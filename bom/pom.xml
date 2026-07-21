@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.newzkl.platform</groupId>
+    <artifactId>bom</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <name>bom</name>
+    <description>Base - 模块版本统一管理</description>
+
+    <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- ===== common / ddd ===== -->
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>ddd-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>ddd-domain</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>ddd-application</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>ddd-action</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>ddd-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- ===== common / core ===== -->
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-utils</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-redis</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-rocketmq</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

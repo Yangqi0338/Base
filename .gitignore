@@ -1,0 +1,73 @@
+# Compiled class file
+*.class
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Maven
+**/**/target/
+
+**/**/.flattened-pom.xml
+**/.flattened-pom.xml
+
+# Gradle
+build
+.gradle
+
+# Log file
+*.log
+log/
+
+# out
+**/out/
+
+# Mac
+.DS_Store
+
+# others
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+*.pid
+*.orig
+*.demo
+*Demo.java
+temp/
+demo-*/
+*demo
+app-test/
+/EasyCode
+
+.flattened-pom.xml
+
+#AI
+.omx
+.claude/worktrees/

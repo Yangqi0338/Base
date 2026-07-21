@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform</groupId>
+        <artifactId>Base</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.newzkl.platform.Base</groupId>
+    <artifactId>biz</artifactId>
+    <packaging>pom</packaging>
+    <name>biz</name>
+    <description>业务域聚合 (biz-system 模式: 各服务域独立模块, 无 starter)。服务域待 grill 定案后逐个加入 modules。</description>
+
+    <!-- 待定服务域 (grill §3.2 中): user/sys/finance/order/goods/market/inventory/media/content/course/store/activity/裂变 -->
+    <modules>
+    </modules>
+</project>
