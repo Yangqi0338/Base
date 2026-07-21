@@ -18,6 +18,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-model</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
         </dependency>

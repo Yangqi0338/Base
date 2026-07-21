@@ -1,0 +1,52 @@
+package com.newzkl.platform.base.biz.account.domain.repository;
+
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.model.support.CodeReq;
+import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
+import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
+import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+
+import java.util.List;
+
+/**
+ * 供应商
+ *
+ * @author fang
+ */
+public interface SupplierRepository {
+
+    Long supplierSave(SupplierVO supplier);
+
+    int supplierEdit(SupplierVO supplier);
+
+    int supplierDelete(List<Long> supplierIdList);
+
+    void supplierEdit(List<EditColumnDTO> columnList, Long id);
+
+    SupplierVO supplier(Long supplierId);
+
+    List<Long> idByQuery(SupplierQuery supplierQuery);
+
+    /**
+     * 分页列表
+     */
+    Page<SupplierVO> pageList(SupplierQuery supplierQuery);
+
+    /**
+     * 任意返回参的分页列表
+     */
+    <T> Page<T> pageObj(SupplierQuery supplierQuery, Class<T> clazz);
+
+    /**
+     * 带账户信息的分页列表
+     */
+    Page<SupplierAccountVO> pageListWithAccount(SupplierQuery query);
+
+    void smsNotify(CodeReq codeReq);
+
+    String getSettlementConfig(Long accountId);
+
+    Long selectCount(SupplierQuery query);
+}

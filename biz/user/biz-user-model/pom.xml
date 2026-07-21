@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform.Base</groupId>
+        <artifactId>biz-user</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>biz-user-model</artifactId>
+    <packaging>jar</packaging>
+    <name>biz-user-model</name>
+    <description>用户域共享内核: Entity/VO/Req/Res/Query/DTO (Command/DO 不在此)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-model</artifactId>
+        </dependency>
+        <!-- 迁移补充: relation domain/infra 使用 TransferUtils/SecurityUtils/ScmException(core-model 经此传递)。
+             core-utils 为 common 基础叶子模块(与 ddd-model 同层)，参照 biz-account-model 迁移。 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
+        </dependency>
+    </dependencies>
+</project>

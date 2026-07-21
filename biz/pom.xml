@@ -17,7 +17,9 @@
     <name>biz</name>
     <description>业务域聚合 (biz-system 模式: 各服务域独立模块, 无 starter)。服务域待 grill 定案后逐个加入 modules。</description>
 
-    <!-- 待定服务域 (grill §3.2 中): user/sys/finance/order/goods/market/inventory/media/content/course/store/activity/裂变 -->
+    <!-- M1: user(试点). 后续 sys/finance/order/goods; M2+ market/inventory/media/content/course/store/activity/social-bang/notify -->
     <modules>
+        <module>account</module>
+        <module>user</module>
     </modules>
 </project>

@@ -17,6 +17,7 @@
     <description>技术中间件聚合 (utils/redis/rocketmq，不反引 ddd)</description>
 
     <modules>
+        <module>core-model</module>
         <module>core-utils</module>
         <module>core-redis</module>
         <module>core-rocketmq</module>

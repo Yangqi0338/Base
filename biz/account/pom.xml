@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform.Base</groupId>
+        <artifactId>biz</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>biz-account</artifactId>
+    <packaging>pom</packaging>
+    <name>biz-account</name>
+    <description>账户服务域: 多态 Account + auth + policy + 8 身份(含 admin)。纯库, 无 starter</description>
+
+    <modules>
+        <module>biz-account-model</module>
+        <module>biz-account-facade</module>
+        <module>biz-account-domain</module>
+        <module>biz-account-application</module>
+        <module>biz-account-infrastructure</module>
+    </modules>
+</project>

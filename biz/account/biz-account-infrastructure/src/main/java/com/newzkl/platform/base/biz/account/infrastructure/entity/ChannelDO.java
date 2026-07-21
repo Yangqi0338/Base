@@ -1,0 +1,81 @@
+package com.newzkl.platform.base.biz.account.infrastructure.entity;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.ddd.model.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
+import lombok.Data;
+
+/**
+ * 渠道商
+ *
+ * @author fang
+ */
+@Data
+@TableName
+public class ChannelDO extends BaseDO {
+    /**
+     * 名称(account.realname)
+     */
+    private String name;
+    /**
+     * 主体类型
+     */
+    private AccountEnum.BodyType bodyType;
+    /**
+     * 状态
+     */
+    private ChannelEnum.State state;
+    /**
+     * 企业信息
+     */
+    private String companyInfo;
+    /**
+     * 审批拒绝原因
+     */
+    private String auditRefuseReason;
+    /**
+     * 平台服务费
+     */
+    @TableField(exist = false)
+    private String platformNowValue;
+    /**
+     * 市场数量
+     */
+    private Integer marketCount;
+    /**
+     * 数字门店权限
+     */
+    private CommonEnum.YesOrNo storePermission;
+    /**
+     * 店铺地址，省CODE, 6位
+     */
+    private Integer shipProvinceCode;
+    /**
+     * 店铺地址，市CODE, 6位
+     */
+    private Integer shipCityCode;
+    /**
+     * 店铺地址，区CODE, 6位
+     */
+    private Integer shipAreaCode;
+    /**
+     * 联系方式
+     */
+    private String contactsWay;
+    /**
+     * 联系人名称
+     */
+    private String contactsName;
+    /**
+     * 店铺名称
+     */
+    private String storeName;
+    /**
+     * 渠道商类型
+     */
+    private ChannelEnum.ChannelType channelType;
+
+}

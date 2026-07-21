@@ -17,6 +17,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- ===== common / core-model (最底层) ===== -->
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- ===== common / ddd ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
@@ -58,6 +65,60 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>core-rocketmq</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- ===== biz / user ===== -->
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-user-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-user-facade</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-user-domain</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-user-application</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-user-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- ===== biz / account ===== -->
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-account-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-account-facade</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-account-domain</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-account-application</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-account-infrastructure</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

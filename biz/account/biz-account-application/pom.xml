@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform.Base</groupId>
+        <artifactId>biz-account</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>biz-account-application</artifactId>
+    <packaging>jar</packaging>
+    <name>biz-account-application</name>
+    <description>账户域编排 + provider(AccountFacade)实现 + 分布式事务上移点</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-domain</artifactId>
+        </dependency>
+    </dependencies>
+</project>
