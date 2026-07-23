@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.newzkl.platform.Base</groupId>
+        <artifactId>biz</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>biz-course</artifactId>
+    <packaging>pom</packaging>
+    <name>biz-course</name>
+    <modules>
+        <module>biz-course-model</module>
+        <module>biz-course-facade</module>
+        <module>biz-course-domain</module>
+        <module>biz-course-application</module>
+        <module>biz-course-infrastructure</module>
+    </modules>
+</project>

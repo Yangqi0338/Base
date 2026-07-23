@@ -1,0 +1,21 @@
+package com.newzkl.platform.base.biz.goods.rpc.model.relation;
+
+import lombok.Data;
+
+import java.io.Serializable;
+
+/**
+ * SPU关联的市场VO
+ */
+@Data
+public class SpuRelevancyMarketVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long spuId;
+    /**
+     * 关联的市场数量
+     */
+    private Integer marketNum;
+
+}

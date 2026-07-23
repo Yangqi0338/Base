@@ -1,0 +1,53 @@
+package com.newzkl.platform.base.biz.finance.model.account.req;
+
+
+import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
+public class BillOrderAwardRpcReq extends BaseVO {
+
+    /**
+     * 角色ID
+     */
+    private RoleEnum.CompanyRole role;
+
+    /**
+     * 账户ID
+     */
+    private Long accountId;
+
+    /**
+     * 账户名称(手机号)
+     */
+    private String username;
+
+    /**
+     * 账户类型
+     */
+    private PurseEnum.PurseType purseType;
+
+    /**
+     * 账户类型
+     */
+    private PurseEnum.FinanceUser accountType;
+
+    /**
+     * 金额
+     */
+    private Integer amount;
+
+    /**
+     * 商品spuId
+     */
+    private Long spuId;
+
+    /**
+     * 创建日期
+     */
+    private LocalDate createDate;
+}

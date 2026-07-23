@@ -1,0 +1,65 @@
+package com.newzkl.platform.base.biz.finance.model.purse.vo;
+
+
+import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+/**
+ * @author niu
+ * @description: 账户变动记录vo
+ * @date 2023/12/23 16:38
+ */
+@Data
+public class AccountPurseAlterRecordVO extends BaseVO {
+
+    /**
+     * 客户id
+     */
+    private Long accountId;
+
+    /**
+     * 账户类型
+     */
+    private PurseEnum.PurseType purseType;
+
+    /**
+     * 1 进账 2 出账 财务用户类型
+     * 客户类型
+     */
+    private PurseEnum.FinanceUser accountType;
+
+    /**
+     * 账号修改类型  1 进账 2 出账
+     *
+     */
+    private PurseEnum.PurseAlterType alterType;
+
+    /**
+     * 分润修改类型  1 进账 2 出账
+     *
+     */
+    private EarningsEnum.PurseAlterTypeEnum earningAlterType;
+
+    /**
+     * 金额
+     */
+    private Integer amount;
+
+    /**
+     * 关联记录id
+     */
+    private Long joinRecordId;
+
+    /**
+     * 备注或记录
+     */
+    private String remark;
+
+    public LocalDateTime getTime() {
+        return createTime;
+    }
+}

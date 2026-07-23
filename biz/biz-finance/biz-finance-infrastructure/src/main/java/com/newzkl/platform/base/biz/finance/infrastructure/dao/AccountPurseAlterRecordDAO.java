@@ -1,0 +1,53 @@
+package com.newzkl.platform.base.biz.finance.infrastructure.dao;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.newzkl.platform.base.biz.finance.infrastructure.entity.AccountPurseAlterRecordDO;
+import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
+import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * AccountPurseAlterRecordDAO继承基类
+ */
+@Mapper
+public interface AccountPurseAlterRecordDAO extends BaseMapper<AccountPurseAlterRecordDO> {
+
+    default LambdaQueryWrapper<AccountPurseAlterRecordDO> getLw(AccountPurseAlterRecordQuery query) {
+        LambdaQueryWrapper<AccountPurseAlterRecordDO> queryWrapper = new BaseLambdaQueryWrapper<AccountPurseAlterRecordDO>()
+                .notEmptyEq(AccountPurseAlterRecordDO::getAccountId, query.getAccountId())
+                .notEmptyEq(AccountPurseAlterRecordDO::getPurseType, query.getPurseType())
+                .notEmptyIn(AccountPurseAlterRecordDO::getAlterType, query.getAlterTypeList())
+                .between(AccountPurseAlterRecordDO::getCreateTime, query.getCreateTime())
+                .eq(AccountPurseAlterRecordDO::getAccountType, query.getAccountType())
+                .orderByDesc(AccountPurseAlterRecordDO::getCreateTime);
+        return queryWrapper;
+    }
+
+    /**
+     * 保存客户账户变动记录
+     *
+     * @param accountPurseAlterRecords
+     */
+    void saveAccountPurseAlterRecord(@Param("list") List<AccountPurseAlterRecordVO> accountPurseAlterRecords);
+
+    /**
+     * 查询客户账户变动记录
+     *
+     * @param req
+     * @return
+     */
+    List<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req);
+
+    /**
+     * 查询供应商结算数据
+     *
+     * @param remark
+     * @return
+     */
+    Integer querySupplierSettleData(Integer remark);
+}

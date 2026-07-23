@@ -58,10 +58,17 @@ common/
 <biz>-<服务域>-infrastructure/
     adapt/repository/            # XxxRepositoryImpl（DO↔DTO 转换）
     adapt/api/                   # port 实现 + consumer 调远程 facade
-    po/                          # DO
+    gateway/                     # 出站网关: http 客户端调用 / mq publisher（空域也留占位）
+    entity/                      # DO（持久化对象；禁用 po/ 命名）
     dao/                         # DAO/Mapper（getLw 约定）
 ```
 Controller/starter 不在 Base，在入口侧仓（building-scm/building-mmt）。
+
+**infra 布局硬规则**：
+- DO 目录名固定 `entity/`，**禁止 `po/`**。
+- RepositoryImpl 固定 `adapt/repository/`，**禁止裸 `repository/`**。
+- 出站网关(http/mq publisher)固定 `gateway/`，无实现也保留空占位目录。
+- 通用持久化基座(RepositorySupport/BaseLambdaQueryWrapper/BaseQueryWrapper/分页转换)在 `common/ddd/ddd-infrastructure`，**禁止各 biz 自拷**。
 
 ## 技术红线
 

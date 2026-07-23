@@ -19,7 +19,20 @@
 
     <!-- M1: user(试点). 后续 sys/finance/order/goods; M2+ market/inventory/media/content/course/store/activity/social-bang/notify -->
     <modules>
-        <module>account</module>
-        <module>user</module>
+        <module>biz-account</module>
+        <module>biz-user</module>
+        <module>biz-sys</module>
+        <module>biz-finance</module>
+        <module>biz-order</module>
+        <module>biz-goods</module>
+        <module>biz-market</module>
+        <module>biz-inventory</module>
+        <module>biz-media</module>
+        <module>biz-content</module>
+        <module>biz-course</module>
+        <module>biz-store</module>
+        <module>biz-activity</module>
+        <module>biz-social-bang</module>
+        <module>biz-notify</module>
     </modules>
 </project>

@@ -2,6 +2,16 @@
 
 > Base = 跨域中台底座单仓（common + biz）。**动手前先读 `rules/`**。
 
+## 规格大前提（@import — 每轮重载，compact 免疫）
+
+> 下列 @import 保证 Constitution/Architecture/SPEC/Project 每轮进 context，不随 /compact 丢失。
+> 优先级：技术校验 SPEC > Architecture > skill；业务正确 Constitution 独立。
+
+@rules/Constitution.md
+@rules/Architecture.md
+@rules/Project.md
+@SPEC.md
+
 ## rules/（长期规范，优先级高→低）
 
 | 文件 | 作用 | 何时读 |
