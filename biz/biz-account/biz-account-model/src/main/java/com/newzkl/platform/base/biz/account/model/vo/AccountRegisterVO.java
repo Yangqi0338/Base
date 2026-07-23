@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class AccountRegisterVO extends BaseVO {
+public class AccountRegisterVO extends BaseRes {
     /**
      * 注册角色
      * PLATFORM(0L,"平台用户"),

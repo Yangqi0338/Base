@@ -18,5 +18,6 @@
         <module>biz-market-domain</module>
         <module>biz-market-application</module>
         <module>biz-market-infrastructure</module>
+        <module>biz-market-action</module>
     </modules>
 </project>

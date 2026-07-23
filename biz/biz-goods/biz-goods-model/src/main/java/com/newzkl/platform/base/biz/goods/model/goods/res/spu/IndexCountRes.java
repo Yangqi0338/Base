@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.res.spu;
 
-import com.newzkl.platform.base.common.ddd.model.GroupCountRes;
+import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import lombok.Data;
 
 import java.util.List;

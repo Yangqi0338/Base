@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
@@ -61,7 +61,7 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
     }
 
     @Override
-    public void channelEdit(List<EditColumnDTO> editColumnList, Long id) {
+    public void channelEdit(List<EditColumnVO> editColumnList, Long id) {
         ChannelQuery query = new ChannelQuery();
         query.setId(id);
         channelRepository.channelEdit(editColumnList, query);

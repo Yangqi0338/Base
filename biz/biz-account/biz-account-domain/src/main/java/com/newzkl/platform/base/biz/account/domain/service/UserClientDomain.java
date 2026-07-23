@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
 
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
-import com.newzkl.platform.base.common.core.model.exception.EasyExcelError;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
+import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
@@ -23,7 +23,7 @@ public interface UserClientDomain {
 
     int memberDelete(List<Long> memberIdList);
 
-    void memberEdit(List<EditColumnDTO> editColumnList, Long id);
+    void memberEdit(List<EditColumnVO> editColumnList, Long id);
 
     MemberVO member(Long memberId);
 
@@ -65,5 +65,5 @@ public interface UserClientDomain {
      * @param file 上传的Excel文件
      * @return 导入结果
      */
-    EasyExcelError adminImportAccount(MultipartFile file);
+    EasyExcelErrorVO adminImportAccount(MultipartFile file);
 }

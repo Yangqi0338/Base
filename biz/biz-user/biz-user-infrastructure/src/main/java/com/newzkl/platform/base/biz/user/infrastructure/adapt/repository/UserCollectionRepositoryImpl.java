@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 用户收藏仓储实现。
  *
- * <p>迁移说明：新 common BaseLogicDelDO 使用 delFlag(@TableLogic)，源 isDeleted 字段不存在，
+ * <p>迁移说明：新 common BaseDO 使用 delFlag(@TableLogic)，源 isDeleted 字段不存在，
  * 逻辑删除交由 MP 处理；isValid 为 CommonEnum.YesOrNo 枚举；findPageByUserId 降级为 List(TODO[page-meta])。</p>
  *
  * @author sijiwang

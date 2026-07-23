@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IExecuteLogRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.ExecuteLogRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.assembler.ExecuteLogAssembler;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.ExecuteLogDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.ExecuteLogDO;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class ExecuteLogRepositoryImpl implements IExecuteLogRepository {
+public class ExecuteLogRepositoryImpl implements ExecuteLogRepository {
 
     private final ExecuteLogDAO executeLogDAO;
     private final ExecuteLogAssembler executeLogAssembler;

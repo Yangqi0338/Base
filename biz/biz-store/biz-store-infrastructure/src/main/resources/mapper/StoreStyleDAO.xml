@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.store.infrastructure.dao.StoreStyleDAO">
+
+    <resultMap id="BaseResultMap" type="com.newzkl.platform.base.biz.store.infrastructure.entity.StoreStyleDO">
+        <id column="id" property="id" />
+        <result column="style_code" property="styleCode" />
+        <result column="style_name" property="styleName" />
+        <result column="essential_colour" property="essentialColour" />
+        <result column="auxiliary_color" property="auxiliaryColor" />
+        <result column="use_store_num" property="useStoreNum" />
+        <result column="package_describe" property="packageDescribe" />
+        <result column="type" property="type" />
+        <result column="state" property="state" />
+        <result column="deleted" property="deleted" />
+        <result column="create_id" property="createId" />
+        <result column="create_name" property="createName" />
+        <result column="create_time" property="createTime" />
+        <result column="mender_id" property="menderId" />
+        <result column="mender_name" property="menderName" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, style_code, style_name, essential_colour, auxiliary_color, use_store_num,
+        package_describe, type, state, deleted, create_id, create_name, create_time,
+        mender_id, mender_name, update_time
+    </sql>
+
+</mapper>

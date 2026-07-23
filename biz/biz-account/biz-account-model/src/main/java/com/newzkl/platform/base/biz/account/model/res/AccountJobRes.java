@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class AccountJobRes extends BaseVO {
+public class AccountJobRes extends BaseRes {
     /**
      * 名称
      */

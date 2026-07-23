@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.goods.domain.spu.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IAuditDataSpuRepository;
-import com.newzkl.platform.base.biz.goods.domain.spu.service.ISpuWorkflowDomain;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.AuditDataSpuRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuWorkflowDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SpuWorkflowDomainImpl implements ISpuWorkflowDomain {
+public class SpuWorkflowDomainImpl implements SpuWorkflowDomain {
 
-    private final IAuditDataSpuRepository auditDataSpuRepository;
+    private final AuditDataSpuRepository auditDataSpuRepository;
 
     @Override
     public void editBusinessData(Long flowId, String editCommand) {

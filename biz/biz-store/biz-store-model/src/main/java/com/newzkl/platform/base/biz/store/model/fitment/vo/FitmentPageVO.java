@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.fitment.vo;
 
-import com.newzkl.platform.base.common.core.utils.common.JsonUtils;
+import cn.hutool.json.JSONUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -107,7 +107,7 @@ public class FitmentPageVO {
         if (goodsId == null) {
             this.goodsId = null;
         }else {
-            this.goodsId = JsonUtils.jsonToList(goodsId, Long.class);
+            this.goodsId = JSONUtil.toList(goodsId, Long.class);
         }
     }
 
@@ -119,7 +119,7 @@ public class FitmentPageVO {
         if (goodsId == null) {
             this.markets = null;
         }else {
-            this.markets = JsonUtils.jsonToList(markets, Long.class);
+            this.markets = JSONUtil.toList(markets, Long.class);
         }
     }
 

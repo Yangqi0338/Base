@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.SupplierEnum;
@@ -84,7 +84,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     }
 
     @Override
-    public void supplierEdit(List<EditColumnDTO> editColumnList, Long id) {
+    public void supplierEdit(List<EditColumnVO> editColumnList, Long id) {
         supplierRepository.supplierEdit(editColumnList, id);
     }
 

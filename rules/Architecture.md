@@ -55,6 +55,7 @@ common/
     adapt/api/                   # outbound port 接口
 <biz>-<服务域>-facade/           # 对外契约（自带 model/，物理禁引 <svc>-model）
 <biz>-<服务域>-application/      # 跨业务域编排 + 分布式事务上移点（纯透传禁写类）
+<biz>-<服务域>-action/           # 【项目级 override】controller + Command（cmd/）；调 application 或 domain
 <biz>-<服务域>-infrastructure/
     adapt/repository/            # XxxRepositoryImpl（DO↔DTO 转换）
     adapt/api/                   # port 实现 + consumer 调远程 facade
@@ -62,7 +63,14 @@ common/
     entity/                      # DO（持久化对象；禁用 po/ 命名）
     dao/                         # DAO/Mapper（getLw 约定）
 ```
-Controller/starter 不在 Base，在入口侧仓（building-scm/building-mmt）。
+
+**【项目级 override】action 模块**（偏离 skill 默认 biz-system——默认 controller 在入口侧 starter）：
+- 各服务域自带 `<biz>-<服务域>-action` 模块（jar），controller + Command 落此，模块自包含、装配更干净。
+- 6 模块布局：model/domain/**action**/facade/application/infrastructure。
+- 入口 starter（building-scm/building-mmt）聚合各 biz-action，不再自写 controller。
+- 无源 REST 的服务域（如 order，事件驱动）：action 建空壳模块（未来扩展位），**不臆造 controller**。
+- 鉴权注解 `@RoleLimit`(per-biz model，依赖 RoleEnum) / `@Limit`+`FuncCons`(ddd-action 全局) 为惰性标记，`TODO[auth-defer]`——拦截切面待入口 starter 鉴权基建接入。
+- 语义迁移：`SecurityUtils.getRole()`→`getRoleId()`；`PageInfo`→`IPage/Page` 直返（响应壳变，前端契约注意）；`ScmException` 三参(含 boolean)→两参。
 
 **infra 布局硬规则**：
 - DO 目录名固定 `entity/`，**禁止 `po/`**。

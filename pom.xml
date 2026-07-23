@@ -164,6 +164,11 @@
                 <version>${auto-table.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.dromara.mpe</groupId>
+                <artifactId>mybatis-plus-ext-autofill-annotation</artifactId>
+                <version>${mybatis-plus-ext.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>

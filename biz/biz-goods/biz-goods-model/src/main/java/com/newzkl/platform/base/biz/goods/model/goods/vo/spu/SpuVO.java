@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class SpuVO extends BaseVO implements Serializable {
+public class SpuVO extends BaseRes implements Serializable {
     /**
      * 名称 (查询)
      */

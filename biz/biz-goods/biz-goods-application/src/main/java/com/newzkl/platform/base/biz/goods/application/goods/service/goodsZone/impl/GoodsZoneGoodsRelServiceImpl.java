@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.application.goods.service.goodsZone.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.application.goods.service.goodsZone.IGoodsZoneGoodsRelService;
+import com.newzkl.platform.base.biz.goods.application.goods.service.goodsZone.GoodsZoneGoodsRelService;
 import com.newzkl.platform.base.biz.goods.domain.goodsZone.service.GoodsZoneGoodsRelDomainService;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneGoodsRelAddReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneGoodsRelDelReq;
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GoodsZoneGoodsRelServiceImpl implements IGoodsZoneGoodsRelService {
+public class GoodsZoneGoodsRelServiceImpl implements GoodsZoneGoodsRelService {
 
     private final GoodsZoneGoodsRelDomainService relDomainService;
 

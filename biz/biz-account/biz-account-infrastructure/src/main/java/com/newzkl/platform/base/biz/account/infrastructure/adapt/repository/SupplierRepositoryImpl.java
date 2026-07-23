@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 // TODO[infra-sms gateway]: import ...support.SmsMethod; (SmsApi=Forest外部短信网关, 出域, 未迁)
 import com.newzkl.platform.base.biz.account.model.support.CodeReq;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.SupplierDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.SupplierDO;
@@ -48,7 +48,7 @@ public class SupplierRepositoryImpl extends RepositorySupport implements Supplie
     }
 
     @Override
-    public void supplierEdit(List<EditColumnDTO> columnList, Long id) {
+    public void supplierEdit(List<EditColumnVO> columnList, Long id) {
         SupplierQuery query = new SupplierQuery();
         query.setId(id);
         supplierDAO.columnByQuery(columnList, supplierDAO.getLw(query));

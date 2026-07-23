@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @date 2023/12/23 16:38
  */
 @Data
-public class AccountPurseAlterRecordExportVO extends BaseVO {
+public class AccountPurseAlterRecordExportVO extends BaseRes {
 
     @ExcelProperty("流水号")
     private Long id;

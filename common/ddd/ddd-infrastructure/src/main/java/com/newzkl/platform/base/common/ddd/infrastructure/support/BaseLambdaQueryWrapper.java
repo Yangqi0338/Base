@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.newzkl.platform.base.common.ddd.model.query.QuerySupport;
-import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BaseLambdaUpdateWrapper;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;

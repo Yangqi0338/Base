@@ -161,7 +161,7 @@ public class OrderRepositoryImpl extends ServiceImpl<OrderDAO, OrderDO> implemen
     private LambdaQueryWrapper<OrderDO> buildQueryWrapper(Order queryCondition) {
         LambdaQueryWrapper<OrderDO> wrapper = new LambdaQueryWrapper<>();
         if (queryCondition == null) {
-            return wrapper.orderByDesc(OrderDO::getCreateTime);
+            return wrapper.orderByDesc(OrderDO::getId);
         }
 
         // 直接转换查询条件
@@ -170,6 +170,6 @@ public class OrderRepositoryImpl extends ServiceImpl<OrderDAO, OrderDO> implemen
         Optional.ofNullable(queryDO.getChannelId())
                 .ifPresent(channelId -> wrapper.eq(OrderDO::getChannelId, channelId));
 
-        return wrapper.orderByDesc(OrderDO::getCreateTime);
+        return wrapper.orderByDesc(OrderDO::getId);
     }
 }

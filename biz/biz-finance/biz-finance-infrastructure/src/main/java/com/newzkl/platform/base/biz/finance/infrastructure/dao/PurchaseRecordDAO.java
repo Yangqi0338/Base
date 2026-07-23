@@ -30,7 +30,8 @@ public interface PurchaseRecordDAO extends BaseMapper<PurchaseRecordDO> {
         ew.jsonEq(PurchaseRecordDO::getOrderInfo, "buyMode", false, query.getBuyMode());
         ew.jsonLike(PurchaseRecordDO::getOrderInfo, "seatPackageName", false, query.getSeatPackageName());
         // 手机号/用户名
-        ew.likeList(query.getKeyword(), PurchaseRecordDO::getAccountName, PurchaseRecordDO::getCreator);
+        // TODO[exector-migrate]: creator 由独立列改为 exector JSON 列, mp lambda 无法引 JSON 内字段, 暂移除按创建人模糊查
+        ew.likeList(query.getKeyword(), PurchaseRecordDO::getAccountName);
         ew.between(PurchaseRecordDO::getCreateTime, query.getCreateTime());
         return ew;
     }

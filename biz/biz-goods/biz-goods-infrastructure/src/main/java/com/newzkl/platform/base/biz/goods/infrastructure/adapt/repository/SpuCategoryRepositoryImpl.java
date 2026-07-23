@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.ISpuCategoryRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuCategoryRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuCategoryDO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SpuCategoryDAO;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SpuCategoryRepositoryImpl
         extends AbstractLayerCategoryRepository<SpuCategoryDO, SpuCategoryVO, SpuCategoryQuery>
-        implements ISpuCategoryRepository {
+        implements SpuCategoryRepository {
 
     private final SpuCategoryDAO categoryDAO;
 

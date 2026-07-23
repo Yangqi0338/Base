@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.BaseLogicDelDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,8 +16,8 @@ import java.math.BigDecimal;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
-public class UserCollectionDO extends BaseLogicDelDO {
+@TableName(autoResultMap = true)
+public class UserCollectionDO extends BaseDO {
 
     /**
      * 用户ID

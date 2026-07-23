@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.action.config;
 
-import com.newzkl.platform.base.common.ddd.model.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import org.springframework.http.HttpStatus;

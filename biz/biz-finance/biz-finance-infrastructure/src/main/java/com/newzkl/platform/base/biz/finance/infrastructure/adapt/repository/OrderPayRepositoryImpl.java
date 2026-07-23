@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.vo.OrderPayeeInfoVO;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PaymentVO;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
-import com.newzkl.platform.base.common.core.utils.common.JsonUtils;
+import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -41,7 +41,7 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
         PaymentDO payment = TransferUtils.transfer(paymentVO, PaymentDO::new);
         payment.setTradeNo(NumberUtil.parseLong(BusinessCodeUtil.generate(BusinessType.PAYMENT)));
         if (payeeInfos != null) {
-            payment.setPayeeInfo(JsonUtils.toJson(payeeInfos));
+            payment.setPayeeInfo(JSONUtil.toJsonStr(payeeInfos));
         }
         paymentDAO.insert(payment);
         return payment.getTradeNo();
@@ -68,7 +68,7 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
     @Override
     public List<PaymentVO> tradeOrderQuery(PaymentQuery query) {
         LambdaQueryWrapper<PaymentDO> queryWrapper = paymentDAO.getLw(query)
-                .orderByDesc(PaymentDO::getCreateTime);
+                .orderByDesc(PaymentDO::getId);
         Page<PaymentDO> pageList = paymentDAO.selectPage(RepositorySupport.page(query), queryWrapper);
         return TransferUtils.transfers(pageList.getRecords(), PaymentVO.class);
     }

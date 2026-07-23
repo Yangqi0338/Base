@@ -46,6 +46,43 @@ public class SecurityUtils {
         return NumberUtil.parseLong(s, null);
     }
 
+    /**
+     * 获取当前员工ID。
+     *
+     * <p>主账号无员工ID, 返回 {@code null}; 员工账号返回其员工ID。</p>
+     *
+     * @return 员工ID, 主账号或未设置时返回 null
+     */
+    public static Long getEmpId() {
+        String s = SecurityContextHolder.get(TokenConstants.DETAILS_EMP_ID, String.class);
+        if (StrUtil.isEmpty(s) || "null".equals(s)) {
+            return null;
+        }
+        return Long.parseLong(s);
+    }
+
+    /**
+     * 获取当前上级运营商ID。
+     *
+     * @return 运营商ID, 未设置时返回 null
+     */
+    public static Long getOperatorId() {
+        String s = SecurityContextHolder.get(TokenConstants.DETAILS_OPERATOR_ID, String.class);
+        if (StrUtil.isEmpty(s) || "null".equals(s)) {
+            return null;
+        }
+        return Long.parseLong(s);
+    }
+
+    /**
+     * 获取当前 IM 用户账号。
+     *
+     * @return IM 用户账号
+     */
+    public static String getImUserAccount() {
+        return SecurityContextHolder.get(TokenConstants.IM_USER_ACCOUNT, String.class);
+    }
+
     public static Long getUpId() {
         String s = SecurityContextHolder.get(TokenConstants.DETAILS_UP_ID, String.class);
         return Long.parseLong(s);

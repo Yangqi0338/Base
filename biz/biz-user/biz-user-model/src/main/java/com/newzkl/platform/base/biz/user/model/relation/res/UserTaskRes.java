@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.relation.res;
 
 import com.newzkl.platform.base.biz.user.model.enums.EarningsEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserTaskRes extends BaseVO {
+public class UserTaskRes extends BaseRes {
 
     /**
      * 用户id

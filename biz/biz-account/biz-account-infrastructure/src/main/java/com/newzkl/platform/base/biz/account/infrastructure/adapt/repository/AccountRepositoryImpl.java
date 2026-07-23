@@ -13,7 +13,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCount
 // TODO[infra-sms gateway]: import ...support.SmsMethod; (SmsApi=Forest外部短信网关, 出域, 未迁)
 import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
-import com.newzkl.platform.base.common.ddd.model.GroupCountRes;
+import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;

@@ -18,5 +18,6 @@
         <module>biz-finance-domain</module>
         <module>biz-finance-application</module>
         <module>biz-finance-infrastructure</module>
+        <module>biz-finance-action</module>
     </modules>
 </project>

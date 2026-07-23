@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.goods.domain.brand.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.brand.repository.IIndustryRepository;
-import com.newzkl.platform.base.biz.goods.domain.brand.service.IIndustryDomain;
+import com.newzkl.platform.base.biz.goods.domain.brand.repository.IndustryRepository;
+import com.newzkl.platform.base.biz.goods.domain.brand.service.IndustryDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.query.brand.IndustryPageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.brand.IndustryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO;
@@ -19,9 +19,9 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class IndustryDomainImpl implements IIndustryDomain {
+public class IndustryDomainImpl implements IndustryDomain {
 
-    private final IIndustryRepository industryRepository;
+    private final IndustryRepository industryRepository;
 
     @Override
     public Long industrySave(IndustryReq industryReq) {

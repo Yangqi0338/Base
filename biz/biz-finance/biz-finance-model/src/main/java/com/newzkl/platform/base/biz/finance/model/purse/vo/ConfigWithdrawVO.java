@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 
@@ -11,7 +11,7 @@ import lombok.Data;
  * @since 2025-09-24 11:07:45
  */
 @Data
-public class ConfigWithdrawVO extends BaseVO {
+public class ConfigWithdrawVO extends BaseRes {
 
     /**
      * 收益设置 平台订单分润比例

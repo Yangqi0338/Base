@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.repository;
 
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
 
@@ -19,7 +19,7 @@ public interface MemberRepository {
 
     int memberDelete(List<Long> memberIdList);
 
-    void memberEdit(List<EditColumnDTO> columnList, Long id);
+    void memberEdit(List<EditColumnVO> columnList, Long id);
 
     MemberVO member(Long memberId);
 

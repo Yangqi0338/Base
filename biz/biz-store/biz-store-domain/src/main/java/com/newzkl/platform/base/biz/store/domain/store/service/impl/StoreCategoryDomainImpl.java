@@ -8,12 +8,12 @@ import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveCommand;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreQueryReq;
-import com.newzkl.platform.base.biz.store.model.store.vo.StoreCategoryVO;
-import com.newzkl.platform.base.biz.store.model.store.vo.StoreSearchVO;
-import com.newzkl.platform.base.biz.store.domain.store.repository.IStoreCategoryRepository;
-import com.newzkl.platform.base.biz.store.domain.store.service.IStoreCategoryDomain;
-import com.newzkl.platform.base.biz.store.domain.store.service.IStoreDomain;
+import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
+import com.newzkl.platform.base.biz.store.domain.store.repository.StoreCategoryRepository;
+import com.newzkl.platform.base.biz.store.domain.store.service.StoreCategoryDomain;
+import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +27,9 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class StoreCategoryDomainImpl implements IStoreCategoryDomain {
-    private final IStoreCategoryRepository repository;
-    private final IStoreDomain storeDomain;
+public class StoreCategoryDomainImpl implements StoreCategoryDomain {
+    private final StoreCategoryRepository repository;
+    private final StoreDomain storeDomain;
 
     /**
      * 详情
@@ -49,8 +49,8 @@ public class StoreCategoryDomainImpl implements IStoreCategoryDomain {
      * @return 列表
      */
     @Override
-    public List<StoreCategoryVO> queryList(StoreCategoryQuery query) {
-        List<StoreCategoryVO> voList = repository.queryList(query);
+    public List<StoreCategoryRes> queryList(StoreCategoryQuery query) {
+        List<StoreCategoryRes> voList = repository.queryList(query);
         return voList;
     }
 
@@ -87,13 +87,13 @@ public class StoreCategoryDomainImpl implements IStoreCategoryDomain {
     @Override
     public void del(Long id) {
         // 判断门店是否关联了该分类
-        StoreQueryReq storeQueryReq = new StoreQueryReq();
+        StoreQuery storeQueryReq = new StoreQuery();
         storeQueryReq.setType(id);
         storeQueryReq.resetQuerySingle();
-        Page<StoreSearchVO> page = storeDomain.storeSearchPage(storeQueryReq);
+        Page<StoreSearchRes> page = storeDomain.storeSearchPage(storeQueryReq);
         boolean hasStore = page.getTotal() > 0;
         if (hasStore) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "门店分类下存在门店，不允许删除", true);
+            throw new ScmException(BaseErrorCode.CUSTOM, "门店分类下存在门店，不允许删除");
         }
 
         repository.del(id);
@@ -106,8 +106,8 @@ public class StoreCategoryDomainImpl implements IStoreCategoryDomain {
      * @return 分页列表
      */
     @Override
-    public IPage<StoreCategoryVO> queryPage(StoreCategoryQuery query) {
-        IPage<StoreCategoryVO> page = repository.queryPage(query);
+    public IPage<StoreCategoryRes> queryPage(StoreCategoryQuery query) {
+        IPage<StoreCategoryRes> page = repository.queryPage(query);
         return page;
     }
 }

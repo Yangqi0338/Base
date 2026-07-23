@@ -13,8 +13,8 @@ import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuCountQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
-import com.newzkl.platform.base.common.ddd.model.GroupCountRes;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -37,7 +37,7 @@ public interface SpuDAO extends BaseMapper<SpuDO> {
 
     List<SpuCategoryVO> countSpuByCategory(@Param("categoryIdList") List<Long> categoryIdList);
 
-    void editColumn(@Param("id") Long id, @Param("columnList") List<EditColumnDTO> editColumnDTOS);
+    void editColumn(@Param("id") Long id, @Param("columnList") List<EditColumnVO> editColumnDTOS);
 
     List<GroupCountRes> spuCount(@Param("query") TimeQuery timeQuery);
 

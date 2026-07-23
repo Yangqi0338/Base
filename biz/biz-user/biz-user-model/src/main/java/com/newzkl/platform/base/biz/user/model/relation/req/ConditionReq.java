@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.model.relation.req;
 
 import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.user.model.relation.res.PackGoodsInfo;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseIdVO;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author fang
  */
 @Data
-public class ConditionReq extends BaseIdVO {
+public class ConditionReq extends BaseReq {
 
     /**
      * 团队增加数量

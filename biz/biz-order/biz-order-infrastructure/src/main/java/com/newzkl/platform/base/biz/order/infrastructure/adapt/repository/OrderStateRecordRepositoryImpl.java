@@ -93,7 +93,7 @@ public class OrderStateRecordRepositoryImpl extends ServiceImpl<OrderStateRecord
             wrapper.eq(OrderStateRecordDO::getOperatorRoleId, req.getOperatorRoleId());
         }
         // 按创建时间降序排序（核心要求）
-        wrapper.orderByDesc(OrderStateRecordDO::getCreateTime);
+        wrapper.orderByDesc(OrderStateRecordDO::getId);
 
         // 3. 执行MyBatisPlus分页查询（自动计算总条数、分页数据）
         Page<OrderStateRecordDO> resultDoPage = baseMapper.selectPage(doPage, wrapper);

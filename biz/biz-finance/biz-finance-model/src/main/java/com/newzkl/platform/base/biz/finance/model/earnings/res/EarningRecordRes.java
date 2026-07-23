@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.res;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @date 2023/12/22 16:55
  */
 @Data
-public class EarningRecordRes extends BaseVO {
+public class EarningRecordRes extends BaseRes {
 
     /**
      * 消费类型

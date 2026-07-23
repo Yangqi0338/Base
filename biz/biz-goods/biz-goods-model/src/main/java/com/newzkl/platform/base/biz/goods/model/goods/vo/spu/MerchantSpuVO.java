@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author fang
  */
 @Data
-public class MerchantSpuVO extends BaseVO implements Serializable {
+public class MerchantSpuVO extends BaseRes implements Serializable {
     /**
      * 名称 (查询)
      */

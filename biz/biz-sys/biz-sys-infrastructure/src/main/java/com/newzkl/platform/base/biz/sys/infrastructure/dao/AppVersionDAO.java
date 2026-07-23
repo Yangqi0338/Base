@@ -24,6 +24,6 @@ public interface AppVersionDAO extends BaseMapper<AppVersionDO> {
     default LambdaQueryWrapper<AppVersionDO> getLw(AppVersionQuery query) {
         return new BaseLambdaQueryWrapper<AppVersionDO>()
                 .notEmptyEq(AppVersionDO::getAppName, query.getAppName())
-                .orderByDesc(AppVersionDO::getCreateTime);
+                .orderByDesc(AppVersionDO::getId);
     }
 }

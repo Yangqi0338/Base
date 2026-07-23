@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.entity;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 
@@ -11,7 +11,7 @@ import lombok.Data;
  * @since 2026-01-27 11:21:02
  */
 @Data
-public class StoreCategory extends BaseVO {
+public class StoreCategory extends BaseRes {
 
     /**
      * 门店名称

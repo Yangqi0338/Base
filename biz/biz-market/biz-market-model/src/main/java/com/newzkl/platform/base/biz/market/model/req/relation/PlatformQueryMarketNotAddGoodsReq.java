@@ -76,9 +76,9 @@ public class PlatformQueryMarketNotAddGoodsReq extends PageQuery {
      */
     public void setTimeSort(int timeSort) {
         if (timeSort == 1) {
-            addSortField("createTime");
+            addSortField("id");
         } else if (timeSort == 2) {
-            addDescSortField("createTime");
+            addDescSortField("id");
         }
     }
 

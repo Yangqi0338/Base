@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.newzkl.platform.base.biz.market.domain.market.repository.IMarketCategoryRepository;
+import com.newzkl.platform.base.biz.market.domain.market.repository.MarketCategoryRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketCategoryDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketCategoryDO;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketCategoryPageQuery;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class MarketCategoryRepositoryImpl
         extends AbstractCategoryRepository<MarketCategoryDO, MarketCategoryVO, MarketCategoryPageQuery>
-        implements IMarketCategoryRepository {
+        implements MarketCategoryRepository {
 
     private final MarketCategoryDAO marketCategoryDAO;
 

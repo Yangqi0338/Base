@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.goods.domain.spu.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IExecuteLogRepository;
-import com.newzkl.platform.base.biz.goods.domain.spu.service.IExecuteLogDomain;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.ExecuteLogRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.service.ExecuteLogDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.executeLog.ExecuteLog;
 import com.newzkl.platform.base.biz.goods.model.goods.query.executeLog.ExecuteLogQuery;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ import java.util.List;
 */
 @Service
 @RequiredArgsConstructor
-public class ExecuteLogDomainImpl implements IExecuteLogDomain {
+public class ExecuteLogDomainImpl implements ExecuteLogDomain {
 
-    private final IExecuteLogRepository executeLogRepository;
+    private final ExecuteLogRepository executeLogRepository;
 
     @Override
     public Long executeLogSave(Integer type, Long targetId, String executeUserName, String oldData, String updateDate) {

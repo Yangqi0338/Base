@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class SupplierRes extends BaseVO {
+public class SupplierRes extends BaseRes {
 
     /**
      * 账号名称 (查询)

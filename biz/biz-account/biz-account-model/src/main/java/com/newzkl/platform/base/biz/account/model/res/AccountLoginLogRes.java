@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class AccountLoginLogRes extends BaseVO {
+public class AccountLoginLogRes extends BaseRes {
     /**
      * 账号ID (查询)
      */

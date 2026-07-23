@@ -3,7 +3,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.rocketmq.utils.MQUtil;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.core.rocketmq.MQ;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.ChannelDAO;
@@ -48,7 +48,7 @@ public class ChannelRepositoryImpl extends RepositorySupport implements ChannelR
     }
 
     @Override
-    public void channelEdit(List<EditColumnDTO> columnList, ChannelQuery query) {
+    public void channelEdit(List<EditColumnVO> columnList, ChannelQuery query) {
         channelDAO.columnByQuery(columnList, channelDAO.getLw(query));
     }
 

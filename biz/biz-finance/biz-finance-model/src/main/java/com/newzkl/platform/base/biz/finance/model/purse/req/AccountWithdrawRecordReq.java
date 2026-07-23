@@ -1,13 +1,13 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
  * @author 提现记录
  */
 @Data
-public class AccountWithdrawRecordReq extends BaseVO {
+public class AccountWithdrawRecordReq extends BaseRes {
 
     /**
      * 客户id

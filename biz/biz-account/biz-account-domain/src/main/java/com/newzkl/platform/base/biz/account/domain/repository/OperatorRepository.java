@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.repository;
 
 import com.newzkl.platform.base.biz.account.model.support.OperatorConfigVO;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.OperatorQuery;
 import com.newzkl.platform.base.biz.account.model.res.OperatorDomainInfo;
 import com.newzkl.platform.base.biz.account.model.vo.OperatorVO;
@@ -22,7 +22,7 @@ public interface OperatorRepository {
 
     int operatorDelete(List<Long> operatorIdList);
 
-    void operatorEdit(List<EditColumnDTO> columnList, Long id);
+    void operatorEdit(List<EditColumnVO> columnList, Long id);
 
     OperatorVO operator(Long operatorId);
 

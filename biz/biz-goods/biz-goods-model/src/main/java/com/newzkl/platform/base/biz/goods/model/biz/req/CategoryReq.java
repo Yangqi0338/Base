@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.biz.req;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseReq;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.infrastructure.mybatis;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
@@ -21,5 +21,5 @@ public interface MyBatisPlusBaseDao<Model, PK extends Serializable> extends Base
      * */
     List<PK> idByQuery(@Param("ew") Wrapper<Model> wrapper);
 
-    int columnByQuery(@Param("columnList") List<EditColumnDTO> columnList, @Param("ew") Wrapper<Model> wrapper);
+    int columnByQuery(@Param("columnList") List<EditColumnVO> columnList, @Param("ew") Wrapper<Model> wrapper);
 }

@@ -20,7 +20,7 @@ import com.newzkl.platform.base.common.core.model.exception.ErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
-import com.newzkl.platform.base.common.ddd.model.ScmTreeNode;
+import com.newzkl.platform.base.common.ddd.model.res.ScmTreeNode;
 import jakarta.validation.ConstraintViolation;
 import org.springframework.stereotype.Component;
 
@@ -345,6 +345,28 @@ public class ScmUtil {
             set.add(ScmUtil.generateDiffCode(length));
         }
         return set;
+    }
+
+    /**
+     * 根据企业角色码计算下级类型。
+     *
+     * <p>用于权限功能点归属判定: 平台管理员(角色码 0)对应下级类型 1,
+     * 市场管理员(角色码 1)对应下级类型 2, 其余角色对应 0。</p>
+     *
+     * <p>迁移说明: 原实现引用业务枚举 {@code RoleEnum.CompanyRole.PLATFORM/MARKET}，
+     * 因通用层不得依赖业务枚举, 此处内联其角色码字面量 (PLATFORM=0, MARKET=1)。</p>
+     *
+     * @param code 企业角色码
+     * @return 下级类型: 平台=1, 市场=2, 其他=0
+     */
+    public static Integer getBelowType(Long code) {
+        if (Long.valueOf(0L).equals(code)) {
+            return 1;
+        } else if (Long.valueOf(1L).equals(code)) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 
     public static List<Long> strToLongList(String[] fieldRole) {

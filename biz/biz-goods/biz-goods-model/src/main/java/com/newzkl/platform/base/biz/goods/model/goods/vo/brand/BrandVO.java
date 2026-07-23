@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.brand;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum.ApprovalStatus;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class BrandVO extends BaseVO {
+public class BrandVO extends BaseRes {
 
      /**
      * 添加人

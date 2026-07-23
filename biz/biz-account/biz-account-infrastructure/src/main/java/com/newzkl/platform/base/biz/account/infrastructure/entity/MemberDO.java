@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import com.newzkl.platform.base.biz.account.model.enums.PersonalEnum;
 import lombok.Data;
 

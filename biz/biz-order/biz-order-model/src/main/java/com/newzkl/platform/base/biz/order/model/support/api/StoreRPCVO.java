@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -12,7 +12,7 @@ import lombok.Data;
  * @author KC
  */
 @Data
-public class StoreRPCVO extends BaseVO {
+public class StoreRPCVO extends BaseRes {
     /** 门店名称。 */
     private String name;
     /** logo。 */

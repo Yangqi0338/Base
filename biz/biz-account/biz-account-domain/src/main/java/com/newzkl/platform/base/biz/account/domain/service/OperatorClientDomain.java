@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.req.web.DealerProxySaveReq;
@@ -41,7 +41,7 @@ public interface OperatorClientDomain {
      * @param editColumnList
      * @param id
      */
-    void operatorEdit(List<EditColumnDTO> editColumnList, Long id);
+    void operatorEdit(List<EditColumnVO> editColumnList, Long id);
 
     /**
      * 查询实体
@@ -68,7 +68,7 @@ public interface OperatorClientDomain {
 
     int dealerDelete(List<Long> dealerIdList);
 
-    void dealerEdit(List<EditColumnDTO> editColumnList, Long id);
+    void dealerEdit(List<EditColumnVO> editColumnList, Long id);
 
     DealerVO dealer(Long dealerId);
 
@@ -82,7 +82,7 @@ public interface OperatorClientDomain {
 
     int selectorDelete(List<Long> selectorIdList);
 
-    void selectorEdit(List<EditColumnDTO> editColumnList, Long id);
+    void selectorEdit(List<EditColumnVO> editColumnList, Long id);
 
     SelectorVO selector(Long selectorId);
 

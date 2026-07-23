@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.domain.repository.SelectorRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.SelectorDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.SelectorDO;
@@ -68,7 +68,7 @@ public class SelectorRepositoryImpl implements SelectorRepository {
     }
 
     @Override
-    public void selectorEdit(List<EditColumnDTO> columnList, Long id) {
+    public void selectorEdit(List<EditColumnVO> columnList, Long id) {
         SelectorQuery query = new SelectorQuery();
         query.setId(id);
 //        selectorDAO.columnByQuery(columnList, query);

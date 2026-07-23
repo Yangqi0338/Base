@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.user.domain.adapt.repository.LevelRepository
 import com.newzkl.platform.base.biz.user.infrastructure.dao.LevelDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.LevelDO;
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelQuery;
-import com.newzkl.platform.base.biz.user.model.relation.res.Level;
+import com.newzkl.platform.base.biz.user.model.relation.res.LevelDTO;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.TeamCondition;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.TeamDirectCondition;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.TeamNoDirectCondition;
@@ -29,22 +29,22 @@ public class LevelRepositoryImpl implements LevelRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long save(Level level) {
+    public Long save(LevelDTO level) {
         LevelDO levelDO = TransferUtils.transfer(level, LevelDO::new);
         levelDAO.insertOrUpdate(levelDO);
         return levelDO.getId();
     }
 
     @Override
-    public Level detail(Long levelId) {
+    public LevelDTO detail(Long levelId) {
         LevelDO levelDO = levelDAO.selectById(levelId);
-        return TransferUtils.transfer(levelDO, Level::new);
+        return TransferUtils.transfer(levelDO, LevelDTO::new);
     }
 
     @Override
-    public List<Level> list(LevelQuery levelQuery) {
+    public List<LevelDTO> list(LevelQuery levelQuery) {
         List<LevelDO> levelDOList = levelDAO.selectList(levelDAO.getLw(levelQuery));
-        return TransferUtils.transfers(levelDOList, Level.class);
+        return TransferUtils.transfers(levelDOList, LevelDTO.class);
     }
 
     @Override

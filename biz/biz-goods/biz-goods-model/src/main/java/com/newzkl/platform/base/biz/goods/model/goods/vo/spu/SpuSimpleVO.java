@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author fang
  */
 @Data
-public class SpuSimpleVO extends BaseVO implements Serializable {
+public class SpuSimpleVO extends BaseRes implements Serializable {
     /**
      * 编码 (查询)
      */

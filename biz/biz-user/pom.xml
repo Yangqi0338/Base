@@ -22,5 +22,6 @@
         <module>biz-user-domain</module>
         <module>biz-user-application</module>
         <module>biz-user-infrastructure</module>
+        <module>biz-user-action</module>
     </modules>
 </project>

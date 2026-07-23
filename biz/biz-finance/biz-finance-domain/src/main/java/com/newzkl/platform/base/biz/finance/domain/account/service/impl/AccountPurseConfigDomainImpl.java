@@ -12,7 +12,6 @@ import com.newzkl.platform.base.biz.finance.model.account.req.ChargeConfigChanne
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.common.core.utils.common.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -98,8 +97,8 @@ public class AccountPurseConfigDomainImpl implements AccountPurseConfigDomain {
     private ConfigChannelVO buildChannelConfig(ChargeConfigChannelReq req) {
         ConfigChannelVO channelConfigVO = new ConfigChannelVO();
         channelConfigVO.setChannelId(req.getChannelId());
-        channelConfigVO.setPlatformConfig(JsonUtils.toJson(req.getPlatformConfig()));
-        channelConfigVO.setOperatorConfig(JsonUtils.toJson(req.getPlatformConfig()));
+        channelConfigVO.setPlatformConfig(JSONUtil.toJsonStr(req.getPlatformConfig()));
+        channelConfigVO.setOperatorConfig(JSONUtil.toJsonStr(req.getPlatformConfig()));
         if (CollectionUtil.isNotEmpty(req.getPlatformConfig())) {
             channelConfigVO.setPlatformNowValue(req.getPlatformConfig().firstEntry().getValue());
         }

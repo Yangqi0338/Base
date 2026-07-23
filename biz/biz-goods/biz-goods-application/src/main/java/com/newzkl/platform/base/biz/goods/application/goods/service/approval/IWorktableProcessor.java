@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.goods.application.goods.service.approval;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSONObject;
-import com.newzkl.platform.base.biz.goods.application.goods.service.goods.IGoodsQueryService;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IAuditDataWorkTableRepository;
+import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.AuditDataWorkTableRepository;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.common.ddd.model.check.AddCommand;
@@ -27,9 +27,9 @@ import java.util.List;
 public abstract class IWorktableProcessor<A extends AddCommand, U extends UpdateCommand, D extends DeleteCommand, C extends CheckCommand> {
 
     @Autowired
-    private IGoodsQueryService goodsQueryService;
+    private GoodsQueryService goodsQueryService;
     @Autowired
-    private IAuditDataWorkTableRepository auditDataWorkTableRepository;
+    private AuditDataWorkTableRepository auditDataWorkTableRepository;
     /**
      * 支持
      * @return

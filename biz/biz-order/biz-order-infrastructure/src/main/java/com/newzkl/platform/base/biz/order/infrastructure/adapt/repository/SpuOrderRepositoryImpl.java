@@ -69,7 +69,7 @@ public class SpuOrderRepositoryImpl extends ServiceImpl<SpuOrderDAO, SpuOrderDO>
                 .map(no -> {
                     LambdaQueryWrapper<SpuOrderDO> wrapper = new LambdaQueryWrapper<>();
                     wrapper.eq(SpuOrderDO::getSpuOrderNo, no)
-                            .orderByDesc(SpuOrderDO::getCreateTime);
+                            .orderByDesc(SpuOrderDO::getId);
                     return baseMapper.selectList(wrapper).stream()
                             .filter(Objects::nonNull)
                             .map(doObj -> TransferUtils.transfer(doObj, SpuOrder::new))
@@ -86,7 +86,7 @@ public class SpuOrderRepositoryImpl extends ServiceImpl<SpuOrderDAO, SpuOrderDO>
                 .map(no -> {
                     LambdaQueryWrapper<SpuOrderDO> wrapper = new LambdaQueryWrapper<>();
                     wrapper.eq(SpuOrderDO::getOrderNo, no)
-                            .orderByDesc(SpuOrderDO::getCreateTime);
+                            .orderByDesc(SpuOrderDO::getId);
                     return baseMapper.selectList(wrapper).stream()
                             .filter(Objects::nonNull)
                             .map(doObj -> TransferUtils.transfer(doObj, SpuOrder::new))
@@ -210,7 +210,7 @@ public class SpuOrderRepositoryImpl extends ServiceImpl<SpuOrderDAO, SpuOrderDO>
                 });
 
         // 按创建时间降序排列
-        wrapper.orderByDesc(SpuOrderDO::getCreateTime);
+        wrapper.orderByDesc(SpuOrderDO::getId);
 
         return wrapper;
     }

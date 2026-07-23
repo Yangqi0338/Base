@@ -92,7 +92,7 @@ public class GoodsZoneGoodsRelRepositoryImpl extends ServiceImpl<GoodsZoneGoodsR
         // 排除逻辑删除
         wrapper.eq(GoodsZoneGoodsRelDO::getDelFlag, 0);
         // 按创建时间倒序
-        wrapper.orderByDesc(GoodsZoneGoodsRelDO::getCreateTime);
+        wrapper.orderByDesc(GoodsZoneGoodsRelDO::getId);
 
         Page<GoodsZoneGoodsRelDO> doPage = new Page<>(queryReq.getCurrent(), queryReq.getSize());
         Page<GoodsZoneGoodsRelDO> resultDO = this.page(doPage, wrapper);

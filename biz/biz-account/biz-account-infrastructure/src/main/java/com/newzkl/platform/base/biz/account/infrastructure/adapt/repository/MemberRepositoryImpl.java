@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 
 import com.newzkl.platform.base.common.core.rocketmq.utils.MQUtil;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.core.rocketmq.MQ;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.MemberDAO;
@@ -47,7 +47,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void memberEdit(List<EditColumnDTO> columnList, Long id) {
+    public void memberEdit(List<EditColumnVO> columnList, Long id) {
         MemberQuery query = new MemberQuery();
         query.setId(id);
 //        memberDAO.columnByQuery(columnList, query);

@@ -18,5 +18,6 @@
         <module>biz-store-domain</module>
         <module>biz-store-application</module>
         <module>biz-store-infrastructure</module>
+        <module>biz-store-action</module>
     </modules>
 </project>

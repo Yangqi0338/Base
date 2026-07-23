@@ -18,5 +18,6 @@
         <module>biz-sys-domain</module>
         <module>biz-sys-application</module>
         <module>biz-sys-infrastructure</module>
+        <module>biz-sys-action</module>
     </modules>
 </project>

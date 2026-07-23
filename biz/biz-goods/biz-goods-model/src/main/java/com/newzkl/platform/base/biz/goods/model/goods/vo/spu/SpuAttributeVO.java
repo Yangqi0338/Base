@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class SpuAttributeVO extends BaseVO {
+public class SpuAttributeVO extends BaseRes {
      /**
      * ID (查询)
      */

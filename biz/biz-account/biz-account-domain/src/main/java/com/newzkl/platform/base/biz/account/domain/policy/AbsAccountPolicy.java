@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.RedisEnum;
 import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
@@ -215,7 +215,7 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
 
     }
 
-    public void addColumn(List<EditColumnDTO> columnList, Long id) {
+    public void addColumn(List<EditColumnVO> columnList, Long id) {
 
     }
 

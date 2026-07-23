@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +14,7 @@ import java.time.LocalDate;
  */
 @Data
 @NoArgsConstructor
-public class MemberRes extends BaseVO {
+public class MemberRes extends BaseRes {
 
     /**
      * 昵称

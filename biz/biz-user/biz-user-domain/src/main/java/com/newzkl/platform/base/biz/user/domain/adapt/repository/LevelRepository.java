@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelQuery;
-import com.newzkl.platform.base.biz.user.model.relation.res.Level;
+import com.newzkl.platform.base.biz.user.model.relation.res.LevelDTO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.LevelVO;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface LevelRepository {
      * @param selectorLevel 等级领域模型
      * @return 主键ID
      */
-    Long save(Level selectorLevel);
+    Long save(LevelDTO selectorLevel);
 
     /**
      * 等级详情。
@@ -26,7 +26,7 @@ public interface LevelRepository {
      * @param levelId 等级ID
      * @return 等级领域模型
      */
-    Level detail(Long levelId);
+    LevelDTO detail(Long levelId);
 
     /**
      * 等级列表。
@@ -34,7 +34,7 @@ public interface LevelRepository {
      * @param levelQuery 查询条件
      * @return 等级列表
      */
-    List<Level> list(LevelQuery levelQuery);
+    List<LevelDTO> list(LevelQuery levelQuery);
 
     /**
      * 等级计算列表。

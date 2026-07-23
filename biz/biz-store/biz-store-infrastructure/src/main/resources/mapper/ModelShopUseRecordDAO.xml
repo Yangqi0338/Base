@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.store.infrastructure.dao.ModelShopUseRecordDAO">
+    <select id="selectLatestRecordsByGroup" resultType="com.zkl.scm.terminal.domain.model.model.vo.ModelShopStorePageVO">
+        SELECT t.*,
+               (t3.model_shop_id = #{query.modeShopId}) AS inUse,
+                t4.model_shop_name,
+               t3.name as storeName
+        FROM model_shop_use_record t
+        INNER JOIN (
+            SELECT store_id, MAX(id) as max_id
+            FROM model_shop_use_record
+            WHERE model_shop_id = #{query.modeShopId}
+            <if test="query.storeId != null">
+                AND store_id = #{query.storeId}
+            </if>
+        <if test="query.storeIdList != null">
+            AND store_id IN
+            <foreach collection="query.storeIdList" item="item" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+            GROUP BY store_id
+        ) t2 ON t.store_id = t2.store_id AND t.id = t2.max_id
+        LEFT JOIN store t3 ON t3.id = t.store_id
+        LEFT JOIN model_shop t4 ON t4.id = t.model_shop_id
+        WHERE t.model_shop_id = #{query.modeShopId}
+        <if test="query.storeName != null and query.storeName != ''">
+            AND t3.name LIKE CONCAT('%', #{query.storeName}, '%')
+        </if>
+        <if test="query.useTimeL != null and query.useTimeR != null and query.useTimeL != '' and query.useTimeR != ''">
+            AND t.create_time BETWEEN #{query.useTimeL} AND #{query.useTimeR}
+        </if>
+        <if test="query.inUse != null and query.inUse == true">
+            AND t3.model_shop_id = #{query.modeShopId}
+        </if>
+        <if test="query.inUse != null and query.inUse == false">
+            AND (t3.model_shop_id IS NULL OR t3.model_shop_id != #{query.modeShopId})
+        </if>
+        ORDER BY t.id DESC
+    </select>
+
+    <!-- 按天统计新增使用门店数量（每天第一次使用的门店数） -->
+    <select id="countNewStoreByDay"
+            resultType="com.zkl.scm.terminal.domain.model.model.res.ModeShopDataSummary">
+        SELECT
+            DATE_FORMAT(first_use_time, '%Y-%m-%d') AS dimensionValue,
+            COUNT(DISTINCT store_id) AS value
+        FROM (
+            SELECT
+                store_id,
+                MIN(create_time) AS first_use_time
+            FROM model_shop_use_record
+            WHERE model_shop_id = #{modelShopId}
+            GROUP BY store_id
+        ) t
+        WHERE first_use_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY DATE_FORMAT(first_use_time, '%Y-%m-%d')
+        ORDER BY dimensionValue ASC
+    </select>
+</mapper>

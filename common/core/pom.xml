@@ -21,5 +21,6 @@
         <module>core-utils</module>
         <module>core-redis</module>
         <module>core-rocketmq</module>
+        <module>core-job</module>
     </modules>
 </project>

@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class PaymentVO extends BaseVO {
+public class PaymentVO extends BaseRes {
 
     /**
      * 交易单号

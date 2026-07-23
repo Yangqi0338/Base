@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
@@ -24,7 +24,7 @@ public interface SupplierClientDomain {
 
     int supplierDelete(List<Long> supplierIdList);
 
-    void supplierEdit(List<EditColumnDTO> editColumnList, Long id);
+    void supplierEdit(List<EditColumnVO> editColumnList, Long id);
 
     SupplierVO supplier(Long supplierId);
 

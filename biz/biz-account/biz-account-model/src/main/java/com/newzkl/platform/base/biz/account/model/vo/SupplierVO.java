@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class SupplierVO extends BaseVO {
+public class SupplierVO extends BaseRes {
     /**
      * 账号名称 (查询)
      */

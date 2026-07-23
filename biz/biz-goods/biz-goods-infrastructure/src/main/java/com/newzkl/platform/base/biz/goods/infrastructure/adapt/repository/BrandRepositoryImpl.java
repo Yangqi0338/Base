@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.brand.repository.IBrandRepository;
+import com.newzkl.platform.base.biz.goods.domain.brand.repository.BrandRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.BrandDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.BrandDO;
 import com.newzkl.platform.base.biz.goods.model.goods.query.brand.BrandPageQuery;
@@ -22,7 +22,7 @@ import java.util.List;
 */
 @Repository
 @RequiredArgsConstructor
-public class BrandRepositoryImpl implements IBrandRepository {
+public class BrandRepositoryImpl implements BrandRepository {
 
     private final BrandDAO brandDAO;
 

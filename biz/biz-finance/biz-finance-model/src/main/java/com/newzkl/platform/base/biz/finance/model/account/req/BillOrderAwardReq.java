@@ -2,13 +2,13 @@ package com.newzkl.platform.base.biz.finance.model.account.req;
 
 
 import cn.hutool.core.lang.Opt;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
 import lombok.Data;
 
 @Data
-public class BillOrderAwardReq extends BaseVO {
+public class BillOrderAwardReq extends BaseRes {
 
     /**
      * 角色ID

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.ChannelCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
@@ -23,7 +23,7 @@ public interface ChannelClientDomain {
 
     int channelDelete(List<Long> channelIdList);
 
-    void channelEdit(List<EditColumnDTO> editColumnList, Long id);
+    void channelEdit(List<EditColumnVO> editColumnList, Long id);
 
     ChannelVO channel(Long channelId);
 

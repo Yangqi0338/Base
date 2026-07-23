@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.user.model.relation.vo;
 import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.Condition;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class LevelVO extends BaseVO implements Condition {
+public class LevelVO extends BaseRes implements Condition {
     /**
      * ID
      */

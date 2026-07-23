@@ -26,6 +26,10 @@
             <artifactId>mybatis-plus-annotation</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.dromara.mpe</groupId>
+            <artifactId>mybatis-plus-ext-autofill-annotation</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>

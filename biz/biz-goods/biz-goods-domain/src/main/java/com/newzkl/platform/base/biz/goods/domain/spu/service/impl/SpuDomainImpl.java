@@ -6,9 +6,9 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.ISpuCategoryRepository;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.ISpuRepository;
-import com.newzkl.platform.base.biz.goods.domain.spu.service.ISpuDomain;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuCategoryRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuAttributeDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
@@ -28,7 +28,7 @@ import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.InventoryExecuteReq;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
@@ -56,10 +56,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SpuDomainImpl implements ISpuDomain {
+public class SpuDomainImpl implements SpuDomain {
 
-    private final ISpuRepository spuRepository;
-    private final ISpuCategoryRepository spuCategoryRepository;
+    private final SpuRepository spuRepository;
+    private final SpuCategoryRepository spuCategoryRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -261,7 +261,7 @@ public class SpuDomainImpl implements ISpuDomain {
     }
 
     @Override
-    public void editColumn(Long id, List<EditColumnDTO> editColumnDTOS) {
+    public void editColumn(Long id, List<EditColumnVO> editColumnDTOS) {
         spuRepository.editColumn(id, editColumnDTOS);
     }
 

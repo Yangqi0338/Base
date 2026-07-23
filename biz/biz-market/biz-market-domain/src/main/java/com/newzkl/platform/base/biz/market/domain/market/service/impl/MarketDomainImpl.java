@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.market.domain.market.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.market.repository.IMarketCategoryRepository;
-import com.newzkl.platform.base.biz.market.domain.market.repository.IMarketRepository;
-import com.newzkl.platform.base.biz.market.domain.market.service.IMarketDomain;
+import com.newzkl.platform.base.biz.market.domain.market.repository.MarketCategoryRepository;
+import com.newzkl.platform.base.biz.market.domain.market.repository.MarketRepository;
+import com.newzkl.platform.base.biz.market.domain.market.service.MarketDomain;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketBindDTO;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketCategoryPageQuery;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
@@ -28,10 +28,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MarketDomainImpl implements IMarketDomain {
+public class MarketDomainImpl implements MarketDomain {
 
-    private final IMarketRepository marketRepository;
-    private final IMarketCategoryRepository marketCategoryRepository;
+    private final MarketRepository marketRepository;
+    private final MarketCategoryRepository marketCategoryRepository;
 
     @Override
     public Page<AppBindMarketVO> queryChannelBindMarket(ChannelMarketPageQuery query) {

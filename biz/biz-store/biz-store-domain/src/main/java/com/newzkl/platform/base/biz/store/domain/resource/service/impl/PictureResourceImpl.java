@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.store.domain.resource.service.impl;
 
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import com.newzkl.platform.base.biz.store.model.resource.req.QueryPictureResourceReq;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureMenuVO;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureResourceVO;
-import com.newzkl.platform.base.biz.store.domain.resource.repository.IPictureResourceRepository;
-import com.newzkl.platform.base.biz.store.domain.resource.service.IPictureResource;
+import com.newzkl.platform.base.biz.store.domain.resource.repository.PictureResourceRepository;
+import com.newzkl.platform.base.biz.store.domain.resource.service.PictureResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ import org.springframework.stereotype.Service;
  * @date 2024/4/12 10:51
  */
 @Service
-public class PictureResourceImpl implements IPictureResource {
+public class PictureResourceImpl implements PictureResource {
 
-    private final IPictureResourceRepository pictureResourceRepository;
+    private final PictureResourceRepository pictureResourceRepository;
 
     @Autowired
-    public PictureResourceImpl(IPictureResourceRepository pictureResourceRepository) {
+    public PictureResourceImpl(PictureResourceRepository pictureResourceRepository) {
         this.pictureResourceRepository = pictureResourceRepository;
     }
 
@@ -36,12 +36,12 @@ public class PictureResourceImpl implements IPictureResource {
     }
 
     @Override
-    public PageInfo<PictureMenuVO> queryMenu(PageQuery query) {
+    public Page<PictureMenuVO> queryMenu(PageQuery query) {
         return pictureResourceRepository.queryMenu(query);
     }
 
     @Override
-    public PageInfo<PictureResourceVO> queryResource(QueryPictureResourceReq req) {
+    public Page<PictureResourceVO> queryResource(QueryPictureResourceReq req) {
         return pictureResourceRepository.queryResource(req);
     }
 }

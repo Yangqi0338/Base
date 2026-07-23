@@ -7,7 +7,7 @@ import com.alibaba.excel.read.builder.ExcelReaderBuilder;
 import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.handler.WriteHandler;
-import com.newzkl.platform.base.common.core.model.exception.EasyExcelError;
+import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
 import com.newzkl.platform.base.common.core.utils.spring.BaseReadListener;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,32 +51,32 @@ public class EasyExcelUtil {
         return StrUtil.format("第{}行：{} 跳过导入", rowNum, msg);
     }
 
-    public static <T> EasyExcelError importBiz(InputStream inputStream, Class<T> clazz,
-                                               Consumer<List<T>> saveDataFunc) {
+    public static <T> EasyExcelErrorVO importBiz(InputStream inputStream, Class<T> clazz,
+                                                 Consumer<List<T>> saveDataFunc) {
         return importBiz(inputStream, clazz, (data, rowNum) -> "", saveDataFunc, null);
     }
 
 
-    public static <T> EasyExcelError importBiz(InputStream inputStream, Class<T> clazz,
-                                               Consumer<List<T>> saveDataFunc,
-                                               ImportParam importParam) {
+    public static <T> EasyExcelErrorVO importBiz(InputStream inputStream, Class<T> clazz,
+                                                 Consumer<List<T>> saveDataFunc,
+                                                 ImportParam importParam) {
         return importBiz(inputStream, clazz, (data, rowNum) -> "", saveDataFunc, importParam);
     }
 
-    public static <T> EasyExcelError importBiz(InputStream inputStream, Class<T> clazz,
-                                               BiFunction<T, Integer, String> validateFunc,
-                                               Consumer<List<T>> saveDataFunc) {
+    public static <T> EasyExcelErrorVO importBiz(InputStream inputStream, Class<T> clazz,
+                                                 BiFunction<T, Integer, String> validateFunc,
+                                                 Consumer<List<T>> saveDataFunc) {
         return importBiz(inputStream, clazz, validateFunc, saveDataFunc, null);
     }
 
-    public static <T> EasyExcelError importBiz(InputStream inputStream, Class<T> clazz,
-                                               BiFunction<T, Integer, String> validateFunc,
-                                               Consumer<List<T>> saveDataFunc,
-                                               ImportParam importParam) {
+    public static <T> EasyExcelErrorVO importBiz(InputStream inputStream, Class<T> clazz,
+                                                 BiFunction<T, Integer, String> validateFunc,
+                                                 Consumer<List<T>> saveDataFunc,
+                                                 ImportParam importParam) {
         BaseReadListener<T> listener = createListener(validateFunc, saveDataFunc);
         ExcelReaderBuilder builder = EasyExcel.read(inputStream, clazz, listener);
         ImportParam.build(importParam, builder).doRead();
-        return listener.getEasyExcelError();
+        return listener.buildResult();
     }
 
     @Data

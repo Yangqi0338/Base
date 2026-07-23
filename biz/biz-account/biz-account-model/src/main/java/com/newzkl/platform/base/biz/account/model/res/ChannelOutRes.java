@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class ChannelOutRes extends BaseVO {
+public class ChannelOutRes extends BaseRes {
     /**
      * 主体类型 (查询)
      */

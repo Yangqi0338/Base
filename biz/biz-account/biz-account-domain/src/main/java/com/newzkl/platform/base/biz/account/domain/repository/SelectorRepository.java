@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.repository;
 
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.res.SelectorOutRes;
 import com.newzkl.platform.base.biz.account.model.vo.SelectorVO;
 // TODO[cross-domain relation]: import relation.vo.TeamUserCountRes;
@@ -22,7 +22,7 @@ public interface SelectorRepository {
 
     int selectorDelete(List<Long> selectorIdList);
 
-    void selectorEdit(List<EditColumnDTO> columnList, Long id);
+    void selectorEdit(List<EditColumnVO> columnList, Long id);
 
     SelectorVO selector(Long selectorId);
 

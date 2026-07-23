@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.freight;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class FreightTemplateVO extends BaseVO {
+public class FreightTemplateVO extends BaseRes {
      /**
      * ID
      */

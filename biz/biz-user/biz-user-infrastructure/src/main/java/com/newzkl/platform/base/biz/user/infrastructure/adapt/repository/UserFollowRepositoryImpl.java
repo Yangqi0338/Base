@@ -95,7 +95,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     public List<UserFollow> findFollowingList(Long follower) {
         List<UserFollowDO> doList = userFollowDAO.selectList(new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowerId, follower)
-                .orderByDesc(UserFollowDO::getCreateTime));
+                .orderByDesc(UserFollowDO::getId));
         return doList.stream().map(this::toDomain).collect(Collectors.toList());
     }
 
@@ -105,7 +105,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
         Page<UserFollowDO> page = new Page<>(query.getPageNo(), query.getPageSize());
         Page<UserFollowDO> doPage = userFollowDAO.selectPage(page, new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowerId, query.getUserId())
-                .orderByDesc(UserFollowDO::getCreateTime));
+                .orderByDesc(UserFollowDO::getId));
         return doPage.getRecords().stream().map(this::toDomain).collect(Collectors.toList());
     }
 
@@ -113,7 +113,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     public List<UserFollow> findFollowerList(Long following) {
         List<UserFollowDO> doList = userFollowDAO.selectList(new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowingId, following)
-                .orderByDesc(UserFollowDO::getCreateTime));
+                .orderByDesc(UserFollowDO::getId));
         return doList.stream().map(this::toDomain).collect(Collectors.toList());
     }
 
@@ -123,7 +123,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
         Page<UserFollowDO> page = new Page<>(query.getPageNo(), query.getPageSize());
         Page<UserFollowDO> doPage = userFollowDAO.selectPage(page, new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowingId, query.getUserId())
-                .orderByDesc(UserFollowDO::getCreateTime));
+                .orderByDesc(UserFollowDO::getId));
         return doPage.getRecords().stream().map(this::toDomain).collect(Collectors.toList());
     }
 

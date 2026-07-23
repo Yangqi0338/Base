@@ -32,6 +32,7 @@ public enum BaseErrorCode implements ErrorCode {
     NOT_SERVICE(999, "无此服务"),
     CUSTOM(999, "{}"),
     NOT_FILE(998, "非文件或文件不存在"),
+    NO_AUTH(1010, "权限不足"),
     ;
 
     /**

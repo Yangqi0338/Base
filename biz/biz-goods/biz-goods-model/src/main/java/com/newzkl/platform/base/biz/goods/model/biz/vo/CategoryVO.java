@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.biz.vo;
 
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
 * @author fang
 */
 @Data
-public class CategoryVO extends BaseVO {
+public class CategoryVO extends BaseRes {
 
 	/**
 	 * 专属用户ID

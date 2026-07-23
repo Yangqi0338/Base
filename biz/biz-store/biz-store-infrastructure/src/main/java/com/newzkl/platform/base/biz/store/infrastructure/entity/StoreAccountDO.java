@@ -1,0 +1,87 @@
+package com.newzkl.platform.base.biz.store.infrastructure.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+/**
+ * 门店客户表实体类
+ */
+@Data
+@TableName("store_account")
+public class StoreAccountDO {
+
+    /**
+     * 主键
+     */
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private Long id;
+
+    /**
+     * 门店id
+     */
+    private Long storeId;
+    /**
+     * 客户id
+     */
+    private Long accountId;
+
+    /**
+     * 渠道商ID
+     */
+    private Long channelId;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 统计：支付笔数
+     */
+    private Integer countPayNumber;
+
+    /**
+     * 支付金额：分
+     */
+    private Integer countPayAmount;
+
+    /**
+     * 进店总数
+     */
+    private Integer countVisitNumber;
+
+    /**
+     * 最后进店时间
+     */
+    private LocalDateTime lastViewTime;
+
+    /**
+     * 最后支付时间
+     */
+    private LocalDateTime lastPayTime;
+
+    /**
+     * 最后支付金额：分
+     */
+    private Integer lastPayAmount;
+
+    /**
+     * 0:未拉黑，1已拉黑
+     */
+    private Integer relationType;
+
+    /**
+     * 是否默认：1 是
+     */
+    private Integer defult;
+
+}

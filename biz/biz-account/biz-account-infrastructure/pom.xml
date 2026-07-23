@@ -25,6 +25,11 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+        <!-- 鉴权端口 AuthApi 定义处 (账户域实现该端口, 供公共层 LimitAop 使用) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-action</artifactId>
+        </dependency>
         <!-- 迁移补充: 账户/渠道注册发布领域事件 MQUtil.send (core-rocketmq 为 common 基础模块) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

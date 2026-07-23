@@ -81,7 +81,7 @@ public class OrderDeliveryRepositoryImpl extends ServiceImpl<OrderDeliveryDAO, O
         wrapper.eq(pageReq.getUserId() != null, OrderDeliveryDO::getUserId, pageReq.getUserId());
         wrapper.eq(pageReq.getDeliveryStatus() != null, OrderDeliveryDO::getDeliveryStatus, pageReq.getDeliveryStatus());
 
-        wrapper.orderByDesc(OrderDeliveryDO::getCreateTime);
+        wrapper.orderByDesc(OrderDeliveryDO::getId);
 
         Page<OrderDeliveryDO> page = new Page<>(pageReq.getCurrent(), pageReq.getSize());
         Page<OrderDeliveryDO> doPage = this.page(page, wrapper);

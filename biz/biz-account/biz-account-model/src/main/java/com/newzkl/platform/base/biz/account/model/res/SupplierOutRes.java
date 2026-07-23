@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class SupplierOutRes extends BaseVO {
+public class SupplierOutRes extends BaseRes {
      /**
      * 状态 (查询)
      */

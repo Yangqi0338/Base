@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.sys.model.dict.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DictVO extends BaseVO {
+public class DictVO extends BaseRes {
 
     /**
      * 字典值

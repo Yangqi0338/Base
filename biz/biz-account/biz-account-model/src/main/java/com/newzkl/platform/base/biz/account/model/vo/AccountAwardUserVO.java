@@ -2,14 +2,14 @@ package com.newzkl.platform.base.biz.account.model.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AccountAwardUserVO extends BaseVO {
+public class AccountAwardUserVO extends BaseRes {
 
     private String nickname;
 

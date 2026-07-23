@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.freight.repository.IFreightTemplateRepository;
+import com.newzkl.platform.base.biz.goods.domain.freight.repository.FreightTemplateRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.FreightTemplateDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.FreightTemplateDO;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.freight.FreightTemplate;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class FreightTemplateRepositoryImpl implements IFreightTemplateRepository {
+public class FreightTemplateRepositoryImpl implements FreightTemplateRepository {
 
     private final FreightTemplateDAO freightTemplateDAO;
 

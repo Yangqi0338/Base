@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.SupplierDO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.vo.*;
@@ -68,7 +68,7 @@ public interface SupplierDAO extends BaseMapper<SupplierDO> {
      */
     BizCountMap countWithAccountByCondition(@Param("query") SupplierQuery query, @Param(Constants.WRAPPER) BaseQueryWrapper<SupplierDO> queryWrapper);
 
-    int columnByQuery(@Param("columnList") List<EditColumnDTO> columnList, @Param(Constants.WRAPPER) BaseLambdaQueryWrapper<SupplierDO> queryWrapper);
+    int columnByQuery(@Param("columnList") List<EditColumnVO> columnList, @Param(Constants.WRAPPER) BaseLambdaQueryWrapper<SupplierDO> queryWrapper);
 
     Page<SupplierAccountVO> pageListWithAccount(Page<Object> page, @Param(Constants.WRAPPER) BaseQueryWrapper<SupplierDO> queryWrapper);
 }

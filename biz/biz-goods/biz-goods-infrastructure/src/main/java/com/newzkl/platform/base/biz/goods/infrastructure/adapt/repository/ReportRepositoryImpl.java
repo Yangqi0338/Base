@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.report.repository.IReportRepository;
+import com.newzkl.platform.base.biz.goods.domain.report.repository.ReportRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.ReportDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SpuDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.ReportDO;
@@ -32,7 +32,7 @@ import java.util.Set;
  */
 @Repository
 @RequiredArgsConstructor
-public class ReportRepositoryImpl implements IReportRepository {
+public class ReportRepositoryImpl implements ReportRepository {
     @Resource
     private ReportDAO reportDAO;
     @Resource

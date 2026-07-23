@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * 收货地址仓储实现。
  *
- * <p>迁移说明：新 common BaseLogicDelDO 使用 delFlag(@TableLogic)，源 isDeleted/deletedTime
+ * <p>迁移说明：新 common BaseDO 使用 delFlag(@TableLogic)，源 isDeleted/deletedTime
  * 字段不存在，逻辑删除交由 MP removeById 处理；pageQuery 降级为 List(TODO[page-meta])。</p>
  *
  * @author sijiwang

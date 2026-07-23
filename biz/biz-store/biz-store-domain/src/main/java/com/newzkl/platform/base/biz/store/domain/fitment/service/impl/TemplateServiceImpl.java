@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.store.domain.fitment.service.impl;
 
-import com.github.pagehelper.PageInfo;
-import com.newzkl.platform.base.biz.store.model.fitment.req.FitmentPageQueryReq;
-import com.newzkl.platform.base.biz.store.model.fitment.req.FitmentTemplateQueryReq;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.store.model.fitment.req.FitmentPageQuery;
+import com.newzkl.platform.base.biz.store.model.fitment.req.FitmentTemplateQuery;
 import com.newzkl.platform.base.biz.store.model.fitment.vo.FitmentPageVO;
 import com.newzkl.platform.base.biz.store.model.fitment.vo.FitmentTemplateVO;
-import com.newzkl.platform.base.biz.store.domain.fitment.repository.ITemplateRepository;
-import com.newzkl.platform.base.biz.store.domain.fitment.service.ITemplateService;
+import com.newzkl.platform.base.biz.store.domain.fitment.repository.TemplateRepository;
+import com.newzkl.platform.base.biz.store.domain.fitment.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +18,12 @@ import java.util.List;
  * @date 2024/3/29 15:29
  */
 @Service
-public class TemplateServiceImpl implements ITemplateService {
+public class TemplateServiceImpl implements TemplateService {
 
-    private final ITemplateRepository templateRepository;
+    private final TemplateRepository templateRepository;
 
     @Autowired
-    public TemplateServiceImpl(ITemplateRepository templateRepository) {
+    public TemplateServiceImpl(TemplateRepository templateRepository) {
         this.templateRepository = templateRepository;
     }
 
@@ -38,7 +38,7 @@ public class TemplateServiceImpl implements ITemplateService {
     }
 
     @Override
-    public PageInfo<FitmentTemplateVO> queryTemplate(FitmentTemplateQueryReq req) {
+    public Page<FitmentTemplateVO> queryTemplate(FitmentTemplateQuery req) {
         return templateRepository.queryTemplate(req);
     }
 
@@ -48,7 +48,7 @@ public class TemplateServiceImpl implements ITemplateService {
     }
 
     @Override
-    public PageInfo<FitmentPageVO> queryPage(FitmentPageQueryReq req) {
+    public Page<FitmentPageVO> queryPage(FitmentPageQuery req) {
         return templateRepository.queryPage(req);
     }
 

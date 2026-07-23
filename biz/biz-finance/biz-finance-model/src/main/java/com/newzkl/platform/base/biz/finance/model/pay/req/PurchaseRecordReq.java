@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.req;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import lombok.Data;
  * @since 2025-11-25 17:24:24
  */
 @Data
-public class PurchaseRecordReq extends BaseVO {
+public class PurchaseRecordReq extends BaseRes {
 
     /**
      * 购买单号

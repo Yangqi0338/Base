@@ -3,27 +3,34 @@ package com.newzkl.platform.base.common.core.utils.spring;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.PageReadListener;
-import com.newzkl.platform.base.common.core.model.exception.EasyExcelError;
-import lombok.Getter;
+import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * EasyExcel 模板的读取监听基类。
  *
- * @author Jiaju Zhuang
+ * <p>内部以可变结构累加校验异常, 解析完成后一次性构建不可变结果 {@link EasyExcelErrorVO}。</p>
+ *
  * @param <T> 行数据类型
+ * @author Jiaju Zhuang
  */
 @Slf4j
 public abstract class BaseReadListener<T> extends PageReadListener<T> {
 
     /**
-     * 错误信息汇总
+     * 异常行累加器: 行号 -> 该行错误信息列表
      */
-    @Getter
-    private final EasyExcelError easyExcelError = new EasyExcelError();
+    private final LinkedHashMap<String, List<String>> errorLineStrMap = new LinkedHashMap<>();
+
+    /**
+     * 总行数
+     */
+    private int totalCount;
 
     public BaseReadListener(Consumer<List<T>> consumer) {
         super(consumer);
@@ -38,9 +45,9 @@ public abstract class BaseReadListener<T> extends PageReadListener<T> {
         Integer currentRowNum = context.readRowHolder().getRowIndex();
         String errorMsg = validate(currentRowNum, data);
         if (StrUtil.isNotBlank(errorMsg)) {
-            easyExcelError.putError(currentRowNum + "", errorMsg);
+            putError(currentRowNum + "", errorMsg);
         }
-        if (easyExcelError.getErrorCount() > 0) {
+        if (!errorLineStrMap.isEmpty()) {
             return;
         }
         data = preprocess(data);
@@ -52,15 +59,30 @@ public abstract class BaseReadListener<T> extends PageReadListener<T> {
     public void doAfterAllAnalysed(AnalysisContext context) {
         super.doAfterAllAnalysed(context);
 
-        int totalRows = context.readRowHolder().getRowIndex();
-        easyExcelError.setTotalCount(totalRows);
-        easyExcelError.last();
+        this.totalCount = context.readRowHolder().getRowIndex();
         log.info("所有数据解析完成！");
     }
 
     @Override
     public void onException(Exception exception, AnalysisContext context) throws Exception {
-        easyExcelError.putError(context.readRowHolder().getRowIndex() + "", exception.getMessage());
+        putError(context.readRowHolder().getRowIndex() + "", exception.getMessage());
+    }
+
+    private void putError(String line, String errorMsg) {
+        errorLineStrMap.computeIfAbsent(line, k -> new ArrayList<>()).add(errorMsg);
+    }
+
+    /**
+     * 构建不可变的导入结果。
+     *
+     * @return Excel 导入结果载体
+     */
+    public EasyExcelErrorVO buildResult() {
+        List<EasyExcelErrorVO.ErrorLineVO> errorLines = new ArrayList<>();
+        errorLineStrMap.forEach((line, msgList) ->
+                errorLines.add(new EasyExcelErrorVO.ErrorLineVO(line, StrUtil.join(",", msgList))));
+        int errorCount = errorLineStrMap.size();
+        return new EasyExcelErrorVO(null, totalCount, totalCount - errorCount, errorCount, errorLines);
     }
 
     /**

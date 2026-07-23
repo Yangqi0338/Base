@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class EarningRecordVO extends BaseVO {
+public class EarningRecordVO extends BaseRes {
 
     /**
      * 分润类型

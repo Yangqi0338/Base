@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.BaseIdDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseIdDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 
@@ -12,7 +12,7 @@ import lombok.Data;
  * @since 2025-09-18 09:52:27
  */
 @Data
-public class BankRes extends BaseVO {
+public class BankRes extends BaseRes {
 
     /**
      * 银行编码

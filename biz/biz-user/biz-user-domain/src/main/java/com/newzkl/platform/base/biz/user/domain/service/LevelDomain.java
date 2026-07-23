@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Pair;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelReq;
-import com.newzkl.platform.base.biz.user.model.relation.res.Level;
+import com.newzkl.platform.base.biz.user.model.relation.res.LevelDTO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.LevelVO;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public interface LevelDomain {
      * @param levelQuery 查询条件
      * @return 等级列表
      */
-    List<Level> list(LevelQuery levelQuery);
+    List<LevelDTO> list(LevelQuery levelQuery);
 
     /**
      * 更新等级。
@@ -63,5 +63,5 @@ public interface LevelDomain {
      * @param levelQuery 查询条件
      * @return 等级
      */
-    Level findByQuery(LevelQuery levelQuery);
+    LevelDTO findByQuery(LevelQuery levelQuery);
 }

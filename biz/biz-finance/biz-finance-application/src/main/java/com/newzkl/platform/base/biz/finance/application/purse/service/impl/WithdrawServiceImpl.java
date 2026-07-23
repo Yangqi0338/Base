@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
-import com.newzkl.platform.base.common.ddd.model.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;

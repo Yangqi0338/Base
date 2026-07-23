@@ -6,8 +6,15 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.*;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeBaseRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.*;
@@ -20,7 +27,6 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.TripartiteAcco
 import com.newzkl.platform.base.biz.finance.model.support.TripartiteBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
 import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
-import com.newzkl.platform.base.common.core.utils.common.JsonUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +47,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.BiConsumer;
 
 import static com.newzkl.platform.base.biz.finance.domain.hf.AmountReq.*;
@@ -99,7 +107,7 @@ public class HuiFuMethod {
      * @throws Exception
      */
     public static HuiFuPayStateRes payState(HuiFuPayStateReq request) {
-        log.info("请求原始数据:{}", JsonUtils.objectToJson(request));
+        log.info("请求原始数据:{}", JSONUtil.toJsonStr(request));
         PayStateReq req = new PayStateReq();
         req.setOrg_hf_seq_id(request.getHuifuTradeNo());
         AmountRes.PayStateRes res = api.payState(req);
@@ -473,6 +481,72 @@ public class HuiFuMethod {
     @Autowired
     public void setHuiFuApi(HuiFuApi huiFuApi) {
         HuiFuMethod.api = huiFuApi;
+    }
+
+    /**
+     * 递归字典序排序 JSON 字符串。
+     *
+     * <p>汇付加签要求参数按 key 升序排列后再签名, 此方法基于 TreeMap 对 JSON 做深度排序,
+     * 保证嵌套对象与数组内的对象同样有序。</p>
+     *
+     * @param sourceJson 原始 JSON 字符串
+     * @param maxLayer   数组最大嵌套层级, 超出抛参数异常; 传 0 不限制
+     * @param needLoop   是否对嵌套对象递归排序
+     * @return 排序后的 JSON 字符串, 入参为空时返回空串
+     */
+    public static String loopSort4JsonString(String sourceJson, int maxLayer, boolean needLoop) {
+        if (StrUtil.isBlank(sourceJson)) {
+            return "";
+        }
+
+        TreeMap<String, Object> m = JSONObject.parseObject(sourceJson, TreeMap.class);
+        if (maxLayer > 0) {
+            for (Map.Entry<String, Object> entry : m.entrySet()) {
+                int layer = 0;
+                if (entry.getValue() instanceof JSONArray array) {
+                    ++layer;
+                    sortJsonArray(array, layer, maxLayer);
+                }
+            }
+        }
+        if (needLoop && MapUtil.isNotEmpty(m)) {
+            List<Map.Entry<String, Object>> handleMapList = m.entrySet().stream()
+                    .filter(it -> it.getValue() instanceof JSONObject).toList();
+
+            if (CollUtil.isNotEmpty(handleMapList)) {
+                for (Map.Entry<String, Object> map : handleMapList) {
+                    String sortJson = loopSort4JsonString(JSON.toJSONString(map.getValue()), maxLayer + 1, needLoop);
+                    map.setValue(sortJson);
+                }
+            }
+        }
+
+        return JSON.toJSONString(m);
+    }
+
+    private static void sortJsonArray(JSONArray array, int layer, int maxLayer) {
+        if (layer >= maxLayer) {
+            throw new ScmException(BaseErrorCode.PARAM);
+        }
+        for (int i = 0; i < array.size(); ++i) {
+            JSONArray nested;
+            if (array.get(i) instanceof JSONArray) {
+                nested = (JSONArray) array.get(i);
+                ++layer;
+                sortJsonArray(nested, layer, maxLayer);
+            } else if (!(array.get(i) instanceof Comparable)) {
+                Map map = JSON.parseObject(array.get(i).toString(), TreeMap.class);
+                array.set(i, map);
+                for (Object o : map.entrySet()) {
+                    Map.Entry entry = (Map.Entry) o;
+                    if (entry.getValue() instanceof JSONArray) {
+                        nested = (JSONArray) entry.getValue();
+                        ++layer;
+                        sortJsonArray(nested, layer, maxLayer);
+                    }
+                }
+            }
+        }
     }
 
 }

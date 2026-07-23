@@ -122,7 +122,7 @@ public class SettleRecordRepositoryImpl extends ServiceImpl<SettleRecordDAO, Set
             wrapper.eq(SettleRecordDO::getSupplierId, query.getSupplierId());
         }
         
-        wrapper.orderByDesc(SettleRecordDO::getCreateTime);
+        wrapper.orderByDesc(SettleRecordDO::getId);
         
         return wrapper;
     }

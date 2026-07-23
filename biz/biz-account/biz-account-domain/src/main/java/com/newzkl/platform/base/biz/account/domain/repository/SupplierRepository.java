@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.model.support.CodeReq;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
@@ -23,7 +23,7 @@ public interface SupplierRepository {
 
     int supplierDelete(List<Long> supplierIdList);
 
-    void supplierEdit(List<EditColumnDTO> columnList, Long id);
+    void supplierEdit(List<EditColumnVO> columnList, Long id);
 
     SupplierVO supplier(Long supplierId);
 

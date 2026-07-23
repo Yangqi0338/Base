@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.domain.goodsZone.convert.GoodsZoneGood
 import com.newzkl.platform.base.biz.goods.domain.goodsZone.repository.GoodsZoneGoodsRelRepository;
 import com.newzkl.platform.base.biz.goods.domain.goodsZone.repository.GoodsZoneRepository;
 import com.newzkl.platform.base.biz.goods.domain.goodsZone.service.GoodsZoneGoodsRelDomainService;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.ISpuRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.goodsZooe.GoodsZone;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.goodsZooe.GoodsZoneGoodsRel;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneGoodsRelAddReq;
@@ -40,7 +40,7 @@ public class GoodsZoneGoodsRelDomainServiceImpl implements GoodsZoneGoodsRelDoma
 
     private final GoodsZoneGoodsRelRepository relRepository;
     private final GoodsZoneRepository goodsZoneRepository;
-    private final ISpuRepository spuRepository;
+    private final SpuRepository spuRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

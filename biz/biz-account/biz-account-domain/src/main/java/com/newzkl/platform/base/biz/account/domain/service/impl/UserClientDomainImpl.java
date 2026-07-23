@@ -3,13 +3,13 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 // TODO[infra-auth satoken]: import cn.dev33.satoken.stp.StpUtil; (登出属 auth 基础设施)
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.EasyExcelError;
+import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
@@ -78,7 +78,7 @@ public class UserClientDomainImpl implements UserClientDomain {
     }
 
     @Override
-    public void memberEdit(List<EditColumnDTO> editColumnList, Long id) {
+    public void memberEdit(List<EditColumnVO> editColumnList, Long id) {
         memberRepository.memberEdit(editColumnList, id);
     }
 
@@ -268,7 +268,7 @@ public class UserClientDomainImpl implements UserClientDomain {
     }
 
     @Override
-    public EasyExcelError adminImportAccount(MultipartFile file) {
+    public EasyExcelErrorVO adminImportAccount(MultipartFile file) {
         Set<String> phoneSet = new HashSet<>();
         try (InputStream inputStream = file.getInputStream()) {
             return EasyExcelUtil.importBiz(inputStream, MemberImportExcelVO.class,

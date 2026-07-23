@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.vo;
 
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
@@ -17,7 +17,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class ChannelVO extends BaseVO {
+public class ChannelVO extends BaseRes {
 
     /**
      * 角色ID

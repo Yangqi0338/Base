@@ -24,7 +24,7 @@ public interface AccountPurseAlterRecordDAO extends BaseMapper<AccountPurseAlter
                 .notEmptyIn(AccountPurseAlterRecordDO::getAlterType, query.getAlterTypeList())
                 .between(AccountPurseAlterRecordDO::getCreateTime, query.getCreateTime())
                 .eq(AccountPurseAlterRecordDO::getAccountType, query.getAccountType())
-                .orderByDesc(AccountPurseAlterRecordDO::getCreateTime);
+                .orderByDesc(AccountPurseAlterRecordDO::getId);
         return queryWrapper;
     }
 

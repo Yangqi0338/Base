@@ -57,7 +57,7 @@ public class SkuOrderRepositoryImpl extends ServiceImpl<SkuOrderDAO, SkuOrderDO>
                 .map(list -> {
                     LambdaQueryWrapper<SkuOrderDO> wrapper = new LambdaQueryWrapper<>();
                     wrapper.in(SkuOrderDO::getSpuOrderNo, list)
-                            .orderByDesc(SkuOrderDO::getCreateTime);
+                            .orderByDesc(SkuOrderDO::getId);
                     return baseMapper.selectList(wrapper).stream()
                             .filter(Objects::nonNull)
                             .map(doObj -> TransferUtils.transfer(doObj, SkuOrder::new))
@@ -73,7 +73,7 @@ public class SkuOrderRepositoryImpl extends ServiceImpl<SkuOrderDAO, SkuOrderDO>
                 .map(no -> {
                     LambdaQueryWrapper<SkuOrderDO> wrapper = new LambdaQueryWrapper<>();
                     wrapper.eq(SkuOrderDO::getSpuOrderNo, no)
-                            .orderByDesc(SkuOrderDO::getCreateTime);
+                            .orderByDesc(SkuOrderDO::getId);
                     return baseMapper.selectList(wrapper).stream()
                             .filter(Objects::nonNull)
                             .map(doObj -> TransferUtils.transfer(doObj, SkuOrder::new))
@@ -90,7 +90,7 @@ public class SkuOrderRepositoryImpl extends ServiceImpl<SkuOrderDAO, SkuOrderDO>
                 .map(no -> {
                     LambdaQueryWrapper<SkuOrderDO> wrapper = new LambdaQueryWrapper<>();
                     wrapper.eq(SkuOrderDO::getOrderNo, no)
-                            .orderByDesc(SkuOrderDO::getCreateTime);
+                            .orderByDesc(SkuOrderDO::getId);
                     return baseMapper.selectList(wrapper).stream()
                             .filter(Objects::nonNull)
                             .map(doObj -> TransferUtils.transfer(doObj, SkuOrder::new))
@@ -115,7 +115,7 @@ public class SkuOrderRepositoryImpl extends ServiceImpl<SkuOrderDAO, SkuOrderDO>
                         wrapper.eq(SkuOrderDO::getSkuId, queryDO.getSkuId());
                     }
                 });
-        wrapper.orderByDesc(SkuOrderDO::getCreateTime);
+        wrapper.orderByDesc(SkuOrderDO::getId);
 
         return TransferUtils.transferPage(baseMapper.selectPage(doPage, wrapper), SkuOrder::new);
     }

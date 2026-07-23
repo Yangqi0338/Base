@@ -10,7 +10,6 @@ import com.dtflys.forest.http.ForestResponse;
 import com.dtflys.forest.interceptor.ResponseResult;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
-import com.newzkl.platform.base.common.core.utils.common.JsonUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,7 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
         // 参数校验
         request.getBody().getObjectItems().forEach(item -> validate(request, item));
 
-        String params = JsonUtils.loopSort4JsonString(json, 0, true);
+        String params = HuiFuMethod.loopSort4JsonString(json, 0, true);
         log.info("排序后参数：" + params);
         String requestSign = HuiFuMethod.sign(params);
         OAuth oAuth = new OAuth();

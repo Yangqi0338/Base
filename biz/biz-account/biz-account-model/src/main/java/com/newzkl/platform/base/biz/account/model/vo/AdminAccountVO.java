@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import jakarta.validation.constraints.Pattern;
@@ -13,7 +13,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class AdminAccountVO extends BaseVO {
+public class AdminAccountVO extends BaseRes {
     /**
      * 昵称 (查询)
      */

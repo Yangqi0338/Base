@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.repository;
 
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.res.DealerOutRes;
 import com.newzkl.platform.base.biz.account.model.vo.DealerVO;
 
@@ -19,7 +19,7 @@ public interface DealerRepository {
 
     int dealerDelete(List<Long> dealerIdList);
 
-    void dealerEdit(List<EditColumnDTO> columnList, Long id);
+    void dealerEdit(List<EditColumnVO> columnList, Long id);
 
     DealerVO dealer(Long dealerId);
 

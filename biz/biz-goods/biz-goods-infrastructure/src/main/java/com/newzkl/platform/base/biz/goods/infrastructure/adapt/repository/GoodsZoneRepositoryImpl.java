@@ -55,7 +55,7 @@ public class GoodsZoneRepositoryImpl extends ServiceImpl<GoodsZoneDAO, GoodsZone
             wrapper.eq(GoodsZoneDO::getState, queryReq.getState());
         }
         // 按创建时间倒序（匹配产品设计的列表排序）
-        wrapper.orderByDesc(GoodsZoneDO::getCreateTime);
+        wrapper.orderByDesc(GoodsZoneDO::getId);
 
         Page<GoodsZoneDO> doPage = new Page<>(queryReq.getCurrent(), queryReq.getSize());
         Page<GoodsZoneDO> resultDO = this.page(doPage, wrapper);

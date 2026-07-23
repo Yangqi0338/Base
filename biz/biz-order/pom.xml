@@ -18,5 +18,6 @@
         <module>biz-order-domain</module>
         <module>biz-order-application</module>
         <module>biz-order-infrastructure</module>
+        <module>biz-order-action</module>
     </modules>
 </project>

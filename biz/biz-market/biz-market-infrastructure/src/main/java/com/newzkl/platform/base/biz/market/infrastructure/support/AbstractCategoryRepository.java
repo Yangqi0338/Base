@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.support.ICategoryRepository;
+import com.newzkl.platform.base.biz.market.domain.support.CategoryRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.support.CategoryBaseDO;
 import com.newzkl.platform.base.biz.market.model.biz.req.CategoryReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author fang
  */
 public abstract class AbstractCategoryRepository<T extends CategoryBaseDO, V, Q extends CategoryQuery>
-        extends RepositorySupport implements ICategoryRepository<V, Q> {
+        extends RepositorySupport implements CategoryRepository<V, Q> {
 
     protected abstract BaseMapper<T> getMapper();
 

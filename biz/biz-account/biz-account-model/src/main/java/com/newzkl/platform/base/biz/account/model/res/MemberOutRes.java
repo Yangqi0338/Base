@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,7 +13,7 @@ import java.time.LocalDate;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class MemberOutRes extends BaseVO {
+public class MemberOutRes extends BaseRes {
     /**
      * 背景图
      */

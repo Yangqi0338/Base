@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.brand;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class IndustryReq extends BaseVO {
+public class IndustryReq extends BaseRes {
      /**
      * ID
      */

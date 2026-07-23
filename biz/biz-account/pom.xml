@@ -22,5 +22,6 @@
         <module>biz-account-domain</module>
         <module>biz-account-application</module>
         <module>biz-account-infrastructure</module>
+        <module>biz-account-action</module>
     </modules>
 </project>

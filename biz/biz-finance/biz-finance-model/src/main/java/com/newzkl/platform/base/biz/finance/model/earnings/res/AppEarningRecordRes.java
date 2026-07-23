@@ -3,9 +3,9 @@ package com.newzkl.platform.base.biz.finance.model.earnings.res;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.AwardInfoVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.GoodsInfoVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.PickPackInfoVO;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseIdVO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @date 2023/12/22 16:55
  */
 @Data
-public class AppEarningRecordRes extends BaseIdVO {
+public class AppEarningRecordRes extends BaseRes {
 
     /**
      * 消费类型

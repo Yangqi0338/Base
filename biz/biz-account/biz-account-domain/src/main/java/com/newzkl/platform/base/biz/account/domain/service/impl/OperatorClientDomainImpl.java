@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.support.OperatorConfigVO;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -62,7 +62,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     }
 
     @Override
-    public void operatorEdit(List<EditColumnDTO> editColumnList, Long id) {
+    public void operatorEdit(List<EditColumnVO> editColumnList, Long id) {
         operatorRepository.operatorEdit(editColumnList, id);
     }
 
@@ -200,7 +200,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     }
 
     @Override
-    public void dealerEdit(List<EditColumnDTO> editColumnList, Long id) {
+    public void dealerEdit(List<EditColumnVO> editColumnList, Long id) {
         dealerRepository.dealerEdit(editColumnList, id);
     }
 
@@ -270,7 +270,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     }
 
     @Override
-    public void selectorEdit(List<EditColumnDTO> editColumnList, Long id) {
+    public void selectorEdit(List<EditColumnVO> editColumnList, Long id) {
         selectorRepository.selectorEdit(editColumnList, id);
     }
 
@@ -287,14 +287,14 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
             return;
         }
         //增加邀请数量
-        List<EditColumnDTO> columnList = new ArrayList<>();
-        columnList.add(new EditColumnDTO(OperatorEnum.TEAM_COUNT, 1));
-        columnList.add(new EditColumnDTO(OperatorEnum.TODAY_INVITE, 1));
-        columnList.add(new EditColumnDTO(OperatorEnum.TO_MONTH_INVITE, 1));
+        List<EditColumnVO> columnList = new ArrayList<>();
+        columnList.add(new EditColumnVO(OperatorEnum.TEAM_COUNT, 1));
+        columnList.add(new EditColumnVO(OperatorEnum.TODAY_INVITE, 1));
+        columnList.add(new EditColumnVO(OperatorEnum.TO_MONTH_INVITE, 1));
         if (RoleEnum.CompanyRole.SUPPLIER == inviteAccountRole) {
-            columnList.add(new EditColumnDTO(OperatorEnum.TEAM_SUPPLIER_COUNT, 1));
+            columnList.add(new EditColumnVO(OperatorEnum.TEAM_SUPPLIER_COUNT, 1));
         } else if (RoleEnum.CompanyRole.SELECTOR == inviteAccountRole) {
-            columnList.add(new EditColumnDTO(OperatorEnum.TEAM_SELECTOR_COUNT, 1));
+            columnList.add(new EditColumnVO(OperatorEnum.TEAM_SELECTOR_COUNT, 1));
         }
         selectorRepository.selectorEdit(columnList, accountId);
     }

@@ -6,7 +6,7 @@ import cn.hutool.core.util.PhoneUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.EasyExcelError;
+import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.EmpRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AdminClientDomain;
@@ -67,7 +67,7 @@ public class AdminClientDomainImpl implements AdminClientDomain {
     }
 
     @Override
-    public EasyExcelError excelCreateEmp(InputStream inputStream, Long accountId) {
+    public EasyExcelErrorVO excelCreateEmp(InputStream inputStream, Long accountId) {
         Set<String> successUsernames = new HashSet<>();
         CommonEnum.Client client = CommonEnum.Client.ADMIN;
         AccountVO accountVO = accountRepository.account(client, accountId);

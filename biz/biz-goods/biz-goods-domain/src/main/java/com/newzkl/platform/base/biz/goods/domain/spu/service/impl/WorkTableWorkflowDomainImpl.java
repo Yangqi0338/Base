@@ -3,8 +3,8 @@ package com.newzkl.platform.base.biz.goods.domain.spu.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IAuditDataWorkTableRepository;
-import com.newzkl.platform.base.biz.goods.domain.spu.service.IWorkTableWorkflowDomain;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.AuditDataWorkTableRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.service.WorkTableWorkflowDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataWorkTable;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataWorkTableQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
@@ -27,9 +27,9 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class WorkTableWorkflowDomainImpl implements IWorkTableWorkflowDomain {
+public class WorkTableWorkflowDomainImpl implements WorkTableWorkflowDomain {
 
-    private final IAuditDataWorkTableRepository auditDataWorkTableRepository;
+    private final AuditDataWorkTableRepository auditDataWorkTableRepository;
 
     @Override
     public void editBusinessData(Long flowId, String editCommand) {

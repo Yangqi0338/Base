@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.LevelEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
@@ -85,7 +85,7 @@ public abstract class AbsIdentityPolicy {
 
     // TODO[cross-domain relation]: levelUp(AccountLevelUpReq,...) 依赖 relation DTO, 迁 biz-user 后恢复
 
-    public void addColumn(List<EditColumnDTO> columnList, Long id) {
+    public void addColumn(List<EditColumnVO> columnList, Long id) {
 
     }
 

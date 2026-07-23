@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.openapi;
 
-import com.newzkl.platform.base.common.ddd.model.ScmTreeNode;
+import com.newzkl.platform.base.common.ddd.model.res.ScmTreeNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

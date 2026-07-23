@@ -67,6 +67,11 @@
                 <artifactId>core-rocketmq</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-job</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- ===== biz / user ===== -->
             <dependency>
@@ -92,6 +97,11 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-user-action</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -121,6 +131,11 @@
                 <artifactId>biz-account-infrastructure</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-account-action</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- ===== biz / 其余服务域 (骨架, 逐个迁移填充) ===== -->
             <dependency>
@@ -146,6 +161,11 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-sys-action</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -174,6 +194,11 @@
                 <artifactId>biz-finance-infrastructure</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-finance-action</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
@@ -198,6 +223,11 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-order-action</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -226,6 +256,11 @@
                 <artifactId>biz-goods-infrastructure</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-goods-action</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
@@ -250,6 +285,11 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-market-action</artifactId>
                 <version>${revision}</version>
             </dependency>
 

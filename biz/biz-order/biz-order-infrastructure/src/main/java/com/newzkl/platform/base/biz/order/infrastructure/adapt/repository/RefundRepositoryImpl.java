@@ -190,7 +190,7 @@ public class RefundRepositoryImpl extends ServiceImpl<RefundDAO, RefundDO> imple
 
 
         // 按创建时间降序排列
-        wrapper.orderByDesc(RefundDO::getCreateTime);
+        wrapper.orderByDesc(RefundDO::getId);
 
         return wrapper;
     }

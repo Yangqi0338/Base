@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.account.vo;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class BillOrderAwardVO extends BaseVO {
+public class BillOrderAwardVO extends BaseRes {
 
     /**
      * 角色id

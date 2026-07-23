@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
 import lombok.Data;

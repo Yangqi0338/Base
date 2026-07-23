@@ -82,9 +82,9 @@ public interface MarketGoodsRelationDAO extends BaseMapper<MarketGoodsRelationDO
         wrapper.eq(query.getRelationType() != null, MarketGoodsRelationDO::getRelationType, query.getRelationType());
         // 时间排序：1 升序 2 降序，默认降序
         if (query.getTimeSort() != null && query.getTimeSort() == 1) {
-            wrapper.orderByAsc(MarketGoodsRelationDO::getCreateTime);
+            wrapper.orderByAsc(MarketGoodsRelationDO::getId);
         } else {
-            wrapper.orderByDesc(MarketGoodsRelationDO::getCreateTime);
+            wrapper.orderByDesc(MarketGoodsRelationDO::getId);
         }
         return wrapper;
     }

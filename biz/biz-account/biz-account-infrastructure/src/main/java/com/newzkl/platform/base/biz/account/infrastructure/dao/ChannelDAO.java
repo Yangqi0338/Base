@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.ChannelDO;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.res.UpIdRes;
@@ -39,7 +39,7 @@ public interface ChannelDAO extends BaseMapper<ChannelDO> {
 
     void resetUserOrderCount();
 
-    void columnByQuery(@Param("columnList") List<EditColumnDTO> columnList, @Param(Constants.WRAPPER) AbstractWrapper<ChannelDO, ?, ?> wrapper);
+    void columnByQuery(@Param("columnList") List<EditColumnVO> columnList, @Param(Constants.WRAPPER) AbstractWrapper<ChannelDO, ?, ?> wrapper);
 
     Integer hasStore(@Param("accountId") Long accountId);
 

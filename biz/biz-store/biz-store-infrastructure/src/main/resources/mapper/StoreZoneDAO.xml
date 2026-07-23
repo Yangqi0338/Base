@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.store.infrastructure.dao.StoreZoneDAO">
+
+    <resultMap id="BaseResultMap" type="com.newzkl.platform.base.biz.store.infrastructure.entity.StoreZoneDO">
+        <id column="id" property="id" />
+        <result column="zone_code" property="zoneCode" />
+        <result column="zone_name" property="zoneName" />
+        <result column="zone_subtitle" property="zoneSubtitle" />
+        <result column="goods_num" property="goodsNum" />
+        <result column="order_num" property="orderNum" />
+        <result column="zone_describe" property="zoneDescribe" />
+        <result column="state" property="state" />
+        <result column="create_id" property="createId" />
+        <result column="create_name" property="createName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, zone_code, zone_name, zone_subtitle, goods_num, order_num, zone_describe, state,
+        create_id, create_name, create_time, update_time
+    </sql>
+
+</mapper>

@@ -3,7 +3,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IAuditDataSpuRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.AuditDataSpuRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.AuditDataSpuDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditSpuDO;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class AuditDataSpuRepositoryImpl implements IAuditDataSpuRepository {
+public class AuditDataSpuRepositoryImpl implements AuditDataSpuRepository {
 
     private final AuditDataSpuDAO auditDataSpuDAO;
 

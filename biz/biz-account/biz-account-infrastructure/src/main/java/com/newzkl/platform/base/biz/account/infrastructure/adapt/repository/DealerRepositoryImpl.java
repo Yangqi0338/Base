@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.domain.repository.DealerRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.DealerDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.DealerDO;
@@ -48,7 +48,7 @@ public class DealerRepositoryImpl implements DealerRepository {
     }
 
     @Override
-    public void dealerEdit(List<EditColumnDTO> columnList, Long id) {
+    public void dealerEdit(List<EditColumnVO> columnList, Long id) {
         DealerQuery query = new DealerQuery();
         query.setId(id);
 //        dealerDAO.columnByQuery(columnList, query);

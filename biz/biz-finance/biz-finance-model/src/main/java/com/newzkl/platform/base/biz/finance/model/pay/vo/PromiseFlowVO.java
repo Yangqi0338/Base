@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
 import jakarta.validation.constraints.Positive;
@@ -13,7 +13,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class PromiseFlowVO extends BaseVO {
+public class PromiseFlowVO extends BaseRes {
 
     /**
      * 账号ID (查询)

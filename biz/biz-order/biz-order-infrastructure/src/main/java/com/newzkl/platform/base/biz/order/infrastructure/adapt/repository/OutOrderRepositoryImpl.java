@@ -91,7 +91,7 @@ public class OutOrderRepositoryImpl extends ServiceImpl<OutOrderDAO, OutOrderDO>
         }
 
         // 按创建时间降序排序
-        wrapper.orderByDesc(OutOrderDO::getCreateTime);
+        wrapper.orderByDesc(OutOrderDO::getId);
 
         // 执行MyBatisPlus分页查询
         Page<OutOrderDO> resultDoPage = baseMapper.selectPage(doPage, wrapper);

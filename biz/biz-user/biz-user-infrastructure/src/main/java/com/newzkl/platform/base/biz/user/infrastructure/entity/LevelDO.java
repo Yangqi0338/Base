@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

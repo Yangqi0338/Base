@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.market.repository.IMarketRepository;
+import com.newzkl.platform.base.biz.market.domain.market.repository.MarketRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketBindDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketCategoryDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketDAO;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class MarketRepositoryImpl implements IMarketRepository {
+public class MarketRepositoryImpl implements MarketRepository {
 
     private static final String CATEGORY_CACHE_KEY = "category:";
 
@@ -83,7 +83,7 @@ public class MarketRepositoryImpl implements IMarketRepository {
                         .eq(query.getClientId() != null && query.getClientId() > 0, MarketDO::getClientId, query.getClientId())
                         .like(query.getMarketName() != null, MarketDO::getMarketName, query.getMarketName())
                         .in(finalSubBindMarketIds != null, MarketDO::getId, finalSubBindMarketIds != null ? finalSubBindMarketIds : Collections.emptyList())
-                        .orderByDesc(MarketDO::getCreateTime)
+                        .orderByDesc(MarketDO::getId)
         );
         return TransferUtils.transferPage(page, MarketVO::new);
     }
@@ -214,7 +214,7 @@ public class MarketRepositoryImpl implements IMarketRepository {
                         .eq(MarketBindDO::getBindType, req.getBindType())
                         .eq(MarketBindDO::getState, 1)
                         .in(!CollectionUtils.isEmpty(req.getUserIds()), MarketBindDO::getUserId, req.getUserIds())
-                        .orderByDesc(MarketBindDO::getCreateTime)
+                        .orderByDesc(MarketBindDO::getId)
         ).stream().map(bind -> {
             MarketUserVO vo = new MarketUserVO();
             vo.setId(bind.getId());

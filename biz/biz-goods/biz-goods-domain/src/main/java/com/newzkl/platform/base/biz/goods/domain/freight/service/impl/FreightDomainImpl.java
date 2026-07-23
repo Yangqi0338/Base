@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.goods.domain.freight.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.freight.repository.IFreightTemplateRepository;
-import com.newzkl.platform.base.biz.goods.domain.freight.service.IFreightDomain;
+import com.newzkl.platform.base.biz.goods.domain.freight.repository.FreightTemplateRepository;
+import com.newzkl.platform.base.biz.goods.domain.freight.service.FreightDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.freight.FreightTemplate;
 import com.newzkl.platform.base.biz.goods.model.goods.query.freight.FreightTemplateQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.freight.FreightTemplateReq;
@@ -20,9 +20,9 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class FreightDomainImpl implements IFreightDomain {
+public class FreightDomainImpl implements FreightDomain {
 
-    private final IFreightTemplateRepository freightTemplateRepository;
+    private final FreightTemplateRepository freightTemplateRepository;
 
     @Override
     public Long freightTemplateSave(FreightTemplateReq req) {

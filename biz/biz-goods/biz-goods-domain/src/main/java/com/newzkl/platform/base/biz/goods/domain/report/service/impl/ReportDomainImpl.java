@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.goods.domain.report.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.report.repository.IReportRepository;
-import com.newzkl.platform.base.biz.goods.domain.report.service.IReportDomain;
+import com.newzkl.platform.base.biz.goods.domain.report.repository.ReportRepository;
+import com.newzkl.platform.base.biz.goods.domain.report.service.ReportDomain;
 import com.newzkl.platform.base.biz.goods.model.assembler.ReportAssembler;
 import com.newzkl.platform.base.biz.goods.model.goods.query.report.ReportQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.report.ReportReq;
@@ -20,8 +20,8 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class ReportDomainImpl implements IReportDomain {
-    private final IReportRepository repository;
+public class ReportDomainImpl implements ReportDomain {
+    private final ReportRepository repository;
     private final ReportAssembler assembler;
 
     @Override

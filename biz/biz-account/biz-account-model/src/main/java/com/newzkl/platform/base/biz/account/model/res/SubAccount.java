@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -20,7 +20,7 @@ import java.util.List;
  * @date 2024/2/2211:09
  */
 @Data
-public class SubAccount extends BaseVO {
+public class SubAccount extends BaseRes {
 
     /**
      * 主账号id

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.infrastructure.auth.entity;
 
-import com.newzkl.platform.base.common.ddd.model.BaseIdDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseIdDO;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

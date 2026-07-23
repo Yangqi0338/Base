@@ -1,0 +1,336 @@
+package com.newzkl.platform.base.biz.store.domain.template.service.impl;
+
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.biz.store.model.enums.AuditEnum;
+import com.newzkl.platform.base.biz.store.model.enums.BIEnum;
+import com.newzkl.platform.base.biz.store.model.template.entity.ModelShop;
+import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopOrderRecord;
+import com.newzkl.platform.base.biz.store.model.template.query.ModelShopDataQuery;
+import com.newzkl.platform.base.biz.store.model.template.query.ModelShopStorePageQuery;
+import com.newzkl.platform.base.biz.store.model.template.req.ApplyModelShopReq;
+import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
+import com.newzkl.platform.base.biz.store.model.template.req.ModelShopUpdateReq;
+import com.newzkl.platform.base.biz.store.model.template.req.QueryModelShopReq;
+import com.newzkl.platform.base.biz.store.model.template.res.ModeShopDataSummary;
+import com.newzkl.platform.base.biz.store.model.template.res.ModelShopDataRes;
+import com.newzkl.platform.base.biz.store.model.template.vo.ModelShopOrderDataVO;
+import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
+import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStyleRes;
+import com.newzkl.platform.base.biz.store.model.template.res.ModelShopRes;
+import com.newzkl.platform.base.biz.store.domain.template.repository.ModelShopOrderRecordRepository;
+import com.newzkl.platform.base.biz.store.domain.template.repository.ModelShopRepository;
+import com.newzkl.platform.base.biz.store.domain.template.repository.ModelShopUseRecordRepository;
+import com.newzkl.platform.base.biz.store.domain.template.service.ModelShopDomain;
+import com.newzkl.platform.base.biz.store.model.store.entity.Store;
+import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
+import com.newzkl.platform.base.biz.store.domain.store.repository.StoreRepository;
+import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepository;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDataDTO;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * @author niu
+ * @description:
+ * @date 2024/4/7 16:13
+ */
+@Service
+public class ModelShopDomainImpl implements ModelShopDomain {
+
+    @Autowired
+    private ModelShopRepository modelShopRepository;
+    @Autowired
+    private StoreStyleRepository storeStyleRepository;
+    @Autowired
+    private ModelShopOrderRecordRepository modelShopOrderRecordRepository;
+    @Autowired
+    private ModelShopUseRecordRepository modelShopUseRecordRepository;
+    @Autowired
+    private StoreRepository storeRepository;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void applyModelShop(ApplyModelShopReq req) {
+        ModelShop query = new ModelShop();
+        query.setChannelId(SecurityUtils.getAccountId());
+        ModelShop modelShop = modelShopRepository.queryByModelShop(query);
+        if (modelShop == null) {
+            //复制模板
+            StoreStyle storeStyle = storeStyleRepository.copyStyle(null);
+
+            //新增样板店
+            modelShop = new ModelShop();
+            modelShop.setModelShopName(req.getModelShopName());
+            modelShop.setModelDescription(req.getModelDescription());
+            modelShop.setChannelId(SecurityUtils.getAccountId());
+            modelShop.setStyleCode(storeStyle.getStyleCode());
+            modelShop.setCreateId(SecurityUtils.getAccountId());
+            modelShop.setCreateName(SecurityUtils.getNickName());
+            modelShopRepository.create(modelShop);
+        } else if (AuditEnum.State.FAIL.getCode().equals(modelShop.getAuditState())) {
+            modelShop.setId(modelShop.getId());
+            modelShop.setAuditState(AuditEnum.State.AUDITING.getCode());
+            modelShop.setAuditInfo(null);
+            modelShopRepository.update(modelShop);
+        }
+    }
+
+    @Override
+    public void auditModelShop(AuditModelShopReq req) {
+        modelShopRepository.auditModelShop(req);
+
+        if (AuditEnum.State.SUCCESS.getCode().equals(req.getAuditState())) {
+            ModelShop modelShop = modelShopRepository.queryByStyleCode(req.getStyleCode());
+            Store store = new Store();
+            store.setId(modelShop.getChannelId());
+            store.setIsModelShop(1);
+            store.setModelShopId(modelShop.getId());
+            storeRepository.storeEdit(store);
+        }
+    }
+
+    @Override
+    public Page<ModelShopRes> queryModelShopPage(QueryModelShopReq req) {
+        Page<ModelShopRes> page = modelShopRepository.queryModelShopPage(req);
+        //填充模板数据
+        List<ModelShopRes> records = page.getRecords();
+        List<String> collect = page.getRecords().stream().map(ModelShopRes::getStyleCode).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(collect)) {
+            List<StoreStyle> storeStyleList = storeStyleRepository.getByStoreStyleList(collect);
+            if (CollectionUtil.isNotEmpty(storeStyleList)) {
+                Map<String, StoreStyle> map = storeStyleList.stream().collect(Collectors.toMap(StoreStyle::getStyleCode, item -> item));
+                records.forEach(item -> {
+                    StoreStyle storeStyle = map.get(item.getStyleCode());
+                    if (storeStyle != null) {
+                        item.setSourceCode(storeStyle.getSourceCode());
+                        item.setSourceName(storeStyle.getSourceName());
+                        item.setPreviewImage(storeStyle.getPreviewImage());
+                    }
+                });
+            }
+        }
+        return page;
+    }
+
+    @Override
+    public Page<ModelShopStorePageRes> modelShopStorePage(ModelShopStorePageQuery query) {
+        if(StrUtil.isBlank(query.getStoreName())){
+            Store store = new Store();
+            store.setName(query.getStoreName());
+            List<Long> storeIdList = storeRepository.getStoreList(store).stream().map(Store::getId).collect(Collectors.toList());
+            query.setStoreIdList(storeIdList);
+        }
+
+        Page<ModelShopStorePageRes> page = modelShopUseRecordRepository.modelShopStorePage(query);
+
+        // 如果分页结果为空，直接返回
+        if (page.getRecords().isEmpty()) {
+            return page;
+        }
+
+        // 收集门店ID
+        List<Long> storeIdList = page.getRecords().stream()
+                .map(ModelShopStorePageRes::getStoreId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 批量查询订单统计数据
+        List<ModelShopOrderDataVO> dataVOList = modelShopOrderRecordRepository.modelShopPayOrderData(query.getModeShopId(), storeIdList);
+
+        // 构建映射关系（storeId -> 统计数据）
+        Map<Long, ModelShopOrderDataVO> orderDataMap = dataVOList.stream()
+                .collect(Collectors.toMap(
+                        ModelShopOrderDataVO::getStoreId,
+                        data -> data,
+                        (existing, replacement) -> existing
+                ));
+
+        // 填充订单统计数据
+        page.getRecords().forEach(item -> {
+            ModelShopOrderDataVO orderData = orderDataMap.get(item.getStoreId());
+            if (orderData != null) {
+                item.setTotalPayNum(orderData.getTotalPayNum());
+                item.setTotalPayAmount(orderData.getTotalPayAmount());
+            } else {
+                // 没有订单数据的门店设置为0
+                item.setTotalPayNum(0);
+                item.setTotalPayAmount(0);
+            }
+        });
+
+        return page;
+    }
+
+    @Override
+    public ModelShopDataRes modelShopData(ModelShopDataQuery query) {
+        ModelShop modelShop = new ModelShop();
+        modelShop.setId(query.getModelShopId());
+        // 查询样板店基本信息
+        ModelShopDataRes shopDataRes = TransferUtils.transfer(
+                modelShopRepository.queryByModelShop(modelShop),
+                ModelShopDataRes::new
+        );
+
+        if (shopDataRes == null) {
+            return null;
+        }
+
+        // 根据维度计算时间范围
+        Date endTime = new Date();
+        DateTime startTime = BIEnum.Dimension.findStartTime(query.getDimension(), endTime);
+
+        if (startTime == null) {
+            return shopDataRes;
+        }
+
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startTime.toInstant(), ZoneId.systemDefault());
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
+
+        // 按天统计支付订单数量
+        List<ModeShopDataSummary> payOrderSummary = modelShopOrderRecordRepository
+                .countPayOrderByDay(query.getModelShopId(), startDateTime, endDateTime);
+        shopDataRes.setPayOrderSummary(payOrderSummary);
+
+        // 按天统计支付订单金额
+        List<ModeShopDataSummary> payAmountSummary = modelShopOrderRecordRepository
+                .sumPayAmountByDay(query.getModelShopId(), startDateTime, endDateTime);
+        shopDataRes.setPayAmountSummary(payAmountSummary);
+
+        // 按天统计新增使用门店数量
+        List<ModeShopDataSummary> useSummary = modelShopUseRecordRepository
+                .countNewStoreByDay(query.getModelShopId(), startDateTime, endDateTime);
+        shopDataRes.setUseSummary(useSummary);
+
+        return shopDataRes;
+    }
+
+    @Override
+    public ModelShop queryByStyleCode(String styleCode) {
+        return modelShopRepository.queryByStyleCode(styleCode);
+    }
+
+    @Override
+    public ModelShop queryById(Long id) {
+        ModelShop modelShop = new ModelShop();
+        modelShop.setId(id);
+        return modelShopRepository.queryByModelShop(modelShop);
+    }
+
+    @Override
+    public ModelShop queryByChannelId(Long channelId) {
+        ModelShop modelShop = new ModelShop();
+        modelShop.setChannelId(channelId);
+        return modelShopRepository.queryByModelShop(modelShop);
+    }
+
+    @Override
+    public List<ModelShopStyleRes> queryModelShopList() {
+        List<ModelShopStyleRes> modelShopStyleVOList = new ArrayList<>();
+
+        // 添加已上线的样板店
+        ModelShop query = new ModelShop();
+        query.setAuditState(AuditEnum.State.SUCCESS.getCode());
+        query.setIsDelete(0);
+        query.setState(1);
+        List<ModelShop> modelShops = modelShopRepository.queryByModelShopList(query);
+        if (CollectionUtil.isNotEmpty(modelShops)) {
+            modelShopStyleVOList.addAll(TransferUtils.transfers(modelShops, ModelShopStyleRes::new));
+        }
+
+        if (modelShopStyleVOList.isEmpty()) {
+            return modelShopStyleVOList;
+        }
+
+        // 批量查询样式信息
+        List<String> styleCodeList = modelShopStyleVOList.stream()
+                .map(ModelShopStyleRes::getStyleCode)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        List<StoreStyle> storeStyleList = storeStyleRepository.getByStoreStyleList(styleCodeList);
+        Map<String, StoreStyle> styleMap = CollectionUtil.isEmpty(storeStyleList)
+                ? Collections.emptyMap()
+                : storeStyleList.stream().collect(Collectors.toMap(StoreStyle::getStyleCode, Function.identity(), (a, b) -> a));
+
+        // 查询当前登录用户的门店
+        Store store = storeRepository.storeByChannelId(SecurityUtils.getAccountId());
+        Long storeModelShopId = (store != null) ? store.getModelShopId() : null;
+
+        // 填充样式数据及使用状态
+        modelShopStyleVOList.forEach(item -> {
+            StoreStyle storeStyle = styleMap.get(item.getStyleCode());
+            if (storeStyle != null) {
+                item.setStyleContent(storeStyle.getStyleContent());
+                item.setGoodsIdListStr(storeStyle.getGoodsIdListStr());
+                item.setPreviewImage(storeStyle.getPreviewImage());
+            }
+            if (ObjectUtil.equals(item.getId(), storeModelShopId)) {
+                item.setInUse(true);
+            }
+        });
+
+        return modelShopStyleVOList;
+    }
+
+    @Override
+    public void deleteModelShop(Long id) {
+        modelShopRepository.deleteModelShop(id);
+    }
+
+    @Override
+    public void updateModelShop(ModelShopUpdateReq req) {
+        modelShopRepository.update(TransferUtils.transfer(req, ModelShop::new));
+    }
+
+    @Override
+    public void syncModelShop() {
+        Store store = storeRepository.store(SecurityUtils.getAccountId());
+        if (store != null && store.getModelShopId() != null) {
+            ModelShop modelShopQuery = new ModelShop();
+            modelShopQuery.setId(store.getModelShopId());
+            ModelShop modelShop = modelShopRepository.queryByModelShop(modelShopQuery);
+            // 同步后的新样式
+            StoreStyle storeStyle = storeStyleRepository.copyStyle(store.getStyleCode());
+            // 删除旧的复制样式
+            storeStyleRepository.deleteCopyStyle(modelShop.getStyleCode());
+            // 更新样板店的样式
+            modelShop.setStyleCode(storeStyle.getStyleCode());
+            modelShopRepository.update(modelShop);
+        }
+    }
+
+    @Override
+    public void updateTotalUseStoreNum(Long storeId, Long modelShopId) {
+        modelShopRepository.updateTotalUseStoreNum(storeId, modelShopId);
+    }
+
+    @Override
+    public void updateModelShopData(ModelShopDataDTO dto) {
+        Store store = storeRepository.store(dto.getStoreId());
+        if (store != null) {
+            dto.setModelShopId(store.getModelShopId());
+            //修改数据
+            modelShopRepository.updateModelShopData(dto);
+            //生成记录
+            modelShopOrderRecordRepository.create(TransferUtils.transfer(dto, ModelShopOrderRecord::new));
+        }
+    }
+
+    @Override
+    public void updateUseStoreNum(String styleCode, Integer num) {
+        modelShopRepository.updateUseStoreNum(styleCode, num);
+    }
+}

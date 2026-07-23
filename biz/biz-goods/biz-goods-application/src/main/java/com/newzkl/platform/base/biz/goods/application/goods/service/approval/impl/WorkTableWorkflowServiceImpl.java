@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.goods.application.goods.service.approval.impl;
 
-import com.newzkl.platform.base.biz.goods.application.goods.service.approval.IWorkTableWorkflowService;
+import com.newzkl.platform.base.biz.goods.application.goods.service.approval.WorkTableWorkflowService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.approval.utils.WorktableFactory;
-import com.newzkl.platform.base.biz.goods.domain.spu.service.IWorkTableWorkflowDomain;
+import com.newzkl.platform.base.biz.goods.domain.spu.service.WorkTableWorkflowDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.req.audit.ApprovalResultReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class WorkTableWorkflowServiceImpl implements IWorkTableWorkflowService {
+public class WorkTableWorkflowServiceImpl implements WorkTableWorkflowService {
 
-    private final IWorkTableWorkflowDomain workTableWorkflowDomain;
+    private final WorkTableWorkflowDomain workTableWorkflowDomain;
     private final WorktableFactory worktableFactory;
 
     @Override

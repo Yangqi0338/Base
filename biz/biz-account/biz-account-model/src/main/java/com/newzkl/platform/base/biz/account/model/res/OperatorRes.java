@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class OperatorRes extends BaseVO {
+public class OperatorRes extends BaseRes {
     /**
      * 名称 (查询)
      */

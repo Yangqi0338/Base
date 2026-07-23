@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.executeLog;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -8,7 +8,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class ExecuteLogVO extends BaseVO {
+public class ExecuteLogVO extends BaseRes {
      /**
      * ID
      */

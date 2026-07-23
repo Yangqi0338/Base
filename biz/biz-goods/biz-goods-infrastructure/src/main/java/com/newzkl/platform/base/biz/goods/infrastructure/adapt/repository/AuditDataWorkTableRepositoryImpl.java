@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.spu.repository.IAuditDataWorkTableRepository;
+import com.newzkl.platform.base.biz.goods.domain.spu.repository.AuditDataWorkTableRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.AuditDataWorkTableDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditDataWorkTableDO;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataWorkTable;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class AuditDataWorkTableRepositoryImpl implements IAuditDataWorkTableRepository {
+public class AuditDataWorkTableRepositoryImpl implements AuditDataWorkTableRepository {
 
     private final AuditDataWorkTableDAO auditDataWorkTableDAO;
 

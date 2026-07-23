@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.user.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelReq;
-import com.newzkl.platform.base.biz.user.model.relation.res.Level;
+import com.newzkl.platform.base.biz.user.model.relation.res.LevelDTO;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.PackCondition;
 import com.newzkl.platform.base.biz.user.model.relation.vo.ConditionVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.LevelVO;
@@ -33,7 +33,7 @@ public class LevelDomainImpl implements LevelDomain {
 
     @Override
     public Long save(LevelReq levelCommand) {
-        Level level = TransferUtils.transfer(levelCommand, Level::new);
+        LevelDTO level = TransferUtils.transfer(levelCommand, LevelDTO::new);
         level.setValue(1);
 
         // 保存礼包 只有这一个修改入口, 改为必填
@@ -85,15 +85,15 @@ public class LevelDomainImpl implements LevelDomain {
     }
 
     @Override
-    public List<Level> list(LevelQuery levelQuery) {
+    public List<LevelDTO> list(LevelQuery levelQuery) {
         return levelRepository.list(levelQuery);
     }
 
     @Override
-    public Level findByQuery(LevelQuery levelQuery) {
+    public LevelDTO findByQuery(LevelQuery levelQuery) {
         levelQuery.setPageSize(1);
 
-        List<Level> list = levelRepository.list(levelQuery);
+        List<LevelDTO> list = levelRepository.list(levelQuery);
 
         return CollUtil.getFirst(list);
     }

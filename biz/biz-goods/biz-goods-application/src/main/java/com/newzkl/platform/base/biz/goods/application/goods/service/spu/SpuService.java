@@ -1,0 +1,70 @@
+package com.newzkl.platform.base.biz.goods.application.goods.service.spu;
+
+
+import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
+import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSkuVO;
+import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuStateVO;
+import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuVO;
+import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
+
+import java.util.List;
+
+/**
+ * @author muc_fang
+ * @Description:
+ * @date 2023/11/317:50
+ */
+public interface SpuService {
+    /**
+     * 供应商提交审核
+     * @param accountId
+     * @param spuId
+     * @return
+     */
+    Long supplierSpuSubmit(Long accountId, Long spuId);
+    /**
+     * 上下架
+     * @param enable
+     * @param spuIdList
+     */
+    void spuUp(Integer enable, List<Long> spuIdList);
+    /**
+     * 外部供应链商品同步
+     * @param spuDTO
+     */
+    void outGoodsSync(SpuDTO spuDTO);
+
+    SupplierSpuStatisticsVO supplierSpuStatistics(SupplierSpuStatisticsQuery query);
+
+    /**
+     * 货盘选择商品
+     */
+    Long palletSelectGoods(SpuVO spuVO);
+
+    /**
+     * 商品选品数量增加
+     */
+    void spuSelectorNumAdd(List<Long> spuIdList, Integer num);
+
+    /**
+     * 验证供应商商品
+     */
+    void validateSupplierSpu(SpuDTO spuDTO, Long accountId);
+
+    /**
+     * API-SPU状态
+     */
+    List<ApiSpuStateVO> apiSpuState(Long accountId, List<Long> spuIdList);
+
+    /**
+     * API-SPU列表
+     */
+    List<ApiSpuVO> apiSpuVOList(Long accountId, List<Long> spuIdList);
+
+    /**
+     * API-SKU列表
+     */
+    List<ApiSkuVO> apiSkuVOList(Long accountId, List<Long> spuIdList);
+}

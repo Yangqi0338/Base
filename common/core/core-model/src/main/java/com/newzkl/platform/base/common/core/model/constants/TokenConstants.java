@@ -31,6 +31,18 @@ public interface TokenConstants {
      */
     String DETAILS_ACCOUNT_ID = "account_id";
     /**
+     * TOKEN: IM 用户账号字段
+     */
+    String IM_USER_ACCOUNT = "im_user_account";
+    /**
+     * TOKEN: C端用户ID字段
+     */
+    String DETAILS_MEMBER_ID = "member_id";
+    /**
+     * TOKEN: 员工ID字段
+     */
+    String DETAILS_EMP_ID = "emp_id";
+    /**
      * TOKEN: 用户名字段
      */
     String DETAILS_USERNAME = "username";
@@ -39,9 +51,17 @@ public interface TokenConstants {
      */
     String DETAILS_NICKNAME = "nickname";
     /**
+     * TOKEN: 企业角色字段
+     */
+    String DETAILS_COMPANY_ROLE = "companyRole";
+    /**
      * TOKEN: 上级ID
      */
     String DETAILS_UP_ID = "up_id";
+    /**
+     * TOKEN: 上级运营商ID
+     */
+    String DETAILS_OPERATOR_ID = "operator_id";
     /**
      * 访问信息 (IP) RequestInfo.class
      */

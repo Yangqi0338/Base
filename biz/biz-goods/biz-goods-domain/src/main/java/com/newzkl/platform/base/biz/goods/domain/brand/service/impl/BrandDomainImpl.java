@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.goods.domain.brand.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.domain.brand.repository.IBrandRepository;
-import com.newzkl.platform.base.biz.goods.domain.brand.service.IBrandDomain;
+import com.newzkl.platform.base.biz.goods.domain.brand.repository.BrandRepository;
+import com.newzkl.platform.base.biz.goods.domain.brand.service.BrandDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.query.brand.BrandPageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.brand.BrandReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.BrandVO;
@@ -18,9 +18,9 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class BrandDomainImpl implements IBrandDomain {
+public class BrandDomainImpl implements BrandDomain {
 
-    private final IBrandRepository brandRepository;
+    private final BrandRepository brandRepository;
 
     @Override
     public Long brandSave(BrandReq brandReq) {

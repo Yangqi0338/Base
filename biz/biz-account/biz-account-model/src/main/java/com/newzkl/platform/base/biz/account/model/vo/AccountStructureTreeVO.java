@@ -7,10 +7,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import lombok.Data;
 
@@ -74,7 +73,7 @@ public class AccountStructureTreeVO extends AccountStructureVO {
 
         // 1. 构建ID到节点的映射（方便快速查找父节点）
         Map<Long, AccountStructureTreeVO> nodeMap = accountSubStructureVOList.stream()
-                .collect(CommonUtil.toMap(BaseVO::getId));
+                .collect(CommonUtil.toMap(BaseRes::getId));
 
         // 2. 初始化所有节点的children和子节点数量
         accountSubStructureVOList.forEach(node -> {

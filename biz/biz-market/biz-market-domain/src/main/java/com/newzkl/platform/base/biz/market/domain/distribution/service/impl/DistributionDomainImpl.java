@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.market.domain.distribution.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.distribution.repository.IDistributionRepository;
-import com.newzkl.platform.base.biz.market.domain.distribution.service.IDistributionDomain;
+import com.newzkl.platform.base.biz.market.domain.distribution.repository.DistributionRepository;
+import com.newzkl.platform.base.biz.market.domain.distribution.service.DistributionDomain;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StateNotifyDTO;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
 import com.newzkl.platform.base.biz.market.model.event.distribution.WorkTableUpDownEventMq;
@@ -45,9 +45,9 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class DistributionDomainImpl implements IDistributionDomain {
+public class DistributionDomainImpl implements DistributionDomain {
 
-    private final IDistributionRepository distributionRepository;
+    private final DistributionRepository distributionRepository;
 
     @Override
     public List<Long> idByQuery(DistributionsQuery req) {

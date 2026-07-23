@@ -176,7 +176,7 @@ public class SpuQuery extends BusinessPageQuery implements Serializable {
         /**
          * 默认
          */
-        DEFAULT(1, "create_time"),
+        DEFAULT(1, "id"),
         /**
          * 销量
          */

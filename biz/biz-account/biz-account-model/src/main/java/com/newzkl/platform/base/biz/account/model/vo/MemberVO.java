@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.Data;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class MemberVO extends BaseVO {
+public class MemberVO extends BaseRes {
 
     /**
      * 昵称

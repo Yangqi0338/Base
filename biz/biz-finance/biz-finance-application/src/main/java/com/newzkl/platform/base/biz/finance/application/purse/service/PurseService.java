@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.application.purse.service;
 
 
 import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
-import com.newzkl.platform.base.common.ddd.model.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
 
 /**
  * 采购金分配编排接口 (平台线下)。

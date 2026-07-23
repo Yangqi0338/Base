@@ -1,0 +1,118 @@
+package com.newzkl.platform.base.common.ddd.action.spi;
+
+import com.newzkl.platform.base.common.ddd.model.spi.IdentityExtension;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.util.ClassUtils;
+
+import java.util.Set;
+
+/**
+ * 身份扩展点透明代理注册器。
+ *
+ * <p>启动早期扫描类路径上标注 {@link IdentityExtension} 的接口, 为每个接口注册一个 {@code @Primary} 的
+ * {@link IdentityExtensionProxyFactoryBean} bean。调用方按接口类型注入时命中该主代理 bean (而非某个具体实现 bean),
+ * 从而透明地获得 {@link IdentityDispatcher} 的分发代理。</p>
+ *
+ * @author KC
+ */
+public class IdentityExtensionProxyRegistrar
+        implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+
+    /** 扫描根包, 覆盖平台全部 biz 与 plugin 扩展点。 */
+    private static final String BASE_PACKAGE = "com.newzkl.platform";
+
+    private Environment environment;
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        ClassPathScanningCandidateComponentProvider scanner = buildScanner();
+        for (BeanDefinition candidate : scanner.findCandidateComponents(BASE_PACKAGE)) {
+            String className = candidate.getBeanClassName();
+            if (className == null) {
+                continue;
+            }
+            Class<?> extensionType = resolveClass(className);
+            if (extensionType == null || !extensionType.isInterface()) {
+                continue;
+            }
+            registerProxyBean(registry, extensionType);
+        }
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        // 无需后处理 bean factory。
+    }
+
+    /**
+     * 构建仅接受 {@link IdentityExtension} 标注接口的扫描器。
+     *
+     * @return 组件扫描器
+     */
+    private ClassPathScanningCandidateComponentProvider buildScanner() {
+        ClassPathScanningCandidateComponentProvider scanner =
+                new ClassPathScanningCandidateComponentProvider(false, environment) {
+                    @Override
+                    protected boolean isCandidateComponent(
+                            org.springframework.beans.factory.annotation.AnnotatedBeanDefinition beanDefinition) {
+                        // 扩展点是被标注的独立接口, 覆盖默认 (默认排除接口)。
+                        return beanDefinition.getMetadata().isInterface()
+                                && beanDefinition.getMetadata().isIndependent();
+                    }
+                };
+        scanner.addIncludeFilter(new AnnotationTypeFilter(IdentityExtension.class));
+        return scanner;
+    }
+
+    /**
+     * 为扩展点接口注册 {@code @Primary} 代理 bean。
+     *
+     * @param registry      bean 定义注册表
+     * @param extensionType 扩展点接口
+     */
+    private void registerProxyBean(BeanDefinitionRegistry registry, Class<?> extensionType) {
+        String beanName = extensionType.getName() + "#identityProxy";
+        if (registry.containsBeanDefinition(beanName)) {
+            return;
+        }
+        GenericBeanDefinition definition = new GenericBeanDefinition();
+        definition.setBeanClass(IdentityExtensionProxyFactoryBean.class);
+        definition.setPrimary(true);
+        definition.setAutowireCandidate(true);
+        ConstructorArgumentValues args = new ConstructorArgumentValues();
+        args.addIndexedArgumentValue(0, extensionType);
+        definition.setConstructorArgumentValues(args);
+        definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_NO);
+        registry.registerBeanDefinition(beanName, definition);
+    }
+
+    /**
+     * 按类名加载 Class, 加载失败返回 {@code null}。
+     *
+     * @param className 全限定类名
+     * @return Class 或 null
+     */
+    private Class<?> resolveClass(String className) {
+        try {
+            return ClassUtils.forName(className, getClass().getClassLoader());
+        } catch (ClassNotFoundException | LinkageError e) {
+            return null;
+        }
+    }
+}

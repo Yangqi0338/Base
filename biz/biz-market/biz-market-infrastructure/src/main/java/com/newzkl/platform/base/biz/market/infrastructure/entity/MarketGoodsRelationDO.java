@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.market.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
-import com.newzkl.platform.base.common.ddd.model.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

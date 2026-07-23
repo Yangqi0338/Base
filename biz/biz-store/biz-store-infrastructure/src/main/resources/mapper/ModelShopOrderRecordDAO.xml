@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.store.infrastructure.dao.ModelShopOrderRecordDAO">
+
+    <select id="modelShopPayOrderData"
+            resultType="com.zkl.scm.terminal.domain.model.model.vo.ModelShopOrderDataVO">
+        SELECT
+        store_id AS storeId,
+        COUNT(*) AS totalPayNum,
+        IFNULL(SUM(amount), 0) AS totalPayAmount
+        FROM model_shop_order_record
+        WHERE model_shop_id = #{modelShopId}
+        AND type = 'PAY'
+        AND store_id IN
+        <foreach collection="storeIdList" item="storeId" open="(" separator="," close=")">
+            #{storeId}
+        </foreach>
+        GROUP BY store_id
+    </select>
+
+    <!-- 按天统计支付订单数量 -->
+    <select id="countPayOrderByDay"
+            resultType="com.zkl.scm.terminal.domain.model.model.res.ModeShopDataSummary">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m-%d') AS dimensionValue,
+            COUNT(*) AS value
+        FROM model_shop_order_record
+        WHERE model_shop_id = #{modelShopId}
+          AND type = 'PAY'
+          AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d')
+        ORDER BY dimensionValue ASC
+    </select>
+
+    <!-- 按天统计支付订单金额 -->
+    <select id="sumPayAmountByDay"
+            resultType="com.zkl.scm.terminal.domain.model.model.res.ModeShopDataSummary">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m-%d') AS dimensionValue,
+            IFNULL(SUM(amount), 0) AS value
+        FROM model_shop_order_record
+        WHERE model_shop_id = #{modelShopId}
+          AND type = 'PAY'
+          AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d')
+        ORDER BY dimensionValue ASC
+    </select>
+</mapper>

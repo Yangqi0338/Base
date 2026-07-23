@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.spu;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class SpuRpcVO extends BaseVO implements Serializable {
+public class SpuRpcVO extends BaseRes implements Serializable {
      /**
      * ID (查询)
      */

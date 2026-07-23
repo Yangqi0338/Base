@@ -21,6 +21,16 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-application</artifactId>
         </dependency>
+        <!-- 鉴权切面依赖: SecurityUtils/ScmUtil/SecurityContextHolder (传递 guava/mybatis-plus/transmittable-thread-local/aspectjweaver) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
+        </dependency>
+        <!-- SecurityContextFilter 经 sa-token StpUtil 解析 token -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>

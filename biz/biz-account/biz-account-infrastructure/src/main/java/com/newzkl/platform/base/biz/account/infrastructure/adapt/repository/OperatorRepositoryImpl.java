@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.model.support.OperatorConfigVO;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.domain.repository.OperatorRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.OperatorDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.OperatorDO;
@@ -51,7 +51,7 @@ public class OperatorRepositoryImpl implements OperatorRepository {
     }
 
     @Override
-    public void operatorEdit(List<EditColumnDTO> columnList, Long id) {
+    public void operatorEdit(List<EditColumnVO> columnList, Long id) {
         OperatorQuery query = new OperatorQuery();
         query.setId(id);
 //        operatorDAO.columnByQuery(columnList, query);

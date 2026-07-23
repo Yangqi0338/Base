@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class AccountFinanceVO extends BaseVO {
+public class AccountFinanceVO extends BaseRes {
     /**
      * 礼包收益
      */

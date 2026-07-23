@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.model.support.api;
 
 import com.newzkl.platform.base.biz.order.model.enums.user.AccountEnum;
 import com.newzkl.platform.base.biz.order.model.enums.user.identity.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -14,7 +14,7 @@ import lombok.Data;
  * @author KC
  */
 @Data
-public class ChannelOutRes extends BaseVO {
+public class ChannelOutRes extends BaseRes {
     /** 主体类型 (查询)。 */
     private AccountEnum.BodyType bodyType;
     /** 状态 (查询)。 */

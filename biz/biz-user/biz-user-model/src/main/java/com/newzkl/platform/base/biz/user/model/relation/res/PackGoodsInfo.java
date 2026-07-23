@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.relation.res;
 
 import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseIdVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class PackGoodsInfo extends BaseIdVO {
+public class PackGoodsInfo extends BaseRes {
 
     /**
      * 订单金额

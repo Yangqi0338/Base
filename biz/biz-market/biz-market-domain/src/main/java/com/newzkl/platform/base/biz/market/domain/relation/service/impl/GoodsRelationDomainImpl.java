@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.relation.repository.IGoodsRelationRepository;
-import com.newzkl.platform.base.biz.market.domain.relation.service.IGoodsRelationDomain;
+import com.newzkl.platform.base.biz.market.domain.relation.repository.GoodsRelationRepository;
+import com.newzkl.platform.base.biz.market.domain.relation.service.GoodsRelationDomain;
 import com.newzkl.platform.base.biz.market.model.dto.relation.GoodsRelationQueryDTO;
 import com.newzkl.platform.base.biz.market.model.dto.relation.MarketGoodsRelationDTO;
 import com.newzkl.platform.base.biz.market.model.query.relation.GoodsListPageQuery;
@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class GoodsRelationDomainImpl implements IGoodsRelationDomain {
+public class GoodsRelationDomainImpl implements GoodsRelationDomain {
 
-    private final IGoodsRelationRepository goodsRelationRepository;
+    private final GoodsRelationRepository goodsRelationRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -68,7 +68,7 @@ public class UserInteractionRepositoryImpl implements UserInteractionRepository 
         LambdaQueryWrapper<UserInteractionDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserInteractionDO::getUserId, userId)
                 .eq(UserInteractionDO::getActionType, actionType)
-                .orderByDesc(UserInteractionDO::getCreateTime);
+                .orderByDesc(UserInteractionDO::getId);
 
         List<UserInteractionDO> interactions = interactionMapper.selectList(queryWrapper);
         return TransferUtils.transfers(interactions, InteractionVO.class);
@@ -96,7 +96,7 @@ public class UserInteractionRepositoryImpl implements UserInteractionRepository 
 
         LambdaQueryWrapper<UserInteractionDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserInteractionDO::getUserId, pageDTO.getUserId())
-                .orderByDesc(UserInteractionDO::getCreateTime);
+                .orderByDesc(UserInteractionDO::getId);
 
         if (pageDTO.getStoreId() != null) {
             queryWrapper.eq(UserInteractionDO::getStoreId, pageDTO.getStoreId());

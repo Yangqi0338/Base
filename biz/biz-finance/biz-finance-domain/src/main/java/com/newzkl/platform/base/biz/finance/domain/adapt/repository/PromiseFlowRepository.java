@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
 import com.newzkl.platform.base.biz.finance.model.pay.req.PromiseFlowQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PromiseFlowVO;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public interface PromiseFlowRepository {
 
     int promiseFlowDelete(List<Long> promiseFlowIdList);
 
-    void promiseFlowEdit(List<EditColumnDTO> columnList, Long id);
+    void promiseFlowEdit(List<EditColumnVO> columnList, Long id);
 
     PromiseFlowVO promiseFlow(Long promiseFlowId);
 }

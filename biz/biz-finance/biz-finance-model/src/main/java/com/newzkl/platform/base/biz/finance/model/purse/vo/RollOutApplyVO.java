@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @date 2023/12/23 11:45
  */
 @Data
-public class RollOutApplyVO extends BaseVO {
+public class RollOutApplyVO extends BaseRes {
 
     /**
      * 客户id

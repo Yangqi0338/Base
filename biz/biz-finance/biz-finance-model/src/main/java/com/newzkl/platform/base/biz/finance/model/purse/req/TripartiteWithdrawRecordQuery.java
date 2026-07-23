@@ -24,7 +24,7 @@ public class TripartiteWithdrawRecordQuery extends BusinessPageQuery {
         /**
          * 默认
          */
-        DEFAULT(0, "create_time"),
+        DEFAULT(0, "id"),
         ;
 
         private final Integer code;

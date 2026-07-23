@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.finance.infrastructure.dao.PromiseFlowDAO;
 import com.newzkl.platform.base.biz.finance.infrastructure.entity.PromiseFlowDO;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PromiseFlowQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PromiseFlowVO;
-import com.newzkl.platform.base.common.ddd.model.EditColumnDTO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -60,7 +60,7 @@ public class PromiseFlowRepositoryImpl implements PromiseFlowRepository {
     }
 
     @Override
-    public void promiseFlowEdit(List<EditColumnDTO> columnList, Long id) {
+    public void promiseFlowEdit(List<EditColumnVO> columnList, Long id) {
         PromiseFlowQuery query = new PromiseFlowQuery();
         query.setId(id);
 //        promiseFlowDAO.columnByQuery(columnList, query);

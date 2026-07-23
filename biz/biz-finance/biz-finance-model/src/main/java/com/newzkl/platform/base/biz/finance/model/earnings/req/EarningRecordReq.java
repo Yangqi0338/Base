@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class EarningRecordReq extends BaseVO {
+public class EarningRecordReq extends BaseRes {
 
     /**
      * 消费类型
