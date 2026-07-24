@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform.Base.core</groupId>
+        <artifactId>core-job</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>core-job-domain</artifactId>
+    <packaging>jar</packaging>
+    <name>core-job-domain</name>
+    <description>execute_log 二级 Job 领域编排: BaseJob/JobContext/JobInvoker/XxlJobAdminClient + ExecuteLogDomain/Repository 端口</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-job-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-domain</artifactId>
+        </dependency>
+        <!-- @XxlJob 注解 + XxlJobSpringExecutor -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+        </dependency>
+        <!-- Page<T> 分页返回类型 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+    </dependencies>
+</project>

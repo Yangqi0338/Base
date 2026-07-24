@@ -68,8 +68,18 @@
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>core-job</artifactId>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-job-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-job-domain</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-job-infra</artifactId>
                 <version>${revision}</version>
             </dependency>
 
