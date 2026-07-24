@@ -6,42 +6,37 @@
 
     <parent>
         <groupId>com.newzkl.platform.Base.core</groupId>
-        <artifactId>core-job</artifactId>
+        <artifactId>core-mq</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>core-job-infra</artifactId>
+    <artifactId>core-mq-infra</artifactId>
     <packaging>jar</packaging>
-    <name>core-job-infra</name>
-    <description>execute_log 二级 Job 落库实现: DO/DAO/RepositoryImpl/ExecuteLogDomainImpl/ScanJob/JobAspect + XxlJobConfig 装配</description>
+    <name>core-mq-infra</name>
+    <description>本地消息落库实现: DO/DAO/RepositoryImpl(CAS)/DomainImpl/幂等消费者/LocalMessageJob</description>
 
     <dependencies>
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>
-            <artifactId>core-job-domain</artifactId>
+            <artifactId>core-mq-domain</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
-        <!-- @XxlJob / XxlJobSpringExecutor / XxlJobHelper -->
-        <dependency>
-            <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-job-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-        <!-- #126: fill 路径末发 JOB_CONTEXT_CLEAR 通知 (MQUtil) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-rocketmq</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>
-            <artifactId>core-mq-model</artifactId>
+            <artifactId>core-job-domain</artifactId>
+        </dependency>
+        <!-- @XxlJob 补偿任务 -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
         </dependency>
     </dependencies>
 </project>

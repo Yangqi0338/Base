@@ -82,6 +82,21 @@
                 <artifactId>core-job-infra</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-mq-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-mq-domain</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-mq-infra</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- ===== biz / user ===== -->
             <dependency>
