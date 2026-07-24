@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.sys.action.controller;
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
 import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
-import com.newzkl.platform.base.biz.sys.model.dict.vo.DictVO;
+import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -46,7 +46,7 @@ public class DictController {
      * @return 字典视图对象
      */
     @GetMapping("/dict")
-    public ScmResult<DictVO> dict(@RequestParam("id") Long id) {
+    public ScmResult<DictRes> dict(@RequestParam("id") Long id) {
         return ScmResult.success(dictDomain.dictVO(id));
     }
 
@@ -57,7 +57,7 @@ public class DictController {
      * @return 字典列表
      */
     @PostMapping("/dictList")
-    public ScmResult<List<DictVO>> dictList(@Validated @RequestBody DictQuery query) {
+    public ScmResult<List<DictRes>> dictList(@Validated @RequestBody DictQuery query) {
         return ScmResult.success(dictDomain.dictList(query));
     }
 

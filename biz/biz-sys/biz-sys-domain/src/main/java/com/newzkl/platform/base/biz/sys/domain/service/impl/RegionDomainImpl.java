@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 行政区域领域服务实现。
  *
- * <p>区域数据来源于 classpath 下 {@code area.json} (随 infrastructure 打包)。</p>
+ * <p>区域数据来源于 classpath 下 {@code area.json}。</p>
  *
  * <p>迁移说明: 源 {@code getBusinessRegion} 依赖 operatorFacade (跨域 RPC) 做运营商区域筛选,
  * 属跨域编排, 暂缓 (见 sys 迁移计划)。此处仅保留基础区域读取/平铺能力。</p>

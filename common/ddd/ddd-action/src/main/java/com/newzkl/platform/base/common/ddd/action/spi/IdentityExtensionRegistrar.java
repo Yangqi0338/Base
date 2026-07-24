@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.action.spi;
 
-import com.newzkl.platform.base.common.ddd.model.spi.IdentityExtension;
-import com.newzkl.platform.base.common.ddd.model.spi.IdentityImpl;
+import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
+import com.newzkl.platform.base.common.ddd.application.spi.IdentityImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;

@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.sys.domain.adapt.repository.DictRepository;
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
 import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
-import com.newzkl.platform.base.biz.sys.model.dict.vo.DictVO;
+import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,23 +27,23 @@ public class DictDomainImpl implements DictDomain {
     }
 
     @Override
-    public DictVO dictVO(Long id) {
+    public DictRes dictVO(Long id) {
         return dictRepository.dictVO(id);
     }
 
     @Override
-    public List<DictVO> dictList(DictQuery dictQuery) {
+    public List<DictRes> dictList(DictQuery dictQuery) {
         return dictRepository.dictList(dictQuery);
     }
 
     @Override
     public String nextCode(Long id) {
-        DictVO dictVO = dictRepository.dictVOLock(id);
+        DictRes dictRes = dictRepository.dictVOLock(id);
         String value;
-        if (dictVO == null || dictVO.getValue() == null) {
+        if (dictRes == null || dictRes.getValue() == null) {
             value = "1";
         } else {
-            value = Long.toString(Long.parseLong(dictVO.getValue()) + 1);
+            value = Long.toString(Long.parseLong(dictRes.getValue()) + 1);
         }
         DictReq dict = new DictReq();
         dict.setId(id);
@@ -58,8 +58,8 @@ public class DictDomainImpl implements DictDomain {
      * @param req 字典请求
      * @return 字典视图对象
      */
-    private DictVO toVO(DictReq req) {
-        DictVO vo = new DictVO();
+    private DictRes toVO(DictReq req) {
+        DictRes vo = new DictRes();
         vo.setId(req.getId());
         vo.setValue(req.getValue());
         vo.setDesc(req.getDesc());

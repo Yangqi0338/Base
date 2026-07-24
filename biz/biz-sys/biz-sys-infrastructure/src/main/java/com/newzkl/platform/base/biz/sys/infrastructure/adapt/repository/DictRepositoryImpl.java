@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.sys.domain.adapt.repository.DictRepository;
 import com.newzkl.platform.base.biz.sys.infrastructure.dao.DictDAO;
 import com.newzkl.platform.base.biz.sys.infrastructure.entity.DictDO;
 import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
-import com.newzkl.platform.base.biz.sys.model.dict.vo.DictVO;
+import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -30,7 +30,7 @@ public class DictRepositoryImpl implements DictRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long dictSave(DictVO dict) {
+    public Long dictSave(DictRes dict) {
         DictDO dictDO = TransferUtils.transfer(dict, DictDO::new);
         dictDAO.insertOrUpdate(dictDO);
         return dictDO.getId();
@@ -44,26 +44,26 @@ public class DictRepositoryImpl implements DictRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void dictUpdate(DictVO dict) {
+    public void dictUpdate(DictRes dict) {
         dictDAO.updateById(TransferUtils.transfer(dict, DictDO::new));
     }
 
     @Override
-    public DictVO dictVO(Long id) {
-        return TransferUtils.transfer(dictDAO.selectById(id), DictVO::new);
+    public DictRes dictVO(Long id) {
+        return TransferUtils.transfer(dictDAO.selectById(id), DictRes::new);
     }
 
     @Override
-    public List<DictVO> dictList(DictQuery dictQuery) {
+    public List<DictRes> dictList(DictQuery dictQuery) {
         Page<DictDO> page = dictDAO.selectPage(RepositorySupport.page(dictQuery), dictDAO.getLw(dictQuery));
-        return TransferUtils.transfers(page.getRecords(), DictVO::new);
+        return TransferUtils.transfers(page.getRecords(), DictRes::new);
     }
 
     @Override
-    public DictVO dictVOLock(Long id) {
+    public DictRes dictVOLock(Long id) {
         DictDO dictDO = dictDAO.selectOne(new BaseLambdaQueryWrapper<DictDO>()
                 .eq(DictDO::getId, id)
                 .last("for update"));
-        return TransferUtils.transfer(dictDO, DictVO::new);
+        return TransferUtils.transfer(dictDO, DictRes::new);
     }
 }

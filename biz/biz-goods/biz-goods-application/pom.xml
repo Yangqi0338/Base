@@ -17,6 +17,11 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-goods-domain</artifactId>
         </dependency>
+        <!-- 身份 SPI 注解 @IdentityExtension/@IdentityImpl (SpuQueryExt 扩展点标记 + Default 实现) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-application</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.sys.domain.service;
 
 import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
-import com.newzkl.platform.base.biz.sys.model.dict.vo.DictVO;
+import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface DictDomain {
      * @param id 字典 id
      * @return 字典视图对象
      */
-    DictVO dictVO(Long id);
+    DictRes dictVO(Long id);
 
     /**
      * 字典列表 (分页降级为列表, 分页在基础设施层内部执行)。
@@ -34,7 +34,7 @@ public interface DictDomain {
      * @param dictQuery 字典查询
      * @return 字典列表
      */
-    List<DictVO> dictList(DictQuery dictQuery);
+    List<DictRes> dictList(DictQuery dictQuery);
 
     /**
      * 取指定 key 的下一个序列值, 不存在则从 1 开始并落库。

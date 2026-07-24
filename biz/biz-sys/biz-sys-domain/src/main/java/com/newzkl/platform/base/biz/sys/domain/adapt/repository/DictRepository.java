@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.sys.domain.adapt.repository;
 
 import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
-import com.newzkl.platform.base.biz.sys.model.dict.vo.DictVO;
+import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface DictRepository {
      * @param dict 字典视图对象
      * @return 字典 id
      */
-    Long dictSave(DictVO dict);
+    Long dictSave(DictRes dict);
 
     /**
      * 字典删除。
@@ -31,7 +31,7 @@ public interface DictRepository {
      *
      * @param dict 字典视图对象
      */
-    void dictUpdate(DictVO dict);
+    void dictUpdate(DictRes dict);
 
     /**
      * 字典详情。
@@ -39,7 +39,7 @@ public interface DictRepository {
      * @param id 字典 id
      * @return 字典视图对象
      */
-    DictVO dictVO(Long id);
+    DictRes dictVO(Long id);
 
     /**
      * 字典列表 (分页在实现内部执行)。
@@ -47,7 +47,7 @@ public interface DictRepository {
      * @param dictQuery 字典查询
      * @return 字典列表
      */
-    List<DictVO> dictList(DictQuery dictQuery);
+    List<DictRes> dictList(DictQuery dictQuery);
 
     /**
      * 加锁读取字典 (行锁, 用于序列自增)。
@@ -55,5 +55,5 @@ public interface DictRepository {
      * @param id 字典 id
      * @return 字典视图对象
      */
-    DictVO dictVOLock(Long id);
+    DictRes dictVOLock(Long id);
 }

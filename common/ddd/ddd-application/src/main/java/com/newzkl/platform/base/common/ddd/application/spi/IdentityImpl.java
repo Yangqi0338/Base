@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.common.ddd.model.spi;
+package com.newzkl.platform.base.common.ddd.application.spi;
 
 import org.springframework.stereotype.Component;
 

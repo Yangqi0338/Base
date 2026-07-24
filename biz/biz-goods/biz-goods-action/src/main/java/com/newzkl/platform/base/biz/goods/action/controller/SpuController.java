@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.goods.action.controller;
 import com.newzkl.platform.base.biz.goods.action.cmd.SpuCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
+import com.newzkl.platform.base.biz.goods.application.goods.ext.SpuQueryExt;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
@@ -39,6 +40,7 @@ public class SpuController {
     private final SpuService spuService;
     private final SpuDomain spuDomain;
     private final GoodsQueryService goodsQueryService;
+    private final SpuQueryExt spuQueryExt;
 
     /**
      * 外部商品修改。
@@ -98,7 +100,7 @@ public class SpuController {
     @GetMapping("spu")
     public ScmResult<SpuVO> spu(@RequestParam("id") Long id,
                                 @RequestParam(value = "needExtraInfo", required = false, defaultValue = "false") Boolean needExtraInfo) {
-        return ScmResult.success(goodsQueryService.spuVO(id, needExtraInfo));
+        return ScmResult.success(spuQueryExt.spu(id, needExtraInfo));
     }
 
     /**

@@ -1,7 +1,8 @@
 package com.newzkl.platform.base.common.ddd.action.spi;
 
-import com.newzkl.platform.base.common.ddd.model.spi.IdentityExtension;
+import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
@@ -9,13 +10,10 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.env.Environment;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-
-import java.util.Set;
 
 /**
  * 身份扩展点透明代理注册器。
@@ -26,18 +24,11 @@ import java.util.Set;
  *
  * @author KC
  */
-public class IdentityExtensionProxyRegistrar
-        implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+@Component
+public class IdentityExtensionProxyRegistrar implements BeanDefinitionRegistryPostProcessor {
 
     /** 扫描根包, 覆盖平台全部 biz 与 plugin 扩展点。 */
     private static final String BASE_PACKAGE = "com.newzkl.platform";
-
-    private Environment environment;
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
@@ -63,14 +54,16 @@ public class IdentityExtensionProxyRegistrar
     /**
      * 构建仅接受 {@link IdentityExtension} 标注接口的扫描器。
      *
+     * <p>使用扫描器自带的默认 {@code StandardEnvironment}, 避免依赖 {@code EnvironmentAware}
+     * (BDRPP 阶段 aware 回调不可靠)。</p>
+     *
      * @return 组件扫描器
      */
     private ClassPathScanningCandidateComponentProvider buildScanner() {
         ClassPathScanningCandidateComponentProvider scanner =
-                new ClassPathScanningCandidateComponentProvider(false, environment) {
+                new ClassPathScanningCandidateComponentProvider(false) {
                     @Override
-                    protected boolean isCandidateComponent(
-                            org.springframework.beans.factory.annotation.AnnotatedBeanDefinition beanDefinition) {
+                    protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
                         // 扩展点是被标注的独立接口, 覆盖默认 (默认排除接口)。
                         return beanDefinition.getMetadata().isInterface()
                                 && beanDefinition.getMetadata().isIndependent();
