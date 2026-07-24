@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2023/12/23 14:21
  */
 @Data
-public class RollOutApplyQuery extends BusinessPageQuery {
+public class RollOutApplyQuery extends BizPageQuery {
 
     /**
      * 客户类型
@@ -51,6 +51,6 @@ public class RollOutApplyQuery extends BusinessPageQuery {
     private List<AuditEnum.WithdrawSate> auditStateList;
 
     public void setAuditState(AuditEnum.WithdrawSate auditState) {
-        this.auditStateList = BusinessPageQuery.doWrapperList(auditStateList, auditState);
+        this.auditStateList = BizPageQuery.doWrapperList(auditStateList, auditState);
     }
 }

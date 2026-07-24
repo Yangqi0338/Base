@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class ChannelQuery extends BusinessPageQuery {
+public class ChannelQuery extends BizPageQuery {
     /**
      * 主体类型 (查询)
      */

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.enums.finance;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.biz.req.query;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CategoryQuery extends BusinessPageQuery {
+public class CategoryQuery extends BizPageQuery {
     /**
      * 父ID集合
      */

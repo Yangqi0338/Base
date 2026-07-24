@@ -1,14 +1,14 @@
 package com.newzkl.platform.base.biz.finance.model.account.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BillOrderAwardQuery extends BusinessPageQuery {
+public class BillOrderAwardQuery extends BizPageQuery {
 
     /**
      * 角色

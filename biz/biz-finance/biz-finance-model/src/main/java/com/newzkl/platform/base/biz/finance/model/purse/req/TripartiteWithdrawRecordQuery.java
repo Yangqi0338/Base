@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ import java.util.Arrays;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TripartiteWithdrawRecordQuery extends BusinessPageQuery {
+public class TripartiteWithdrawRecordQuery extends BizPageQuery {
 
     @AllArgsConstructor
     @Getter

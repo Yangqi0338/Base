@@ -22,6 +22,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterReco
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
+import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.RedisEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountInfo;
@@ -74,7 +75,8 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
         AccountPurseVO accountPurseVO = TransferUtils.transfer(entity, AccountPurseVO::new);
         AccountInfo account = accountFacade.account(
-                entity.getAccountType().getRole().getClient(), SecurityUtils.getAccountId());
+                CommonEnum.Client.getByCode(entity.getAccountType().getRole().getClient().getCode()),
+                SecurityUtils.getAccountId());
         if (ObjectUtil.isNotNull(account)) {
             accountPurseVO.setHeadImg(account.getHead());
             accountPurseVO.setName(account.getNickname());

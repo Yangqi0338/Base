@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.dto.virtualSpu;
 
-import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

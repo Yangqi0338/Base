@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author kc
  */
 @Data
-public class UserTaskQuery extends BusinessPageQuery {
+public class UserTaskQuery extends BizPageQuery {
     private static final long serialVersionUID = -54429464448553649L;
 
     /**

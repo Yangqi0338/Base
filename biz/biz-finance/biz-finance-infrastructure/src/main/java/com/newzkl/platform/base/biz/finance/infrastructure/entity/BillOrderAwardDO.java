@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

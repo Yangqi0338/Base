@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.support.api;
 
 import com.newzkl.platform.base.biz.order.model.enums.user.AccountEnum;
-import com.newzkl.platform.base.biz.order.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.virtualSpu.BuyCreateCd
 import com.newzkl.platform.base.biz.goods.model.goods.req.virtualSpu.ToCdkCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.virtualSpu.CdkVO;
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;

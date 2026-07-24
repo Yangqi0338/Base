@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.application.purse.service.WithdrawService;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuRollOutRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountWithdrawReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyAuditReq;

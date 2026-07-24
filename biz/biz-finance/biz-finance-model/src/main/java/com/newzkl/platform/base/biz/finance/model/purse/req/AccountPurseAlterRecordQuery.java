@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2023/12/23 16:53
  */
 @Data
-public class AccountPurseAlterRecordQuery extends BusinessPageQuery {
+public class AccountPurseAlterRecordQuery extends BizPageQuery {
 
     /**
      * 账户类型 0:总账户  其他：甄选师有多个分账户  1：直推奖  2：分红奖

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;

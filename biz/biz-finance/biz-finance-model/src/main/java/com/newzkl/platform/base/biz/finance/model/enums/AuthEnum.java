@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.enums;
 
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

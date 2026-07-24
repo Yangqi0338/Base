@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
-import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.Condition;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.query.spu;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 * @author fang
 */
 @Data
-public class SpuAttributeQuery extends BusinessPageQuery {
+public class SpuAttributeQuery extends BizPageQuery {
 
     /**
     * spuId (查询)

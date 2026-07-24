@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.req;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 * @author fang
 */
 @Data
-public class StoreQuery extends BusinessPageQuery {
+public class StoreQuery extends BizPageQuery {
     private Long id;
     private List<Long> idList;
     /**

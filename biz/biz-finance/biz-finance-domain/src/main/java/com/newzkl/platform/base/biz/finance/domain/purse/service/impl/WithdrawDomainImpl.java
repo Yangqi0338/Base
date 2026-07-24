@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.finance.model.assembler.AccountPurseRollOutA
 import com.newzkl.platform.base.biz.finance.model.assembler.AccountWithdrawRecordAssembler;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

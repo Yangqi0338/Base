@@ -169,6 +169,29 @@
                 <version>${mybatis-plus-ext.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.dromara.mpe</groupId>
+                <artifactId>mybatis-plus-ext-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus-ext.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.dromara.mpe</groupId>
+                        <artifactId>mybatis-plus-ext-bind</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.dromara.mpe</groupId>
+                        <artifactId>mybatis-plus-ext-datasource</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.dromara.mpe</groupId>
+                        <artifactId>mybatis-plus-ext-condition</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.dromara.autotable</groupId>
+                        <artifactId>auto-table-strategy-all</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>

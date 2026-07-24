@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
-import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,13 +11,13 @@ import lombok.EqualsAndHashCode;
  * <p>支持多条件组合查询，默认按默认地址+更新时间排序。</p>
  *
  * <p>迁移说明：源类继承 MyBatis-Plus Page（extension），model 层无 MP extension 依赖，
- * 改继承 {@link BusinessPageQuery}；infra 层据此构造 MP Page 分页。</p>
+ * 改继承 {@link BizPageQuery}；infra 层据此构造 MP Page 分页。</p>
  *
  * @author sijiwang
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ShipAddressPageReq extends BusinessPageQuery {
+public class ShipAddressPageReq extends BizPageQuery {
     /**
      * 所属账号ID（必填，数据隔离）
      */

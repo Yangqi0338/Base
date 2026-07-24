@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.enums;
 
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

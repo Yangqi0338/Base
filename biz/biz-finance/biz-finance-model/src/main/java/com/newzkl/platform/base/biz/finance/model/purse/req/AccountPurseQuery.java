@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AccountPurseQuery extends BusinessPageQuery {
+public class AccountPurseQuery extends BizPageQuery {
 
     /**
      * 客户类型

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req.cmd;
 
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

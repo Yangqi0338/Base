@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AccountContributeQuery extends BusinessPageQuery {
+public class AccountContributeQuery extends BizPageQuery {
 
     /**
      * 客户类型

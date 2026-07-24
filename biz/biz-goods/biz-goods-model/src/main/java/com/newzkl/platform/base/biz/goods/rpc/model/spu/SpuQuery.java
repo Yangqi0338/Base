@@ -1,11 +1,11 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.spu;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.user.identity.OperatorEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +21,7 @@ import java.util.List;
 */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SpuQuery extends BusinessPageQuery implements Serializable {
+public class SpuQuery extends BizPageQuery implements Serializable {
 
     /**
      * 市场ID

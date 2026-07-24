@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.query.distribution;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class StoreDistributionQuery extends BusinessPageQuery {
+public class StoreDistributionQuery extends BizPageQuery {
 
     /**
      * 状态 0：下架  1：上架

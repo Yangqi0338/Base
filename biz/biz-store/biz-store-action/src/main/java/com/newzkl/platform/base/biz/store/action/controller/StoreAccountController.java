@@ -4,7 +4,7 @@ import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreAccountDomain;
 import com.newzkl.platform.base.biz.store.model.enums.EventTrackingEnum;
-import com.newzkl.platform.base.biz.store.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.store.model.enums.RoleLimit;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountUpdateReq;

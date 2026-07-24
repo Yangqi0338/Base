@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.spu;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PalletSpuQuery extends BusinessPageQuery implements Serializable {
+public class PalletSpuQuery extends BizPageQuery implements Serializable {
 
     /**
      * 商品渠道来源 SpuAccountId

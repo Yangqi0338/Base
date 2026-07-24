@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.support.OperatorConfigVO;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.biz.account.domain.repository.DealerRepository;

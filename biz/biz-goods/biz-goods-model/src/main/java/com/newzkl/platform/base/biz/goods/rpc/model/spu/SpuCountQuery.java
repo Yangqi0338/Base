@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.spu;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class SpuCountQuery extends BusinessPageQuery {
+public class SpuCountQuery extends BizPageQuery {
 
     /**
      * 供应商id列表

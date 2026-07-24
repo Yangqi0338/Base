@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserFollowPageReq extends BusinessPageQuery {
+public class UserFollowPageReq extends BizPageQuery {
 
     /**
      * 用户ID

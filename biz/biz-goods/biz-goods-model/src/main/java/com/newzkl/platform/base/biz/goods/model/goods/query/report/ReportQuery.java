@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.query.report;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ReportQuery extends BusinessPageQuery {
+public class ReportQuery extends BizPageQuery {
     /**
      * 名称
      */

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.core.rocketmq.utils.MQUtil;
 import com.newzkl.platform.base.biz.order.model.support.MQ;
 import com.newzkl.platform.base.biz.order.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.biz.order.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.order.model.order.dto.OrderStateRecord;
 import com.newzkl.platform.base.biz.order.model.order.dto.SpuOrder;
 import lombok.RequiredArgsConstructor;

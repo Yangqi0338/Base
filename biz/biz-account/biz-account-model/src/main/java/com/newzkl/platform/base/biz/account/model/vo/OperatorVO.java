@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.account.model.vo;
 import cn.hutool.core.lang.Opt;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.model.req.web.OperatorProxySaveReq;
 import lombok.Data;
 

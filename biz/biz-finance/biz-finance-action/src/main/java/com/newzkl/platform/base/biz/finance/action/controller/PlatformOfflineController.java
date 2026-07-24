@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.application.purse.service.PurseService;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.res.ScmResult;

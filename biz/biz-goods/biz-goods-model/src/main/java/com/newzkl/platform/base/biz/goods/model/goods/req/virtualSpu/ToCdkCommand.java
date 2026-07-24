@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.virtualSpu;
 
-import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

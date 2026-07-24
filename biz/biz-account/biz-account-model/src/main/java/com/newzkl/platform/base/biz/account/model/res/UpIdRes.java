@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.Data;
  * @since 2025-09-18 09:49:13
  */
 @Data
-public class BankQuery extends BusinessPageQuery {
+public class BankQuery extends BizPageQuery {
     private static final long serialVersionUID = -29137350637771477L;
 
     /**

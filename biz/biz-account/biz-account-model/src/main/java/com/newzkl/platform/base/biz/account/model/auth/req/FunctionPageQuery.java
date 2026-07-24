@@ -1,14 +1,14 @@
 package com.newzkl.platform.base.biz.account.model.auth.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class FunctionPageQuery extends BusinessPageQuery {
+public class FunctionPageQuery extends BizPageQuery {
 
     /**
      * id

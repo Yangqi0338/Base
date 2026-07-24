@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 

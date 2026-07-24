@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.query;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class ModelShopStorePageQuery extends BusinessPageQuery {
+public class ModelShopStorePageQuery extends BizPageQuery {
 
     /**
      * 门店ID

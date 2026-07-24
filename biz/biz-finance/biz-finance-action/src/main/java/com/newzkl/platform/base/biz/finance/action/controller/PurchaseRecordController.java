@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;

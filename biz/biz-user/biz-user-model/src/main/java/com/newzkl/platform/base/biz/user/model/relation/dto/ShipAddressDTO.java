@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.dto;
 
-import com.newzkl.platform.base.biz.user.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

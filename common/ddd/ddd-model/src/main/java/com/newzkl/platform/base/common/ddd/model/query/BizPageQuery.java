@@ -18,7 +18,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BusinessPageQuery extends PageQuery implements Serializable {
+public class BizPageQuery extends PageQuery implements Serializable {
     /**
      * id列表
      */
@@ -117,21 +117,5 @@ public class BusinessPageQuery extends PageQuery implements Serializable {
             return;
         }
         this.createTime = ArrayUtil.append(this.createTime, formatDateTime(dateTime));
-    }
-
-    public void setCreateTimeBegin(Object startTime) {
-        setCreateStartTime(startTime);
-    }
-
-    public void setCreateTimeL(Object startTime) {
-        setCreateStartTime(startTime);
-    }
-
-    public void setCreateTimeEnd(Object endTime) {
-        setCreateEndTime(endTime);
-    }
-
-    public void setCreateTimeR(Object endTime) {
-        setCreateEndTime(endTime);
     }
 }

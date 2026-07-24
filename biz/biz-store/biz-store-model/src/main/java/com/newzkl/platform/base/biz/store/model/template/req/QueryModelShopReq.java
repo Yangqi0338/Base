@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.template.req;
 
 import com.newzkl.platform.base.biz.store.model.enums.AuditEnum;
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class QueryModelShopReq extends BusinessPageQuery {
+public class QueryModelShopReq extends BizPageQuery {
 
     /**
      * 审核状态

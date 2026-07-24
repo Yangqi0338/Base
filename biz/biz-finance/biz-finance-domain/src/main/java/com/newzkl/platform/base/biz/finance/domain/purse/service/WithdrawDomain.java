@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.purse.service;
 
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 
 import java.util.List;
 

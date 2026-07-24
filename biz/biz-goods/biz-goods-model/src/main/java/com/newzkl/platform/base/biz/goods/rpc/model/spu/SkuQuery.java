@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.spu;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 * @author fang
 */
 @Data
-public class SkuQuery extends BusinessPageQuery {
+public class SkuQuery extends BizPageQuery {
 
     /**
      * spuId集合 (查询)

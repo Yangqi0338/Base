@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;

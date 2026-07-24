@@ -16,7 +16,7 @@ import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.model.support.UserProperties;

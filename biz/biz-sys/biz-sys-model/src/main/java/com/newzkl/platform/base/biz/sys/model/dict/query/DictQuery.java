@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.sys.model.dict.query;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +11,6 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DictQuery extends BusinessPageQuery {
+public class DictQuery extends BizPageQuery {
 
 }

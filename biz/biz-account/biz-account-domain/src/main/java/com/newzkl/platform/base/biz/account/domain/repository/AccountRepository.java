@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.res.SubAccount;
 import com.newzkl.platform.base.biz.account.model.res.UpIdRes;

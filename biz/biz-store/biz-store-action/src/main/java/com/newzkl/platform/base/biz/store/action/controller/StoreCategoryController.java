@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.action.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreCategoryDomain;
-import com.newzkl.platform.base.biz.store.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveCommand;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;

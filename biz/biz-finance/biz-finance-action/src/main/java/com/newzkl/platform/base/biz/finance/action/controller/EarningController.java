@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.earnings.res.AccountContribute
 import com.newzkl.platform.base.biz.finance.model.earnings.res.AppEarningRecordRes;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.EarningRecordVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.TotalEarningVO;
-import com.newzkl.platform.base.biz.finance.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
 import lombok.RequiredArgsConstructor;

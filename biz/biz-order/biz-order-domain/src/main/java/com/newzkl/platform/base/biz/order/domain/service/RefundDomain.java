@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.domain.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.order.model.order.dto.SkuOrder;
 import com.newzkl.platform.base.biz.order.model.order.dto.SpuOrder;
 import com.newzkl.platform.base.biz.order.model.order.req.ApplyPlatformReq;

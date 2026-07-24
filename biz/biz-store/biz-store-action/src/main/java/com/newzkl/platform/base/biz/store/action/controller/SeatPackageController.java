@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.application.service.SeatPackageService;
 import com.newzkl.platform.base.biz.store.domain.store.service.SeatPackageDomain;
-import com.newzkl.platform.base.biz.store.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.store.model.enums.RoleLimit;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageCreateReq;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;

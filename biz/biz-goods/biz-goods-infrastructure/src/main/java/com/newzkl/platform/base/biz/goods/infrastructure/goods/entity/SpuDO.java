@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.user.identity.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

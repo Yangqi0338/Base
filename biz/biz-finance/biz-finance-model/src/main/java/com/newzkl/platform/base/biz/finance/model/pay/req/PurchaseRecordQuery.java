@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.req;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.Data;
  * @since 2025-11-25 17:24:23
  */
 @Data
-public class PurchaseRecordQuery extends BusinessPageQuery {
+public class PurchaseRecordQuery extends BizPageQuery {
     private static final long serialVersionUID = 208229929331831171L;
 
     /**

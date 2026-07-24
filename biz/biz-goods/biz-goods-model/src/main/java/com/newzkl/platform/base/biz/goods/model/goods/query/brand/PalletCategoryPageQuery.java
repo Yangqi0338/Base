@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.query.brand;
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class PalletCategoryPageQuery extends BusinessPageQuery {
+public class PalletCategoryPageQuery extends BizPageQuery {
 
     /**
      * 父ID

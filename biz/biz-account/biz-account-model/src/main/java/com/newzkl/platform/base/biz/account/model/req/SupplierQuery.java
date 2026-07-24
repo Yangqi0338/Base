@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.query.BusinessPageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.SupplierEnum;
@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class SupplierQuery extends BusinessPageQuery {
+public class SupplierQuery extends BizPageQuery {
 
     /**
      * 状态
