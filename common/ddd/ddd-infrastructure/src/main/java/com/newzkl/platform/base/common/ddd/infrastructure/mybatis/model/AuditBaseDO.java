@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model;
 
-import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Getter;
 import lombok.Setter;
 import org.dromara.autotable.annotation.Index;

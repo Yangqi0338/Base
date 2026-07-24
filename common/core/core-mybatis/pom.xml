@@ -11,23 +11,19 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <groupId>com.newzkl.platform.Base.core</groupId>
     <artifactId>core-mybatis</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>core-mybatis</name>
     <description>MyBatis ORM封装: 使用MyBatis plus extension</description>
+    <modules>
+        <module>core-mybatis-infrastructure</module>
+    </modules>
 
     <dependencies>
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.mpe</groupId>
-            <artifactId>mybatis-plus-ext-spring-boot3-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mybatis-infrastructure</artifactId>
         </dependency>
     </dependencies>
 </project>

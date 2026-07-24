@@ -13,11 +13,15 @@ import cn.hutool.core.util.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
 
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -484,5 +488,132 @@ public class CommonUtil {
     public static List<Integer> strToIntList(String string) {
         List<String> strings = StrUtil.splitTrim(string, ",");
         return CollUtil.map(strings, Integer::parseInt, true);
+    }
+
+    private static final JavaProjectBuilder builder = new JavaProjectBuilder();
+    private static final ConcurrentHashMap<Class<?>, JavaClass> JAVA_CLASS_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * 查找某个类在项目的目录位置
+     *
+     * @param clazz 目标类
+     * @return 该类所在模块的源代码相对目录路径，无法解析时返回空字符串
+     */
+    public static String findClassDirPath(Class<?> clazz) {
+        List<String> dirList = StrUtil.split("src.main.java", ".");
+        // 从包名提取模块名
+
+        String packageName = clazz.getPackage().getName();
+        String prefix = "com.zhongze.chicken.";
+
+        if (packageName.startsWith(prefix)) {
+            String remaining = packageName.substring(prefix.length());
+            String[] parts = remaining.split("\\.");
+
+            Object subModuleName = ArrayUtil.get(parts, 1);
+            Object moduleName = ArrayUtil.get(parts, 0);
+            if (ObjectUtil.isEmpty(moduleName)) {
+                System.err.println("无法从类" + clazz.getName() + "中提取模块名，跳过该类");
+                return "";
+            }
+            if (ObjectUtil.isNotEmpty(subModuleName)) {
+                dirList.addFirst(moduleName + "-" + subModuleName.toString());
+            }
+            if (ObjectUtil.isNotEmpty(moduleName)) {
+                dirList.addFirst("adopt-chicken-" + moduleName);
+            }
+        }
+
+        if (dirList.size() <= 3) {
+            System.err.println("无法从类" + clazz.getName() + "中提取模块名，跳过该类");
+            return "";
+        }
+
+        return IgnoreStrJoiner.toStr(File.separator, dirList.toArray(new String[0]));
+    }
+
+    /**
+     * 通过QDox解析器获取指定类的JavaClass对象
+     * @ext 带缓存
+     * @param clazz 目标类
+     * @return QDox JavaClass对象
+     * @throws Exception 找不到源文件或解析失败时抛出
+     */
+    public static JavaClass findJavaClass(Class<?> clazz) throws Exception {
+        // 从缓存中获取
+        if (JAVA_CLASS_CACHE.containsKey(clazz)) {
+            return JAVA_CLASS_CACHE.get(clazz);
+        }
+
+        // 加载类的源文件
+        loadJavaSource(clazz);
+
+        // 获取QDox的JavaClass对象
+        JavaClass javaClass = builder.getClassByName(clazz.getName());
+        if (javaClass == null) {
+            throw new IllegalArgumentException("无法找到类: " + clazz.getName());
+        }
+        // 缓存JavaClass对象
+        JAVA_CLASS_CACHE.put(clazz, javaClass);
+        return javaClass;
+    }
+
+    /**
+     * 查 JavaField — QDox JavaClass.getFieldByName 仅本类字段；沿父类链递归查父类字段
+     *
+     * @param javaClass QDox JavaClass
+     * @param fieldName 字段名
+     * @return QDox JavaField；找不到返回 null
+     */
+    public static JavaField findJavaField(JavaClass javaClass, String fieldName) {
+        if (javaClass == null) return null;
+        // 本类命中直接返
+        JavaField field = javaClass.getFieldByName(fieldName);
+        if (field != null) return field;
+
+        // 父类不存在或到 Object 终止
+        JavaClass superJavaClass = javaClass.getSuperJavaClass();
+        try {
+            Class<?> clazz = Class.forName(superJavaClass.getFullyQualifiedName());
+            return findJavaField(findJavaClass(clazz), fieldName);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 加载Java源文件到QDox解析器
+     *
+     * @param clazz 目标类
+     * @return 加载成功返回 true
+     * @throws IOException 文件读取失败时抛出
+     */
+    private static boolean loadJavaSource(Class<?> clazz) throws IOException {
+        /*
+         * 优先按开发期磁盘路径读；生产/测试环境走 classpath 内嵌 .java
+         * (依赖 parent pom 把 src/main/java 下 *.java 作为资源打入 jar)
+         */
+        String moduleSourceDir = findClassDirPath(clazz);
+        String className = clazz.getName().replace('.', '/');
+        File moduleFile = new File(moduleSourceDir, className + ".java");
+
+        // 磁盘源
+        if (moduleFile.exists() && moduleFile.isFile()) {
+            builder.addSource(moduleFile);
+            return true;
+        }
+
+        // classpath 内嵌 .java
+        try (InputStream in = clazz.getClassLoader().getResourceAsStream(className + ".java")) {
+            if (in != null) {
+                builder.addSource(new InputStreamReader(in, StandardCharsets.UTF_8));
+                return true;
+            }
+        } catch (Exception e) {
+            System.err.println("从classpath读取源文件失败: " + e.getMessage());
+        }
+
+        System.err.println("无法找到源文件: " + clazz.getName());
+        return false;
     }
 }

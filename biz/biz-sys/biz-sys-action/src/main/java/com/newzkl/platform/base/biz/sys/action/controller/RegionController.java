@@ -38,7 +38,11 @@ public class RegionController {
      *
      * @param code 区域编码
      * @return 区域名称
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/getRegionByCode")
     public ScmResult<String> getRegionByCode(@RequestParam("code") Integer code) {
         return ScmResult.success(regionDomain.getRegionByCode(code));
@@ -50,7 +54,11 @@ public class RegionController {
      * @param parentCode 父编码, 为 null 时返回全部顶层
      * @param flatten    是否平铺
      * @return 区域列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/getRegionList")
     public ScmResult<List<Area>> getRegionList(@RequestParam(value = "parentCode", required = false) Integer parentCode,
                                                @RequestParam(value = "flatten", defaultValue = "false") boolean flatten) {

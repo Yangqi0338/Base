@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawConfig;
-import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

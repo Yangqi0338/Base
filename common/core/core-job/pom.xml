@@ -13,7 +13,6 @@
 
     <groupId>com.newzkl.platform.Base.core</groupId>
     <artifactId>core-job</artifactId>
-    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>core-job</name>
     <description>二级 job 技术特性聚合 (model/domain/infra)</description>
@@ -21,6 +20,13 @@
     <modules>
         <module>core-job-model</module>
         <module>core-job-domain</module>
-        <module>core-job-infra</module>
+        <module>core-job-infrastructure</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-job-infrastructure</artifactId>
+        </dependency>
+    </dependencies>
 </project>

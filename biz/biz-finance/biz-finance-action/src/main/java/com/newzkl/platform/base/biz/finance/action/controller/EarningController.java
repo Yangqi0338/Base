@@ -52,7 +52,11 @@ public class EarningController {
      *
      * @param req 分润记录查询
      * @return APP 分润记录列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/queryAppEarningRecord")
     public ScmResult<List<AppEarningRecordRes>> queryAppEarningRecord(@RequestBody EarningRecordQuery req) {
         if (req.getAccountId() == null) {
@@ -76,7 +80,11 @@ public class EarningController {
      *
      * @param req 客户贡献查询
      * @return 客户贡献列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/queryAccountContribute")
     public ScmResult<List<AccountContributeRes>> queryAccountContribute(@RequestBody AccountContributeQuery req) {
         if (req.getAccountId() == null) {

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
-import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 /**

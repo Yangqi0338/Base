@@ -74,7 +74,11 @@ public class PurseController {
      * 查询三方账户。
      *
      * @return 三方账户
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/queryAccountTripartitePurse")
     public ScmResult<AccountTripartitePurseVO> queryAccountTripartitePurse() {
         AccountTripartitePurseVO accountTripartitePurseVO = tripartitePurseDomain.queryAccountTripartitePurse(SecurityUtils.getAccountId());
@@ -89,7 +93,11 @@ public class PurseController {
      *
      * @param query 三方账户查询
      * @return 三方账户列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/queryTripartitePursePage")
     public ScmResult<List<AccountTripartitePurseVO>> queryTripartitePursePage(@RequestBody @Valid AccountTripartitePurseQuery query) {
         return ScmResult.success(tripartitePurseDomain.queryPageAccountTripartitePurse(query));
@@ -124,7 +132,11 @@ public class PurseController {
      *
      * @param req 变动记录查询
      * @return 动账明细列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/accountMovementDetails")
     public ScmResult<List<AccountPurseAlterRecordVO>> accountMovementDetails(@RequestBody AccountPurseAlterRecordQuery req) {
         if (req.getAccountId() == null) {

@@ -43,7 +43,11 @@ public class StoreCategoryController {
      *
      * @param id 分类 ID
      * @return 分类
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/{id}")
     public ScmResult<StoreCategory> detail(@PathVariable Long id) {
         return ScmResult.success(storeCategoryDomain.detail(id));

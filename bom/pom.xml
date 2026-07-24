@@ -69,6 +69,11 @@
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-job</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-job-model</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -79,7 +84,12 @@
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
-                <artifactId>core-job-infra</artifactId>
+                <artifactId>core-job-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-mq</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -94,7 +104,27 @@
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
-                <artifactId>core-mq-infra</artifactId>
+                <artifactId>core-mq-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-db-migrate</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-db-migrate-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-mybatis</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base.core</groupId>
+                <artifactId>core-mybatis-infrastructure</artifactId>
                 <version>${revision}</version>
             </dependency>
 

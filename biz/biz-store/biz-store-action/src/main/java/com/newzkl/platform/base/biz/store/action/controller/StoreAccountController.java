@@ -58,7 +58,11 @@ public class StoreAccountController {
      * @param req 埋点请求
      * @return 成功结果
      * @throws ScmException 门店 ID 为空时抛出
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/eventTracking")
     @RoleLimit({RoleEnum.CompanyRole.MEMBER, RoleEnum.CompanyRole.CHANNEL})
     public ScmResult<Void> eventTracking(@Validated({EventTrackingEnum.IStore.class}) @RequestBody EventTrackingReq req) {

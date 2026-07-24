@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.common.ddd.model.entity.BaseIdDO;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseIdDO;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.annotation.Resource;

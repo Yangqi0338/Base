@@ -31,7 +31,11 @@ public class CountController {
      *
      * @param timeQuery 时间范围查询条件
      * @return 首页统计结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("indexCount")
     public ScmResult<IndexCountRes> indexCount(@RequestBody TimeQuery timeQuery) {
         return ScmResult.success(spuRepository.indexCount(timeQuery));

@@ -13,7 +13,6 @@
 
     <groupId>com.newzkl.platform.Base.core</groupId>
     <artifactId>core-mq</artifactId>
-    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>core-mq</name>
     <description>本地消息 Outbox + CAS 幂等技术特性聚合 (model/domain/infra)</description>
@@ -21,6 +20,6 @@
     <modules>
         <module>core-mq-model</module>
         <module>core-mq-domain</module>
-        <module>core-mq-infra</module>
+        <module>core-mq-infrastructure</module>
     </modules>
 </project>

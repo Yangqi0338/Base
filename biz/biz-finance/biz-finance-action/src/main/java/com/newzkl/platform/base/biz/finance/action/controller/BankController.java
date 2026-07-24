@@ -39,7 +39,11 @@ public class BankController {
      *
      * @param id 银行主键
      * @return 银行详情
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/{id}")
     public ScmResult<BankVO> detail(@PathVariable Long id) {
         return ScmResult.success(bankService.detail(id));
@@ -52,7 +56,11 @@ public class BankController {
      *
      * @param file 银行导入 Excel 文件
      * @return 导入结果, 含解析错误信息
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PutMapping("/importBankAndBranch")
     public ScmResult<Object> importBankAndBranch(@RequestParam("file") MultipartFile file) {
         return bankService.huiFuImportExcel(file);

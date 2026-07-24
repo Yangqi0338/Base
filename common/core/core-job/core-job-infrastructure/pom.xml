@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform.Base.core</groupId>
+        <artifactId>core-job</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>core-job-infrastructure</artifactId>
+    <packaging>jar</packaging>
+    <name>core-job-infrastructure</name>
+    <description>execute_log 二级 Job 落库实现: DO/DAO/RepositoryImpl/ExecuteLogDomainImpl/ScanJob/JobAspect + XxlJobConfig 装配</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-job-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-infrastructure</artifactId>
+        </dependency>
+        <!-- @XxlJob / XxlJobSpringExecutor / XxlJobHelper -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+        </dependency>
+        <!-- #126: fill 路径末发 JOB_CONTEXT_CLEAR 通知 (MQUtil) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-rocketmq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-model</artifactId>
+        </dependency>
+    </dependencies>
+</project>

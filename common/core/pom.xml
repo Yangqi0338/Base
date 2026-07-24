@@ -23,5 +23,7 @@
         <module>core-rocketmq</module>
         <module>core-job</module>
         <module>core-mq</module>
+        <module>core-db-migrate</module>
+        <module>core-mybatis</module>
     </modules>
 </project>

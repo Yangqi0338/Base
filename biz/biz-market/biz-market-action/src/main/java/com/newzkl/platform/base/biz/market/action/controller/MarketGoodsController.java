@@ -44,7 +44,11 @@ public class MarketGoodsController {
      *
      * @param req 查询请求
      * @return 市场商品分页
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/appQueryMarketGoodList")
     public ScmResult<Page<GoodsRelationListVO>> appQueryMarketGoodList(@RequestBody GoodsListPageQuery req) {
         req.setUserId(SecurityUtils.getAccountId());
@@ -129,7 +133,11 @@ public class MarketGoodsController {
      *
      * @param query 查询请求
      * @return 市场商品分页
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/channelDistributionSelectedGoodsList")
     public ScmResult<Page<GoodsRelationListVO>> channelDistributionSelectedGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq query) {
         return ScmResult.success(goodsRelationDomain.channelDistributionSelectedGoodsList(query));
@@ -152,7 +160,11 @@ public class MarketGoodsController {
      *
      * @param idList ID 列表
      * @return 成功结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/channelBatchCancelSelected")
     public ScmResult<Void> channelBatchCancelSelected(@RequestBody IdListCommand idList) {
         idList.getIdList().forEach(goodsRelationDomain::channelCancelSelected);

@@ -11,23 +11,19 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <groupId>com.newzkl.platform.Base.core</groupId>
     <artifactId>core-db-migrate</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>core-db-migrate</name>
     <description>数据库迁移与模型管理: Flyway + AutoTable (仅处理MySQL)</description>
+    <modules>
+        <module>core-db-migrate-infrastructure</module>
+    </modules>
 
     <dependencies>
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.autotable</groupId>
-            <artifactId>auto-table-strategy-mysql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-db-migrate-infrastructure</artifactId>
         </dependency>
     </dependencies>
 </project>

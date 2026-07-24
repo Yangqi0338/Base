@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * XXL-Job admin REST 客户端
- * <p>由 core-job-infra 的 XxlJobConfig 装配; 配置项: xxl.job.admin.addresses/username/password,
+ * <p>由 core-job-infrastructure 的 XxlJobConfig 装配; 配置项: xxl.job.admin.addresses/username/password,
  * xxl.job.executor.groupIds.
  * @ext cookie session 鉴权
  */

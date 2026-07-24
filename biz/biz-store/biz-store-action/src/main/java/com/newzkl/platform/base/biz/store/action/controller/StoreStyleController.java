@@ -74,7 +74,11 @@ public class StoreStyleController {
      * 供应商模板列表。
      *
      * @return 模板列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/supplierTemplateList")
     public ScmResult<List<SupplierTemplateRes>> supplierTemplateList() {
         return ScmResult.success(storeStyleDomain.supplierTemplateList(SecurityUtils.getAccountId()));
@@ -85,7 +89,11 @@ public class StoreStyleController {
      *
      * @param req 更新请求
      * @return 成功结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/supplierTemplateUpdate")
     public ScmResult<Void> supplierTemplateUpdate(@Validated @RequestBody SupplierTemplateUpdateReq req) {
         storeStyleDomain.supplierTemplateUpdate(req);

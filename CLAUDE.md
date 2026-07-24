@@ -19,6 +19,7 @@
 | `rules/Architecture.md` | 技术红线（arch-mode=biz-system、三硬线、分层、common 两级、中台拆细哲学） | 写/改任何 `.java` 前 |
 | `rules/Constitution.md` | 业务铁律 | 涉及业务逻辑时 |
 | `rules/Project.md` | 项目元信息（模块清单、技术栈） | 需全局背景时 |
+| `rules/DeadEndpoint.md` | 死接口生命周期（@Deprecated 标记/观察/清理，权威清单指向 docs） | 动某 biz 端点前 / 清理死代码时 |
 
 ## SPEC.md（根目录，当前 feature 动态规格）
 

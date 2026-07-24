@@ -31,7 +31,11 @@ public class StoreZoneController {
      *
      * @param req 分页请求
      * @return 专区分页
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/storeZonePage")
     public ScmResult<Page<StoreZoneResponse>> storeZonePage(@Validated @RequestBody StoreZonePageReq req) {
         return ScmResult.success(storeZoneDomain.storeZonePage(req));
@@ -42,7 +46,11 @@ public class StoreZoneController {
      *
      * @param req 创建请求
      * @return 成功结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/create")
     public ScmResult<Void> create(@Validated @RequestBody StoreZoneCreateReq req) {
         storeZoneDomain.create(req);
@@ -54,7 +62,11 @@ public class StoreZoneController {
      *
      * @param req 更新请求
      * @return 成功结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/update")
     public ScmResult<Void> update(@Validated @RequestBody StoreZoneUpdateReq req) {
         storeZoneDomain.update(req);

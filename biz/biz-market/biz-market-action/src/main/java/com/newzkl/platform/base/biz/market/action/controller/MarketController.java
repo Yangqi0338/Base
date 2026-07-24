@@ -46,7 +46,11 @@ public class MarketController {
      *
      * @param query 查询请求
      * @return 绑定市场分页
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/queryChannelBindMarket")
     public ScmResult<Page<AppBindMarketVO>> queryChannelBindMarket(@ModelAttribute ChannelMarketPageQuery query) {
         if (query.getClientId() == null) {
@@ -60,7 +64,11 @@ public class MarketController {
      *
      * @param query 查询请求
      * @return 绑定市场商品分页
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/queryChannelBindMarketGoods")
     public ScmResult<Page<AppBindMarketGoodsVO>> queryChannelBindMarketGoods(@ModelAttribute AppBindMarketGoodsPageQuery query) {
         if (query.getUserId() == null) {
@@ -110,7 +118,11 @@ public class MarketController {
      *
      * @param req 绑定请求
      * @return 绑定 ID
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/appChannelBindMarket")
     public ScmResult<Long> appChannelBindMarket(@RequestBody ClientBindMarketReq req) {
         return ScmResult.success(marketDomain.appChannelBindMarket(req));
@@ -217,7 +229,11 @@ public class MarketController {
      * 查询选品库商品分类。
      *
      * @return 选品库商品分类列表
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/querySelectorGoodsCategory")
     public ScmResult<List<MarketGoodsCategoryVO>> querySelectorGoodsCategory() {
         return ScmResult.success(marketDomain.queryMarketGoodsCategory(null, SecurityUtils.getAccountId()));

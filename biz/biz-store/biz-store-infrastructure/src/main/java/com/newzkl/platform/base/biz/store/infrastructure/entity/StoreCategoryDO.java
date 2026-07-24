@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 /**

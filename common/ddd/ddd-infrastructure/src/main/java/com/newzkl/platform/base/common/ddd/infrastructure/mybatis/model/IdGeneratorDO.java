@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.entity.BaseIdDO;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseIdDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Ignore;

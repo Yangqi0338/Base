@@ -38,7 +38,11 @@ public class PurchaseRecordController {
      *
      * @param id 主键
      * @return 单条数据
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @GetMapping("/{id}")
     public ScmResult<PurchaseRecordVO> detail(@PathVariable Long id) {
         return ScmResult.success(purchaseRecordDomain.detail(id));
@@ -49,7 +53,11 @@ public class PurchaseRecordController {
      *
      * @param saveCommand 编辑命令
      * @return 新增结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PostMapping("/add")
     public ScmResult<Long> add(@Validated @RequestBody PurchaseRecordReq saveCommand) {
         return ScmResult.success(purchaseRecordDomain.add(saveCommand));
@@ -60,7 +68,11 @@ public class PurchaseRecordController {
      *
      * @param saveCommand 编辑命令
      * @return 编辑结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @PutMapping("/edit")
     public ScmResult<Void> edit(@Validated @RequestBody PurchaseRecordReq saveCommand) {
         purchaseRecordDomain.edit(saveCommand);
@@ -72,7 +84,11 @@ public class PurchaseRecordController {
      *
      * @param id 主键
      * @return 删除结果
+     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
+     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
+     *   docs/planning/dead-endpoint-audit/README.md。
      */
+    @Deprecated
     @DeleteMapping("/del/{id}")
     public ScmResult<Void> del(@PathVariable Long id) {
         purchaseRecordDomain.del(id);
