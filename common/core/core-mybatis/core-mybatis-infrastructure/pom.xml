@@ -21,6 +21,10 @@
             <artifactId>core-utils</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-model</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.dromara.mpe</groupId>
             <artifactId>mybatis-plus-ext-spring-boot3-starter</artifactId>
         </dependency>

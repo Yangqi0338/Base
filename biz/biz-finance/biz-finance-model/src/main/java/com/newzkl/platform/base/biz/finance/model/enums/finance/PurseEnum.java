@@ -248,6 +248,94 @@ public class PurseEnum implements Serializable {
         @JsonValue
         private final String value;
         private final String desc;
+
+        /**
+         * 按三方返回的状态串取枚举。
+         *
+         * <p>回调报文里状态是裸串 (如 {@code NORMAL}), 而 VO 侧已是枚举, 需要此转换。</p>
+         *
+         * @param value 三方状态串
+         * @return 对应枚举; 无法识别返回 {@code null}
+         */
+        public static TripartitePurchaseStatus getByValue(String value) {
+            return Arrays.stream(values())
+                    .filter(it -> it.getValue().equals(value))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+
+    /**
+     * 三方账号绑卡审核状态 (汇付 {@code audit_status})。
+     *
+     * <p>迁移自 new-scm {@code FinanceEnum.TripartitePurchaseAuditStatus}。</p>
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum TripartitePurchaseAuditStatus {
+        /** 汇付审核通过 */
+        HUI_FU_SUCCESS("Y", "审核通过"),
+        /** 汇付审核中 */
+        HUI_FU_PROCESS("P", "审核中"),
+        /** 汇付审核失败 */
+        HUI_FU_FAIL("N", "审核失败"),
+        ;
+
+        @EnumValue
+        @JsonValue
+        private final String value;
+        private final String desc;
+
+        /**
+         * 按汇付返回的审核状态串取枚举。
+         *
+         * @param value 审核状态串
+         * @return 对应枚举; 无法识别返回 {@code null}
+         */
+        public static TripartitePurchaseAuditStatus getByValue(String value) {
+            return Arrays.stream(values())
+                    .filter(it -> it.getValue().equals(value))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+
+    /**
+     * 连连 ACCP 交易状态 (回调 {@code txn_status})。
+     *
+     * <p>迁移自 new-scm {@code TripartitePayMethod} 内的 {@code TRADE_*} 裸字符串常量,
+     * 收敛为枚举避免回调处理散落魔法值。</p>
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum TripartiteTxnStatus {
+        /** 交易处理中 */
+        WAIT_PAY("TRADE_WAIT_PAY", "交易处理中"),
+        /** 交易成功 */
+        SUCCESS("TRADE_SUCCESS", "交易成功"),
+        /** 交易失败 */
+        CLOSE("TRADE_CLOSE", "交易失败"),
+        /** 交易退回 */
+        CANCEL("TRADE_CANCEL", "交易退回"),
+        ;
+
+        @EnumValue
+        @JsonValue
+        private final String value;
+        private final String desc;
+
+        /**
+         * 按连连返回的交易状态串取枚举。
+         *
+         * @param value 交易状态串
+         * @return 对应枚举; 无法识别返回 {@code null}
+         */
+        public static TripartiteTxnStatus getByValue(String value) {
+            return Arrays.stream(values())
+                    .filter(it -> it.getValue().equals(value))
+                    .findFirst()
+                    .orElse(null);
+        }
     }
 
 }

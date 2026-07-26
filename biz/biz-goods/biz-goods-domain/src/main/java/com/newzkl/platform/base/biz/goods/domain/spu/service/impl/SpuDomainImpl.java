@@ -35,7 +35,7 @@ import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ScmException;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
-import com.newzkl.platform.base.biz.goods.model.properties.ScmSysProperties;
+import com.newzkl.platform.base.common.core.utils.properties.SysProperties;
 import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -918,8 +918,8 @@ public class SpuDomainImpl implements SpuDomain {
                 countQuery.resetQueryList();
                 List<Long> alreadyIdByPid = spuCategoryRepository.categoryPage(countQuery).getRecords()
                         .stream().map(SpuCategoryVO::getId).collect(Collectors.toList());
-                if (alreadyIdByPid.size() > ScmSysProperties.sameCategoryCount) {
-                    throw new ScmException(BaseErrorCode.PARAM, StrUtil.format("同级分类数量不能超过{},请删除一些", ScmSysProperties.sameCategoryCount));
+                if (alreadyIdByPid.size() > SysProperties.sameCategoryCount) {
+                    throw new ScmException(BaseErrorCode.PARAM, StrUtil.format("同级分类数量不能超过{},请删除一些", SysProperties.sameCategoryCount));
                 }
                 categoryReq.setId(ScmUtil.nextCode(categoryReq.getPid(), alreadyIdByPid));
             }

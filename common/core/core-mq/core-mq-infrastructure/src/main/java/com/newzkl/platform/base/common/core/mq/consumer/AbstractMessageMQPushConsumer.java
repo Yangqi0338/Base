@@ -6,8 +6,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.newzkl.platform.base.common.core.mq.LocalMessageDomain;
-import com.newzkl.platform.base.common.core.mq.enums.MessageEnum;
-import com.newzkl.platform.base.common.core.rocketmq.base.consumer.AbstractMQPushConsumer;
+import com.newzkl.platform.base.common.core.mq.enums.MQEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -38,7 +37,7 @@ public abstract class AbstractMessageMQPushConsumer<T> extends AbstractMQPushCon
     @Override
     public boolean process(T message, Map<String, Object> extMap) {
         // 获取本地消息 id
-        String localMessageId = MapUtil.getStr(extMap, MessageEnum.LOCAL_MESSAGE_ID_KEY);
+        String localMessageId = MapUtil.getStr(extMap, MQEnum.LOCAL_MESSAGE_ID_KEY);
         Long messageId = null;
         if (StrUtil.isNotBlank(localMessageId) && NumberUtil.isNumber(localMessageId)) {
             messageId = Long.parseLong(localMessageId);

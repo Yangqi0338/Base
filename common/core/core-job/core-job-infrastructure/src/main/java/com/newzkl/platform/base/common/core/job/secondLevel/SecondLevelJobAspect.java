@@ -4,9 +4,9 @@ import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.common.core.job.dto.ExecuteLogDTO;
 import com.newzkl.platform.base.common.core.job.param.AssetJobParam;
 import com.newzkl.platform.base.common.core.job.param.SecondLevelJobParam;
-import com.newzkl.platform.base.common.core.mq.constant.MQTagConstants;
+import com.newzkl.platform.base.common.core.mq.constant.MQ;
 import com.newzkl.platform.base.common.core.mq.message.JobContextClearMessage;
-import com.newzkl.platform.base.common.core.rocketmq.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.utils.MQUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
@@ -93,7 +93,7 @@ public class SecondLevelJobAspect {
                 // fill 路径末: 发 JOB_CONTEXT_CLEAR 通知各实例 ScanJob reload
                 JobContextClearMessage clearMsg = new JobContextClearMessage();
                 clearMsg.setJobName(meta.getJobName());
-                MQUtil.send(MQTagConstants.JOB_CONTEXT_CLEAR, clearMsg);
+                MQUtil.send(MQ.Tag.JOB_CONTEXT_CLEAR, clearMsg);
                 log.info("[JobAspect] fill 路径完成 + JOB_CONTEXT_CLEAR jobName={}", meta.getJobName());
             }
             // method 实际声明返回 List<ExecuteLogDTO>; 若 admin 调度需 ReturnT 由 XXL-Job 框架兜底为 SUCCESS

@@ -2,9 +2,9 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.core.rocketmq.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.utils.MQUtil;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.rocketmq.MQ;
+import com.newzkl.platform.base.common.core.mq.constant.MQ;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.ChannelDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.ChannelDO;

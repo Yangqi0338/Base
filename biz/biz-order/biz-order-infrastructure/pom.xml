@@ -33,8 +33,8 @@
         </dependency>
         <!-- 迁移补充: 发送 MQ (MQUtil) -->
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-rocketmq</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-infrastructure</artifactId>
         </dependency>
     </dependencies>
 </project>

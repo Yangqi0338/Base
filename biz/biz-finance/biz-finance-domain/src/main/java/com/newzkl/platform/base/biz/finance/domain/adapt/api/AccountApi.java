@@ -30,4 +30,15 @@ public interface AccountApi {
      * @return 上级链路结果
      */
     UpIdRes upId(CommonEnum.Client client, Long accountId);
+
+    /**
+     * 增加账户提货积分。
+     *
+     * <p>提现到账回调后按提现记录的 {@code goodsPoints} 回补积分,
+     * 迁移自旧 {@code IAccountFacade#addGoodsPoints}。</p>
+     *
+     * @param accountId   账户ID
+     * @param goodsPoints 提货积分增量
+     */
+    void addGoodsPoints(Long accountId, Integer goodsPoints);
 }

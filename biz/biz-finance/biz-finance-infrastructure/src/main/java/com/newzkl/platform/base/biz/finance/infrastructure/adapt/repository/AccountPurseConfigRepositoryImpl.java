@@ -62,8 +62,12 @@ public class AccountPurseConfigRepositoryImpl implements AccountPurseConfigRepos
         String value = dictFacade.get(DictEnum.Key.CHANNEL_CONFIG.getCode());
         ChannelConfigVO channelConfigVO = JSONUtil.toBean(value, ChannelConfigVO.class);
         if (channelConfigVO == null) {
+            // 字典未配置时给出 0 兜底: 调用方对金额阈值做拆箱比较, null 会直接 NPE
             channelConfigVO = new ChannelConfigVO();
-
+            channelConfigVO.setMinimumRechargeAmount(0);
+            channelConfigVO.setMinimumWithdrawalAmount(0);
+            channelConfigVO.setMaximumDailyWithdrawalAmount(0);
+            channelConfigVO.setWithdrawalFee(0);
         }
         return channelConfigVO;
     }

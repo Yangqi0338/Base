@@ -33,6 +33,21 @@ public class CategoryReq extends BaseReq {
      */
     private String desc;
     /**
+     * 排序
+     */
+    private Integer idx;
+    /**
+     * 分类来源类型 0:平台同步 1:自营
+     */
+    private Integer type;
+    /**
+     * 平台源分类ID
+     *
+     * <p>迁移: 替代旧 {@code merchant_category.code} 列。平台分类同步时记录源 id,
+     * 供幂等校验与再次同步 diff; 自营分类为 null。</p>
+     */
+    private Long sourceId;
+    /**
      * 子分类
      */
     private List<CategoryReq> children;

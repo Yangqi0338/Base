@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.core.mq.dto;
 
-import com.newzkl.platform.base.common.core.mq.enums.MessageEnum;
+import com.newzkl.platform.base.common.core.mq.enums.MQEnum;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
@@ -38,7 +38,7 @@ public class LocalMessageDTO extends BaseDTO {
     /**
      * 发送状态。
      */
-    private MessageEnum.SendState sendState;
+    private MQEnum.SendState sendState;
 
     /**
      * 消息体 JSON。
@@ -59,7 +59,7 @@ public class LocalMessageDTO extends BaseDTO {
      * 消费状态。
      * @ext 0-待消费, 1-消费成功, 2-消费失败, 3-异常
      */
-    private MessageEnum.ConsumeState consumeState;
+    private MQEnum.ConsumeState consumeState;
 
     /**
      * 可消费标识。

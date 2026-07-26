@@ -4,11 +4,35 @@ import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-
+/**
+ * 财务域配置根。
+ *
+ * <p>密钥类配置一律不落代码默认值, 由 Nacos {@code platform-share-config.yml} 注入:</p>
+ * <pre>
+ * scm:
+ *   fi:
+ *     huifu:
+ *       public-key: ${HUIFU_PUBLIC_KEY}
+ *       private-key: ${HUIFU_PRIVATE_KEY}
+ *     lianlian:
+ *       public-key: ${LIANLIAN_PUBLIC_KEY}
+ *       private-key: ${LIANLIAN_PRIVATE_KEY}
+ *       oid-partner: ${LIANLIAN_OID_PARTNER}
+ * </pre>
+ *
+ * @author KC
+ */
 @Configuration
 @ConfigurationProperties(prefix = "scm.fi")
 public class FinanceProperties {
 
+    /**
+     * 汇付支付配置。
+     *
+     * <p>静态字段 + 实例 setter 模式: Spring 绑定走实例 setter, 业务侧静态引用免注入。</p>
+     *
+     * @author KC
+     */
     @Configuration
     @ConfigurationProperties(prefix = "scm.fi.huifu")
     @Getter
@@ -22,8 +46,14 @@ public class FinanceProperties {
         private static final String refundNotifyUri = "/notify/refundNotify";
         // 转出通知
         private static final String withdrawNotifyUri = "/notify/rollOutNotify";
-        public static String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2iLK7Ln7hYbLWjU1yjvIL3PmnrtYGFwD78oUa8uNcTZmbYbwz6aZHkPo3+xtZvHsgkD+d1aZyf8cJr/4AWHj+4o5xWxajlMGZsV1fUKYk54b7pncorI5V3Pvc9kTE51a5uU6cuyItotgkUaeFCyXKheKcRBXLnMhUPPuSzwGxz2D9YtKCYAyE2g+VAUrw0ajIgqqybzlEv96QsWRsWFMO4lcqwUaK+60uDpzaDYG4kiJZLGPmI1OOLlPPxMeSWqAFn9WEMz6aZ6dLy/+WYc9CD0lBQ2K2uVRRMyVvlj6OkXakB4jsB+b8aQVDddBMVvvvLDcHApm6Yj1YKLy18zr5QIDAQAB";
-        public static String privateKey = "MIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQDaIsrsufuFhstaNTXKO8gvc+aeu1gYXAPvyhRry41xNmZthvDPppkeQ+jf7G1m8eyCQP53VpnJ/xwmv/gBYeP7ijnFbFqOUwZmxXV9QpiTnhvumdyisjlXc+9z2RMTnVrm5Tpy7Ii2i2CRRp4ULJcqF4pxEFcucyFQ8+5LPAbHPYP1i0oJgDITaD5UBSvDRqMiCqrJvOUS/3pCxZGxYUw7iVyrBRor7rS4OnNoNgbiSIlksY+YjU44uU8/Ex5JaoAWf1YQzPppnp0vL/5Zhz0IPSUFDYra5VFEzJW+WPo6RdqQHiOwH5vxpBUN10ExW++8sNwcCmbpiPVgovLXzOvlAgMBAAECggEBAIKeMNq9pxHWnC/hCtuVHpLjmOXVkrPLbYQJgl7l3UU8aOsO0WXWAXvw+CIVxZDOLmv0lStKjP46p1XAv7W8MzLtGxjPgA4XQw8JEAg4d3p1Q46FTWuSwulN/8Vj55toLwVxn6UvY9HC9ckn+wJjjQTkYb7AJSQoRnveBQPB5uEoJi7Om757k3IAESZl46JvH8db4jMlPscsEeuCIL1By1PkkwQBTvgDu9hz0vhUxU4UiwUkaFbCCqwYjoBdeDb3rRj54c+PfuoP1fw7NQMJFTxQLJT1jW29XXONUz15GMVVUjIl2v6Fyry2w5EzlAZKoWFIvXE55GC+QooxIgejXIUCgYEA+2cyHF2AVHGZgpZC5dEzWbJ0wzjfNoJXwGtqeDJ4SaASo4cPM4MijWfKZiRZDPPd1BbLDx/sfFWDYdkyldFsuLi2RPLt4XZOUGJNOVNadPNppulLbxeP6dKp4gY+JOs0DPCWDqRUf70mqZInJcCaVyzM3nao01NhOIYlr1USxw8CgYEA3h/f/r3VH+FqGFNcbcaVxIRuIkiH7M8k9MU2vHmrGvRxwL/jfEd9MCOkriiadX/lvW2VAEwYuzK0OV020KeI9M+er3N9Zio60WVKxYFZp5eKXYeICLtxCu/vctaS3P2d+CIrg3CnaYEz1wdyDE6QAbvZ8/cmh10s2aolZ4PdvcsCgYBhL7CQhJjSjCPS9rGf1DKsry8yNO8dTGAN87hyBNi5ZZcu/kwjFsOptIDq4YxHVJLhpXoUO7wZCJnEnslOX2pPMqDLoLnTGgAGVSoTSiTC50JlkvRlWs94jca8qLsnXIF/qxXnTSGZTA8BKI3Xq1A++QOt0GNNZoND7Z/t2s5qgwKBgHju/8Qw1HU8A8hksmDuCqJou5GczaxHh0ZgjRGGaHsPdVNM5ezG+0iXT1SmtJmeXZWJsOLti1V4IJlOv8ZQQIeQ9kNt7GsQON/Cdzga2ZYeMm4DmTOv4bbjtQlf+6unxTbQW8J/NhaCCpha7GP47fyTqvFhsS9nskB7m0vFhpeLAn8cRqCDJuYZkRHSUFXd2BytPnmCEIpSPpccabdhxIW5BGOeUfRFL0uN6uuTZKAJ8Nfjam00YQlPSOp/js3aZcREowN/rBJ+3BQ4wj+8NYQxn0hff1wuQUo1LHWFrI/Oudhr3AUunDUWKWrs6jaaGOonkZsqnjU+mRVViAygqHbA";
+        /**
+         * 汇付公钥。安全基线: 禁止在代码内保留默认值, 必须由 Nacos {@code scm.fi.huifu.public-key} 注入。
+         */
+        public static String publicKey;
+        /**
+         * 汇付商户私钥。安全基线: 禁止在代码内保留默认值, 必须由 Nacos {@code scm.fi.huifu.private-key} 注入。
+         */
+        public static String privateKey;
         public static String productId = "EDUARK";
         public static String sysId = "6666000168676220";
         public static String testPreUrl = "https://api.huifu.com";
@@ -93,6 +123,84 @@ public class FinanceProperties {
 
         public void setWithdrawNotifyUrl(String huiFuWithdrawNotifyUrl) {
             HuiFuProperties.withdrawNotifyUrl = huiFuWithdrawNotifyUrl;
+        }
+    }
+
+    /**
+     * 连连支付 (个人钱包) 配置。
+     *
+     * <p>迁移自 new-scm {@code SignUtils} / {@code TripartitePayMethod} 内的硬编码常量。
+     * 密钥与商户号一律不落代码默认值, 由 Nacos {@code platform-share-config.yml} 的
+     * {@code scm.fi.lianlian.*} 注入。</p>
+     *
+     * @author KC
+     */
+    @Configuration
+    @ConfigurationProperties(prefix = "scm.fi.lianlian")
+    @Getter
+    public static class LianLianProperties {
+
+        /**
+         * 连连平台公钥 (验签用)。必须由 Nacos {@code scm.fi.lianlian.public-key} 注入。
+         */
+        public static String publicKey;
+
+        /**
+         * 商户私钥 (签名用)。必须由 Nacos {@code scm.fi.lianlian.private-key} 注入。
+         */
+        public static String privateKey;
+
+        /**
+         * 商户号 (旧码 {@code MERCHANT_NO})。必须由 Nacos {@code scm.fi.lianlian.oid-partner} 注入。
+         */
+        public static String oidPartner;
+
+        /**
+         * ACCP 主接口前缀, 旧值 {@code https://accpapi.lianlianpay.com/v1/}。
+         */
+        public static String apiUrl = "https://accpapi.lianlianpay.com/v1";
+
+        /**
+         * ACCP 网关前缀, 旧值 {@code https://accpgw.lianlianpay.com/v1/}。
+         */
+        public static String gwUrl = "https://accpgw.lianlianpay.com/v1";
+
+        /**
+         * ACCP 文件上传前缀, 旧值 {@code https://accpfile.lianlianpay.com/v1/}。
+         */
+        public static String fileUrl = "https://accpfile.lianlianpay.com/v1";
+
+        /**
+         * 个人钱包异步通知回调地址 (旧码 {@code PersonPayController.notify} 硬编码)。
+         */
+        public static String notifyUrl;
+
+        public void setPublicKey(String publicKey) {
+            LianLianProperties.publicKey = publicKey;
+        }
+
+        public void setPrivateKey(String privateKey) {
+            LianLianProperties.privateKey = privateKey;
+        }
+
+        public void setOidPartner(String oidPartner) {
+            LianLianProperties.oidPartner = oidPartner;
+        }
+
+        public void setApiUrl(String apiUrl) {
+            LianLianProperties.apiUrl = apiUrl;
+        }
+
+        public void setGwUrl(String gwUrl) {
+            LianLianProperties.gwUrl = gwUrl;
+        }
+
+        public void setFileUrl(String fileUrl) {
+            LianLianProperties.fileUrl = fileUrl;
+        }
+
+        public void setNotifyUrl(String notifyUrl) {
+            LianLianProperties.notifyUrl = notifyUrl;
         }
     }
 

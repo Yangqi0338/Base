@@ -22,11 +22,4 @@
         <module>core-job-domain</module>
         <module>core-job-infrastructure</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.newzkl.platform.Base.core</groupId>
-            <artifactId>core-job-infrastructure</artifactId>
-        </dependency>
-    </dependencies>
 </project>

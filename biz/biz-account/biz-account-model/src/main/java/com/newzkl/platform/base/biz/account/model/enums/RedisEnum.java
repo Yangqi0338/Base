@@ -26,6 +26,12 @@ public class RedisEnum {
         PROLE_LIST(ModuleEnum.USER, "AMC:pRoleList:%s", "父角色列表, s = 账号ID"),
         /** 子结构列表, s = 账号ID */
         SUB_STRUCTURE(ModuleEnum.USER, "AMC:subStructure:%s", "子结构列表, s = 账号ID"),
+        /**
+         * 角色申请资料, s1 = 账号ID, s2 = 角色ID
+         * <p>沿用旧常量 {@code RoleEnum.ApplyCommandRedisKeyPre} 的裸 key 形态 (无模块前缀),
+         * 以便与旧数据共存。</p>
+         */
+        ROLE_APPLY_COMMAND(ModuleEnum.COMMON, "role:roleApplyCommand:%s:%s", "角色申请资料, s1 = 账号ID, s2 = 角色ID"),
 
         /* ============ 商品 ============ */
         /** 商品信息, s = SKU ID */

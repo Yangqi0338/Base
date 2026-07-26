@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.store.domain.store.service.StoreAccountDomai
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreStyleDomain;
 import com.newzkl.platform.base.biz.store.domain.template.service.ModelShopDomain;
-import com.newzkl.platform.base.common.core.utils.properties.ScmSysProperties;
+import com.newzkl.platform.base.common.core.utils.properties.SysProperties;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
@@ -55,8 +55,9 @@ public class StoreServiceImpl implements StoreService {
         if (defultStoreId != null) {
             store = storeDomain.store(defultStoreId);
         } else {
-            // 查询默认门店样式
-            store = storeDomain.store(ScmSysProperties.officialChannelId);
+            // 查询默认门店样式 TODO
+//            store = storeDomain.store(SysProperties.officialChannelId);
+            store = new Store();
         }
 
         StoreStyleRes storeStyleVO = TransferUtils.transfer(store, StoreStyleRes::new);

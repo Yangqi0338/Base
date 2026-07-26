@@ -45,6 +45,11 @@ public class OrderPayDomainImpl implements OrderPayDomain {
     }
 
     @Override
+    public void resetTripartiteTradeNo(Long tradeNo, String tripartiteTradeNo) {
+        orderPayRepository.resetTripartiteTradeNo(tradeNo, tripartiteTradeNo);
+    }
+
+    @Override
     public TradeOrderInfoRes tradeOrderQuery(Long tradeNo) {
         return orderPayRepository.tradeOrderQuery(tradeNo);
     }

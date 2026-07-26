@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.core.mq.LocalMessageRepository;
 import com.newzkl.platform.base.common.core.mq.dao.LocalMessageDAO;
 import com.newzkl.platform.base.common.core.mq.dto.LocalMessageDTO;
 import com.newzkl.platform.base.common.core.mq.entity.LocalMessageDO;
-import com.newzkl.platform.base.common.core.mq.enums.MessageEnum;
+import com.newzkl.platform.base.common.core.mq.enums.MQEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -38,7 +38,7 @@ public class LocalMessageRepositoryImpl extends RepositorySupport implements Loc
     public Long localMessageCreate(LocalMessageDTO localMessage) {
         LocalMessageDO localMessageDO = TransferUtils.transfer(localMessage, LocalMessageDO.class);
         if (localMessageDO.getConsumeState() == null) {
-            localMessageDO.setConsumeState(MessageEnum.ConsumeState.WAIT);
+            localMessageDO.setConsumeState(MQEnum.ConsumeState.WAIT);
         }
         if (localMessageDO.getSendCount() == null) {
             localMessageDO.setSendCount(0);
@@ -83,8 +83,8 @@ public class LocalMessageRepositoryImpl extends RepositorySupport implements Loc
     public List<LocalMessageDTO> querySendFailMsg() {
         // 查询15分钟前发送成功但消费待处理的消息
         List<LocalMessageDO> list = localMessageDAO.selectList(new LambdaQueryWrapper<LocalMessageDO>()
-                .eq(LocalMessageDO::getSendState, MessageEnum.SendState.SUCCESS)
-                .eq(LocalMessageDO::getConsumeState, MessageEnum.ConsumeState.WAIT)
+                .eq(LocalMessageDO::getSendState, MQEnum.SendState.SUCCESS)
+                .eq(LocalMessageDO::getConsumeState, MQEnum.ConsumeState.WAIT)
                 .eq(LocalMessageDO::getConsumeErrorCount, 0)
                 .lt(LocalMessageDO::getSendTime, LocalDateTime.now().minusMinutes(15))
         );
@@ -92,7 +92,7 @@ public class LocalMessageRepositoryImpl extends RepositorySupport implements Loc
     }
 
     @Override
-    public List<LocalMessageDTO> querySendState(MessageEnum.SendState sendState, int limit) {
+    public List<LocalMessageDTO> querySendState(MQEnum.SendState sendState, int limit) {
         List<LocalMessageDO> list = localMessageDAO.selectList(localMessageDAO.getLw(sendState)
                 .last("LIMIT " + Math.max(1, limit)));
         return TransferUtils.transfers(list, LocalMessageDTO.class);
@@ -104,9 +104,9 @@ public class LocalMessageRepositoryImpl extends RepositorySupport implements Loc
         LambdaUpdateWrapper<LocalMessageDO> wrapper = new LambdaUpdateWrapper<LocalMessageDO>()
                 .set(LocalMessageDO::getConsumeState, toState)
                 .eq(LocalMessageDO::getId, id)
-                .eq(LocalMessageDO::getConsumeState, MessageEnum.ConsumeState.WAIT);
+                .eq(LocalMessageDO::getConsumeState, MQEnum.ConsumeState.WAIT);
         // 终态(成功/失败/异常)回写消费时间
-        if (!MessageEnum.ConsumeState.WAIT.getCode().equals(toState)) {
+        if (!MQEnum.ConsumeState.WAIT.getCode().equals(toState)) {
             wrapper.set(LocalMessageDO::getConsumeTime, LocalDateTime.now());
         }
         return localMessageDAO.update(wrapper) > 0;

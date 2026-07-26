@@ -26,6 +26,10 @@
             <artifactId>core-utils</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mybatis-infrastructure</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>

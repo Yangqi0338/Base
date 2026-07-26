@@ -30,10 +30,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-action</artifactId>
         </dependency>
-        <!-- 迁移补充: 账户/渠道注册发布领域事件 MQUtil.send (core-rocketmq 为 common 基础模块) -->
+        <!-- 迁移补充: 账户/渠道注册发布领域事件 MQUtil.send (core-mq-infrastructure 含 RocketMQ 框架底座) -->
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-rocketmq</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-infrastructure</artifactId>
         </dependency>
         <!-- 迁移补充: auth token/缓存 RedisUtil (core-redis 为 common 基础模块) -->
         <dependency>

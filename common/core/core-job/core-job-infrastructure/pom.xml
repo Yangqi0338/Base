@@ -32,8 +32,8 @@
         </dependency>
         <!-- #126: fill 路径末发 JOB_CONTEXT_CLEAR 通知 (MQUtil) -->
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-rocketmq</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-infrastructure</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>

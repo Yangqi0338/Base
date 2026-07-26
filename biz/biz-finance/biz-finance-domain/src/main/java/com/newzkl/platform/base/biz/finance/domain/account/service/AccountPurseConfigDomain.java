@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.finance.model.account.req.ChargeConfigChanne
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 
 import java.util.List;
 
@@ -76,4 +77,13 @@ public interface AccountPurseConfigDomain {
      * @return
      */
     ConfigSupplierVO querySupplierConfig();
+
+    /**
+     * 查询全局数智门店配置。
+     *
+     * <p>取字典 {@code DictEnum.Key.CHANNEL_CONFIG}, 字典缺省时返回金额阈值全 0 的兜底对象, 永不为 null。</p>
+     *
+     * @return 数智门店配置
+     */
+    ChannelConfigVO defaultChannelConfig();
 }

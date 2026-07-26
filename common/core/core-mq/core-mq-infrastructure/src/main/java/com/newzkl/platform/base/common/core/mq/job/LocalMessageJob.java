@@ -2,8 +2,8 @@ package com.newzkl.platform.base.common.core.mq.job;
 
 import com.newzkl.platform.base.common.core.mq.LocalMessageDomain;
 import com.newzkl.platform.base.common.core.mq.dto.LocalMessageDTO;
-import com.newzkl.platform.base.common.core.mq.enums.MessageEnum;
-import com.newzkl.platform.base.common.core.rocketmq.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.enums.MQEnum;
+import com.newzkl.platform.base.common.core.mq.utils.MQUtil;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class LocalMessageJob {
      */
     @XxlJob("sendMessage")
     public void sendMessage() {
-        List<LocalMessageDTO> list = localMessageDomain.listBySendState(MessageEnum.SendState.WAIT, BATCH_SIZE);
+        List<LocalMessageDTO> list = localMessageDomain.listBySendState(MQEnum.SendState.WAIT, BATCH_SIZE);
         int success = 0;
         for (LocalMessageDTO m : list) {
             if (resend(m)) {
@@ -74,7 +74,7 @@ public class LocalMessageJob {
         SendResult sendResult = MQUtil.send(m.getTopic(), m.getTag(), m.getId(),
                 m.getMessageContent(), m.getMessageClass());
         boolean ok = sendResult != null && SendStatus.SEND_OK.equals(sendResult.getSendStatus());
-        MessageEnum.SendState toState = ok ? MessageEnum.SendState.SUCCESS : MessageEnum.SendState.FAIL;
+        MQEnum.SendState toState = ok ? MQEnum.SendState.SUCCESS : MQEnum.SendState.FAIL;
         localMessageDomain.messageSendUpdate(m.getId(), toState.getCode(), LocalDateTime.now());
         return ok;
     }

@@ -28,4 +28,9 @@ public class AccountApiDefaultImpl implements AccountApi {
         // TODO[cross-service]: 远程 user 上级链路查询, 默认返回空对象
         return new UpIdRes();
     }
+
+    @Override
+    public void addGoodsPoints(Long accountId, Integer goodsPoints) {
+        // TODO[cross-service]: 远程 user 提货积分增加, 默认空操作
+    }
 }

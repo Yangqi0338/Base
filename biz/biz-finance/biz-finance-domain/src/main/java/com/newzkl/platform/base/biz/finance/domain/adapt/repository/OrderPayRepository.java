@@ -32,6 +32,16 @@ public interface OrderPayRepository {
     boolean alterPayState(Long tradeNo,String tripartiteTradeNo);
 
     /**
+     * 回填三方交易号。
+     *
+     * <p>三方支付受理成功后才拿到三方单号, 需回写到已落库的支付单上。</p>
+     *
+     * @param tradeNo           支付单号
+     * @param tripartiteTradeNo 三方交易号
+     */
+    void resetTripartiteTradeNo(Long tradeNo, String tripartiteTradeNo);
+
+    /**
      * 交易单信息查询
      * @param tradeNo
      * @return

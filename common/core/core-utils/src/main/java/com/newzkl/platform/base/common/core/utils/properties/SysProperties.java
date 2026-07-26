@@ -33,6 +33,10 @@ public class SysProperties {
      */
     public static String db;
     /**
+     * 同类目能有的数量
+     */
+    public static Integer sameCategoryCount = 90;
+    /**
      * 当前应用的程序版本
      */
     public static String version;
@@ -50,57 +54,26 @@ public class SysProperties {
      */
     public static Map<String, String> translateMap = new HashMap<>();
 
-    /**
-     * 设置网关地址。
-     *
-     * @param gatewayUrl 网关地址
-     */
     public void setGatewayUrl(String gatewayUrl) {
         SysProperties.gatewayUrl = gatewayUrl;
     }
-
-    /**
-     * 设置当前应用数据库名称
-     *
-     * @param db 数据库名称
-     */
     public void setDb(String db) {
         SysProperties.db = db;
     }
-
-    /**
-     * 设置当前应用的程序版本
-     *
-     * @param version 程序版本
-     */
+    public void setSameCategoryCount(Integer sameCategoryCount) {
+        SysProperties.sameCategoryCount = sameCategoryCount;
+    }
     public void setVersion(String version) {
         SysProperties.version = version;
     }
-
-    /**
-     * 设置平台名称
-     *
-     * @param appName 平台名称
-     */
     public void setAppName(String appName) {
         SysProperties.appName = appName;
     }
-
-    /**
-     * 设置自由用户
-     *
-     * @param freedomUser 自由用户
-     */
     public void setFreedomUser(List<Long> freedomUser) {
         SysProperties.freedomUser = freedomUser;
     }
 
     private String translate;
-    /**
-     * 设置全局JSON翻译映射
-     *
-     * @param translate 翻译映射表
-     */
     public void setTranslate(String translate) {
         this.translate = translate;
         if (StrUtil.isNotBlank(translate)) {

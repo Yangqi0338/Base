@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.account.model.res.AccountLoginLogRes;
 import com.newzkl.platform.base.biz.account.model.res.LoginAccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.CodeLoginRegisterReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentitySaveReq;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.LoginReq;
 import com.newzkl.platform.base.biz.account.model.auth.vo.AccountLoginLogVO;
 import org.mapstruct.Mapper;
@@ -32,5 +32,5 @@ public interface LoginAssembler {
 
     LoginReq codeLoginRegisterReq2LoginReq(CodeLoginRegisterReq codeLoginRegisterReq);
 
-    IdentitySaveReq codeLoginRegisterReq2SaveReq(CodeLoginRegisterReq codeLoginReq);
+    IdentityCustomSaveReq codeLoginRegisterReq2SaveReq(CodeLoginRegisterReq codeLoginReq);
 }

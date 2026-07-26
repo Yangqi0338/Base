@@ -21,5 +21,48 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-account-domain</artifactId>
         </dependency>
+        <!-- 迁移补充: UserQueryServiceImpl#doOperatorAppInfo 需把 policy detail() 的 Object
+             下转为 OperatorDO/DealerDO/SelectorDO. 待 policy detail() 收敛为 VO 后可移除 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-infrastructure</artifactId>
+        </dependency>
+        <!-- 迁移补充: 编排层 sa-token 会话 (StpUtil / SaSession) -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+        </dependency>
+        <!-- 迁移补充: 编排层使用 commons-lang3 / commons-collections4 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <!-- 迁移补充: 编排层入参校验注解 -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 迁移补充: Mockito(ByteBuddy) 在本 JDK 需显式允许自挂载 agent, 否则 mock 初始化失败 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

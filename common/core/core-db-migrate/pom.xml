@@ -19,11 +19,4 @@
     <modules>
         <module>core-db-migrate-infrastructure</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.newzkl.platform.Base.core</groupId>
-            <artifactId>core-db-migrate-infrastructure</artifactId>
-        </dependency>
-    </dependencies>
 </project>

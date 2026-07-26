@@ -60,6 +60,15 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetTripartiteTradeNo(Long tradeNo, String tripartiteTradeNo) {
+        paymentDAO.update(new LambdaUpdateWrapper<PaymentDO>()
+                .set(PaymentDO::getTripartiteTradeNo, tripartiteTradeNo)
+                .eq(PaymentDO::getTradeNo, tradeNo)
+        );
+    }
+
+    @Override
     public TradeOrderInfoRes tradeOrderQuery(Long tradeNo) {
         PaymentDO payment = paymentDAO.selectById(tradeNo);
         return TransferUtils.transfer(payment, TradeOrderInfoRes::new);

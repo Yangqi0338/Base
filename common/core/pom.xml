@@ -20,7 +20,6 @@
         <module>core-model</module>
         <module>core-utils</module>
         <module>core-redis</module>
-        <module>core-rocketmq</module>
         <module>core-job</module>
         <module>core-mq</module>
         <module>core-db-migrate</module>

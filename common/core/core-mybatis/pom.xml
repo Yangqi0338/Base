@@ -19,11 +19,4 @@
     <modules>
         <module>core-mybatis-infrastructure</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.newzkl.platform.Base.core</groupId>
-            <artifactId>core-mybatis-infrastructure</artifactId>
-        </dependency>
-    </dependencies>
 </project>

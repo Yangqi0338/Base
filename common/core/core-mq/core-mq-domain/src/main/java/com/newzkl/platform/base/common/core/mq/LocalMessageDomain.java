@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.core.mq;
 
 import com.newzkl.platform.base.common.core.mq.dto.LocalMessageDTO;
-import com.newzkl.platform.base.common.core.mq.enums.MessageEnum;
+import com.newzkl.platform.base.common.core.mq.enums.MQEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,7 +54,7 @@ public interface LocalMessageDomain {
      * @param limit     限量
      * @return 消息列表
      */
-    List<LocalMessageDTO> listBySendState(MessageEnum.SendState sendState, int limit);
+    List<LocalMessageDTO> listBySendState(MQEnum.SendState sendState, int limit);
 
     /**
      * 拉取待重发的消息列表。

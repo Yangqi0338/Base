@@ -304,6 +304,35 @@ public class ScmUtil {
         return md5Hex.substring(0, length);
     }
 
+    /**
+     * 生成指定长度的随机码 (数字 + 小写字母混合)。
+     *
+     * <p>每一位以约 50% 概率取 0-9 数字, 否则取 a-z 小写字母。
+     * 与 {@link #generateDiffCode(int)} 不同, 本方法不依赖 MD5 摘要长度,
+     * 因此支持大于 32 的长度 (常用于 openapi secret 等 32 位凭证)。</p>
+     *
+     * <p>迁移说明: 原 {@code com.zkl.scm.model.utils.ScmUtil#generateCode(int)},
+     * 行为逐字保留 (含"数字/字母各半"的随机策略)。</p>
+     *
+     * @param length 随机码长度
+     * @return 随机码
+     * @author KC
+     */
+    public static String generateCode(int length) {
+        char[] letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+                'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+        Random random = new Random();
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            if (Math.random() >= 0.5) {
+                result.append(letters[random.nextInt(letters.length)]);
+            } else {
+                result.append(random.nextInt(10));
+            }
+        }
+        return result.toString();
+    }
+
     public static String cutLast(String string) {
         if (StrUtil.isEmpty(string)) {
             return "";

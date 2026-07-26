@@ -1,9 +1,13 @@
 package com.newzkl.platform.base.biz.sys.action.controller;
 
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
+import com.newzkl.platform.base.biz.sys.domain.service.DictItemDomain;
 import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
 import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
+import com.newzkl.platform.base.biz.sys.model.dictitem.req.DictItemReq;
+import com.newzkl.platform.base.biz.sys.model.dictitem.res.DictItemRes;
+import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +31,7 @@ import java.util.List;
 public class DictController {
 
     private final DictDomain dictDomain;
+    private final DictItemDomain dictItemDomain;
 
     /**
      * 字典创建/更新。
@@ -78,5 +83,39 @@ public class DictController {
     @GetMapping("/nextCode")
     public ScmResult<String> nextCode(@RequestParam("id") Long id) {
         return ScmResult.success(dictDomain.nextCode(id));
+    }
+
+    /**
+     * 字典条目创建/更新。
+     *
+     * @param req 条目请求
+     * @return 条目 id
+     */
+    @PostMapping("/dictItemSave")
+    public ScmResult<Long> dictItemSave(@Validated @RequestBody DictItemReq req) {
+        return ScmResult.success(dictItemDomain.itemSave(req));
+    }
+
+    /**
+     * 按父字典 id 查条目列表。
+     *
+     * @param dictId 父字典 id
+     * @return 条目列表
+     */
+    @GetMapping("/dictItemList")
+    public ScmResult<List<DictItemRes>> dictItemList(@RequestParam("dictId") Long dictId) {
+        return ScmResult.success(dictItemDomain.itemList(dictId));
+    }
+
+    /**
+     * 字典条目删除。
+     *
+     * @param req id 列表入参
+     * @return 成功结果
+     */
+    @PostMapping("/dictItemDelete")
+    public ScmResult<Void> dictItemDelete(@Validated @RequestBody IdListCommand req) {
+        dictItemDomain.itemDelete(req.getIdList());
+        return ScmResult.success();
     }
 }

@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.account.req.ChargeConfigChanne
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +93,11 @@ public class AccountPurseConfigDomainImpl implements AccountPurseConfigDomain {
     @Override
     public ConfigSupplierVO querySupplierConfig() {
         return accountPurseConfigRepository.querySupplierConfig();
+    }
+
+    @Override
+    public ChannelConfigVO defaultChannelConfig() {
+        return accountPurseConfigRepository.defaultChannelConfig();
     }
 
     private ConfigChannelVO buildChannelConfig(ChargeConfigChannelReq req) {

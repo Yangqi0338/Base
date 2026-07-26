@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.newzkl.platform</groupId>
+    <groupId>com.newzkl.platform.Base</groupId>
     <artifactId>bom</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -12,7 +12,7 @@
     <description>Base - 模块版本统一管理</description>
 
     <properties>
-        <revision>1.0.0-SNAPSHOT</revision>
+        <revision>1.0.1-SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>
@@ -60,11 +60,6 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>core-redis</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>core-rocketmq</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -475,6 +470,11 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-store-action</artifactId>
                 <version>${revision}</version>
             </dependency>
 

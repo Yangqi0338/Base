@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
-import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2023/12/27 15:28
  */
 @Data
-public class WithdrawRecordVO extends BaseDO {
+public class WithdrawRecordVO extends BaseRes {
 
     /**
      * 客户id

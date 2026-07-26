@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.ShortVideoDAO">
+
+    <!-- 列表查询条件 (迁移自 new-scm ShortVideoDAO.xml querySQL) -->
+    <sql id="querySQL">
+        and sv.del_flag = 0
+        <if test="query.idList != null and query.idList.size() > 0">
+            and sv.id in
+            <foreach collection="query.idList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="query.spuIdList != null and query.spuIdList.size() > 0">
+            and vsr.spu_id in
+            <foreach collection="query.spuIdList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="query.accountId != null">
+            and s.account_id = #{query.accountId,jdbcType=BIGINT}
+        </if>
+        <if test="query.spuName != null and query.spuName != ''">
+            and s.name like CONCAT('%', #{query.spuName,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="query.createStartTime != null and query.createStartTime != ''">
+            and sv.create_time &gt;= #{query.createStartTime}
+        </if>
+        <if test="query.createEndTime != null and query.createEndTime != ''">
+            and sv.create_time &lt; #{query.createEndTime}
+        </if>
+    </sql>
+
+    <!-- 分页列表: 关联关系取短视频类型(type=1), join spu 带出编码/名称/图片 -->
+    <select id="queryPage" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO">
+        select sv.id, sv.path, sv.cover_path, sv.create_time, sv.update_time,
+        vsr.spu_id, s.code, s.name, s.img
+        from short_video sv
+        left join video_spu_relation vsr on vsr.type = 1 and vsr.video_id = sv.id
+        left join spu s on s.id = vsr.spu_id
+        <where>
+            <include refid="querySQL"/>
+        </where>
+        order by sv.create_time desc
+    </select>
+
+</mapper>

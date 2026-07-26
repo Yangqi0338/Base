@@ -30,8 +30,32 @@
             <artifactId>core-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-rocketmq</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- 迁移补充: core-utils 的 servlet-api 为 provided 不传递, 而 SecurityUtils 方法签名
+             引用 ServletRequest; mockStatic(SecurityUtils) 需该类在 test classpath 可加载 -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- 迁移补充: Mockito(ByteBuddy) 在本 JDK 需显式允许自挂载 agent, 否则 mock 初始化失败 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

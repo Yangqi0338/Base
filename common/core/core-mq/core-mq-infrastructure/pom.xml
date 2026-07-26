@@ -25,9 +25,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+        <!-- 合并自 core-rocketmq: RocketMQ 框架底座 (MQUtil/@MQProducer/@MQConsumer/config) -->
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-rocketmq</artifactId>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>

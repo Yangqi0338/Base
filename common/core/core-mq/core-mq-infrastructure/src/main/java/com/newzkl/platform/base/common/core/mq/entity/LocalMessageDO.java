@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.core.mq.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.core.mq.enums.MessageEnum;
+import com.newzkl.platform.base.common.core.mq.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import jakarta.validation.constraints.NotNull;
@@ -52,7 +52,7 @@ public class LocalMessageDO extends BaseDO {
      */
     @NotNull
     @Index
-    private MessageEnum.SendState sendState;
+    private MQEnum.SendState sendState;
 
     /**
      * 消息体。
@@ -79,7 +79,7 @@ public class LocalMessageDO extends BaseDO {
      */
     @NotNull
     @Index
-    private MessageEnum.ConsumeState consumeState;
+    private MQEnum.ConsumeState consumeState;
 
     /**
      * 可消费标识。
