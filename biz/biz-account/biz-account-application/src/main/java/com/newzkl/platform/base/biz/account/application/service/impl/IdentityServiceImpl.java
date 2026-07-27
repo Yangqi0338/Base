@@ -27,7 +27,7 @@ import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.model.exception.RoleErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
@@ -99,7 +99,7 @@ public class IdentityServiceImpl implements IdentityService {
         JSONObject jsonObject = JSON.parseObject(roleApplyCommand.getCompanyInfoVO());
         //检查角色
         if (RoleEnum.CompanyRole.contains(roleApplyCommand.getRole(), accountVO.getRoleIdList())) {
-            throw new ScmException(AccountErrorCode.EXIST_ROLE);
+            throw new PlatformException(AccountErrorCode.EXIST_ROLE);
         }
         //创建审核单
         AuditRoleApplyVO auditRoleDataOutVO = new AuditRoleApplyVO();
@@ -139,7 +139,7 @@ public class IdentityServiceImpl implements IdentityService {
         IdentityCustomSaveReq req = new IdentityCustomSaveReq();
         // 角色只能是[渠道商|供应商]
         if (!CollUtil.newArrayList(RoleEnum.CompanyRole.CHANNEL, RoleEnum.CompanyRole.SUPPLIER).contains(role)) {
-            throw new ScmException(RoleErrorCode.WARN_ROLE);
+            throw new PlatformException(RoleErrorCode.WARN_ROLE);
         }
 
         AbsIdentityPolicySupport.getPolicy(role).customRegister(req);
@@ -153,9 +153,9 @@ public class IdentityServiceImpl implements IdentityService {
         if (accountVO == null || !RoleEnum.CompanyRole.contains(roleApplyCommand.getRole(), accountVO.getRoleIdList())) {
             RoleEnum.CompanyRole role = roleApplyCommand.getRole();
             if (RoleEnum.CompanyRole.CHANNEL == role || RoleEnum.CompanyRole.SUPPLIER == role) {
-                throw new ScmException(BaseErrorCode.NOT_SERVICE);
+                throw new PlatformException(BaseErrorCode.NOT_SERVICE);
             }
-            throw new ScmException(BaseErrorCode.PARAM, "申请角色");
+            throw new PlatformException(BaseErrorCode.PARAM, "申请角色");
         }
         RedisUtil.set(applyCommandKey(accountId, roleApplyCommand.getRole().getCode()), roleApplyCommand);
     }
@@ -182,7 +182,7 @@ public class IdentityServiceImpl implements IdentityService {
         // 分配开通码
         int toCount = cdkDomain.toCdk(toCdkCommand);
         if (toCdkCommand.getCdkIdList().size() != toCount) {
-            throw new ScmException(BaseErrorCode.PARAM, "开通码分配数量");
+            throw new PlatformException(BaseErrorCode.PARAM, "开通码分配数量");
         }
         Integer value;
         PurseEnum.FinanceUser financeUserType;
@@ -202,7 +202,7 @@ public class IdentityServiceImpl implements IdentityService {
                 from = RoleEnum.CompanyRole.OPERATOR;
                 to = RoleEnum.CompanyRole.CHANNEL;
             } else {
-                throw new ScmException(BaseErrorCode.PARAM, "被分配人角色");
+                throw new PlatformException(BaseErrorCode.PARAM, "被分配人角色");
             }
         } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(fromRole)) {
             if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(toRole)) {
@@ -211,10 +211,10 @@ public class IdentityServiceImpl implements IdentityService {
                 from = RoleEnum.CompanyRole.DEALER;
                 to = RoleEnum.CompanyRole.CHANNEL;
             } else {
-                throw new ScmException(BaseErrorCode.PARAM, "被分配人角色");
+                throw new PlatformException(BaseErrorCode.PARAM, "被分配人角色");
             }
         } else {
-            throw new ScmException(BaseErrorCode.PARAM, "分配人角色");
+            throw new PlatformException(BaseErrorCode.PARAM, "分配人角色");
         }
         // 分配期权
         AccountVO toAccount = accountDomain.account(null, toCdkCommand.getToUserId());
@@ -233,7 +233,7 @@ public class IdentityServiceImpl implements IdentityService {
     }
 
     /**
-     * 构建期权变更明细 JSON (对齐旧 {@code ScmUtil.getOptionMapJson})。
+     * 构建期权变更明细 JSON (对齐旧 {@code BizUtil.getOptionMapJson})。
      *
      * @param size  开通码数量
      * @param price 单价
@@ -393,7 +393,7 @@ public class IdentityServiceImpl implements IdentityService {
 //        // 是否是用户或者渠道商
 //        AccountVO accountVO = accountQueryService.accountVO(accountId);
 //        if (accountVO == null) {
-//            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "账号不存在");
+//            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "账号不存在");
 //        }
 //        boolean isChannel = accountVO.getRoleIdList().contains(RoleEnum.CompanyRole.CHANNEL.getCode() + "");
 //        boolean isMember = accountVO.getRoleIdList().contains(RoleEnum.CompanyRole.MEMBER.getCode() + "");
@@ -402,11 +402,11 @@ public class IdentityServiceImpl implements IdentityService {
 //            if (channelVO == null) {
 //                isChannel = false;
 //            } else if (CommonEnum.YesOrNo.YES == channelVO.getStorePermission()) {
-//                throw new ScmException(BaseErrorCode.EXIST_DATA, "门店已开通");
+//                throw new PlatformException(BaseErrorCode.EXIST_DATA, "门店已开通");
 //            }
 //        }
 //        if (!isChannel && !isMember) {
-//            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "未知的身份");
+//            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "未知的身份");
 //        }
 //
 //        String json = dictFacade.get(DictEnum.Key.CHANNEL_CONFIG.getCode());

@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,9 +49,9 @@ public class SpuController {
      * @return 成功结果
      */
     @PostMapping("spuSalePriceEdit")
-    public ScmResult<Void> outSpuEdit(@Validated @RequestBody OutSpuEditCommand outSpuEditCommand) {
+    public PlatformResult<Void> outSpuEdit(@Validated @RequestBody OutSpuEditCommand outSpuEditCommand) {
         spuDomain.outSpuEdit(outSpuEditCommand);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -61,9 +61,9 @@ public class SpuController {
      * @return 提交结果 ID
      */
     @PostMapping("spuSubmit")
-    public ScmResult<Long> spuSubmit(@Validated @RequestBody SpuCmd.Id idObj) {
+    public PlatformResult<Long> spuSubmit(@Validated @RequestBody SpuCmd.Id idObj) {
         Long accountId = SecurityUtils.getAccountId();
-        return ScmResult.success(spuService.supplierSpuSubmit(accountId, idObj.getId()));
+        return PlatformResult.success(spuService.supplierSpuSubmit(accountId, idObj.getId()));
     }
 
     /**
@@ -73,9 +73,9 @@ public class SpuController {
      * @return 成功结果
      */
     @PostMapping("spuUp")
-    public ScmResult<Void> spuUp(@Validated @RequestBody SpuCmd.UpCommand upCommand) {
+    public PlatformResult<Void> spuUp(@Validated @RequestBody SpuCmd.UpCommand upCommand) {
         spuService.spuUp(upCommand.getEnable(), upCommand.getSpuIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -85,9 +85,9 @@ public class SpuController {
      * @return 成功结果
      */
     @PostMapping("spuDelete")
-    public ScmResult<Void> spuDelete(@RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> spuDelete(@RequestBody IdListCommand idListObj) {
         spuDomain.spuDelete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -98,9 +98,9 @@ public class SpuController {
      * @return 商品 VO
      */
     @GetMapping("spu")
-    public ScmResult<SpuVO> spu(@RequestParam("id") Long id,
+    public PlatformResult<SpuVO> spu(@RequestParam("id") Long id,
                                 @RequestParam(value = "needExtraInfo", required = false, defaultValue = "false") Boolean needExtraInfo) {
-        return ScmResult.success(spuQueryExt.spu(id, needExtraInfo));
+        return PlatformResult.success(spuQueryExt.spu(id, needExtraInfo));
     }
 
     /**
@@ -110,8 +110,8 @@ public class SpuController {
      * @return 商品 ID
      */
     @PostMapping("/palletSelectGoods")
-    public ScmResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
-        return ScmResult.success(spuService.palletSelectGoods(spuVO));
+    public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
+        return PlatformResult.success(spuService.palletSelectGoods(spuVO));
     }
 
     /**
@@ -121,8 +121,8 @@ public class SpuController {
      * @return 供应商商品统计
      */
     @GetMapping("supplierSpuStatistics")
-    public ScmResult<SupplierSpuStatisticsVO> supplierSpuStatistics(@ModelAttribute SupplierSpuStatisticsQuery query) {
-        return ScmResult.success(spuService.supplierSpuStatistics(query));
+    public PlatformResult<SupplierSpuStatisticsVO> supplierSpuStatistics(@ModelAttribute SupplierSpuStatisticsQuery query) {
+        return PlatformResult.success(spuService.supplierSpuStatistics(query));
     }
 
     /**
@@ -132,8 +132,8 @@ public class SpuController {
      * @return SKU 列表
      */
     @PostMapping("skuList")
-    public ScmResult<List<SkuVO>> skuList(@RequestBody SkuQuery skuQuery) {
-        return ScmResult.success(spuDomain.skuVOList(skuQuery));
+    public PlatformResult<List<SkuVO>> skuList(@RequestBody SkuQuery skuQuery) {
+        return PlatformResult.success(spuDomain.skuVOList(skuQuery));
     }
 
     /**
@@ -143,8 +143,8 @@ public class SpuController {
      * @return 成功结果
      */
     @PostMapping("stockExecute")
-    public ScmResult<Void> stockExecute(@RequestBody List<StockExecuteReq> stockExecuteReq) {
+    public PlatformResult<Void> stockExecute(@RequestBody List<StockExecuteReq> stockExecuteReq) {
         spuDomain.stockExecute(stockExecuteReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

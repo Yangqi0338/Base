@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.AccountJobReq;
 import com.newzkl.platform.base.biz.account.model.res.AccountJobRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountJobVO;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +35,8 @@ public class AccountJobController {
      * @return 职位 ID
      */
     @PostMapping("save")
-    public ScmResult<Long> save(@Validated @RequestBody AccountJobReq accountJobReq) {
-        return ScmResult.success(accountJobDomain.save(accountJobReq));
+    public PlatformResult<Long> save(@Validated @RequestBody AccountJobReq accountJobReq) {
+        return PlatformResult.success(accountJobDomain.save(accountJobReq));
     }
 
     /**
@@ -46,9 +46,9 @@ public class AccountJobController {
      * @return 成功结果
      */
     @PostMapping("delete")
-    public ScmResult<Void> delete(@Validated @RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> delete(@Validated @RequestBody IdListCommand idListObj) {
         accountJobDomain.delete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -58,8 +58,8 @@ public class AccountJobController {
      * @return 职位 VO
      */
     @PostMapping("detail")
-    public ScmResult<AccountJobVO> detail(@RequestParam("id") Long id) {
-        return ScmResult.success(accountJobDomain.detail(id));
+    public PlatformResult<AccountJobVO> detail(@RequestParam("id") Long id) {
+        return PlatformResult.success(accountJobDomain.detail(id));
     }
 
     /**
@@ -69,7 +69,7 @@ public class AccountJobController {
      * @return 职位分页
      */
     @PostMapping("accountJobPage")
-    public ScmResult<Page<AccountJobRes>> accountJobPage(@RequestBody AccountJobQuery accountJobQuery) {
-        return ScmResult.success(accountJobDomain.accountJobPageVO(accountJobQuery));
+    public PlatformResult<Page<AccountJobRes>> accountJobPage(@RequestBody AccountJobQuery accountJobQuery) {
+        return PlatformResult.success(accountJobDomain.accountJobPageVO(accountJobQuery));
     }
 }

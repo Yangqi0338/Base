@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.sys.action.controller;
 import com.newzkl.platform.base.biz.sys.domain.service.AppVersionDomain;
 import com.newzkl.platform.base.biz.sys.model.appversion.query.AppVersionQuery;
 import com.newzkl.platform.base.biz.sys.model.appversion.vo.AppVersionVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +32,8 @@ public class AppVersionController {
      * @return app 版本列表
      */
     @PostMapping("/queryAppVersionList")
-    public ScmResult<List<AppVersionVO>> queryAppVersionList(@RequestBody AppVersionQuery query) {
-        return ScmResult.success(appVersionDomain.queryAppVersionList(query));
+    public PlatformResult<List<AppVersionVO>> queryAppVersionList(@RequestBody AppVersionQuery query) {
+        return PlatformResult.success(appVersionDomain.queryAppVersionList(query));
     }
 
     /**
@@ -43,9 +43,9 @@ public class AppVersionController {
      * @return 成功结果
      */
     @PostMapping("/saveAppVersion")
-    public ScmResult<Void> saveAppVersion(@RequestBody AppVersionVO appVersion) {
+    public PlatformResult<Void> saveAppVersion(@RequestBody AppVersionVO appVersion) {
         appVersionDomain.saveAppVersion(appVersion);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -55,7 +55,7 @@ public class AppVersionController {
      * @return app 版本视图对象
      */
     @PostMapping("/queryAppNewVersion/{appName}")
-    public ScmResult<AppVersionVO> queryAppNewVersion(@PathVariable String appName) {
-        return ScmResult.success(appVersionDomain.queryAppNewVersion(appName));
+    public PlatformResult<AppVersionVO> queryAppNewVersion(@PathVariable String appName) {
+        return PlatformResult.success(appVersionDomain.queryAppNewVersion(appName));
     }
 }

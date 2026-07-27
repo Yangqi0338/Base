@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantQuery;
 import com.newzkl.platform.base.biz.account.model.merchant.res.MerchantRes;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +40,9 @@ public class MerchantController {
      * @return 成功结果
      */
     @PostMapping("merchantEdit")
-    public ScmResult<Void> merchantEdit(@Validated @RequestBody MerchantCmd.Edit edit) {
+    public PlatformResult<Void> merchantEdit(@Validated @RequestBody MerchantCmd.Edit edit) {
         merchantDomain.edit(edit.getId(), edit.getMerchantCommand());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -52,9 +52,9 @@ public class MerchantController {
      * @return 成功结果
      */
     @PostMapping("merchantDelete")
-    public ScmResult<Void> merchantDelete(@Validated @RequestBody MerchantCmd.IDList merchantIdList) {
+    public PlatformResult<Void> merchantDelete(@Validated @RequestBody MerchantCmd.IDList merchantIdList) {
         merchantDomain.delete(merchantIdList.getMerchantIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -63,8 +63,8 @@ public class MerchantController {
      * @return 商户详情, 无则 null
      */
     @PostMapping("merchant")
-    public ScmResult<MerchantRes> merchant() {
-        return ScmResult.success(userQueryService.merchantVO(SecurityUtils.getAccountId()));
+    public PlatformResult<MerchantRes> merchant() {
+        return PlatformResult.success(userQueryService.merchantVO(SecurityUtils.getAccountId()));
     }
 
     /**
@@ -74,8 +74,8 @@ public class MerchantController {
      * @return 商户分页
      */
     @PostMapping("merchantPage")
-    public ScmResult<Page<MerchantRes>> merchantPage(@RequestBody MerchantQuery merchantQuery) {
-        return ScmResult.success(userQueryService.merchantPage(merchantQuery));
+    public PlatformResult<Page<MerchantRes>> merchantPage(@RequestBody MerchantQuery merchantQuery) {
+        return PlatformResult.success(userQueryService.merchantPage(merchantQuery));
     }
 
     /**
@@ -87,9 +87,9 @@ public class MerchantController {
      * @return 成功结果
      */
     @PostMapping("useStoreCdk")
-    public ScmResult<Void> useStoreCdk(@Validated @RequestBody MerchantCmd.Cdk cdk) {
+    public PlatformResult<Void> useStoreCdk(@Validated @RequestBody MerchantCmd.Cdk cdk) {
         merchantDomain.useStoreCdk(cdk.getCdk());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -99,9 +99,9 @@ public class MerchantController {
      * @return appId, 未配置时为 null
      */
     @PostMapping("appId")
-    public ScmResult<String> appId(@RequestBody MerchantCmd.ID idObj) {
+    public PlatformResult<String> appId(@RequestBody MerchantCmd.ID idObj) {
         WxMpConfigVO wxMpConfig = userQueryService.wxMpConfig(idObj.getId());
-        return ScmResult.success(wxMpConfig == null ? null : wxMpConfig.getAppId());
+        return PlatformResult.success(wxMpConfig == null ? null : wxMpConfig.getAppId());
     }
 
     /**
@@ -111,8 +111,8 @@ public class MerchantController {
      * @return 微信公众号配置, 未配置时为 null
      */
     @PostMapping("getWxMpConfigVO")
-    public ScmResult<WxMpConfigVO> getWxMpConfigVO(@RequestBody MerchantCmd.ID idObj) {
-        return ScmResult.success(userQueryService.wxMpConfig(idObj.getId()));
+    public PlatformResult<WxMpConfigVO> getWxMpConfigVO(@RequestBody MerchantCmd.ID idObj) {
+        return PlatformResult.success(userQueryService.wxMpConfig(idObj.getId()));
     }
 
     /**
@@ -122,8 +122,8 @@ public class MerchantController {
      * @return 成功结果
      */
     @PostMapping("setWxMpConfigVO")
-    public ScmResult<Void> setWxMpConfigVO(@RequestBody MerchantCmd.EditWxMpConfigVO editWxMpConfigVO) {
+    public PlatformResult<Void> setWxMpConfigVO(@RequestBody MerchantCmd.EditWxMpConfigVO editWxMpConfigVO) {
         merchantDomain.wxMpConfigSet(editWxMpConfigVO.getWxMpConfigVO());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

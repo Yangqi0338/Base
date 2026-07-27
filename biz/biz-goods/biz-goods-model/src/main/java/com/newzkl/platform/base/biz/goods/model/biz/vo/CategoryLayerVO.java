@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.biz.vo;
 
-import com.newzkl.platform.base.common.ddd.model.res.ScmTreeNode;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformTreeNode;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class CategoryLayerVO extends CategoryVO implements ScmTreeNode<CategoryLayerVO> {
+public class CategoryLayerVO extends CategoryVO implements PlatformTreeNode<CategoryLayerVO> {
     /**
      * 父ID
      */

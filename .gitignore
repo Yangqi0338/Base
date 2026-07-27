@@ -71,3 +71,7 @@ app-test/
 #AI
 .omx
 .claude/worktrees/
+.codegraph/
+
+# IDE 插件本地配置
+.apifox-helper.properties

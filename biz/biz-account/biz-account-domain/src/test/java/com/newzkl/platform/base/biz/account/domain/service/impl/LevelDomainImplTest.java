@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.account.model.level.vo.LevelVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.PackCondition;
 import com.newzkl.platform.base.biz.account.model.level.vo.PermissionVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -141,7 +141,7 @@ class LevelDomainImplTest {
         LevelReq req = validReq();
         req.setCondition(null);
 
-        ScmException ex = assertThrows(ScmException.class, () -> levelDomain.save(req));
+        PlatformException ex = assertThrows(PlatformException.class, () -> levelDomain.save(req));
         assertEquals(BaseErrorCode.PARAM.getCode().toString(), ex.getCode());
         verify(levelRepository, never()).save(any());
     }
@@ -152,7 +152,7 @@ class LevelDomainImplTest {
         LevelReq req = validReq();
         req.getCondition().setPack(null);
 
-        ScmException ex = assertThrows(ScmException.class, () -> levelDomain.save(req));
+        PlatformException ex = assertThrows(PlatformException.class, () -> levelDomain.save(req));
         assertEquals(BaseErrorCode.PARAM.getCode().toString(), ex.getCode());
         verify(levelRepository, never()).save(any());
     }
@@ -164,7 +164,7 @@ class LevelDomainImplTest {
         req.getPermission().getDirectConfig().setDirectPackType(1);
         req.getPermission().getDirectConfig().setDirectPack(List.of(0.1D));
 
-        ScmException ex = assertThrows(ScmException.class, () -> levelDomain.save(req));
+        PlatformException ex = assertThrows(PlatformException.class, () -> levelDomain.save(req));
         assertEquals(BaseErrorCode.PARAM.getCode().toString(), ex.getCode());
         verify(levelRepository, never()).save(any());
     }
@@ -174,7 +174,7 @@ class LevelDomainImplTest {
     void updateShouldRejectWhenIdAbsent() {
         LevelReq req = validReq();
 
-        ScmException ex = assertThrows(ScmException.class, () -> levelDomain.update(req));
+        PlatformException ex = assertThrows(PlatformException.class, () -> levelDomain.update(req));
         assertEquals(BaseErrorCode.NODATA.getCode().toString(), ex.getCode());
         verify(levelRepository, never()).save(any());
     }

@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.BankReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankExcelVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
 import jakarta.validation.Valid;
@@ -104,7 +104,7 @@ public class BankDomainImpl implements BankService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ScmResult<Object> huiFuImportExcel(MultipartFile file) {
+    public PlatformResult<Boolean> huiFuImportExcel(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             // 4.2.0 版本 ExcelImportUtil.importExcel 需传入 3 个参数
             EasyExcelErrorVO easyExcelError = EasyExcelUtil.importBiz(
@@ -134,12 +134,12 @@ public class BankDomainImpl implements BankService {
                     }
             );
             if (easyExcelError.errorCount() > 0) {
-                return ScmResult.fail(easyExcelError.errorMsg());
+                return PlatformResult.fail(easyExcelError.errorMsg());
             } else {
-                return ScmResult.success();
+                return PlatformResult.success();
             }
         } catch (Exception e) {
-            return ScmResult.fail("文件解析异常：" + e.getMessage());
+            return PlatformResult.fail("文件解析异常：" + e.getMessage());
         }
     }
 }

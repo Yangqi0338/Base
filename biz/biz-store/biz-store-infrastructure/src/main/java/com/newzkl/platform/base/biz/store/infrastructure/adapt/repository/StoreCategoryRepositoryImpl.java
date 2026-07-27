@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseQueryWrapper;
@@ -104,7 +104,7 @@ public class StoreCategoryRepositoryImpl implements StoreCategoryRepository {
     public void edit(StoreCategory storeCategory, StoreCategoryQuery query) {
         QueryWrapper<StoreCategoryDO> ew = buildLambdaQw(query);
         if (dao.selectCount(ew) == 0) {
-            throw new ScmException(BaseErrorCode.INVALID_UPDATE);
+            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
         }
 
         StoreCategoryDO storeCategoryDO = TransferUtils.transfer(storeCategory, StoreCategoryDO::new);

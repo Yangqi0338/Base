@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.goods.domain.goodPackage.adapt.repository.Go
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -60,7 +60,7 @@ class GoodPackageDomainImplTest {
         when(goodPackageRepository.existsByPackageId("PKG001")).thenReturn(true);
 
         assertThatThrownBy(() -> goodPackageDomain.create(req("PKG001")))
-                .isInstanceOf(ScmException.class)
+                .isInstanceOf(PlatformException.class)
                 .hasMessageContaining("套餐ID已存在");
         verify(goodPackageRepository, never()).save(any(GoodPackageReq.class));
     }
@@ -85,7 +85,7 @@ class GoodPackageDomainImplTest {
         when(goodPackageRepository.findById(404L)).thenReturn(null);
 
         assertThatThrownBy(() -> goodPackageDomain.update(req))
-                .isInstanceOf(ScmException.class)
+                .isInstanceOf(PlatformException.class)
                 .hasMessageContaining("套餐不存在");
     }
 
@@ -116,7 +116,7 @@ class GoodPackageDomainImplTest {
         when(goodPackageRepository.findById(404L)).thenReturn(null);
 
         assertThatThrownBy(() -> goodPackageDomain.enable(404L))
-                .isInstanceOf(ScmException.class)
+                .isInstanceOf(PlatformException.class)
                 .hasMessageContaining("套餐不存在");
     }
 
@@ -125,7 +125,7 @@ class GoodPackageDomainImplTest {
         when(goodPackageRepository.findByPackageId("NOPE")).thenReturn(null);
 
         assertThatThrownBy(() -> goodPackageDomain.detailByPackageId("NOPE"))
-                .isInstanceOf(ScmException.class)
+                .isInstanceOf(PlatformException.class)
                 .hasMessageContaining("套餐不存在");
     }
 

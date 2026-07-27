@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.account.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
@@ -31,7 +31,7 @@ import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.CustomSaveBatchReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -274,10 +274,10 @@ public class AccountServiceImpl implements AccountService {
         AccountVO account = accountDomain.account(req.getClient(), req.getId());
 
         if (account.getState() != AccountEnum.State.ENABLE) {
-            throw new ScmException(AccountErrorCode.PARAM_ERROR, "用户已注销或被平台禁用，不可操作");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "用户已注销或被平台禁用，不可操作");
         }
         if (req.getState() != AccountEnum.State.DESTROY && req.getState() != AccountEnum.State.ENABLE) {
-            throw new ScmException(AccountErrorCode.PARAM_ERROR, "只能进行启用或者禁用");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "只能进行启用或者禁用");
         }
         account.setState(req.getState());
 //        accountDomain.accountEdit(account);
@@ -296,7 +296,7 @@ public class AccountServiceImpl implements AccountService {
                     .setUserAccount(req.getSuperiorAccount());
             AccountVO account = accountRepository.account(accountQuery);
             if (Objects.isNull(account)) {
-                throw new ScmException(BaseErrorCode.NODATA, "上级账号");
+                throw new PlatformException(BaseErrorCode.NODATA, "上级账号");
             }
             // 若上级和当前不是同客户端，则视为邀请人
             if (account.getClient() != role.getClient()) {
@@ -312,7 +312,7 @@ public class AccountServiceImpl implements AccountService {
 
         // 注册失败则抛出异常，成功则重新执行登录
         if (registerRes.getErrorCode() != null) {
-            throw new ScmException(registerRes.getErrorCode());
+            throw new PlatformException(registerRes.getErrorCode());
         }
 
         return registerRes.getId();

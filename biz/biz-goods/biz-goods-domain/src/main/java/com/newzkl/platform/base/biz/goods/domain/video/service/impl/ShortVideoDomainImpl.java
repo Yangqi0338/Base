@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.goods.domain.video.service.ShortVideoDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +49,7 @@ public class ShortVideoDomainImpl implements ShortVideoDomain {
     public ShortVideoVO detail(Long id) {
         ShortVideoVO vo = shortVideoRepository.detail(id);
         if (vo == null) {
-            throw new ScmException(400, "短视频不存在");
+            throw new PlatformException(400, "短视频不存在");
         }
         return vo;
     }
@@ -73,7 +73,7 @@ public class ShortVideoDomainImpl implements ShortVideoDomain {
             spuIdList.add(req.getSpuId());
         }
         if (CollUtil.isEmpty(spuIdList)) {
-            throw new ScmException(400, "关联的SPU不能为空");
+            throw new PlatformException(400, "关联的SPU不能为空");
         }
         req.setSpuIdList(spuIdList);
     }

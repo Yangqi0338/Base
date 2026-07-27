@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.openapi;
 
-import com.newzkl.platform.base.common.ddd.model.res.ScmTreeNode;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformTreeNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2023年04月27日 14:58:00
  */
 @Data
-public class ApiCategoryVO implements Serializable, ScmTreeNode<ApiCategoryVO> {
+public class ApiCategoryVO implements Serializable, PlatformTreeNode<ApiCategoryVO> {
     /**
      * ID: 1级分类(2位数字), 2级分类(4位数字)
      */

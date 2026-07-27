@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.ShipAddressUpdateReq
 import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressRpcVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         boolean nameEmpty = !StringUtils.hasText(name);
         if (codeEmpty ^ nameEmpty) {
             log.error("{}编码和名称不能一个为空、一个非空，编码：{}，名称：{}", fieldName, code, name);
-            throw new ScmException(BaseErrorCode.PARAM, fieldName + "编码和名称必须同时为空或同时非空");
+            throw new PlatformException(BaseErrorCode.PARAM, fieldName + "编码和名称必须同时为空或同时非空");
         }
     }
 
@@ -123,7 +123,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         Optional<ShipAddressDTO> dtoOpt = shipAddressRepository.findById(req.getId());
         if (dtoOpt.isEmpty()) {
             log.error("更新收货地址失败，地址ID：{} 不存在", req.getId());
-            throw new ScmException(BaseErrorCode.NODATA, "地址不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "地址不存在");
         }
         ShipAddressDTO oldDto = dtoOpt.get();
 
@@ -171,7 +171,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         boolean updateResult = shipAddressRepository.updateById(dto);
         if (!updateResult) {
             log.error("更新收货地址失败，地址ID：{}", req.getId());
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "更新地址失败");
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "更新地址失败");
         }
         log.info("收货地址更新成功，地址ID：{}", req.getId());
 
@@ -183,7 +183,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         }
 
         ShipAddressDTO updatedDto = shipAddressRepository.findById(req.getId())
-                .orElseThrow(() -> new ScmException(BaseErrorCode.NODATA, "地址更新后查询失败"));
+                .orElseThrow(() -> new PlatformException(BaseErrorCode.NODATA, "地址更新后查询失败"));
         ShipAddressVO vo = TransferUtils.transfer(updatedDto, ShipAddressVO::new);
         log.info("更新收货地址完成，VO：{}", vo);
         return vo;
@@ -196,7 +196,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         ShipAddressDTO dto = shipAddressRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("查询收货地址失败，地址ID：{} 不存在", id);
-                    return new ScmException(BaseErrorCode.NODATA, "地址不存在");
+                    return new PlatformException(BaseErrorCode.NODATA, "地址不存在");
                 });
 
         ShipAddressVO vo = TransferUtils.transfer(dto, ShipAddressVO::new);
@@ -246,7 +246,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         Optional<ShipAddressDTO> dtoOpt = shipAddressRepository.findById(id);
         if (dtoOpt.isEmpty()) {
             log.error("删除收货地址失败，地址ID：{} 不存在", id);
-            throw new ScmException(BaseErrorCode.NODATA, "地址不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "地址不存在");
         }
 
         boolean deleteResult = shipAddressRepository.logicDeleteById(id, operator);
@@ -262,7 +262,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         Optional<ShipAddressDTO> dtoOpt = shipAddressRepository.findById(id);
         if (dtoOpt.isEmpty()) {
             log.error("设置默认地址失败，地址ID：{} 不存在", id);
-            throw new ScmException(BaseErrorCode.NODATA, "地址不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "地址不存在");
         }
 
         boolean setDefaultResult = shipAddressRepository.setDefault(
@@ -278,7 +278,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
 
         if (id == null && accountId == null) {
             log.error("查询收货地址失败，账号ID不能为空");
-            throw new ScmException(BaseErrorCode.PARAM, "ID 和 账号ID不能都为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "ID 和 账号ID不能都为空");
         }
 
         ShipAddressDTO addressDTO = null;

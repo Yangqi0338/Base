@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.store.model.template.res.ModelShopDataRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStyleRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopRes;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,9 +44,9 @@ public class ModelShopController {
      * @return 成功结果
      */
     @PostMapping("/applyModelShop")
-    public ScmResult<Void> applyModelShop(@RequestBody ApplyModelShopReq req) {
+    public PlatformResult<Void> applyModelShop(@RequestBody ApplyModelShopReq req) {
         modelShopDomain.applyModelShop(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -56,9 +56,9 @@ public class ModelShopController {
      * @return 成功结果
      */
     @PostMapping("/updateModelShop")
-    public ScmResult<Void> updateModelShop(@RequestBody ModelShopUpdateReq req) {
+    public PlatformResult<Void> updateModelShop(@RequestBody ModelShopUpdateReq req) {
         modelShopDomain.updateModelShop(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -68,9 +68,9 @@ public class ModelShopController {
      * @return 成功结果
      */
     @PostMapping("/auditModelShop")
-    public ScmResult<Void> auditModelShop(@RequestBody AuditModelShopReq req) {
+    public PlatformResult<Void> auditModelShop(@RequestBody AuditModelShopReq req) {
         modelShopDomain.auditModelShop(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -80,8 +80,8 @@ public class ModelShopController {
      * @return 样板店分页
      */
     @PostMapping("/queryModelShopPage")
-    public ScmResult<Page<ModelShopRes>> queryModelShopPage(@RequestBody QueryModelShopReq req) {
-        return ScmResult.success(modelShopDomain.queryModelShopPage(req));
+    public PlatformResult<Page<ModelShopRes>> queryModelShopPage(@RequestBody QueryModelShopReq req) {
+        return PlatformResult.success(modelShopDomain.queryModelShopPage(req));
     }
 
     /**
@@ -91,8 +91,8 @@ public class ModelShopController {
      * @return 样板店数据
      */
     @PostMapping("/modelShopData")
-    public ScmResult<ModelShopDataRes> modelShopData(@RequestBody ModelShopDataQuery query) {
-        return ScmResult.success(modelShopDomain.modelShopData(query));
+    public PlatformResult<ModelShopDataRes> modelShopData(@RequestBody ModelShopDataQuery query) {
+        return PlatformResult.success(modelShopDomain.modelShopData(query));
     }
 
     /**
@@ -102,8 +102,8 @@ public class ModelShopController {
      * @return 门店分页
      */
     @PostMapping("/modelShopStorePage")
-    public ScmResult<Page<ModelShopStorePageRes>> modelShopStorePage(@RequestBody ModelShopStorePageQuery query) {
-        return ScmResult.success(modelShopDomain.modelShopStorePage(query));
+    public PlatformResult<Page<ModelShopStorePageRes>> modelShopStorePage(@RequestBody ModelShopStorePageQuery query) {
+        return PlatformResult.success(modelShopDomain.modelShopStorePage(query));
     }
 
     /**
@@ -113,9 +113,9 @@ public class ModelShopController {
      * @return 成功结果
      */
     @GetMapping("/useModelShop")
-    public ScmResult<Void> useModelShop(@RequestParam(required = false) String styleCode) {
+    public PlatformResult<Void> useModelShop(@RequestParam(required = false) String styleCode) {
         modelShopService.useModelShop(styleCode);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -124,8 +124,8 @@ public class ModelShopController {
      * @return 样板店列表
      */
     @GetMapping("/queryModelShopList")
-    public ScmResult<List<ModelShopStyleRes>> queryModelShopList() {
-        return ScmResult.success(modelShopDomain.queryModelShopList());
+    public PlatformResult<List<ModelShopStyleRes>> queryModelShopList() {
+        return PlatformResult.success(modelShopDomain.queryModelShopList());
     }
 
     /**
@@ -135,9 +135,9 @@ public class ModelShopController {
      * @return 成功结果
      */
     @GetMapping("/deleteModelShop")
-    public ScmResult<Void> deleteModelShop(@RequestParam(required = false) Long id) {
+    public PlatformResult<Void> deleteModelShop(@RequestParam(required = false) Long id) {
         modelShopDomain.deleteModelShop(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -146,8 +146,8 @@ public class ModelShopController {
      * @return 成功结果
      */
     @GetMapping("/syncModelShop")
-    public ScmResult<Void> syncModelShop() {
+    public PlatformResult<Void> syncModelShop() {
         modelShopDomain.syncModelShop();
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

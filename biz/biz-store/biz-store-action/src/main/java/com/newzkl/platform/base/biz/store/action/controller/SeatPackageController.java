@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +39,9 @@ public class SeatPackageController {
      * @return 席位套餐分页
      */
     @PostMapping("/seatPackagePage")
-    public ScmResult<Page<SeatPackageResponse>> seatPackagePage(@Validated @RequestBody SeatPackagePageReq req) {
+    public PlatformResult<Page<SeatPackageResponse>> seatPackagePage(@Validated @RequestBody SeatPackagePageReq req) {
         req.setRoleId(SecurityUtils.getRoleId());
-        return ScmResult.success(seatPackageDomain.seatPackagePage(req));
+        return PlatformResult.success(seatPackageDomain.seatPackagePage(req));
     }
 
     /**
@@ -51,9 +51,9 @@ public class SeatPackageController {
      */
     @PostMapping("seatPackageStoreVO")
     @RoleLimit({RoleEnum.CompanyRole.CHANNEL})
-    public ScmResult<SeatPackageChannelRes> seatPackageStoreVO() {
+    public PlatformResult<SeatPackageChannelRes> seatPackageStoreVO() {
         Long accountId = SecurityUtils.getAccountId();
-        return ScmResult.success(seatPackageService.seatPackageStoreVO(accountId));
+        return PlatformResult.success(seatPackageService.seatPackageStoreVO(accountId));
     }
 
     /**
@@ -63,9 +63,9 @@ public class SeatPackageController {
      * @return 成功结果
      */
     @PostMapping("/create")
-    public ScmResult<Void> create(@Validated @RequestBody SeatPackageCreateReq req) {
+    public PlatformResult<Void> create(@Validated @RequestBody SeatPackageCreateReq req) {
         seatPackageDomain.create(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -75,8 +75,8 @@ public class SeatPackageController {
      * @return 成功结果
      */
     @PostMapping("/update")
-    public ScmResult<Void> update(@Validated @RequestBody SeatPackageUpdateReq req) {
+    public PlatformResult<Void> update(@Validated @RequestBody SeatPackageUpdateReq req) {
         seatPackageDomain.update(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

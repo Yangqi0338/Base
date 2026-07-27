@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.market.model.suggest.req.CommitTagReq;
 import com.newzkl.platform.base.biz.market.model.suggest.req.TagConfigReq;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.CommitTagVO;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.TagConfigVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,9 +44,9 @@ public class SuggestController {
      * @return 成功结果
      */
     @PostMapping("/saveTagConfig")
-    public ScmResult<Void> saveTagConfig(@RequestBody TagConfigReq req) {
+    public PlatformResult<Boolean> saveTagConfig(@RequestBody TagConfigReq req) {
         suggestDomain.saveTagConfig(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -56,9 +56,9 @@ public class SuggestController {
      * @return 成功结果
      */
     @PostMapping("/commitTag")
-    public ScmResult<Void> commitTag(@RequestBody CommitTagReq req) {
+    public PlatformResult<Boolean > commitTag(@RequestBody CommitTagReq req) {
         suggestDomain.commitTag(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -67,8 +67,8 @@ public class SuggestController {
      * @return 标签配置视图
      */
     @PostMapping("/queryTagConfig")
-    public ScmResult<TagConfigVO> queryTagConfig() {
-        return ScmResult.success(suggestDomain.queryTagConfig(true));
+    public PlatformResult<TagConfigVO> queryTagConfig() {
+        return PlatformResult.success(suggestDomain.queryTagConfig(true));
     }
 
     /**
@@ -77,8 +77,8 @@ public class SuggestController {
      * @return 标签配置视图
      */
     @PostMapping("/tradeQueryTagConfig")
-    public ScmResult<TagConfigVO> tradeQueryTagConfig() {
-        return ScmResult.success(suggestDomain.queryTagConfig(false));
+    public PlatformResult<TagConfigVO> tradeQueryTagConfig() {
+        return PlatformResult.success(suggestDomain.queryTagConfig(false));
     }
 
     /**
@@ -87,8 +87,8 @@ public class SuggestController {
      * @return 提交视图
      */
     @PostMapping("/queryCommitTag")
-    public ScmResult<CommitTagVO> queryCommitTag() {
-        return ScmResult.success(suggestDomain.queryCommitTag());
+    public PlatformResult<CommitTagVO> queryCommitTag() {
+        return PlatformResult.success(suggestDomain.queryCommitTag());
     }
 
     /**
@@ -98,8 +98,8 @@ public class SuggestController {
      * @return 提交视图列表
      */
     @PostMapping("/queryOperatorAllSuggest/{mobile}")
-    public ScmResult<List<CommitTagVO>> queryOperatorAllSuggest(@PathVariable String mobile) {
-        return ScmResult.success(suggestDomain.queryOperatorAllSuggest(normalizeMobile(mobile)));
+    public PlatformResult<List<CommitTagVO>> queryOperatorAllSuggest(@PathVariable String mobile) {
+        return PlatformResult.success(suggestDomain.queryOperatorAllSuggest(normalizeMobile(mobile)));
     }
 
     /**

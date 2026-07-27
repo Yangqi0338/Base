@@ -14,7 +14,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.*;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeBaseRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.*;
@@ -26,7 +26,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.TripartiteAccountBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.TripartiteBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -404,7 +404,7 @@ public class HuiFuMethod {
      * 装饰金额
      */
     public static String decorateAmount(Integer cents) {
-        BigDecimal amount = ScmUtil.percent(cents, 2, RoundingMode.FLOOR);
+        BigDecimal amount = BizUtil.percent(cents, 2, RoundingMode.FLOOR);
         // 非生产走逻辑
         if (SecurityContextHolder.isDev()) {
             // 阶梯下降,直到小于1元 (判断价格是否正确)
@@ -526,7 +526,7 @@ public class HuiFuMethod {
 
     private static void sortJsonArray(JSONArray array, int layer, int maxLayer) {
         if (layer >= maxLayer) {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
         for (int i = 0; i < array.size(); ++i) {
             JSONArray nested;

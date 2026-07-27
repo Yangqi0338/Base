@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.lock.DistributedLocker;
 import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
@@ -156,7 +156,7 @@ class CashPayServiceImplTest {
     void orderPayShouldRejectNonCashPayTypeAndReleaseLock() {
         when(orderPayDomain.saveOrderPayRecord(any(), eq(null))).thenReturn(TRADE_NO);
 
-        ScmException ex = assertThrows(ScmException.class,
+        PlatformException ex = assertThrows(PlatformException.class,
                 () -> cashPayService.orderPay(req(OrderEnum.PayType.PURCHASE)));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));

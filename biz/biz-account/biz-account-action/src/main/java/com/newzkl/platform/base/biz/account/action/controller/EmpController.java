@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.EmpQuery;
 import com.newzkl.platform.base.biz.account.model.res.EmpRes;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +39,9 @@ public class EmpController {
      * @return 成功结果
      */
     @PostMapping("batchEmpCreate")
-    public ScmResult<Void> batchEmpCreate(@Validated @RequestBody List<EmpCreateReq> empCreateReqList) {
+    public PlatformResult<Void> batchEmpCreate(@Validated @RequestBody List<EmpCreateReq> empCreateReqList) {
         adminClientDomain.batchEmpCreate(empCreateReqList, SecurityUtils.getAccountId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -51,8 +51,8 @@ public class EmpController {
      * @return 员工分页
      */
     @PostMapping("empPage")
-    public ScmResult<Page<EmpRes>> empPage(@RequestBody EmpQuery empQuery) {
-        return ScmResult.success(adminClientDomain.empPage(empQuery));
+    public PlatformResult<Page<EmpRes>> empPage(@RequestBody EmpQuery empQuery) {
+        return PlatformResult.success(adminClientDomain.empPage(empQuery));
     }
 
     /**
@@ -63,7 +63,7 @@ public class EmpController {
      * @throws IOException 文件读取异常
      */
     @PostMapping("excelCreateEmp")
-    public ScmResult<EasyExcelErrorVO> excelCreateEmp(@RequestParam("file") MultipartFile file) throws IOException {
-        return ScmResult.success(adminClientDomain.excelCreateEmp(file.getInputStream(), SecurityUtils.getAccountId()));
+    public PlatformResult<EasyExcelErrorVO> excelCreateEmp(@RequestParam("file") MultipartFile file) throws IOException {
+        return PlatformResult.success(adminClientDomain.excelCreateEmp(file.getInputStream(), SecurityUtils.getAccountId()));
     }
 }

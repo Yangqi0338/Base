@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTarge
 import com.newzkl.platform.base.biz.goods.model.goods.res.interaction.StoreTargetInteractionStatPageRes;
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionEvent;
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -46,9 +46,9 @@ public class StoreTargetInteractionStatController {
      * @return 成功结果
      */
     @PostMapping("/interaction")
-    public ScmResult<String> submitInteraction(@Validated @RequestBody InteractionStatReq requestVO) {
+    public PlatformResult<String> submitInteraction(@Validated @RequestBody InteractionStatReq requestVO) {
         statService.submitInteraction(requestVO);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -58,8 +58,8 @@ public class StoreTargetInteractionStatController {
      * @return 统计记录
      */
     @PostMapping("/interaction/query")
-    public ScmResult<StoreTargetInteractionStat> findByStoreTarget(@Validated @RequestBody BatchSyncStatReq queryVO) {
-        return ScmResult.success(statService.findByStoreTarget(queryVO));
+    public PlatformResult<StoreTargetInteractionStat> findByStoreTarget(@Validated @RequestBody BatchSyncStatReq queryVO) {
+        return PlatformResult.success(statService.findByStoreTarget(queryVO));
     }
 
     /**
@@ -69,8 +69,8 @@ public class StoreTargetInteractionStatController {
      * @return 是否删除成功
      */
     @DeleteMapping("/interaction/delete")
-    public ScmResult<Boolean> deleteByStoreTarget(@Validated @RequestBody BatchSyncStatReq queryVO) {
-        return ScmResult.success(statService.deleteByStoreTarget(queryVO));
+    public PlatformResult<Boolean> deleteByStoreTarget(@Validated @RequestBody BatchSyncStatReq queryVO) {
+        return PlatformResult.success(statService.deleteByStoreTarget(queryVO));
     }
 
     /**
@@ -80,8 +80,8 @@ public class StoreTargetInteractionStatController {
      * @return 分页结果
      */
     @PostMapping("/interaction/page")
-    public ScmResult<StoreTargetInteractionStatPageRes> pageQuery(@Validated @RequestBody StoreTargetInteractionStatPageReq queryVO) {
-        return ScmResult.success(statService.pageQuery(queryVO));
+    public PlatformResult<StoreTargetInteractionStatPageRes> pageQuery(@Validated @RequestBody StoreTargetInteractionStatPageReq queryVO) {
+        return PlatformResult.success(statService.pageQuery(queryVO));
     }
 
     /**
@@ -91,8 +91,8 @@ public class StoreTargetInteractionStatController {
      * @return 统计记录列表
      */
     @PostMapping("/interaction/batch")
-    public ScmResult<List<StoreTargetInteractionStat>> batchQuery(@Validated @RequestBody StoreTargetInteractionStatBatchReq queryVO) {
-        return ScmResult.success(statService.batchQuery(queryVO));
+    public PlatformResult<List<StoreTargetInteractionStat>> batchQuery(@Validated @RequestBody StoreTargetInteractionStatBatchReq queryVO) {
+        return PlatformResult.success(statService.batchQuery(queryVO));
     }
 
     /**
@@ -102,9 +102,9 @@ public class StoreTargetInteractionStatController {
      * @return 成功结果
      */
     @PostMapping("/remoteProcess")
-    public ScmResult<String> remoteProcess(@Validated @RequestBody StoreTargetInteractionEvent requestVO) {
+    public PlatformResult<String> remoteProcess(@Validated @RequestBody StoreTargetInteractionEvent requestVO) {
         statService.remoteProcess(requestVO);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -115,9 +115,9 @@ public class StoreTargetInteractionStatController {
      * @return 汇总统计列表
      */
     @GetMapping("/summary")
-    public ScmResult<List<StoreTargetInteractionSummaryObj>> summaryByTargetTypeAndIdList(@RequestParam String targetType,
+    public PlatformResult<List<StoreTargetInteractionSummaryObj>> summaryByTargetTypeAndIdList(@RequestParam String targetType,
                                                                                           @RequestParam Long targetId) {
-        return ScmResult.success(statService.summaryByTargetTypeAndIdList(
+        return PlatformResult.success(statService.summaryByTargetTypeAndIdList(
                 Collections.singletonList(targetType), Collections.singletonList(targetId)));
     }
 
@@ -128,8 +128,8 @@ public class StoreTargetInteractionStatController {
      * @return 汇总统计结果
      */
     @GetMapping("/selectSummaryByPublisherId")
-    public ScmResult<StoreTargetInteractionSummaryObj> selectSummaryByPublisherId(@RequestParam Long publisherId) {
-        return ScmResult.success(statService.selectSummaryByPublisherId(publisherId));
+    public PlatformResult<StoreTargetInteractionSummaryObj> selectSummaryByPublisherId(@RequestParam Long publisherId) {
+        return PlatformResult.success(statService.selectSummaryByPublisherId(publisherId));
     }
 
     // TODO[debug-drop]: 源 queryCache/deleteCache/existsCache/getAllByPattern 为直连 RedisUtil 的调试端点,

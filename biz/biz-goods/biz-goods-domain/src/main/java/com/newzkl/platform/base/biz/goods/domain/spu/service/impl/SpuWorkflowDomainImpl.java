@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.user.AuditErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class SpuWorkflowDomainImpl implements SpuWorkflowDomain {
         query.setId(flowId);
         List<AuditDataSpuVO> auditDataSpus = auditDataSpuRepository.auditDataSpuVOList(query);
         if (ObjectUtil.isEmpty(auditDataSpus)) {
-            throw new ScmException(AuditErrorCode.AUDIT_DATA_LOSE);
+            throw new PlatformException(AuditErrorCode.AUDIT_DATA_LOSE);
         }
         return auditDataSpus.get(0);
     }

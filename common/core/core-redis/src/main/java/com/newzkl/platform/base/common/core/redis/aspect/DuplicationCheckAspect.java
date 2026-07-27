@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.core.redis.aspect;
 
 import cn.hutool.core.text.StrJoiner;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SpElParseUtil;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -35,7 +35,7 @@ public class DuplicationCheckAspect {
             String key = generateKey(joinPoint, duplicationCheck);
             RBucket<String> bucket = redissonClient.getBucket(key);
             if (bucket.isExists()) {
-                throw new ScmException(BaseErrorCode.REPEAT.getCode(), duplicationCheck.message());
+                throw new PlatformException(BaseErrorCode.REPEAT.getCode(), duplicationCheck.message());
             }
             bucket.set(key, duplicationCheck.time(), TimeUnit.SECONDS);
             return joinPoint.proceed();

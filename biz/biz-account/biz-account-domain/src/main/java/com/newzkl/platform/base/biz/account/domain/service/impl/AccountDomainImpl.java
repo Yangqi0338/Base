@@ -23,7 +23,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
@@ -35,7 +35,7 @@ import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.CodeUpdatePasswordReq;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.biz.TransactionUtils;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
@@ -151,7 +151,7 @@ public class AccountDomainImpl implements AccountDomain {
         accountQuery.setState(AccountEnum.State.ENABLE);
         Long newAccountId = accountRepository.findId(accountQuery);
         if (newAccountId != null) {
-            throw new ScmException(AccountErrorCode.EXIST_USERNAME);
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
         }
 
         // 若新账号名不是手机号,则使用旧账号的手机号
@@ -178,7 +178,7 @@ public class AccountDomainImpl implements AccountDomain {
         AccountVO parentAccount = account(null, parentId);
 
         if (subEditReq.getRoleIdList().stream().anyMatch(roleId -> !parentAccount.getRoleIdList().contains(roleId + ""))) {
-            throw new ScmException(AccountErrorCode.NOT_OPEN_ROLE);
+            throw new PlatformException(AccountErrorCode.NOT_OPEN_ROLE);
         }
         //保存账号
         accountEdit.setRoleIdList(CollUtil.join(subEditReq.getRoleIdList(), ","));
@@ -276,11 +276,11 @@ public class AccountDomainImpl implements AccountDomain {
             String inviteAccountRoleId = inviteAccountVO.getRoleIdList();
             // 不存在邀请人或邀请人是自己
             if (inviteAccountId.equals(accountId)) {
-                throw new ScmException(AccountErrorCode.PARAM_YQM);
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
             }
             accountEdit.setPid(inviteAccountId);
-            accountEdit.setPidList(ScmUtil.getPidList(inviteAccountVO.getPidList(), accountEdit.getPid()));
-            accountEdit.setPRoleList(ScmUtil.getPRoleList(inviteAccountVO.getPRoleList(), inviteAccountRoleId));
+            accountEdit.setPidList(BizUtil.getPidList(inviteAccountVO.getPidList(), accountEdit.getPid()));
+            accountEdit.setPRoleList(BizUtil.getPRoleList(inviteAccountVO.getPRoleList(), inviteAccountRoleId));
             accountEdit.setInviteAccountId(accountEdit.getPid());
         }
 
@@ -297,7 +297,7 @@ public class AccountDomainImpl implements AccountDomain {
         CommonEnum.Client client = role.getClient();
         AccountVO accountVO = account(client, accountId);
         if (AccountEnum.State.DESTROY == accountVO.getState()) {
-            throw new ScmException(AccountErrorCode.IS_LOCK);
+            throw new PlatformException(AccountErrorCode.IS_LOCK);
         }
 
         String username = accountVO.getUsername();
@@ -335,7 +335,7 @@ public class AccountDomainImpl implements AccountDomain {
     public @NotNull AccountVO account(CommonEnum.Client client, Long accountId) {
         AccountVO accountVO = accountRepository.account(client, accountId);
         if (accountVO == null) {
-            throw new ScmException(AccountErrorCode.NO_EXIST);
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
         }
         return accountVO;
     }
@@ -367,13 +367,13 @@ public class AccountDomainImpl implements AccountDomain {
         AccountVO account = accountRepository.account(CommonEnum.Client.ADMIN, pid);
         //检查是否与父账号重复
         if (account.getUsername().equals(proxySaveReq.getUsername())) {
-            throw new ScmException(AccountErrorCode.EXIST_USERNAME);
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
         }
         //检查父账号是否具备授权的角色
         for (Long item : proxySaveReq.getRoleIdList()) {
             List<Long> parentRoleIdList = StrUtil.split(account.getRoleIdList(), ',', -1, true, NumberUtil::parseLong);
             if (!parentRoleIdList.contains(item)) {
-                throw new ScmException(AccountErrorCode.NOT_OPEN_ROLE);
+                throw new PlatformException(AccountErrorCode.NOT_OPEN_ROLE);
             }
         }
         //检查子账号是否存在
@@ -382,7 +382,7 @@ public class AccountDomainImpl implements AccountDomain {
         accountQuery.setPid(pid);
         int count = accountRepository.accountCountByQuery(accountQuery);
         if (count > 0) {
-            throw new ScmException(AccountErrorCode.EXIST_USERNAME);
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
         }
         //保存账号
         SubAccount subAccount = new SubAccount();
@@ -461,12 +461,12 @@ public class AccountDomainImpl implements AccountDomain {
     public List<SubAccountVO> subAccountList(AccountParentQuery query) {
         AccountVO accountVO = account(query.getClient(), query.getId());
         if (StrUtil.isBlank(query.getPidList())) {
-            query.setPidList(ScmUtil.getPidList(accountVO.getPidList(), query.getId()));
+            query.setPidList(BizUtil.getPidList(accountVO.getPidList(), query.getId()));
         }
 
         // 查询在运营商端下 所有的下级
         AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setPidList(ScmUtil.getPidList(accountVO.getPidList(), query.getId()));
+        accountQuery.setPidList(BizUtil.getPidList(accountVO.getPidList(), query.getId()));
         accountQuery.setClient(query.getClient());
 
         List<AccountStructureTreeVO> structureList = accountAssembler.structure2TreeList(accountRepository.listObj(accountQuery, AccountStructureVO.class));
@@ -493,7 +493,7 @@ public class AccountDomainImpl implements AccountDomain {
             if (role != null) {
                 sameRoleSubAccountList.forEach(subStructure -> {
                     SubStructureReq subReq1 = new SubStructureReq();
-                    subReq1.setPidList(ScmUtil.getPidList(subStructure.getPidList(), subStructure.getId()));
+                    subReq1.setPidList(BizUtil.getPidList(subStructure.getPidList(), subStructure.getId()));
                     subReq1.setRoleIdList(query.getRoleIdList());
                     List<AccountStructureVO> subList = accountRepository.findScopeSubAccountStructure(0L);
 

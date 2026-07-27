@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveCommand;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
@@ -93,7 +93,7 @@ public class StoreCategoryDomainImpl implements StoreCategoryDomain {
         Page<StoreSearchRes> page = storeDomain.storeSearchPage(storeQueryReq);
         boolean hasStore = page.getTotal() > 0;
         if (hasStore) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "门店分类下存在门店，不允许删除");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "门店分类下存在门店，不允许删除");
         }
 
         repository.del(id);

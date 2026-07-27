@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.res.report.ReportRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuSimpleVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class ReportRepositoryImpl implements ReportRepository {
     public ReportRes detail(Long id) {
         ReportDO reportDO = reportDAO.selectById(id);
         if (reportDO == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "报告");
+            throw new PlatformException(BaseErrorCode.NODATA, "报告");
         }
         ReportRes report = TransferUtils.transfer(reportDO, ReportRes::new);
         if (CollUtil.isNotEmpty(report.getSpuIdList())) {
@@ -71,7 +71,7 @@ public class ReportRepositoryImpl implements ReportRepository {
         Long reportId = req.getId();
 
         if (reportDAO.countByQuery(reportQuery) == 0) {
-            throw new ScmException(BaseErrorCode.INVALID_UPDATE);
+            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
         }
 
         // 设置要更新的视频id列表

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.web.DealerProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.web.OperatorProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.web.SelectorProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -126,14 +126,14 @@ class MigrationRewireBehaviourTest {
     }
 
     /**
-     * 旧: {@code ScmUtil.generateCode(32)} 生成 openapi 开发者密钥。
+     * 旧: {@code BizUtil.generateCode(32)} 生成 openapi 开发者密钥。
      * 新: 该方法在通用层拆分时被误删, Task 0 已按原实现补回。
      * 锁定点: 必须支持 length &gt; 16 (兄弟方法 generateDiffCode 基于 MD5 16 位摘要, 32 位会越界)。
      */
     @Test
     @DisplayName("随机码工具: generateCode 支持 32 位, 且字符集为数字+小写字母")
     void generateCodeSupportsThirtyTwoLength() {
-        String secret = ScmUtil.generateCode(32);
+        String secret = BizUtil.generateCode(32);
 
         assertNotNull(secret);
         assertEquals(32, secret.length(), "openapi 密钥长度必须为 32");
@@ -143,12 +143,12 @@ class MigrationRewireBehaviourTest {
     @Test
     @DisplayName("随机码工具: generateCode 每次调用结果不同")
     void generateCodeIsRandom() {
-        assertFalse(ScmUtil.generateCode(32).equals(ScmUtil.generateCode(32)),
+        assertFalse(BizUtil.generateCode(32).equals(BizUtil.generateCode(32)),
                 "两次生成的密钥重复概率极低, 相同视为实现退化");
     }
 
     /**
-     * 旧: {@code ScmUtil.findClientRoleIdList(client)} (通用层)。
+     * 旧: {@code BizUtil.findClientRoleIdList(client)} (通用层)。
      * 新: 角色语义随业务枚举下沉, 改调 {@code RoleEnumUtil.findClientRoleIdList(client)}。
      * 锁定点: 端 -> 角色码列表的映射必须仍然可用且非空。
      */

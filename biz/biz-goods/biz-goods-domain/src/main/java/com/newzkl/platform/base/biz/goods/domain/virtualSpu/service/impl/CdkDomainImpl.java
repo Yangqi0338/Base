@@ -11,8 +11,8 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.virtualSpu.CdkVO;
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class CdkDomainImpl implements CdkDomain {
         List<CdkDTO> cdkDTOList = new ArrayList<>();
         HashSet<String> valueList = new HashSet<>();
         if (number > 1000) {
-            throw new ScmException(BaseErrorCode.PARAM, "一次最多生成1000个");
+            throw new PlatformException(BaseErrorCode.PARAM, "一次最多生成1000个");
         }
         //递归获取兑换码
         createCdkValue(valueList, cdkRepository, systemType, 12, number);
@@ -69,7 +69,7 @@ public class CdkDomainImpl implements CdkDomain {
         if (!objects.isEmpty()) {
             log.warn("createCdkValue : 发生递归");
         }
-        Set<String> valueList = ScmUtil.generateDiffCode(length, number - objects.size());
+        Set<String> valueList = BizUtil.generateDiffCode(length, number - objects.size());
         Set<String> existValue = cdkRepository.existValue(systemType, valueList);
         if (!existValue.isEmpty()) {
             valueList.removeAll(existValue);
@@ -83,7 +83,7 @@ public class CdkDomainImpl implements CdkDomain {
         CdkDTO cdkDTO = cdkRepository.cdk(id);
         if (CommonEnum.YesOrNo.NO.getCode().equals(useState)) {
             if (cdkDTO.getUseType() == 0) {
-                throw new ScmException(BaseErrorCode.PARAM, "用户已使用的兑换,不能修改为未使用");
+                throw new PlatformException(BaseErrorCode.PARAM, "用户已使用的兑换,不能修改为未使用");
             }
         }
         CdkDTO cdkDTOEdit = new CdkDTO();
@@ -161,7 +161,7 @@ public class CdkDomainImpl implements CdkDomain {
                 cdkDTOEdit.setChannelId(toCdkCommand.getToUserId());
                 cdkDTOEdit.setToChannelTime(LocalDateTime.now());
             }else {
-                throw new ScmException(BaseErrorCode.PARAM);
+                throw new PlatformException(BaseErrorCode.PARAM);
             }
         } else if (RoleEnum.CompanyRole.DEALER == toCdkCommand.getFromRole()) {
             if (RoleEnum.CompanyRole.CHANNEL == toCdkCommand.getToRole()) {
@@ -170,10 +170,10 @@ public class CdkDomainImpl implements CdkDomain {
                 cdkDTOEdit.setChannelId(toCdkCommand.getToUserId());
                 cdkDTOEdit.setToChannelTime(LocalDateTime.now());
             }else {
-                throw new ScmException(BaseErrorCode.PARAM);
+                throw new PlatformException(BaseErrorCode.PARAM);
             }
         }else {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
         return cdkRepository.cdkEditForToCdk(cdkDTOEdit,toCdkCommand.getCdkIdList());
     }

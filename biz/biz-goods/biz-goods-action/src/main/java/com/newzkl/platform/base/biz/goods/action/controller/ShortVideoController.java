@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +39,8 @@ public class ShortVideoController {
      * @return 短视频 ID
      */
     @PostMapping("add")
-    public ScmResult<Long> add(@Validated @RequestBody ShortVideoReq req) {
-        return ScmResult.success(shortVideoDomain.add(req));
+    public PlatformResult<Long> add(@Validated @RequestBody ShortVideoReq req) {
+        return PlatformResult.success(shortVideoDomain.add(req));
     }
 
     /**
@@ -50,9 +50,9 @@ public class ShortVideoController {
      * @return 成功结果
      */
     @PostMapping("edit")
-    public ScmResult<Void> edit(@Validated(UpdateCommand.class) @RequestBody ShortVideoReq req) {
+    public PlatformResult<Void> edit(@Validated(UpdateCommand.class) @RequestBody ShortVideoReq req) {
         shortVideoDomain.edit(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -62,9 +62,9 @@ public class ShortVideoController {
      * @return 成功结果
      */
     @PostMapping("del")
-    public ScmResult<Void> del(@RequestParam("id") Long id) {
+    public PlatformResult<Void> del(@RequestParam("id") Long id) {
         shortVideoDomain.del(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -74,8 +74,8 @@ public class ShortVideoController {
      * @return 短视频视图对象
      */
     @GetMapping("detail")
-    public ScmResult<ShortVideoVO> detail(@RequestParam("id") Long id) {
-        return ScmResult.success(shortVideoDomain.detail(id));
+    public PlatformResult<ShortVideoVO> detail(@RequestParam("id") Long id) {
+        return PlatformResult.success(shortVideoDomain.detail(id));
     }
 
     /**
@@ -87,8 +87,8 @@ public class ShortVideoController {
      * @return 短视频分页
      */
     @PostMapping("page")
-    public ScmResult<Page<ShortVideoVO>> page(@RequestBody ShortVideoQuery query) {
+    public PlatformResult<Page<ShortVideoVO>> page(@RequestBody ShortVideoQuery query) {
         query.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(shortVideoDomain.page(query));
+        return PlatformResult.success(shortVideoDomain.page(query));
     }
 }

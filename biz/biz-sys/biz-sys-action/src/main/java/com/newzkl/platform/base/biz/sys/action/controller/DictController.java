@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 import com.newzkl.platform.base.biz.sys.model.dictitem.req.DictItemReq;
 import com.newzkl.platform.base.biz.sys.model.dictitem.res.DictItemRes;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +40,8 @@ public class DictController {
      * @return 字典 id
      */
     @PostMapping("/dictSave")
-    public ScmResult<Long> dictSave(@Validated @RequestBody DictReq req) {
-        return ScmResult.success(dictDomain.dictSave(req));
+    public PlatformResult<Long> dictSave(@Validated @RequestBody DictReq req) {
+        return PlatformResult.success(dictDomain.dictSave(req));
     }
 
     /**
@@ -51,8 +51,8 @@ public class DictController {
      * @return 字典视图对象
      */
     @GetMapping("/dict")
-    public ScmResult<DictRes> dict(@RequestParam("id") Long id) {
-        return ScmResult.success(dictDomain.dictVO(id));
+    public PlatformResult<DictRes> dict(@RequestParam("id") Long id) {
+        return PlatformResult.success(dictDomain.dictVO(id));
     }
 
     /**
@@ -66,8 +66,8 @@ public class DictController {
      */
     @Deprecated
     @PostMapping("/dictList")
-    public ScmResult<List<DictRes>> dictList(@Validated @RequestBody DictQuery query) {
-        return ScmResult.success(dictDomain.dictList(query));
+    public PlatformResult<List<DictRes>> dictList(@Validated @RequestBody DictQuery query) {
+        return PlatformResult.success(dictDomain.dictList(query));
     }
 
     /**
@@ -81,8 +81,8 @@ public class DictController {
      */
     @Deprecated
     @GetMapping("/nextCode")
-    public ScmResult<String> nextCode(@RequestParam("id") Long id) {
-        return ScmResult.success(dictDomain.nextCode(id));
+    public PlatformResult<String> nextCode(@RequestParam("id") Long id) {
+        return PlatformResult.success(dictDomain.nextCode(id));
     }
 
     /**
@@ -92,8 +92,8 @@ public class DictController {
      * @return 条目 id
      */
     @PostMapping("/dictItemSave")
-    public ScmResult<Long> dictItemSave(@Validated @RequestBody DictItemReq req) {
-        return ScmResult.success(dictItemDomain.itemSave(req));
+    public PlatformResult<Long> dictItemSave(@Validated @RequestBody DictItemReq req) {
+        return PlatformResult.success(dictItemDomain.itemSave(req));
     }
 
     /**
@@ -103,8 +103,8 @@ public class DictController {
      * @return 条目列表
      */
     @GetMapping("/dictItemList")
-    public ScmResult<List<DictItemRes>> dictItemList(@RequestParam("dictId") Long dictId) {
-        return ScmResult.success(dictItemDomain.itemList(dictId));
+    public PlatformResult<List<DictItemRes>> dictItemList(@RequestParam("dictId") Long dictId) {
+        return PlatformResult.success(dictItemDomain.itemList(dictId));
     }
 
     /**
@@ -114,8 +114,8 @@ public class DictController {
      * @return 成功结果
      */
     @PostMapping("/dictItemDelete")
-    public ScmResult<Void> dictItemDelete(@Validated @RequestBody IdListCommand req) {
+    public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdListCommand req) {
         dictItemDomain.itemDelete(req.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

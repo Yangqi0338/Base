@@ -8,7 +8,7 @@ import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.spring.BaseReadListener;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class EasyExcelUtil {
             protected String validate(Integer rowNum, T data) {
                 String result = validateFunc.apply(data, rowNum);
                 if (StrUtil.isBlank(result)) {
-                    String validateStr = ScmUtil.getValidateStr(data, ";");
+                    String validateStr = BizUtil.getValidateStr(data, ";");
                     if (StrUtil.isBlank(validateStr)) {
                         return getMessage(rowNum, validateStr);
                     }

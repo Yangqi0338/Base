@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.assembler.AccountWithdrawRecor
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -80,8 +80,8 @@ public class WithdrawDomainImpl implements WithdrawDomain {
         Integer realAmount = amount;
         Integer goodsPoints = 0;
         if (withdraw != null) {
-            goodsPoints = ScmUtil.percentFloor(realAmount, withdraw.getScoreRatio());
-            realAmount = ScmUtil.percentFloor(realAmount, withdraw.getRatio());
+            goodsPoints = BizUtil.percentFloor(realAmount, withdraw.getScoreRatio());
+            realAmount = BizUtil.percentFloor(realAmount, withdraw.getRatio());
         }
 
         AccountWithdrawRecordReq withdrawRecordReq = new AccountWithdrawRecordReq();
@@ -125,9 +125,9 @@ public class WithdrawDomainImpl implements WithdrawDomain {
         List<RollOutApplyExportVO> exportResponses = rollOutApplyList.stream().map(c -> {
             RollOutApplyExportVO v = TransferUtils.transfer(c, RollOutApplyExportVO::new);
             v.setAuditState(c.getAuditState().getValue());
-            v.setApplyAmount(ScmUtil.toYuanStr(c.getApplyAmount()));
-            v.setHandlingFee(ScmUtil.toYuanStr(c.getHandlingFee()));
-            v.setArrivalAmount(ScmUtil.toYuanStr(c.getApplyAmount() - c.getHandlingFee()));
+            v.setApplyAmount(BizUtil.toYuanStr(c.getApplyAmount()));
+            v.setHandlingFee(BizUtil.toYuanStr(c.getHandlingFee()));
+            v.setArrivalAmount(BizUtil.toYuanStr(c.getApplyAmount() - c.getHandlingFee()));
             return v;
         }).collect(Collectors.toList());
         return exportResponses;

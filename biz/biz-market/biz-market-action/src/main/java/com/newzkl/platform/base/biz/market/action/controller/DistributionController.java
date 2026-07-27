@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsList
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,14 +46,14 @@ public class DistributionController {
      * @return 铺货分页
      */
     @PostMapping("/queryDistributions")
-    public ScmResult<Page<DistributionGoodsListRes>> queryDistributions(@RequestBody DistributionsQuery req) {
+    public PlatformResult<Page<DistributionGoodsListRes>> queryDistributions(@RequestBody DistributionsQuery req) {
         if (req.getChannelId() == null) {
             req.setChannelId(SecurityUtils.getAccountId());
         }
         if (req.getStoreId() == null) {
             req.setStoreId(req.getChannelId());
         }
-        return ScmResult.success(distributionDomain.queryDistributionsChannel(req));
+        return PlatformResult.success(distributionDomain.queryDistributionsChannel(req));
     }
 
     /**
@@ -63,8 +63,8 @@ public class DistributionController {
      * @return 铺货分页
      */
     @PostMapping("/queryDistributionsOverallPlatform")
-    public ScmResult<Page<DistributionGoodsListOPVO>> queryDistributionsOverallPlatform(@RequestBody DistributionsPageQuery query) {
-        return ScmResult.success(distributionDomain.queryDistributionsOverallPlatform(query));
+    public PlatformResult<Page<DistributionGoodsListOPVO>> queryDistributionsOverallPlatform(@RequestBody DistributionsPageQuery query) {
+        return PlatformResult.success(distributionDomain.queryDistributionsOverallPlatform(query));
     }
 
     /**
@@ -74,9 +74,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @PostMapping("/goodsDistribution/{goodsId}")
-    public ScmResult<Void> goodsDistribution(@PathVariable Long goodsId) {
+    public PlatformResult<Boolean> goodsDistribution(@PathVariable Long goodsId) {
         distributionDomain.goodsDistribution(SecurityUtils.getAccountId(), goodsId, false);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -86,13 +86,13 @@ public class DistributionController {
      * @return 成功结果
      */
     @PostMapping("/alterGoodsState")
-    public ScmResult<Void> alterGoodsState(@RequestBody GoodsStateAlterReq req) {
+    public PlatformResult<Boolean> alterGoodsState(@RequestBody GoodsStateAlterReq req) {
         req.setChannelId(SecurityUtils.getAccountId());
         if (req.getStoreId() == null) {
             req.setStoreId(SecurityUtils.getAccountId());
         }
         distributionDomain.alterGoodsState(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -102,10 +102,10 @@ public class DistributionController {
      * @return 成功结果
      */
     @PostMapping("/batchUpdateDistributions")
-    public ScmResult<Void> batchUpdateDistributions(@RequestBody DistributionsBatchUpdateReq req) {
+    public PlatformResult<Boolean> batchUpdateDistributions(@RequestBody DistributionsBatchUpdateReq req) {
         req.setChannelId(SecurityUtils.getAccountId());
         distributionDomain.batchUpdateDistributions(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -115,9 +115,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @PostMapping("/delGoods/{goodsId}")
-    public ScmResult<Void> delGoods(@PathVariable Long goodsId) {
+    public PlatformResult<Boolean> delGoods(@PathVariable Long goodsId) {
         distributionDomain.delGoods(goodsId);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -127,9 +127,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @PostMapping("/batchDelGoods")
-    public ScmResult<Void> batchDelGoods(@RequestBody IdListCommand idListObj) {
+    public PlatformResult<Boolean> batchDelGoods(@RequestBody IdListCommand idListObj) {
         distributionDomain.batchDelGoods(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -139,8 +139,8 @@ public class DistributionController {
      * @return 随机铺货分页
      */
     @PostMapping("/randomSelectedGoodsList")
-    public ScmResult<Page<DistributionRandomVO>> randomSelectedGoodsList(@RequestBody DistributionRandomPageQuery query) {
-        return ScmResult.success(distributionDomain.randomSelectedGoodsPage(query));
+    public PlatformResult<Page<DistributionRandomVO>> randomSelectedGoodsList(@RequestBody DistributionRandomPageQuery query) {
+        return PlatformResult.success(distributionDomain.randomSelectedGoodsPage(query));
     }
 
     /**
@@ -150,8 +150,8 @@ public class DistributionController {
      * @return 铺货分类列表
      */
     @GetMapping("/getDistributionGoodsCategory")
-    public ScmResult<List<DistributionCategoryVO>> getDistributionGoodsCategory(@RequestParam(value = "storeId", required = false) Long storeId) {
-        return ScmResult.success(distributionDomain.getDistributionGoodsCategory(Opt.ofNullable(storeId).orElse(SecurityUtils.getAccountId())));
+    public PlatformResult<List<DistributionCategoryVO>> getDistributionGoodsCategory(@RequestParam(value = "storeId", required = false) Long storeId) {
+        return PlatformResult.success(distributionDomain.getDistributionGoodsCategory(Opt.ofNullable(storeId).orElse(SecurityUtils.getAccountId())));
     }
 
     /**
@@ -161,9 +161,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @GetMapping("/recommendationGoods")
-    public ScmResult<Void> recommendationGoods(@RequestParam("id") Long id) {
+    public PlatformResult<Void> recommendationGoods(@RequestParam("id") Long id) {
         distributionDomain.recommendationGoods(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -173,9 +173,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @GetMapping("/cancelRecommendationGoods")
-    public ScmResult<Void> cancelRecommendationGoods(@RequestParam("id") Long id) {
+    public PlatformResult<Void> cancelRecommendationGoods(@RequestParam("id") Long id) {
         distributionDomain.cancelRecommendationGoods(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -185,9 +185,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @GetMapping("/platformStoreListed")
-    public ScmResult<Void> platformStoreListed(@RequestParam("id") Long id) {
+    public PlatformResult<Void> platformStoreListed(@RequestParam("id") Long id) {
         distributionDomain.platformStoreListed(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -197,9 +197,9 @@ public class DistributionController {
      * @return 成功结果
      */
     @GetMapping("/platformStoreUnlisted")
-    public ScmResult<Void> platformStoreUnlisted(@RequestParam("id") Long id) {
+    public PlatformResult<Void> platformStoreUnlisted(@RequestParam("id") Long id) {
         distributionDomain.platformStoreUnlisted(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -208,8 +208,8 @@ public class DistributionController {
      * @return 推荐铺货列表
      */
     @GetMapping("/queryRecommendationDistributions")
-    public ScmResult<List<DistributionGoodsDetailRes>> queryRecommendationDistributions() {
-        return ScmResult.success(distributionDomain.queryRecommendationDistributions());
+    public PlatformResult<List<DistributionGoodsDetailRes>> queryRecommendationDistributions() {
+        return PlatformResult.success(distributionDomain.queryRecommendationDistributions());
     }
 
     /**
@@ -218,7 +218,7 @@ public class DistributionController {
      * @return 推荐门店列表
      */
     @GetMapping("/queryRecommendationStores")
-    public ScmResult<List<DistributionGoodsDetailRes>> queryRecommendationStores() {
-        return ScmResult.success(distributionDomain.queryRecommendationStores());
+    public PlatformResult<List<DistributionGoodsDetailRes>> queryRecommendationStores() {
+        return PlatformResult.success(distributionDomain.queryRecommendationStores());
     }
 }

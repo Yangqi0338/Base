@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newzkl.platform.base.biz.order.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.order.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.biz.order.model.enums.order.RefundEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.order.model.enums.order.RefundErrorCode;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.RefundDAO;
@@ -51,7 +51,7 @@ public class RefundRepositoryImpl extends ServiceImpl<RefundDAO, RefundDO> imple
         for (RefundItemVO refundItem : refund.getItem()) {
             int count = skuOrderDAO.updateSkuRefundingQuantity(refund.getSpuOrderNo(), refundItem.getSkuId(), refundItem.getCount());
             if (count != 1){
-                throw new ScmException(RefundErrorCode.SKU_REFUNDING_COUNT);
+                throw new PlatformException(RefundErrorCode.SKU_REFUNDING_COUNT);
             }
             number = number + refundItem.getCount();
         }

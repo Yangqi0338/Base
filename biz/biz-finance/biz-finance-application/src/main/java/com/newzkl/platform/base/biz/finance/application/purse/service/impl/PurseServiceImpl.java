@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDom
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -35,10 +35,10 @@ public class PurseServiceImpl implements PurseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ScmResult<Object> platformToOperator(AmountDistributionReq req) {
+    public PlatformResult<Boolean> platformToOperator(AmountDistributionReq req) {
         Integer lever = accountPurseConfigDomain.queryOperatorLever(req.getAccountId());
         if (lever == 0) {
-            return ScmResult.fail(BaseErrorCode.NODATA);
+            return PlatformResult.fail(BaseErrorCode.NODATA);
         }
         // 1、分配实际采购金
         AccountPurseAlterRecordReq recordReq = buildAccountPurseAlterRecord(req,
@@ -51,16 +51,16 @@ public class PurseServiceImpl implements PurseService {
         AccountPurseAlterRecordReq recordReq1 = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.PLATFORM_TO_OPERATOR_LEVER,
                 PurseEnum.FinanceUser.OPERATOR, leverAmount, PurseEnum.PurseType.LEVERAGE_PURCHASE);
         accountPurseService.addAmount(recordReq, recordReq1);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ScmResult<Object> operatorToChannel(AmountDistributionReq req) {
+    public PlatformResult<Boolean> operatorToChannel(AmountDistributionReq req) {
         UpIdRes upIdRes = accountFacade.upId(CommonEnum.Client.CHANNEL, req.getAccountId());
         Integer lever = accountPurseConfigDomain.queryOperatorLever(SecurityUtils.getAccountId());
         if (lever == 0 || !upIdRes.getOneId().equals(SecurityUtils.getAccountId())) {
-            return ScmResult.fail(BaseErrorCode.NODATA);
+            return PlatformResult.fail(BaseErrorCode.NODATA);
         }
 
         // 运营商杠杆采购金变动记录
@@ -73,14 +73,14 @@ public class PurseServiceImpl implements PurseService {
                     PurseEnum.FinanceUser.CHANNEL, req.getAmount(), PurseEnum.PurseType.PURCHASE);
             accountPurseService.addAmount(channelRecordReq);
         } else {
-            return ScmResult.fail(FinanceErrorCode.AMOUNT_LESS);
+            return PlatformResult.fail(FinanceErrorCode.AMOUNT_LESS);
         }
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ScmResult<Object> channelBalanceSync(AmountDistributionReq req) {
+    public PlatformResult<Object> channelBalanceSync(AmountDistributionReq req) {
         Long accountId = req.getAccountId();
         Integer amount = req.getAmount();
         try {
@@ -91,9 +91,9 @@ public class PurseServiceImpl implements PurseService {
             // 渠道商采购金充值后，更新服务费
             accountPurseConfigDomain.alterChannelNowChargeConfig(accountId, amount);
         } catch (Exception e) {
-            return ScmResult.fail(e.getMessage());
+            return PlatformResult.fail(e.getMessage());
         }
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     private AccountPurseAlterRecordReq buildAccountPurseAlterRecord(AmountDistributionReq distributionReq,

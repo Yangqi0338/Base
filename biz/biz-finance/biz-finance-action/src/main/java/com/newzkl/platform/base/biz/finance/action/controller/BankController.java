@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.BankService;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BankQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +45,8 @@ public class BankController {
      */
     @Deprecated
     @GetMapping("/{id}")
-    public ScmResult<BankVO> detail(@PathVariable Long id) {
-        return ScmResult.success(bankService.detail(id));
+    public PlatformResult<BankVO> detail(@PathVariable Long id) {
+        return PlatformResult.success(bankService.detail(id));
     }
 
     /**
@@ -62,7 +62,7 @@ public class BankController {
      */
     @Deprecated
     @PutMapping("/importBankAndBranch")
-    public ScmResult<Object> importBankAndBranch(@RequestParam("file") MultipartFile file) {
+    public PlatformResult<Boolean> importBankAndBranch(@RequestParam("file") MultipartFile file) {
         return bankService.huiFuImportExcel(file);
     }
 
@@ -73,8 +73,8 @@ public class BankController {
      * @return 银行列表
      */
     @PostMapping("/queryPageList")
-    public ScmResult<List<BankVO>> queryPageList(@RequestBody BankQuery query) {
-        return ScmResult.success(bankService.queryPageList(query));
+    public PlatformResult<List<BankVO>> queryPageList(@RequestBody BankQuery query) {
+        return PlatformResult.success(bankService.queryPageList(query));
     }
 
     /**
@@ -84,8 +84,8 @@ public class BankController {
      * @return 银行支行列表
      */
     @PostMapping("/queryBranchPageList")
-    public ScmResult<List<BankBranchVO>> queryBranchPageList(@RequestBody BankQuery query) {
-        return ScmResult.success(bankService.queryBranchPageList(query));
+    public PlatformResult<List<BankBranchVO>> queryBranchPageList(@RequestBody BankQuery query) {
+        return PlatformResult.success(bankService.queryBranchPageList(query));
     }
 
     // TODO[service-gap]: 源 queryList / queryBranchList 未迁 (BankService 无对应方法), 待补 domain 方法后 wire。

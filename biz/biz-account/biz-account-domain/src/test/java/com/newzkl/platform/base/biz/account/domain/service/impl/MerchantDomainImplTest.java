@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.account.model.merchant.vo.MerchantVO;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import org.junit.jupiter.api.AfterEach;
@@ -192,7 +192,7 @@ class MerchantDomainImplTest {
         when(cdkRepository.idByValue("abc123")).thenReturn(8801L);
         when(cdkRepository.detail(8801L)).thenReturn(cdk);
 
-        ScmException ex = assertThrows(ScmException.class, () -> merchantDomain.useStoreCdk("abc123"));
+        PlatformException ex = assertThrows(PlatformException.class, () -> merchantDomain.useStoreCdk("abc123"));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
         verify(cdkRepository, never()).edit(any());
@@ -205,7 +205,7 @@ class MerchantDomainImplTest {
         when(cdkRepository.idByValue("nope")).thenReturn(null);
         when(cdkRepository.detail(null)).thenReturn(null);
 
-        ScmException ex = assertThrows(ScmException.class, () -> merchantDomain.useStoreCdk("nope"));
+        PlatformException ex = assertThrows(PlatformException.class, () -> merchantDomain.useStoreCdk("nope"));
 
         assertTrue(ex.equalsCode(BaseErrorCode.NODATA));
         verify(merchantRepository, never()).edit(any());

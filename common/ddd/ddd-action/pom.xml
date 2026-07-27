@@ -21,7 +21,7 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-application</artifactId>
         </dependency>
-        <!-- 鉴权切面依赖: SecurityUtils/ScmUtil/SecurityContextHolder (传递 guava/mybatis-plus/transmittable-thread-local/aspectjweaver) -->
+        <!-- 鉴权切面依赖: SecurityUtils/BizUtil/SecurityContextHolder (传递 guava/mybatis-plus/transmittable-thread-local/aspectjweaver) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>

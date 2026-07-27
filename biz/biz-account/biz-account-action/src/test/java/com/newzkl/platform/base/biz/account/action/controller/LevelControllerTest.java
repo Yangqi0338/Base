@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
 import com.newzkl.platform.base.biz.account.model.level.res.LevelRes;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +43,7 @@ class LevelControllerTest {
     void levelPackShouldPassRoleId() {
         when(levelDomain.levelPack(1002)).thenReturn(null);
 
-        ScmResult<PackGoodsInfo> result = levelController.levelPack(1002);
+        PlatformResult<PackGoodsInfo> result = levelController.levelPack(1002);
 
         assertNull(result.getData());
         verify(levelDomain).levelPack(1002);
@@ -54,7 +54,7 @@ class LevelControllerTest {
     void saveShouldDelegate() {
         LevelReq req = new LevelReq();
 
-        ScmResult<Void> result = levelController.save(req);
+        PlatformResult<Void> result = levelController.save(req);
 
         assertNull(result.getData());
         verify(levelDomain).save(req);
@@ -65,7 +65,7 @@ class LevelControllerTest {
     void levelListShouldReturnList() {
         when(levelDomain.pageList(any())).thenReturn(new ArrayList<>());
 
-        ScmResult<List<LevelRes>> result = levelController.levelList(new LevelQuery());
+        PlatformResult<List<LevelRes>> result = levelController.levelList(new LevelQuery());
 
         assertTrue(result.getData().isEmpty());
     }

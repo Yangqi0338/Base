@@ -8,9 +8,9 @@ import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
 import lombok.Data;
@@ -147,7 +147,7 @@ public class AccountVO extends BaseRes {
      */
     public AccountVO init(List<RoleEnum.CompanyRole> registerRole, String username, String password, Long mainAccountId, AccountEnum.State state) {
         if (CollUtil.isEmpty(registerRole)) {
-            throw new ScmException(AccountErrorCode.NOT_AVAIL_ROLE);
+            throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
         }
         this.username = username;
         this.password = password;
@@ -172,11 +172,11 @@ public class AccountVO extends BaseRes {
         }
         List<CommonEnum.Client> clientList = registerRole.stream().map(RoleEnum.CompanyRole::getClient).distinct().toList();
         if (clientList.size() > 1) {
-            throw new ScmException(AccountErrorCode.PARAM_ERROR, "不支持多端角色同时注册");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "不支持多端角色同时注册");
         }
         this.client = CollUtil.getFirst(clientList);
         //设置邀请码
-        this.yqm = ScmUtil.generate6code();
+        this.yqm = BizUtil.generate6code();
 
         //默认实名认证审批状态
         this.nameAuthAuditState = AuditEnum.State.CUSTOM;

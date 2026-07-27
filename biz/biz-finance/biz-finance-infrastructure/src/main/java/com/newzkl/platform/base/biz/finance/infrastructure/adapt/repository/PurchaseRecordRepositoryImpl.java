@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.finance.infrastructure.entity.PurchaseRecord
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -93,7 +93,7 @@ public class PurchaseRecordRepositoryImpl extends RepositorySupport implements P
     public void edit(PurchaseRecordVO purchaseRecord, PurchaseRecordQuery query) {
         BaseLambdaQueryWrapper<PurchaseRecordDO> ew = purchaseRecordDAO.getLw(query);
         if (purchaseRecordDAO.exists(ew)) {
-            throw new ScmException(BaseErrorCode.INVALID_UPDATE);
+            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
         }
 
         PurchaseRecordDO purchaseRecordDO = TransferUtils.transfer(purchaseRecord, PurchaseRecordDO::new);

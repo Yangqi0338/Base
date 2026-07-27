@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.account.model.enums.DictEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
@@ -38,7 +38,7 @@ import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentitySaveReq;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -108,7 +108,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         }
         //如果已有供应商角色则不能注册其他角色
         if (account.getRoleIdList().contains(RoleEnum.CompanyRole.SUPPLIER.getCodeStr())) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "该手机号已有供应商角色, 请更换手机号");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "该手机号已有供应商角色, 请更换手机号");
         }
         //获取邀请人信息
         RoleEnum.CompanyRole inviteRole = null;
@@ -116,17 +116,17 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         AccountVO inviteAccountVO = accountQueryAppService.accountByYqm(customSaveReq.getYqm());
         if (inviteAccountVO != null) {
             if (accountId.equals(inviteAccountVO.getId())) {
-                throw new ScmException(AccountErrorCode.PARAM_YQM);
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
             } else {
 //                log.info("邀请人身份ID：{}", inviteAccountVO.getSubRoleIdList());
                 if (!(inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCodeStr()) ||
                         inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCodeStr()))) {
-                    throw new ScmException(AccountErrorCode.NO_INVITE);
+                    throw new PlatformException(AccountErrorCode.NO_INVITE);
                 }
             }
             // 交易师和运营商可以各自招募
-            account.setPidList(ScmUtil.getPidList(inviteAccountVO.getPidList(), inviteAccountVO.getId()));
-            account.setPRoleList(ScmUtil.getPRoleList(inviteAccountVO.getPRoleList(), inviteAccountVO.getRoleIdList()));
+            account.setPidList(BizUtil.getPidList(inviteAccountVO.getPidList(), inviteAccountVO.getId()));
+            account.setPRoleList(BizUtil.getPRoleList(inviteAccountVO.getPRoleList(), inviteAccountVO.getRoleIdList()));
 
             inviteId = inviteAccountVO.getId();
 
@@ -197,7 +197,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         if (!isRegisterOnce) {
             developerInitReq.setAccountId(accountId);
             developerInitReq.setAppId(String.valueOf(SnowflakeIdAble.getSnowflakeId()));
-            developerInitReq.setSecret(ScmUtil.generateCode(32));
+            developerInitReq.setSecret(BizUtil.generateCode(32));
             openapiDeveloperApi.initDeveloper(developerInitReq);
         }
         //初始化默认用户
@@ -226,7 +226,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
      */
     @Override
     public IdentityRegisterRes proxyRegister(IdentityProxySaveReq proxySaveReq) {
-        throw new ScmException(BaseErrorCode.CUSTOM, "渠道商不支持代理注册");
+        throw new PlatformException(BaseErrorCode.CUSTOM, "渠道商不支持代理注册");
     }
 
     @Override
@@ -237,7 +237,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
     @Override
     public void inviteSuccess(AccountVO inviteAccount, AccountVO account, Object roleObj) {
         // 渠道商无法邀请人
-        throw new ScmException(AccountErrorCode.NO_INVITE);
+        throw new PlatformException(AccountErrorCode.NO_INVITE);
     }
 
 

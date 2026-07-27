@@ -19,7 +19,7 @@ import com.newzkl.platform.base.biz.account.model.res.OpenSubAccountExcelData;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.EmpVO;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.EmpAssembler;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

@@ -14,10 +14,6 @@ import org.springframework.context.annotation.Configuration;
  *     huifu:
  *       public-key: ${HUIFU_PUBLIC_KEY}
  *       private-key: ${HUIFU_PRIVATE_KEY}
- *     lianlian:
- *       public-key: ${LIANLIAN_PUBLIC_KEY}
- *       private-key: ${LIANLIAN_PRIVATE_KEY}
- *       oid-partner: ${LIANLIAN_OID_PARTNER}
  * </pre>
  *
  * @author KC
@@ -123,84 +119,6 @@ public class FinanceProperties {
 
         public void setWithdrawNotifyUrl(String huiFuWithdrawNotifyUrl) {
             HuiFuProperties.withdrawNotifyUrl = huiFuWithdrawNotifyUrl;
-        }
-    }
-
-    /**
-     * 连连支付 (个人钱包) 配置。
-     *
-     * <p>迁移自 new-scm {@code SignUtils} / {@code TripartitePayMethod} 内的硬编码常量。
-     * 密钥与商户号一律不落代码默认值, 由 Nacos {@code platform-share-config.yml} 的
-     * {@code scm.fi.lianlian.*} 注入。</p>
-     *
-     * @author KC
-     */
-    @Configuration
-    @ConfigurationProperties(prefix = "scm.fi.lianlian")
-    @Getter
-    public static class LianLianProperties {
-
-        /**
-         * 连连平台公钥 (验签用)。必须由 Nacos {@code scm.fi.lianlian.public-key} 注入。
-         */
-        public static String publicKey;
-
-        /**
-         * 商户私钥 (签名用)。必须由 Nacos {@code scm.fi.lianlian.private-key} 注入。
-         */
-        public static String privateKey;
-
-        /**
-         * 商户号 (旧码 {@code MERCHANT_NO})。必须由 Nacos {@code scm.fi.lianlian.oid-partner} 注入。
-         */
-        public static String oidPartner;
-
-        /**
-         * ACCP 主接口前缀, 旧值 {@code https://accpapi.lianlianpay.com/v1/}。
-         */
-        public static String apiUrl = "https://accpapi.lianlianpay.com/v1";
-
-        /**
-         * ACCP 网关前缀, 旧值 {@code https://accpgw.lianlianpay.com/v1/}。
-         */
-        public static String gwUrl = "https://accpgw.lianlianpay.com/v1";
-
-        /**
-         * ACCP 文件上传前缀, 旧值 {@code https://accpfile.lianlianpay.com/v1/}。
-         */
-        public static String fileUrl = "https://accpfile.lianlianpay.com/v1";
-
-        /**
-         * 个人钱包异步通知回调地址 (旧码 {@code PersonPayController.notify} 硬编码)。
-         */
-        public static String notifyUrl;
-
-        public void setPublicKey(String publicKey) {
-            LianLianProperties.publicKey = publicKey;
-        }
-
-        public void setPrivateKey(String privateKey) {
-            LianLianProperties.privateKey = privateKey;
-        }
-
-        public void setOidPartner(String oidPartner) {
-            LianLianProperties.oidPartner = oidPartner;
-        }
-
-        public void setApiUrl(String apiUrl) {
-            LianLianProperties.apiUrl = apiUrl;
-        }
-
-        public void setGwUrl(String gwUrl) {
-            LianLianProperties.gwUrl = gwUrl;
-        }
-
-        public void setFileUrl(String fileUrl) {
-            LianLianProperties.fileUrl = fileUrl;
-        }
-
-        public void setNotifyUrl(String notifyUrl) {
-            LianLianProperties.notifyUrl = notifyUrl;
         }
     }
 

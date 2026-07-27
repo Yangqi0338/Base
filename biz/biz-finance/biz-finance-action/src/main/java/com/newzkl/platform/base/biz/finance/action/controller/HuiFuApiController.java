@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.EntUserApplyAccountR
 import com.newzkl.platform.base.biz.finance.model.purse.res.UserApplyAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +38,8 @@ public class HuiFuApiController {
      * @return 开户结果
      */
     @PostMapping("/entOpenAccount")
-    public ScmResult<EntUserApplyAccountRes> entOpenAccount(@RequestBody @Valid EntUserApplyAccountReq request) {
-        return ScmResult.success(tripartitePurseService.addEntAccountTripartitePurse(request));
+    public PlatformResult<EntUserApplyAccountRes> entOpenAccount(@RequestBody @Valid EntUserApplyAccountReq request) {
+        return PlatformResult.success(tripartitePurseService.addEntAccountTripartitePurse(request));
     }
 
     /**
@@ -49,8 +49,8 @@ public class HuiFuApiController {
      * @return 开户结果
      */
     @PostMapping("/userOpenAccount")
-    public ScmResult<UserApplyAccountRes> userOpenAccount(@RequestBody @Valid UserApplyAccountReq request) {
-        return ScmResult.success(tripartitePurseService.addAccountTripartitePurse(request));
+    public PlatformResult<UserApplyAccountRes> userOpenAccount(@RequestBody @Valid UserApplyAccountReq request) {
+        return PlatformResult.success(tripartitePurseService.addAccountTripartitePurse(request));
     }
 
     /**
@@ -59,7 +59,7 @@ public class HuiFuApiController {
      * @return 三方账户
      */
     @GetMapping("/detail")
-    public ScmResult<AccountTripartitePurseVO> detail() {
-        return ScmResult.success(tripartitePurseDomain.queryAccountTripartitePurse(SecurityUtils.getAccountId()));
+    public PlatformResult<AccountTripartitePurseVO> detail() {
+        return PlatformResult.success(tripartitePurseDomain.queryAccountTripartitePurse(SecurityUtils.getAccountId()));
     }
 }

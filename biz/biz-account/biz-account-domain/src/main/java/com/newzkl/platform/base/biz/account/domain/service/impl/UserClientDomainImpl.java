@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
@@ -131,26 +131,26 @@ public class UserClientDomainImpl implements UserClientDomain {
         // 基础参数校验：无更新字段直接抛异常
         if (StrUtil.isAllBlank(command.getNickname(), command.getHeadImg(), command.getNewPhone(), command.getNewPassword(), command.getOldPassword())) {
             log.error("更新用户信息失败：无有效更新字段，accountId: {}", accountId);
-            throw new ScmException(AccountErrorCode.PARAM_ERROR, "请至少填写一项更新内容");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "请至少填写一项更新内容");
         }
 
         //  查询并校验用户信息
         AccountVO account = accountRepository.account(null, accountId);
         if (Objects.isNull(account)) {
             log.error("更新用户信息失败：账号不存在，accountId: {}", accountId);
-            throw new ScmException(AccountErrorCode.PARAM_ERROR, "账号不存在");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "账号不存在");
         }
 //        MemberVO member = memberRepository.validByAccountId(accountId);
 //        if (Objects.isNull(member)) {
 //            log.error("更新用户信息失败：用户不存在，accountId: {}", accountId);
-//            throw new ScmException(AccountErrorCode.PARAM_ERROR, "用户不存在");
+//            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "用户不存在");
 //        }
 
         // 验证码校验：传手机号则必须传验证码，且验证合法性
         if (StrUtil.isNotBlank(command.getPhone())) {
             if (StrUtil.isBlank(command.getCode())) {
                 log.error("更新用户信息失败：传手机号但未传验证码，accountId: {}, phone: {}", accountId, command.getPhone());
-                throw new ScmException(AccountErrorCode.PARAM_ERROR, "验证码不能为空");
+                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "验证码不能为空");
             }
             // 校验验证码有效性
             VerificationCodeReq codeReq = new VerificationCodeReq();
@@ -162,7 +162,7 @@ public class UserClientDomainImpl implements UserClientDomain {
             if (!account.getPhone().equals(command.getPhone())) {
                 log.error("更新用户信息失败：验证码手机号与绑定手机号不一致，accountId: {}, 绑定手机号: {}, 验证码手机号: {}",
                         accountId, account.getPhone(), command.getPhone());
-                throw new ScmException(AccountErrorCode.PARAM_ERROR, "验证码手机号和已绑定手机号不一致！");
+                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "验证码手机号和已绑定手机号不一致！");
             }
         }
         RoleEnum.CompanyRole MEMBER_ROLE_CODE = RoleEnum.CompanyRole.MEMBER;
@@ -200,12 +200,12 @@ public class UserClientDomainImpl implements UserClientDomain {
                     // 修改密码（有旧密码）
 //                    RoleEnum.CompanyRole companyRole = findRole(account);
 //                    if (Objects.isNull(companyRole)) {
-//                        throw new ScmException(AccountErrorCode.NO_EXIST);
+//                        throw new PlatformException(AccountErrorCode.NO_EXIST);
 //                    }
                     // 旧密码校验
                     boolean checkPassword = account.checkPassword(command.getOldPassword());
                     if (!checkPassword) {
-                        throw new ScmException(AccountErrorCode.PASSWORD);
+                        throw new PlatformException(AccountErrorCode.PASSWORD);
                     }
                     // 更新密码
                     String newPassword = account.getNewPassword(command.getNewPassword());
@@ -245,7 +245,7 @@ public class UserClientDomainImpl implements UserClientDomain {
                     .setUserAccount(req.getSuperiorAccount());
             AccountVO account = accountRepository.account(accountQuery);
             if (Objects.isNull(account)) {
-                throw new ScmException(BaseErrorCode.NODATA, "上级账号");
+                throw new PlatformException(BaseErrorCode.NODATA, "上级账号");
             }
             // 若上级和当前不是同客户端，则视为邀请人
             if (account.getClient() != role.getClient()) {
@@ -261,7 +261,7 @@ public class UserClientDomainImpl implements UserClientDomain {
 
         // 注册失败则抛出异常，成功则重新执行登录
         if (registerRes.getErrorCode() != null) {
-            throw new ScmException(registerRes.getErrorCode());
+            throw new PlatformException(registerRes.getErrorCode());
         }
 
         return registerRes;
@@ -291,7 +291,7 @@ public class UserClientDomainImpl implements UserClientDomain {
                     }, new EasyExcelUtil.ImportParam().setHeadRowNum(1));
         } catch (Exception e) {
             log.error("会员批量导入异常", e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "导入失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "导入失败：" + e.getMessage());
         }
     }
 }

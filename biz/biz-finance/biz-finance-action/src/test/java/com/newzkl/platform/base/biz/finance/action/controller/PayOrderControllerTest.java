@@ -9,9 +9,9 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -68,7 +68,7 @@ class PayOrderControllerTest {
     void channelRechargeShouldRejectAmountBelowThreshold() {
         when(accountPurseConfigDomain.defaultChannelConfig()).thenReturn(channelConfig(10000));
 
-        ScmException ex = assertThrows(ScmException.class, () -> payOrderController.channelRecharge(9999, 1));
+        PlatformException ex = assertThrows(PlatformException.class, () -> payOrderController.channelRecharge(9999, 1));
 
         assertTrue(ex.equalsCode(FinanceErrorCode.LESS_THAN_MINIMUM_RECHARGE_AMOUNT));
         verify(cashPayService, never()).orderPay(any());
@@ -80,7 +80,7 @@ class PayOrderControllerTest {
         when(accountPurseConfigDomain.defaultChannelConfig()).thenReturn(channelConfig(10000));
         when(cashPayService.orderPay(any())).thenReturn(new HuiFuPayRes());
 
-        ScmResult<HuiFuPayRes> result = payOrderController.channelRecharge(10000, 1);
+        PlatformResult<HuiFuPayRes> result = payOrderController.channelRecharge(10000, 1);
 
         assertTrue(result.isSuccess());
         OrderPayReq req = captureOrderPayReq();
@@ -111,7 +111,7 @@ class PayOrderControllerTest {
     void supplierRechargeShouldBuildSupplierRequest() {
         when(cashPayService.orderPay(any())).thenReturn(new HuiFuPayRes());
 
-        ScmResult<HuiFuPayRes> result = payOrderController.supplierRecharge(2000, 1);
+        PlatformResult<HuiFuPayRes> result = payOrderController.supplierRecharge(2000, 1);
 
         assertTrue(result.isSuccess());
         OrderPayReq req = captureOrderPayReq();

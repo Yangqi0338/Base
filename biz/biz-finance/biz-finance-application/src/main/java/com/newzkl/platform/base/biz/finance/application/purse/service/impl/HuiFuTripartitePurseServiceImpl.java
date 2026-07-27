@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -42,7 +42,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
     @Transactional(rollbackFor = Exception.class)
     public EntUserApplyAccountRes addEntAccountTripartitePurse(EntUserApplyAccountReq command) {
         if (!(command instanceof HuiFuEntUserApplyAccountReq saveCommand)) {
-            throw new ScmException(BaseErrorCode.NOT_SERVICE);
+            throw new PlatformException(BaseErrorCode.NOT_SERVICE);
         }
 
         String huifuId = saveCommand.getHuifuId();
@@ -57,7 +57,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         // 开户或修改开户信息
         OpenAccountRes openAccountRes = doUpdateAction ? HuiFuMethod.entModifyAccount(accountReq) : HuiFuMethod.entOpenAccount(accountReq);
         if (openAccountRes.isSuccess()) {
-            throw new ScmException(openAccountRes.getReqCode(), openAccountRes.getReqDesc());
+            throw new PlatformException(openAccountRes.getReqCode(), openAccountRes.getReqDesc());
         }
 
         // 开户成功才能绑卡
@@ -69,7 +69,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         AccountBindSyncRes syncRes = doUpdateAction ? HuiFuMethod.userModifyCard(cardReq) : HuiFuMethod.userBindCard(cardReq);
 
         if (!syncRes.isSuccess()) {
-            throw new ScmException(BaseErrorCode.PARAM_JSON.getCode(), syncRes.getReqDesc());
+            throw new PlatformException(BaseErrorCode.PARAM_JSON.getCode(), syncRes.getReqDesc());
         }
 
         String tokenNo = syncRes.getTokenNo();
@@ -102,7 +102,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
     @Override
     public UserApplyAccountRes addAccountTripartitePurse(UserApplyAccountReq command) {
         if (!(command instanceof HuiFuUserApplyAccountReq saveCommand)) {
-            throw new ScmException(BaseErrorCode.NOT_SERVICE);
+            throw new PlatformException(BaseErrorCode.NOT_SERVICE);
         }
 
         String huifuId = saveCommand.getHuifuId();
@@ -120,7 +120,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         // 开户或修改开户信息
         OpenAccountRes openAccountRes = doUpdateAction ? HuiFuMethod.userModifyAccount(accountReq) : HuiFuMethod.userOpenAccount(accountReq);
         if (!openAccountRes.isSuccess()) {
-            throw new ScmException(BaseErrorCode.PARAM_JSON.getCode(), openAccountRes.getReqDesc());
+            throw new PlatformException(BaseErrorCode.PARAM_JSON.getCode(), openAccountRes.getReqDesc());
         }
 
         huifuId = openAccountRes.getHuifuId();
@@ -131,7 +131,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         AccountBindSyncRes syncRes = doUpdateAction ? HuiFuMethod.userModifyCard(cardReq) : HuiFuMethod.userBindCard(cardReq);
 
         if (!syncRes.isSuccess()) {
-            throw new ScmException(BaseErrorCode.PARAM_JSON.getCode(), syncRes.getReqDesc());
+            throw new PlatformException(BaseErrorCode.PARAM_JSON.getCode(), syncRes.getReqDesc());
         }
 
         String tokenNo = syncRes.getTokenNo();
@@ -168,11 +168,11 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         AccountTripartitePurseVO dbTripartitePurse = tripartitePurseDomain.queryAccountTripartitePurse(accountId);
         // 新增判断
         if (dbTripartitePurse != null && !doUpdateAction) {
-            throw new ScmException(BaseErrorCode.EXIST_DATA);
+            throw new PlatformException(BaseErrorCode.EXIST_DATA);
         }
         // 修改判断
         if (dbTripartitePurse == null && doUpdateAction) {
-            throw new ScmException(BaseErrorCode.NODATA);
+            throw new PlatformException(BaseErrorCode.NODATA);
         }
         return doUpdateAction;
     }

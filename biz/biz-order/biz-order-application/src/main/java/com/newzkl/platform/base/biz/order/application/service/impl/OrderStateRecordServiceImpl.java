@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.application.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.order.application.service.OrderStateRecordService;
 import com.newzkl.platform.base.biz.order.domain.service.OrderStateRecordDomain;
 import com.newzkl.platform.base.biz.order.model.order.dto.OrderStateRecord;
@@ -58,7 +58,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             return resultVO;
         } catch (Exception e) {
             log.error("新增订单状态记录失败，原因：{}", e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "新增订单状态记录失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "新增订单状态记录失败：" + e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
                     .findFirst()
                     .orElse(null);
             if (oldEntity == null) {
-                throw new ScmException(BaseErrorCode.OPERATE_FAIL, "订单状态记录不存在，ID：" + req.getId());
+                throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "订单状态记录不存在，ID：" + req.getId());
             }
 
             // 2. Req转换为领域Entity（仅覆盖需要修改的字段）
@@ -98,7 +98,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             return resultVO;
         } catch (Exception e) {
             log.error("修改订单状态记录失败，记录ID：{}，原因：{}", req.getId(), e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "修改订单状态记录失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "修改订单状态记录失败：" + e.getMessage());
         }
     }
 
@@ -126,7 +126,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             return vo;
         } catch (Exception e) {
             log.error("查询订单状态记录失败，记录ID：{}，原因：{}", id, e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录失败：" + e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             }).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("查询订单状态记录列表失败，订单ID：{}，原因：{}", orderNo, e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录列表失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录列表失败：" + e.getMessage());
         }
     }
 
@@ -168,7 +168,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             });
         } catch (Exception e) {
             log.error("查询订单状态记录失败，订单ID：{}，变更后状态：{}，原因：{}", orderNo, afterOrderState, e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录失败：" + e.getMessage());
         }
     }
 
@@ -189,7 +189,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             }).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("查询订单状态记录失败，操作时间范围：{} - {}，原因：{}", startTime, endTime, e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "查询订单状态记录失败：" + e.getMessage());
         }
     }
 
@@ -219,7 +219,7 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             return voPage;
         } catch (Exception e) {
             log.error("分页查询订单状态记录失败，原因：{}", e.getMessage(), e);
-            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "分页查询订单状态记录失败：" + e.getMessage());
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "分页查询订单状态记录失败：" + e.getMessage());
         }
     }
 

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * 上级链路结果 (跨域 user 结构降级为 finance 本地 DTO)。
  *
  * <p>迁移: 原 {@code com.zkl.scm.user.model.account.res.UpIdRes};
- * 原依赖 {@code ScmUtil.getOperatorLevelUpEnumList} 已内联, 去除跨域耦合。</p>
+ * 原依赖 {@code BizUtil.getOperatorLevelUpEnumList} 已内联, 去除跨域耦合。</p>
  *
  * @author muc_fang
  */
@@ -67,7 +67,7 @@ public class UpIdRes implements Serializable {
     }
 
     /**
-     * 获取运营商端升级角色列表 (原 ScmUtil.getOperatorLevelUpEnumList 内联)。
+     * 获取运营商端升级角色列表 (原 BizUtil.getOperatorLevelUpEnumList 内联)。
      *
      * @param roleIdStr 角色ID串
      * @return 运营商端匹配角色列表 (永不为 null)

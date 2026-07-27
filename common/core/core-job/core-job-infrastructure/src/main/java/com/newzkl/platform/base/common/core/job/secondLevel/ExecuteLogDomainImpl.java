@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.core.job.req.ExecuteLogManualReq;
 import com.newzkl.platform.base.common.core.job.req.ExecuteLogQuery;
 import com.newzkl.platform.base.common.core.job.vo.ExecuteLogVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,10 +69,10 @@ public class ExecuteLogDomainImpl implements ExecuteLogDomain {
     public boolean skip(Long id, String msg, Long operatorId) {
         ExecuteLogDTO dto = executeLogRepository.getById(id);
         if (dto == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "执行日志");
+            throw new PlatformException(BaseErrorCode.NODATA, "执行日志");
         }
         if (dto.getStatus() != ExecuteLogEnum.Status.PENDING) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "仅 PENDING 可 SKIP");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "仅 PENDING 可 SKIP");
         }
         String fullMsg = String.format("管理员 %d 手动 SKIP: %s", operatorId, msg == null ? "" : msg);
         return executeLogRepository.markSkip(id, fullMsg);
@@ -82,11 +82,11 @@ public class ExecuteLogDomainImpl implements ExecuteLogDomain {
     public boolean retry(Long id, Long operatorId) {
         ExecuteLogDTO dto = executeLogRepository.getById(id);
         if (dto == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "执行日志");
+            throw new PlatformException(BaseErrorCode.NODATA, "执行日志");
         }
         if (dto.getStatus() != ExecuteLogEnum.Status.FAILED
                 && dto.getStatus() != ExecuteLogEnum.Status.SKIP) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "仅 FAILED/SKIP 可重试");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "仅 FAILED/SKIP 可重试");
         }
         log.info("[retry] operator={} id={}", operatorId, id);
         return executeLogRepository.retryToPending(id);
@@ -95,7 +95,7 @@ public class ExecuteLogDomainImpl implements ExecuteLogDomain {
     @Override
     public Long insertManual(ExecuteLogManualReq req, Long operatorId) {
         if (req.getScheduledDate() == null || req.getScheduledTime() == null) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "预计时间错误");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "预计时间错误");
         }
         ExecuteLogDTO dto = new ExecuteLogDTO();
         dto.setBizType(req.getBizType());

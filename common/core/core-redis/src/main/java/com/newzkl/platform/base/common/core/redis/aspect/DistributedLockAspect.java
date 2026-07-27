@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.core.redis.aspect;
 
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SpElParseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class DistributedLockAspect {
                 return joinPoint.proceed();
             } else {
                 log.info("加锁失败:{}", rKey);
-                throw new ScmException(BaseErrorCode.SERVER, distributedLock.errorMsg());
+                throw new PlatformException(BaseErrorCode.SERVER, distributedLock.errorMsg());
             }
         } finally {
             if (lock.isLocked() && lock.isHeldByCurrentThread()) {

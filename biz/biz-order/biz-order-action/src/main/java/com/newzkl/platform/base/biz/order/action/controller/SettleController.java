@@ -15,11 +15,11 @@ import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordDetailVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordItemVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRefundExcelVO;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -76,11 +76,11 @@ public class SettleController {
      * @return 结算单分页
      */
     @PostMapping("settleRecordPage")
-    public ScmResult<Page<SettleRecordVO>> settlePage(@RequestBody SettleRecordPageReq settleRecordQuery) {
+    public PlatformResult<Page<SettleRecordVO>> settlePage(@RequestBody SettleRecordPageReq settleRecordQuery) {
         if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(SecurityUtils.getRoleId())) {
             settleRecordQuery.setSupplierId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(settleDomain.settleRecordVOList(settleRecordQuery));
+        return PlatformResult.success(settleDomain.settleRecordVOList(settleRecordQuery));
     }
 
     /**
@@ -90,8 +90,8 @@ public class SettleController {
      * @return 结算单详情
      */
     @PostMapping("settleRecordDetailVO")
-    public ScmResult<SettleRecordDetailVO> settleRecordDetailVO(@RequestBody OrderCmd.ID idObj) {
-        return ScmResult.success(settleDomain.settleRecordDetailVO(idObj.getId()));
+    public PlatformResult<SettleRecordDetailVO> settleRecordDetailVO(@RequestBody OrderCmd.ID idObj) {
+        return PlatformResult.success(settleDomain.settleRecordDetailVO(idObj.getId()));
     }
 
     /**
@@ -101,9 +101,9 @@ public class SettleController {
      * @return 结算单明细分页
      */
     @PostMapping("settleRecordItemPage")
-    public ScmResult<Page<SettleRecordItemVO>> settleRecordItemPage(
+    public PlatformResult<Page<SettleRecordItemVO>> settleRecordItemPage(
             @Validated @RequestBody SettleRecordItemPageReq settleRecordItemQuery) {
-        return ScmResult.success(settleDomain.settleRecordItemPage(settleRecordItemQuery));
+        return PlatformResult.success(settleDomain.settleRecordItemPage(settleRecordItemQuery));
     }
 
     /**
@@ -113,9 +113,9 @@ public class SettleController {
      * @return 成功结果
      */
     @PostMapping("editSettleRecord")
-    public ScmResult<Void> editSettleRecord(@RequestBody SettleRecordEditReq settleRecordEditReq) {
+    public PlatformResult<Void> editSettleRecord(@RequestBody SettleRecordEditReq settleRecordEditReq) {
         settleDomain.editSettleRecord(settleRecordEditReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -125,8 +125,8 @@ public class SettleController {
      * @return 待结算订单列表
      */
     @PostMapping("settleTypeList")
-    public ScmResult<List<SettleOrderWaitVO>> settleTypeList(@Validated @RequestBody SettleTypeListReq settleTypeList) {
-        return ScmResult.success(settleDomain.settleTypeList(settleTypeList));
+    public PlatformResult<List<SettleOrderWaitVO>> settleTypeList(@Validated @RequestBody SettleTypeListReq settleTypeList) {
+        return PlatformResult.success(settleDomain.settleTypeList(settleTypeList));
     }
 
     /**
@@ -136,8 +136,8 @@ public class SettleController {
      * @return 结算单视图对象
      */
     @PostMapping("settleRecordVO")
-    public ScmResult<SettleRecordVO> settleRecordVO(@RequestBody OrderCmd.ID idObj) {
-        return ScmResult.success(settleDomain.settleRecordVO(idObj.getId()));
+    public PlatformResult<SettleRecordVO> settleRecordVO(@RequestBody OrderCmd.ID idObj) {
+        return PlatformResult.success(settleDomain.settleRecordVO(idObj.getId()));
     }
 
     /**
@@ -175,16 +175,16 @@ public class SettleController {
             List<SettleGoodsExcelVO> goodsExcelVOList = TransferUtils.transfers(voList, c -> {
                 SettleGoodsExcelVO v = new SettleGoodsExcelVO();
                 v.setSpuOrderId(c.getSpuOrderNo());
-                v.setSpuName(c.getSpuName() + "( " + ScmUtil.goodsSkuName(c.getSkuName())
+                v.setSpuName(c.getSpuName() + "( " + BizUtil.goodsSkuName(c.getSkuName())
                         + " * " + c.getSkuCount() + " )");
-                v.setOrderMoney(ScmUtil.excelMoney(c.getOrderMoney()));
+                v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
                 // 旧语义: 有售后且售后状态 1 记为异常, 结算总额置 0
                 if (c.getRefundId() != null && Integer.valueOf(1).equals(c.getRefundState())) {
                     v.setC4("异常");
                     v.setC5("0.00");
                 } else {
                     v.setC4("已结算");
-                    v.setC5(ScmUtil.excelMoney(c.getOrderMoney()));
+                    v.setC5(BizUtil.excelMoney(c.getOrderMoney()));
                 }
                 return v;
             });
@@ -193,7 +193,7 @@ public class SettleController {
             List<SettleFreightExcelVO> freightExcelVOList = TransferUtils.transfers(voList, c -> {
                 SettleFreightExcelVO v = new SettleFreightExcelVO();
                 v.setSpuOrderId(c.getSpuOrderNo());
-                v.setOrderMoney(ScmUtil.excelMoney(c.getOrderMoney()));
+                v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
                 return v;
             });
             EasyExcel.write(response.getOutputStream(), SettleFreightExcelVO.class).sheet("模板")
@@ -203,8 +203,8 @@ public class SettleController {
                 SettleRefundExcelVO v = new SettleRefundExcelVO();
                 v.setRefundId(String.valueOf(c.getRefundId()));
                 v.setSpuOrderId(c.getSpuOrderNo());
-                v.setOrderMoney(ScmUtil.excelMoney(c.getOrderMoney()));
-                v.setC4(ScmUtil.excelMoney(0 - c.getOrderMoney()));
+                v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
+                v.setC4(BizUtil.excelMoney(0 - c.getOrderMoney()));
                 return v;
             });
             EasyExcel.write(response.getOutputStream(), SettleRefundExcelVO.class).sheet("模板")

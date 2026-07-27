@@ -8,16 +8,16 @@ package com.newzkl.platform.base.common.core.model.exception;
 public class ThrowsException {
 
     public static void exception(ErrorCode errorCode) {
-        throw new ScmException(errorCode);
+        throw new PlatformException(errorCode);
     }
 
     public static void exception(ErrorCode errorCode, Object... params) {
-        throw new ScmException(errorCode.getCode(), errorCode.getMessage(params));
+        throw new PlatformException(errorCode.getCode(), errorCode.getMessage(params));
 
     }
 
     public static void exception(int code, String msg) {
-        throw new ScmException(code, msg);
+        throw new PlatformException(code, msg);
 
     }
 

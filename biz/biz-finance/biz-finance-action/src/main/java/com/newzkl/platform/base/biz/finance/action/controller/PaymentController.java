@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.vo.PaymentVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,9 +50,9 @@ public class PaymentController {
      * @return 分页支付记录
      */
     @PostMapping("/paymentList")
-    public ScmResult<List<PaymentVO>> paymentList(@RequestBody PaymentQuery query) {
+    public PlatformResult<List<PaymentVO>> paymentList(@RequestBody PaymentQuery query) {
         query.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(orderPayDomain.tradeOrderQuery(query));
+        return PlatformResult.success(orderPayDomain.tradeOrderQuery(query));
     }
 
     /**

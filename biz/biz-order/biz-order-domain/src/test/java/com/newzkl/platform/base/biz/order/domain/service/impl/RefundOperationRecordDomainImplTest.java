@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.order.model.enums.order.RefundEnum;
 import com.newzkl.platform.base.biz.order.model.order.dto.RefundOperationRecord;
 import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordPageReq;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,7 +73,7 @@ class RefundOperationRecordDomainImplTest {
         RefundOperationRecord record = validRecord();
         record.setRefundId(null);
 
-        ScmException ex = assertThrows(ScmException.class, () -> refundOperationRecordDomain.create(record));
+        PlatformException ex = assertThrows(PlatformException.class, () -> refundOperationRecordDomain.create(record));
 
         assertEquals(BaseErrorCode.PARAM.getCode().toString(), ex.getCode());
         assertTrue(ex.getMessage().contains("售后单ID"));
@@ -86,7 +86,7 @@ class RefundOperationRecordDomainImplTest {
         RefundOperationRecord record = validRecord();
         record.setOperationContent("  ");
 
-        assertThrows(ScmException.class, () -> refundOperationRecordDomain.create(record));
+        assertThrows(PlatformException.class, () -> refundOperationRecordDomain.create(record));
         verify(refundOperationRecordRepository, never()).save(any());
     }
 
@@ -96,7 +96,7 @@ class RefundOperationRecordDomainImplTest {
         RefundOperationRecord record = validRecord();
         record.setId(1L);
 
-        assertThrows(ScmException.class, () -> refundOperationRecordDomain.create(record));
+        assertThrows(PlatformException.class, () -> refundOperationRecordDomain.create(record));
         verify(refundOperationRecordRepository, never()).save(any());
     }
 
@@ -119,7 +119,7 @@ class RefundOperationRecordDomainImplTest {
         record.setId(77L);
         when(refundOperationRecordRepository.existsById(77L)).thenReturn(false);
 
-        ScmException ex = assertThrows(ScmException.class, () -> refundOperationRecordDomain.update(record));
+        PlatformException ex = assertThrows(PlatformException.class, () -> refundOperationRecordDomain.update(record));
 
         assertEquals(BaseErrorCode.NODATA.getCode().toString(), ex.getCode());
         verify(refundOperationRecordRepository, never()).updateById(any());
@@ -140,7 +140,7 @@ class RefundOperationRecordDomainImplTest {
     void deleteShouldRejectMissingRecord() {
         when(refundOperationRecordRepository.existsById(89L)).thenReturn(false);
 
-        assertThrows(ScmException.class, () -> refundOperationRecordDomain.delete(89L));
+        assertThrows(PlatformException.class, () -> refundOperationRecordDomain.delete(89L));
         verify(refundOperationRecordRepository, never()).deleteById(anyLong());
     }
 
@@ -155,7 +155,7 @@ class RefundOperationRecordDomainImplTest {
     @Test
     @DisplayName("按 SPU 订单号查询: 空单号抛参数异常")
     void listBySpuOrderNoShouldRejectBlank() {
-        assertThrows(ScmException.class, () -> refundOperationRecordDomain.listBySpuOrderNo(" "));
+        assertThrows(PlatformException.class, () -> refundOperationRecordDomain.listBySpuOrderNo(" "));
     }
 
     @Test
@@ -171,6 +171,6 @@ class RefundOperationRecordDomainImplTest {
     @Test
     @DisplayName("分页: 入参为空抛参数异常")
     void pageQueryShouldRejectNull() {
-        assertThrows(ScmException.class, () -> refundOperationRecordDomain.pageQuery(null));
+        assertThrows(PlatformException.class, () -> refundOperationRecordDomain.pageQuery(null));
     }
 }

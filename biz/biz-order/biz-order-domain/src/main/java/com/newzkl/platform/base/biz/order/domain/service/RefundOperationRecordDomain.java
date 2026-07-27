@@ -10,7 +10,7 @@ import java.util.List;
  * 售后操作记录 (协商记录) 领域服务。
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.domain.refund.service.IRefundOperationRecordDomainService},
- * 去 I 前缀。领域规则校验 (必填/存在性) 沿用旧实现, 校验失败改抛 {@code ScmException}。</p>
+ * 去 I 前缀。领域规则校验 (必填/存在性) 沿用旧实现, 校验失败改抛 {@code PlatformException}。</p>
  *
  * @author sijiwang
  * @since 2026-01-23

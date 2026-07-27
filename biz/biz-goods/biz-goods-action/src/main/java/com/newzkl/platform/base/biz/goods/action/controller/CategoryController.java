@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +42,8 @@ public class CategoryController {
      * @return 分类 ID
      */
     @PostMapping("categoryCreate")
-    public ScmResult<Long> categoryCreate(@Validated @RequestBody SpuCategoryReq categoryReq) {
-        return ScmResult.success(spuDomain.categorySave(categoryReq));
+    public PlatformResult<Long> categoryCreate(@Validated @RequestBody SpuCategoryReq categoryReq) {
+        return PlatformResult.success(spuDomain.categorySave(categoryReq));
     }
 
     /**
@@ -53,9 +53,9 @@ public class CategoryController {
      * @return 成功结果
      */
     @PostMapping("categoryDelete")
-    public ScmResult<Void> categoryDelete(@RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> categoryDelete(@RequestBody IdListCommand idListObj) {
         spuDomain.categoryDelete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -65,9 +65,9 @@ public class CategoryController {
      * @return 成功结果
      */
     @PostMapping("categoryUpdate")
-    public ScmResult<Void> categoryUpdate(@Validated @RequestBody SpuCategoryReq categoryReq) {
+    public PlatformResult<Void> categoryUpdate(@Validated @RequestBody SpuCategoryReq categoryReq) {
         spuDomain.categorySave(categoryReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -77,8 +77,8 @@ public class CategoryController {
      * @return 分类 VO
      */
     @GetMapping("category")
-    public ScmResult<SpuCategoryVO> categoryVO(@RequestParam("id") Long id) {
-        return ScmResult.success(spuDomain.category(id));
+    public PlatformResult<SpuCategoryVO> categoryVO(@RequestParam("id") Long id) {
+        return PlatformResult.success(spuDomain.category(id));
     }
 
     /**
@@ -88,8 +88,8 @@ public class CategoryController {
      * @return 分类列表
      */
     @PostMapping("categoryList")
-    public ScmResult<List<SpuCategoryVO>> categoryList(@RequestBody SpuCategoryQuery categoryQuery) {
-        return ScmResult.success(spuCategoryService.categoryList(categoryQuery));
+    public PlatformResult<List<SpuCategoryVO>> categoryList(@RequestBody SpuCategoryQuery categoryQuery) {
+        return PlatformResult.success(spuCategoryService.categoryList(categoryQuery));
     }
 
     /**
@@ -99,8 +99,8 @@ public class CategoryController {
      * @return 分类列表
      */
     @PostMapping("appCategoryList")
-    public ScmResult<List<SpuCategoryVO>> appCategoryList(@RequestBody SpuCategoryQuery categoryQuery) {
-        return ScmResult.success(spuCategoryService.appCategoryList(categoryQuery));
+    public PlatformResult<List<SpuCategoryVO>> appCategoryList(@RequestBody SpuCategoryQuery categoryQuery) {
+        return PlatformResult.success(spuCategoryService.appCategoryList(categoryQuery));
     }
 
     /**
@@ -110,8 +110,8 @@ public class CategoryController {
      * @return 分类列表
      */
     @PostMapping("palletCategoryList")
-    public ScmResult<List<SpuCategoryVO>> palletCategoryList(@RequestBody @Valid PalletCategoryPageQuery categoryQuery) {
-        return ScmResult.success(spuCategoryService.palletCategoryList(categoryQuery));
+    public PlatformResult<List<SpuCategoryVO>> palletCategoryList(@RequestBody @Valid PalletCategoryPageQuery categoryQuery) {
+        return PlatformResult.success(spuCategoryService.palletCategoryList(categoryQuery));
     }
 
     /**
@@ -121,9 +121,9 @@ public class CategoryController {
      * @return 成功结果
      */
     @PostMapping("bindBrand")
-    public ScmResult<Void> bindBrand(@RequestBody CategoryCmd.BindBrand bindCategory) {
+    public PlatformResult<Void> bindBrand(@RequestBody CategoryCmd.BindBrand bindCategory) {
         spuCategoryService.bindBrand(bindCategory.getCategoryId(), bindCategory.getBrandId(),
                 BooleanUtil.isTrue(bindCategory.getIsBind()));
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

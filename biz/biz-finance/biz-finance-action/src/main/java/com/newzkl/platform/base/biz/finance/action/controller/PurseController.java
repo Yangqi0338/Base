@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterReco
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,9 +42,9 @@ public class PurseController {
      * @return 客户账户列表
      */
     @PostMapping("/queryAccountPurse")
-    public ScmResult<List<AccountPurseVO>> queryAccountPurse(@RequestBody AccountPurseQuery req) {
+    public PlatformResult<List<AccountPurseVO>> queryAccountPurse(@RequestBody AccountPurseQuery req) {
         req.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(accountPurseDomain.queryAccountPurse(req));
+        return PlatformResult.success(accountPurseDomain.queryAccountPurse(req));
     }
 
     /**
@@ -54,9 +54,9 @@ public class PurseController {
      * @return 采购金账户
      */
     @PostMapping("/queryAccountPurchasePurse")
-    public ScmResult<AccountPurseVO> queryAccountPurchasePurse(@RequestBody AccountPurseQuery req) {
+    public PlatformResult<AccountPurseVO> queryAccountPurchasePurse(@RequestBody AccountPurseQuery req) {
         req.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(accountPurseDomain.queryAccountPurchasePurse(req));
+        return PlatformResult.success(accountPurseDomain.queryAccountPurchasePurse(req));
     }
 
     /**
@@ -66,8 +66,8 @@ public class PurseController {
      * @return 批量收益列表
      */
     @PostMapping("/batchQueryAccountEarning")
-    public ScmResult<List<BatchQueryAccountPurseRes>> batchQueryAccountEarning(@RequestBody BatchAccountPurseQuery req) {
-        return ScmResult.success(accountPurseDomain.batchQueryAccountEarning(req));
+    public PlatformResult<List<BatchQueryAccountPurseRes>> batchQueryAccountEarning(@RequestBody BatchAccountPurseQuery req) {
+        return PlatformResult.success(accountPurseDomain.batchQueryAccountEarning(req));
     }
 
     /**
@@ -80,12 +80,12 @@ public class PurseController {
      */
     @Deprecated
     @PostMapping("/queryAccountTripartitePurse")
-    public ScmResult<AccountTripartitePurseVO> queryAccountTripartitePurse() {
+    public PlatformResult<AccountTripartitePurseVO> queryAccountTripartitePurse() {
         AccountTripartitePurseVO accountTripartitePurseVO = tripartitePurseDomain.queryAccountTripartitePurse(SecurityUtils.getAccountId());
         if (accountTripartitePurseVO != null) {
             accountTripartitePurseVO.subBankNo();
         }
-        return ScmResult.success(accountTripartitePurseVO);
+        return PlatformResult.success(accountTripartitePurseVO);
     }
 
     /**
@@ -99,8 +99,8 @@ public class PurseController {
      */
     @Deprecated
     @PostMapping("/queryTripartitePursePage")
-    public ScmResult<List<AccountTripartitePurseVO>> queryTripartitePursePage(@RequestBody @Valid AccountTripartitePurseQuery query) {
-        return ScmResult.success(tripartitePurseDomain.queryPageAccountTripartitePurse(query));
+    public PlatformResult<List<AccountTripartitePurseVO>> queryTripartitePursePage(@RequestBody @Valid AccountTripartitePurseQuery query) {
+        return PlatformResult.success(tripartitePurseDomain.queryPageAccountTripartitePurse(query));
     }
 
     /**
@@ -110,11 +110,11 @@ public class PurseController {
      * @return 变动记录列表
      */
     @PostMapping("/queryAccountPurseAlterRecords")
-    public ScmResult<List<AccountPurseAlterRecordVO>> queryAccountPurseAlterRecords(@RequestBody AccountPurseAlterRecordQuery req) {
+    public PlatformResult<List<AccountPurseAlterRecordVO>> queryAccountPurseAlterRecords(@RequestBody AccountPurseAlterRecordQuery req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
+        return PlatformResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
     }
 
     /**
@@ -123,8 +123,8 @@ public class PurseController {
      * @return 供应商累计结算数据
      */
     @PostMapping("/querySupplierSettleData")
-    public ScmResult<TotalSupplierSettleDataRes> querySupplierSettleData() {
-        return ScmResult.success(accountPurseDomain.querySupplierSettleData());
+    public PlatformResult<TotalSupplierSettleDataRes> querySupplierSettleData() {
+        return PlatformResult.success(accountPurseDomain.querySupplierSettleData());
     }
 
     /**
@@ -138,10 +138,10 @@ public class PurseController {
      */
     @Deprecated
     @PostMapping("/accountMovementDetails")
-    public ScmResult<List<AccountPurseAlterRecordVO>> accountMovementDetails(@RequestBody AccountPurseAlterRecordQuery req) {
+    public PlatformResult<List<AccountPurseAlterRecordVO>> accountMovementDetails(@RequestBody AccountPurseAlterRecordQuery req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
+        return PlatformResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
     }
 }

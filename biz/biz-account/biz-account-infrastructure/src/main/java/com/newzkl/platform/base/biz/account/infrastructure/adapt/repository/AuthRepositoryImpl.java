@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
 import com.newzkl.platform.base.biz.account.model.enums.RedisEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.auth.repository.AuthRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.auth.dao.AuthFunctionDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.auth.dao.AuthMenuDAO;
@@ -71,7 +71,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     public void roleDelete(Long roleId) {
         boolean exists = authRelationsDAO.exists(new LambdaUpdateWrapper<AuthRelationsDO>().eq(AuthRelationsDO::getTargetId, roleId).eq(AuthRelationsDO::getType, AuthEnum.RelationType.USER_ROLE.name()));
         if (exists) {
-            throw new ScmException(-1, "已绑定用户的角色无法删除");
+            throw new PlatformException(-1, "已绑定用户的角色无法删除");
         }
         //删除角色
         authRoleDAO.deleteById(roleId);
@@ -139,7 +139,7 @@ public class AuthRepositoryImpl implements AuthRepository {
 
                 // 如果不是废弃接口，则不能删除
                 if (!deprecatedCodes.contains(id)) {
-                    throw new ScmException(-1, "已绑定角色的权限无法删除: " + id);
+                    throw new PlatformException(-1, "已绑定角色的权限无法删除: " + id);
                 }
             }
         }
@@ -469,7 +469,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     public void deleteMenu(Long id) {
         boolean exists = authRelationsDAO.exists(new LambdaUpdateWrapper<AuthRelationsDO>().eq(AuthRelationsDO::getTargetId, id).eq(AuthRelationsDO::getType, AuthEnum.RelationType.ROLE_MENU.name()));
         if (exists) {
-            throw new ScmException(-1, "已绑定角色的菜单无法删除");
+            throw new PlatformException(-1, "已绑定角色的菜单无法删除");
         }
         authMenuDAO.deleteById(id);
     }

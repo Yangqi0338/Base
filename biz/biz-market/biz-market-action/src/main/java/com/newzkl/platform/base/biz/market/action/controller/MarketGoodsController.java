@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarke
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +35,8 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/platformQueryMarketGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> platformQueryMarketGoodsList(@RequestBody GoodsListPageQuery req) {
-        return ScmResult.success(goodsRelationDomain.platformQueryMarketGoodsList(req));
+    public PlatformResult<Page<GoodsRelationListVO>> platformQueryMarketGoodsList(@RequestBody GoodsListPageQuery req) {
+        return PlatformResult.success(goodsRelationDomain.platformQueryMarketGoodsList(req));
     }
 
     /**
@@ -50,9 +50,9 @@ public class MarketGoodsController {
      */
     @Deprecated
     @PostMapping("/appQueryMarketGoodList")
-    public ScmResult<Page<GoodsRelationListVO>> appQueryMarketGoodList(@RequestBody GoodsListPageQuery req) {
+    public PlatformResult<Page<GoodsRelationListVO>> appQueryMarketGoodList(@RequestBody GoodsListPageQuery req) {
         req.setUserId(SecurityUtils.getAccountId());
-        return ScmResult.success(goodsRelationDomain.appQueryMarketGoodList(req));
+        return PlatformResult.success(goodsRelationDomain.appQueryMarketGoodList(req));
     }
 
     /**
@@ -62,8 +62,8 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/operatorQueryMarketGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> operatorQueryMarketGoodsList(@RequestBody MarketGoodsPageQuery req) {
-        return ScmResult.success(goodsRelationDomain.operatorQueryMarketGoodsList(req));
+    public PlatformResult<Page<GoodsRelationListVO>> operatorQueryMarketGoodsList(@RequestBody MarketGoodsPageQuery req) {
+        return PlatformResult.success(goodsRelationDomain.operatorQueryMarketGoodsList(req));
     }
 
     /**
@@ -73,8 +73,8 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/channelQuerySelectGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> channelQuerySelectGoodsList(@RequestBody MarketGoodsPageQuery req) {
-        return ScmResult.success(goodsRelationDomain.channelQuerySelectGoodsList(req));
+    public PlatformResult<Page<GoodsRelationListVO>> channelQuerySelectGoodsList(@RequestBody MarketGoodsPageQuery req) {
+        return PlatformResult.success(goodsRelationDomain.channelQuerySelectGoodsList(req));
     }
 
     /**
@@ -84,12 +84,12 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/queryClientBindMarketGoodsRelationList")
-    public ScmResult<Page<GoodsRelationListVO>> queryClientBindMarketGoodsRelationList(@RequestBody GoodsListPageQuery req) {
+    public PlatformResult<Page<GoodsRelationListVO>> queryClientBindMarketGoodsRelationList(@RequestBody GoodsListPageQuery req) {
         if (req.getUserId() == null) {
             req.setUserId(SecurityUtils.getAccountId());
         }
         req.setBindType(3);
-        return ScmResult.success(goodsRelationDomain.queryClientBindMarketGoodsRelationList(req));
+        return PlatformResult.success(goodsRelationDomain.queryClientBindMarketGoodsRelationList(req));
     }
 
     /**
@@ -99,9 +99,9 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/platformQueryMarketNotAddGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> platformQueryMarketNotAddGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
+    public PlatformResult<Page<GoodsRelationListVO>> platformQueryMarketNotAddGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
         req.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(goodsRelationDomain.platformQueryMarketNotAddGoodsList(req));
+        return PlatformResult.success(goodsRelationDomain.platformQueryMarketNotAddGoodsList(req));
     }
 
     /**
@@ -111,9 +111,9 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/operateQueryMarketNotAddGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> operateQueryMarketNotAddGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
+    public PlatformResult<Page<GoodsRelationListVO>> operateQueryMarketNotAddGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
         req.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(goodsRelationDomain.operateQueryMarketNotAddGoodsList(req));
+        return PlatformResult.success(goodsRelationDomain.operateQueryMarketNotAddGoodsList(req));
     }
 
     /**
@@ -123,9 +123,9 @@ public class MarketGoodsController {
      * @return 市场商品分页
      */
     @PostMapping("/channelMarketNotSelectedGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> channelMarketNotSelectedGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
+    public PlatformResult<Page<GoodsRelationListVO>> channelMarketNotSelectedGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
         req.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(goodsRelationDomain.channelMarketNotSelectedGoodsList(req));
+        return PlatformResult.success(goodsRelationDomain.channelMarketNotSelectedGoodsList(req));
     }
 
     /**
@@ -139,8 +139,8 @@ public class MarketGoodsController {
      */
     @Deprecated
     @PostMapping("/channelDistributionSelectedGoodsList")
-    public ScmResult<Page<GoodsRelationListVO>> channelDistributionSelectedGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq query) {
-        return ScmResult.success(goodsRelationDomain.channelDistributionSelectedGoodsList(query));
+    public PlatformResult<Page<GoodsRelationListVO>> channelDistributionSelectedGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq query) {
+        return PlatformResult.success(goodsRelationDomain.channelDistributionSelectedGoodsList(query));
     }
 
     /**
@@ -150,9 +150,9 @@ public class MarketGoodsController {
      * @return 成功结果
      */
     @PostMapping("/channelCancelSelected/{id}")
-    public ScmResult<Void> channelCancelSelected(@PathVariable Long id) {
+    public PlatformResult<Boolean> channelCancelSelected(@PathVariable Long id) {
         goodsRelationDomain.channelCancelSelected(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -166,8 +166,8 @@ public class MarketGoodsController {
      */
     @Deprecated
     @PostMapping("/channelBatchCancelSelected")
-    public ScmResult<Void> channelBatchCancelSelected(@RequestBody IdListCommand idList) {
+    public PlatformResult<Boolean> channelBatchCancelSelected(@RequestBody IdListCommand idList) {
         idList.getIdList().forEach(goodsRelationDomain::channelCancelSelected);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

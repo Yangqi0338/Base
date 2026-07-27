@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.action.spi;
 
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>维护 扩展点接口 → 实现列表 的注册表, 对外产出 JDK 动态代理。代理在方法调用时读取当前调用方身份
  * ({@link SecurityUtils#getRoleId()}), 选出唯一命中实现执行一次; 无精确命中则回退 catch-all 实现;
- * 仍无命中则抛出 {@link ScmException}。注册表由 {@link IdentityExtensionRegistrar} 启动期填充。</p>
+ * 仍无命中则抛出 {@link PlatformException}。注册表由 {@link IdentityExtensionRegistrar} 启动期填充。</p>
  *
  * @author KC
  */
@@ -87,7 +87,7 @@ public class IdentityDispatcher {
      * @param ext    扩展点接口
      * @param roleId 调用方身份 code, 可能为 null
      * @return 命中实现实例
-     * @throws ScmException 无任何命中且无 catch-all 时抛出
+     * @throws PlatformException 无任何命中且无 catch-all 时抛出
      */
     private Object selectImpl(Class<?> ext, Long roleId) {
         List<ImplHolder> holders = registry.get(ext);
@@ -106,7 +106,7 @@ public class IdentityDispatcher {
                 return catchAll.impl();
             }
         }
-        throw new ScmException(BaseErrorCode.NO_AUTH.getCode(),
+        throw new PlatformException(BaseErrorCode.NO_AUTH.getCode(),
                 "该请求不支持当前身份[" + roleId + "]");
     }
 

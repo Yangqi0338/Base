@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +41,7 @@ public class StoreController {
      * @return 成功结果
      */
     @PostMapping("storeEdit")
-    public ScmResult<Void> storeEdit(@Validated @RequestBody StoreCmd.Edit edit) {
+    public PlatformResult<Void> storeEdit(@Validated @RequestBody StoreCmd.Edit edit) {
         if (edit.getId() == null) {
             edit.setId(SecurityUtils.getAccountId());
         }
@@ -55,7 +55,7 @@ public class StoreController {
             req.setPhone(contactPhone);
             storeService.updateChannel(req);
         }
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -65,7 +65,7 @@ public class StoreController {
      * @return 门店 VO
      */
     @PostMapping("store")
-    public ScmResult<StoreRes> store(@Validated @RequestBody StoreCmd.ID storeId) {
+    public PlatformResult<StoreRes> store(@Validated @RequestBody StoreCmd.ID storeId) {
         if (storeId.getStoreId() == null) {
             storeId.setStoreId(SecurityUtils.getAccountId());
         }
@@ -75,7 +75,7 @@ public class StoreController {
             storeVO.setContactName(channelStoreVO.getContactsName());
             storeVO.setContactPhone(channelStoreVO.getContactsPhone());
         }
-        return ScmResult.success(storeVO);
+        return PlatformResult.success(storeVO);
     }
 
     /**
@@ -89,9 +89,9 @@ public class StoreController {
      */
     @Deprecated
     @PostMapping("storePage")
-    public ScmResult<Page<StoreRes>> storePage(@RequestBody StoreQuery storeQueryReq) {
+    public PlatformResult<Page<StoreRes>> storePage(@RequestBody StoreQuery storeQueryReq) {
         storeQueryReq.setChannelId(SecurityUtils.getAccountId());
-        return ScmResult.success(storeDomain.storePage(storeQueryReq));
+        return PlatformResult.success(storeDomain.storePage(storeQueryReq));
     }
 
     /**
@@ -100,8 +100,8 @@ public class StoreController {
      * @return 门店样式 VO
      */
     @GetMapping("/getModelShopStyle")
-    public ScmResult<StoreStyleRes> getModelShopStyle() {
-        return ScmResult.success(storeService.getModelShopStyle());
+    public PlatformResult<StoreStyleRes> getModelShopStyle() {
+        return PlatformResult.success(storeService.getModelShopStyle());
     }
 
     /**
@@ -111,7 +111,7 @@ public class StoreController {
      * @return 搜索分页
      */
     @PostMapping("storeSearchPage")
-    public ScmResult<Page<StoreSearchRes>> storeSearchPage(@RequestBody StoreQuery storeQueryReq) {
-        return ScmResult.success(storeDomain.storeSearchPage(storeQueryReq));
+    public PlatformResult<Page<StoreSearchRes>> storeSearchPage(@RequestBody StoreQuery storeQueryReq) {
+        return PlatformResult.success(storeDomain.storeSearchPage(storeQueryReq));
     }
 }

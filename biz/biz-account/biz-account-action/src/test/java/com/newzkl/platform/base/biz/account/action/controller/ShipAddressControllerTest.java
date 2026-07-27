@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +60,7 @@ class ShipAddressControllerTest {
     void shipAddressSaveShouldReturnId() {
         when(shipAddressDomain.save(any())).thenReturn(90001L);
 
-        ScmResult<Long> result = shipAddressController.shipAddressSave(new ShipAddressReq());
+        PlatformResult<Long> result = shipAddressController.shipAddressSave(new ShipAddressReq());
 
         assertEquals(90001L, result.getData());
     }

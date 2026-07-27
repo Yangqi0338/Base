@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.application.purse.service.PurseServi
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +30,9 @@ public class PlatformOfflineController {
      * @return 处理结果
      */
     @PostMapping("/platformToOperator")
-    public ScmResult<Object> platformToOperator(@RequestBody AmountDistributionReq req) {
+    public PlatformResult<Boolean> platformToOperator(@RequestBody AmountDistributionReq req) {
         if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
-            return ScmResult.fail();
+            return PlatformResult.fail();
         }
         return purseService.platformToOperator(req);
     }
@@ -44,9 +44,9 @@ public class PlatformOfflineController {
      * @return 处理结果
      */
     @PostMapping("/operatorToChannel")
-    public ScmResult<Object> operatorToChannel(@RequestBody AmountDistributionReq req) {
+    public PlatformResult<Boolean> operatorToChannel(@RequestBody AmountDistributionReq req) {
         if (!RoleEnum.CompanyRole.OPERATOR.getCode().equals(SecurityUtils.getRoleId())) {
-            return ScmResult.fail();
+            return PlatformResult.fail();
         }
         return purseService.operatorToChannel(req);
     }

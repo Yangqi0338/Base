@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.brand.BrandPageQuery
 import com.newzkl.platform.base.biz.goods.model.goods.req.brand.BrandReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.BrandVO;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +35,9 @@ public class BrandController {
      * @return 品牌 ID
      */
     @PostMapping("brandCreate")
-    public ScmResult<Long> brandCreate(@Validated @RequestBody BrandReq brandReq) {
+    public PlatformResult<Long> brandCreate(@Validated @RequestBody BrandReq brandReq) {
         Long brandId = brandDomain.brandSave(brandReq);
-        return ScmResult.success(brandId);
+        return PlatformResult.success(brandId);
     }
 
     /**
@@ -47,9 +47,9 @@ public class BrandController {
      * @return 成功结果
      */
     @PostMapping("brandDelete")
-    public ScmResult<Void> brandDelete(@RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> brandDelete(@RequestBody IdListCommand idListObj) {
         brandDomain.brandDelete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -59,9 +59,9 @@ public class BrandController {
      * @return 成功结果
      */
     @PostMapping("brandUpdate")
-    public ScmResult<Void> brandUpdate(@Validated @RequestBody BrandReq brandReq) {
+    public PlatformResult<Void> brandUpdate(@Validated @RequestBody BrandReq brandReq) {
         brandDomain.brandSave(brandReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -71,8 +71,8 @@ public class BrandController {
      * @return 品牌 VO
      */
     @GetMapping("brand")
-    public ScmResult<BrandVO> brandVO(@RequestParam("id") Long id) {
-        return ScmResult.success(brandDomain.brandById(id));
+    public PlatformResult<BrandVO> brandVO(@RequestParam("id") Long id) {
+        return PlatformResult.success(brandDomain.brandById(id));
     }
 
     /**
@@ -82,7 +82,7 @@ public class BrandController {
      * @return 品牌分页
      */
     @PostMapping("brandPage")
-    public ScmResult<Page<BrandVO>> brandPage(@RequestBody BrandPageQuery brandQuery) {
-        return ScmResult.success(brandDomain.brandPage(brandQuery));
+    public PlatformResult<Page<BrandVO>> brandPage(@RequestBody BrandPageQuery brandQuery) {
+        return PlatformResult.success(brandDomain.brandPage(brandQuery));
     }
 }

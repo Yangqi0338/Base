@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +38,8 @@ public class SupplierController {
      * @return 供应商 ID
      */
     @PostMapping("supplierCustomSave")
-    public ScmResult<Long> supplierCustomSave(@Validated @RequestBody SupplierCustomSaveReq req) {
-        return ScmResult.success(supplierClientDomain.supplierCustomSave(req));
+    public PlatformResult<Long> supplierCustomSave(@Validated @RequestBody SupplierCustomSaveReq req) {
+        return PlatformResult.success(supplierClientDomain.supplierCustomSave(req));
     }
 
     /**
@@ -49,12 +49,12 @@ public class SupplierController {
      * @return 修改数量
      */
     @PostMapping("supplierEdit")
-    public ScmResult<Integer> supplierEdit(@Validated @RequestBody SupplierReq supplierEditReq) {
+    public PlatformResult<Integer> supplierEdit(@Validated @RequestBody SupplierReq supplierEditReq) {
         Long id = supplierEditReq.getId();
         if (id == null) {
             id = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(supplierClientDomain.supplierEdit(id, supplierEditReq));
+        return PlatformResult.success(supplierClientDomain.supplierEdit(id, supplierEditReq));
     }
 
     /**
@@ -64,9 +64,9 @@ public class SupplierController {
      * @return 成功结果
      */
     @PostMapping("supplierEditColumn")
-    public ScmResult<Void> supplierEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
+    public PlatformResult<Void> supplierEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
         supplierClientDomain.supplierEdit(cmd.getEditColumnList(), cmd.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -76,8 +76,8 @@ public class SupplierController {
      * @return 删除数量
      */
     @PostMapping("supplierDelete")
-    public ScmResult<Integer> supplierDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return ScmResult.success(supplierClientDomain.supplierDelete(idListObj.getIdList()));
+    public PlatformResult<Integer> supplierDelete(@Validated @RequestBody IdListCommand idListObj) {
+        return PlatformResult.success(supplierClientDomain.supplierDelete(idListObj.getIdList()));
     }
 
     /**
@@ -87,11 +87,11 @@ public class SupplierController {
      * @return 供应商 VO
      */
     @PostMapping("supplier")
-    public ScmResult<SupplierVO> supplier(@RequestParam(value = "id", required = false) Long supplierId) {
+    public PlatformResult<SupplierVO> supplier(@RequestParam(value = "id", required = false) Long supplierId) {
         if (supplierId == null) {
             supplierId = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(supplierClientDomain.supplier(supplierId));
+        return PlatformResult.success(supplierClientDomain.supplier(supplierId));
     }
 
     /**
@@ -100,8 +100,8 @@ public class SupplierController {
      * @return 限额, 0 表示不限
      */
     @PostMapping("limitAmount")
-    public ScmResult<Integer> limitAmount() {
-        return ScmResult.success(supplierClientDomain.limitAmount(SecurityUtils.getAccountId()));
+    public PlatformResult<Integer> limitAmount() {
+        return PlatformResult.success(supplierClientDomain.limitAmount(SecurityUtils.getAccountId()));
     }
 
     /**
@@ -111,7 +111,7 @@ public class SupplierController {
      * @return 供应商分页
      */
     @PostMapping("supplierPage")
-    public ScmResult<Page<SupplierRes>> supplierPage(@RequestBody SupplierQuery supplierQuery) {
-        return ScmResult.success(supplierClientDomain.supplierPage(supplierQuery));
+    public PlatformResult<Page<SupplierRes>> supplierPage(@RequestBody SupplierQuery supplierQuery) {
+        return PlatformResult.success(supplierClientDomain.supplierPage(supplierQuery));
     }
 }

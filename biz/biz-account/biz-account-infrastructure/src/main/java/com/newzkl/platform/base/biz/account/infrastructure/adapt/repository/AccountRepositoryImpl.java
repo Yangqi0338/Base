@@ -17,7 +17,7 @@ import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.model.support.UserProperties;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
@@ -33,7 +33,7 @@ import com.newzkl.platform.base.biz.account.model.res.UserCountRes;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.MemberAssembler;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +80,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         // 若新旧一样,说明没角色可移除
         String newRoleIdStr = CollUtil.join(roleIdList, ",");
         if (newRoleIdStr.equals(roleIdStr)) {
-            throw new ScmException(AccountErrorCode.NOT_OPEN_ROLE);
+            throw new PlatformException(AccountErrorCode.NOT_OPEN_ROLE);
         }
         // 若没有角色了,直接注销
         if (StrUtil.isBlank(newRoleIdStr)) {
@@ -220,8 +220,8 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         if (account.getPid() == null || account.getPid() == 0) {
             // 根据不为空的pid构建关联的pidList和pRoleList
             if (StrUtil.isBlank(account.getPidList()) || StrUtil.isBlank(account.getPRoleList())) {
-                account.setPidList(ScmUtil.getPidList(account.getPidList(), account.getId()));
-                account.setPRoleList(ScmUtil.getPRoleList(account.getPRoleList(), account.getRoleIdList()));
+                account.setPidList(BizUtil.getPidList(account.getPidList(), account.getId()));
+                account.setPRoleList(BizUtil.getPRoleList(account.getPRoleList(), account.getRoleIdList()));
             }
         }
 
@@ -319,7 +319,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         // TODO[infra-sms gateway]: boolean isRight = SmsMethod.verificationCode(verificationCodeReq);
         boolean isRight = true;
         if (!isRight) {
-            throw new ScmException(AccountErrorCode.CODE_ERROR);
+            throw new PlatformException(AccountErrorCode.CODE_ERROR);
         }
     }
 

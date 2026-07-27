@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.account.model.res.OperatorDomainInfo;
 import com.newzkl.platform.base.biz.account.model.vo.OperatorVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +37,8 @@ public class OperatorController {
      * @return 运营商 VO
      */
     @PostMapping("operatorEdit")
-    public ScmResult<OperatorVO> operatorEdit(@Validated @RequestBody OperatorReq operatorEditReq) {
-        return ScmResult.success(operatorClientDomain.operatorEdit(operatorEditReq));
+    public PlatformResult<OperatorVO> operatorEdit(@Validated @RequestBody OperatorReq operatorEditReq) {
+        return PlatformResult.success(operatorClientDomain.operatorEdit(operatorEditReq));
     }
 
     /**
@@ -48,9 +48,9 @@ public class OperatorController {
      * @return 成功结果
      */
     @PostMapping("operatorEditColumn")
-    public ScmResult<Void> operatorEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
+    public PlatformResult<Void> operatorEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
         operatorClientDomain.operatorEdit(cmd.getEditColumnList(), cmd.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -60,8 +60,8 @@ public class OperatorController {
      * @return 删除数量
      */
     @PostMapping("operatorDelete")
-    public ScmResult<Integer> operatorDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return ScmResult.success(operatorClientDomain.operatorDelete(idListObj.getIdList()));
+    public PlatformResult<Integer> operatorDelete(@Validated @RequestBody IdListCommand idListObj) {
+        return PlatformResult.success(operatorClientDomain.operatorDelete(idListObj.getIdList()));
     }
 
     /**
@@ -71,11 +71,11 @@ public class OperatorController {
      * @return 运营商 VO
      */
     @PostMapping("operator")
-    public ScmResult<OperatorVO> operator(@RequestParam(value = "id", required = false) Long operatorId) {
+    public PlatformResult<OperatorVO> operator(@RequestParam(value = "id", required = false) Long operatorId) {
         if (operatorId == null) {
             operatorId = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(operatorClientDomain.operator(operatorId));
+        return PlatformResult.success(operatorClientDomain.operator(operatorId));
     }
 
     /**
@@ -85,8 +85,8 @@ public class OperatorController {
      * @return 运营商 VO
      */
     @PostMapping("operatorCustomSave")
-    public ScmResult<OperatorVO> operatorCustomSave(@Validated @RequestBody OperatorCustomSaveReq operatorEditReq) {
-        return ScmResult.success(operatorClientDomain.operatorCustomSave(operatorEditReq, SecurityUtils.getAccountId()));
+    public PlatformResult<OperatorVO> operatorCustomSave(@Validated @RequestBody OperatorCustomSaveReq operatorEditReq) {
+        return PlatformResult.success(operatorClientDomain.operatorCustomSave(operatorEditReq, SecurityUtils.getAccountId()));
     }
 
     /**
@@ -96,8 +96,8 @@ public class OperatorController {
      * @return 运营商 VO
      */
     @PostMapping("operatorProxySave")
-    public ScmResult<OperatorVO> operatorProxySave(@Validated @RequestBody OperatorProxySaveReq operatorProxySaveReq) {
-        return ScmResult.success(operatorClientDomain.operatorProxySave(operatorProxySaveReq, SecurityUtils.getAccountId()));
+    public PlatformResult<OperatorVO> operatorProxySave(@Validated @RequestBody OperatorProxySaveReq operatorProxySaveReq) {
+        return PlatformResult.success(operatorClientDomain.operatorProxySave(operatorProxySaveReq, SecurityUtils.getAccountId()));
     }
 
     /**
@@ -107,7 +107,7 @@ public class OperatorController {
      * @return 运营商域信息
      */
     @PostMapping("getOperatorDomainInfo")
-    public ScmResult<OperatorDomainInfo> getOperatorDomainInfo(@RequestParam("id") Long id) {
-        return ScmResult.success(operatorClientDomain.getOperatorDomainInfo(id));
+    public PlatformResult<OperatorDomainInfo> getOperatorDomainInfo(@RequestParam("id") Long id) {
+        return PlatformResult.success(operatorClientDomain.getOperatorDomainInfo(id));
     }
 }

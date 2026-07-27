@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 幂等本地消息消费者基类。
  *
- * <p>移植自 adopt-chicken {@code AbstractMessageMQPushConsumer}; 基于 Base core-rocketmq
+ * <p>移植自模板 {@code AbstractMessageMQPushConsumer}; 基于 Base core-rocketmq
  * {@link AbstractMQPushConsumer} 泛型自动反序列化, 消费前查 local_message 做 CAS 幂等,
  * 再委派给 {@link AbstractMessageMQPushConsumerHandler}。去 TraceIdHolder / dev fixId 逻辑。</p>
  *

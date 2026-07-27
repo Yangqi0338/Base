@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordU
 import com.newzkl.platform.base.biz.order.model.order.vo.RefundOperationRecordVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +62,7 @@ class RefundOperationRecordControllerTest {
         vo.setId(1L);
         when(refundOperationRecordService.create(any())).thenReturn(vo);
 
-        ScmResult<RefundOperationRecordVO> result =
+        PlatformResult<RefundOperationRecordVO> result =
                 refundOperationRecordController.create(new RefundOperationRecordCreateReq());
 
         assertEquals(1L, result.getData().getId());
@@ -86,7 +86,7 @@ class RefundOperationRecordControllerTest {
         OrderCmd.ID idObj = new OrderCmd.ID();
         idObj.setId(3L);
 
-        ScmResult<Void> result = refundOperationRecordController.delete(idObj);
+        PlatformResult<Void> result = refundOperationRecordController.delete(idObj);
 
         verify(refundOperationRecordService).delete(3L);
         assertTrue(result.getSuccess());

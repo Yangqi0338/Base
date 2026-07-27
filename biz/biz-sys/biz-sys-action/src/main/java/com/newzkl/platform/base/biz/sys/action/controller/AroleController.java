@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.sys.model.arole.req.AroleReq;
 import com.newzkl.platform.base.biz.sys.model.arole.res.AroleRes;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +39,8 @@ public class AroleController {
      * @return 角色 id
      */
     @PostMapping("/createArole")
-    public ScmResult<Long> createArole(@Validated @RequestBody AroleReq req) {
-        return ScmResult.success(aroleDomain.aroleSave(req));
+    public PlatformResult<Long> createArole(@Validated @RequestBody AroleReq req) {
+        return PlatformResult.success(aroleDomain.aroleSave(req));
     }
 
     /**
@@ -50,9 +50,9 @@ public class AroleController {
      * @return 成功结果
      */
     @PostMapping("/deleteArole")
-    public ScmResult<Void> deleteArole(@Validated @RequestBody IdListCommand req) {
+    public PlatformResult<Void> deleteArole(@Validated @RequestBody IdListCommand req) {
         aroleDomain.aroleDelete(req.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -62,9 +62,9 @@ public class AroleController {
      * @return 成功结果
      */
     @PostMapping("/updateArole")
-    public ScmResult<Void> updateArole(@Validated(UpdateCommand.class) @RequestBody AroleReq req) {
+    public PlatformResult<Void> updateArole(@Validated(UpdateCommand.class) @RequestBody AroleReq req) {
         aroleDomain.aroleSave(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -74,8 +74,8 @@ public class AroleController {
      * @return 角色视图对象
      */
     @GetMapping("/getArole")
-    public ScmResult<AroleRes> getArole(@RequestParam("id") Long id) {
-        return ScmResult.success(aroleDomain.aroleVO(id));
+    public PlatformResult<AroleRes> getArole(@RequestParam("id") Long id) {
+        return PlatformResult.success(aroleDomain.aroleVO(id));
     }
 
     /**
@@ -85,7 +85,7 @@ public class AroleController {
      * @return 角色列表
      */
     @PostMapping("/pageArole")
-    public ScmResult<List<AroleRes>> pageArole(@RequestBody AroleQuery query) {
-        return ScmResult.success(aroleDomain.aroleList(query));
+    public PlatformResult<List<AroleRes>> pageArole(@RequestBody AroleQuery query) {
+        return PlatformResult.success(aroleDomain.aroleList(query));
     }
 }

@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.RedisEnum;
 import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
@@ -137,7 +137,7 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
 
     protected AccountVO doRegisterAccount(AccountSaveReq req) {
         if (StrUtil.isBlank(req.getUsername()) && StrUtil.isBlank(req.getPhone())) {
-            throw new ScmException(AccountErrorCode.REGISTER_CERTIFICATE_ERROR, "注册");
+            throw new PlatformException(AccountErrorCode.REGISTER_CERTIFICATE_ERROR, "注册");
         }
         // 处理username和phone的数据同步关系
         String username = StrUtil.blankToDefault(req.getUsername(), req.getPhone());
@@ -170,7 +170,7 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
             } else if (targetAccount.getState() == AccountEnum.State.DESTROY) {
                 // 禁用状态报错
                 log.error("{}对应的账号{}已被平台禁用", username, targetAccount.getId());
-                throw new ScmException(AccountErrorCode.IN_BLOCKLIST, "注册");
+                throw new PlatformException(AccountErrorCode.IN_BLOCKLIST, "注册");
             }
             targetAccount.setOld(true);
             return targetAccount;
@@ -184,7 +184,7 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
             codeReq.setType(SmsEnum.Type.Register);
             accountRepository.verificationCode(codeReq);
         } else if (StrUtil.isBlank(req.getPassword())) {
-            throw new ScmException(AccountErrorCode.CERTIFICATE_MISSING, "注册");
+            throw new PlatformException(AccountErrorCode.CERTIFICATE_MISSING, "注册");
         }
 
         // 有邀请码但是没有邀请id，去数据库查
@@ -194,7 +194,7 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
             yqmQuery.setYqm(yqm);
             AccountVO account = accountRepository.account(yqmQuery);
             if (account == null) {
-                throw new ScmException(AccountErrorCode.PARAM_YQM);
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
             }
             log.info("邀请人信息：{}", JSONUtil.toJsonStr(account));
             req.setInviteId(account.getId());

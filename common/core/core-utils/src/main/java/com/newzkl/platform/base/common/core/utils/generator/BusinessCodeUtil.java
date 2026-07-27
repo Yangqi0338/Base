@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.core.utils.generator;
 
 import cn.hutool.core.map.MapUtil;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,7 +99,7 @@ public class BusinessCodeUtil {
     public static Generator getSequence(BusinessType type) {
         Generator generator = MapUtil.get(SEQUENCE_MAP, type, Generator.class);
         if (generator == null) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "!!未设置序列化器!!");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "!!未设置序列化器!!");
         }
         return generator;
     }

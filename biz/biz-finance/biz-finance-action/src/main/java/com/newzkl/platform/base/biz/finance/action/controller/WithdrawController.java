@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.application.purse.service.WithdrawService;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
+import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawAmountVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuRollOutRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountWithdrawReq;
@@ -13,7 +14,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,8 +44,8 @@ public class WithdrawController {
      * @return 提现配置
      */
     @PostMapping("/queryWithdrawConfig")
-    public ScmResult<ConfigWithdrawVO> queryWithdrawConfig() {
-        return ScmResult.success(withdrawDomain.defaultWithdrawConfig());
+    public PlatformResult<ConfigWithdrawVO> queryWithdrawConfig() {
+        return PlatformResult.success(withdrawDomain.defaultWithdrawConfig());
     }
 
     /**
@@ -54,9 +55,9 @@ public class WithdrawController {
      * @return 成功结果
      */
     @PostMapping("/alterWithdrawConfig")
-    public ScmResult<Object> alterWithdrawConfig(@RequestBody ConfigWithdrawVO saveCommand) {
+    public PlatformResult<Boolean> alterWithdrawConfig(@RequestBody ConfigWithdrawVO saveCommand) {
         withdrawDomain.alterWithdrawConfig(saveCommand);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -66,9 +67,9 @@ public class WithdrawController {
      * @return 成功结果
      */
     @PostMapping("/rollOutApply")
-    public ScmResult<Object> rollOutApply(@RequestBody @Valid RollOutApplyReq req) {
+    public PlatformResult<Boolean> rollOutApply(@RequestBody @Valid RollOutApplyReq req) {
         withdrawService.rollOutApply(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -78,8 +79,8 @@ public class WithdrawController {
      * @return 汇付转出结果
      */
     @PostMapping("/rollOutApplyAudit")
-    public ScmResult<HuiFuRollOutRes> rollOutApplyAudit(@RequestBody RollOutApplyAuditReq req) {
-        return ScmResult.success(withdrawService.rollOutApplyAudit(req));
+    public PlatformResult<HuiFuRollOutRes> rollOutApplyAudit(@RequestBody RollOutApplyAuditReq req) {
+        return PlatformResult.success(withdrawService.rollOutApplyAudit(req));
     }
 
     /**
@@ -89,8 +90,8 @@ public class WithdrawController {
      * @return 转出申请列表
      */
     @PostMapping("/queryWithdrawRecords")
-    public ScmResult<List<RollOutApplyVO>> queryWithdrawRecords(@RequestBody RollOutApplyQuery req) {
-        return ScmResult.success(withdrawDomain.queryRollOutApplyPage(req));
+    public PlatformResult<List<RollOutApplyVO>> queryWithdrawRecords(@RequestBody RollOutApplyQuery req) {
+        return PlatformResult.success(withdrawDomain.queryRollOutApplyPage(req));
     }
 
     /**
@@ -100,12 +101,12 @@ public class WithdrawController {
      * @return 转出申请列表
      */
     @PostMapping("/queryClientWithdrawRecords")
-    public ScmResult<List<RollOutApplyVO>> queryClientWithdrawRecords(@RequestBody RollOutApplyQuery req) {
+    public PlatformResult<List<RollOutApplyVO>> queryClientWithdrawRecords(@RequestBody RollOutApplyQuery req) {
         req.setAccountId(SecurityUtils.getAccountId());
         if (req.getPurseType() == null) {
-            return ScmResult.fail();
+            return PlatformResult.fail();
         }
-        return ScmResult.success(withdrawDomain.queryRollOutApplyPage(req));
+        return PlatformResult.success(withdrawDomain.queryRollOutApplyPage(req));
     }
 
     /**
@@ -115,9 +116,9 @@ public class WithdrawController {
      * @return 成功结果
      */
     @PostMapping("/alterRollOutApplyId/{id}")
-    public ScmResult<Object> alterRollOutApplyId(@PathVariable Long id) {
+    public PlatformResult<Boolean> alterRollOutApplyId(@PathVariable Long id) {
         withdrawDomain.alterRollOutApplyId(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -127,7 +128,7 @@ public class WithdrawController {
      * @return 处理结果
      */
     @PostMapping("/accountTripartiteWithdraw")
-    public ScmResult<Object> accountTripartiteWithdraw(@RequestBody AccountWithdrawReq req) {
+    public PlatformResult<Boolean> accountTripartiteWithdraw(@RequestBody AccountWithdrawReq req) {
         return withdrawService.accountTripartiteWithdraw(req);
     }
 
@@ -138,11 +139,11 @@ public class WithdrawController {
      * @return 提现记录列表
      */
     @PostMapping("/queryTripartiteWithdrawRecordList")
-    public ScmResult<List<WithdrawRecordVO>> queryTripartiteWithdrawRecordList(@RequestBody TripartiteWithdrawRecordQuery req) {
+    public PlatformResult<List<WithdrawRecordVO>> queryTripartiteWithdrawRecordList(@RequestBody TripartiteWithdrawRecordQuery req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(withdrawDomain.queryTripartiteWithdrawRecordList(req));
+        return PlatformResult.success(withdrawDomain.queryTripartiteWithdrawRecordList(req));
     }
 
     /**
@@ -151,8 +152,8 @@ public class WithdrawController {
      * @return 提现金额
      */
     @PostMapping("/queryWithdrawAmount")
-    public ScmResult<Object> queryWithdrawAmount() {
+    public PlatformResult<WithdrawAmountVO> queryWithdrawAmount() {
         RoleEnum.CompanyRole role = RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId());
-        return ScmResult.success(withdrawDomain.queryWithdrawAmount(role, SecurityUtils.getAccountId()));
+        return PlatformResult.success(withdrawDomain.queryWithdrawAmount(role, SecurityUtils.getAccountId()));
     }
 }

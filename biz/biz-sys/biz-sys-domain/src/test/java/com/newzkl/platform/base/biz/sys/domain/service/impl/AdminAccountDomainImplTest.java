@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.sys.domain.adapt.repository.AdminAccountRepo
 import com.newzkl.platform.base.biz.sys.model.adminaccount.req.AdminAccountReq;
 import com.newzkl.platform.base.biz.sys.model.adminaccount.req.PasswordUpdateReq;
 import com.newzkl.platform.base.biz.sys.model.adminaccount.res.AdminAccountRes;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -84,7 +84,7 @@ class AdminAccountDomainImplTest {
         when(adminAccountRepository.adminAccountByUsername("admin")).thenReturn(account);
 
         assertThatThrownBy(() -> adminAccountDomain.passwordVerify("admin", "wrong"))
-                .isInstanceOf(ScmException.class);
+                .isInstanceOf(PlatformException.class);
     }
 
     @Test
@@ -92,7 +92,7 @@ class AdminAccountDomainImplTest {
         when(adminAccountRepository.adminAccountByUsername("ghost")).thenReturn(null);
 
         assertThatThrownBy(() -> adminAccountDomain.passwordVerify("ghost", "any"))
-                .isInstanceOf(ScmException.class);
+                .isInstanceOf(PlatformException.class);
     }
 
     @Test

@@ -22,11 +22,11 @@ import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
 import com.newzkl.platform.base.biz.account.model.vo.SelectorSupplierVO;
 import com.newzkl.platform.base.biz.account.model.vo.SelectorVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,7 +83,7 @@ public class AdapterController {
      * @return 渠道商详情
      */
     @GetMapping("/channel/channelForAdmin")
-    public ScmResult<ChannelVO> channelForAdmin(@RequestParam("id") Long id) {
+    public PlatformResult<ChannelVO> channelForAdmin(@RequestParam("id") Long id) {
         return channelController.channel(id);
     }
 
@@ -94,9 +94,9 @@ public class AdapterController {
      * @return 成功结果
      */
     @PostMapping("/selector/submitNameAuthInfo")
-    public ScmResult<Void> submitNameAuthInfo(@RequestBody NameAuthVO nameAuthVO) {
+    public PlatformResult<Void> submitNameAuthInfo(@RequestBody NameAuthVO nameAuthVO) {
         accountService.submitNameAuthInfo(nameAuthVO);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -108,9 +108,9 @@ public class AdapterController {
      * @return 供应商分页
      */
     @PostMapping("/selector/selectorSupplierPageVO")
-    public ScmResult<Page<SelectorSupplierVO>> selectorSupplierPageVO(@RequestBody SupplierQuery supplierQuery) {
+    public PlatformResult<Page<SelectorSupplierVO>> selectorSupplierPageVO(@RequestBody SupplierQuery supplierQuery) {
         supplierQuery.setInviteId(SecurityUtils.getAccountId());
-        return ScmResult.success(userQueryService.selectorSupplierVO(supplierQuery));
+        return PlatformResult.success(userQueryService.selectorSupplierVO(supplierQuery));
     }
 
     /**
@@ -123,7 +123,7 @@ public class AdapterController {
      * @return 用户统计 (含分组)
      */
     @PostMapping("/count/groupCount")
-    public ScmResult<UserCountRes> indexCount(@RequestBody TimeQuery timeQuery) {
+    public PlatformResult<UserCountRes> indexCount(@RequestBody TimeQuery timeQuery) {
         UserCountRes source = userQueryService.userCount();
         UserCountRes result = new UserCountRes();
         if (source != null) {
@@ -135,7 +135,7 @@ public class AdapterController {
             result.setOperatorCount(source.getOperatorCount());
         }
         result.setGroupCountRes(userQueryService.groupCount(timeQuery));
-        return ScmResult.success(result);
+        return PlatformResult.success(result);
     }
 
     /**
@@ -144,8 +144,8 @@ public class AdapterController {
      * @return 用户统计
      */
     @PostMapping("/count/userCount")
-    public ScmResult<UserCountRes> userCount() {
-        return ScmResult.success(userQueryService.userCount());
+    public PlatformResult<UserCountRes> userCount() {
+        return PlatformResult.success(userQueryService.userCount());
     }
 
     /**
@@ -157,19 +157,19 @@ public class AdapterController {
      * @return 对应身份详情
      */
     @PostMapping("/count/userAccount")
-    public ScmResult<?> userAccount(@RequestBody CountCmd.UserAccount userAccount) {
+    public PlatformResult<?> userAccount(@RequestBody CountCmd.UserAccount userAccount) {
         Long roleId = userAccount.getRoleId();
         Long accountId = userAccount.getAccountId();
         if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
-            return ScmResult.success(userQueryService.supplierVO(accountId));
+            return PlatformResult.success(userQueryService.supplierVO(accountId));
         } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(roleId)) {
-            return ScmResult.success(userQueryService.dealerVO(accountId));
+            return PlatformResult.success(userQueryService.dealerVO(accountId));
         } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
-            return ScmResult.success(channelClientDomain.channel(accountId));
+            return PlatformResult.success(channelClientDomain.channel(accountId));
         } else if (RoleEnum.CompanyRole.SELECTOR.getCode().equals(roleId)) {
-            return ScmResult.success(userQueryService.selectorVO(accountId));
+            return PlatformResult.success(userQueryService.selectorVO(accountId));
         } else {
-            throw new ScmException(BaseErrorCode.PARAM, "角色");
+            throw new PlatformException(BaseErrorCode.PARAM, "角色");
         }
     }
 
@@ -183,10 +183,10 @@ public class AdapterController {
      * @return 供应商列表, 无数据返回空集合
      */
     @PostMapping("/count/supplierPage")
-    public ScmResult<List<SupplierRes>> supplierPage(@RequestBody CountCmd.SupplierPage supplierPage) {
+    public PlatformResult<List<SupplierRes>> supplierPage(@RequestBody CountCmd.SupplierPage supplierPage) {
         SupplierQuery supplierQuery = new SupplierQuery();
         supplierQuery.setInviteId(supplierPage.getInviteId());
-        return ScmResult.success(records(supplierClientDomain.supplierPage(supplierQuery)));
+        return PlatformResult.success(records(supplierClientDomain.supplierPage(supplierQuery)));
     }
 
     /**
@@ -198,10 +198,10 @@ public class AdapterController {
      * @return 渠道商列表, 无数据返回空集合
      */
     @PostMapping("/count/channelPage")
-    public ScmResult<List<ChannelVO>> channelPage(@RequestBody CountCmd.ChannelPage channelPage) {
+    public PlatformResult<List<ChannelVO>> channelPage(@RequestBody CountCmd.ChannelPage channelPage) {
         ChannelQuery channelQuery = new ChannelQuery();
         channelQuery.setInvitedId(channelPage.getInviteId());
-        return ScmResult.success(records(channelClientDomain.channelPageList(channelQuery)));
+        return PlatformResult.success(records(channelClientDomain.channelPageList(channelQuery)));
     }
 
     /**
@@ -211,10 +211,10 @@ public class AdapterController {
      * @return 甄选师列表, 无数据返回空集合
      */
     @PostMapping("/count/selectorPage")
-    public ScmResult<List<SelectorVO>> selectorPage(@RequestBody CountCmd.SelectorPage selectorPage) {
+    public PlatformResult<List<SelectorVO>> selectorPage(@RequestBody CountCmd.SelectorPage selectorPage) {
         SelectorQuery selectorQuery = new SelectorQuery();
         selectorQuery.setInviteId(selectorPage.getInviteId());
-        return ScmResult.success(records(userQueryService.selectorPage(selectorQuery)));
+        return PlatformResult.success(records(userQueryService.selectorPage(selectorQuery)));
     }
 
     /**
@@ -224,10 +224,10 @@ public class AdapterController {
      * @return 交易师列表, 无数据返回空集合
      */
     @PostMapping("/count/dealerPage")
-    public ScmResult<List<DealerVO>> dealerPage(@RequestBody CountCmd.DealerPage dealerPage) {
+    public PlatformResult<List<DealerVO>> dealerPage(@RequestBody CountCmd.DealerPage dealerPage) {
         DealerQuery dealerQuery = new DealerQuery();
         dealerQuery.setOperatorId(dealerPage.getInviteId());
-        return ScmResult.success(records(userQueryService.dealerPage(dealerQuery)));
+        return PlatformResult.success(records(userQueryService.dealerPage(dealerQuery)));
     }
 
     /**
@@ -239,14 +239,14 @@ public class AdapterController {
      * @return 账号对外详情
      */
     @PostMapping("/count/accountDetail")
-    public ScmResult<AccountOutRes> accountDetail(@RequestBody CountCmd.ID id) {
+    public PlatformResult<AccountOutRes> accountDetail(@RequestBody CountCmd.ID id) {
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setId(id.getAccountId());
         AccountInfo accountInfo = accountDomain.accountInfo(accountQuery);
         if (accountInfo == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "账号");
+            throw new PlatformException(BaseErrorCode.NODATA, "账号");
         }
-        return ScmResult.success(userQueryService.accountOutVO(accountInfo.getClient(), accountInfo.getId()));
+        return PlatformResult.success(userQueryService.accountOutVO(accountInfo.getClient(), accountInfo.getId()));
     }
 
     /**

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 本地消息扫描发送 / 失败重发定时任务。
  *
- * <p>移植自 adopt-chicken {@code LocalMessageJob}; 基于 Base core-rocketmq {@link MQUtil} 重发。</p>
+ * <p>移植自模板 {@code LocalMessageJob}; 基于 Base core-rocketmq {@link MQUtil} 重发。</p>
  *
  * @author fang
  */

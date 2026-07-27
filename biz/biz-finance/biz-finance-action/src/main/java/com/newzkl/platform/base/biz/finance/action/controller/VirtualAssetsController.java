@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.finance.model.virtual.query.VirtualAssetsRec
 import com.newzkl.platform.base.biz.finance.model.virtual.res.VirtualAssetsRecordRes;
 import com.newzkl.platform.base.biz.finance.model.virtual.res.VirtualAssetsRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,14 +42,14 @@ public class VirtualAssetsController {
      * @return 虚拟资产列表
      */
     @PostMapping("/queryVirtualAssets")
-    public ScmResult<List<VirtualAssetsRes>> queryVirtualAssets(@RequestBody VirtualAssetsQuery query) {
+    public PlatformResult<List<VirtualAssetsRes>> queryVirtualAssets(@RequestBody VirtualAssetsQuery query) {
         if (query.getAccountId() == null) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
         if (query.getAccountType() == null) {
             query.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRoleId()));
         }
-        return ScmResult.success(virtualAssetsDomain.queryVirtualAssets(query));
+        return PlatformResult.success(virtualAssetsDomain.queryVirtualAssets(query));
     }
 
     /**
@@ -61,7 +61,7 @@ public class VirtualAssetsController {
      * @return 变动记录列表
      */
     @PostMapping("/queryVirtualAssetsRecord")
-    public ScmResult<List<VirtualAssetsRecordRes>> queryVirtualAssetsRecord(
+    public PlatformResult<List<VirtualAssetsRecordRes>> queryVirtualAssetsRecord(
             @RequestBody VirtualAssetsRecordQuery query) {
         if (query.getAccountId() == null) {
             query.setAccountId(SecurityUtils.getAccountId());
@@ -69,6 +69,6 @@ public class VirtualAssetsController {
         if (query.getAccountType() == null) {
             query.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRoleId()));
         }
-        return ScmResult.success(virtualAssetsDomain.queryVirtualAssetsRecord(query));
+        return PlatformResult.success(virtualAssetsDomain.queryVirtualAssetsRecord(query));
     }
 }

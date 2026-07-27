@@ -8,7 +8,7 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.DealerRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.OperatorRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.SelectorRepository;
@@ -76,7 +76,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Transactional(rollbackFor = Exception.class)
     public OperatorVO operatorProxySave(OperatorProxySaveReq operatorProxySaveReq, Long accountId) {
         if (accountId == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
 
         OperatorVO operatorVO = new OperatorVO();
@@ -89,7 +89,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Override
     public OperatorVO operatorCustomSave(OperatorCustomSaveReq operatorEditReq, Long accountId) {
         if (accountId == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
 
         OperatorProxySaveReq operatorProxySaveReq = TransferUtils.transfer(operatorEditReq, OperatorProxySaveReq::new);
@@ -106,7 +106,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     public boolean doOperatorCheck(OperatorVO operator) {
         OperatorEnum.Type type = operator.getType();
         if (type == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "类型错误");
+            throw new PlatformException(BaseErrorCode.PARAM, "类型错误");
         }
 
         Long operatorId = operator.getId();
@@ -118,7 +118,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
             // 若现数据库的类型为非机构, 且修改类型不为自身, 则拒绝
             OperatorEnum.Type dbType = oldVO.getType();
             if (OperatorEnum.Type.ORGANIZE != dbType && type != dbType) {
-                throw new ScmException(BaseErrorCode.EXECUTE, "新增或更新失败: 区域|行业|品牌不允许修改为其他类型");
+                throw new PlatformException(BaseErrorCode.EXECUTE, "新增或更新失败: 区域|行业|品牌不允许修改为其他类型");
             }
         }
 
@@ -136,7 +136,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
             }
             Long operatorCountByQuery = operatorRepository.count(operatorQuery);
             if (operatorCountByQuery > 0) {
-                throw new ScmException(BaseErrorCode.PARAM, "该" + type.getValue() + "已存在运营商");
+                throw new PlatformException(BaseErrorCode.PARAM, "该" + type.getValue() + "已存在运营商");
             }
         }
 
@@ -146,7 +146,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
             domain = domain.toLowerCase();
             OperatorConfigVO operatorConfigVO = operatorRepository.getOperatorConfig();
             if (operatorConfigVO == null) {
-                throw new ScmException(BaseErrorCode.SERVER, "运营商域名配置异常");
+                throw new PlatformException(BaseErrorCode.SERVER, "运营商域名配置异常");
             }
             String baseDomain = operatorConfigVO.getBaseDomain();
             if (!StrUtil.endWith(domain, baseDomain)) {
@@ -160,7 +160,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
                 operatorQuery.setDomain(domain);
                 Long operatorCountByQuery = operatorRepository.count(operatorQuery);
                 if (operatorCountByQuery > 0) {
-                    throw new ScmException(BaseErrorCode.PARAM, "域名错误，运营商已存在");
+                    throw new PlatformException(BaseErrorCode.PARAM, "域名错误，运营商已存在");
                 }
             }
         }
@@ -172,7 +172,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long dealerCustomSave(DealerCustomSaveReq dealerEditReq, boolean isRegisterOnce) {
         if (dealerEditReq.getId() == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         if (isRegisterOnce) {
             dealerRepository.dealerDelete(Collections.singletonList(dealerEditReq.getId()));
@@ -214,7 +214,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Transactional(rollbackFor = Exception.class)
     public DealerVO dealerProxySave(DealerProxySaveReq dealerRegisterCommand, Long inviteAccountId, Long accountId, boolean isRegisterOnce) {
         if (accountId == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         DealerVO item = TransferUtils.transfer(dealerRegisterCommand, DealerVO::new, (c, v) -> {
             v.setId(accountId);
@@ -230,7 +230,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long selectorCustomSave(SelectorCustomSaveReq req, boolean isRegisterOnce) {
         if (req.getId() == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         if (isRegisterOnce) {
             selectorRepository.selectorDelete(Collections.singletonList(req.getId()));
@@ -248,7 +248,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Override
     public Long selectorSave(SelectorVO selector) {
         if (selector.getId() == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         selector.setState(RoleEnum.State.IN);
         selector.setName(StrUtil.isEmpty(selector.getName()) ? selector.getUsername() : selector.getName());
@@ -322,7 +322,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Override
     public SelectorVO selectorProxySave(SelectorProxySaveReq selectorProxySaveReq, Long inviteAccountId, Long accountId) {
         if (accountId == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         SelectorVO item = TransferUtils.transfer(selectorProxySaveReq, SelectorVO::new, (c, v) -> {
             v.setId(accountId);

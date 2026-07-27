@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTabl
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class WorkTableWorkflowServiceImpl implements WorkTableWorkflowService {
             } else if (SpuEnum.OperateType.DELETE.getCode().equals(messageData.getOperateType())) {
                 worktableFactory.getPolicy(messageData.getOperateTarget()).delete(messageData.getSpuEditInfoJson(), messageData.getSkuSalePriceJson());
             } else {
-                throw new ScmException(BaseErrorCode.PARAM);
+                throw new PlatformException(BaseErrorCode.PARAM);
             }
         }
     }

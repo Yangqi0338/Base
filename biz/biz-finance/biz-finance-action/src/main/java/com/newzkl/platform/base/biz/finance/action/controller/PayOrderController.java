@@ -10,10 +10,10 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.RechargeOrderInfo;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,11 +56,11 @@ public class PayOrderController {
      * @return 汇付支付结果
      */
     @PostMapping("/channelRecharge/{amount}/{payMethod}")
-    public ScmResult<HuiFuPayRes> channelRecharge(@PathVariable("amount") Integer amount,
+    public PlatformResult<HuiFuPayRes> channelRecharge(@PathVariable("amount") Integer amount,
                                                   @PathVariable("payMethod") Integer payMethod) {
         ChannelConfigVO channelConfig = accountPurseConfigDomain.defaultChannelConfig();
         if (channelConfig.getMinimumWithdrawalAmount() > amount) {
-            throw new ScmException(FinanceErrorCode.LESS_THAN_MINIMUM_RECHARGE_AMOUNT);
+            throw new PlatformException(FinanceErrorCode.LESS_THAN_MINIMUM_RECHARGE_AMOUNT);
         }
 
         RechargeOrderInfo orderInfo = new RechargeOrderInfo();
@@ -69,7 +69,7 @@ public class PayOrderController {
         OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.RECHARGE, amount, payMethod);
         req.setOrderInfo(JSONUtil.toJsonStr(orderInfo));
         req.setGoodsInfo(CHANNEL_RECHARGE);
-        return ScmResult.success(cashPayService.orderPay(req));
+        return PlatformResult.success(cashPayService.orderPay(req));
     }
 
     /**
@@ -80,12 +80,12 @@ public class PayOrderController {
      * @return 汇付支付结果
      */
     @PostMapping("/supplierRecharge/{rechargeAmount}/{payType}")
-    public ScmResult<HuiFuPayRes> supplierRecharge(@PathVariable("rechargeAmount") Integer rechargeAmount,
+    public PlatformResult<HuiFuPayRes> supplierRecharge(@PathVariable("rechargeAmount") Integer rechargeAmount,
                                                    @PathVariable("payType") Integer payType) {
         OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE, rechargeAmount, payType);
         req.setOrderInfo(String.valueOf(rechargeAmount));
         req.setGoodsInfo(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE.getInfo());
-        return ScmResult.success(cashPayService.orderPay(req));
+        return PlatformResult.success(cashPayService.orderPay(req));
     }
 
     /**

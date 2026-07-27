@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.SupplierEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.SupplierAssembler;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long supplierCustomSave(SupplierCustomSaveReq req) {
         if (req.getId() == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "账号ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         SupplierVO item = TransferUtils.transfer(req, SupplierVO::new, (c, v) -> {
             v.setGoodsDealCount(0);
@@ -100,7 +100,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         //从companyInfo取出行业ID并赋值
         JSONObject jsonObject = JSONObject.parseObject(companyInfo);
         if (jsonObject == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "companyInfo不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "companyInfo不能为空");
         }
         String manageIndustryIdListString = jsonObject.getString("manageIndustryIdList");
         List<String> manageIndustryIdList = JSONUtil.toList(manageIndustryIdListString, String.class);
@@ -110,7 +110,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         supplier.setId(accountVO.getId());
         supplier.setName(jsonObject.getString("companyName"));
 //        supplier.setCompanyAreaCode(StrUtil.toString(CollUtil.getLast(companyAreaCode)));
-        supplier.setIndustryIdList(ScmUtil.stringListToString(manageIndustryIdList));
+        supplier.setIndustryIdList(BizUtil.stringListToString(manageIndustryIdList));
         supplier.setState(SupplierEnum.State.NORMAL);
         supplier.setAuditState(AuditEnum.State.SUCCESS);
         supplier.setCompanyInfo(companyInfo);
@@ -147,7 +147,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 //        //修改供应商
 //        SupplierRes supplier = new SupplierRes();
 //        if (promiseFlowVO.getAccountId() == null) {
-//            throw new ScmException(BaseErrorCode.PARAM, "account_id");
+//            throw new PlatformException(BaseErrorCode.PARAM, "account_id");
 //        }
 //        supplier.setId(promiseFlowVO.getAccountId());
 //        supplier.setState(2);

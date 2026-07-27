@@ -12,8 +12,8 @@ import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
 import com.newzkl.platform.base.biz.account.model.cdk.vo.CdkVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -33,7 +33,7 @@ import java.util.Set;
  * 开通码领域服务实现。
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.ICdkDomainImpl}。
- * 旧 {@code ThrowsException.exception(...)} 一律换为 {@link ScmException};
+ * 旧 {@code ThrowsException.exception(...)} 一律换为 {@link PlatformException};
  * 旧 {@code CommonEnum.Switch} 在中台通用层为 {@code CommonEnum.YesOrNo} (码值 0/1 一致)。</p>
  *
  * @author KC
@@ -103,7 +103,7 @@ public class CdkDomainImpl implements CdkDomain {
     @Transactional(rollbackFor = Exception.class)
     public List<String> randomCreateCdk(Long belowId, Integer number, Integer systemType) {
         if (number == null || number > MAX_CREATE_COUNT) {
-            throw new ScmException(BaseErrorCode.PARAM, "一次最多生成" + MAX_CREATE_COUNT + "个");
+            throw new PlatformException(BaseErrorCode.PARAM, "一次最多生成" + MAX_CREATE_COUNT + "个");
         }
         Set<String> valueSet = new HashSet<>();
         createCdkValue(valueSet, systemType, number);
@@ -164,7 +164,7 @@ public class CdkDomainImpl implements CdkDomain {
                 cdkEdit.setChannelId(command.getToUserId());
                 cdkEdit.setToChannelTime(LocalDateTime.now());
             } else {
-                throw new ScmException(BaseErrorCode.PARAM, "被分配人角色");
+                throw new PlatformException(BaseErrorCode.PARAM, "被分配人角色");
             }
         } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(fromRole)) {
             if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(toRole)) {
@@ -173,10 +173,10 @@ public class CdkDomainImpl implements CdkDomain {
                 cdkEdit.setChannelId(command.getToUserId());
                 cdkEdit.setToChannelTime(LocalDateTime.now());
             } else {
-                throw new ScmException(BaseErrorCode.PARAM, "被分配人角色");
+                throw new PlatformException(BaseErrorCode.PARAM, "被分配人角色");
             }
         } else {
-            throw new ScmException(BaseErrorCode.PARAM, "分配人角色");
+            throw new PlatformException(BaseErrorCode.PARAM, "分配人角色");
         }
         return cdkRepository.editForToCdk(cdkEdit, command.getCdkIdList());
     }
@@ -186,11 +186,11 @@ public class CdkDomainImpl implements CdkDomain {
     public void cdkStateEdit(Long id, Integer useState) {
         CdkVO cdk = cdkRepository.detail(id);
         if (cdk == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "开通码");
+            throw new PlatformException(BaseErrorCode.NODATA, "开通码");
         }
         if (CommonEnum.YesOrNo.NO.getCode().equals(useState)
                 && CommonEnum.YesOrNo.NO.getCode().equals(cdk.getUseType())) {
-            throw new ScmException(BaseErrorCode.PARAM, "用户已使用的兑换,不能修改为未使用");
+            throw new PlatformException(BaseErrorCode.PARAM, "用户已使用的兑换,不能修改为未使用");
         }
         CdkVO cdkEdit = new CdkVO();
         cdkEdit.setId(id);
@@ -214,7 +214,7 @@ public class CdkDomainImpl implements CdkDomain {
         if (!valueSet.isEmpty()) {
             log.warn("createCdkValue : 发生递归");
         }
-        Set<String> candidates = ScmUtil.generateDiffCode(CDK_VALUE_LENGTH, number - valueSet.size());
+        Set<String> candidates = BizUtil.generateDiffCode(CDK_VALUE_LENGTH, number - valueSet.size());
         Set<String> existValue = cdkRepository.existValue(systemType, candidates);
         if (CollUtil.isNotEmpty(existValue)) {
             candidates.removeAll(existValue);

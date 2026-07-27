@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.goods.domain.video.adapt.repository.ShortVid
 import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -55,7 +55,7 @@ class ShortVideoDomainImplTest {
         req.setPath("video/a.mp4");
 
         assertThatThrownBy(() -> shortVideoDomain.add(req))
-                .isInstanceOf(ScmException.class)
+                .isInstanceOf(PlatformException.class)
                 .hasMessageContaining("关联的SPU不能为空");
     }
 
@@ -66,7 +66,7 @@ class ShortVideoDomainImplTest {
         req.setPath("video/a.mp4");
 
         assertThatThrownBy(() -> shortVideoDomain.edit(req))
-                .isInstanceOf(ScmException.class)
+                .isInstanceOf(PlatformException.class)
                 .hasMessageContaining("关联的SPU不能为空");
     }
 
@@ -103,7 +103,7 @@ class ShortVideoDomainImplTest {
         when(shortVideoRepository.detail(2L)).thenReturn(null);
 
         assertThatThrownBy(() -> shortVideoDomain.detail(2L))
-                .isInstanceOf(ScmException.class);
+                .isInstanceOf(PlatformException.class);
     }
 
     @Test

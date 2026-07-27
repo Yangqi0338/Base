@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneAdd
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZonePageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.goodsZone.GoodsZoneRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,13 +54,13 @@ public class GoodsZoneDomainServiceImpl implements GoodsZoneDomainService {
     public GoodsZoneRes edit(GoodsZoneAddReq addReq) {
         // 1. 校验ID
         if (addReq.getId() == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "编辑失败：分组ID不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "编辑失败：分组ID不能为空");
         }
 
         // 2. 查询分组是否存在
         Optional<GoodsZone> zoneOpt = goodsZoneRepository.findById(addReq.getId());
         if (!zoneOpt.isPresent()) {
-            throw new ScmException(BaseErrorCode.NODATA, "编辑失败：分组不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "编辑失败：分组不存在");
         }
 
         // 3. 校验名称唯一性
@@ -83,7 +83,7 @@ public class GoodsZoneDomainServiceImpl implements GoodsZoneDomainService {
         // 1. 校验分组存在
         Optional<GoodsZone> zoneOpt = goodsZoneRepository.findById(id);
         if (!zoneOpt.isPresent()) {
-            throw new ScmException(BaseErrorCode.NODATA, "启用失败：分组不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "启用失败：分组不存在");
         }
 
         // 2. 更新状态
@@ -98,7 +98,7 @@ public class GoodsZoneDomainServiceImpl implements GoodsZoneDomainService {
         // 1. 校验分组存在
         Optional<GoodsZone> zoneOpt = goodsZoneRepository.findById(id);
         if (!zoneOpt.isPresent()) {
-            throw new ScmException(BaseErrorCode.NODATA, "禁用失败：分组不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "禁用失败：分组不存在");
         }
 
         // 2. 更新状态
@@ -111,7 +111,7 @@ public class GoodsZoneDomainServiceImpl implements GoodsZoneDomainService {
     public GoodsZoneRes getById(Long id) {
         Optional<GoodsZone> zoneOpt = goodsZoneRepository.findById(id);
         if (!zoneOpt.isPresent()) {
-            throw new ScmException(BaseErrorCode.NODATA, "查询失败：分组不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "查询失败：分组不存在");
         }
         return GoodsZoneConvertUtil.convertToVO(zoneOpt.get());
     }
@@ -139,7 +139,7 @@ public class GoodsZoneDomainServiceImpl implements GoodsZoneDomainService {
         // 1. 校验分组存在
         Optional<GoodsZone> zoneOpt = goodsZoneRepository.findById(id);
         if (!zoneOpt.isPresent()) {
-            throw new ScmException(BaseErrorCode.NODATA, "删除失败：分组不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "删除失败：分组不存在");
         }
 
         // 2. 删除分组
@@ -158,7 +158,7 @@ public class GoodsZoneDomainServiceImpl implements GoodsZoneDomainService {
             return;
         }
         if (goodsZoneRepository.existsByName(groupName, excludeId)) {
-            throw new ScmException(BaseErrorCode.EXIST_DATA, "分组名称已存在");
+            throw new PlatformException(BaseErrorCode.EXIST_DATA, "分组名称已存在");
         }
     }
 }

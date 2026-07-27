@@ -70,7 +70,7 @@ common/
 - 入口 starter（building-scm/building-mmt）聚合各 biz-action，不再自写 controller。
 - 无源 REST 的服务域（如 order，事件驱动）：action 建空壳模块（未来扩展位），**不臆造 controller**。
 - 鉴权注解 `@RoleLimit`(per-biz model，依赖 RoleEnum) / `@Limit`+`FuncCons`(ddd-action 全局) 为惰性标记，`TODO[auth-defer]`——拦截切面待入口 starter 鉴权基建接入。
-- 语义迁移：`SecurityUtils.getRole()`→`getRoleId()`；`PageInfo`→`IPage/Page` 直返（响应壳变，前端契约注意）；`ScmException` 三参(含 boolean)→两参。
+- 语义迁移：`SecurityUtils.getRole()`→`getRoleId()`；`PageInfo`→`IPage/Page` 直返（响应壳变，前端契约注意）；`PlatformException` 三参(含 boolean)→两参。
 
 **infra 布局硬规则**：
 - DO 目录名固定 `entity/`，**禁止 `po/`**。

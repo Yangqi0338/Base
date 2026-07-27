@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +38,8 @@ public class ChannelController {
      * @return 渠道商 ID
      */
     @PostMapping("channelCustomSave")
-    public ScmResult<Long> channelCustomSave(@Validated @RequestBody ChannelCustomSaveReq customSaveReq) {
-        return ScmResult.success(channelClientDomain.channelCustomSave(customSaveReq));
+    public PlatformResult<Long> channelCustomSave(@Validated @RequestBody ChannelCustomSaveReq customSaveReq) {
+        return PlatformResult.success(channelClientDomain.channelCustomSave(customSaveReq));
     }
 
     /**
@@ -49,8 +49,8 @@ public class ChannelController {
      * @return 修改数量
      */
     @PostMapping("channelEdit")
-    public ScmResult<Integer> channelEdit(@Validated @RequestBody ChannelReq channelReq) {
-        return ScmResult.success(channelClientDomain.channelEdit(channelReq));
+    public PlatformResult<Integer> channelEdit(@Validated @RequestBody ChannelReq channelReq) {
+        return PlatformResult.success(channelClientDomain.channelEdit(channelReq));
     }
 
     /**
@@ -60,9 +60,9 @@ public class ChannelController {
      * @return 成功结果
      */
     @PostMapping("channelEditColumn")
-    public ScmResult<Void> channelEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
+    public PlatformResult<Void> channelEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
         channelClientDomain.channelEdit(cmd.getEditColumnList(), cmd.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -72,8 +72,8 @@ public class ChannelController {
      * @return 删除数量
      */
     @PostMapping("channelDelete")
-    public ScmResult<Integer> channelDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return ScmResult.success(channelClientDomain.channelDelete(idListObj.getIdList()));
+    public PlatformResult<Integer> channelDelete(@Validated @RequestBody IdListCommand idListObj) {
+        return PlatformResult.success(channelClientDomain.channelDelete(idListObj.getIdList()));
     }
 
     /**
@@ -83,11 +83,11 @@ public class ChannelController {
      * @return 渠道商 VO
      */
     @PostMapping("channel")
-    public ScmResult<ChannelVO> channel(@RequestParam(value = "id", required = false) Long channelId) {
+    public PlatformResult<ChannelVO> channel(@RequestParam(value = "id", required = false) Long channelId) {
         if (channelId == null) {
             channelId = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(channelClientDomain.channel(channelId));
+        return PlatformResult.success(channelClientDomain.channel(channelId));
     }
 
     /**
@@ -97,8 +97,8 @@ public class ChannelController {
      * @return 修改数量
      */
     @PostMapping("updateChannel")
-    public ScmResult<Integer> updateChannel(@Validated @RequestBody ChannelUpdateReq req) {
-        return ScmResult.success(channelClientDomain.updateChannel(req));
+    public PlatformResult<Integer> updateChannel(@Validated @RequestBody ChannelUpdateReq req) {
+        return PlatformResult.success(channelClientDomain.updateChannel(req));
     }
 
     /**
@@ -108,7 +108,7 @@ public class ChannelController {
      * @return 渠道商分页
      */
     @PostMapping("channelPageList")
-    public ScmResult<Page<ChannelVO>> channelPageList(@RequestBody ChannelQuery channelQuery) {
-        return ScmResult.success(channelClientDomain.channelPageList(channelQuery));
+    public PlatformResult<Page<ChannelVO>> channelPageList(@RequestBody ChannelQuery channelQuery) {
+        return PlatformResult.success(channelClientDomain.channelPageList(channelQuery));
     }
 }

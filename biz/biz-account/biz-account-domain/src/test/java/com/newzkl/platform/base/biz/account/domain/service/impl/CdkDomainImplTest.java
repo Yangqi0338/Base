@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
 import com.newzkl.platform.base.biz.account.model.cdk.vo.CdkVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import org.junit.jupiter.api.BeforeEach;
@@ -136,7 +136,7 @@ class CdkDomainImplTest {
     @Test
     @DisplayName("随机生成: 超过 1000 个抛参数异常")
     void randomCreateCdkShouldRejectOverLimit() {
-        ScmException ex = assertThrows(ScmException.class,
+        PlatformException ex = assertThrows(PlatformException.class,
                 () -> cdkDomain.randomCreateCdk(OPERATOR_ID, 1001, SYSTEM_TYPE));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
@@ -242,7 +242,7 @@ class CdkDomainImplTest {
         command.setFromRole(RoleEnum.CompanyRole.DEALER.getCode());
         command.setToRole(RoleEnum.CompanyRole.DEALER.getCode());
 
-        ScmException ex = assertThrows(ScmException.class, () -> cdkDomain.toCdk(command));
+        PlatformException ex = assertThrows(PlatformException.class, () -> cdkDomain.toCdk(command));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
         verify(cdkRepository, never()).editForToCdk(any(), any());
@@ -255,7 +255,7 @@ class CdkDomainImplTest {
         command.setFromRole(RoleEnum.CompanyRole.CHANNEL.getCode());
         command.setToRole(RoleEnum.CompanyRole.CHANNEL.getCode());
 
-        ScmException ex = assertThrows(ScmException.class, () -> cdkDomain.toCdk(command));
+        PlatformException ex = assertThrows(PlatformException.class, () -> cdkDomain.toCdk(command));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
     }
@@ -268,7 +268,7 @@ class CdkDomainImplTest {
         cdk.setUseType(0);
         when(cdkRepository.detail(1L)).thenReturn(cdk);
 
-        ScmException ex = assertThrows(ScmException.class, () -> cdkDomain.cdkStateEdit(1L, 0));
+        PlatformException ex = assertThrows(PlatformException.class, () -> cdkDomain.cdkStateEdit(1L, 0));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
         verify(cdkRepository, never()).edit(any());
@@ -295,7 +295,7 @@ class CdkDomainImplTest {
     void cdkStateEditShouldRejectAbsent() {
         when(cdkRepository.detail(1L)).thenReturn(null);
 
-        ScmException ex = assertThrows(ScmException.class, () -> cdkDomain.cdkStateEdit(1L, 1));
+        PlatformException ex = assertThrows(PlatformException.class, () -> cdkDomain.cdkStateEdit(1L, 1));
 
         assertTrue(ex.equalsCode(BaseErrorCode.NODATA));
     }

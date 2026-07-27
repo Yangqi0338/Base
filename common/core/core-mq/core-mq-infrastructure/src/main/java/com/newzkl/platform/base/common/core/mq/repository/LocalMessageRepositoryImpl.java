@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 本地消息仓储实现。
  *
- * <p>移植自 adopt-chicken {@code LocalMessageRepositoryImpl}; 用 hutool BeanUtil 完成 DTO&lt;-&gt;DO 转换。</p>
+ * <p>移植自模板 {@code LocalMessageRepositoryImpl}; 用 hutool BeanUtil 完成 DTO&lt;-&gt;DO 转换。</p>
  *
  * @author sample
  */

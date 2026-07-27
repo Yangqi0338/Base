@@ -20,6 +20,7 @@
     <!-- M1: user(试点). 后续 sys/finance/order/goods; M2+ market/inventory/media/content/course/store/activity/social-bang/notify -->
     <modules>
         <module>biz-account</module>
+        <module>biz-auth</module>
         <module>biz-user</module>
         <module>biz-sys</module>
         <module>biz-finance</module>

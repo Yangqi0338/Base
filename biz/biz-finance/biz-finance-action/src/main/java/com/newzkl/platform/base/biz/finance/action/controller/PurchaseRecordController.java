@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,8 +44,8 @@ public class PurchaseRecordController {
      */
     @Deprecated
     @GetMapping("/{id}")
-    public ScmResult<PurchaseRecordVO> detail(@PathVariable Long id) {
-        return ScmResult.success(purchaseRecordDomain.detail(id));
+    public PlatformResult<PurchaseRecordVO> detail(@PathVariable Long id) {
+        return PlatformResult.success(purchaseRecordDomain.detail(id));
     }
 
     /**
@@ -59,8 +59,8 @@ public class PurchaseRecordController {
      */
     @Deprecated
     @PostMapping("/add")
-    public ScmResult<Long> add(@Validated @RequestBody PurchaseRecordReq saveCommand) {
-        return ScmResult.success(purchaseRecordDomain.add(saveCommand));
+    public PlatformResult<Long> add(@Validated @RequestBody PurchaseRecordReq saveCommand) {
+        return PlatformResult.success(purchaseRecordDomain.add(saveCommand));
     }
 
     /**
@@ -74,9 +74,9 @@ public class PurchaseRecordController {
      */
     @Deprecated
     @PutMapping("/edit")
-    public ScmResult<Void> edit(@Validated @RequestBody PurchaseRecordReq saveCommand) {
+    public PlatformResult<Void> edit(@Validated @RequestBody PurchaseRecordReq saveCommand) {
         purchaseRecordDomain.edit(saveCommand);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -90,9 +90,9 @@ public class PurchaseRecordController {
      */
     @Deprecated
     @DeleteMapping("/del/{id}")
-    public ScmResult<Void> del(@PathVariable Long id) {
+    public PlatformResult<Void> del(@PathVariable Long id) {
         purchaseRecordDomain.del(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -102,11 +102,11 @@ public class PurchaseRecordController {
      * @return 分页列表
      */
     @PostMapping("/queryPage")
-    public ScmResult<List<PurchaseRecordVO>> queryPage(@RequestBody @Valid PurchaseRecordQuery query) {
+    public PlatformResult<List<PurchaseRecordVO>> queryPage(@RequestBody @Valid PurchaseRecordQuery query) {
         Long role = SecurityUtils.getRoleId();
         if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(role)) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(purchaseRecordDomain.queryPage(query));
+        return PlatformResult.success(purchaseRecordDomain.queryPage(query));
     }
 }

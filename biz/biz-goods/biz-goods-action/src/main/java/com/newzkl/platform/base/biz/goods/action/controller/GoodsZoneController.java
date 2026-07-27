@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneAdd
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZonePageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.goodsZone.GoodsZoneRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,10 +37,10 @@ public class GoodsZoneController {
      * @return 分组结果
      */
     @PostMapping("/add")
-    public ScmResult<GoodsZoneRes> add(@Validated @RequestBody GoodsZoneAddReq addReq) {
+    public PlatformResult<GoodsZoneRes> add(@Validated @RequestBody GoodsZoneAddReq addReq) {
         addReq.setOperator(SecurityUtils.getNickName());
         addReq.setCreateId(SecurityUtils.getAccountId());
-        return ScmResult.success(goodsZoneService.add(addReq));
+        return PlatformResult.success(goodsZoneService.add(addReq));
     }
 
     /**
@@ -50,10 +50,10 @@ public class GoodsZoneController {
      * @return 分组结果
      */
     @PostMapping("/edit")
-    public ScmResult<GoodsZoneRes> edit(@Validated @RequestBody GoodsZoneAddReq addReq) {
+    public PlatformResult<GoodsZoneRes> edit(@Validated @RequestBody GoodsZoneAddReq addReq) {
         addReq.setOperator(SecurityUtils.getNickName());
         addReq.setCreateId(SecurityUtils.getAccountId());
-        return ScmResult.success(goodsZoneService.edit(addReq));
+        return PlatformResult.success(goodsZoneService.edit(addReq));
     }
 
     /**
@@ -63,8 +63,8 @@ public class GoodsZoneController {
      * @return 是否成功
      */
     @PostMapping("/enable/{id}")
-    public ScmResult<Boolean> enable(@PathVariable Long id) {
-        return ScmResult.success(goodsZoneService.enable(id, SecurityUtils.getNickName()));
+    public PlatformResult<Boolean> enable(@PathVariable Long id) {
+        return PlatformResult.success(goodsZoneService.enable(id, SecurityUtils.getNickName()));
     }
 
     /**
@@ -74,8 +74,8 @@ public class GoodsZoneController {
      * @return 是否成功
      */
     @PostMapping("/disable/{id}")
-    public ScmResult<Boolean> disable(@PathVariable Long id) {
-        return ScmResult.success(goodsZoneService.disable(id, SecurityUtils.getNickName()));
+    public PlatformResult<Boolean> disable(@PathVariable Long id) {
+        return PlatformResult.success(goodsZoneService.disable(id, SecurityUtils.getNickName()));
     }
 
     /**
@@ -85,8 +85,8 @@ public class GoodsZoneController {
      * @return 分组详情
      */
     @GetMapping("/get/{id}")
-    public ScmResult<GoodsZoneRes> getById(@PathVariable Long id) {
-        return ScmResult.success(goodsZoneService.getById(id));
+    public PlatformResult<GoodsZoneRes> getById(@PathVariable Long id) {
+        return PlatformResult.success(goodsZoneService.getById(id));
     }
 
     /**
@@ -96,8 +96,8 @@ public class GoodsZoneController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public ScmResult<Page<GoodsZoneRes>> pageQuery(@RequestBody GoodsZonePageReq queryReq) {
-        return ScmResult.success(goodsZoneService.pageQuery(queryReq));
+    public PlatformResult<Page<GoodsZoneRes>> pageQuery(@RequestBody GoodsZonePageReq queryReq) {
+        return PlatformResult.success(goodsZoneService.pageQuery(queryReq));
     }
 
     /**
@@ -106,8 +106,8 @@ public class GoodsZoneController {
      * @return 分组列表
      */
     @GetMapping("/listEnabled")
-    public ScmResult<List<GoodsZoneRes>> listAllEnabled() {
-        return ScmResult.success(goodsZoneService.listAllEnabled());
+    public PlatformResult<List<GoodsZoneRes>> listAllEnabled() {
+        return PlatformResult.success(goodsZoneService.listAllEnabled());
     }
 
     /**
@@ -117,7 +117,7 @@ public class GoodsZoneController {
      * @return 是否成功
      */
     @PostMapping("/delete/{id}")
-    public ScmResult<Boolean> deleteById(@PathVariable Long id) {
-        return ScmResult.success(goodsZoneService.deleteById(id));
+    public PlatformResult<Boolean> deleteById(@PathVariable Long id) {
+        return PlatformResult.success(goodsZoneService.deleteById(id));
     }
 }

@@ -16,8 +16,7 @@ import java.util.List;
  */
 public interface MyBatisPlusBaseDao<Model, PK extends Serializable> extends BaseMapper<Model> {
     /*
-     * 实现
-     * @see com.zkl.scm.mybatisPlus.BaseServiceImpl.listIds
+     * 实现见 RepositorySupport#listIds
      * */
     List<PK> idByQuery(@Param("ew") Wrapper<Model> wrapper);
 

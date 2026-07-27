@@ -33,10 +33,10 @@ import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
 import com.newzkl.platform.base.common.core.utils.properties.SysProperties;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -127,7 +127,7 @@ public class SpuDomainImpl implements SpuDomain {
         Long spuId = spuDTO.getId();
         SpuDTO spu = spuRepository.getById(spuDTO.getId());
         if (spu == null || !SpuEnum.State.STORE.getCode().equals(spu.getState())) {
-            throw new ScmException(SpuErrorCode.NOT_EXIST_OR_STATE_ERROR);
+            throw new PlatformException(SpuErrorCode.NOT_EXIST_OR_STATE_ERROR);
         }
 
         // 删除sku
@@ -247,7 +247,7 @@ public class SpuDomainImpl implements SpuDomain {
             // 增加库存
             executeInventoryOperation(skuList, false);
         } else {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
     }
 
@@ -462,7 +462,7 @@ public class SpuDomainImpl implements SpuDomain {
                     : spuRepository.addInventory(sku.getId(), sku.getCount());
             
             if (result == 0) {
-                throw new ScmException(SpuErrorCode.INVENTORY_EXECUTE_ERROR);
+                throw new PlatformException(SpuErrorCode.INVENTORY_EXECUTE_ERROR);
             }
         }
     }
@@ -808,7 +808,7 @@ public class SpuDomainImpl implements SpuDomain {
         // 检查SKU是否都未携带ID
         for (SkuDTO sku : spuDTO.getSkuList()) {
             if (sku.getId() != null && sku.getId() != 0) {
-                throw new ScmException(BaseErrorCode.PARAM, "覆盖更新sku不能携带ID");
+                throw new PlatformException(BaseErrorCode.PARAM, "覆盖更新sku不能携带ID");
             }
         }
 
@@ -907,7 +907,7 @@ public class SpuDomainImpl implements SpuDomain {
 
         Long count = spuCategoryRepository.categoryCount(categoryQuery);
         if (count > 0) {
-            throw new ScmException(BaseErrorCode.EXIST_DATA);
+            throw new PlatformException(BaseErrorCode.EXIST_DATA);
         }
 
         if (categoryReq.getId() == null) {
@@ -919,9 +919,9 @@ public class SpuDomainImpl implements SpuDomain {
                 List<Long> alreadyIdByPid = spuCategoryRepository.categoryPage(countQuery).getRecords()
                         .stream().map(SpuCategoryVO::getId).collect(Collectors.toList());
                 if (alreadyIdByPid.size() > SysProperties.sameCategoryCount) {
-                    throw new ScmException(BaseErrorCode.PARAM, StrUtil.format("同级分类数量不能超过{},请删除一些", SysProperties.sameCategoryCount));
+                    throw new PlatformException(BaseErrorCode.PARAM, StrUtil.format("同级分类数量不能超过{},请删除一些", SysProperties.sameCategoryCount));
                 }
-                categoryReq.setId(ScmUtil.nextCode(categoryReq.getPid(), alreadyIdByPid));
+                categoryReq.setId(BizUtil.nextCode(categoryReq.getPid(), alreadyIdByPid));
             }
             spuCategoryRepository.categorySave(categoryReq);
             return categoryReq.getId();
@@ -938,7 +938,7 @@ public class SpuDomainImpl implements SpuDomain {
         childQuery.setPidList(idList);
         Long childCount = spuCategoryRepository.categoryCount(childQuery);
         if (childCount > 0) {
-            throw new ScmException(BaseErrorCode.PARAM, "存在子分类，请先删除子分类");
+            throw new PlatformException(BaseErrorCode.PARAM, "存在子分类，请先删除子分类");
         }
         spuCategoryRepository.categoryDelete(idList);
     }
@@ -956,7 +956,7 @@ public class SpuDomainImpl implements SpuDomain {
 
     @Override
     public List<SpuCategoryVO> categoryTree(SpuCategoryQuery categoryQuery) {
-        return ScmUtil.listToTree(categoryList(categoryQuery));
+        return BizUtil.listToTree(categoryList(categoryQuery));
     }
 
 }

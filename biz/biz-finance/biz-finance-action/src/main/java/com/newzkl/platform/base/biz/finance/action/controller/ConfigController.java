@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseC
 import com.newzkl.platform.base.biz.finance.model.account.req.BatchQueryConfigChannelQuery;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,11 +32,11 @@ public class ConfigController {
      * @return 渠道商配置列表
      */
     @PostMapping("/batchQueryChannelConfig")
-    public ScmResult<List<BatchQueryConfigChannelRes>> batchQueryChannelConfig(@RequestBody BatchQueryConfigChannelQuery req) {
+    public PlatformResult<List<BatchQueryConfigChannelRes>> batchQueryChannelConfig(@RequestBody BatchQueryConfigChannelQuery req) {
         if (req.getAccountId() != null && req.getAccountId().size() > 0) {
-            return ScmResult.success(accountPurseConfigDomain.batchQueryChannelConfig(req));
+            return PlatformResult.success(accountPurseConfigDomain.batchQueryChannelConfig(req));
         }
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -45,7 +45,7 @@ public class ConfigController {
      * @return 供应商配置
      */
     @PostMapping("/querySupplierConfig")
-    public ScmResult<ConfigSupplierVO> querySupplierConfig() {
-        return ScmResult.success(accountPurseConfigDomain.querySupplierConfig());
+    public PlatformResult<ConfigSupplierVO> querySupplierConfig() {
+        return PlatformResult.success(accountPurseConfigDomain.querySupplierConfig());
     }
 }

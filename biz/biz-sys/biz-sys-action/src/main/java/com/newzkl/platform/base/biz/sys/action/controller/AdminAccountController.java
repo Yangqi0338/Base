@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.sys.model.adminaccount.req.PasswordUpdateReq
 import com.newzkl.platform.base.biz.sys.model.adminaccount.res.AdminAccountRes;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,8 +41,8 @@ public class AdminAccountController {
      * @return 账号 id
      */
     @PostMapping("/createAccount")
-    public ScmResult<Long> createAccount(@Validated @RequestBody AdminAccountReq req) {
-        return ScmResult.success(adminAccountDomain.adminAccountCreate(req));
+    public PlatformResult<Long> createAccount(@Validated @RequestBody AdminAccountReq req) {
+        return PlatformResult.success(adminAccountDomain.adminAccountCreate(req));
     }
 
     /**
@@ -52,9 +52,9 @@ public class AdminAccountController {
      * @return 成功结果
      */
     @PostMapping("/delete")
-    public ScmResult<Void> delete(@Validated @RequestBody IdListCommand req) {
+    public PlatformResult<Void> delete(@Validated @RequestBody IdListCommand req) {
         adminAccountDomain.adminAccountDelete(req.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -64,9 +64,9 @@ public class AdminAccountController {
      * @return 成功结果
      */
     @PostMapping("/update")
-    public ScmResult<Void> update(@Validated(UpdateCommand.class) @RequestBody AdminAccountReq req) {
+    public PlatformResult<Void> update(@Validated(UpdateCommand.class) @RequestBody AdminAccountReq req) {
         adminAccountDomain.adminAccountUpdate(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -76,8 +76,8 @@ public class AdminAccountController {
      * @return 账号视图对象
      */
     @PostMapping("/detail")
-    public ScmResult<AdminAccountRes> detail(@RequestParam("id") Long id) {
-        return ScmResult.success(adminAccountDomain.adminAccountVO(id));
+    public PlatformResult<AdminAccountRes> detail(@RequestParam("id") Long id) {
+        return PlatformResult.success(adminAccountDomain.adminAccountVO(id));
     }
 
     /**
@@ -87,8 +87,8 @@ public class AdminAccountController {
      * @return 账号列表
      */
     @PostMapping("/page")
-    public ScmResult<List<AdminAccountRes>> page(@RequestBody AdminAccountQuery query) {
-        return ScmResult.success(adminAccountDomain.adminAccountList(query));
+    public PlatformResult<List<AdminAccountRes>> page(@RequestBody AdminAccountQuery query) {
+        return PlatformResult.success(adminAccountDomain.adminAccountList(query));
     }
 
     /**
@@ -98,8 +98,8 @@ public class AdminAccountController {
      * @return 成功结果
      */
     @PostMapping("/passwordUpdate")
-    public ScmResult<Void> passwordUpdate(@Validated @RequestBody PasswordUpdateReq req) {
+    public PlatformResult<Void> passwordUpdate(@Validated @RequestBody PasswordUpdateReq req) {
         adminAccountDomain.passwordUpdate(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

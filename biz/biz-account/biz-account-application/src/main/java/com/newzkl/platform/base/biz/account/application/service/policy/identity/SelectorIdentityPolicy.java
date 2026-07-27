@@ -10,7 +10,7 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
@@ -27,7 +27,7 @@ import com.newzkl.platform.base.biz.account.model.vo.SelectorVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -76,17 +76,17 @@ public class SelectorIdentityPolicy extends AbsIdentityPolicy {
         }
         //如果已有供应商角色则不能注册其他角色
         if (CommonUtil.strToLongList(account.getRoleIdList()).contains(RoleEnum.CompanyRole.SUPPLIER.getCode().longValue())) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "该手机号已有供应商角色, 请更换手机号");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "该手机号已有供应商角色, 请更换手机号");
         }
         //获取邀请人信息
         Long inviteAccountId = customSaveReq.getPid();
         AccountVO inviteAccountVO = roleQueryAppService.accountByYqm(customSaveReq.getYqm());
         if (inviteAccountVO != null) {
             if (accountId.equals(inviteAccountVO.getId())) {
-                throw new ScmException(AccountErrorCode.PARAM_YQM);
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
             } else {
                 if (CollUtil.isEmpty(RoleEnumUtil.getOperatorLevelUpEnumList(inviteAccountVO.getRoleIdList()))) {
-                    throw new ScmException(AccountErrorCode.NO_INVITE);
+                    throw new PlatformException(AccountErrorCode.NO_INVITE);
                 } else {
                     inviteAccountId = inviteAccountVO.getId();
                 }
@@ -137,7 +137,7 @@ public class SelectorIdentityPolicy extends AbsIdentityPolicy {
             if (RoleEnum.State.DESTROY.getCode().equals(selectorVO.getState())) {
                 isRegisterOnce = true;
             } else {
-                throw new ScmException(AccountErrorCode.EXIST_ROLE);
+                throw new PlatformException(AccountErrorCode.EXIST_ROLE);
             }
         }
         //获取邀请人信息
@@ -145,10 +145,10 @@ public class SelectorIdentityPolicy extends AbsIdentityPolicy {
         AccountVO inviteAccountVO = roleQueryAppService.accountByYqm(selectorProxySaveReq.getYqm());
         if (inviteAccountVO != null) {
             if (accountId.equals(inviteAccountVO.getId())) {
-                throw new ScmException(AccountErrorCode.PARAM_YQM);
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
             } else {
                 if (CollUtil.isEmpty(RoleEnumUtil.getOperatorLevelUpEnumList(inviteAccountVO.getRoleIdList()))) {
-                    throw new ScmException(AccountErrorCode.NO_INVITE);
+                    throw new PlatformException(AccountErrorCode.NO_INVITE);
                 } else {
                     inviteAccountId = inviteAccountVO.getId();
                 }

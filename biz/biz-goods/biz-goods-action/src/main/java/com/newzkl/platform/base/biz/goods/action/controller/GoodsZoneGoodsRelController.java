@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneGoo
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneGoodsRelDelReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneGoodsRelPageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.goodsZone.GoodsZoneGoodsRelRes;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +38,8 @@ public class GoodsZoneGoodsRelController {
      * @return 是否成功
      */
     @PostMapping("/batchAdd")
-    public ScmResult<Boolean> batchAdd(@Validated @RequestBody GoodsZoneGoodsRelAddReq addReq) {
-        return ScmResult.success(goodsZoneGoodsRelService.batchAdd(addReq));
+    public PlatformResult<Boolean> batchAdd(@Validated @RequestBody GoodsZoneGoodsRelAddReq addReq) {
+        return PlatformResult.success(goodsZoneGoodsRelService.batchAdd(addReq));
     }
 
     /**
@@ -49,8 +49,8 @@ public class GoodsZoneGoodsRelController {
      * @return 是否成功
      */
     @PostMapping("/batchDelete")
-    public ScmResult<Boolean> batchDelete(@Validated @RequestBody GoodsZoneGoodsRelDelReq delReq) {
-        return ScmResult.success(goodsZoneGoodsRelService.batchDelete(delReq));
+    public PlatformResult<Boolean> batchDelete(@Validated @RequestBody GoodsZoneGoodsRelDelReq delReq) {
+        return PlatformResult.success(goodsZoneGoodsRelService.batchDelete(delReq));
     }
 
     /**
@@ -60,8 +60,8 @@ public class GoodsZoneGoodsRelController {
      * @return 商品列表
      */
     @GetMapping("/listByGroupId/{groupId}")
-    public ScmResult<List<GoodsZoneGoodsRelRes>> listByGroupId(@PathVariable Long groupId) {
-        return ScmResult.success(goodsZoneGoodsRelService.listByGroupId(groupId));
+    public PlatformResult<List<GoodsZoneGoodsRelRes>> listByGroupId(@PathVariable Long groupId) {
+        return PlatformResult.success(goodsZoneGoodsRelService.listByGroupId(groupId));
     }
 
     /**
@@ -71,8 +71,8 @@ public class GoodsZoneGoodsRelController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public ScmResult<Page<GoodsZoneGoodsRelRes>> pageQuery(@RequestBody GoodsZoneGoodsRelPageReq queryReq) {
-        return ScmResult.success(goodsZoneGoodsRelService.pageQuery(queryReq));
+    public PlatformResult<Page<GoodsZoneGoodsRelRes>> pageQuery(@RequestBody GoodsZoneGoodsRelPageReq queryReq) {
+        return PlatformResult.success(goodsZoneGoodsRelService.pageQuery(queryReq));
     }
 
     /**
@@ -83,7 +83,7 @@ public class GoodsZoneGoodsRelController {
      * @return 是否已关联
      */
     @GetMapping("/checkExists")
-    public ScmResult<Boolean> checkExists(@RequestParam Long groupId, @RequestParam Long spuId) {
-        return ScmResult.success(goodsZoneGoodsRelService.checkExists(groupId, spuId));
+    public PlatformResult<Boolean> checkExists(@RequestParam Long groupId, @RequestParam Long spuId) {
+        return PlatformResult.success(goodsZoneGoodsRelService.checkExists(groupId, spuId));
     }
 }

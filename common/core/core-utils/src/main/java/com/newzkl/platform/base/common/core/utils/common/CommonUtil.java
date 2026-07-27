@@ -12,7 +12,7 @@ import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -203,7 +203,7 @@ public class CommonUtil {
             return true;
         } else {
             if (throwException) {
-                throw new ScmException(-103, "图片格式只支持:" + ArrayUtil.join(image_accept, ","));
+                throw new PlatformException(-103, "图片格式只支持:" + ArrayUtil.join(image_accept, ","));
             }
             return false;
         }
@@ -494,42 +494,131 @@ public class CommonUtil {
     private static final ConcurrentHashMap<Class<?>, JavaClass> JAVA_CLASS_CACHE = new ConcurrentHashMap<>();
 
     /**
+     * 平台代码包名前缀，仅该前缀下的类走磁盘源码定位。
+     */
+    private static final String PLATFORM_PACKAGE_PREFIX = "com.newzkl.platform";
+
+    /**
+     * Maven 标准源码目录相对片段。
+     */
+    private static final String SRC_MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java";
+
+    /**
+     * 类 → 所在模块源码根目录 缓存，未命中缓存空串。
+     */
+    private static final ConcurrentHashMap<String, String> CLASS_DIR_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * 工程内全部模块源码根目录缓存，首次调用时扫描。
+     */
+    private static volatile List<File> SOURCE_ROOT_CACHE;
+
+    /**
      * 查找某个类在项目的目录位置
+     * @ext 包名 → 目录不是一一映射(如 {@code common.core.mq} 分布在 core-mq-domain / core-mq-infrastructure，
+     * {@code common.core.utils} 落在 core-utils)，故按工程真实模块布局遍历候选源码根，命中源文件者为准
      *
      * @param clazz 目标类
-     * @return 该类所在模块的源代码相对目录路径，无法解析时返回空字符串
+     * @return 该类所在模块的源代码目录路径(到 src/main/java 为止)，无法解析时返回空字符串
      */
     public static String findClassDirPath(Class<?> clazz) {
-        List<String> dirList = StrUtil.split("src.main.java", ".");
-        // 从包名提取模块名
-
-        String packageName = clazz.getPackage().getName();
-        String prefix = "com.zhongze.chicken.";
-
-        if (packageName.startsWith(prefix)) {
-            String remaining = packageName.substring(prefix.length());
-            String[] parts = remaining.split("\\.");
-
-            Object subModuleName = ArrayUtil.get(parts, 1);
-            Object moduleName = ArrayUtil.get(parts, 0);
-            if (ObjectUtil.isEmpty(moduleName)) {
-                System.err.println("无法从类" + clazz.getName() + "中提取模块名，跳过该类");
-                return "";
-            }
-            if (ObjectUtil.isNotEmpty(subModuleName)) {
-                dirList.addFirst(moduleName + "-" + subModuleName.toString());
-            }
-            if (ObjectUtil.isNotEmpty(moduleName)) {
-                dirList.addFirst("adopt-chicken-" + moduleName);
-            }
+        if (clazz == null || clazz.getPackage() == null) {
+            return "";
         }
-
-        if (dirList.size() <= 3) {
-            System.err.println("无法从类" + clazz.getName() + "中提取模块名，跳过该类");
+        String packageName = clazz.getPackage().getName();
+        // 非平台代码(三方 jar)不做磁盘扫描，直接交给 classpath 兜底
+        if (!packageName.startsWith(PLATFORM_PACKAGE_PREFIX)) {
             return "";
         }
 
-        return IgnoreStrJoiner.toStr(File.separator, dirList.toArray(new String[0]));
+        return CLASS_DIR_CACHE.computeIfAbsent(clazz.getName(), key -> {
+            String relativePath = packageName.replace('.', File.separatorChar)
+                    + File.separator + topLevelSimpleName(clazz) + ".java";
+            for (File sourceRoot : listSourceRoots()) {
+                if (new File(sourceRoot, relativePath).isFile()) {
+                    return sourceRoot.getPath();
+                }
+            }
+            System.err.println("无法定位类" + clazz.getName() + "的源码目录，跳过该类");
+            return "";
+        });
+    }
+
+    /**
+     * 取最外层类的简单名(内部类去掉 {@code $Inner} 后缀)，用于匹配磁盘上的 .java 文件名。
+     *
+     * @param clazz 目标类
+     * @return 最外层类简单名
+     */
+    private static String topLevelSimpleName(Class<?> clazz) {
+        String name = StrUtil.subAfter(clazz.getName(), ".", true);
+        return StrUtil.subBefore(name, "$", false);
+    }
+
+    /**
+     * 扫描工程内全部 Maven 模块的 {@code src/main/java} 目录。
+     * @ext 从当前工作目录向上找到聚合工程根(最外层含 pom.xml 的目录)，再沿含 pom.xml 的子目录递归，
+     * 天然适配 biz/biz-xxx/biz-xxx-yyy、common/core/core-xxx、common/core/core-mq/core-mq-yyy 等多级嵌套
+     *
+     * @return 源码根目录列表，找不到工程根时返回空列表
+     */
+    private static List<File> listSourceRoots() {
+        List<File> cached = SOURCE_ROOT_CACHE;
+        if (cached != null) {
+            return cached;
+        }
+        synchronized (CommonUtil.class) {
+            if (SOURCE_ROOT_CACHE != null) {
+                return SOURCE_ROOT_CACHE;
+            }
+            List<File> roots = new ArrayList<>();
+            File projectRoot = findProjectRoot();
+            if (projectRoot != null) {
+                collectSourceRoots(projectRoot, roots);
+            }
+            SOURCE_ROOT_CACHE = roots;
+            return roots;
+        }
+    }
+
+    /**
+     * 从工作目录向上定位聚合工程根目录。
+     *
+     * @return 最外层含 pom.xml 的目录，均不含时返回 null
+     */
+    private static File findProjectRoot() {
+        File current = new File(System.getProperty("user.dir", ".")).getAbsoluteFile();
+        File root = null;
+        while (current != null) {
+            if (new File(current, "pom.xml").isFile()) {
+                root = current;
+            }
+            current = current.getParentFile();
+        }
+        return root;
+    }
+
+    /**
+     * 沿模块树递归收集源码根目录。
+     *
+     * @param moduleDir 模块目录
+     * @param roots     收集容器
+     */
+    private static void collectSourceRoots(File moduleDir, List<File> roots) {
+        File sourceRoot = new File(moduleDir, SRC_MAIN_JAVA);
+        if (sourceRoot.isDirectory()) {
+            roots.add(sourceRoot);
+        }
+        File[] children = moduleDir.listFiles(File::isDirectory);
+        if (children == null) {
+            return;
+        }
+        for (File child : children) {
+            // 仅下钻 Maven 模块目录，跳过 target / .git / node_modules 等
+            if (new File(child, "pom.xml").isFile()) {
+                collectSourceRoots(child, roots);
+            }
+        }
     }
 
     /**

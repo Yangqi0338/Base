@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.sys.domain.service.RegionDomain;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +46,7 @@ public class RegionDomainImpl implements RegionDomain {
         loadIfAbsent();
         Area area = areaMap.get(code);
         if (area == null) {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
         return area.getName();
     }
@@ -86,7 +86,7 @@ public class RegionDomainImpl implements RegionDomain {
             String data = IoUtil.read(in, StandardCharsets.UTF_8);
             return JSONUtil.toList(data, Area.class);
         } catch (Exception e) {
-            throw new ScmException(BaseErrorCode.SERVER);
+            throw new PlatformException(BaseErrorCode.SERVER);
         }
     }
 

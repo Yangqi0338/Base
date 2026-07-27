@@ -12,11 +12,11 @@ import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountExportResp
 import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountResponse;
 import com.newzkl.platform.base.biz.store.model.web.EventTrackingReq;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,9 +47,9 @@ public class StoreAccountController {
      * @return 账户分页
      */
     @PostMapping("/queryStoreAccountPage")
-    public ScmResult<Page<StoreAccountResponse>> queryStoreAccountPage(@Validated @RequestBody StoreAccountQuery req) {
+    public PlatformResult<Page<StoreAccountResponse>> queryStoreAccountPage(@Validated @RequestBody StoreAccountQuery req) {
         req.setChannelId(SecurityUtils.getAccountId());
-        return ScmResult.success(storeAccountDomain.queryStoreAccountPage(req));
+        return PlatformResult.success(storeAccountDomain.queryStoreAccountPage(req));
     }
 
     /**
@@ -57,7 +57,7 @@ public class StoreAccountController {
      *
      * @param req 埋点请求
      * @return 成功结果
-     * @throws ScmException 门店 ID 为空时抛出
+     * @throws PlatformException 门店 ID 为空时抛出
      * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
      *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
      *   docs/planning/dead-endpoint-audit/README.md。
@@ -65,16 +65,16 @@ public class StoreAccountController {
     @Deprecated
     @PostMapping("/eventTracking")
     @RoleLimit({RoleEnum.CompanyRole.MEMBER, RoleEnum.CompanyRole.CHANNEL})
-    public ScmResult<Void> eventTracking(@Validated({EventTrackingEnum.IStore.class}) @RequestBody EventTrackingReq req) {
+    public PlatformResult<Void> eventTracking(@Validated({EventTrackingEnum.IStore.class}) @RequestBody EventTrackingReq req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
         }
         if (req.getStoreId() == null) {
-            throw new ScmException(BaseErrorCode.CUSTOM, "门店id不能为空");
+            throw new PlatformException(BaseErrorCode.CUSTOM, "门店id不能为空");
         }
         req.setEventTrackingType(EventTrackingEnum.Store.VIEW.getCode());
         storeAccountDomain.eventTracking(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -84,9 +84,9 @@ public class StoreAccountController {
      * @return 成功结果
      */
     @PostMapping("/updateStoreAccount")
-    public ScmResult<Void> updateStoreAccount(@Validated @RequestBody StoreAccountUpdateReq req) {
+    public PlatformResult<Void> updateStoreAccount(@Validated @RequestBody StoreAccountUpdateReq req) {
         storeAccountDomain.updateStoreAccount(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**

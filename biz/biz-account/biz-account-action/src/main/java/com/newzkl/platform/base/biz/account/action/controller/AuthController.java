@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.account.model.auth.req.RoleReq;
 import com.newzkl.platform.base.biz.account.model.auth.vo.FunctionVO;
 import com.newzkl.platform.base.biz.account.model.auth.vo.LimitRoleVO;
 import com.newzkl.platform.base.biz.account.model.auth.vo.MenuTreeVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,9 +42,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("roleCreate")
-    public ScmResult<Void> roleCreate(@Validated @RequestBody RoleReq roleReq) {
+    public PlatformResult<Void> roleCreate(@Validated @RequestBody RoleReq roleReq) {
         authDomain.roleCreate(roleReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -54,9 +54,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("roleDelete")
-    public ScmResult<Void> roleDelete(@RequestParam("roleId") Long roleId) {
+    public PlatformResult<Void> roleDelete(@RequestParam("roleId") Long roleId) {
         authDomain.roleDelete(roleId);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -66,9 +66,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("roleEdit")
-    public ScmResult<Void> roleEdit(@Validated @RequestBody RoleReq roleReq) {
+    public PlatformResult<Void> roleEdit(@Validated @RequestBody RoleReq roleReq) {
         authDomain.roleEdit(roleReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -78,8 +78,8 @@ public class AuthController {
      * @return 角色分页
      */
     @PostMapping("rolePage")
-    public ScmResult<Page<LimitRoleVO>> rolePage(@RequestBody RolePageQuery rolePageQuery) {
-        return ScmResult.success(authDomain.rolePage(rolePageQuery));
+    public PlatformResult<Page<LimitRoleVO>> rolePage(@RequestBody RolePageQuery rolePageQuery) {
+        return PlatformResult.success(authDomain.rolePage(rolePageQuery));
     }
 
     /**
@@ -89,9 +89,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("createFunction")
-    public ScmResult<Void> createFunction(@Validated @RequestBody FunctionReq req) {
+    public PlatformResult<Void> createFunction(@Validated @RequestBody FunctionReq req) {
         authDomain.createFunction(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -101,9 +101,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("updateFunction")
-    public ScmResult<Void> updateFunction(@Validated @RequestBody FunctionReq req) {
+    public PlatformResult<Void> updateFunction(@Validated @RequestBody FunctionReq req) {
         authDomain.updateFunction(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -113,9 +113,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("deleteFunction")
-    public ScmResult<Void> deleteFunction(@RequestParam("id") Long id) {
+    public PlatformResult<Void> deleteFunction(@RequestParam("id") Long id) {
         authDomain.deleteFunction(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -125,8 +125,8 @@ public class AuthController {
      * @return 功能点分页
      */
     @PostMapping("functionPage")
-    public ScmResult<Page<FunctionVO>> functionPage(@RequestBody FunctionPageQuery query) {
-        return ScmResult.success(authDomain.functionPage(query));
+    public PlatformResult<Page<FunctionVO>> functionPage(@RequestBody FunctionPageQuery query) {
+        return PlatformResult.success(authDomain.functionPage(query));
     }
 
     /**
@@ -136,8 +136,8 @@ public class AuthController {
      * @return 菜单树列表
      */
     @PostMapping("functionTreeList")
-    public ScmResult<List<MenuTreeVO>> functionTreeList(@RequestBody FunctionTreeQuery functionTreeQuery) {
-        return ScmResult.success(authDomain.functionTreeList(functionTreeQuery));
+    public PlatformResult<List<MenuTreeVO>> functionTreeList(@RequestBody FunctionTreeQuery functionTreeQuery) {
+        return PlatformResult.success(authDomain.functionTreeList(functionTreeQuery));
     }
 
     /**
@@ -146,8 +146,8 @@ public class AuthController {
      * @return 功能点列表
      */
     @PostMapping("noEnteredFunctionList")
-    public ScmResult<List<FunctionVO>> noEnteredFunctionList() {
-        return ScmResult.success(authDomain.noEnteredFunctionList());
+    public PlatformResult<List<FunctionVO>> noEnteredFunctionList() {
+        return PlatformResult.success(authDomain.noEnteredFunctionList());
     }
 
     /**
@@ -156,8 +156,8 @@ public class AuthController {
      * @return 功能点列表
      */
     @PostMapping("deprecatedFunctionList")
-    public ScmResult<List<FunctionVO>> deprecatedFunctionList() {
-        return ScmResult.success(authDomain.deprecatedFunctionList());
+    public PlatformResult<List<FunctionVO>> deprecatedFunctionList() {
+        return PlatformResult.success(authDomain.deprecatedFunctionList());
     }
 
     /**
@@ -167,9 +167,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("createMenu")
-    public ScmResult<Void> createMenu(@Validated @RequestBody MenuReq req) {
+    public PlatformResult<Void> createMenu(@Validated @RequestBody MenuReq req) {
         authDomain.createMenu(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -179,9 +179,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("updateMenu")
-    public ScmResult<Void> updateMenu(@Validated @RequestBody MenuReq req) {
+    public PlatformResult<Void> updateMenu(@Validated @RequestBody MenuReq req) {
         authDomain.updateMenu(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -191,9 +191,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("deleteMenu")
-    public ScmResult<Void> deleteMenu(@RequestParam("id") Long id) {
+    public PlatformResult<Void> deleteMenu(@RequestParam("id") Long id) {
         authDomain.deleteMenu(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -203,9 +203,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("checkFunction")
-    public ScmResult<Void> checkFunction(@RequestBody FunctionRelationsReq req) {
+    public PlatformResult<Void> checkFunction(@RequestBody FunctionRelationsReq req) {
         authDomain.checkFunction(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -215,9 +215,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("cancelCheckFunction")
-    public ScmResult<Void> cancelCheckFunction(@RequestBody FunctionRelationsReq req) {
+    public PlatformResult<Void> cancelCheckFunction(@RequestBody FunctionRelationsReq req) {
         authDomain.cancelCheckFunction(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -227,8 +227,8 @@ public class AuthController {
      * @return 菜单树列表
      */
     @PostMapping("roleFunctionTreeList")
-    public ScmResult<List<MenuTreeVO>> roleFunctionTreeList(@RequestParam("roleId") Long roleId) {
-        return ScmResult.success(authDomain.roleFunctionTreeList(roleId));
+    public PlatformResult<List<MenuTreeVO>> roleFunctionTreeList(@RequestParam("roleId") Long roleId) {
+        return PlatformResult.success(authDomain.roleFunctionTreeList(roleId));
     }
 
     /**
@@ -239,10 +239,10 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("menuFunctionRelations")
-    public ScmResult<Void> menuFunctionRelations(@RequestParam("functionId") Long functionId,
+    public PlatformResult<Void> menuFunctionRelations(@RequestParam("functionId") Long functionId,
                                                  @RequestParam("menuId") Long menuId) {
         authDomain.menuFunctionRelations(functionId, menuId);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -253,9 +253,9 @@ public class AuthController {
      * @return 成功结果
      */
     @PostMapping("menuCancelFunction")
-    public ScmResult<Void> menuCancelFunction(@RequestParam("functionId") Long functionId,
+    public PlatformResult<Void> menuCancelFunction(@RequestParam("functionId") Long functionId,
                                               @RequestParam("menuId") Long menuId) {
         authDomain.menuCancelFunction(functionId, menuId);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

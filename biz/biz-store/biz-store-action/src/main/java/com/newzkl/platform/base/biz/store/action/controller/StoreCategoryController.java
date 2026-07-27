@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +49,8 @@ public class StoreCategoryController {
      */
     @Deprecated
     @GetMapping("/{id}")
-    public ScmResult<StoreCategory> detail(@PathVariable Long id) {
-        return ScmResult.success(storeCategoryDomain.detail(id));
+    public PlatformResult<StoreCategory> detail(@PathVariable Long id) {
+        return PlatformResult.success(storeCategoryDomain.detail(id));
     }
 
     /**
@@ -60,8 +60,8 @@ public class StoreCategoryController {
      * @return 分类 ID
      */
     @PostMapping("/add")
-    public ScmResult<Long> add(@Validated @RequestBody StoreCategorySaveCommand saveCommand) {
-        return ScmResult.success(storeCategoryDomain.add(saveCommand));
+    public PlatformResult<Long> add(@Validated @RequestBody StoreCategorySaveCommand saveCommand) {
+        return PlatformResult.success(storeCategoryDomain.add(saveCommand));
     }
 
     /**
@@ -71,9 +71,9 @@ public class StoreCategoryController {
      * @return 成功结果
      */
     @PutMapping("/edit")
-    public ScmResult<Void> edit(@Validated({UpdateCommand.class, Default.class}) @RequestBody StoreCategorySaveCommand saveCommand) {
+    public PlatformResult<Void> edit(@Validated({UpdateCommand.class, Default.class}) @RequestBody StoreCategorySaveCommand saveCommand) {
         storeCategoryDomain.edit(saveCommand);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -83,9 +83,9 @@ public class StoreCategoryController {
      * @return 成功结果
      */
     @DeleteMapping("/del/{id}")
-    public ScmResult<Void> del(@PathVariable Long id) {
+    public PlatformResult<Void> del(@PathVariable Long id) {
         storeCategoryDomain.del(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -95,9 +95,9 @@ public class StoreCategoryController {
      * @return 分类列表
      */
     @PostMapping("/queryList")
-    public ScmResult<List<StoreCategoryRes>> queryList(@RequestBody StoreCategoryQuery query) {
+    public PlatformResult<List<StoreCategoryRes>> queryList(@RequestBody StoreCategoryQuery query) {
         applySort(query);
-        return ScmResult.success(storeCategoryDomain.queryList(query));
+        return PlatformResult.success(storeCategoryDomain.queryList(query));
     }
 
     /**
@@ -107,9 +107,9 @@ public class StoreCategoryController {
      * @return 分类分页
      */
     @PostMapping("/queryPage")
-    public ScmResult<IPage<StoreCategoryRes>> queryPage(@RequestBody StoreCategoryQuery query) {
+    public PlatformResult<IPage<StoreCategoryRes>> queryPage(@RequestBody StoreCategoryQuery query) {
         applySort(query);
-        return ScmResult.success(storeCategoryDomain.queryPage(query));
+        return PlatformResult.success(storeCategoryDomain.queryPage(query));
     }
 
     /**

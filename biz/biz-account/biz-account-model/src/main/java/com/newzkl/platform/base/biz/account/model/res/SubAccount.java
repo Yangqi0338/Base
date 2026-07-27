@@ -6,8 +6,8 @@ import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -94,7 +94,7 @@ public class SubAccount extends BaseRes {
      */
     public void init(List<Long> registerRole, String username, String password, Long mainAccountId, AccountEnum.State state) {
         if (StrUtil.isEmpty(username)) {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         } else {
             this.username = username;
         }
@@ -115,10 +115,10 @@ public class SubAccount extends BaseRes {
         }
         //设置角色ID
         for (Long roleId : registerRole) {
-            this.roleIdList = ScmUtil.addIdString(this.roleIdList, roleId);
+            this.roleIdList = BizUtil.addIdString(this.roleIdList, roleId);
         }
         //设置邀请码
-        this.yqm = ScmUtil.generate6code();
+        this.yqm = BizUtil.generate6code();
         //默认实名认证审批状态
         this.nameAuthAuditState = AuditEnum.State.CUSTOM.getCode();
         //默认实名认证审批状态

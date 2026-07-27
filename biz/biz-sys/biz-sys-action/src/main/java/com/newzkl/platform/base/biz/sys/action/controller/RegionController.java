@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.sys.action.controller;
 
 import com.newzkl.platform.base.biz.sys.domain.service.RegionDomain;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +29,8 @@ public class RegionController {
      * @return 区域树 JSON
      */
     @GetMapping("/getRegion")
-    public ScmResult<String> getRegion() {
-        return ScmResult.success(regionDomain.getRegion());
+    public PlatformResult<String> getRegion() {
+        return PlatformResult.success(regionDomain.getRegion());
     }
 
     /**
@@ -44,8 +44,8 @@ public class RegionController {
      */
     @Deprecated
     @GetMapping("/getRegionByCode")
-    public ScmResult<String> getRegionByCode(@RequestParam("code") Integer code) {
-        return ScmResult.success(regionDomain.getRegionByCode(code));
+    public PlatformResult<String> getRegionByCode(@RequestParam("code") Integer code) {
+        return PlatformResult.success(regionDomain.getRegionByCode(code));
     }
 
     /**
@@ -60,8 +60,8 @@ public class RegionController {
      */
     @Deprecated
     @GetMapping("/getRegionList")
-    public ScmResult<List<Area>> getRegionList(@RequestParam(value = "parentCode", required = false) Integer parentCode,
+    public PlatformResult<List<Area>> getRegionList(@RequestParam(value = "parentCode", required = false) Integer parentCode,
                                                @RequestParam(value = "flatten", defaultValue = "false") boolean flatten) {
-        return ScmResult.success(regionDomain.getRegionList(parentCode, flatten));
+        return PlatformResult.success(regionDomain.getRegionList(parentCode, flatten));
     }
 }

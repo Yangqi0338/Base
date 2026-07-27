@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.DealerEditReq;
 import com.newzkl.platform.base.biz.account.model.vo.DealerVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +35,8 @@ public class DealerController {
      * @return 交易师 ID
      */
     @PostMapping("dealerCustomSave")
-    public ScmResult<Long> dealerCustomSave(@Validated @RequestBody DealerCustomSaveReq dealerEditReq) {
-        return ScmResult.success(operatorClientDomain.dealerCustomSave(dealerEditReq, false));
+    public PlatformResult<Long> dealerCustomSave(@Validated @RequestBody DealerCustomSaveReq dealerEditReq) {
+        return PlatformResult.success(operatorClientDomain.dealerCustomSave(dealerEditReq, false));
     }
 
     /**
@@ -46,8 +46,8 @@ public class DealerController {
      * @return 修改数量
      */
     @PostMapping("dealerEdit")
-    public ScmResult<Integer> dealerEdit(@Validated @RequestBody DealerEditReq dealerEditReq) {
-        return ScmResult.success(operatorClientDomain.dealerEdit(dealerEditReq.getId(), dealerEditReq));
+    public PlatformResult<Integer> dealerEdit(@Validated @RequestBody DealerEditReq dealerEditReq) {
+        return PlatformResult.success(operatorClientDomain.dealerEdit(dealerEditReq.getId(), dealerEditReq));
     }
 
     /**
@@ -57,9 +57,9 @@ public class DealerController {
      * @return 成功结果
      */
     @PostMapping("dealerEditColumn")
-    public ScmResult<Void> dealerEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
+    public PlatformResult<Void> dealerEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
         operatorClientDomain.dealerEdit(cmd.getEditColumnList(), cmd.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -69,8 +69,8 @@ public class DealerController {
      * @return 删除数量
      */
     @PostMapping("dealerDelete")
-    public ScmResult<Integer> dealerDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return ScmResult.success(operatorClientDomain.dealerDelete(idListObj.getIdList()));
+    public PlatformResult<Integer> dealerDelete(@Validated @RequestBody IdListCommand idListObj) {
+        return PlatformResult.success(operatorClientDomain.dealerDelete(idListObj.getIdList()));
     }
 
     /**
@@ -80,10 +80,10 @@ public class DealerController {
      * @return 交易师 VO
      */
     @PostMapping("dealer")
-    public ScmResult<DealerVO> dealer(@RequestParam(value = "id", required = false) Long dealerId) {
+    public PlatformResult<DealerVO> dealer(@RequestParam(value = "id", required = false) Long dealerId) {
         if (dealerId == null) {
             dealerId = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(operatorClientDomain.dealer(dealerId));
+        return PlatformResult.success(operatorClientDomain.dealer(dealerId));
     }
 }

@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneCreateReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZonePageReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneResponse;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +37,8 @@ public class StoreZoneController {
      */
     @Deprecated
     @PostMapping("/storeZonePage")
-    public ScmResult<Page<StoreZoneResponse>> storeZonePage(@Validated @RequestBody StoreZonePageReq req) {
-        return ScmResult.success(storeZoneDomain.storeZonePage(req));
+    public PlatformResult<Page<StoreZoneResponse>> storeZonePage(@Validated @RequestBody StoreZonePageReq req) {
+        return PlatformResult.success(storeZoneDomain.storeZonePage(req));
     }
 
     /**
@@ -52,9 +52,9 @@ public class StoreZoneController {
      */
     @Deprecated
     @PostMapping("/create")
-    public ScmResult<Void> create(@Validated @RequestBody StoreZoneCreateReq req) {
+    public PlatformResult<Void> create(@Validated @RequestBody StoreZoneCreateReq req) {
         storeZoneDomain.create(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -68,8 +68,8 @@ public class StoreZoneController {
      */
     @Deprecated
     @PostMapping("/update")
-    public ScmResult<Void> update(@Validated @RequestBody StoreZoneUpdateReq req) {
+    public PlatformResult<Void> update(@Validated @RequestBody StoreZoneUpdateReq req) {
         storeZoneDomain.update(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

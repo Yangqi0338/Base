@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.domain.goodPackage.service.GoodPackage
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * <p>迁移说明: new-scm 该链路为坏桩 (仓储 save/findAll/findByState 直接返回 null,
  * mapper 未注入), 本实现按 Base 范式重写, 并把旧 {@code RuntimeException} 换为
- * {@link ScmException}。</p>
+ * {@link PlatformException}。</p>
  *
  * @author KC
  */
@@ -40,7 +40,7 @@ public class GoodPackageDomainImpl implements GoodPackageDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long create(GoodPackageReq req) {
         if (goodPackageRepository.existsByPackageId(req.getPackageId())) {
-            throw new ScmException(400, "套餐ID已存在");
+            throw new PlatformException(400, "套餐ID已存在");
         }
         if (req.getState() == null) {
             req.setState(STATE_ENABLED);
@@ -73,7 +73,7 @@ public class GoodPackageDomainImpl implements GoodPackageDomain {
     public GoodPackageVO detailByPackageId(String packageId) {
         GoodPackageVO vo = goodPackageRepository.findByPackageId(packageId);
         if (vo == null) {
-            throw new ScmException(400, "套餐不存在");
+            throw new PlatformException(400, "套餐不存在");
         }
         return vo;
     }
@@ -90,7 +90,7 @@ public class GoodPackageDomainImpl implements GoodPackageDomain {
      */
     private void requireExists(Long id) {
         if (goodPackageRepository.findById(id) == null) {
-            throw new ScmException(400, "套餐不存在");
+            throw new PlatformException(400, "套餐不存在");
         }
     }
 }

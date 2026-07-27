@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 本地幂等消费处理器。
  *
- * <p>移植自 adopt-chicken {@code AbstractMessageMQPushConsumerHandler}; 去 MQConsumedEvent 事件发布。</p>
+ * <p>移植自模板 {@code AbstractMessageMQPushConsumerHandler}; 去 MQConsumedEvent 事件发布。</p>
  *
  * @author fang
  */

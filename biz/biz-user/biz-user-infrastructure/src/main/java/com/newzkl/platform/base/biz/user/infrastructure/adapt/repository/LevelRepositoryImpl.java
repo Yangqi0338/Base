@@ -73,14 +73,14 @@ public class LevelRepositoryImpl implements LevelRepository {
     /**
      * 获取向上兼容的角色id, 方便升级。
      *
-     * <p>TODO 源码依赖 ScmUtil.getOperatorLevelUpEnumList(未迁移, 属运营商身份体系)，
+     * <p>TODO 源码依赖 BizUtil.getOperatorLevelUpEnumList(未迁移, 属运营商身份体系)，
      * 迁移期直接返回原列表, 待身份升级链路迁移后补齐向上合并逻辑。</p>
      *
      * @param sourceRoleList 源角色id列表
      * @return 合并后的角色id列表
      */
     public List<Long> upRoleMerge(List<Long> sourceRoleList) {
-        // TODO[cross-domain] ScmUtil.getOperatorLevelUpEnumList 未迁移，暂原样返回。
+        // TODO[cross-domain] BizUtil.getOperatorLevelUpEnumList 未迁移，暂原样返回。
         return sourceRoleList;
     }
 }

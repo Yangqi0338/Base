@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.report.ReportQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.report.ReportReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.report.ReportRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,8 +39,8 @@ public class ReportController {
      * @return 主键
      */
     @PostMapping("/add")
-    public ScmResult<Long> add(@Validated @RequestBody ReportReq req) {
-        return ScmResult.success(reportDomain.add(req));
+    public PlatformResult<Long> add(@Validated @RequestBody ReportReq req) {
+        return PlatformResult.success(reportDomain.add(req));
     }
 
     /**
@@ -50,8 +50,8 @@ public class ReportController {
      * @return 详情
      */
     @GetMapping("/{id}")
-    public ScmResult<ReportRes> detail(@PathVariable Long id) {
-        return ScmResult.success(reportDomain.detail(id));
+    public PlatformResult<ReportRes> detail(@PathVariable Long id) {
+        return PlatformResult.success(reportDomain.detail(id));
     }
 
     /**
@@ -61,9 +61,9 @@ public class ReportController {
      * @return 成功结果
      */
     @PutMapping("/edit")
-    public ScmResult<Void> edit(@Validated @RequestBody ReportReq req) {
+    public PlatformResult<Void> edit(@Validated @RequestBody ReportReq req) {
         reportDomain.edit(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -73,9 +73,9 @@ public class ReportController {
      * @return 成功结果
      */
     @DeleteMapping("/del/{id}")
-    public ScmResult<Void> del(@PathVariable Long id) {
+    public PlatformResult<Void> del(@PathVariable Long id) {
         reportDomain.del(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -85,8 +85,8 @@ public class ReportController {
      * @return 列表
      */
     @PostMapping("/queryList")
-    public ScmResult<List<ReportVO>> queryList(@RequestBody ReportQuery query) {
-        return ScmResult.success(reportDomain.queryList(query));
+    public PlatformResult<List<ReportVO>> queryList(@RequestBody ReportQuery query) {
+        return PlatformResult.success(reportDomain.queryList(query));
     }
 
     /**
@@ -96,7 +96,7 @@ public class ReportController {
      * @return 分页列表
      */
     @PostMapping("/queryPageList")
-    public ScmResult<Page<ReportVO>> queryPageList(@RequestBody ReportQuery query) {
-        return ScmResult.success(reportDomain.queryPageList(query));
+    public PlatformResult<Page<ReportVO>> queryPageList(@RequestBody ReportQuery query) {
+        return PlatformResult.success(reportDomain.queryPageList(query));
     }
 }

@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,8 +42,8 @@ public class MemberController {
      * @return 会员 ID
      */
     @PostMapping("memberSave")
-    public ScmResult<Long> memberSave(@Validated @RequestBody MemberReq memberReq) {
-        return ScmResult.success(userClientDomain.memberSave(memberReq));
+    public PlatformResult<Long> memberSave(@Validated @RequestBody MemberReq memberReq) {
+        return PlatformResult.success(userClientDomain.memberSave(memberReq));
     }
 
     /**
@@ -53,8 +53,8 @@ public class MemberController {
      * @return 修改数量
      */
     @PostMapping("memberEdit")
-    public ScmResult<Integer> memberEdit(@Validated @RequestBody MemberReq memberReq) {
-        return ScmResult.success(userClientDomain.memberEdit(memberReq.getId(), memberReq));
+    public PlatformResult<Integer> memberEdit(@Validated @RequestBody MemberReq memberReq) {
+        return PlatformResult.success(userClientDomain.memberEdit(memberReq.getId(), memberReq));
     }
 
     /**
@@ -64,9 +64,9 @@ public class MemberController {
      * @return 成功结果
      */
     @PostMapping("memberEditColumn")
-    public ScmResult<Void> memberEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
+    public PlatformResult<Void> memberEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
         userClientDomain.memberEdit(cmd.getEditColumnList(), cmd.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -76,8 +76,8 @@ public class MemberController {
      * @return 删除数量
      */
     @PostMapping("memberDelete")
-    public ScmResult<Integer> memberDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return ScmResult.success(userClientDomain.memberDelete(idListObj.getIdList()));
+    public PlatformResult<Integer> memberDelete(@Validated @RequestBody IdListCommand idListObj) {
+        return PlatformResult.success(userClientDomain.memberDelete(idListObj.getIdList()));
     }
 
     /**
@@ -87,11 +87,11 @@ public class MemberController {
      * @return 会员 VO
      */
     @PostMapping("member")
-    public ScmResult<MemberVO> member(@RequestParam(value = "id", required = false) Long memberId) {
+    public PlatformResult<MemberVO> member(@RequestParam(value = "id", required = false) Long memberId) {
         if (memberId == null) {
             memberId = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(userClientDomain.member(memberId));
+        return PlatformResult.success(userClientDomain.member(memberId));
     }
 
     /**
@@ -101,8 +101,8 @@ public class MemberController {
      * @return 会员列表
      */
     @PostMapping("queryMember")
-    public ScmResult<List<MemberVO>> queryMember(@RequestParam("nickname") String nickname) {
-        return ScmResult.success(userClientDomain.queryMember(nickname));
+    public PlatformResult<List<MemberVO>> queryMember(@RequestParam("nickname") String nickname) {
+        return PlatformResult.success(userClientDomain.queryMember(nickname));
     }
 
     /**
@@ -112,9 +112,9 @@ public class MemberController {
      * @return 成功结果
      */
     @PostMapping("cancelMember")
-    public ScmResult<Void> cancelMember(@Validated @RequestBody CancelMemberReq command) {
+    public PlatformResult<Void> cancelMember(@Validated @RequestBody CancelMemberReq command) {
         userClientDomain.cancelMember(SecurityUtils.getAccountId(), command);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -124,9 +124,9 @@ public class MemberController {
      * @return 成功结果
      */
     @PostMapping("updateMemberInfo")
-    public ScmResult<Void> updateMemberInfo(@Validated @RequestBody UpdateMemberInfoCommand command) {
+    public PlatformResult<Void> updateMemberInfo(@Validated @RequestBody UpdateMemberInfoCommand command) {
         userClientDomain.updateMemberInfo(SecurityUtils.getAccountId(), command);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -136,8 +136,8 @@ public class MemberController {
      * @return 身份注册结果
      */
     @PostMapping("adminCreateMember")
-    public ScmResult<IdentityRegisterRes> adminCreateMember(@Validated @RequestBody AdminRegisterIdentityReq req) {
-        return ScmResult.success(userClientDomain.adminCreateMember(req));
+    public PlatformResult<IdentityRegisterRes> adminCreateMember(@Validated @RequestBody AdminRegisterIdentityReq req) {
+        return PlatformResult.success(userClientDomain.adminCreateMember(req));
     }
 
     /**
@@ -147,7 +147,7 @@ public class MemberController {
      * @return 导入结果
      */
     @PostMapping("adminImportAccount")
-    public ScmResult<EasyExcelErrorVO> adminImportAccount(@RequestParam("file") MultipartFile file) {
-        return ScmResult.success(userClientDomain.adminImportAccount(file));
+    public PlatformResult<EasyExcelErrorVO> adminImportAccount(@RequestParam("file") MultipartFile file) {
+        return PlatformResult.success(userClientDomain.adminImportAccount(file));
     }
 }

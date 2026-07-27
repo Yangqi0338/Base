@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.application.service.OrderStateRecordService;
 import com.newzkl.platform.base.biz.order.model.order.req.OrderStateRecordPageReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.OrderStateRecordVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ class OrderStateRecordControllerTest {
         vo.setId(1001L);
         when(orderStateRecordService.listBySpuOrderNo("SPU202607260001")).thenReturn(List.of(vo));
 
-        ScmResult<List<OrderStateRecordVO>> result =
+        PlatformResult<List<OrderStateRecordVO>> result =
                 orderStateRecordController.listBySpuOrderId("SPU202607260001");
 
         assertEquals(1, result.getData().size());
@@ -58,7 +58,7 @@ class OrderStateRecordControllerTest {
         page.setTotal(3);
         when(orderStateRecordService.pageQuery(req)).thenReturn(page);
 
-        ScmResult<Page<OrderStateRecordVO>> result = orderStateRecordController.pageQuery(req);
+        PlatformResult<Page<OrderStateRecordVO>> result = orderStateRecordController.pageQuery(req);
 
         assertNotNull(result.getData());
         assertEquals(3, result.getData().getTotal());

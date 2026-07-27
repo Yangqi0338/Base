@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
 import com.newzkl.platform.base.biz.account.model.level.res.LevelRes;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +42,8 @@ public class LevelController {
      * @return 礼包商品信息
      */
     @GetMapping("levelPack")
-    public ScmResult<PackGoodsInfo> levelPack(@RequestParam("roleId") Integer roleId) {
-        return ScmResult.success(levelDomain.levelPack(roleId));
+    public PlatformResult<PackGoodsInfo> levelPack(@RequestParam("roleId") Integer roleId) {
+        return PlatformResult.success(levelDomain.levelPack(roleId));
     }
 
     /**
@@ -53,9 +53,9 @@ public class LevelController {
      * @return 成功结果
      */
     @PostMapping("save")
-    public ScmResult<Void> save(@Validated @RequestBody LevelReq levelReq) {
+    public PlatformResult<Void> save(@Validated @RequestBody LevelReq levelReq) {
         levelDomain.save(levelReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -65,7 +65,7 @@ public class LevelController {
      * @return 等级列表
      */
     @PostMapping("levelList")
-    public ScmResult<List<LevelRes>> levelList(@RequestBody LevelQuery levelQuery) {
-        return ScmResult.success(levelDomain.pageList(levelQuery));
+    public PlatformResult<List<LevelRes>> levelList(@RequestBody LevelQuery levelQuery) {
+        return PlatformResult.success(levelDomain.pageList(levelQuery));
     }
 }

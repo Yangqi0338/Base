@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.finance.model.enums.finance.PayEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -106,7 +106,7 @@ public class CashPayServiceImpl implements CashPayService {
                     break;
                 default:
                     // 2、其他消费支付成功后发送mq消息
-                    MQUtil.send(MQ.Tag.LIANLIAN_PAY_SUCCESS, new PaySuccessEvent(tradeNo));
+                    MQUtil.send(MQ.Tag.PAYMENT_PAY_SUCCESS, new PaySuccessEvent(tradeNo));
                     break;
             }
         }
@@ -154,7 +154,7 @@ public class CashPayServiceImpl implements CashPayService {
         huiFuPayReq.setTradeType(switch (req.getPayType()) {
             case WX -> PayEnum.HuiFuTradeType.T_NATIVE;
             case ALIPAY -> PayEnum.HuiFuTradeType.A_NATIVE;
-            default -> throw new ScmException(BaseErrorCode.PARAM);
+            default -> throw new PlatformException(BaseErrorCode.PARAM);
         });
         return huiFuPayReq;
     }

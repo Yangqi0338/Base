@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataWork
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataWorkTableQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.user.AuditErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +62,7 @@ public class WorkTableWorkflowDomainImpl implements WorkTableWorkflowDomain {
         query.setId(flowId);
         List<AuditDataWorkTableVO> auditDataWorkTables = auditDataWorkTableRepository.auditDataWorkTableVOList(query);
         if (ObjectUtil.isEmpty(auditDataWorkTables)) {
-            throw new ScmException(AuditErrorCode.AUDIT_DATA_LOSE);
+            throw new PlatformException(AuditErrorCode.AUDIT_DATA_LOSE);
         }
         return auditDataWorkTables.get(0);
     }

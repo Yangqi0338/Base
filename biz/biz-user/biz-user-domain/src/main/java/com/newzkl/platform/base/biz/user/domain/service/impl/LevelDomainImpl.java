@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.user.model.relation.vo.ConditionVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.LevelVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.PermissionVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class LevelDomainImpl implements LevelDomain {
         ConditionVO condition = level.getCondition();
         PermissionVO permission = level.getPermission();
         if (condition == null || condition.getPack() == null || !permission.getDirectConfig().checkActiveDirectPack()) {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
 
         PackCondition pack = condition.getPack();
@@ -51,7 +51,7 @@ public class LevelDomainImpl implements LevelDomain {
     @Override
     public void update(LevelReq levelCommand) {
         if (levelCommand.getId() == null) {
-            throw new ScmException(BaseErrorCode.NODATA);
+            throw new PlatformException(BaseErrorCode.NODATA);
         }
 
         save(levelCommand);

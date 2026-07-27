@@ -52,10 +52,10 @@ public interface MQ {
         String AUDIT_NAME_AUTH = "audit:nameauth";
         String AUDIT_NAME_AUTH_MESSAGE = "audit-nameauth-message";
         /**
-         * 连连:支付成功
+         * 支付:支付成功
          */
-        String LIANLIAN_PAY_SUCCESS = "lianlian:paysuccess";
-        String LIANLIAN_PAY_SUCCESS_MESSAGE = "lianlian-paysuccess-message";
+        String PAYMENT_PAY_SUCCESS = "payment:paysuccess";
+        String PAYMENT_PAY_SUCCESS_MESSAGE = "payment-paysuccess-message";
         /**
          * 商品订单:支付成功
          */
@@ -70,7 +70,7 @@ public interface MQ {
          * 财务:分润消息
          */
         String FINANCE_EARNINGS_EXEC = "finance:earningsexec";
-        String FINANCE_EARNINGS_EXEC_MESSAGE = "lianlian-earningsexec-message";
+        String FINANCE_EARNINGS_EXEC_MESSAGE = "payment-earnings-message";
         /**
          * 财务:SKU订单分润消息
          */

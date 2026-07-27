@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,8 +51,8 @@ public class AccountController {
      * @return 账号 VO
      */
     @PostMapping("account")
-    public ScmResult<AccountVO> account() {
-        return ScmResult.success(accountDomain.account(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
+    public PlatformResult<AccountVO> account() {
+        return PlatformResult.success(accountDomain.account(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
     }
 
     /**
@@ -62,8 +62,8 @@ public class AccountController {
      * @return 账号信息
      */
     @PostMapping("accountInfo")
-    public ScmResult<AccountInfo> accountInfo(@RequestBody AccountQuery query) {
-        return ScmResult.success(accountDomain.accountInfo(query));
+    public PlatformResult<AccountInfo> accountInfo(@RequestBody AccountQuery query) {
+        return PlatformResult.success(accountDomain.accountInfo(query));
     }
 
     /**
@@ -73,9 +73,9 @@ public class AccountController {
      * @return 成功结果
      */
     @PostMapping("editPassword")
-    public ScmResult<Void> editPassword(@Validated @RequestBody CodeUpdatePasswordReq req) {
+    public PlatformResult<Void> editPassword(@Validated @RequestBody CodeUpdatePasswordReq req) {
         accountDomain.editPassword(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -85,8 +85,8 @@ public class AccountController {
      * @return 修改结果
      */
     @PostMapping("accountEdit")
-    public ScmResult<Boolean> accountEdit(@Validated @RequestBody AccountReq req) {
-        return ScmResult.success(accountDomain.accountEdit(req));
+    public PlatformResult<Boolean> accountEdit(@Validated @RequestBody AccountReq req) {
+        return PlatformResult.success(accountDomain.accountEdit(req));
     }
 
     /**
@@ -96,9 +96,9 @@ public class AccountController {
      * @return 成功结果
      */
     @PostMapping("editUsername")
-    public ScmResult<Void> editUsername(@Validated @RequestBody CodeUpdateUsernameReq req) {
+    public PlatformResult<Void> editUsername(@Validated @RequestBody CodeUpdateUsernameReq req) {
         accountDomain.editUsername(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -108,9 +108,9 @@ public class AccountController {
      * @return 成功结果
      */
     @PostMapping("subEditBase")
-    public ScmResult<Void> subEditBase(@Validated @RequestBody SubEditReq req) {
+    public PlatformResult<Void> subEditBase(@Validated @RequestBody SubEditReq req) {
         accountDomain.subEditBase(SecurityUtils.getAccountId(), req.getId(), req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -120,9 +120,9 @@ public class AccountController {
      * @return 成功结果
      */
     @PostMapping("nameAuthSubmit")
-    public ScmResult<Void> nameAuthSubmit(@Validated @RequestBody NameAuthVO nameAuthVO) {
+    public PlatformResult<Void> nameAuthSubmit(@Validated @RequestBody NameAuthVO nameAuthVO) {
         accountDomain.nameAuthSubmit(SecurityUtils.getAccountId(), nameAuthVO);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -132,9 +132,9 @@ public class AccountController {
      * @return 成功结果
      */
     @PostMapping("accountDelete")
-    public ScmResult<Void> accountDelete(@Validated @RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> accountDelete(@Validated @RequestBody IdListCommand idListObj) {
         accountDomain.accountDelete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -144,9 +144,9 @@ public class AccountController {
      * @return 成功结果
      */
     @PostMapping("destroy")
-    public ScmResult<Void> destroy(@Validated @RequestBody DestroyRoleReq destroyRoleReq) {
+    public PlatformResult<Void> destroy(@Validated @RequestBody DestroyRoleReq destroyRoleReq) {
         accountDomain.destroy(SecurityUtils.getAccountId(), destroyRoleReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -155,8 +155,8 @@ public class AccountController {
      * @return 子账号结构列表
      */
     @PostMapping("subAccountStructure")
-    public ScmResult<List<AccountStructureTreeVO>> subAccountStructure() {
-        return ScmResult.success(accountDomain.findScopeSubAccountStructure(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
+    public PlatformResult<List<AccountStructureTreeVO>> subAccountStructure() {
+        return PlatformResult.success(accountDomain.findScopeSubAccountStructure(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
     }
 
     /**
@@ -166,8 +166,8 @@ public class AccountController {
      * @return 账号 VO
      */
     @PostMapping("customSave")
-    public ScmResult<AccountVO> customSave(@Validated @RequestBody AccountSaveReq customSaveReq) {
-        return ScmResult.success(accountDomain.customSave(customSaveReq));
+    public PlatformResult<AccountVO> customSave(@Validated @RequestBody AccountSaveReq customSaveReq) {
+        return PlatformResult.success(accountDomain.customSave(customSaveReq));
     }
 
     /**
@@ -177,8 +177,8 @@ public class AccountController {
      * @return 账号 VO
      */
     @PostMapping("proxySave")
-    public ScmResult<AccountVO> proxySave(@Validated @RequestBody SubProxySaveReq proxySaveReq) {
-        return ScmResult.success(accountDomain.proxySave(SecurityUtils.getAccountId(), proxySaveReq));
+    public PlatformResult<AccountVO> proxySave(@Validated @RequestBody SubProxySaveReq proxySaveReq) {
+        return PlatformResult.success(accountDomain.proxySave(SecurityUtils.getAccountId(), proxySaveReq));
     }
 
     /**
@@ -188,8 +188,8 @@ public class AccountController {
      * @return 账号列表
      */
     @PostMapping("accountList")
-    public ScmResult<List<AccountVO>> accountList(@RequestBody AccountQuery query) {
-        return ScmResult.success(accountDomain.accountList(query));
+    public PlatformResult<List<AccountVO>> accountList(@RequestBody AccountQuery query) {
+        return PlatformResult.success(accountDomain.accountList(query));
     }
 
     /**
@@ -198,8 +198,8 @@ public class AccountController {
      * @return 角色列表
      */
     @PostMapping("accountRoleList")
-    public ScmResult<List<RoleVO>> accountRoleList() {
-        return ScmResult.success(accountDomain.accountRoleList(SecurityUtils.getAccountId(), SecurityUtils.getClient()));
+    public PlatformResult<List<RoleVO>> accountRoleList() {
+        return PlatformResult.success(accountDomain.accountRoleList(SecurityUtils.getAccountId(), SecurityUtils.getClient()));
     }
 
     /**
@@ -209,8 +209,8 @@ public class AccountController {
      * @return 下级账号列表
      */
     @PostMapping("subAccountList")
-    public ScmResult<List<SubAccountVO>> subAccountList(@RequestBody AccountParentQuery query) {
-        return ScmResult.success(accountDomain.subAccountList(query));
+    public PlatformResult<List<SubAccountVO>> subAccountList(@RequestBody AccountParentQuery query) {
+        return PlatformResult.success(accountDomain.subAccountList(query));
     }
 
     /**
@@ -220,8 +220,8 @@ public class AccountController {
      * @return 简易账号分页
      */
     @PostMapping("simpleAccountPage")
-    public ScmResult<Page<SimpleAccountRes>> simpleAccountPage(@RequestBody SimpleAccountQuery accountQuery) {
-        return ScmResult.success(accountDomain.simpleAccountPage(accountQuery));
+    public PlatformResult<Page<SimpleAccountRes>> simpleAccountPage(@RequestBody SimpleAccountQuery accountQuery) {
+        return PlatformResult.success(accountDomain.simpleAccountPage(accountQuery));
     }
 
     /**
@@ -231,8 +231,8 @@ public class AccountController {
      * @return 账号分页
      */
     @PostMapping("accountPage")
-    public ScmResult<Page<AccountVO>> accountPage(@RequestBody AccountQuery accountQuery) {
-        return ScmResult.success(accountDomain.accountPage(accountQuery));
+    public PlatformResult<Page<AccountVO>> accountPage(@RequestBody AccountQuery accountQuery) {
+        return PlatformResult.success(accountDomain.accountPage(accountQuery));
     }
 
     /**
@@ -242,7 +242,7 @@ public class AccountController {
      * @return 用户分页
      */
     @PostMapping("awardUserPage")
-    public ScmResult<Page<AccountAwardUserVO>> awardUserPage(@RequestBody AccountAwardUserQuery query) {
-        return ScmResult.success(accountDomain.awardUserPage(query));
+    public PlatformResult<Page<AccountAwardUserVO>> awardUserPage(@RequestBody AccountAwardUserQuery query) {
+        return PlatformResult.success(accountDomain.awardUserPage(query));
     }
 }

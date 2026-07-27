@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordP
 import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordUpdateReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.RefundOperationRecordVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class RefundOperationRecordServiceImpl implements RefundOperationRecordSe
     public RefundOperationRecordVO update(RefundOperationRecordUpdateReq req) {
         RefundOperationRecord old = refundOperationRecordDomain.findById(req.getId());
         if (old == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "售后操作");
+            throw new PlatformException(BaseErrorCode.NODATA, "售后操作");
         }
         // 旧实现: 仅描述性字段可改, 业务主数据从原记录回填
         old.setOperationContent(req.getOperationContent());

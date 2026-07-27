@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.purse.service.WithdrawService;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseConfigRepository;
-import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
@@ -14,17 +13,15 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuRollOutReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuRollOutRes;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.CommitInfoExt;
-import com.newzkl.platform.base.biz.finance.model.person.res.WithdrawNotifyRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -46,22 +43,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WithdrawServiceImpl implements WithdrawService {
 
-    /**
-     * 三方到账成功状态值 (旧代码裸 1)。
-     */
-    private static final Integer TRIPARTITE_STATE_SUCCESS = 1;
-
     private final WithdrawDomain withdrawDomain;
     private final AccountPurseDomain accountPurseService;
     private final AccountPurseConfigRepository accountPurseConfigRepository;
     private final TripartitePurseDomain tripartitePurse;
 
     private final SupplierApi supplierFacade;
-
-    /**
-     * 账户域出站端口 (提货积分回补)。
-     */
-    private final AccountApi accountApi;
 
     private static HuiFuRollOutReq buildRollOutReq(RollOutApplyVO rollOutApplyVO) {
         HuiFuRollOutReq rollOutReq = new HuiFuRollOutReq();
@@ -102,10 +89,10 @@ public class WithdrawServiceImpl implements WithdrawService {
 
         AccountTripartitePurseVO accountTripartitePurseVO = tripartitePurse.queryAccountTripartitePurse(SecurityUtils.getAccountId());
         if (accountTripartitePurseVO == null || PurseEnum.TripartitePurchaseStatus.NORMAL != accountTripartitePurseVO.getUserStatus()) {
-            throw new ScmException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
+            throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
         }
         if (req.getAmount() < 1) {
-            throw new ScmException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
+            throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
         }
         // 根据角色code获取客户类型
         PurseEnum.FinanceUser accountType = req.getAccountType();
@@ -134,7 +121,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             req.setAccountType(accountType);
             CommitInfoExt infoExt = JSONUtil.toBean(accountTripartitePurseVO.getCommitInfo(), CommitInfoExt.class);
             if (infoExt == null || StrUtil.isBlank(infoExt.getHuifuId())) {
-                throw new ScmException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
+                throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
             }
             req.setTripartiteAccountId(infoExt.getHuifuId());
             withdrawDomain.rollOutApply(req);
@@ -168,7 +155,7 @@ public class WithdrawServiceImpl implements WithdrawService {
                 req.getPurseType() == PurseEnum.PurseType.GOODS_INCOME) {
             //校验最小提现金额
             if (channelConfigVO.getMinimumWithdrawalAmount() > req.getAmount()) {
-                throw new ScmException(FinanceErrorCode.LESS_THAN_MINIMUM_WITHDRAWAL_AMOUNT);
+                throw new PlatformException(FinanceErrorCode.LESS_THAN_MINIMUM_WITHDRAWAL_AMOUNT);
             }
 
             //查询当日提交的审核中或已通过的转出申请
@@ -184,7 +171,7 @@ public class WithdrawServiceImpl implements WithdrawService {
                     .sum();
             //校验单日提现最高金额
             if (channelConfigVO.getMaximumDailyWithdrawalAmount() < countApplyAmount) {
-                throw new ScmException(FinanceErrorCode.GREATER_THAN_MAXIMUM_DAILY_WITHDRAWAL_AMOUNT);
+                throw new PlatformException(FinanceErrorCode.GREATER_THAN_MAXIMUM_DAILY_WITHDRAWAL_AMOUNT);
             }
 
             //填充手续费,提现手续费比例单位为千分制整数，所以需要除以10得出单位为分的手续费
@@ -193,71 +180,8 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     @Override
-    public ScmResult<Object> accountTripartiteWithdraw(AccountWithdrawReq req) {
+    public PlatformResult<Boolean> accountTripartiteWithdraw(AccountWithdrawReq req) {
         return null;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void alterRollOutTripartiteState(Long applyId, Integer tripartiteState, String tripartiteTradeNo) {
-        RollOutApplyVO rollOutApplyVO = withdrawDomain.rollOutApplyDetail(applyId);
-        // 更新转出申请三方到账状态
-        boolean flag = withdrawDomain.alterRollOutTripartiteState(applyId, tripartiteState, tripartiteTradeNo);
-        // 三方到账成功后, 补记客户三方账户余额
-        if (flag && TRIPARTITE_STATE_SUCCESS.equals(tripartiteState) && rollOutApplyVO != null) {
-            tripartitePurse.addAccountTripartitePurseAmount(rollOutApplyVO.getAccountId(),
-                    rollOutApplyVO.getApplyAmount());
-        }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void withdrawNotify(WithdrawNotifyRes notify) {
-        AlterWithdrawStateReq req = new AlterWithdrawStateReq();
-        // txn_seqno 即平台提现记录ID
-        req.setId(Long.valueOf(notify.getOrderInfo().getTxn_seqno()));
-        req.setTripartiteTradeNo(notify.getAccp_txno());
-        req.setFinishTime(notify.getFinish_time());
-        req.setState(parseWithdrawState(notify.getTxn_status()));
-
-        if (!withdrawDomain.alterWithdrawState(req)) {
-            // 状态未变更 (重复回调 / 记录不存在), 不做后续账务处理
-            log.warn("提现回调状态未变更, notify: {}", JSONUtil.toJsonStr(notify));
-            return;
-        }
-        WithdrawRecordVO withdrawRecord = withdrawDomain.queryTripartiteWithdrawRecord(req.getId());
-        if (withdrawRecord == null) {
-            log.error("提现回调未查到提现记录, id: {}", req.getId());
-            return;
-        }
-        // 提现成功扣减三方账户余额; 退汇则回补
-        if (AuditEnum.WithdrawSate.PASS == req.getState()) {
-            tripartitePurse.subAccountTripartitePurseAmount(withdrawRecord.getAccountId(), withdrawRecord.getAmount());
-        }
-        if (AuditEnum.WithdrawSate.SUCCESS == req.getState()) {
-            tripartitePurse.addAccountTripartitePurseAmount(withdrawRecord.getAccountId(), withdrawRecord.getAmount());
-        }
-        // 增加提货积分
-        accountApi.addGoodsPoints(withdrawRecord.getAccountId(), withdrawRecord.getGoodsPoints());
-    }
-
-    /**
-     * 连连交易状态转提现状态。
-     *
-     * <p>旧代码用裸 int (1/2/3) 且判定顺序为 "先 成功/失败, 再覆盖退汇",
-     * 迁移改为枚举 + 单次判定, 语义等价: 成功 → {@code PASS}, 退回 → {@code SUCCESS}(退汇), 其余 → {@code REFUSE}。</p>
-     *
-     * @param txnStatus 连连交易状态串
-     * @return 提现状态枚举
-     */
-    private AuditEnum.WithdrawSate parseWithdrawState(String txnStatus) {
-        PurseEnum.TripartiteTxnStatus status = PurseEnum.TripartiteTxnStatus.getByValue(txnStatus);
-        if (PurseEnum.TripartiteTxnStatus.SUCCESS == status) {
-            return AuditEnum.WithdrawSate.PASS;
-        }
-        if (PurseEnum.TripartiteTxnStatus.CANCEL == status) {
-            return AuditEnum.WithdrawSate.SUCCESS;
-        }
-        return AuditEnum.WithdrawSate.REFUSE;
-    }
 }

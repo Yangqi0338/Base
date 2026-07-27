@@ -300,42 +300,4 @@ public class PurseEnum implements Serializable {
         }
     }
 
-    /**
-     * 连连 ACCP 交易状态 (回调 {@code txn_status})。
-     *
-     * <p>迁移自 new-scm {@code TripartitePayMethod} 内的 {@code TRADE_*} 裸字符串常量,
-     * 收敛为枚举避免回调处理散落魔法值。</p>
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum TripartiteTxnStatus {
-        /** 交易处理中 */
-        WAIT_PAY("TRADE_WAIT_PAY", "交易处理中"),
-        /** 交易成功 */
-        SUCCESS("TRADE_SUCCESS", "交易成功"),
-        /** 交易失败 */
-        CLOSE("TRADE_CLOSE", "交易失败"),
-        /** 交易退回 */
-        CANCEL("TRADE_CANCEL", "交易退回"),
-        ;
-
-        @EnumValue
-        @JsonValue
-        private final String value;
-        private final String desc;
-
-        /**
-         * 按连连返回的交易状态串取枚举。
-         *
-         * @param value 交易状态串
-         * @return 对应枚举; 无法识别返回 {@code null}
-         */
-        public static TripartiteTxnStatus getByValue(String value) {
-            return Arrays.stream(values())
-                    .filter(it -> it.getValue().equals(value))
-                    .findFirst()
-                    .orElse(null);
-        }
-    }
-
 }

@@ -21,7 +21,7 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-model</artifactId>
         </dependency>
-        <!-- 迁移补充: relation domain/infra 使用 TransferUtils/SecurityUtils/ScmException(core-model 经此传递)。
+        <!-- 迁移补充: relation domain/infra 使用 TransferUtils/SecurityUtils/PlatformException(core-model 经此传递)。
              core-utils 为 common 基础叶子模块(与 ddd-model 同层)，参照 biz-account-model 迁移。 -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

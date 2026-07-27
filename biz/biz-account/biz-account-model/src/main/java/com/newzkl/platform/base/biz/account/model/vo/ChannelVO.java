@@ -8,7 +8,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import lombok.Data;
 
 /**
@@ -185,7 +185,7 @@ public class ChannelVO extends BaseRes {
 
     public String getStoreUrl() {
         if (StrUtil.isNotEmpty(this.operatorDomain)) {
-            if (ScmUtil.stringLast(this.operatorDomain).equals("/")) {
+            if (BizUtil.stringLast(this.operatorDomain).equals("/")) {
                 return this.operatorDomain + "scm/" + this.id + "/scm/";
             } else {
                 return this.operatorDomain + "/scm/" + this.id + "/scm/";

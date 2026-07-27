@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.market.model.suggest.req.CommitTagReq;
 import com.newzkl.platform.base.biz.market.model.suggest.req.TagConfigReq;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.CommitTagVO;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.TagConfigVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +52,7 @@ class SuggestControllerTest {
         TagConfigVO vo = new TagConfigVO();
         when(suggestDomain.queryTagConfig(true)).thenReturn(vo);
 
-        ScmResult<TagConfigVO> result = suggestController.queryTagConfig();
+        PlatformResult<TagConfigVO> result = suggestController.queryTagConfig();
 
         assertThat(result.getData()).isSameAs(vo);
         verify(suggestDomain).queryTagConfig(true);

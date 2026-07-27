@@ -123,6 +123,38 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- ===== biz / auth ===== -->
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-auth-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-auth-facade</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-auth-domain</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-auth-application</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-auth-infrastructure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-auth-action</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- ===== biz / user ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>

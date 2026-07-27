@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.action.spi;
 
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
 import org.junit.jupiter.api.AfterEach;
@@ -49,7 +49,7 @@ class IdentityDispatcherTest {
 
         SecurityContextHolder.set(TokenConstants.ROLE, "1001");
         Greeter proxy = dispatcher.resolve(Greeter.class);
-        ScmException ex = assertThrows(ScmException.class, proxy::hi);
+        PlatformException ex = assertThrows(PlatformException.class, proxy::hi);
         assertEquals("1010", ex.getCode());
     }
 

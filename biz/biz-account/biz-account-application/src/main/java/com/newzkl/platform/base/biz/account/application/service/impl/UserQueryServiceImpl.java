@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
@@ -40,7 +40,7 @@ import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.*;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -315,7 +315,7 @@ public class UserQueryServiceImpl implements UserQueryService {
             UpIdRes upIdRes = channelUpId(SecurityUtils.getAccountId());
             return operatorDomain.getOperatorDomainInfo(upIdRes.getOneId());
         } else {
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
     }
 
@@ -496,12 +496,12 @@ public class UserQueryServiceImpl implements UserQueryService {
     public String supplierRegistrationInvitationLink(String headHost) {
         Long accountId = SecurityUtils.getAccountId();
         if (accountId == null) {
-            throw new ScmException(PARAM, "请先登录");
+            throw new PlatformException(PARAM, "请先登录");
         }
 
 //        OperatorDO operator = operatorDAO.selectByPrimaryKey(accountId);
 //        if (operator == null) {
-//            throw new ScmException(PARAM, "未找到当前域名的运营商信息");
+//            throw new PlatformException(PARAM, "未找到当前域名的运营商信息");
 //        }
 //        String domain = operator.getDomain();
 //

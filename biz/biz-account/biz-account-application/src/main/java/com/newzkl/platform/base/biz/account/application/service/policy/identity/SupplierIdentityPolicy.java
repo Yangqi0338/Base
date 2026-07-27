@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
@@ -77,16 +77,16 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
         log.info("邀请人信息：{}", JSONUtil.toJsonStr(inviteAccountVO));
         if (inviteAccountVO != null) {
             if (accountId.equals(inviteAccountVO.getId())) {
-                throw new ScmException(AccountErrorCode.PARAM_YQM);
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
             } else {
 //                log.info("邀请人身份ID：{}", inviteAccountVO.getSubRoleIdList());
                 if (!(inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.SELECTOR.getCodeStr()) ||
                         inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCodeStr()) ||
                         inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCodeStr()))) {
-                    throw new ScmException(AccountErrorCode.NO_INVITE);
+                    throw new PlatformException(AccountErrorCode.NO_INVITE);
                 } //只有交易师、渠道商、运营商可邀请供应商
                /* if(!(inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.SELECTOR.getCode().toString())|| inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCode().toString())) || inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCode().toString())){
-                    throw new ScmException(AccountErrorCode.NO_INVITE);
+                    throw new PlatformException(AccountErrorCode.NO_INVITE);
                 }*/
                 else {
                     inviteAccountId = inviteAccountVO.getId();
@@ -135,7 +135,7 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public IdentityRegisterRes proxyRegister(IdentityProxySaveReq proxySaveReq) {
-        throw new ScmException(BaseErrorCode.CUSTOM, "供应商不支持代理注册");
+        throw new PlatformException(BaseErrorCode.CUSTOM, "供应商不支持代理注册");
     }
 
 
@@ -165,7 +165,7 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
             supplierDomain.auditFail(accountId, auditEvent.getLastRefuseReason());
         } else {
             log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
         //发送短信
         CodeReq codeReq = new CodeReq();
@@ -180,7 +180,7 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
             smsApi.sendCode(codeReq);
         } else {
             log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
     }
 
@@ -188,7 +188,7 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
     @Override
     public void inviteSuccess(AccountVO inviteAccount, AccountVO account, Object roleObj) {
         // 供应商无法邀请人
-        throw new ScmException(AccountErrorCode.NO_INVITE);
+        throw new PlatformException(AccountErrorCode.NO_INVITE);
     }
 
     @Override

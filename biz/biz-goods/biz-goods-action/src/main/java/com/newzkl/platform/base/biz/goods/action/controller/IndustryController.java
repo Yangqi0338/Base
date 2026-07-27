@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.brand.IndustryPageQu
 import com.newzkl.platform.base.biz.goods.model.goods.req.brand.IndustryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +40,8 @@ public class IndustryController {
      * @return 行业 ID
      */
     @PostMapping("createIndustry")
-    public ScmResult<Long> industryCreate(@Validated @RequestBody IndustryReq industryReq) {
-        return ScmResult.success(industryDomain.industrySave(industryReq));
+    public PlatformResult<Long> industryCreate(@Validated @RequestBody IndustryReq industryReq) {
+        return PlatformResult.success(industryDomain.industrySave(industryReq));
     }
 
     /**
@@ -51,9 +51,9 @@ public class IndustryController {
      * @return 成功结果
      */
     @PostMapping("deleteIndustry")
-    public ScmResult<Void> industryDelete(@RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> industryDelete(@RequestBody IdListCommand idListObj) {
         industryDomain.industryDelete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -63,9 +63,9 @@ public class IndustryController {
      * @return 成功结果
      */
     @PostMapping("updateIndustry")
-    public ScmResult<Void> industryUpdate(@RequestBody IndustryReq industryReq) {
+    public PlatformResult<Void> industryUpdate(@RequestBody IndustryReq industryReq) {
         industryDomain.industrySave(industryReq);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -75,8 +75,8 @@ public class IndustryController {
      * @return 行业 VO
      */
     @GetMapping("getIndustry")
-    public ScmResult<IndustryVO> industryVO(@RequestParam("id") Long id) {
-        return ScmResult.success(industryDomain.industry(id));
+    public PlatformResult<IndustryVO> industryVO(@RequestParam("id") Long id) {
+        return PlatformResult.success(industryDomain.industry(id));
     }
 
     /**
@@ -86,8 +86,8 @@ public class IndustryController {
      * @return 行业分页
      */
     @PostMapping("pageIndustry")
-    public ScmResult<Page<IndustryVO>> industryPage(@RequestBody IndustryPageQuery industryQuery) {
-        return ScmResult.success(industryDomain.industryPage(industryQuery));
+    public PlatformResult<Page<IndustryVO>> industryPage(@RequestBody IndustryPageQuery industryQuery) {
+        return PlatformResult.success(industryDomain.industryPage(industryQuery));
     }
 
     /**
@@ -97,9 +97,9 @@ public class IndustryController {
      * @return 成功结果
      */
     @PostMapping("bindCategory")
-    public ScmResult<Void> bindCategory(@Validated @RequestBody IndustryCmd.BindCategory bindCategory) {
+    public PlatformResult<Void> bindCategory(@Validated @RequestBody IndustryCmd.BindCategory bindCategory) {
         spuCategoryService.bindIndustry(bindCategory.getIndustryId(), bindCategory.getCategoryId(),
                 BooleanUtil.isTrue(bindCategory.getIsBind()));
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

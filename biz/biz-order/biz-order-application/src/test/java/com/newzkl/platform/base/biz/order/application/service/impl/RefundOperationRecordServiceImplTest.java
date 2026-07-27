@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordP
 import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordUpdateReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.RefundOperationRecordVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -99,7 +99,7 @@ class RefundOperationRecordServiceImplTest {
         RefundOperationRecordUpdateReq req = new RefundOperationRecordUpdateReq();
         req.setId(6L);
 
-        ScmException ex = assertThrows(ScmException.class, () -> refundOperationRecordService.update(req));
+        PlatformException ex = assertThrows(PlatformException.class, () -> refundOperationRecordService.update(req));
 
         assertEquals(BaseErrorCode.NODATA.getCode().toString(), ex.getCode());
         verify(refundOperationRecordDomain, never()).update(any());

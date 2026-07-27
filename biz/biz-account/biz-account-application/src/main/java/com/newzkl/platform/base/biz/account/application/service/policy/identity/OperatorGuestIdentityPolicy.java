@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Component;
@@ -80,7 +80,7 @@ public class OperatorGuestIdentityPolicy extends AbsIdentityPolicy {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public IdentityRegisterRes proxyRegister(IdentityProxySaveReq proxySaveReq) {
-        throw new ScmException(AccountErrorCode.NO_INVITE);
+        throw new PlatformException(AccountErrorCode.NO_INVITE);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class OperatorGuestIdentityPolicy extends AbsIdentityPolicy {
     @Override
     public void inviteSuccess(AccountVO account, AccountVO inviteAccount, Object roleObj) {
         // 游客无法邀请人
-        throw new ScmException(AccountErrorCode.NO_INVITE);
+        throw new PlatformException(AccountErrorCode.NO_INVITE);
     }
 
     @Override

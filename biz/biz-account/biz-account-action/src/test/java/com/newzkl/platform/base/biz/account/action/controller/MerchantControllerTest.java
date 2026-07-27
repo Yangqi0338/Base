@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.merchant.res.MerchantRes;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,7 +100,7 @@ class MerchantControllerTest {
         when(userQueryService.merchantPage(any())).thenReturn(new Page<>());
         MerchantQuery query = new MerchantQuery();
 
-        ScmResult<Page<MerchantRes>> result = merchantController.merchantPage(query);
+        PlatformResult<Page<MerchantRes>> result = merchantController.merchantPage(query);
 
         assertEquals(0, result.getData().getRecords().size());
         verify(userQueryService).merchantPage(query);

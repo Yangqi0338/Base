@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPack
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>商品域「商品套餐/组包」配置, 区别于甄选师「入会礼包」(归 biz-benefit-order)。</p>
  *
  * <p>迁移偏离: 旧 {@code /api/good-packages} REST 风格 (PathVariable + 散装 RequestParam)
- * 统一为 {@code /goods/goodPackage} + POST + RequestBody, 返回 {@code ScmResult}。</p>
+ * 统一为 {@code /goods/goodPackage} + POST + RequestBody, 返回 {@code PlatformResult}。</p>
  *
  * @author KC
  */
@@ -40,8 +40,8 @@ public class GoodPackageController {
      * @return 套餐主键 ID
      */
     @PostMapping("create")
-    public ScmResult<Long> create(@Validated @RequestBody GoodPackageReq req) {
-        return ScmResult.success(goodPackageDomain.create(req));
+    public PlatformResult<Long> create(@Validated @RequestBody GoodPackageReq req) {
+        return PlatformResult.success(goodPackageDomain.create(req));
     }
 
     /**
@@ -51,9 +51,9 @@ public class GoodPackageController {
      * @return 成功结果
      */
     @PostMapping("update")
-    public ScmResult<Void> update(@Validated(UpdateCommand.class) @RequestBody GoodPackageReq req) {
+    public PlatformResult<Void> update(@Validated(UpdateCommand.class) @RequestBody GoodPackageReq req) {
         goodPackageDomain.update(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -63,9 +63,9 @@ public class GoodPackageController {
      * @return 成功结果
      */
     @PostMapping("enable")
-    public ScmResult<Void> enable(@RequestParam("id") Long id) {
+    public PlatformResult<Void> enable(@RequestParam("id") Long id) {
         goodPackageDomain.enable(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -75,9 +75,9 @@ public class GoodPackageController {
      * @return 成功结果
      */
     @PostMapping("disable")
-    public ScmResult<Void> disable(@RequestParam("id") Long id) {
+    public PlatformResult<Void> disable(@RequestParam("id") Long id) {
         goodPackageDomain.disable(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -87,8 +87,8 @@ public class GoodPackageController {
      * @return 套餐视图对象
      */
     @GetMapping("detail")
-    public ScmResult<GoodPackageVO> detail(@RequestParam("packageId") String packageId) {
-        return ScmResult.success(goodPackageDomain.detailByPackageId(packageId));
+    public PlatformResult<GoodPackageVO> detail(@RequestParam("packageId") String packageId) {
+        return PlatformResult.success(goodPackageDomain.detailByPackageId(packageId));
     }
 
     /**
@@ -98,7 +98,7 @@ public class GoodPackageController {
      * @return 套餐分页
      */
     @PostMapping("page")
-    public ScmResult<Page<GoodPackageVO>> page(@RequestBody GoodPackageQuery query) {
-        return ScmResult.success(goodPackageDomain.page(query));
+    public PlatformResult<Page<GoodPackageVO>> page(@RequestBody GoodPackageQuery query) {
+        return PlatformResult.success(goodPackageDomain.page(query));
     }
 }

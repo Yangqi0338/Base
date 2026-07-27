@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.MarketGoodsCategoryVO
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketUserVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -52,11 +52,11 @@ public class MarketController {
      */
     @Deprecated
     @GetMapping("/queryChannelBindMarket")
-    public ScmResult<Page<AppBindMarketVO>> queryChannelBindMarket(@ModelAttribute ChannelMarketPageQuery query) {
+    public PlatformResult<Page<AppBindMarketVO>> queryChannelBindMarket(@ModelAttribute ChannelMarketPageQuery query) {
         if (query.getClientId() == null) {
             query.setClientId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(marketDomain.queryChannelBindMarket(query));
+        return PlatformResult.success(marketDomain.queryChannelBindMarket(query));
     }
 
     /**
@@ -70,11 +70,11 @@ public class MarketController {
      */
     @Deprecated
     @GetMapping("/queryChannelBindMarketGoods")
-    public ScmResult<Page<AppBindMarketGoodsVO>> queryChannelBindMarketGoods(@ModelAttribute AppBindMarketGoodsPageQuery query) {
+    public PlatformResult<Page<AppBindMarketGoodsVO>> queryChannelBindMarketGoods(@ModelAttribute AppBindMarketGoodsPageQuery query) {
         if (query.getUserId() == null) {
             query.setUserId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(marketDomain.queryChannelBindMarketGoods(query));
+        return PlatformResult.success(marketDomain.queryChannelBindMarketGoods(query));
     }
 
     /**
@@ -84,11 +84,11 @@ public class MarketController {
      * @return 市场分页
      */
     @PostMapping("/queryMarketList")
-    public ScmResult<Page<MarketVO>> queryMarketList(@RequestBody MarketPageQuery query) {
+    public PlatformResult<Page<MarketVO>> queryMarketList(@RequestBody MarketPageQuery query) {
         if (query.getClientId() == null) {
             query.setClientId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(marketDomain.queryMarketList(query));
+        return PlatformResult.success(marketDomain.queryMarketList(query));
     }
 
     /**
@@ -98,8 +98,8 @@ public class MarketController {
      * @return 市场详情
      */
     @PostMapping("/queryMarket/{marketId}")
-    public ScmResult<MarketVO> queryMarket(@PathVariable Long marketId) {
-        return ScmResult.success(marketDomain.queryMarket(marketId));
+    public PlatformResult<MarketVO> queryMarket(@PathVariable Long marketId) {
+        return PlatformResult.success(marketDomain.queryMarket(marketId));
     }
 
     /**
@@ -109,8 +109,8 @@ public class MarketController {
      * @return 绑定 ID
      */
     @PostMapping("/tradersBindTwoMarket")
-    public ScmResult<Long> tradersBindTwoMarket(@RequestBody ClientBindMarketReq req) {
-        return ScmResult.success(marketDomain.bindMarket(req));
+    public PlatformResult<Long> tradersBindTwoMarket(@RequestBody ClientBindMarketReq req) {
+        return PlatformResult.success(marketDomain.bindMarket(req));
     }
 
     /**
@@ -124,8 +124,8 @@ public class MarketController {
      */
     @Deprecated
     @PostMapping("/appChannelBindMarket")
-    public ScmResult<Long> appChannelBindMarket(@RequestBody ClientBindMarketReq req) {
-        return ScmResult.success(marketDomain.appChannelBindMarket(req));
+    public PlatformResult<Long> appChannelBindMarket(@RequestBody ClientBindMarketReq req) {
+        return PlatformResult.success(marketDomain.appChannelBindMarket(req));
     }
 
     /**
@@ -135,8 +135,8 @@ public class MarketController {
      * @return 绑定 ID
      */
     @PostMapping("/channelBindTradersMarket")
-    public ScmResult<Long> channelBindTradersMarket(@RequestBody ClientBindMarketReq req) {
-        return ScmResult.success(marketDomain.channelBindTradersMarket(req));
+    public PlatformResult<Long> channelBindTradersMarket(@RequestBody ClientBindMarketReq req) {
+        return PlatformResult.success(marketDomain.channelBindTradersMarket(req));
     }
 
     /**
@@ -146,9 +146,9 @@ public class MarketController {
      * @return 成功结果
      */
     @PostMapping("/deBindMarket/{id}")
-    public ScmResult<Void> deBindMarket(@PathVariable Long id) {
+    public PlatformResult<Boolean> deBindMarket(@PathVariable Long id) {
         marketDomain.deBindMarket(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -158,11 +158,11 @@ public class MarketController {
      * @return 绑定市场列表
      */
     @PostMapping("/queryBindMarket")
-    public ScmResult<List<BindMarketVO>> queryBindMarket(@RequestBody BindMarketListReq req) {
+    public PlatformResult<List<BindMarketVO>> queryBindMarket(@RequestBody BindMarketListReq req) {
         if (req.getClientId() == null) {
             req.setClientId(SecurityUtils.getAccountId());
         }
-        return ScmResult.success(marketDomain.queryBindMarket(req));
+        return PlatformResult.success(marketDomain.queryBindMarket(req));
     }
 
     /**
@@ -172,8 +172,8 @@ public class MarketController {
      * @return 市场用户列表
      */
     @PostMapping("/queryMarketUser")
-    public ScmResult<List<MarketUserVO>> queryMarketUser(@RequestBody MarketUserReq req) {
-        return ScmResult.success(marketDomain.queryMarketUser(req));
+    public PlatformResult<List<MarketUserVO>> queryMarketUser(@RequestBody MarketUserReq req) {
+        return PlatformResult.success(marketDomain.queryMarketUser(req));
     }
 
     /**
@@ -183,11 +183,11 @@ public class MarketController {
      * @return 成功或失败结果
      */
     @PostMapping("/saveMarketCategory")
-    public ScmResult<Object> saveMarketCategory(@RequestBody MarketCategoryVO marketCategory) {
+    public PlatformResult<Boolean> saveMarketCategory(@RequestBody MarketCategoryVO marketCategory) {
         if (marketDomain.saveMarketCategory(marketCategory)) {
-            return ScmResult.success();
+            return PlatformResult.success();
         } else {
-            return ScmResult.fail();
+            return PlatformResult.fail();
         }
     }
 
@@ -198,8 +198,8 @@ public class MarketController {
      * @return 市场分类分页
      */
     @PostMapping("/queryMarketCategoryList")
-    public ScmResult<Page<MarketCategoryVO>> queryMarketCategoryList(@RequestBody MarketCategoryPageQuery query) {
-        return ScmResult.success(marketDomain.queryMarketCategoryPage(query));
+    public PlatformResult<Page<MarketCategoryVO>> queryMarketCategoryList(@RequestBody MarketCategoryPageQuery query) {
+        return PlatformResult.success(marketDomain.queryMarketCategoryPage(query));
     }
 
     /**
@@ -209,9 +209,9 @@ public class MarketController {
      * @return 成功结果
      */
     @PostMapping("/deleteMarketCategory/{id}")
-    public ScmResult<Void> deleteMarketCategory(@PathVariable Long id) {
+    public PlatformResult<Boolean> deleteMarketCategory(@PathVariable Long id) {
         marketDomain.deleteMarketCategory(id);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -221,8 +221,8 @@ public class MarketController {
      * @return 市场商品分类列表
      */
     @PostMapping("/queryMarketGoodsCategory/{marketId}")
-    public ScmResult<List<MarketGoodsCategoryVO>> queryMarketGoodsCategory(@PathVariable Long marketId) {
-        return ScmResult.success(marketDomain.queryMarketGoodsCategory(marketId, null));
+    public PlatformResult<List<MarketGoodsCategoryVO>> queryMarketGoodsCategory(@PathVariable Long marketId) {
+        return PlatformResult.success(marketDomain.queryMarketGoodsCategory(marketId, null));
     }
 
     /**
@@ -235,7 +235,7 @@ public class MarketController {
      */
     @Deprecated
     @PostMapping("/querySelectorGoodsCategory")
-    public ScmResult<List<MarketGoodsCategoryVO>> querySelectorGoodsCategory() {
-        return ScmResult.success(marketDomain.queryMarketGoodsCategory(null, SecurityUtils.getAccountId()));
+    public PlatformResult<List<MarketGoodsCategoryVO>> querySelectorGoodsCategory() {
+        return PlatformResult.success(marketDomain.queryMarketGoodsCategory(null, SecurityUtils.getAccountId()));
     }
 }

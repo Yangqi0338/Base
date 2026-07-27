@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 本地消息仓储端口。
  *
- * <p>移植自 adopt-chicken {@code ILocalMessageRepository}, 去 I 前缀; 依赖指向本仓模型。</p>
+ * <p>移植自模板 {@code ILocalMessageRepository}, 去 I 前缀; 依赖指向本仓模型。</p>
  *
  * @author sample
  */

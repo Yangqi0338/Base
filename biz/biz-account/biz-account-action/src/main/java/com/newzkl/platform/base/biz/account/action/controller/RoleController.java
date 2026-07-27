@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,8 +60,8 @@ public class RoleController {
      * @return 审批流 ID (审批域未接线时为 null)
      */
     @PostMapping("/applyRole")
-    public ScmResult<Long> applyRole(@RequestBody RoleApplyCommand roleApplyCommand) {
-        return ScmResult.success(identityService.applyRole(roleApplyCommand));
+    public PlatformResult<Long> applyRole(@RequestBody RoleApplyCommand roleApplyCommand) {
+        return PlatformResult.success(identityService.applyRole(roleApplyCommand));
     }
 
     /**
@@ -71,9 +71,9 @@ public class RoleController {
      * @return 成功结果
      */
     @PostMapping("/saveApplyCommand")
-    public ScmResult<Void> saveApplyCommand(@RequestBody RoleApplyCommand roleApplyCommand) {
+    public PlatformResult<Void> saveApplyCommand(@RequestBody RoleApplyCommand roleApplyCommand) {
         identityService.saveApplyCommand(roleApplyCommand);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -85,14 +85,14 @@ public class RoleController {
      * @return 角色申请资料, 无或异常时为 null
      */
     @GetMapping("/loadApplyCommand")
-    public ScmResult<RoleApplyCommand> loadApplyCommand(@RequestParam("roleId") Long roleId) {
+    public PlatformResult<RoleApplyCommand> loadApplyCommand(@RequestParam("roleId") Long roleId) {
         RoleApplyCommand roleApplyCommand = null;
         try {
             roleApplyCommand = identityService.loadApplyCommand(roleId);
         } catch (Exception e) {
             log.warn("加载申请资料异常");
         }
-        return ScmResult.success(roleApplyCommand);
+        return PlatformResult.success(roleApplyCommand);
     }
 
     /**
@@ -101,8 +101,8 @@ public class RoleController {
      * @return 当前登录账号已开通的角色列表
      */
     @PostMapping("/userRoleInfo")
-    public ScmResult<List<AccountRoleVO>> userRoleInfo() {
-        return ScmResult.success(userQueryService.accountRoleVO(SecurityUtils.getAccountId()));
+    public PlatformResult<List<AccountRoleVO>> userRoleInfo() {
+        return PlatformResult.success(userQueryService.accountRoleVO(SecurityUtils.getAccountId()));
     }
 
     /**
@@ -112,8 +112,8 @@ public class RoleController {
      * @return 审批流 ID (审批域未接线时为 null)
      */
     @PostMapping("/submitPromiseFlow")
-    public ScmResult<Long> submitPromiseFlow(@RequestBody @Valid PromiseFlowVO promiseFlowVO) {
-        return ScmResult.success(identityService.submitPromiseFlow(promiseFlowVO));
+    public PlatformResult<Long> submitPromiseFlow(@RequestBody @Valid PromiseFlowVO promiseFlowVO) {
+        return PlatformResult.success(identityService.submitPromiseFlow(promiseFlowVO));
     }
 
     /**
@@ -123,8 +123,8 @@ public class RoleController {
      * @return 角色列表
      */
     @PostMapping("/roleList")
-    public ScmResult<List<RoleRes>> roleList(@RequestBody RoleQuery roleQuery) {
-        return ScmResult.success(roleDomain.list(roleQuery));
+    public PlatformResult<List<RoleRes>> roleList(@RequestBody RoleQuery roleQuery) {
+        return PlatformResult.success(roleDomain.list(roleQuery));
     }
 
     /**
@@ -134,8 +134,8 @@ public class RoleController {
      * @return 角色详情, 无则 null
      */
     @GetMapping("/roleDetail")
-    public ScmResult<RoleRes> roleDetail(@RequestParam("roleId") Long roleId) {
-        return ScmResult.success(roleDomain.detail(roleId));
+    public PlatformResult<RoleRes> roleDetail(@RequestParam("roleId") Long roleId) {
+        return PlatformResult.success(roleDomain.detail(roleId));
     }
 
     /**
@@ -147,13 +147,13 @@ public class RoleController {
      * @return 成功结果
      */
     @PostMapping("/roleListSave")
-    public ScmResult<Void> roleListSave(@RequestBody RoleReq roleReq) {
+    public PlatformResult<Void> roleListSave(@RequestBody RoleReq roleReq) {
         if (roleReq.getId() != null) {
             roleDomain.edit(roleReq.getId(), roleReq);
         } else {
             roleDomain.save(roleReq);
         }
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -166,7 +166,7 @@ public class RoleController {
      * @return 开通码分页
      */
     @PostMapping("cdkList")
-    public ScmResult<Page<CdkRes>> cdkList(@RequestBody CdkQuery cdkQuery) {
+    public PlatformResult<Page<CdkRes>> cdkList(@RequestBody CdkQuery cdkQuery) {
         RoleEnum.CompanyRole role = RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId());
         Long accountId = SecurityUtils.getAccountId();
         if (RoleEnum.CompanyRole.OPERATOR == role) {
@@ -176,7 +176,7 @@ public class RoleController {
         } else if (RoleEnum.CompanyRole.CHANNEL == role) {
             cdkQuery.setChannelId(accountId);
         }
-        return ScmResult.success(userQueryService.cdkPage(cdkQuery));
+        return PlatformResult.success(userQueryService.cdkPage(cdkQuery));
     }
 
     /**
@@ -188,11 +188,11 @@ public class RoleController {
      * @return 成功结果
      */
     @PostMapping("toCdk")
-    public ScmResult<Void> toCdk(@Validated @RequestBody ToCdkCommand toCdkCommand) {
+    public PlatformResult<Void> toCdk(@Validated @RequestBody ToCdkCommand toCdkCommand) {
         toCdkCommand.setFromRole(SecurityUtils.getRoleId());
         toCdkCommand.setFromUserId(SecurityUtils.getAccountId());
         identityService.toCdk(toCdkCommand);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -202,8 +202,8 @@ public class RoleController {
      * @return 成功结果
      */
     @PostMapping("cdkStateEdit")
-    public ScmResult<Void> cdkStateEdit(@Validated @RequestBody RoleCmd.StateEdit stateEdit) {
+    public PlatformResult<Void> cdkStateEdit(@Validated @RequestBody RoleCmd.StateEdit stateEdit) {
         cdkDomain.cdkStateEdit(stateEdit.getId(), stateEdit.getUseState());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

@@ -4,24 +4,19 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayService;
-import com.newzkl.platform.base.biz.finance.application.purse.service.WithdrawService;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
-import com.newzkl.platform.base.biz.finance.domain.ll.SignUtils;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.model.enums.CacheKey;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuAsyncRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuBindCardNotifyRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayNotifyRes;
-import com.newzkl.platform.base.biz.finance.model.person.res.PersonPurseNotifyRes;
-import com.newzkl.platform.base.biz.finance.model.person.res.TripartiteTxnNotifyRes;
-import com.newzkl.platform.base.biz.finance.model.person.res.WithdrawNotifyRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,26 +36,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 三方支付异步回调控制器 (连连 + 汇付)。
+ * 三方支付异步回调控制器
  *
- * <p>迁移自 new-scm {@code interfaces.pay.PayNotifyController}。</p>
+ * <p>迁移自 new-scm {@code interfaces.pay.PayNotifyController}</p>
  *
  * <p>迁移调整:</p>
  * <ul>
  *   <li>{@code javax.servlet.*} → {@code jakarta.servlet.*} (Spring Boot 3);</li>
- *   <li>连连验签走 {@link SignUtils#checkSign}, 汇付验签走 {@link HuiFuMethod#verify}
- *       (旧 {@code verify(String, HttpServletRequest)} 重载已在 domain 层裁掉,
- *       sign 提取属入口层职责, 由本控制器完成);</li>
- *   <li>{@code TRADE_*} / {@code Y P N} 裸串收敛为 {@link PurseEnum.TripartiteTxnStatus}
- *       与 {@link PurseEnum.TripartitePurchaseAuditStatus};</li>
+ *   <li>验签走 {@link HuiFuMethod#verify} (旧 {@code verify(String, HttpServletRequest)}
+ *       重载已在 domain 层裁掉, sign 提取属入口层职责, 由本控制器完成);</li>
+ *   <li>{@code Y P N} 裸串收敛为 {@link PurseEnum.TripartitePurchaseAuditStatus};</li>
  *   <li>{@code queryPageAccountTripartitePurse} 在 Base 直接返回 {@code List},
  *       旧代码的 {@code .getList()} 去掉;</li>
  *   <li>{@code AccountTripartitePurseVO.userStatus} 在 Base 已是枚举, 三方状态串经
- *       {@code getByValue} 转换后再赋值;</li>
- *   <li>旧 {@code consumeNotify} 里注释掉的连连分支未迁 (汇付已接管消费回调)。</li>
+ *       {@code getByValue} 转换后再赋值</li>
  * </ul>
  *
- * <p>回调接口不做鉴权 (三方直连), 安全性由验签保证。</p>
+ * <p>回调接口不做鉴权 (三方直连), 安全性由验签保证</p>
  *
  * @author KC
  */
@@ -76,30 +68,13 @@ public class NotifyController {
     private static final String SUCCESS = "Success";
 
     /**
-     * 连连转出到账成功状态值。
-     */
-    private static final Integer ROLL_OUT_SUCCESS = 1;
-
-    /**
-     * 连连转出到账失败状态值。
-     */
-    private static final Integer ROLL_OUT_FAIL = 2;
-
-    /**
      * 汇付通知类型 - 审核消息。
      */
     private static final String NOTIFY_TYPE_AUDIT = "A";
 
-    /**
-     * 连连签名请求头名。
-     */
-    private static final String HEADER_SIGNATURE = "Signature-Data";
-
     private final TripartitePurseDomain tripartitePurse;
 
     private final CashPayService cashPayService;
-
-    private final WithdrawService withdrawService;
 
     /**
      * 消费支付结果回调 (汇付)。
@@ -127,36 +102,10 @@ public class NotifyController {
      * @return 支付状态, 无缓存返回 0
      */
     @GetMapping("/state")
-    public ScmResult<Long> state(@RequestParam("businessKey") String businessKey,
+    public PlatformResult<Long> state(@RequestParam("businessKey") String businessKey,
                                  @RequestParam("key") String key) {
         Long state = RedisUtil.get(StrUtil.format(CacheKey.PAYMENT_STATE, businessKey, key));
-        return ScmResult.success(Opt.ofNullable(state).orElse(0L));
-    }
-
-    /**
-     * 个人 / 企业开户结果回调 (连连)。
-     *
-     * @param request 回调请求
-     * @return 成功返回 {@code Success}; 验签失败返回 {@code null}
-     * @throws IOException 读取请求体失败
-     */
-    @PostMapping("/personPurseNotify")
-    public String personPurseNotify(HttpServletRequest request) throws IOException {
-        String data = getNotifyDataAndCheck(request);
-        if (data == null) {
-            return null;
-        }
-        PersonPurseNotifyRes result = JSONUtil.toBean(data, PersonPurseNotifyRes.class);
-        AccountTripartitePurseVO accountTripartite = new AccountTripartitePurseVO();
-        accountTripartite.setAccountId(Long.valueOf(result.getUser_id()));
-        accountTripartite.setOidUserNo(result.getOid_userno());
-        accountTripartite.setUserStatus(PurseEnum.TripartitePurchaseStatus.getByValue(result.getUser_status()));
-        accountTripartite.setRemark(result.getRemark());
-        if (result.getAccountInfo() != null) {
-            accountTripartite.setAccountLevel(result.getAccountInfo().getAccount_level());
-        }
-        tripartitePurse.alterAccountTripartitePurse(accountTripartite);
-        return SUCCESS;
+        return PlatformResult.success(Opt.ofNullable(state).orElse(0L));
     }
 
     /**
@@ -187,50 +136,6 @@ public class NotifyController {
     }
 
     /**
-     * 平台转出到账结果回调 (连连)。
-     *
-     * @param request 回调请求
-     * @return 已处理状态返回 {@code Success}; 处理中状态返回 {@code null}
-     * @throws IOException 读取请求体失败
-     */
-    @PostMapping("/rollOutNotify")
-    public String rollOutNotify(HttpServletRequest request) throws IOException {
-        String data = getNotifyDataAndCheck(request);
-        if (data == null) {
-            return null;
-        }
-        TripartiteTxnNotifyRes result = JSONUtil.toBean(data, TripartiteTxnNotifyRes.class);
-        PurseEnum.TripartiteTxnStatus status = PurseEnum.TripartiteTxnStatus.getByValue(result.getTxn_status());
-        Long applyId = Long.valueOf(result.getOrderInfo().getTxn_seqno());
-        if (PurseEnum.TripartiteTxnStatus.SUCCESS == status) {
-            withdrawService.alterRollOutTripartiteState(applyId, ROLL_OUT_SUCCESS, result.getAccp_txno());
-            return SUCCESS;
-        }
-        if (PurseEnum.TripartiteTxnStatus.CLOSE == status) {
-            withdrawService.alterRollOutTripartiteState(applyId, ROLL_OUT_FAIL, result.getAccp_txno());
-            return SUCCESS;
-        }
-        return null;
-    }
-
-    /**
-     * 客户提现结果回调 (连连)。
-     *
-     * @param request 回调请求
-     * @return 成功返回 {@code Success}; 验签失败返回 {@code null}
-     * @throws IOException 读取请求体失败
-     */
-    @PostMapping("/withdrawOutNotify")
-    public String withdrawOutNotify(HttpServletRequest request) throws IOException {
-        String data = getNotifyDataAndCheck(request);
-        if (data == null) {
-            return null;
-        }
-        withdrawService.withdrawNotify(JSONUtil.toBean(data, WithdrawNotifyRes.class));
-        return SUCCESS;
-    }
-
-    /**
      * 按汇付审核结果更新三方账户状态。
      *
      * @param auditInfo 审核信息
@@ -243,7 +148,7 @@ public class NotifyController {
         List<AccountTripartitePurseVO> dbList = tripartitePurse.queryPageAccountTripartitePurse(query);
         if (dbList == null || dbList.isEmpty()) {
             log.error("汇付绑卡回调未知的申请id[{}]", applyNo);
-            throw new ScmException(BaseErrorCode.NODATA);
+            throw new PlatformException(BaseErrorCode.NODATA);
         }
         AccountTripartitePurseVO accountTripartite = dbList.get(0);
 
@@ -251,7 +156,7 @@ public class NotifyController {
                 PurseEnum.TripartitePurchaseAuditStatus.getByValue(auditInfo.getAudit_status());
         if (auditStatus == null) {
             log.error("汇付绑卡回调未知的审核状态[{}], 申请id[{}]", auditInfo.getAudit_status(), applyNo);
-            throw new ScmException(BaseErrorCode.PARAM);
+            throw new PlatformException(BaseErrorCode.PARAM);
         }
         switch (auditStatus) {
             case HUI_FU_SUCCESS -> accountTripartite.setUserStatus(PurseEnum.TripartitePurchaseStatus.NORMAL);
@@ -261,27 +166,9 @@ public class NotifyController {
             }
             // 审核中不改状态, 仅走一次更新保持与旧实现一致
             case HUI_FU_PROCESS -> log.info("汇付绑卡审核中, 申请id[{}]", applyNo);
-            default -> throw new ScmException(BaseErrorCode.PARAM);
+            default -> throw new PlatformException(BaseErrorCode.PARAM);
         }
         tripartitePurse.alterAccountTripartitePurse(accountTripartite);
-    }
-
-    /**
-     * 读取连连回调报文并验签。
-     *
-     * @param request 回调请求
-     * @return 验签通过返回原始报文; 否则返回 {@code null}
-     * @throws IOException 读取请求体失败
-     */
-    private String getNotifyDataAndCheck(HttpServletRequest request) throws IOException {
-        String signature = request.getHeader(HEADER_SIGNATURE);
-        String data = readBody(request);
-        log.info("接收连连异步通知, 签名值: {}", signature);
-        if (SignUtils.checkSign(data, signature)) {
-            return data;
-        }
-        log.error("连连异步通知验签失败");
-        return null;
     }
 
     /**

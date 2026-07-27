@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordC
 import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordPageReq;
 import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordUpdateReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.RefundOperationRecordVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -44,8 +44,8 @@ public class RefundOperationRecordController {
      * @return 视图对象
      */
     @PostMapping("create")
-    public ScmResult<RefundOperationRecordVO> create(@Validated @RequestBody RefundOperationRecordCreateReq req) {
-        return ScmResult.success(refundOperationRecordService.create(req));
+    public PlatformResult<RefundOperationRecordVO> create(@Validated @RequestBody RefundOperationRecordCreateReq req) {
+        return PlatformResult.success(refundOperationRecordService.create(req));
     }
 
     /**
@@ -55,8 +55,8 @@ public class RefundOperationRecordController {
      * @return 视图对象
      */
     @PostMapping("update")
-    public ScmResult<RefundOperationRecordVO> update(@Validated @RequestBody RefundOperationRecordUpdateReq req) {
-        return ScmResult.success(refundOperationRecordService.update(req));
+    public PlatformResult<RefundOperationRecordVO> update(@Validated @RequestBody RefundOperationRecordUpdateReq req) {
+        return PlatformResult.success(refundOperationRecordService.update(req));
     }
 
     /**
@@ -66,9 +66,9 @@ public class RefundOperationRecordController {
      * @return 成功结果
      */
     @PostMapping("delete")
-    public ScmResult<Void> delete(@Valid @RequestBody OrderCmd.ID idObj) {
+    public PlatformResult<Void> delete(@Valid @RequestBody OrderCmd.ID idObj) {
         refundOperationRecordService.delete(idObj.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -78,8 +78,8 @@ public class RefundOperationRecordController {
      * @return 视图对象
      */
     @GetMapping("getById")
-    public ScmResult<RefundOperationRecordVO> getById(@RequestParam("id") Long id) {
-        return ScmResult.success(refundOperationRecordService.getById(id));
+    public PlatformResult<RefundOperationRecordVO> getById(@RequestParam("id") Long id) {
+        return PlatformResult.success(refundOperationRecordService.getById(id));
     }
 
     /**
@@ -89,8 +89,8 @@ public class RefundOperationRecordController {
      * @return 视图对象列表
      */
     @GetMapping("listByRefundId")
-    public ScmResult<List<RefundOperationRecordVO>> listByRefundId(@RequestParam("refundId") Long refundId) {
-        return ScmResult.success(refundOperationRecordService.listByRefundId(refundId));
+    public PlatformResult<List<RefundOperationRecordVO>> listByRefundId(@RequestParam("refundId") Long refundId) {
+        return PlatformResult.success(refundOperationRecordService.listByRefundId(refundId));
     }
 
     /**
@@ -100,8 +100,8 @@ public class RefundOperationRecordController {
      * @return 视图对象列表
      */
     @GetMapping("listBySpuOrderId")
-    public ScmResult<List<RefundOperationRecordVO>> listBySpuOrderId(@RequestParam("spuOrderId") String spuOrderNo) {
-        return ScmResult.success(refundOperationRecordService.listBySpuOrderNo(spuOrderNo));
+    public PlatformResult<List<RefundOperationRecordVO>> listBySpuOrderId(@RequestParam("spuOrderId") String spuOrderNo) {
+        return PlatformResult.success(refundOperationRecordService.listBySpuOrderNo(spuOrderNo));
     }
 
     /**
@@ -111,8 +111,8 @@ public class RefundOperationRecordController {
      * @return 分页结果
      */
     @PostMapping("pageQuery")
-    public ScmResult<Page<RefundOperationRecordVO>> pageQuery(
+    public PlatformResult<Page<RefundOperationRecordVO>> pageQuery(
             @Validated @RequestBody RefundOperationRecordPageReq req) {
-        return ScmResult.success(refundOperationRecordService.pageQuery(req));
+        return PlatformResult.success(refundOperationRecordService.pageQuery(req));
     }
 }

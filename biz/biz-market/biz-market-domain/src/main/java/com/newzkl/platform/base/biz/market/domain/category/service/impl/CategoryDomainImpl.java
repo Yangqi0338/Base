@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.market.model.biz.req.CategorySyncReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
 import com.newzkl.platform.base.biz.market.model.enums.MarketErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +81,7 @@ public class CategoryDomainImpl implements CategoryDomain {
     @Transactional(rollbackFor = Exception.class)
     public void categoryEdit(CategoryEditReq req) {
         if (req.getId() == null || req.getCategory() == null) {
-            throw new ScmException(MarketErrorCode.PARAM_ERROR);
+            throw new PlatformException(MarketErrorCode.PARAM_ERROR);
         }
         CategoryReq category = req.getCategory();
         category.setId(req.getId());
@@ -154,11 +154,11 @@ public class CategoryDomainImpl implements CategoryDomain {
      */
     private Long resolveRootId(CategorySyncReq req) {
         if (req == null || req.getId() == null) {
-            throw new ScmException(MarketErrorCode.PARAM_ERROR);
+            throw new PlatformException(MarketErrorCode.PARAM_ERROR);
         }
         String idString = String.valueOf(req.getId());
         if (idString.length() < ROOT_ID_PREFIX_LEN) {
-            throw new ScmException(MarketErrorCode.PARAM_ERROR);
+            throw new PlatformException(MarketErrorCode.PARAM_ERROR);
         }
         return Long.parseLong(idString.substring(0, ROOT_ID_PREFIX_LEN));
     }
@@ -182,7 +182,7 @@ public class CategoryDomainImpl implements CategoryDomain {
     /**
      * 扁平分类列表组装为树。
      *
-     * <p>迁移变更: 旧实现用 {@code ScmUtil.listToTree} (要求 VO 实现 ScmTreeNode 且
+     * <p>迁移变更: 旧实现用 {@code BizUtil.listToTree} (要求 VO 实现 PlatformTreeNode 且
      * pid 为 null 时拆箱 NPE); 新实现内联按 {@code id}/{@code pid} 组装, VO 保持纯 POJO。</p>
      *
      * @param list 扁平分类列表

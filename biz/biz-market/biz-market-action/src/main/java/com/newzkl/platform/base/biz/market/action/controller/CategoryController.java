@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.market.model.biz.req.CategorySyncReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +40,8 @@ public class CategoryController {
      * @return 新分类ID
      */
     @PostMapping("/categorySave")
-    public ScmResult<Long> categorySave(@Validated @RequestBody CategoryReq req) {
-        return ScmResult.success(categoryDomain.categorySave(req));
+    public PlatformResult<Long> categorySave(@Validated @RequestBody CategoryReq req) {
+        return PlatformResult.success(categoryDomain.categorySave(req));
     }
 
     /**
@@ -51,9 +51,9 @@ public class CategoryController {
      * @return 成功结果
      */
     @PostMapping("/categoryEdit")
-    public ScmResult<Void> categoryEdit(@Validated @RequestBody CategoryEditReq req) {
+    public PlatformResult<Boolean> categoryEdit(@Validated @RequestBody CategoryEditReq req) {
         categoryDomain.categoryEdit(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -63,9 +63,9 @@ public class CategoryController {
      * @return 树形分类列表
      */
     @PostMapping("/categoryList")
-    public ScmResult<List<CategoryVO>> categoryList(@RequestBody CategoryQuery query) {
+    public PlatformResult<List<CategoryVO>> categoryList(@RequestBody CategoryQuery query) {
         query.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(categoryDomain.categoryTree(query));
+        return PlatformResult.success(categoryDomain.categoryTree(query));
     }
 
     /**
@@ -75,8 +75,8 @@ public class CategoryController {
      * @return 成功结果
      */
     @PostMapping("/categorySync")
-    public ScmResult<Void> categorySync(@RequestBody CategorySyncReq req) {
+    public PlatformResult<Boolean> categorySync(@RequestBody CategorySyncReq req) {
         categoryDomain.syncCategory(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

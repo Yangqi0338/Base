@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.SelectorEditReq;
 import com.newzkl.platform.base.biz.account.model.vo.SelectorVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +35,8 @@ public class SelectorController {
      * @return 甄选师 ID
      */
     @PostMapping("selectorCustomSave")
-    public ScmResult<Long> selectorCustomSave(@Validated @RequestBody SelectorCustomSaveReq req) {
-        return ScmResult.success(operatorClientDomain.selectorCustomSave(req, false));
+    public PlatformResult<Long> selectorCustomSave(@Validated @RequestBody SelectorCustomSaveReq req) {
+        return PlatformResult.success(operatorClientDomain.selectorCustomSave(req, false));
     }
 
     /**
@@ -46,8 +46,8 @@ public class SelectorController {
      * @return 修改数量
      */
     @PostMapping("selectorEdit")
-    public ScmResult<Integer> selectorEdit(@Validated @RequestBody SelectorEditReq selectorEditReq) {
-        return ScmResult.success(operatorClientDomain.selectorEdit(selectorEditReq.getId(), selectorEditReq));
+    public PlatformResult<Integer> selectorEdit(@Validated @RequestBody SelectorEditReq selectorEditReq) {
+        return PlatformResult.success(operatorClientDomain.selectorEdit(selectorEditReq.getId(), selectorEditReq));
     }
 
     /**
@@ -57,9 +57,9 @@ public class SelectorController {
      * @return 成功结果
      */
     @PostMapping("selectorEditColumn")
-    public ScmResult<Void> selectorEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
+    public PlatformResult<Void> selectorEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
         operatorClientDomain.selectorEdit(cmd.getEditColumnList(), cmd.getId());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -69,8 +69,8 @@ public class SelectorController {
      * @return 删除数量
      */
     @PostMapping("selectorDelete")
-    public ScmResult<Integer> selectorDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return ScmResult.success(operatorClientDomain.selectorDelete(idListObj.getIdList()));
+    public PlatformResult<Integer> selectorDelete(@Validated @RequestBody IdListCommand idListObj) {
+        return PlatformResult.success(operatorClientDomain.selectorDelete(idListObj.getIdList()));
     }
 
     /**
@@ -80,11 +80,11 @@ public class SelectorController {
      * @return 甄选师 VO
      */
     @PostMapping("selector")
-    public ScmResult<SelectorVO> selector(@RequestParam(value = "id", required = false) Long selectorId) {
+    public PlatformResult<SelectorVO> selector(@RequestParam(value = "id", required = false) Long selectorId) {
         if (selectorId == null) {
             selectorId = SecurityUtils.getAccountId();
         }
-        return ScmResult.success(operatorClientDomain.selector(selectorId));
+        return PlatformResult.success(operatorClientDomain.selector(selectorId));
     }
 
     /**
@@ -94,8 +94,8 @@ public class SelectorController {
      * @return 成功结果
      */
     @PostMapping("selectorLevelUp")
-    public ScmResult<Void> selectorLevelUp(@RequestParam("level") Integer level) {
+    public PlatformResult<Void> selectorLevelUp(@RequestParam("level") Integer level) {
         operatorClientDomain.selectorLevelUp(SecurityUtils.getAccountId(), level);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

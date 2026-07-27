@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.BankQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -97,7 +97,7 @@ public class BankRepositoryImpl implements BankRepository {
     public void edit(BankVO bank, BankQuery query) {
         LambdaQueryWrapper<BankDO> queryWrapper = bankDAO.getLw(query);
         if (bankDAO.exists(queryWrapper)) {
-            throw new ScmException(BaseErrorCode.INVALID_UPDATE);
+            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
         }
 
         BankDO bankDO = TransferUtils.transfer(bank, BankDO::new);

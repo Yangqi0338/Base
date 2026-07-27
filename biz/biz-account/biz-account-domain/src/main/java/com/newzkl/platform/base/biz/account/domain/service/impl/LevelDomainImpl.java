@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.account.model.level.vo.LevelVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.PackCondition;
 import com.newzkl.platform.base.biz.account.model.level.vo.PermissionVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,7 +58,7 @@ public class LevelDomainImpl implements LevelDomain {
         if (condition == null || condition.getPack() == null
                 || permission == null || permission.getDirectConfig() == null
                 || !permission.getDirectConfig().checkActiveDirectPack()) {
-            throw new ScmException(BaseErrorCode.PARAM, "等级升级条件");
+            throw new PlatformException(BaseErrorCode.PARAM, "等级升级条件");
         }
 
         PackCondition pack = condition.getPack();
@@ -78,7 +78,7 @@ public class LevelDomainImpl implements LevelDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long update(LevelReq req) {
         if (req.getId() == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "等级");
+            throw new PlatformException(BaseErrorCode.NODATA, "等级");
         }
         return save(req);
     }

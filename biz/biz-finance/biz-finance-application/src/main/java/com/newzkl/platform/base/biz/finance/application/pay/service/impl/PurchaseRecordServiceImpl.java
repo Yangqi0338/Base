@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
             query.setType(PurseEnum.PurchaseRecordType.SEAT_PACKAGE);
             query.resetQuerySingle();
             PurchaseRecordVO purchaseRecordVO = purchaseRecordService.queryPage(query)
-                    .stream().findFirst().orElseThrow(() -> new ScmException(FinanceErrorCode.NOT_EXISTS));
+                    .stream().findFirst().orElseThrow(() -> new PlatformException(FinanceErrorCode.NOT_EXISTS));
 
             TransferUtils.transfer(purchaseRecordVO, saveCommand, CopyOptions.create().setOverride(false));
             saveCommand.setId(purchaseRecordVO.getId());
@@ -54,7 +54,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         Integer purchaseNum = orderInfo.getPurchaseNum();
         OrderEnum.PayType payMode = saveCommand.getPayType();
         if (purchaseNum == null || purchaseNum <= 0) {
-            throw new ScmException(FinanceErrorCode.STATE_ERROR);
+            throw new PlatformException(FinanceErrorCode.STATE_ERROR);
         }
 
         // 若是采购金抵扣
@@ -65,7 +65,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
             if (!subSuccess) {
                 // 采购金不充足
                 log.info("channelPurchaseGoodsSeat - 采购不充足");
-                throw new ScmException(FinanceErrorCode.AMOUNT_LESS);
+                throw new PlatformException(FinanceErrorCode.AMOUNT_LESS);
             }
         }
 

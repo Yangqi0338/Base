@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.application.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.biz.store.application.service.ModelShopService;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionApi;
@@ -43,7 +43,7 @@ public class ModelShopServiceImpl implements ModelShopService {
         // 1. 查询当前门店
         Store store = storeDomain.store(SecurityUtils.getAccountId());
         if (store == null) {
-            throw new ScmException(-1, "门店不存在");
+            throw new PlatformException(-1, "门店不存在");
         }
 
         // 2. 处理旧样板店

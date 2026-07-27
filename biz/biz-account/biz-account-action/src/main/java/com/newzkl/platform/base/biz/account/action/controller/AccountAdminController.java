@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.req.AdminDisableAccountReq;
 import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -56,8 +56,8 @@ public class AccountAdminController {
      * @return 会员账号分页
      */
     @PostMapping("/page")
-    public ScmResult<Page<MemberAccountVO>> page(@RequestBody AccountQuery query) {
-        return ScmResult.success(accountService.pageAccount(query));
+    public PlatformResult<Page<MemberAccountVO>> page(@RequestBody AccountQuery query) {
+        return PlatformResult.success(accountService.pageAccount(query));
     }
 
     /**
@@ -71,10 +71,10 @@ public class AccountAdminController {
      * @return 成功结果 (与旧接口一致, 不回传主键)
      */
     @PostMapping("/add")
-    public ScmResult<Void> add(@RequestBody AdminRegisterIdentityReq req) {
+    public PlatformResult<Void> add(@RequestBody AdminRegisterIdentityReq req) {
         log.info("添加会员：{}", req);
         userClientDomain.adminCreateMember(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -84,9 +84,9 @@ public class AccountAdminController {
      * @return 成功结果
      */
     @PostMapping("/disable")
-    public ScmResult<Void> disableMember(@Validated @RequestBody AdminDisableAccountReq req) {
+    public PlatformResult<Void> disableMember(@Validated @RequestBody AdminDisableAccountReq req) {
         accountService.disableAccount(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -96,7 +96,7 @@ public class AccountAdminController {
      * @return 导入结果 (总数 / 成功数 / 失败数 / 失败行明细)
      */
     @PutMapping("/importMember")
-    public ScmResult<EasyExcelErrorVO> importMember(@RequestParam("file") MultipartFile file) {
-        return ScmResult.success(userClientDomain.adminImportAccount(file));
+    public PlatformResult<EasyExcelErrorVO> importMember(@RequestParam("file") MultipartFile file) {
+        return PlatformResult.success(userClientDomain.adminImportAccount(file));
     }
 }

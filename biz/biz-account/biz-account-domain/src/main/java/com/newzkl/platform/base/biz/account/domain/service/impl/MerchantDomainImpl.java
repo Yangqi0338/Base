@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.account.model.merchant.res.MerchantRes;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.MerchantVO;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -29,7 +29,7 @@ import java.util.List;
  * 商户领域服务实现。
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.IMerchantDomainImpl}。
- * 旧 {@code ThrowsException.exception(...)} 换为 {@link ScmException};
+ * 旧 {@code ThrowsException.exception(...)} 换为 {@link PlatformException};
  * 旧 {@code CommonEnum.Switch.ON} 在中台通用层为 {@code CommonEnum.YesOrNo.YES} (码值 1 一致);
  * 登录态取值 (accountId) 由旧的 controller/应用层下沉到本层。</p>
  *
@@ -92,10 +92,10 @@ public class MerchantDomainImpl implements MerchantDomain {
         // 开通码校验与占用
         CdkVO cdk = cdkRepository.detail(cdkRepository.idByValue(cdkValue));
         if (cdk == null) {
-            throw new ScmException(BaseErrorCode.NODATA, "开通码");
+            throw new PlatformException(BaseErrorCode.NODATA, "开通码");
         }
         if (CommonEnum.YesOrNo.YES.getCode().equals(cdk.getUseState())) {
-            throw new ScmException(BaseErrorCode.PARAM, "验证码已使用");
+            throw new PlatformException(BaseErrorCode.PARAM, "验证码已使用");
         }
         cdk.setUseState(CommonEnum.YesOrNo.YES.getCode());
         cdk.setUseId(accountId);

@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.store.model.store.res.SupplierTemplateRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +42,8 @@ public class StoreStyleController {
      * @return 样式分页
      */
     @PostMapping("/storeStylePage")
-    public ScmResult<Page<StoreStyleResponse>> storeStylePage(@Validated @RequestBody StoreStylePageQuery req) {
-        return ScmResult.success(storeStyleDomain.storeStylePage(req));
+    public PlatformResult<Page<StoreStyleResponse>> storeStylePage(@Validated @RequestBody StoreStylePageQuery req) {
+        return PlatformResult.success(storeStyleDomain.storeStylePage(req));
     }
 
     /**
@@ -53,9 +53,9 @@ public class StoreStyleController {
      * @return 成功结果
      */
     @PostMapping("/create")
-    public ScmResult<Void> create(@Validated @RequestBody StoreStyleCreateReq req) {
+    public PlatformResult<Void> create(@Validated @RequestBody StoreStyleCreateReq req) {
         storeStyleDomain.create(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -65,9 +65,9 @@ public class StoreStyleController {
      * @return 成功结果
      */
     @PostMapping("/updateByCode")
-    public ScmResult<Void> updateByCode(@Validated @RequestBody StoreStyleUpdateReq req) {
+    public PlatformResult<Void> updateByCode(@Validated @RequestBody StoreStyleUpdateReq req) {
         storeStyleDomain.updateByCode(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -80,8 +80,8 @@ public class StoreStyleController {
      */
     @Deprecated
     @GetMapping("/supplierTemplateList")
-    public ScmResult<List<SupplierTemplateRes>> supplierTemplateList() {
-        return ScmResult.success(storeStyleDomain.supplierTemplateList(SecurityUtils.getAccountId()));
+    public PlatformResult<List<SupplierTemplateRes>> supplierTemplateList() {
+        return PlatformResult.success(storeStyleDomain.supplierTemplateList(SecurityUtils.getAccountId()));
     }
 
     /**
@@ -95,9 +95,9 @@ public class StoreStyleController {
      */
     @Deprecated
     @PostMapping("/supplierTemplateUpdate")
-    public ScmResult<Void> supplierTemplateUpdate(@Validated @RequestBody SupplierTemplateUpdateReq req) {
+    public PlatformResult<Void> supplierTemplateUpdate(@Validated @RequestBody SupplierTemplateUpdateReq req) {
         storeStyleDomain.supplierTemplateUpdate(req);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -107,7 +107,7 @@ public class StoreStyleController {
      * @return 样式 VO
      */
     @GetMapping("/getByStyleCode")
-    public ScmResult<StoreStyleRes> getByStyleCode(@RequestParam String storeStyleCode) {
-        return ScmResult.success(TransferUtils.transfer(storeStyleDomain.getByStyleCode(storeStyleCode), StoreStyleRes::new));
+    public PlatformResult<StoreStyleRes> getByStyleCode(@RequestParam String storeStyleCode) {
+        return PlatformResult.success(TransferUtils.transfer(storeStyleDomain.getByStyleCode(storeStyleCode), StoreStyleRes::new));
     }
 }

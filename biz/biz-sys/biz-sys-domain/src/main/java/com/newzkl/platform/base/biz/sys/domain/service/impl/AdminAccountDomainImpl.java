@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.sys.model.adminaccount.req.AdminAccountReq;
 import com.newzkl.platform.base.biz.sys.model.adminaccount.req.PasswordUpdateReq;
 import com.newzkl.platform.base.biz.sys.model.adminaccount.res.AdminAccountRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -60,14 +60,14 @@ public class AdminAccountDomainImpl implements AdminAccountDomain {
     @Override
     public AdminAccountRes passwordVerify(String username, String rawPassword) {
         if (StrUtil.hasBlank(username, rawPassword)) {
-            throw new ScmException(BaseErrorCode.PARAM, "用户/密码不能为空");
+            throw new PlatformException(BaseErrorCode.PARAM, "用户/密码不能为空");
         }
         AdminAccountRes account = adminAccountRepository.adminAccountByUsername(username);
         if (account == null) {
-            throw new ScmException(BaseErrorCode.USER_NOT_FOUND, username);
+            throw new PlatformException(BaseErrorCode.USER_NOT_FOUND, username);
         }
         if (!SecurityUtils.matchesPassword(rawPassword, account.getPassword())) {
-            throw new ScmException(BaseErrorCode.PASSWORD_ERROR, username);
+            throw new PlatformException(BaseErrorCode.PASSWORD_ERROR, username);
         }
         return account;
     }
@@ -76,10 +76,10 @@ public class AdminAccountDomainImpl implements AdminAccountDomain {
     public void passwordUpdate(PasswordUpdateReq req) {
         AdminAccountRes account = adminAccountRepository.adminAccountVO(req.getAccountId());
         if (account == null) {
-            throw new ScmException(BaseErrorCode.USER_NOT_FOUND, String.valueOf(req.getAccountId()));
+            throw new PlatformException(BaseErrorCode.USER_NOT_FOUND, String.valueOf(req.getAccountId()));
         }
         if (!SecurityUtils.matchesPassword(req.getPassword(), account.getPassword())) {
-            throw new ScmException(BaseErrorCode.PASSWORD_ERROR, account.getUsername());
+            throw new PlatformException(BaseErrorCode.PASSWORD_ERROR, account.getUsername());
         }
         AdminAccountReq update = new AdminAccountReq();
         update.setId(account.getId());

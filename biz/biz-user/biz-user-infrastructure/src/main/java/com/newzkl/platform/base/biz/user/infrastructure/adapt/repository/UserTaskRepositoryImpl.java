@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.UserTaskQuery;
 import com.newzkl.platform.base.biz.user.model.relation.res.UserTaskRes;
 import com.newzkl.platform.base.biz.user.model.relation.vo.UserTaskVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -55,7 +55,7 @@ public class UserTaskRepositoryImpl implements UserTaskRepository {
     public void edit(UserTaskRes userTask, UserTaskQuery query) {
         LambdaQueryWrapper<UserTaskDO> queryWrapper = dao.getLw(query);
         if (dao.selectCount(queryWrapper) == 0) {
-            throw new ScmException(BaseErrorCode.INVALID_UPDATE);
+            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
         }
         UserTaskDO userTaskDO = TransferUtils.transfer(userTask, UserTaskDO::new);
         dao.updateById(userTaskDO);

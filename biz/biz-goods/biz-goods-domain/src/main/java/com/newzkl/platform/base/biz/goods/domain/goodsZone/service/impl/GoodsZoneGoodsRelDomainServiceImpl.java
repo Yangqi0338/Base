@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.res.goodsZone.GoodsZoneGoo
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class GoodsZoneGoodsRelDomainServiceImpl implements GoodsZoneGoodsRelDoma
 
         // 校验分组是否存在
         GoodsZone goodsZone = goodsZoneRepository.findById(groupId)
-                .orElseThrow(() -> new ScmException(BaseErrorCode.NODATA, "添加失败：分组不存在"));
+                .orElseThrow(() -> new PlatformException(BaseErrorCode.NODATA, "添加失败：分组不存在"));
 
         // 批量查询已关联的SPU ID
         Set<Long> existedSpuIds = relRepository.findSpuIdsByGroupId(groupId);
@@ -109,7 +109,7 @@ public class GoodsZoneGoodsRelDomainServiceImpl implements GoodsZoneGoodsRelDoma
         //  校验分组存在
         Optional<GoodsZone> goodsZoneOptional = goodsZoneRepository.findById(groupId);
         if (!goodsZoneOptional.isPresent()) {
-            throw new ScmException(BaseErrorCode.NODATA, "删除失败：分组不存在");
+            throw new PlatformException(BaseErrorCode.NODATA, "删除失败：分组不存在");
         }
         GoodsZone goodsZone = goodsZoneOptional.get();
         // 3. 批量删除关联关系（逻辑删除）

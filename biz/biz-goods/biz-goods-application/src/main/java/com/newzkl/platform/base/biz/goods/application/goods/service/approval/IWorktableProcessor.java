@@ -11,7 +11,7 @@ import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import com.newzkl.platform.base.common.ddd.model.check.DeleteCommand;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ public abstract class IWorktableProcessor<A extends AddCommand, U extends Update
      */
     public void submitWorkTable(List<Long> spuIdList, Integer operateType, A addCommand, U updateCommand, D deleteCommand){
         if(ObjectUtil.isEmpty(spuIdList)) {
-            throw new ScmException(BaseErrorCode.PARAM, "spuId缺少");
+            throw new PlatformException(BaseErrorCode.PARAM, "spuId缺少");
         }
         for (Long id : spuIdList) {
             SpuVO spuVO = goodsQueryService.spuVO(id);

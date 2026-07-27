@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressReq;
 import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +39,8 @@ public class ShipAddressController {
      * @return 收货地址 ID
      */
     @PostMapping("shipAddressSave")
-    public ScmResult<Long> shipAddressSave(@Validated @RequestBody ShipAddressReq shipAddressReq) {
-        return ScmResult.success(shipAddressDomain.save(shipAddressReq));
+    public PlatformResult<Long> shipAddressSave(@Validated @RequestBody ShipAddressReq shipAddressReq) {
+        return PlatformResult.success(shipAddressDomain.save(shipAddressReq));
     }
 
     /**
@@ -49,8 +49,8 @@ public class ShipAddressController {
      * @return 默认收货地址
      */
     @GetMapping("defaultShipAddress")
-    public ScmResult<ShipAddressRes> defaultShipAddress() {
-        return ScmResult.success(shipAddressDomain.defaultShipAddress());
+    public PlatformResult<ShipAddressRes> defaultShipAddress() {
+        return PlatformResult.success(shipAddressDomain.defaultShipAddress());
     }
 
     /**
@@ -60,9 +60,9 @@ public class ShipAddressController {
      * @return 成功结果
      */
     @PostMapping("shipAddressUpdate")
-    public ScmResult<Void> shipAddressEdit(@Validated @RequestBody ShipAddressReq edit) {
+    public PlatformResult<Void> shipAddressEdit(@Validated @RequestBody ShipAddressReq edit) {
         shipAddressDomain.edit(edit.getId(), edit);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -72,9 +72,9 @@ public class ShipAddressController {
      * @return 成功结果
      */
     @PostMapping("shipAddressDelete")
-    public ScmResult<Void> shipAddressDelete(@RequestBody IdListCommand idListObj) {
+    public PlatformResult<Void> shipAddressDelete(@RequestBody IdListCommand idListObj) {
         shipAddressDomain.delete(idListObj.getIdList());
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -84,8 +84,8 @@ public class ShipAddressController {
      * @return 收货地址详情
      */
     @GetMapping("shipAddress")
-    public ScmResult<ShipAddressRes> shipAddress(@RequestParam("id") Long shipAddressId) {
-        return ScmResult.success(shipAddressDomain.detail(shipAddressId));
+    public PlatformResult<ShipAddressRes> shipAddress(@RequestParam("id") Long shipAddressId) {
+        return PlatformResult.success(shipAddressDomain.detail(shipAddressId));
     }
 
     /**
@@ -95,8 +95,8 @@ public class ShipAddressController {
      * @return 收货地址分页
      */
     @PostMapping("shipAddressPage")
-    public ScmResult<Page<ShipAddressRes>> shipAddressPage(@RequestBody ShipAddressQuery shipAddressQuery) {
+    public PlatformResult<Page<ShipAddressRes>> shipAddressPage(@RequestBody ShipAddressQuery shipAddressQuery) {
         shipAddressQuery.setAccountId(SecurityUtils.getAccountId());
-        return ScmResult.success(shipAddressDomain.pageList(shipAddressQuery));
+        return PlatformResult.success(shipAddressDomain.pageList(shipAddressQuery));
     }
 }

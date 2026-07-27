@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQ
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,11 +43,11 @@ public class WorktableController {
      * @return 成功结果
      */
     @PostMapping("spuUpdate")
-    public ScmResult<Void> spuUpdate(@RequestBody SpuBaseCommand.Update spuUpdate) {
+    public PlatformResult<Void> spuUpdate(@RequestBody SpuBaseCommand.Update spuUpdate) {
         worktableFactory.getPolicy(SpuEnum.OperateTarget.SPU_BASE.getCode())
                 .submitWorkTable(Collections.singletonList(spuUpdate.getSpuDTO().getId()),
                         SpuEnum.OperateType.UPDATE.getCode(), null, spuUpdate, null);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -57,14 +57,14 @@ public class WorktableController {
      * @return 成功结果
      */
     @PostMapping("skuUpdate")
-    public ScmResult<Void> skuUpdate(@RequestBody SkuBaseCommand.Update skuUpdate) {
+    public PlatformResult<Void> skuUpdate(@RequestBody SkuBaseCommand.Update skuUpdate) {
         for (SkuDTO sku : skuUpdate.getSkuVOList()) {
             sku.setTempId(SnowflakeIdAble.getSnowflakeId());
         }
         worktableFactory.getPolicy(SpuEnum.OperateTarget.SKU_BASE.getCode())
                 .submitWorkTable(Collections.singletonList(skuUpdate.getSpuId()),
                         SpuEnum.OperateType.UPDATE.getCode(), null, skuUpdate, null);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -74,11 +74,11 @@ public class WorktableController {
      * @return 成功结果
      */
     @PostMapping("spuStateUpdate")
-    public ScmResult<Void> spuStateUpdate(@RequestBody SpuStateCommand.Update spuStateCommand) {
+    public PlatformResult<Void> spuStateUpdate(@RequestBody SpuStateCommand.Update spuStateCommand) {
         worktableFactory.getPolicy(SpuEnum.OperateTarget.SPU_STATE.getCode())
                 .submitWorkTable(spuStateCommand.getSpuId(),
                         SpuEnum.OperateType.UPDATE.getCode(), null, spuStateCommand, null);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -88,11 +88,11 @@ public class WorktableController {
      * @return 成功结果
      */
     @PostMapping("saleAttributeDelete")
-    public ScmResult<Void> saleAttributeDelete(@RequestBody SaleAttributeCommand.Delete saleAttribute) {
+    public PlatformResult<Void> saleAttributeDelete(@RequestBody SaleAttributeCommand.Delete saleAttribute) {
         worktableFactory.getPolicy(SpuEnum.OperateTarget.SALE_ATTRIBUTE.getCode())
                 .submitWorkTable(Collections.singletonList(saleAttribute.getSpuId()),
                         SpuEnum.OperateType.DELETE.getCode(), null, null, saleAttribute);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 
     /**
@@ -102,7 +102,7 @@ public class WorktableController {
      * @return 成功结果
      */
     @PostMapping("saleAttributeAdd")
-    public ScmResult<Void> saleAttributeAdd(@RequestBody SaleAttributeCommand.Add saleAttribute) {
+    public PlatformResult<Void> saleAttributeAdd(@RequestBody SaleAttributeCommand.Add saleAttribute) {
         SaleAttributeCommand.Check check = new SaleAttributeCommand.Check();
         check.setSpuId(saleAttribute.getSpuId());
         check.setOldSpu(goodsQueryService.spuVO(saleAttribute.getSpuId()));
@@ -116,6 +116,6 @@ public class WorktableController {
         worktableFactory.getPolicy(SpuEnum.OperateTarget.SALE_ATTRIBUTE.getCode())
                 .submitWorkTable(Collections.singletonList(saleAttribute.getSpuId()),
                         SpuEnum.OperateType.ADD.getCode(), saleAttribute, null, null);
-        return ScmResult.success();
+        return PlatformResult.success();
     }
 }

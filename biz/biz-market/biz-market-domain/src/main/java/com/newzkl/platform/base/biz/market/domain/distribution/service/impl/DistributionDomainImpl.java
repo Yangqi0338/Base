@@ -26,7 +26,7 @@ import com.newzkl.platform.base.biz.market.model.rpc.spu.GoodsSellNumVO;
 import com.newzkl.platform.base.biz.market.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.market.model.enums.MarketErrorCode;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -90,7 +90,7 @@ public class DistributionDomainImpl implements DistributionDomain {
                 if (sellPrice == null || sellPrice <= 0) {
                     OptionalInt maxSellPrice = distributions.stream().filter(it -> it.getSellPrice() != null).mapToInt(StoreDistributionDTO::getSellPrice).max();
                     if (!maxSellPrice.isPresent() || maxSellPrice.getAsInt() <= 0) {
-                        throw new ScmException(BaseErrorCode.PARAM, "销售价为空或小于0");
+                        throw new PlatformException(BaseErrorCode.PARAM, "销售价为空或小于0");
                     } else {
                         spuDistribution.setSellPrice(maxSellPrice.getAsInt());
                     }
@@ -129,7 +129,7 @@ public class DistributionDomainImpl implements DistributionDomain {
         // 查询商品信息，若不是自营商品，必须有选品数据支持,若查不到市场id则判定为未选品
         DistributionGoodsInfoVO distributionGoodsInfoVO = distributionRepository.queryGoodsDistribution(goodsId, proprietary, channelId);
         if (distributionGoodsInfoVO == null) {
-            throw new ScmException(MarketErrorCode.NOT_EXIST_OR_STATE_ERROR);
+            throw new PlatformException(MarketErrorCode.NOT_EXIST_OR_STATE_ERROR);
         }
 
         List<StoreDistributionDTO> storeDistributionList = new ArrayList<>();
@@ -194,7 +194,7 @@ public class DistributionDomainImpl implements DistributionDomain {
 
         // 校验数据是否全部存在且符合删除条件
         if (!deletableCount.equals((long) uniqueGoodsIdList.size())) {
-            throw new ScmException(BaseErrorCode.CUSTOM,
+            throw new PlatformException(BaseErrorCode.CUSTOM,
                     "部分商品不存在或不符合删除条件(待上架或下架且销量为0)");
         }
         uniqueGoodsIdList.forEach(goodsId -> {

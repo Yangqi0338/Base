@@ -38,8 +38,7 @@ public class AccountPurseRes {
     private PurseEnum.PurseType purseType;
 
     /**
-     * @link com.zkl.scm.finance.rpc.model.constants.FinanceEnum.FinanceUser}  1 进账 2 出账 财务用户类型
-     * 客户类型
+     * 客户类型, 取值见 {@link PurseEnum.FinanceUser} (1 进账 2 出账)
      */
     private PurseEnum.FinanceUser accountType;
 

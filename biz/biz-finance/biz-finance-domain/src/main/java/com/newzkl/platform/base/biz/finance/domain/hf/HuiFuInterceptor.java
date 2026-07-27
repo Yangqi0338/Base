@@ -8,7 +8,7 @@ import com.dtflys.forest.exceptions.ForestRuntimeException;
 import com.dtflys.forest.http.ForestRequest;
 import com.dtflys.forest.http.ForestResponse;
 import com.dtflys.forest.interceptor.ResponseResult;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +86,7 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
         Base.Res res = JSONUtil.toBean(content, Base.Res.class);
         if (!res.isSuccess()) {
             log.error("请求失败，response：" + response);
-            throw new ScmException(res.getResp_code(), res.getResp_desc());
+            throw new PlatformException(res.getResp_code(), res.getResp_desc());
         }
 
         return proceed(); // 继续执行请求的后续逻辑

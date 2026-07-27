@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.action.controller;
 
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.IndexCountRes;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class CountController {
      */
     @Deprecated
     @PostMapping("indexCount")
-    public ScmResult<IndexCountRes> indexCount(@RequestBody TimeQuery timeQuery) {
-        return ScmResult.success(spuRepository.indexCount(timeQuery));
+    public PlatformResult<IndexCountRes> indexCount(@RequestBody TimeQuery timeQuery) {
+        return PlatformResult.success(spuRepository.indexCount(timeQuery));
     }
 }

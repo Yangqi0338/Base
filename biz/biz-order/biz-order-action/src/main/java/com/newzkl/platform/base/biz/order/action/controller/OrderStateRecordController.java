@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.application.service.OrderStateRecordService;
 import com.newzkl.platform.base.biz.order.model.order.req.OrderStateRecordPageReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.OrderStateRecordVO;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -40,9 +40,9 @@ public class OrderStateRecordController {
      * @return 订单状态记录列表
      */
     @GetMapping("/listBySpuOrderId")
-    public ScmResult<List<OrderStateRecordVO>> listBySpuOrderId(
+    public PlatformResult<List<OrderStateRecordVO>> listBySpuOrderId(
             @RequestParam("spuOrderId") @NotNull(message = "spuOrderId不能为空") String spuOrderNo) {
-        return ScmResult.success(orderStateRecordService.listBySpuOrderNo(spuOrderNo));
+        return PlatformResult.success(orderStateRecordService.listBySpuOrderNo(spuOrderNo));
     }
 
     /**
@@ -52,7 +52,7 @@ public class OrderStateRecordController {
      * @return 订单状态记录分页
      */
     @PostMapping("/page")
-    public ScmResult<Page<OrderStateRecordVO>> pageQuery(@RequestBody @Validated OrderStateRecordPageReq req) {
-        return ScmResult.success(orderStateRecordService.pageQuery(req));
+    public PlatformResult<Page<OrderStateRecordVO>> pageQuery(@RequestBody @Validated OrderStateRecordPageReq req) {
+        return PlatformResult.success(orderStateRecordService.pageQuery(req));
     }
 }

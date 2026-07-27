@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.market.model.biz.req.CategoryReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.CategorySyncReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -142,11 +142,11 @@ class CategoryDomainImplTest {
     @DisplayName("syncCategory: id 为 null 或不足两位抛参数异常")
     void syncCategoryThrowsOnInvalidId() {
         assertThatThrownBy(() -> categoryDomain.syncCategory(new CategorySyncReq()))
-                .isInstanceOf(ScmException.class);
+                .isInstanceOf(PlatformException.class);
         CategorySyncReq shortReq = new CategorySyncReq();
         shortReq.setId(5L);
         assertThatThrownBy(() -> categoryDomain.syncCategory(shortReq))
-                .isInstanceOf(ScmException.class);
+                .isInstanceOf(PlatformException.class);
     }
 
     @Test
@@ -186,7 +186,7 @@ class CategoryDomainImplTest {
     @DisplayName("categoryEdit: 缺 id 或缺内容抛参数异常")
     void categoryEditThrowsOnInvalidReq() {
         assertThatThrownBy(() -> categoryDomain.categoryEdit(new CategoryEditReq()))
-                .isInstanceOf(ScmException.class);
+                .isInstanceOf(PlatformException.class);
     }
 
     @Test

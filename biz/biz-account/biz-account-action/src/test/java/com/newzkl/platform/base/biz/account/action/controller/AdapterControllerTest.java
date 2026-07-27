@@ -22,12 +22,12 @@ import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
 import com.newzkl.platform.base.biz.account.model.vo.SelectorVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
-import com.newzkl.platform.base.common.ddd.model.res.ScmResult;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -94,7 +94,7 @@ class AdapterControllerTest {
     @Test
     @DisplayName("渠道商详情: 直接委托已迁渠道商控制器")
     void channelForAdminShouldDelegateToChannelController() {
-        ScmResult<ChannelVO> expected = ScmResult.success(new ChannelVO());
+        PlatformResult<ChannelVO> expected = PlatformResult.success(new ChannelVO());
         when(channelController.channel(12L)).thenReturn(expected);
 
         assertSame(expected, adapterController.channelForAdmin(12L));
@@ -207,7 +207,7 @@ class AdapterControllerTest {
     @Test
     @DisplayName("身份详情: 其余角色抛参数异常 (保留旧语义)")
     void userAccountShouldRejectOtherRole() {
-        ScmException ex = assertThrows(ScmException.class,
+        PlatformException ex = assertThrows(PlatformException.class,
                 () -> adapterController.userAccount(userAccountCmd(1000L, 35L)));
 
         assertEquals("602", ex.getCode());
@@ -294,7 +294,7 @@ class AdapterControllerTest {
         CountCmd.ID cmd = new CountCmd.ID();
         cmd.setAccountId(52L);
 
-        assertThrows(ScmException.class, () -> adapterController.accountDetail(cmd));
+        assertThrows(PlatformException.class, () -> adapterController.accountDetail(cmd));
     }
 
     /**

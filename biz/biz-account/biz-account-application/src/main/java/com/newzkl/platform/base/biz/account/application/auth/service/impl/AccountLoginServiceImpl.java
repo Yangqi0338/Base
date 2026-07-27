@@ -19,7 +19,7 @@ import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ScmException;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.application.auth.service.AccountLoginService;
@@ -43,7 +43,7 @@ import com.newzkl.platform.base.biz.account.model.assembler.LoginAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.*;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
 import com.newzkl.platform.base.biz.account.model.auth.res.TokenAndExpireRes;
-import com.newzkl.platform.base.common.core.utils.biz.ScmUtil;
+import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import static com.newzkl.platform.base.common.core.utils.biz.ScmUtil.async;
+import static com.newzkl.platform.base.common.core.utils.biz.BizUtil.async;
 
 /**
  * @author muc_fang
@@ -81,7 +81,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
     @Override
     public LoginRes accountLogin(LoginReq loginReq) {
         // 参数校验
-        ScmUtil.validate(loginReq);
+        BizUtil.validate(loginReq);
 
         String username = loginReq.getUsername();
         RoleEnum.CompanyRole companyRole = loginReq.getRole();
@@ -93,7 +93,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         companyRole = findRole(companyRole, account);
         if (companyRole == null) {
             log.error("密码登录失败：账号{}无有效角色", account.getId());
-            throw new ScmException(AccountErrorCode.NO_EXIST);
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
         }
 
         // 因素认证
@@ -101,7 +101,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             case PASSWORD:
                 boolean checkPassword = account.checkPassword(loginReq.getPassword());
                 if (!checkPassword) {
-                    throw new ScmException(AccountErrorCode.PASSWORD);
+                    throw new PlatformException(AccountErrorCode.PASSWORD);
                 }
                 break;
             case CODE:
@@ -112,7 +112,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
                 accountRepository.verificationCode(codeReq);
                 break;
             default:
-                throw new ScmException(AccountErrorCode.PARAM_ERROR, "不支持的登录类型");
+                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "不支持的登录类型");
         }
 
         LoginRes loginRes = login(account, AccountEnum.LoginType.PASSWORD, companyRole);
@@ -140,7 +140,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         // 若无可用账号
         if (targetAccount == null) {
             log.error("登录失败：不存在有效账号");
-            throw new ScmException(AccountErrorCode.NO_EXIST);
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
         } else if (targetAccount.getState() == AccountEnum.State.DISABLE) {
             // 停用状态自动启用
             log.info("{}对应的账号{}为停用状态，自动启用", accountQuery.getCredential(), targetAccount.getId());
@@ -150,7 +150,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         } else if (targetAccount.getState() == AccountEnum.State.DESTROY) {
             // 禁用状态报错
             log.error("登录失败：{}对应的账号{}已被平台禁用", accountQuery.getCredential(), targetAccount.getId());
-            throw new ScmException(AccountErrorCode.IN_BLOCKLIST, "登录");
+            throw new PlatformException(AccountErrorCode.IN_BLOCKLIST, "登录");
         }
 
         return targetAccount;
@@ -165,7 +165,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         accountQuery.setState(AccountEnum.State.ENABLE);
         Long mainAccountId = accountRepository.findId(accountQuery);
         if (mainAccountId == null) {
-            throw new ScmException(AccountErrorCode.NO_EXIST);
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
         }
         loginReq.setMainAccountId(mainAccountId);
         return accountLogin(loginReq);
@@ -177,7 +177,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         AccountVO account = accountRepository.account(null, accountId);
         RoleEnum.CompanyRole role = findRole(null, account);
         if (account == null || role == null) {
-            throw new ScmException(AccountErrorCode.NO_EXIST);
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
         }
         //登录
         return login(account, AccountEnum.LoginType.REFRESH, role);
@@ -185,7 +185,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
 
     @Override
     public LoginRes toggleClient(ToggleClientReq toggleClientReq) {
-        ScmUtil.validate(toggleClientReq);
+        BizUtil.validate(toggleClientReq);
 
         Long accountId = toggleClientReq.getAccountId();
         CommonEnum.Client client = toggleClientReq.getClient();
@@ -193,7 +193,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         AccountVO account = accountRepository.account(null, accountId);
         RoleEnum.CompanyRole companyRole = CollUtil.getLast(RoleEnumUtil.getLevelUpEnumList(client, account.getRoleIdList()));
         if (companyRole == null) {
-            throw new ScmException(AccountErrorCode.NOT_AVAIL_ROLE);
+            throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
         }
 
         //登录
@@ -293,7 +293,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         loginReq.setType(AccountEnum.LoginType.CODE);
         try {
             return accountLogin(loginReq);
-        } catch (ScmException e) {
+        } catch (PlatformException e) {
             // 2. C端用户且登录错误为账号不存在, 进行注册
             LoginRes loginRes = null;
             if (codeLoginRegisterReq.getClient() == CommonEnum.Client.USER ||
@@ -323,13 +323,13 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         // 1. 参数校验（对齐原有代码的异常风格）
         if (accountId == null) {
             log.error("获取Token失败：账号ID不能为空");
-            throw new ScmException(AccountErrorCode.PARAM_ERROR, "账号ID不能为空");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "账号ID不能为空");
         }
         String key = accountId + client.getCode();
         // 2. 检查账号是否已登录
         if (!StpUtil.isLogin(key)) {
             log.error("获取Token失败：账号{}未登录", accountId);
-            throw new ScmException(AccountErrorCode.NO_EXIST, "该账号未登录，无有效Token");
+            throw new PlatformException(AccountErrorCode.NO_EXIST, "该账号未登录，无有效Token");
         }
 
         // 3. 获取该账号的所有登录Token（兼容多端登录场景）
@@ -337,7 +337,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         String latestToken = StpUtil.getTokenValueByLoginId(key);
         if (StringUtils.isBlank(latestToken)) {
             log.error("获取Token失败：账号{}无有效登录Token", accountId);
-            throw new ScmException(AccountErrorCode.NO_EXIST, "该账号无有效登录Token");
+            throw new PlatformException(AccountErrorCode.NO_EXIST, "该账号无有效登录Token");
         }
 
         // 4. 获取Token对应的设备类型（可选，按需添加）
@@ -386,7 +386,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         IdentityRegisterRes identityRegisterRes =
                 AbsIdentityPolicySupport.getPolicy(customSaveReq.getRole()).customRegister(customSaveReq);
         if (!identityRegisterRes.isSuccess()) {
-            throw new ScmException(identityRegisterRes.getErrorCode());
+            throw new PlatformException(identityRegisterRes.getErrorCode());
         }
         return identityRegisterRes.getId();
     }
@@ -405,7 +405,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
 
         // 注册失败则抛出异常，成功则重新执行登录
         if (registerRes.getErrorCode() != null) {
-            throw new ScmException(registerRes.getErrorCode());
+            throw new PlatformException(registerRes.getErrorCode());
         }
 
         // 新增门店用户关系
@@ -427,7 +427,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             accountQuery.setUserAccount(codeLoginReq.getSuperiorAccount());
             AccountVO account = accountRepository.account(accountQuery);
             if (Objects.isNull(account)) {
-                throw new ScmException(AccountErrorCode.PARAM_ERROR, "上级账号错误，不存在");
+                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "上级账号错误，不存在");
             }
             memberRegisterReq.setYqm(account.getYqm());
         }
@@ -459,14 +459,14 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         // 通过host查找对应的运营商
         OperatorVO operatorByDomain = userQueryService.getOperatorByDomain(host);
         if (operatorByDomain == null) {
-            throw new ScmException(BaseErrorCode.PARAM, "域名错误，运营商不存在");
+            throw new PlatformException(BaseErrorCode.PARAM, "域名错误，运营商不存在");
         }
         customSaveReq.setYqm(operatorByDomain.getYqm());
         IdentityRegisterRes accountRegisterRes = AbsIdentityPolicySupport.getPolicy(RoleEnum.CompanyRole.SUPPLIER)
                 .customRegister(customSaveReq);
 
         if (accountRegisterRes.getErrorCode() != null) {
-            throw new ScmException(accountRegisterRes.getErrorCode());
+            throw new PlatformException(accountRegisterRes.getErrorCode());
         }
         return accountRegisterRes.getId();
     }
