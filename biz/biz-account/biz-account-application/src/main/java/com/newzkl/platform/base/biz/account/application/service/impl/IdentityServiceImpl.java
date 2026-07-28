@@ -29,7 +29,7 @@ import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
-import com.newzkl.platform.base.biz.account.model.exception.RoleErrorCode;
+import com.newzkl.platform.base.biz.auth.model.exception.RoleErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;

@@ -3,13 +3,9 @@ package com.newzkl.platform.base.biz.account.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.service.RoleDomain;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
 import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
-import com.newzkl.platform.base.biz.account.model.req.RoleQuery;
-import com.newzkl.platform.base.biz.account.model.role.req.RoleReq;
-import com.newzkl.platform.base.biz.account.model.role.res.RoleRes;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
@@ -42,9 +38,6 @@ import static org.mockito.Mockito.when;
 class RoleControllerTest {
 
     private static final Long ACCOUNT_ID = 7701L;
-
-    @Mock
-    private RoleDomain roleDomain;
 
     @Mock
     private UserQueryService userQueryService;
@@ -117,48 +110,6 @@ class RoleControllerTest {
         when(identityService.submitPromiseFlow(flow)).thenReturn(88L);
 
         assertEquals(88L, roleController.submitPromiseFlow(flow).getData());
-    }
-
-    @Test
-    @DisplayName("角色列表: 透传查询条件")
-    void roleListShouldDelegate() {
-        RoleQuery query = new RoleQuery();
-        when(roleDomain.list(query)).thenReturn(List.of(new RoleRes()));
-
-        assertEquals(1, roleController.roleList(query).getData().size());
-    }
-
-    @Test
-    @DisplayName("角色详情: 透传角色 ID")
-    void roleDetailShouldPassId() {
-        RoleRes res = new RoleRes();
-        res.setName("渠道商");
-        when(roleDomain.detail(9L)).thenReturn(res);
-
-        assertEquals("渠道商", roleController.roleDetail(9L).getData().getName());
-    }
-
-    @Test
-    @DisplayName("角色保存: 请求体带 id 走修改")
-    void roleListSaveShouldEditWhenIdPresent() {
-        RoleReq req = new RoleReq();
-        req.setId(5L);
-
-        roleController.roleListSave(req);
-
-        verify(roleDomain).edit(5L, req);
-        verify(roleDomain, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("角色保存: 请求体无 id 走新建")
-    void roleListSaveShouldSaveWhenIdAbsent() {
-        RoleReq req = new RoleReq();
-
-        roleController.roleListSave(req);
-
-        verify(roleDomain).save(req);
-        verify(roleDomain, never()).edit(any(), any());
     }
 
     @Test

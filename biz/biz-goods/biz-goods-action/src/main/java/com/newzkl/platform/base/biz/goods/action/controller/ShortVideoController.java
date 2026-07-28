@@ -10,18 +10,19 @@ import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 商品-短视频控制器。
  *
- * <p>迁移偏离: 旧 REST 风格 (GET/PUT/DELETE + PathVariable) 统一为 POST + RequestBody/RequestParam,
- * 分页壳 {@code PageInfo} 换为 MyBatis-Plus {@code Page}。</p>
+ * <p>迁移偏离: 分页壳 {@code PageInfo} 换为 MyBatis-Plus {@code Page}, HTTP 契约 (路径 + verb) 与 new-scm 逐字一致。</p>
  *
  * @author KC
  */
@@ -49,9 +50,21 @@ public class ShortVideoController {
      * @param req 短视频请求 (id 必填)
      * @return 成功结果
      */
-    @PostMapping("edit")
+    @PutMapping("edit")
     public PlatformResult<Void> edit(@Validated(UpdateCommand.class) @RequestBody ShortVideoReq req) {
         shortVideoDomain.edit(req);
+        return PlatformResult.success();
+    }
+
+    /**
+     * 删除短视频。
+     *
+     * @param id 短视频 ID
+     * @return 成功结果
+     */
+    @DeleteMapping("del/{id}")
+    public PlatformResult<Void> del(@PathVariable Long id) {
+        shortVideoDomain.del(id);
         return PlatformResult.success();
     }
 
@@ -61,8 +74,8 @@ public class ShortVideoController {
      * @param id 短视频 ID
      * @return 短视频视图对象
      */
-    @GetMapping("detail")
-    public PlatformResult<ShortVideoVO> detail(@RequestParam("id") Long id) {
+    @GetMapping("{id}")
+    public PlatformResult<ShortVideoVO> detail(@PathVariable Long id) {
         return PlatformResult.success(shortVideoDomain.detail(id));
     }
 
@@ -74,7 +87,7 @@ public class ShortVideoController {
      * @param query 短视频查询
      * @return 短视频分页
      */
-    @PostMapping("page")
+    @PostMapping("queryPageList")
     public PlatformResult<Page<ShortVideoVO>> page(@RequestBody ShortVideoQuery query) {
         query.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(shortVideoDomain.page(query));

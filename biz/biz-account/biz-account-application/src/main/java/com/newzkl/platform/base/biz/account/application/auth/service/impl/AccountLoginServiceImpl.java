@@ -26,7 +26,7 @@ import com.newzkl.platform.base.biz.account.application.auth.service.AccountLogi
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
-import com.newzkl.platform.base.biz.account.domain.auth.repository.AuthRepository;
+import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
 import com.newzkl.platform.base.biz.account.domain.auth.repository.AccountLoginRepository;
 import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;

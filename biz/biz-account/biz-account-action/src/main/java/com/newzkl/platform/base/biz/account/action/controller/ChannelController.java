@@ -7,6 +7,7 @@ import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ public class ChannelController {
      * @param channelId 渠道商 ID (为空时取当前账号)
      * @return 渠道商 VO
      */
-    @PostMapping("channel")
+    @GetMapping("channel")
     public PlatformResult<ChannelVO> channel(@RequestParam(value = "id", required = false) Long channelId) {
         if (channelId == null) {
             channelId = SecurityUtils.getAccountId();

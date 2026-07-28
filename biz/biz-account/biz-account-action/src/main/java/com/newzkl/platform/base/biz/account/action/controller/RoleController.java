@@ -3,14 +3,10 @@ package com.newzkl.platform.base.biz.account.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.service.RoleDomain;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
 import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
 import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
-import com.newzkl.platform.base.biz.account.model.req.RoleQuery;
-import com.newzkl.platform.base.biz.account.model.role.req.RoleReq;
-import com.newzkl.platform.base.biz.account.model.role.res.RoleRes;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -26,16 +22,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
- * 用户-角色控制器。
+ * 用户-角色控制器 (角色申请 / 保证金 / 开通码)。
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.RoleController}, 路径与 HTTP 方法保持不变。
  * 旧控制器注入了 6 个同类型 {@code IUserQueryService} / {@code IRoleService} 别名字段, 本仓收敛为
  * {@link UserQueryService} + {@link IdentityService} 两个依赖。
  * 旧权限点 {@code @Limit(code = FuncCons.Admin.company_role)} 不在本层声明, 鉴权切面归入口 starter。
  * 旧 {@code SecurityUtils.getRole()} 在中台通用层已不存在, 改用 {@link SecurityUtils#getRoleId()}。</p>
+ *
+ * <p>biz-auth 切分: 角色主体端点 (roleList / roleDetail / roleListSave) 已迁至
+ * {@code com.newzkl.platform.base.biz.auth.action.controller.RoleQueryController};
+ * 本类保留依赖账号注册编排 (IdentityService) 与开通码 (CDK) 的端点, 基址仍为 {@code /user/role}。</p>
  *
  * @author KC
  */
@@ -45,7 +43,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleController {
 
-    private final RoleDomain roleDomain;
     private final UserQueryService userQueryService;
     private final IdentityService identityService;
 
@@ -100,46 +97,6 @@ public class RoleController {
     @PostMapping("/submitPromiseFlow")
     public PlatformResult<Long> submitPromiseFlow(@RequestBody @Valid PromiseFlowVO promiseFlowVO) {
         return PlatformResult.success(identityService.submitPromiseFlow(promiseFlowVO));
-    }
-
-    /**
-     * 角色列表。
-     *
-     * @param roleQuery 角色查询
-     * @return 角色列表
-     */
-    @PostMapping("/roleList")
-    public PlatformResult<List<RoleRes>> roleList(@RequestBody RoleQuery roleQuery) {
-        return PlatformResult.success(roleDomain.list(roleQuery));
-    }
-
-    /**
-     * 角色详情。
-     *
-     * @param roleId 角色 ID
-     * @return 角色详情, 无则 null
-     */
-    @GetMapping("/roleDetail")
-    public PlatformResult<RoleRes> roleDetail(@RequestParam("roleId") Long roleId) {
-        return PlatformResult.success(roleDomain.detail(roleId));
-    }
-
-    /**
-     * 角色保存。
-     *
-     * <p>保留旧语义: 请求体带 id 走修改, 否则走新建。</p>
-     *
-     * @param roleReq 角色入参
-     * @return 成功结果
-     */
-    @PostMapping("/roleListSave")
-    public PlatformResult<Void> roleListSave(@RequestBody RoleReq roleReq) {
-        if (roleReq.getId() != null) {
-            roleDomain.edit(roleReq.getId(), roleReq);
-        } else {
-            roleDomain.save(roleReq);
-        }
-        return PlatformResult.success();
     }
 
     /**
