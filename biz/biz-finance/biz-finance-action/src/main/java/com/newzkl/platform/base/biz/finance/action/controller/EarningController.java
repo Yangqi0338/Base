@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.domain.earnings.service.EarningDomain;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordQuery;
+import com.newzkl.platform.base.biz.finance.model.earnings.res.AppEarningRecordRes;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.EarningRecordVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.TotalEarningVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -40,6 +41,20 @@ public class EarningController {
             req.setRoleId(RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId()));
         }
         return PlatformResult.success(earningDomain.queryEarningRecord(req));
+    }
+
+    /**
+     * APP 查询分润记录。
+     *
+     * @param req 分润记录查询
+     * @return APP 分润记录列表
+     */
+    @PostMapping("/queryAppEarningRecord")
+    public PlatformResult<List<AppEarningRecordRes>> queryAppEarningRecord(@RequestBody EarningRecordQuery req) {
+        if (req.getAccountId() == null) {
+            req.setAccountId(SecurityUtils.getAccountId());
+        }
+        return PlatformResult.success(earningDomain.queryAppEarningRecord(req));
     }
 
     /**

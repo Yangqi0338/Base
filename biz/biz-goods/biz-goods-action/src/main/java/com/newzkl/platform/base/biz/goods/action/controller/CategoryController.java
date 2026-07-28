@@ -80,6 +80,17 @@ public class CategoryController {
     }
 
     /**
+     * app 市场分类查询列表。
+     *
+     * @param categoryQuery 查询条件
+     * @return 分类列表
+     */
+    @PostMapping("appCategoryList")
+    public PlatformResult<List<SpuCategoryVO>> appCategoryList(@RequestBody SpuCategoryQuery categoryQuery) {
+        return PlatformResult.success(spuCategoryService.appCategoryList(categoryQuery));
+    }
+
+    /**
      * 货盘分类列表。
      *
      * @param categoryQuery 查询条件

@@ -50,6 +50,17 @@ public class MarketGoodsController {
     }
 
     /**
+     * 渠道商查询选品列表。
+     *
+     * @param req 查询请求
+     * @return 市场商品分页
+     */
+    @PostMapping("/channelQuerySelectGoodsList")
+    public PlatformResult<Page<GoodsRelationListVO>> channelQuerySelectGoodsList(@RequestBody MarketGoodsPageQuery req) {
+        return PlatformResult.success(goodsRelationDomain.channelQuerySelectGoodsList(req));
+    }
+
+    /**
      * 查询客户绑定市场商品关系列表。
      *
      * @param req 查询请求
