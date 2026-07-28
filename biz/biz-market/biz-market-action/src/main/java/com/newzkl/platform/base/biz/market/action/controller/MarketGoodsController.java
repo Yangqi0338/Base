@@ -7,7 +7,6 @@ import com.newzkl.platform.base.biz.market.model.query.relation.MarketGoodsPageQ
 import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarketNotAddGoodsReq;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,22 +39,6 @@ public class MarketGoodsController {
     }
 
     /**
-     * 移动APP查询市场商品。
-     *
-     * @param req 查询请求
-     * @return 市场商品分页
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/appQueryMarketGoodList")
-    public PlatformResult<Page<GoodsRelationListVO>> appQueryMarketGoodList(@RequestBody GoodsListPageQuery req) {
-        req.setUserId(SecurityUtils.getAccountId());
-        return PlatformResult.success(goodsRelationDomain.appQueryMarketGoodList(req));
-    }
-
-    /**
      * 运营商查询二级市场。
      *
      * @param req 查询请求
@@ -64,17 +47,6 @@ public class MarketGoodsController {
     @PostMapping("/operatorQueryMarketGoodsList")
     public PlatformResult<Page<GoodsRelationListVO>> operatorQueryMarketGoodsList(@RequestBody MarketGoodsPageQuery req) {
         return PlatformResult.success(goodsRelationDomain.operatorQueryMarketGoodsList(req));
-    }
-
-    /**
-     * 渠道商查询选品列表。
-     *
-     * @param req 查询请求
-     * @return 市场商品分页
-     */
-    @PostMapping("/channelQuerySelectGoodsList")
-    public PlatformResult<Page<GoodsRelationListVO>> channelQuerySelectGoodsList(@RequestBody MarketGoodsPageQuery req) {
-        return PlatformResult.success(goodsRelationDomain.channelQuerySelectGoodsList(req));
     }
 
     /**
@@ -129,21 +101,6 @@ public class MarketGoodsController {
     }
 
     /**
-     * 渠道商铺货查询选品列表。
-     *
-     * @param query 查询请求
-     * @return 市场商品分页
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/channelDistributionSelectedGoodsList")
-    public PlatformResult<Page<GoodsRelationListVO>> channelDistributionSelectedGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq query) {
-        return PlatformResult.success(goodsRelationDomain.channelDistributionSelectedGoodsList(query));
-    }
-
-    /**
      * 渠道商取消选品。
      *
      * @param id 选品关系 ID
@@ -152,22 +109,6 @@ public class MarketGoodsController {
     @PostMapping("/channelCancelSelected/{id}")
     public PlatformResult<Boolean> channelCancelSelected(@PathVariable Long id) {
         goodsRelationDomain.channelCancelSelected(id);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 渠道商批量取消选品。
-     *
-     * @param idList ID 列表
-     * @return 成功结果
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/channelBatchCancelSelected")
-    public PlatformResult<Boolean> channelBatchCancelSelected(@RequestBody IdListCommand idList) {
-        idList.getIdList().forEach(goodsRelationDomain::channelCancelSelected);
         return PlatformResult.success();
     }
 }

@@ -1,9 +1,6 @@
 package com.newzkl.platform.base.biz.market.action.controller;
 
 import com.newzkl.platform.base.biz.market.domain.category.service.CategoryDomain;
-import com.newzkl.platform.base.biz.market.model.biz.req.CategoryEditReq;
-import com.newzkl.platform.base.biz.market.model.biz.req.CategoryReq;
-import com.newzkl.platform.base.biz.market.model.biz.req.CategorySyncReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
@@ -52,24 +49,6 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("categorySave: 返回领域层生成的新分类ID")
-    void categorySaveReturnsNewId() {
-        CategoryReq req = new CategoryReq();
-        when(categoryDomain.categorySave(req)).thenReturn(1000L);
-
-        assertThat(categoryController.categorySave(req).getData()).isEqualTo(1000L);
-    }
-
-    @Test
-    @DisplayName("categoryEdit: 委派领域服务并返回成功")
-    void categoryEditDelegates() {
-        CategoryEditReq req = new CategoryEditReq();
-
-        assertThat(categoryController.categoryEdit(req).isSuccess()).isTrue();
-        verify(categoryDomain).categoryEdit(req);
-    }
-
-    @Test
     @DisplayName("categoryList: 回填当前账号并返回树形结果")
     void categoryListFillsAccountIdAndReturnsTree() {
         CategoryVO root = new CategoryVO();
@@ -90,14 +69,5 @@ class CategoryControllerTest {
         assertThat(data).hasSize(1);
         assertThat(data.get(0).getChildren()).hasSize(1);
         assertThat(data.get(0).getChildren().get(0).getId()).isEqualTo(2L);
-    }
-
-    @Test
-    @DisplayName("categorySync: 委派领域服务并返回成功")
-    void categorySyncDelegates() {
-        CategorySyncReq req = new CategorySyncReq();
-
-        assertThat(categoryController.categorySync(req).isSuccess()).isTrue();
-        verify(categoryDomain).syncCategory(req);
     }
 }

@@ -2,12 +2,10 @@ package com.newzkl.platform.base.biz.goods.application.goods.service.spu;
 
 
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSkuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuStateVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
 
 import java.util.List;
 
@@ -35,8 +33,6 @@ public interface SpuService {
      * @param spuDTO
      */
     void outGoodsSync(SpuDTO spuDTO);
-
-    SupplierSpuStatisticsVO supplierSpuStatistics(SupplierSpuStatisticsQuery query);
 
     /**
      * 货盘选择商品

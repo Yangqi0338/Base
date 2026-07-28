@@ -1,13 +1,8 @@
 package com.newzkl.platform.base.biz.sys.action.controller;
 
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
-import com.newzkl.platform.base.biz.sys.domain.service.DictItemDomain;
-import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
 import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
-import com.newzkl.platform.base.biz.sys.model.dictitem.req.DictItemReq;
-import com.newzkl.platform.base.biz.sys.model.dictitem.res.DictItemRes;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -17,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 平台字典控制器。
@@ -31,7 +24,6 @@ import java.util.List;
 public class DictController {
 
     private final DictDomain dictDomain;
-    private final DictItemDomain dictItemDomain;
 
     /**
      * 字典创建/更新。
@@ -55,67 +47,4 @@ public class DictController {
         return PlatformResult.success(dictDomain.dictVO(id));
     }
 
-    /**
-     * 字典列表。
-     *
-     * @param query 字典查询
-     * @return 字典列表
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/dictList")
-    public PlatformResult<List<DictRes>> dictList(@Validated @RequestBody DictQuery query) {
-        return PlatformResult.success(dictDomain.dictList(query));
-    }
-
-    /**
-     * 取指定 key 的下一个序列值。
-     *
-     * @param id 字典 key (id)
-     * @return 下一个序列值
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @GetMapping("/nextCode")
-    public PlatformResult<String> nextCode(@RequestParam("id") Long id) {
-        return PlatformResult.success(dictDomain.nextCode(id));
-    }
-
-    /**
-     * 字典条目创建/更新。
-     *
-     * @param req 条目请求
-     * @return 条目 id
-     */
-    @PostMapping("/dictItemSave")
-    public PlatformResult<Long> dictItemSave(@Validated @RequestBody DictItemReq req) {
-        return PlatformResult.success(dictItemDomain.itemSave(req));
-    }
-
-    /**
-     * 按父字典 id 查条目列表。
-     *
-     * @param dictId 父字典 id
-     * @return 条目列表
-     */
-    @GetMapping("/dictItemList")
-    public PlatformResult<List<DictItemRes>> dictItemList(@RequestParam("dictId") Long dictId) {
-        return PlatformResult.success(dictItemDomain.itemList(dictId));
-    }
-
-    /**
-     * 字典条目删除。
-     *
-     * @param req id 列表入参
-     * @return 成功结果
-     */
-    @PostMapping("/dictItemDelete")
-    public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdListCommand req) {
-        dictItemDomain.itemDelete(req.getIdList());
-        return PlatformResult.success();
-    }
 }

@@ -11,7 +11,6 @@ import com.newzkl.platform.base.biz.order.model.order.req.SettleTypeListReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleFreightExcelVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleGoodsExcelVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleOrderWaitVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordDetailVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordItemVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRefundExcelVO;
@@ -81,17 +80,6 @@ public class SettleController {
             settleRecordQuery.setSupplierId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(settleDomain.settleRecordVOList(settleRecordQuery));
-    }
-
-    /**
-     * 结算单详情 (含明细列表)。
-     *
-     * @param idObj 结算单 ID
-     * @return 结算单详情
-     */
-    @PostMapping("settleRecordDetailVO")
-    public PlatformResult<SettleRecordDetailVO> settleRecordDetailVO(@RequestBody OrderCmd.ID idObj) {
-        return PlatformResult.success(settleDomain.settleRecordDetailVO(idObj.getId()));
     }
 
     /**

@@ -79,22 +79,6 @@ public class StoreController {
     }
 
     /**
-     * 门店分页。
-     *
-     * @param storeQueryReq 查询请求
-     * @return 门店分页
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("storePage")
-    public PlatformResult<Page<StoreRes>> storePage(@RequestBody StoreQuery storeQueryReq) {
-        storeQueryReq.setChannelId(SecurityUtils.getAccountId());
-        return PlatformResult.success(storeDomain.storePage(storeQueryReq));
-    }
-
-    /**
      * 获取样板店样式。
      *
      * @return 门店样式 VO

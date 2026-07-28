@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.market.action.controller;
 
 import com.newzkl.platform.base.biz.market.domain.suggest.service.SuggestDomain;
-import com.newzkl.platform.base.biz.market.model.suggest.req.CommitTagReq;
 import com.newzkl.platform.base.biz.market.model.suggest.req.TagConfigReq;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.CommitTagVO;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.TagConfigVO;
@@ -50,18 +49,6 @@ public class SuggestController {
     }
 
     /**
-     * 交易师提交建议标签。
-     *
-     * @param req 提交请求
-     * @return 成功结果
-     */
-    @PostMapping("/commitTag")
-    public PlatformResult<Boolean > commitTag(@RequestBody CommitTagReq req) {
-        suggestDomain.commitTag(req);
-        return PlatformResult.success();
-    }
-
-    /**
      * 运营商查询自身标签配置。
      *
      * @return 标签配置视图
@@ -69,26 +56,6 @@ public class SuggestController {
     @PostMapping("/queryTagConfig")
     public PlatformResult<TagConfigVO> queryTagConfig() {
         return PlatformResult.success(suggestDomain.queryTagConfig(true));
-    }
-
-    /**
-     * 交易师查询其上级运营商的标签配置。
-     *
-     * @return 标签配置视图
-     */
-    @PostMapping("/tradeQueryTagConfig")
-    public PlatformResult<TagConfigVO> tradeQueryTagConfig() {
-        return PlatformResult.success(suggestDomain.queryTagConfig(false));
-    }
-
-    /**
-     * 查询当前账号的提交信息。
-     *
-     * @return 提交视图
-     */
-    @PostMapping("/queryCommitTag")
-    public PlatformResult<CommitTagVO> queryCommitTag() {
-        return PlatformResult.success(suggestDomain.queryCommitTag());
     }
 
     /**

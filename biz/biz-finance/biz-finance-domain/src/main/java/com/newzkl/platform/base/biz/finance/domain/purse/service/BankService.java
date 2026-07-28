@@ -69,6 +69,15 @@ public interface BankService {
      */
     List<BankBranchVO> queryBranchPageList(BankQuery query);
 
+    /**
+     * 汇付银行/支行 Excel 批量导入
+     *
+     * @param file 银行导入 Excel 文件
+     * @return 导入结果, 含解析错误信息
+     * @deprecated 运维一次性导入工具。对外 HTTP 入口 {@code PUT /bank/importBankAndBranch}
+     * 已于 2026-07-27 死端点清理中删除(前端 7 仓零引用), 本方法暂留供运维脚本/临时接线调用。
+     */
+    @Deprecated
     PlatformResult<Boolean> huiFuImportExcel(MultipartFile file);
 }
 

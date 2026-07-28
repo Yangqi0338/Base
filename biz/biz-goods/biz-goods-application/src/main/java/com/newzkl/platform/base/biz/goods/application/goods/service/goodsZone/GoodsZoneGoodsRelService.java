@@ -42,12 +42,4 @@ public interface GoodsZoneGoodsRelService {
      * @return 分页结果
      */
     Page<GoodsZoneGoodsRelRes> pageQuery(GoodsZoneGoodsRelPageReq queryReq);
-
-    /**
-     * 检查商品是否已关联到分组
-     * @param groupId 分组ID
-     * @param spuId 商品ID
-     * @return 是否已关联
-     */
-    boolean checkExists(Long groupId, Long spuId);
 }

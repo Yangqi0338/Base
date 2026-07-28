@@ -12,11 +12,9 @@ import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -71,17 +69,6 @@ public class CategoryController {
     }
 
     /**
-     * 分类详情。
-     *
-     * @param id 分类 ID
-     * @return 分类 VO
-     */
-    @GetMapping("category")
-    public PlatformResult<SpuCategoryVO> categoryVO(@RequestParam("id") Long id) {
-        return PlatformResult.success(spuDomain.category(id));
-    }
-
-    /**
      * 分类列表。
      *
      * @param categoryQuery 查询条件
@@ -90,17 +77,6 @@ public class CategoryController {
     @PostMapping("categoryList")
     public PlatformResult<List<SpuCategoryVO>> categoryList(@RequestBody SpuCategoryQuery categoryQuery) {
         return PlatformResult.success(spuCategoryService.categoryList(categoryQuery));
-    }
-
-    /**
-     * app 市场分类查询列表。
-     *
-     * @param categoryQuery 查询条件
-     * @return 分类列表
-     */
-    @PostMapping("appCategoryList")
-    public PlatformResult<List<SpuCategoryVO>> appCategoryList(@RequestBody SpuCategoryQuery categoryQuery) {
-        return PlatformResult.success(spuCategoryService.appCategoryList(categoryQuery));
     }
 
     /**

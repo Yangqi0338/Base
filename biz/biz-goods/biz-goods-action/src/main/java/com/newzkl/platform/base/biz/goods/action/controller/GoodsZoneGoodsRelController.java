@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -75,15 +74,4 @@ public class GoodsZoneGoodsRelController {
         return PlatformResult.success(goodsZoneGoodsRelService.pageQuery(queryReq));
     }
 
-    /**
-     * 检查商品是否已关联到分组。
-     *
-     * @param groupId 分组 ID
-     * @param spuId   商品 ID
-     * @return 是否已关联
-     */
-    @GetMapping("/checkExists")
-    public PlatformResult<Boolean> checkExists(@RequestParam Long groupId, @RequestParam Long spuId) {
-        return PlatformResult.success(goodsZoneGoodsRelService.checkExists(groupId, spuId));
-    }
 }

@@ -5,15 +5,12 @@ import com.newzkl.platform.base.biz.sys.model.arole.query.AroleQuery;
 import com.newzkl.platform.base.biz.sys.model.arole.req.AroleReq;
 import com.newzkl.platform.base.biz.sys.model.arole.res.AroleRes;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -44,18 +41,6 @@ public class AroleController {
     }
 
     /**
-     * 删除角色。
-     *
-     * @param req id 列表入参
-     * @return 成功结果
-     */
-    @PostMapping("/deleteArole")
-    public PlatformResult<Void> deleteArole(@Validated @RequestBody IdListCommand req) {
-        aroleDomain.aroleDelete(req.getIdList());
-        return PlatformResult.success();
-    }
-
-    /**
      * 修改角色。
      *
      * @param req 角色请求 (id 必填)
@@ -65,17 +50,6 @@ public class AroleController {
     public PlatformResult<Void> updateArole(@Validated(UpdateCommand.class) @RequestBody AroleReq req) {
         aroleDomain.aroleSave(req);
         return PlatformResult.success();
-    }
-
-    /**
-     * 角色详情。
-     *
-     * @param id 角色 id
-     * @return 角色视图对象
-     */
-    @GetMapping("/getArole")
-    public PlatformResult<AroleRes> getArole(@RequestParam("id") Long id) {
-        return PlatformResult.success(aroleDomain.aroleVO(id));
     }
 
     /**

@@ -24,9 +24,7 @@ import java.util.List;
  * 售后-协商 (操作) 记录控制器。
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.interfaces.controller.RefundOperationRecordController},
- * 7 端点路径与 HTTP 方法保持不变。旧 {@code spuOrderId} (Long) 随中台模型改为业务单号
- * {@code spuOrderNo} (String), 请求参数名沿用 {@code spuOrderId} 不破坏前端契约。
- * 分页出参由旧 {@code IPage} 壳改为 MyBatis-Plus {@code Page}。</p>
+ * 保留端点路径与 HTTP 方法不变。分页出参由旧 {@code IPage} 壳改为 MyBatis-Plus {@code Page}。</p>
  *
  * @author KC
  */
@@ -72,17 +70,6 @@ public class RefundOperationRecordController {
     }
 
     /**
-     * 按 ID 查询售后操作记录。
-     *
-     * @param id 主键 ID
-     * @return 视图对象
-     */
-    @GetMapping("getById")
-    public PlatformResult<RefundOperationRecordVO> getById(@RequestParam("id") Long id) {
-        return PlatformResult.success(refundOperationRecordService.getById(id));
-    }
-
-    /**
      * 按售后单 ID 查询操作记录列表。
      *
      * @param refundId 售后单 ID
@@ -91,17 +78,6 @@ public class RefundOperationRecordController {
     @GetMapping("listByRefundId")
     public PlatformResult<List<RefundOperationRecordVO>> listByRefundId(@RequestParam("refundId") Long refundId) {
         return PlatformResult.success(refundOperationRecordService.listByRefundId(refundId));
-    }
-
-    /**
-     * 按 SPU 订单号查询操作记录列表。
-     *
-     * @param spuOrderNo SPU 订单号
-     * @return 视图对象列表
-     */
-    @GetMapping("listBySpuOrderId")
-    public PlatformResult<List<RefundOperationRecordVO>> listBySpuOrderId(@RequestParam("spuOrderId") String spuOrderNo) {
-        return PlatformResult.success(refundOperationRecordService.listBySpuOrderNo(spuOrderNo));
     }
 
     /**

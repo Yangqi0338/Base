@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsInfo;
 import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
@@ -37,17 +36,6 @@ class LevelControllerTest {
 
     @InjectMocks
     private LevelController levelController;
-
-    @Test
-    @DisplayName("等级礼包: 透传角色 ID, 端口未接线时返回 null")
-    void levelPackShouldPassRoleId() {
-        when(levelDomain.levelPack(1002)).thenReturn(null);
-
-        PlatformResult<PackGoodsInfo> result = levelController.levelPack(1002);
-
-        assertNull(result.getData());
-        verify(levelDomain).levelPack(1002);
-    }
 
     @Test
     @DisplayName("保存: 委托领域层且返回空数据结果")

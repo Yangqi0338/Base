@@ -222,13 +222,4 @@ public class OrderStateRecordServiceImpl implements OrderStateRecordService {
             throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "分页查询订单状态记录失败：" + e.getMessage());
         }
     }
-
-    @Override
-    public List<OrderStateRecordVO> listBySpuOrderNo(String spuOrderNo) {
-        return orderStateRecordDomainService.listBySpuOrderId(spuOrderNo).stream().map(orderStateRecordEntity -> {
-            OrderStateRecordVO vo = new OrderStateRecordVO();
-            TransferUtils.transfer(orderStateRecordEntity, vo);
-            return vo;
-        }).collect(Collectors.toList());
-    }
 }

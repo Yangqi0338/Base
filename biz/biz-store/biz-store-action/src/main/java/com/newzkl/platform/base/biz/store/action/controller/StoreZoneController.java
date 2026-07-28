@@ -1,11 +1,8 @@
 package com.newzkl.platform.base.biz.store.action.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreZoneDomain;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreZonePageReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneResponse;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -25,21 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreZoneController {
 
     private final StoreZoneDomain storeZoneDomain;
-
-    /**
-     * 专区分页。
-     *
-     * @param req 分页请求
-     * @return 专区分页
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/storeZonePage")
-    public PlatformResult<Page<StoreZoneResponse>> storeZonePage(@Validated @RequestBody StoreZonePageReq req) {
-        return PlatformResult.success(storeZoneDomain.storeZonePage(req));
-    }
 
     /**
      * 创建专区。

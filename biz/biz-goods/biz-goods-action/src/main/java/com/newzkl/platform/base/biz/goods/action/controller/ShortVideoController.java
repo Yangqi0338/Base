@@ -56,18 +56,6 @@ public class ShortVideoController {
     }
 
     /**
-     * 删除短视频。
-     *
-     * @param id 短视频 ID
-     * @return 成功结果
-     */
-    @PostMapping("del")
-    public PlatformResult<Void> del(@RequestParam("id") Long id) {
-        shortVideoDomain.del(id);
-        return PlatformResult.success();
-    }
-
-    /**
      * 短视频详情。
      *
      * @param id 短视频 ID

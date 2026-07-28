@@ -7,18 +7,15 @@ import com.newzkl.platform.base.biz.goods.application.goods.ext.SpuQueryExt;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,17 +109,6 @@ public class SpuController {
     @PostMapping("/palletSelectGoods")
     public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
         return PlatformResult.success(spuService.palletSelectGoods(spuVO));
-    }
-
-    /**
-     * 移动 APP 供应商商品统计。
-     *
-     * @param query 统计查询
-     * @return 供应商商品统计
-     */
-    @GetMapping("supplierSpuStatistics")
-    public PlatformResult<SupplierSpuStatisticsVO> supplierSpuStatistics(@ModelAttribute SupplierSpuStatisticsQuery query) {
-        return PlatformResult.success(spuService.supplierSpuStatistics(query));
     }
 
     /**

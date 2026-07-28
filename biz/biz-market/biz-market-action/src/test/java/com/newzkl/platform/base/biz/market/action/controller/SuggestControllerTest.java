@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.market.action.controller;
 
 import com.newzkl.platform.base.biz.market.domain.suggest.service.SuggestDomain;
-import com.newzkl.platform.base.biz.market.model.suggest.req.CommitTagReq;
 import com.newzkl.platform.base.biz.market.model.suggest.req.TagConfigReq;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.CommitTagVO;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.TagConfigVO;
@@ -34,16 +33,13 @@ class SuggestControllerTest {
     private SuggestController suggestController;
 
     @Test
-    @DisplayName("saveTagConfig / commitTag 委派领域服务并返回成功")
+    @DisplayName("saveTagConfig 委派领域服务并返回成功")
     void writeEndpointsDelegate() {
         TagConfigReq tagConfigReq = new TagConfigReq();
-        CommitTagReq commitTagReq = new CommitTagReq();
 
         assertThat(suggestController.saveTagConfig(tagConfigReq).isSuccess()).isTrue();
-        assertThat(suggestController.commitTag(commitTagReq).isSuccess()).isTrue();
 
         verify(suggestDomain).saveTagConfig(tagConfigReq);
-        verify(suggestDomain).commitTag(commitTagReq);
     }
 
     @Test
@@ -56,25 +52,6 @@ class SuggestControllerTest {
 
         assertThat(result.getData()).isSameAs(vo);
         verify(suggestDomain).queryTagConfig(true);
-    }
-
-    @Test
-    @DisplayName("tradeQueryTagConfig 走交易师视角 (operator=false)")
-    void tradeQueryTagConfigUsesOperatorFalse() {
-        TagConfigVO vo = new TagConfigVO();
-        when(suggestDomain.queryTagConfig(false)).thenReturn(vo);
-
-        assertThat(suggestController.tradeQueryTagConfig().getData()).isSameAs(vo);
-        verify(suggestDomain).queryTagConfig(false);
-    }
-
-    @Test
-    @DisplayName("queryCommitTag 原样返回领域结果")
-    void queryCommitTagReturnsDomainResult() {
-        CommitTagVO vo = new CommitTagVO();
-        when(suggestDomain.queryCommitTag()).thenReturn(vo);
-
-        assertThat(suggestController.queryCommitTag().getData()).isSameAs(vo);
     }
 
     @Test

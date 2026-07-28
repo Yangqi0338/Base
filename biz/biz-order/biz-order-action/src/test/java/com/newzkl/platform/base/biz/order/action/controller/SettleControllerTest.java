@@ -8,7 +8,6 @@ import com.newzkl.platform.base.biz.order.model.order.req.SettleRecordItemPageRe
 import com.newzkl.platform.base.biz.order.model.order.req.SettleRecordPageReq;
 import com.newzkl.platform.base.biz.order.model.order.req.SettleTypeListReq;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleOrderWaitVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordDetailVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordItemVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
@@ -129,18 +128,6 @@ class SettleControllerTest {
         ArgumentCaptor<SettleRecordPageReq> captor = ArgumentCaptor.forClass(SettleRecordPageReq.class);
         verify(settleDomain).settleRecordVOList(captor.capture());
         assertNull(captor.getValue().getSupplierId());
-    }
-
-    @Test
-    @DisplayName("详情: 透传命令体 ID")
-    void settleRecordDetailShouldPassId() {
-        when(settleDomain.settleRecordDetailVO(anyLong())).thenReturn(new SettleRecordDetailVO());
-        OrderCmd.ID idObj = new OrderCmd.ID();
-        idObj.setId(11L);
-
-        settleController.settleRecordDetailVO(idObj);
-
-        verify(settleDomain).settleRecordDetailVO(11L);
     }
 
     @Test

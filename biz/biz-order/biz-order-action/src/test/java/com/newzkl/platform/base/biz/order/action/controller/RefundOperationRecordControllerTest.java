@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -93,32 +92,12 @@ class RefundOperationRecordControllerTest {
     }
 
     @Test
-    @DisplayName("详情: 透传路径 ID")
-    void getByIdShouldPassId() {
-        when(refundOperationRecordService.getById(anyLong())).thenReturn(new RefundOperationRecordVO());
-
-        refundOperationRecordController.getById(4L);
-
-        verify(refundOperationRecordService).getById(4L);
-    }
-
-    @Test
     @DisplayName("按售后单查询: 透传 refundId")
     void listByRefundIdShouldPassId() {
         when(refundOperationRecordService.listByRefundId(anyLong())).thenReturn(List.of());
 
         assertEquals(0, refundOperationRecordController.listByRefundId(5L).getData().size());
         verify(refundOperationRecordService).listByRefundId(5L);
-    }
-
-    @Test
-    @DisplayName("按 SPU 订单号查询: 旧参数名 spuOrderId 绑定到 spuOrderNo")
-    void listBySpuOrderIdShouldPassOrderNo() {
-        when(refundOperationRecordService.listBySpuOrderNo(anyString())).thenReturn(List.of());
-
-        refundOperationRecordController.listBySpuOrderId("SPU202607260001");
-
-        verify(refundOperationRecordService).listBySpuOrderNo("SPU202607260001");
     }
 
     @Test

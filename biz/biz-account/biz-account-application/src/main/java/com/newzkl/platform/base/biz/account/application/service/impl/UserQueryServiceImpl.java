@@ -31,9 +31,6 @@ import com.newzkl.platform.base.biz.account.domain.service.*;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.DealerDO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.OperatorDO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.SelectorDO;
-import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantQuery;
-import com.newzkl.platform.base.biz.account.model.merchant.res.MerchantRes;
-import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.*;
 import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
@@ -86,44 +83,8 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final FinancePurseApi financePurseApi;
     private final GoodsStoreApi goodsStoreApi;
 
-    private final MerchantDomain merchantDomain;
     private final CdkDomain cdkDomain;
     private final CountSaleDomain countSaleDomain;
-
-    /**
-     * 账号已开通角色列表。
-     *
-     * <p>迁移补充: 旧实现走 {@code AccountDAO.xml#accountRoleVO} 的 supplier / channel 两表 UNION,
-     * 取表内冗余的 {@code role_id} / {@code role_name} 列; 中台身份表已无该冗余列,
-     * 改由身份记录所属角色推导, 取值与旧列一致。</p>
-     *
-     * @param accountId 账号 ID
-     * @return 角色列表, 无数据返回空集合
-     * @author KC
-     */
-    @Override
-    public List<AccountRoleVO> accountRoleVO(Long accountId) {
-        List<AccountRoleVO> roleList = new ArrayList<>();
-        SupplierVO supplier = supplierClientDomain.supplier(accountId);
-        if (supplier != null) {
-            AccountRoleVO item = new AccountRoleVO();
-            item.setRoleId(RoleEnum.CompanyRole.SUPPLIER.getCode());
-            item.setRoleName(RoleEnum.CompanyRole.SUPPLIER.getValue());
-            item.setState(supplier.getState() == null ? null : supplier.getState().getCode());
-            item.setAuditState(supplier.getAuditState() == null ? null : supplier.getAuditState().getCode());
-            roleList.add(item);
-        }
-        ChannelVO channel = channelClientDomain.channel(accountId);
-        if (channel != null) {
-            AccountRoleVO item = new AccountRoleVO();
-            item.setRoleId(RoleEnum.CompanyRole.CHANNEL.getCode());
-            item.setRoleName(RoleEnum.CompanyRole.CHANNEL.getValue());
-            item.setState(channel.getState() == null ? null : channel.getState().getCode());
-            item.setAuditState(channel.getAuditState() == null ? null : channel.getAuditState().getCode());
-            roleList.add(item);
-        }
-        return roleList;
-    }
 
     /**
      * 开通码分页。
@@ -635,18 +596,4 @@ public class UserQueryServiceImpl implements UserQueryService {
         return null;
     }
 
-    @Override
-    public MerchantRes merchantVO(Long merchantId) {
-        return merchantDomain.detail(merchantId);
-    }
-
-    @Override
-    public Page<MerchantRes> merchantPage(MerchantQuery merchantQuery) {
-        return merchantDomain.pageList(merchantQuery);
-    }
-
-    @Override
-    public WxMpConfigVO wxMpConfig(Long merchantId) {
-        return merchantDomain.wxMpConfig(merchantId);
-    }
 }

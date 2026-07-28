@@ -1,10 +1,7 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.service.AccountJobDomain;
-import com.newzkl.platform.base.biz.account.model.req.AccountJobQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountJobReq;
-import com.newzkl.platform.base.biz.account.model.res.AccountJobRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountJobVO;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
@@ -60,16 +57,5 @@ public class AccountJobController {
     @PostMapping("detail")
     public PlatformResult<AccountJobVO> detail(@RequestParam("id") Long id) {
         return PlatformResult.success(accountJobDomain.detail(id));
-    }
-
-    /**
-     * 职位分页。
-     *
-     * @param accountJobQuery 职位查询
-     * @return 职位分页
-     */
-    @PostMapping("accountJobPage")
-    public PlatformResult<Page<AccountJobRes>> accountJobPage(@RequestBody AccountJobQuery accountJobQuery) {
-        return PlatformResult.success(accountJobDomain.accountJobPageVO(accountJobQuery));
     }
 }

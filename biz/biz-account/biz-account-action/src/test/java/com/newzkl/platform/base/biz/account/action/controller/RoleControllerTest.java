@@ -1,10 +1,8 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.action.cmd.RoleCmd;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.service.CdkDomain;
 import com.newzkl.platform.base.biz.account.domain.service.RoleDomain;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
 import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
@@ -12,7 +10,6 @@ import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 import com.newzkl.platform.base.biz.account.model.req.RoleQuery;
 import com.newzkl.platform.base.biz.account.model.role.req.RoleReq;
 import com.newzkl.platform.base.biz.account.model.role.res.RoleRes;
-import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
@@ -48,9 +45,6 @@ class RoleControllerTest {
 
     @Mock
     private RoleDomain roleDomain;
-
-    @Mock
-    private CdkDomain cdkDomain;
 
     @Mock
     private UserQueryService userQueryService;
@@ -114,15 +108,6 @@ class RoleControllerTest {
         when(identityService.loadApplyCommand(1001L)).thenReturn(command);
 
         assertEquals(command, roleController.loadApplyCommand(1001L).getData());
-    }
-
-    @Test
-    @DisplayName("账号角色信息: 按登录态账号查询")
-    void userRoleInfoShouldQueryByLoginAccount() {
-        when(userQueryService.accountRoleVO(ACCOUNT_ID)).thenReturn(List.of(new AccountRoleVO()));
-
-        assertEquals(1, roleController.userRoleInfo().getData().size());
-        verify(userQueryService).accountRoleVO(ACCOUNT_ID);
     }
 
     @Test
@@ -240,17 +225,5 @@ class RoleControllerTest {
         assertEquals(RoleEnum.CompanyRole.OPERATOR.getCode(), command.getFromRole());
         assertEquals(ACCOUNT_ID, command.getFromUserId());
         verify(identityService).toCdk(command);
-    }
-
-    @Test
-    @DisplayName("开通码状态修改: 透传 id 与兑换状态")
-    void cdkStateEditShouldDelegate() {
-        RoleCmd.StateEdit stateEdit = new RoleCmd.StateEdit();
-        stateEdit.setId(3L);
-        stateEdit.setUseState(1);
-
-        roleController.cdkStateEdit(stateEdit);
-
-        verify(cdkDomain).cdkStateEdit(3L, 1);
     }
 }

@@ -22,7 +22,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -106,14 +105,6 @@ class RefundOperationRecordServiceImplTest {
     }
 
     @Test
-    @DisplayName("详情: 记录不存在返回 null (旧语义)")
-    void getByIdShouldReturnNullWhenMissing() {
-        when(refundOperationRecordDomain.findById(7L)).thenReturn(null);
-
-        assertNull(refundOperationRecordService.getById(7L));
-    }
-
-    @Test
     @DisplayName("按售后单查询: 领域列表转 VO 列表")
     void listByRefundIdShouldTransfer() {
         RefundOperationRecord record = new RefundOperationRecord();
@@ -125,15 +116,6 @@ class RefundOperationRecordServiceImplTest {
 
         assertEquals(1, voList.size());
         assertEquals(20L, voList.get(0).getRefundId());
-    }
-
-    @Test
-    @DisplayName("按 SPU 订单号查询: 委托领域层")
-    void listBySpuOrderNoShouldDelegate() {
-        when(refundOperationRecordDomain.listBySpuOrderNo("SPU2")).thenReturn(List.of());
-
-        assertEquals(0, refundOperationRecordService.listBySpuOrderNo("SPU2").size());
-        verify(refundOperationRecordDomain).listBySpuOrderNo("SPU2");
     }
 
     @Test

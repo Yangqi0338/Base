@@ -54,11 +54,4 @@ public class GoodsZoneGoodsRelServiceImpl implements GoodsZoneGoodsRelService {
                 queryReq.getGroupId(), queryReq.getSpuId(), queryReq.getCurrent(), queryReq.getSize());
         return relDomainService.pageQuery(queryReq);
     }
-
-    @Override
-    public boolean checkExists(Long groupId, Long spuId) {
-        boolean exists = relDomainService.checkExists(groupId, spuId);
-        log.info("检查商品是否关联到分组：分组ID={}, 商品ID={}, 结果={}", groupId, spuId, exists);
-        return exists;
-    }
 }

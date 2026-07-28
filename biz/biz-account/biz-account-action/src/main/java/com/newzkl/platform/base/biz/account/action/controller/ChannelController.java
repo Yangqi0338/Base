@@ -1,15 +1,9 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.action.cmd.EditColumnCmd;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
-import com.newzkl.platform.base.biz.account.model.req.ChannelCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
-import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -32,17 +26,6 @@ public class ChannelController {
     private final ChannelClientDomain channelClientDomain;
 
     /**
-     * 渠道商自定义注册。
-     *
-     * @param customSaveReq 自定义注册请求
-     * @return 渠道商 ID
-     */
-    @PostMapping("channelCustomSave")
-    public PlatformResult<Long> channelCustomSave(@Validated @RequestBody ChannelCustomSaveReq customSaveReq) {
-        return PlatformResult.success(channelClientDomain.channelCustomSave(customSaveReq));
-    }
-
-    /**
      * 渠道商修改。
      *
      * @param channelReq 渠道商请求
@@ -51,29 +34,6 @@ public class ChannelController {
     @PostMapping("channelEdit")
     public PlatformResult<Integer> channelEdit(@Validated @RequestBody ChannelReq channelReq) {
         return PlatformResult.success(channelClientDomain.channelEdit(channelReq));
-    }
-
-    /**
-     * 渠道商按列修改。
-     *
-     * @param cmd 列编辑命令
-     * @return 成功结果
-     */
-    @PostMapping("channelEditColumn")
-    public PlatformResult<Void> channelEditColumn(@Validated @RequestBody EditColumnCmd cmd) {
-        channelClientDomain.channelEdit(cmd.getEditColumnList(), cmd.getId());
-        return PlatformResult.success();
-    }
-
-    /**
-     * 渠道商删除。
-     *
-     * @param idListObj ID 列表
-     * @return 删除数量
-     */
-    @PostMapping("channelDelete")
-    public PlatformResult<Integer> channelDelete(@Validated @RequestBody IdListCommand idListObj) {
-        return PlatformResult.success(channelClientDomain.channelDelete(idListObj.getIdList()));
     }
 
     /**
@@ -88,27 +48,5 @@ public class ChannelController {
             channelId = SecurityUtils.getAccountId();
         }
         return PlatformResult.success(channelClientDomain.channel(channelId));
-    }
-
-    /**
-     * 修改渠道商。
-     *
-     * @param req 渠道商更新请求
-     * @return 修改数量
-     */
-    @PostMapping("updateChannel")
-    public PlatformResult<Integer> updateChannel(@Validated @RequestBody ChannelUpdateReq req) {
-        return PlatformResult.success(channelClientDomain.updateChannel(req));
-    }
-
-    /**
-     * 渠道商分页。
-     *
-     * @param channelQuery 渠道商查询
-     * @return 渠道商分页
-     */
-    @PostMapping("channelPageList")
-    public PlatformResult<Page<ChannelVO>> channelPageList(@RequestBody ChannelQuery channelQuery) {
-        return PlatformResult.success(channelClientDomain.channelPageList(channelQuery));
     }
 }

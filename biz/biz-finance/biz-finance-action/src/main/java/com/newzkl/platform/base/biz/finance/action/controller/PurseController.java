@@ -4,7 +4,6 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDom
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
-import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BatchAccountPurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPurseRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleDataRes;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -89,21 +87,6 @@ public class PurseController {
     }
 
     /**
-     * 查询三方账户分页列表。
-     *
-     * @param query 三方账户查询
-     * @return 三方账户列表
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/queryTripartitePursePage")
-    public PlatformResult<List<AccountTripartitePurseVO>> queryTripartitePursePage(@RequestBody @Valid AccountTripartitePurseQuery query) {
-        return PlatformResult.success(tripartitePurseDomain.queryPageAccountTripartitePurse(query));
-    }
-
-    /**
      * 查询客户账户变动记录。
      *
      * @param req 变动记录查询
@@ -125,23 +108,5 @@ public class PurseController {
     @PostMapping("/querySupplierSettleData")
     public PlatformResult<TotalSupplierSettleDataRes> querySupplierSettleData() {
         return PlatformResult.success(accountPurseDomain.querySupplierSettleData());
-    }
-
-    /**
-     * 查询动账明细。
-     *
-     * @param req 变动记录查询
-     * @return 动账明细列表
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/accountMovementDetails")
-    public PlatformResult<List<AccountPurseAlterRecordVO>> accountMovementDetails(@RequestBody AccountPurseAlterRecordQuery req) {
-        if (req.getAccountId() == null) {
-            req.setAccountId(SecurityUtils.getAccountId());
-        }
-        return PlatformResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
     }
 }

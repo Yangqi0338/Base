@@ -45,11 +45,6 @@ public interface SpuCategoryService {
     List<SpuCategoryVO> categoryList(SpuCategoryQuery categoryQuery);
 
     /**
-     * app市场分类查询列表
-     */
-    List<SpuCategoryVO> appCategoryList(SpuCategoryQuery categoryQuery);
-
-    /**
      * 货盘分类分页
      */
     List<SpuCategoryVO> palletCategoryList(PalletCategoryPageQuery categoryQuery);

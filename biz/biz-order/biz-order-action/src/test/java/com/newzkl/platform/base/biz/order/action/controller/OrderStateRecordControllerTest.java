@@ -12,8 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,21 +32,6 @@ class OrderStateRecordControllerTest {
 
     @InjectMocks
     private OrderStateRecordController orderStateRecordController;
-
-    @Test
-    @DisplayName("按 SPU 订单号查询: 透传订单号并原样返回列表")
-    void listBySpuOrderIdShouldDelegate() {
-        OrderStateRecordVO vo = new OrderStateRecordVO();
-        vo.setId(1001L);
-        when(orderStateRecordService.listBySpuOrderNo("SPU202607260001")).thenReturn(List.of(vo));
-
-        PlatformResult<List<OrderStateRecordVO>> result =
-                orderStateRecordController.listBySpuOrderId("SPU202607260001");
-
-        assertEquals(1, result.getData().size());
-        assertEquals(1001L, result.getData().get(0).getId());
-        verify(orderStateRecordService).listBySpuOrderNo("SPU202607260001");
-    }
 
     @Test
     @DisplayName("分页: 透传分页入参并返回 MP 分页壳")

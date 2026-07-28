@@ -57,18 +57,6 @@ public class GoodPackageController {
     }
 
     /**
-     * 启用套餐。
-     *
-     * @param id 套餐主键 ID
-     * @return 成功结果
-     */
-    @PostMapping("enable")
-    public PlatformResult<Void> enable(@RequestParam("id") Long id) {
-        goodPackageDomain.enable(id);
-        return PlatformResult.success();
-    }
-
-    /**
      * 停用套餐。
      *
      * @param id 套餐主键 ID

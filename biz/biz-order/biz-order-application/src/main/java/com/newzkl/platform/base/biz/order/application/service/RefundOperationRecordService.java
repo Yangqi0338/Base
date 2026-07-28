@@ -43,28 +43,12 @@ public interface RefundOperationRecordService {
     void delete(Long id);
 
     /**
-     * 按 ID 查询售后操作记录。
-     *
-     * @param id 主键 ID
-     * @return 视图对象, 不存在返回 null
-     */
-    RefundOperationRecordVO getById(Long id);
-
-    /**
      * 按售后单 ID 查询操作记录列表。
      *
      * @param refundId 售后单 ID
      * @return 视图对象列表, 永不为 null
      */
     List<RefundOperationRecordVO> listByRefundId(Long refundId);
-
-    /**
-     * 按 SPU 订单号查询操作记录列表。
-     *
-     * @param spuOrderNo SPU 订单号
-     * @return 视图对象列表, 永不为 null
-     */
-    List<RefundOperationRecordVO> listBySpuOrderNo(String spuOrderNo);
 
     /**
      * 分页查询售后操作记录。

@@ -72,12 +72,4 @@ public interface OrderStateRecordService {
      * @return 分页结果（视图对象）
      */
     Page<OrderStateRecordVO> pageQuery(OrderStateRecordPageReq req);
-
-    /**
-     * 按订单ID查询所有状态记录（按操作时间倒序）
-     *
-     * @param spuOrderNo 订单主键ID
-     * @return 视图对象列表
-     */
-    List<OrderStateRecordVO> listBySpuOrderNo(String spuOrderNo);
 }

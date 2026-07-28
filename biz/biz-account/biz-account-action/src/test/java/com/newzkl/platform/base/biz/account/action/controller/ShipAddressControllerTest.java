@@ -109,14 +109,4 @@ class ShipAddressControllerTest {
         assertEquals(333L, shipAddressController.shipAddress(333L).getData().getId());
         verify(shipAddressDomain).detail(333L);
     }
-
-    @Test
-    @DisplayName("默认地址: 委托领域层按登录态查询")
-    void defaultShipAddressShouldDelegate() {
-        when(shipAddressDomain.defaultShipAddress()).thenReturn(null);
-
-        shipAddressController.defaultShipAddress();
-
-        verify(shipAddressDomain).defaultShipAddress();
-    }
 }

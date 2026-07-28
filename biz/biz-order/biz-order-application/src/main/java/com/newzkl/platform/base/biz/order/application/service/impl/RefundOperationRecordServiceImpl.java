@@ -70,19 +70,8 @@ public class RefundOperationRecordServiceImpl implements RefundOperationRecordSe
     }
 
     @Override
-    public RefundOperationRecordVO getById(Long id) {
-        return toVO(refundOperationRecordDomain.findById(id));
-    }
-
-    @Override
     public List<RefundOperationRecordVO> listByRefundId(Long refundId) {
         return TransferUtils.transfers(refundOperationRecordDomain.listByRefundId(refundId),
-                RefundOperationRecordVO::new);
-    }
-
-    @Override
-    public List<RefundOperationRecordVO> listBySpuOrderNo(String spuOrderNo) {
-        return TransferUtils.transfers(refundOperationRecordDomain.listBySpuOrderNo(spuOrderNo),
                 RefundOperationRecordVO::new);
     }
 

@@ -1,10 +1,8 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.action.cmd.RoleCmd;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.service.CdkDomain;
 import com.newzkl.platform.base.biz.account.domain.service.RoleDomain;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
 import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
@@ -13,7 +11,6 @@ import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 import com.newzkl.platform.base.biz.account.model.req.RoleQuery;
 import com.newzkl.platform.base.biz.account.model.role.req.RoleReq;
 import com.newzkl.platform.base.biz.account.model.role.res.RoleRes;
-import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -49,7 +46,6 @@ import java.util.List;
 public class RoleController {
 
     private final RoleDomain roleDomain;
-    private final CdkDomain cdkDomain;
     private final UserQueryService userQueryService;
     private final IdentityService identityService;
 
@@ -93,16 +89,6 @@ public class RoleController {
             log.warn("加载申请资料异常");
         }
         return PlatformResult.success(roleApplyCommand);
-    }
-
-    /**
-     * 账号角色信息。
-     *
-     * @return 当前登录账号已开通的角色列表
-     */
-    @PostMapping("/userRoleInfo")
-    public PlatformResult<List<AccountRoleVO>> userRoleInfo() {
-        return PlatformResult.success(userQueryService.accountRoleVO(SecurityUtils.getAccountId()));
     }
 
     /**
@@ -192,18 +178,6 @@ public class RoleController {
         toCdkCommand.setFromRole(SecurityUtils.getRoleId());
         toCdkCommand.setFromUserId(SecurityUtils.getAccountId());
         identityService.toCdk(toCdkCommand);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 修改开通码兑换状态。
-     *
-     * @param stateEdit 状态修改入参
-     * @return 成功结果
-     */
-    @PostMapping("cdkStateEdit")
-    public PlatformResult<Void> cdkStateEdit(@Validated @RequestBody RoleCmd.StateEdit stateEdit) {
-        cdkDomain.cdkStateEdit(stateEdit.getId(), stateEdit.getUseState());
         return PlatformResult.success();
     }
 }

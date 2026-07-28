@@ -44,16 +44,6 @@ public class ShipAddressController {
     }
 
     /**
-     * 查询当前登录态下的默认收货地址。
-     *
-     * @return 默认收货地址
-     */
-    @GetMapping("defaultShipAddress")
-    public PlatformResult<ShipAddressRes> defaultShipAddress() {
-        return PlatformResult.success(shipAddressDomain.defaultShipAddress());
-    }
-
-    /**
      * 收货地址修改。
      *
      * @param edit 收货地址入参 (以其 id 为更新目标)
