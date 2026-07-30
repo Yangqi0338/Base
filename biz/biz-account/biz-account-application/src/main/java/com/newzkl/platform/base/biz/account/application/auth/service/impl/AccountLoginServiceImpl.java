@@ -32,6 +32,12 @@ import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.CodeUpdateUsernameReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
+import com.newzkl.platform.base.biz.account.model.req.ResetMemberReq;
+import com.newzkl.platform.base.biz.account.model.vo.ResetMemberVO;
+import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
+import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
+import com.newzkl.platform.base.common.core.redis.utils.ResetPwdRedisUtil;
+import com.newzkl.platform.base.common.core.utils.common.JsonEncryptDecryptUtils;
 import com.newzkl.platform.base.biz.account.model.res.AccountLoginLog;
 import com.newzkl.platform.base.biz.account.model.res.AccountLoginLogRes;
 import com.newzkl.platform.base.biz.account.model.res.LoginAccountRes;
@@ -56,6 +62,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import static com.newzkl.platform.base.common.core.utils.biz.BizUtil.async;
 
@@ -68,6 +76,21 @@ import static com.newzkl.platform.base.common.core.utils.biz.BizUtil.async;
 @Service
 @RequiredArgsConstructor
 public class AccountLoginServiceImpl implements AccountLoginService {
+
+    /**
+     * 找回密码 nonce 分布式锁 key 前缀 (逐字沿用旧实现)
+     */
+    private static final String RESET_PWD_NONCE_LOCK_PREFIX = "reset:pwd:nonce:lock:";
+
+    /**
+     * 找回密码「设备 + 手机号」验证通过标记 key 前缀 (逐字沿用旧实现)
+     */
+    private static final String RESET_PWD_DEVICE_PREFIX = "reset:pwd:device:";
+
+    /**
+     * 新密码强度: 至少含一个字母与一个数字 (正则逐字沿用旧实现)
+     */
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d).+$");
 
     private final UserQueryService userQueryService;
     private final AccountRepository accountRepository;
@@ -479,6 +502,172 @@ public class AccountLoginServiceImpl implements AccountLoginService {
     @Override
     public void editPassword(CodeUpdatePasswordReq codeUpdateUsernameReq) {
         accountDomain.editPassword(codeUpdateUsernameReq);
+    }
+
+    @Override
+    public void resetPasswordSmsCode(ResetMemberReq req) {
+        log.info("开始执行重置用户密码-验证手机号");
+        // 1. 解密 + 基础参数校验
+        ResetMemberVO resetMemberVO = decryptAndValidateBaseParam(req);
+
+        // 2. 验证码步骤专属参数校验 (保留旧 isAllBlank 语义: 四项全空才拦)
+        if (StringUtils.isAllBlank(resetMemberVO.getPhone(), resetMemberVO.getCode(),
+                resetMemberVO.getDeviceCode(), resetMemberVO.getNonce())) {
+            log.error("重置密码失败：手机号、验证码、设备码、nonce必填");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "手机号、验证码、设备码、nonce必填");
+        }
+
+        // 3. 限流
+        if (ResetPwdRedisUtil.isOverRateLimit(resetMemberVO.getPhone(), 1, 60)) {
+            log.error("重置密码失败：请求过于频繁，请1分钟后重试");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "请求过于频繁，请1分钟后重试");
+        }
+
+        // 4. 防重放
+        String nonceLockKey = RESET_PWD_NONCE_LOCK_PREFIX + resetMemberVO.getNonce();
+        try {
+            if (!RedissonLockUtil.tryLock(nonceLockKey, TimeUnit.SECONDS, 3, 5)) {
+                log.error("重置密码失败：获取nonce锁失败");
+                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "系统繁忙，请稍后再试");
+            }
+            if (ResetPwdRedisUtil.isNonceUsed(resetMemberVO.getNonce())) {
+                log.error("重置密码失败：nonce失效，请重新获取");
+                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "nonce失效，请重新获取");
+            }
+
+            // 5. 查询有效用户
+            validAccountByPhone(resetMemberVO.getPhone());
+
+            // 6. 校验验证码 (校验不过由仓储抛 CODE_ERROR)
+            VerificationCodeReq codeReq = new VerificationCodeReq();
+            codeReq.setPhone(resetMemberVO.getPhone());
+            codeReq.setCode(resetMemberVO.getCode());
+            codeReq.setType(SmsEnum.Type.UpdatePassword);
+            accountRepository.verificationCode(codeReq);
+
+            // 7. 标记 nonce 已使用
+            ResetPwdRedisUtil.markNonceUsed(resetMemberVO.getNonce(), ResetPwdRedisUtil.EXPIRE_MINUTES);
+
+            // 8. 缓存验证通过标记
+            RedisUtil.set(devicePhoneKey(resetMemberVO.getPhone(), resetMemberVO.getDeviceCode()), Boolean.TRUE,
+                    ResetPwdRedisUtil.EXPIRE_MINUTES, TimeUnit.MINUTES);
+            log.info("重置密码-验证手机号成功");
+        } finally {
+            RedissonLockUtil.unlock(nonceLockKey);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetMemberPasswordUpdate(ResetMemberReq req) {
+        log.info("开始执行重置用户密码-更新密码");
+        // 1. 解密 + 基础参数校验
+        ResetMemberVO resetMemberVO = decryptAndValidateBaseParam(req);
+
+        // 2. 更新步骤专属参数校验 (保留旧 isAllBlank 语义)
+        if (StringUtils.isAllBlank(resetMemberVO.getPhone(), resetMemberVO.getNewPassword(),
+                resetMemberVO.getDeviceCode(), resetMemberVO.getNonce())) {
+            log.error("重置密码失败：手机号、新密码、设备码、nonce必填");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "手机号、新密码、设备码、nonce必填");
+        }
+
+        // 3. 校验第一步留下的验证标记
+        String devicePhoneKey = devicePhoneKey(resetMemberVO.getPhone(), resetMemberVO.getDeviceCode());
+        if (!RedisUtil.exists(devicePhoneKey) || Boolean.FALSE.equals(RedisUtil.get(devicePhoneKey))) {
+            log.error("重置密码失败：验证结果已失效或未通过");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "验证结果已失效或未通过");
+        }
+
+        // 4. 查询有效用户
+        AccountVO account = validAccountByPhone(resetMemberVO.getPhone());
+
+        // 5. 密码强度校验
+        String newPassword = resetMemberVO.getNewPassword();
+        if (newPassword == null || newPassword.length() < 8 || !PASSWORD_PATTERN.matcher(newPassword).matches()) {
+            log.error("重置密码失败：密码强度不足");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "密码需至少8位，包含字母和数字");
+        }
+
+        // 6. 更新密码
+        AccountVO accountEdit = new AccountVO();
+        accountEdit.setId(account.getId());
+        accountEdit.setPassword(account.getNewPassword(newPassword));
+        accountRepository.accountEdit(accountEdit, null);
+
+        // 7. 删除验证标记, 避免重复使用
+        RedisUtil.del(devicePhoneKey);
+        log.info("重置密码-更新密码成功，accountId: {}", account.getId());
+    }
+
+    /**
+     * 解密 sign 并做基础校验 (sign 非空 + 时间戳非空且未过期)
+     *
+     * @param req 找回密码请求
+     * @return 解密后的找回密码视图
+     */
+    private ResetMemberVO decryptAndValidateBaseParam(ResetMemberReq req) {
+        if (StrUtil.isBlank(req.getSign())) {
+            log.error("重置密码失败：加密参数缺失");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "加密参数缺失");
+        }
+        ResetMemberVO resetMemberVO;
+        try {
+            resetMemberVO = JsonEncryptDecryptUtils.decryptToObject(req.getSign(), ResetMemberVO.class);
+        } catch (IllegalArgumentException e) {
+            log.error("重置密码失败：sign解密失败, {}", e.getMessage());
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "加密参数无效或已过期");
+        }
+        if (resetMemberVO.getTimestamp() == null) {
+            log.error("重置密码失败：时间戳必填");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "时间戳必填");
+        }
+        if (JsonEncryptDecryptUtils.isExpired(resetMemberVO.getTimestamp())) {
+            log.error("重置密码失败：请求已过期");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "请求已过期，请重新提交");
+        }
+        return resetMemberVO;
+    }
+
+    /**
+     * 按手机号查有效主账号
+     *
+     * <p>等价旧 {@code accountIdByPhone(MAIN_ACCOUNT_PID, phone, ENABLE)} + {@code account(accountId)},
+     * 旧实现同样不限端与角色</p>
+     *
+     * @param phone 手机号
+     * @return 账号视图
+     */
+    private AccountVO validAccountByPhone(String phone) {
+        AccountQuery query = new AccountQuery();
+        query.setMainAccountId(AccountEnum.MAIN_ACCOUNT_PID);
+        query.setPhone(phone);
+        query.setState(AccountEnum.State.ENABLE);
+        Long accountId = accountRepository.findId(query);
+        if (accountId == null) {
+            log.error("重置密码失败：用户不存在");
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "用户不存在");
+        }
+        AccountQuery accountQuery = new AccountQuery();
+        accountQuery.setId(accountId);
+        AccountVO account = accountRepository.account(accountQuery);
+        if (Objects.isNull(account)) {
+            log.error("重置密码失败：账号不存在，accountId: {}", accountId);
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "账号不存在");
+        }
+        return account;
+    }
+
+    /**
+     * 构建「设备 + 手机号」验证通过标记的 Redis Key
+     *
+     * <p>Key 前缀逐字沿用旧实现, 保证灰度期新旧代码互认</p>
+     *
+     * @param phone      手机号
+     * @param deviceCode 设备码
+     * @return Redis Key
+     */
+    private String devicePhoneKey(String phone, String deviceCode) {
+        return RESET_PWD_DEVICE_PREFIX + phone + ":" + deviceCode;
     }
 
 }

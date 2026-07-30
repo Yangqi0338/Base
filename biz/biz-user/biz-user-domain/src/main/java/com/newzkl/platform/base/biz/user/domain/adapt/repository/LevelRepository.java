@@ -7,13 +7,13 @@ import com.newzkl.platform.base.biz.user.model.relation.vo.LevelVO;
 import java.util.List;
 
 /**
- * 等级仓储接口。
+ * 等级仓储接口
  *
  * @author fang
  */
 public interface LevelRepository {
     /**
-     * 等级持久化。
+     * 等级持久化
      *
      * @param selectorLevel 等级领域模型
      * @return 主键ID
@@ -21,7 +21,7 @@ public interface LevelRepository {
     Long save(LevelDTO selectorLevel);
 
     /**
-     * 等级详情。
+     * 等级详情
      *
      * @param levelId 等级ID
      * @return 等级领域模型
@@ -29,7 +29,7 @@ public interface LevelRepository {
     LevelDTO detail(Long levelId);
 
     /**
-     * 等级列表。
+     * 等级列表
      *
      * @param levelQuery 查询条件
      * @return 等级列表
@@ -37,7 +37,7 @@ public interface LevelRepository {
     List<LevelDTO> list(LevelQuery levelQuery);
 
     /**
-     * 等级计算列表。
+     * 等级计算列表
      *
      * @param levelQuery 查询条件
      * @return 等级视图列表

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * 商品-套餐请求对象。
+ * 商品-套餐请求对象
  *
  * <p>本套餐为商品域「商品套餐/组包」配置 (席位数 + 套餐价), 与甄选师「入会礼包」无关。</p>
  *
@@ -16,42 +16,42 @@ import lombok.Data;
 public class GoodPackageReq {
 
     /**
-     * 主键 ID (更新时必填)。
+     * 主键 ID (更新时必填)
      */
     @NotNull(groups = UpdateCommand.class, message = "ID不能为空")
     private Long id;
 
     /**
-     * 套餐业务编码 (唯一)。
+     * 套餐业务编码 (唯一)
      */
     @NotBlank(message = "套餐ID不能为空")
     private String packageId;
 
     /**
-     * 套餐名称。
+     * 套餐名称
      */
     @NotBlank(message = "套餐名称不能为空")
     private String packageName;
 
     /**
-     * 商品席位数。
+     * 商品席位数
      */
     @NotNull(message = "商品席位不能为空")
     private Long goodsNum;
 
     /**
-     * 套餐价格 (分)。
+     * 套餐价格 (分)
      */
     @NotNull(message = "套餐价格不能为空")
     private Integer packagePrice;
 
     /**
-     * 套餐描述。
+     * 套餐描述
      */
     private String packageDesc;
 
     /**
-     * 状态: 1 启用, 0 停用。
+     * 状态: 1 启用, 0 停用
      */
     private Integer state;
 }

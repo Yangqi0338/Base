@@ -4,7 +4,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Redis 工具基类，持有静态 {@link RedissonClient}。
+ * Redis 工具基类，持有静态 {@code RedissonClient}
  *
  * @author sijiwang
  */

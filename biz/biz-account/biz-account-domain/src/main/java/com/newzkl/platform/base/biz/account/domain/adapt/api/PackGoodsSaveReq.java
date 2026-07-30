@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 入会礼包商品写入入参 (跨域出站)。
+ * 入会礼包商品写入入参 (跨域出站)
  *
  * <p>字段裁剪自旧 {@code com.zkl.scm.admin.rpc.model.req.PackGoodsReq}。</p>
  *

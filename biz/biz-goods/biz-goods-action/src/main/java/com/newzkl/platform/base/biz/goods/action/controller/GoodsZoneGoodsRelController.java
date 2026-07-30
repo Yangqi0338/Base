@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 商品分组-商品关联控制器。
+ * 商品分组-商品关联控制器
  *
- * @author sijiwang
+ * @author KC
  */
 @RestController
 @RequestMapping("/goods/zone/rel")
@@ -31,9 +31,9 @@ public class GoodsZoneGoodsRelController {
     private final GoodsZoneGoodsRelService goodsZoneGoodsRelService;
 
     /**
-     * 批量添加商品到分组。
+     * 批量添加商品到分组
      *
-     * @param addReq 新增请求
+     * @param addReq 关联新增请求
      * @return 是否成功
      */
     @PostMapping("/batchAdd")
@@ -42,9 +42,9 @@ public class GoodsZoneGoodsRelController {
     }
 
     /**
-     * 批量删除分组下的商品。
+     * 批量删除分组下的商品
      *
-     * @param delReq 删除请求
+     * @param delReq 关联删除请求
      * @return 是否成功
      */
     @PostMapping("/batchDelete")
@@ -53,10 +53,10 @@ public class GoodsZoneGoodsRelController {
     }
 
     /**
-     * 根据分组 ID 查询关联商品。
+     * 按分组主键查询关联商品
      *
-     * @param groupId 分组 ID
-     * @return 商品列表
+     * @param groupId 分组主键
+     * @return 关联商品列表
      */
     @GetMapping("/listByGroupId/{groupId}")
     public PlatformResult<List<GoodsZoneGoodsRelRes>> listByGroupId(@PathVariable Long groupId) {
@@ -64,14 +64,15 @@ public class GoodsZoneGoodsRelController {
     }
 
     /**
-     * 分页查询关联关系。
+     * 关联关系分页
      *
-     * @param queryReq 分页条件
-     * @return 分页结果
+     * @param queryReq 关联分页查询条件
+     * @return 关联分页
      */
     @PostMapping("/page")
     public PlatformResult<Page<GoodsZoneGoodsRelRes>> pageQuery(@RequestBody GoodsZoneGoodsRelPageReq queryReq) {
         return PlatformResult.success(goodsZoneGoodsRelService.pageQuery(queryReq));
     }
 
+    // 源 checkExists (GET /checkExists) 标注 @Deprecated, 按规则不迁 (Base 侧应用服务亦无对等方法)。
 }

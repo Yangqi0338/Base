@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.ConsumeEarningDataRepository;
@@ -49,19 +50,19 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
     }
 
     @Override
-    public List<EarningRecordVO> queryEarningRecord(EarningRecordQuery query) {
+    public Page<EarningRecordVO> queryEarningRecord(EarningRecordQuery query) {
         LambdaQueryWrapper<EarningRecordDO> queryWrapper = earningRecordDAO.getLw(query)
                 .orderByDesc(EarningRecordDO::getEarningTime);
         Page<EarningRecordDO> pageList = earningRecordDAO.selectPage(RepositorySupport.page(query), queryWrapper);
-        return TransferUtils.transfers(pageList.getRecords(), EarningRecordVO.class);
+        return TransferUtils.transferPage(pageList, EarningRecordVO.class);
     }
 
     @Override
-    public List<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery query) {
+    public Page<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery query) {
         LambdaQueryWrapper<EarningRecordDO> queryWrapper = earningRecordDAO.getLw(query)
                 .orderByDesc(EarningRecordDO::getEarningTime);
         Page<EarningRecordDO> pageList = earningRecordDAO.selectPage(RepositorySupport.page(query), queryWrapper);
-        return TransferUtils.transfers(pageList.getRecords(), AppEarningRecordRes::new);
+        return TransferUtils.transferPage(pageList, AppEarningRecordRes.class);
     }
 
     @Override
@@ -126,8 +127,32 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
         RedisUtil.hDel(RedisEnum.Key.TOTAL_EARNING_AMOUNT.getCode());
     }
 
+    /**
+     * 按查询条件部分更新分润记录
+     *
+     * <p>迁移勘误(2026-07-30): 原实现为 {@code update(null, getLw(req))}, entity 传 null 且
+     * {@code getLw} 返回的是**查询**包装器(无 set 能力), 生成的 SQL 缺整个 SET 段必然语法错;
+     * 入参 {@code earningInfoVO} 被完全丢弃。源侧 new-scm 是
+     * {@code updateByQuery(assembler.vo2DO(earningInfoVO), req)}, XML 的 set 段对每个字段做
+     * {@code <if test="x != null">} 判空 —— 即「非 null 字段才更新」的部分更新语义。
+     * MyBatis-Plus 的 {@code update(entity, wrapper)} 语义与之一致(entity 非 null 字段作 SET,
+     * wrapper 作 WHERE), 故此处补回 VO→DO 转换
+     *
+     * @param earningInfoVO 待更新字段载体, 非 null 字段才进 SET 段
+     * @param req           更新范围条件, 至少命中一个条件否则拒绝执行
+     * @return 受影响行数
+     */
     @Override
     public Integer updateEarningRecord(EarningRecordVO earningInfoVO, EarningRecordQuery req) {
-        return earningRecordDAO.update(null, earningRecordDAO.getLw(req));
+        if (earningInfoVO == null) {
+            throw new IllegalArgumentException("待更新字段为空, 拒绝执行分润记录更新");
+        }
+        LambdaQueryWrapper<EarningRecordDO> wrapper = earningRecordDAO.getLw(req);
+        // getLw 全部条件都是 notEmpty*(空值跳过), 条件全空会退化成无 WHERE 的全表 UPDATE
+        if (StrUtil.isBlank(wrapper.getSqlSegment())) {
+            throw new IllegalArgumentException("更新条件为空, 拒绝执行分润记录全表更新");
+        }
+        EarningRecordDO entity = TransferUtils.transfer(earningInfoVO, EarningRecordDO.class);
+        return earningRecordDAO.update(entity, wrapper);
     }
 }

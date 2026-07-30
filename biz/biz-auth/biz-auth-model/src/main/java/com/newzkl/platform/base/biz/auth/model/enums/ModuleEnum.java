@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 模块枚举 (Redis key 前缀用)。
+ * 模块枚举 (Redis key 前缀用)
  *
  * <p>与 biz-account / biz-order / biz-finance 等域各自持有的同名枚举一致 (本仓既有的按域复制惯例),
- * 保证生成的 key 前缀完全一致。biz-auth 只用到 {@link #COMMON}, 其余保留以对齐语义。</p>
+ * 保证生成的 key 前缀完全一致。biz-auth 只用到 {@link ModuleEnum#COMMON}, 其余保留以对齐语义。</p>
  *
  * @author sijiwang
  */
@@ -28,7 +28,7 @@ public enum ModuleEnum {
     private final String desc;
 
     /**
-     * 根据编码获取枚举。
+     * 根据编码获取枚举
      *
      * @param code 模块编码
      * @return 匹配的枚举, 无匹配返回 null

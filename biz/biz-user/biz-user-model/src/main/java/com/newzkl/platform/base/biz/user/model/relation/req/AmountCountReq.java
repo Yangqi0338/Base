@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 业绩统计请求。
+ * 业绩统计请求
  *
  * @author fang
  */

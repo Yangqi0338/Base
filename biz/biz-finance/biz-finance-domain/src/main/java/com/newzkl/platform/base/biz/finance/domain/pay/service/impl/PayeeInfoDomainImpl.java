@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 现金流收款方配置领域服务实现。
+ * 现金流收款方配置领域服务实现
  *
  * <p>迁移自 new-scm {@code PayeeInfoServiceImpl}。</p>
  *
@@ -21,12 +21,12 @@ import java.util.List;
 public class PayeeInfoDomainImpl implements PayeeInfoDomain {
 
     /**
-     * 收款方配置仓储。
+     * 收款方配置仓储
      */
     private final PayeeInfoRepository payeeInfoRepository;
 
     /**
-     * 更新收款方配置。
+     * 更新收款方配置
      *
      * @param req 更新请求
      */
@@ -36,7 +36,7 @@ public class PayeeInfoDomainImpl implements PayeeInfoDomain {
     }
 
     /**
-     * 按消费类型查询收款方配置。
+     * 按消费类型查询收款方配置
      *
      * @param consumeType 消费类型
      * @return 收款方配置列表

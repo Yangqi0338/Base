@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.finance.domain.purse.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.BankRepository;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.BankService;
 import com.newzkl.platform.base.biz.finance.model.assembler.BankAssembler;
@@ -10,7 +12,9 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankExcelVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankVO;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -90,16 +94,47 @@ public class BankDomainImpl implements BankService {
      * 查询分页列表
      *
      * @param query 查询条件
-     * @return 分页列表
+     * @return 银行分页
      */
     @Override
-    public List<BankVO> queryPageList(BankQuery query) {
+    public Page<BankVO> queryPageList(BankQuery query) {
         return repository.queryPage(query);
     }
 
+    /**
+     * 查询银行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行列表
+     */
     @Override
-    public List<BankBranchVO> queryBranchPageList(@Valid BankQuery query) {
+    public List<BankVO> queryList(BankQuery query) {
+        return repository.queryList(query);
+    }
+
+    /**
+     * 查询分行分页列表
+     *
+     * @param query 查询条件
+     * @return 银行支行分页
+     */
+    @Override
+    public Page<BankBranchVO> queryBranchPageList(@Valid BankQuery query) {
         return repository.queryBranchPage(query);
+    }
+
+    /**
+     * 查询银行支行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行支行列表
+     */
+    @Override
+    public List<BankBranchVO> queryBranchList(BankQuery query) {
+        if (StrUtil.isBlank(query.getBankCode())) {
+            throw new PlatformException(BaseErrorCode.PARAM, "银行编码必传");
+        }
+        return repository.queryBranchList(query);
     }
 
     @Transactional(rollbackFor = Exception.class)

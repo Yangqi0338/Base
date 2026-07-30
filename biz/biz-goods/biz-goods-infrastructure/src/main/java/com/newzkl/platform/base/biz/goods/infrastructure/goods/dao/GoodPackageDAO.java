@@ -8,7 +8,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 商品-套餐 DAO。
+ * 商品-套餐 DAO
  *
  * <p>纯 MyBatis-Plus, 无 mapper xml。</p>
  *
@@ -18,7 +18,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface GoodPackageDAO extends BaseMapper<GoodPackageDO> {
 
     /**
-     * 构建套餐查询条件。
+     * 构建套餐查询条件
      *
      * @param query 套餐查询
      * @return 查询条件
@@ -33,7 +33,7 @@ public interface GoodPackageDAO extends BaseMapper<GoodPackageDO> {
     }
 
     /**
-     * 构建按套餐业务编码的查询条件。
+     * 构建按套餐业务编码的查询条件
      *
      * @param packageId 套餐业务编码
      * @return 查询条件

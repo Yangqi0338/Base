@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * {@link ChannelApi} 默认兜底实现。
+ * {@code ChannelApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 渠道域(user)跨域链延迟, 入口 starter 侧远程 consumer 覆盖。</p>
  *

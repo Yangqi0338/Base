@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.application.pay.service;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 
 /**
- * 席位购买记录编排接口。
+ * 席位购买记录编排接口
  *
  * @author niu
  */

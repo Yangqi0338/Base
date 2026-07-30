@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * {@link MerchantCategoryRepository} 实现。
+ * {@code MerchantCategoryRepository} 实现
  *
- * <p>通用扁平 CRUD 复用 {@link AbstractCategoryRepository}, 不重写。</p>
+ * <p>通用扁平 CRUD 复用 {@code AbstractCategoryRepository}, 不重写。</p>
  *
  * @author KC
  */

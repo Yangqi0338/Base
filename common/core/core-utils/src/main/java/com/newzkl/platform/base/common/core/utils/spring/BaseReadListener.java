@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * EasyExcel 模板的读取监听基类。
+ * EasyExcel 模板的读取监听基类
  *
- * <p>内部以可变结构累加校验异常, 解析完成后一次性构建不可变结果 {@link EasyExcelErrorVO}。</p>
+ * <p>内部以可变结构累加校验异常, 解析完成后一次性构建不可变结果 {@code EasyExcelErrorVO}。</p>
  *
  * @param <T> 行数据类型
  * @author Jiaju Zhuang
@@ -73,7 +73,7 @@ public abstract class BaseReadListener<T> extends PageReadListener<T> {
     }
 
     /**
-     * 构建不可变的导入结果。
+     * 构建不可变的导入结果
      *
      * @return Excel 导入结果载体
      */
@@ -86,7 +86,7 @@ public abstract class BaseReadListener<T> extends PageReadListener<T> {
     }
 
     /**
-     * 数据校验逻辑。
+     * 数据校验逻辑
      *
      * @param rowNum 行号
      * @param data   行数据
@@ -95,7 +95,7 @@ public abstract class BaseReadListener<T> extends PageReadListener<T> {
     protected abstract String validate(Integer rowNum, T data);
 
     /**
-     * 数据预处理逻辑（可选钩子）。
+     * 数据预处理逻辑（可选钩子）
      *
      * @param data 原始数据
      * @return 处理后的数据

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
@@ -56,6 +57,17 @@ public class EarningRecordDO extends BaseDO {
      */
     @Index
     private Long joinOrderNo;
+
+    /**
+     * 关联交易单号（源 earning_record.join_trade_no 列）
+     */
+    private Long joinTradeNo;
+
+    /**
+     * 分润角色 id（源 earning_record.role 列，列名 role 为保留字故显式指定）
+     */
+    @TableField("role")
+    private Long roleId;
 
     /**
      * 商品信息

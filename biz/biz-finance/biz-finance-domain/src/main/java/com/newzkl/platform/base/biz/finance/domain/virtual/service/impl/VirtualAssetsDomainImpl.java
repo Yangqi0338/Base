@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.domain.virtual.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.VirtualAssetsRecordRepository;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.VirtualAssetsRepository;
 import com.newzkl.platform.base.biz.finance.domain.virtual.service.VirtualAssetsDomain;
@@ -14,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 虚拟资产领域服务实现。
+ * 虚拟资产领域服务实现
  *
  * @author KC
  */
@@ -27,7 +28,7 @@ public class VirtualAssetsDomainImpl implements VirtualAssetsDomain {
     private final VirtualAssetsRecordRepository virtualAssetsRecordRepository;
 
     /**
-     * 查询虚拟资产。
+     * 查询虚拟资产
      *
      * @param query 查询条件
      * @return 虚拟资产列表, 无数据返回空集合
@@ -39,14 +40,14 @@ public class VirtualAssetsDomainImpl implements VirtualAssetsDomain {
     }
 
     /**
-     * 查询虚拟资产变动记录。
+     * 查询虚拟资产变动记录分页
      *
      * @param query 查询条件
-     * @return 变动记录列表, 无数据返回空集合
+     * @return 变动记录分页, 无数据返回空分页
      */
     @Override
-    public List<VirtualAssetsRecordRes> queryVirtualAssetsRecord(VirtualAssetsRecordQuery query) {
-        List<VirtualAssetsRecordRes> list = virtualAssetsRecordRepository.queryPage(query);
-        return list == null ? Collections.emptyList() : list;
+    public Page<VirtualAssetsRecordRes> queryVirtualAssetsRecord(VirtualAssetsRecordQuery query) {
+        Page<VirtualAssetsRecordRes> page = virtualAssetsRecordRepository.queryPage(query);
+        return page == null ? new Page<>() : page;
     }
 }

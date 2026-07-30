@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.BillOrderAwardDAO">
+
+    <!-- 根据条件查询流水金额 (迁移自 new-scm BillOrderAwardDao.xml 的 selectSumAmountByCondition) -->
+    <!-- 源侧手写 purseType/accountType/startTime/endTime/accountIdList 条件, Base 签名是 @Param(Constants.WRAPPER) Wrapper, 条件由 getLw 组装, 故走 ${ew.customSqlSegment} -->
+    <select id="selectSumAmountByCondition"
+            resultType="com.newzkl.platform.base.biz.finance.model.account.res.BillOrderAwardAmountRes">
+        SELECT COALESCE(SUM(amount), 0) AS totalOrderAmount ,COALESCE(sum(order_count),0) AS orderCount
+        FROM bill_order_award
+        ${ew.customSqlSegment}
+    </select>
+
+    <!-- 按主键+原金额乐观更新 (迁移自 new-scm BillOrderAwardDao.xml 的 updateByIdAndAmount) -->
+    <!-- 源侧 role_name / nickname / realname / create_date 分支对应的属性在 Base BillOrderAwardDO 上不存在, 已删 -->
+    <update id="updateByIdAndAmount">
+        UPDATE bill_order_award
+        <set>
+            <if test="record.role != null">
+                role = #{record.role,jdbcType=INTEGER},
+            </if>
+            <if test="record.accountId != null">
+                account_id = #{record.accountId,jdbcType=BIGINT},
+            </if>
+            <if test="record.username != null and record.username != ''">
+                username = #{record.username,jdbcType=VARCHAR},
+            </if>
+            <if test="record.purseType != null">
+                purse_type = #{record.purseType,jdbcType=INTEGER},
+            </if>
+            <if test="record.accountType != null">
+                account_type = #{record.accountType,jdbcType=INTEGER},
+            </if>
+            <if test="record.amount != null">
+                amount = #{record.amount,jdbcType=INTEGER},
+            </if>
+            <if test="record.orderCount != null">
+                order_count = #{record.orderCount,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE id = #{record.id,jdbcType=BIGINT} AND amount = #{oldAmount,jdbcType=INTEGER}
+    </update>
+
+</mapper>

@@ -87,7 +87,7 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final CountSaleDomain countSaleDomain;
 
     /**
-     * 开通码分页。
+     * 开通码分页
      *
      * <p>迁移补充: 旧 {@code cdkPage} 返回 PageHelper 的 {@code PageInfo}, 中台统一返回
      * MyBatis-Plus 分页, 记录类型为出参对象。</p>
@@ -230,10 +230,10 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     /**
-     * 销售统计分页。
+     * 销售统计分页
      *
      * <p>迁移补充: 旧实现直连 {@code CountSaleDAO.listByQuery} 并返回 PageHelper 的
-     * {@code PageInfo}, 中台改由 {@link CountSaleDomain} 承接, 统一返回 MyBatis-Plus 分页。</p>
+     * {@code PageInfo}, 中台改由 {@code CountSaleDomain} 承接, 统一返回 MyBatis-Plus 分页。</p>
      *
      * @param countSaleQuery 销售统计查询
      * @return 销售统计分页
@@ -245,10 +245,10 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     /**
-     * 按条件取单条销售统计。
+     * 按条件取单条销售统计
      *
      * <p>迁移补充: 旧实现直连 {@code CountSaleDAO.voByQuery}, 中台改由
-     * {@link CountSaleDomain} 承接; 多条命中时取第一条 (与旧 SQL 无 limit 的宽松语义对齐)。</p>
+     * {@code CountSaleDomain} 承接; 多条命中时取第一条 (与旧 SQL 无 limit 的宽松语义对齐)。</p>
      *
      * @param todayCountSaleQuery 销售统计查询
      * @return 销售统计视图, 无则 null
@@ -416,6 +416,15 @@ public class UserQueryServiceImpl implements UserQueryService {
         query.setId(supplierId);
         SupplierVO supplierVO = supplierClientDomain.supplier(supplierId);
         return supplierVO;
+    }
+
+    @Override
+    public SupplierOutRes supplierOutVO(Long supplierId) {
+        SupplierVO supplierVO = supplierClientDomain.supplier(supplierId);
+        if (supplierVO == null) {
+            return null;
+        }
+        return TransferUtils.transfer(supplierVO, SupplierOutRes::new);
     }
 
     @Override

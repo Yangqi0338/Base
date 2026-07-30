@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * 门店应用服务实现。
+ * 门店应用服务实现
  *
  * @author KC
  */

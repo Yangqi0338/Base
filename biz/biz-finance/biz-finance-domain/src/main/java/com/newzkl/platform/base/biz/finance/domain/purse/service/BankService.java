@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.purse.service;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BankQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BankReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
@@ -59,7 +60,15 @@ public interface BankService {
      * @param query 查询条件
      * @return 分页列表
      */
-    List<BankVO> queryPageList(BankQuery query);
+    Page<BankVO> queryPageList(BankQuery query);
+
+    /**
+     * 查询银行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行列表
+     */
+    List<BankVO> queryList(BankQuery query);
 
     /**
      * 查询分行分页列表
@@ -67,7 +76,17 @@ public interface BankService {
      * @param query 查询条件
      * @return 分页列表
      */
-    List<BankBranchVO> queryBranchPageList(BankQuery query);
+    Page<BankBranchVO> queryBranchPageList(BankQuery query);
+
+    /**
+     * 查询银行支行全量列表, 不分页
+     *
+     * <p>银行编码为必传项, 与 new-scm 源实现的入参校验保持一致。</p>
+     *
+     * @param query 查询条件
+     * @return 银行支行列表
+     */
+    List<BankBranchVO> queryBranchList(BankQuery query);
 
     /**
      * 汇付银行/支行 Excel 批量导入

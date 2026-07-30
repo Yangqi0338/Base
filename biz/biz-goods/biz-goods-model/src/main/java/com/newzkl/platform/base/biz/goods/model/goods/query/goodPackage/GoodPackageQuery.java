@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商品-套餐分页查询。
+ * 商品-套餐分页查询
  *
  * @author KC
  */
@@ -14,17 +14,17 @@ import lombok.EqualsAndHashCode;
 public class GoodPackageQuery extends BizPageQuery {
 
     /**
-     * 套餐业务编码。
+     * 套餐业务编码
      */
     private String packageId;
 
     /**
-     * 套餐名称 (模糊)。
+     * 套餐名称 (模糊)
      */
     private String packageName;
 
     /**
-     * 状态: 1 启用, 0 停用。
+     * 状态: 1 启用, 0 停用
      */
     private Integer state;
 }

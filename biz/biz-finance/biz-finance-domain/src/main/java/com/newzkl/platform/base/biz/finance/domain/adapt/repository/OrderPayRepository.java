@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PaymentQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.OrderPayeeInfoVO;
@@ -32,7 +33,7 @@ public interface OrderPayRepository {
     boolean alterPayState(Long tradeNo,String tripartiteTradeNo);
 
     /**
-     * 回填三方交易号。
+     * 回填三方交易号
      *
      * <p>三方支付受理成功后才拿到三方单号, 需回写到已落库的支付单上。</p>
      *
@@ -49,10 +50,10 @@ public interface OrderPayRepository {
     TradeOrderInfoRes tradeOrderQuery(Long tradeNo);
 
     /**
-     * 交易单信息列表查询
+     * 交易单信息分页查询
      *
-     * @param query
-     * @return
+     * @param query 充值记录查询
+     * @return 支付记录分页
      */
-    List<PaymentVO> tradeOrderQuery(PaymentQuery query);
+    Page<PaymentVO> tradeOrderQuery(PaymentQuery query);
 }

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 开通码分配命令。
+ * 开通码分配命令
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.req.ToCdkCommand}。</p>
  *

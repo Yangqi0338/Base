@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 商品套餐仓储实现。
+ * 商品套餐仓储实现
  *
  * <p>迁移说明: new-scm 同名实现为坏桩 (save 返回 null 且 insert/update 被注释,
  * findAll/findByState 调 mapper 后丢结果返回 null, mapper 字段未 {@code @Autowired}),

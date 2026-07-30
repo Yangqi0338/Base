@@ -12,6 +12,7 @@ import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,33 +24,38 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 门店账户控制器。
+ * 门店客户关系控制器
+ *
+ * <p>迁移自旧 {@code com.zkl.scm.terminal.interfaces.controller.StoreAccountController},
+ * 端点路径与 HTTP 方法逐字保留。旧 {@code eventTracking} 为 {@code @Deprecated} 死端点, 未迁入。</p>
  *
  * @author KC
  */
 @RestController
 @RequestMapping("/storeAccount")
 @RequiredArgsConstructor
+@Slf4j
 public class StoreAccountController {
 
     private final StoreAccountDomain storeAccountDomain;
 
     /**
-     * 门店账户分页。
+     * 渠道商门店客户列表查询
      *
-     * @param req 查询请求
-     * @return 账户分页
+     * @param req 分页查询入参
+     * @return 门店客户分页
      */
     @PostMapping("/queryStoreAccountPage")
-    public PlatformResult<Page<StoreAccountResponse>> queryStoreAccountPage(@Validated @RequestBody StoreAccountQuery req) {
+    public PlatformResult<Page<StoreAccountResponse>> queryStoreAccountPage(
+            @Validated @RequestBody StoreAccountQuery req) {
         req.setChannelId(SecurityUtils.getAccountId());
         return PlatformResult.success(storeAccountDomain.queryStoreAccountPage(req));
     }
 
     /**
-     * 更新门店账户。
+     * 修改门店客户关系
      *
-     * @param req 更新请求
+     * @param req 修改入参
      * @return 成功结果
      */
     @PostMapping("/updateStoreAccount")
@@ -59,10 +65,10 @@ public class StoreAccountController {
     }
 
     /**
-     * 门店账户导出。
+     * 渠道商门店客户列表导出
      *
-     * @param req 查询请求
-     * @throws IOException 导出写出异常
+     * @param req 查询入参
+     * @throws IOException 写出 Excel 失败
      */
     @PostMapping("/storeAccountExport")
     public void storeAccountExport(@RequestBody StoreAccountQuery req) throws IOException {
@@ -70,9 +76,9 @@ public class StoreAccountController {
                 storeAccountDomain.queryStoreAccountPage(req).getRecords(),
                 StoreAccountExportResponse::new,
                 (c, v) -> {
-                    v.setRelationType(c.getRelationType() == 1 ? "直属" : "非直属");
+                    v.setRelationType(c.getRelationType() == 1 ? "已拉黑" : "正常");
                     v.setCountPayAmount(NumberUtil.div(c.getCountPayAmount(), new BigDecimal("100"), 2).toString());
                 });
-        EasyExcelUtil.export(exportResponses, "门店账户");
+        EasyExcelUtil.export(exportResponses, "客户列表");
     }
 }

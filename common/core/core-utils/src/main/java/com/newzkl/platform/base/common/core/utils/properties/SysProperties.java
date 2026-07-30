@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 系统全局配置属性。
+ * 系统全局配置属性
  *
  * <p>静态字段供无 Spring 上下文处静态读取; 值由 setter 注入。</p>
  *
@@ -25,7 +25,7 @@ import java.util.Map;
 public class SysProperties {
 
     /**
-     * 网关地址。
+     * 网关地址
      */
     public static String gatewayUrl;
     /**
@@ -88,7 +88,7 @@ public class SysProperties {
 
     /**
      * 用 translateMap 对文本做子串替换
-     * <p>用于面向用户展示的文本做"个别字替换"。{@link JsonTranslateSerializer}
+     * <p>用于面向用户展示的文本做"个别字替换"。{@code JsonTranslateSerializer}
      * 是整值替换，本方法是子串替换，互不冲突。</p>
      * @ext 逐 entry.key → entry.value 全替换
      * @ext 通知内容/标题等

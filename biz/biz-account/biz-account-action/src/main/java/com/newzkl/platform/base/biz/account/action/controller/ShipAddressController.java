@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 用户-收货地址控制器。
+ * 用户-收货地址
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.ShipAddressController}, 路径与 HTTP 方法保持不变。
- * 旧权限点 {@code @Limit(code = FuncCons.address, level = set/get)} 不在本层声明, 鉴权切面归入口 starter。</p>
+ * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.ShipAddressController}。
+ * 类级路径与方法级路径逐字沿用旧契约, 含旧代码中不带前导斜杠的写法 (如 {@code shipAddress})。</p>
+ *
+ * <p>迁移补充: 旧实现的详情与分页直连 {@code IShipAddressRepository}, action 层不得依赖仓储端口,
+ * 改走领域服务同名能力, 出入参结构不变。旧 {@code @Limit(code=address)} 未迁移, 见迁移报告「鉴权降级」。</p>
  *
  * @author KC
  */
@@ -33,10 +36,10 @@ public class ShipAddressController {
     private final ShipAddressDomain shipAddressDomain;
 
     /**
-     * 收货地址创建。
+     * 收货地址创建
      *
      * @param shipAddressReq 收货地址入参
-     * @return 收货地址 ID
+     * @return 收货地址ID
      */
     @PostMapping("shipAddressSave")
     public PlatformResult<Long> shipAddressSave(@Validated @RequestBody ShipAddressReq shipAddressReq) {
@@ -44,10 +47,10 @@ public class ShipAddressController {
     }
 
     /**
-     * 收货地址修改。
+     * 收货地址修改
      *
-     * @param edit 收货地址入参 (以其 id 为更新目标)
-     * @return 成功结果
+     * @param edit 收货地址入参
+     * @return 空结果
      */
     @PostMapping("shipAddressUpdate")
     public PlatformResult<Void> shipAddressEdit(@Validated @RequestBody ShipAddressReq edit) {
@@ -56,22 +59,22 @@ public class ShipAddressController {
     }
 
     /**
-     * 收货地址删除。
+     * 收货地址删除
      *
-     * @param idListObj ID 列表
-     * @return 成功结果
+     * @param idListCommand ID 列表
+     * @return 空结果
      */
     @PostMapping("shipAddressDelete")
-    public PlatformResult<Void> shipAddressDelete(@RequestBody IdListCommand idListObj) {
-        shipAddressDomain.delete(idListObj.getIdList());
+    public PlatformResult<Void> shipAddressDelete(@RequestBody IdListCommand idListCommand) {
+        shipAddressDomain.delete(idListCommand.getIdList());
         return PlatformResult.success();
     }
 
     /**
-     * 收货地址详情。
+     * 收货地址详情
      *
-     * @param shipAddressId 收货地址 ID
-     * @return 收货地址详情
+     * @param shipAddressId 收货地址ID
+     * @return 收货地址出参
      */
     @GetMapping("shipAddress")
     public PlatformResult<ShipAddressRes> shipAddress(@RequestParam("id") Long shipAddressId) {
@@ -79,9 +82,11 @@ public class ShipAddressController {
     }
 
     /**
-     * 收货地址分页。
+     * 收货地址分页
      *
-     * @param shipAddressQuery 收货地址查询 (账号 ID 按当前登录态回填)
+     * <p>保留旧语义: 强制按当前登录账号过滤。</p>
+     *
+     * @param shipAddressQuery 收货地址查询
      * @return 收货地址分页
      */
     @PostMapping("shipAddressPage")

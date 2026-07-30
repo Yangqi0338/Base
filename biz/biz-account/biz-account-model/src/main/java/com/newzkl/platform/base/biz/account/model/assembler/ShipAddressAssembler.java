@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.model.BaseAssembler;
 import org.mapstruct.Mapper;
 
 /**
- * 收货地址转换器。
+ * 收货地址转换器
  *
  * @author KC
  */
@@ -15,7 +15,7 @@ import org.mapstruct.Mapper;
 public interface ShipAddressAssembler extends BaseAssembler<ShipAddressReq, ShipAddressVO> {
 
     /**
-     * 领域视图转对外出参。
+     * 领域视图转对外出参
      *
      * @param it 领域视图
      * @return 对外出参

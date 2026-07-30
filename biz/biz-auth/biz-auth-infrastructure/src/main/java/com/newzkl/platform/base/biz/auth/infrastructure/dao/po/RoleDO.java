@@ -11,12 +11,12 @@ import org.dromara.autotable.annotation.Index;
 import java.util.List;
 
 /**
- * 角色持久化对象。
+ * 角色持久化对象
  *
  * <p>对应旧表 {@code role} (旧 {@code com.zkl.scm.user.infrastructure.entity.RoleDO})。
  * 语义为"可申请的企业角色配置", 与鉴权角色表 {@code auth_role} 无关。
  * 旧 {@code data_group_id_list} 列以 String 存 JSON 并由业务手工 {@code JSONObject.toJSONString} /
- * {@code parseArray} 转换, 本仓改为 {@link JacksonTypeHandler} 自动映射 (同 {@link LevelDO} 范式,
+ * {@code parseArray} 转换, 本仓改为 {@code JacksonTypeHandler} 自动映射 (同 {@code LevelDO} 范式,
  * 需 {@code @TableName(autoResultMap = true)})。</p>
  *
  * @author KC

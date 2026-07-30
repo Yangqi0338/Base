@@ -58,7 +58,7 @@ public class EarningsAwardExecReq extends EarningsExecReq {
     private String serialId;
 
     /**
-     * {@link ActivityEnum.DividendMethod}
+     * {@code ActivityEnum.DividendMethod}
      * 分红方式
      * AVERAGE("AVERAGE", "平均分红"),
      * WEIGHT("WEIGHT","加权分红");
@@ -66,7 +66,7 @@ public class EarningsAwardExecReq extends EarningsExecReq {
     private String dividendMethod;
 
     /**
-     * 分红周期 {@link ActivityEnum.DividendCycle}
+     * 分红周期 {@code ActivityEnum.DividendCycle}
      * 结算周期类型
      */
     private String settlementType;

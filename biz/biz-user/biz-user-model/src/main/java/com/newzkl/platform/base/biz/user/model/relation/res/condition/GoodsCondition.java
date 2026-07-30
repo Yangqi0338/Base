@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import lombok.Data;
 
 /**
- * 供应商商品数量条件。
+ * 供应商商品数量条件
  *
  * @author fang
  */

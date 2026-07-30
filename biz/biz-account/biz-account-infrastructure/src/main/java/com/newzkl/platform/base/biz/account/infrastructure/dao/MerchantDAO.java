@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 商户 DAO。
+ * 商户 DAO
  *
  * @author KC
  */
@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface MerchantDAO extends BaseMapper<MerchantDO> {
 
     /**
-     * 构建商户查询条件。
+     * 构建商户查询条件
      *
      * <p>与旧 mapper {@code MerchantDAO.xml} 的 where 片段一致: id / idList /
      * name / username 均为精确匹配。</p>

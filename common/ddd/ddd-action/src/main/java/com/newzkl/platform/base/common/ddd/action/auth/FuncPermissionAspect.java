@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * 功能权限鉴权切面。
+ * 功能权限鉴权切面
  *
- * <p>拦截标注 {@link FuncPermission} 的类或方法, 从 sa-token 会话取当前登录者权限清单,
- * 权限含通配 {@code *} 或对应功能码则放行, 否则抛 {@link NotPermissionException}。</p>
+ * <p>拦截标注 {@code FuncPermission} 的类或方法, 从 sa-token 会话取当前登录者权限清单,
+ * 权限含通配 {@code *} 或对应功能码则放行, 否则抛 {@code NotPermissionException}。</p>
  *
  * @author fang
  */
@@ -29,7 +29,7 @@ import java.util.List;
 public class FuncPermissionAspect {
 
     /**
-     * 环绕通知: 校验当前登录者是否具备目标功能码。
+     * 环绕通知: 校验当前登录者是否具备目标功能码
      *
      * @param pjp 连接点
      * @return 目标方法返回值
@@ -55,7 +55,7 @@ public class FuncPermissionAspect {
     }
 
     /**
-     * 解析目标功能码, 方法级注解优先于类级。
+     * 解析目标功能码, 方法级注解优先于类级
      *
      * @param method      目标方法
      * @param targetClass 目标类

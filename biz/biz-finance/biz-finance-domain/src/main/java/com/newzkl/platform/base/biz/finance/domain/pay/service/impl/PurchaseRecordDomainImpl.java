@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.domain.pay.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.PurchaseRecordRepository;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
 import com.newzkl.platform.base.biz.finance.model.assembler.PurchaseRecordAssembler;
@@ -81,10 +82,10 @@ public class PurchaseRecordDomainImpl implements PurchaseRecordDomain {
      * 查询分页列表
      *
      * @param query 查询条件
-     * @return 分页列表
+     * @return 购买记录分页
      */
     @Override
-    public List<PurchaseRecordVO> queryPage(PurchaseRecordQuery query) {
+    public Page<PurchaseRecordVO> queryPage(PurchaseRecordQuery query) {
         return repository.queryPage(query);
     }
 }

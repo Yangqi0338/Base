@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.pay.service.impl;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.OrderPayRepository;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.model.assembler.PaymentAssembler;
@@ -55,7 +56,7 @@ public class OrderPayDomainImpl implements OrderPayDomain {
     }
 
     @Override
-    public List<PaymentVO> tradeOrderQuery(PaymentQuery query) {
+    public Page<PaymentVO> tradeOrderQuery(PaymentQuery query) {
         return orderPayRepository.tradeOrderQuery(query);
     }
 }

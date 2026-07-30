@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link SettleController} 端点与导出分支测试。
+ * {@code SettleController} 端点与导出分支测试
  *
  * @author KC
  */
@@ -60,7 +60,7 @@ class SettleControllerTest {
     }
 
     /**
-     * 构造一条待结算订单 (导出用)。
+     * 构造一条待结算订单 (导出用)
      *
      * @return 待结算订单
      */
@@ -75,7 +75,7 @@ class SettleControllerTest {
     }
 
     /**
-     * 捕获导出字节的响应桩。
+     * 捕获导出字节的响应桩
      *
      * @param buffer 字节缓冲
      * @return 响应桩

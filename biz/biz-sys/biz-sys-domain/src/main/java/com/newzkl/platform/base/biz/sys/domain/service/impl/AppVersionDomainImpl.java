@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.sys.domain.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.sys.domain.adapt.repository.AppVersionRepository;
 import com.newzkl.platform.base.biz.sys.domain.service.AppVersionDomain;
 import com.newzkl.platform.base.biz.sys.model.appversion.query.AppVersionQuery;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * app 版本领域服务实现。
+ * app 版本领域服务实现
  *
  * @author fang
  */
@@ -21,7 +22,7 @@ public class AppVersionDomainImpl implements AppVersionDomain {
     private final AppVersionRepository appVersionRepository;
 
     @Override
-    public List<AppVersionVO> queryAppVersionList(AppVersionQuery query) {
+    public Page<AppVersionVO> queryAppVersionList(AppVersionQuery query) {
         return appVersionRepository.queryAppVersionList(query);
     }
 

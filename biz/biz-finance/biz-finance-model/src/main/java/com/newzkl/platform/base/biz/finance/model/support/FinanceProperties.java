@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 财务域配置根。
+ * 财务域配置根
  *
  * <p>密钥类配置一律不落代码默认值, 由 Nacos {@code platform-share-config.yml} 注入:</p>
  * <pre>
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 public class FinanceProperties {
 
     /**
-     * 汇付支付配置。
+     * 汇付支付配置
      *
      * <p>静态字段 + 实例 setter 模式: Spring 绑定走实例 setter, 业务侧静态引用免注入。</p>
      *

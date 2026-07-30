@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.purse.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.WithdrawRepository;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
 import com.newzkl.platform.base.biz.finance.model.assembler.AccountPurseRollOutAssembler;
@@ -54,7 +55,7 @@ public class WithdrawDomainImpl implements WithdrawDomain {
     }
 
     @Override
-    public List<RollOutApplyVO> queryRollOutApplyPage(RollOutApplyQuery req) {
+    public Page<RollOutApplyVO> queryRollOutApplyPage(RollOutApplyQuery req) {
         return withdrawRepository.queryRollOutApplyPage(req);
     }
 
@@ -103,7 +104,7 @@ public class WithdrawDomainImpl implements WithdrawDomain {
     }
 
     @Override
-    public List<WithdrawRecordVO> queryTripartiteWithdrawRecordList(TripartiteWithdrawRecordQuery req) {
+    public Page<WithdrawRecordVO> queryTripartiteWithdrawRecordList(TripartiteWithdrawRecordQuery req) {
         return withdrawRepository.queryTripartiteWithdrawRecordList(req);
     }
 
@@ -121,7 +122,7 @@ public class WithdrawDomainImpl implements WithdrawDomain {
 
     @Override
     public List<RollOutApplyExportVO> withdrawRecordsExport(RollOutApplyQuery req) {
-        List<RollOutApplyVO> rollOutApplyList = queryRollOutApplyPage(req);
+        List<RollOutApplyVO> rollOutApplyList = queryRollOutApplyPage(req).getRecords();
         List<RollOutApplyExportVO> exportResponses = rollOutApplyList.stream().map(c -> {
             RollOutApplyExportVO v = TransferUtils.transfer(c, RollOutApplyExportVO::new);
             v.setAuditState(c.getAuditState().getValue());

@@ -6,10 +6,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * 身份扩展点代理工厂 bean。
+ * 身份扩展点代理工厂 bean
  *
- * <p>为单个 {@link com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension} 扩展点接口产出
- * {@link IdentityDispatcher} 的分发代理, 以 {@code @Primary} 身份登记, 使调用方按接口类型注入时拿到代理而非具体实现。
+ * <p>为单个 {@code com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension} 扩展点接口产出
+ * {@code IdentityDispatcher} 的分发代理, 以 {@code @Primary} 身份登记, 使调用方按接口类型注入时拿到代理而非具体实现。
  * 代理内部按调用方身份路由到唯一实现执行。</p>
  *
  * @param <T> 扩展点类型

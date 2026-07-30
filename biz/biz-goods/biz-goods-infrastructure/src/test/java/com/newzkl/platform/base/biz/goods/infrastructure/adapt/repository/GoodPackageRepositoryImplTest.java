@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * 商品套餐仓储实现单元测试 (DAO mock, 不连库)。
+ * 商品套餐仓储实现单元测试 (DAO mock, 不连库)
  *
  * <p>回归 new-scm 坏桩: 旧 {@code GoodPackageRepositoryImpl.save()} 直接
  * {@code return null} 且 insert/update 被注释, {@code goodPackageMapper} 未注入。

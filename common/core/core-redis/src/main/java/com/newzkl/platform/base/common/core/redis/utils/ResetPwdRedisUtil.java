@@ -6,7 +6,7 @@ import org.redisson.client.RedisException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 忘记密码签名验签场景专属Redis工具类。
+ * 忘记密码签名验签场景专属Redis工具类
  *
  * @author sijiwang
  */
@@ -23,7 +23,7 @@ public class ResetPwdRedisUtil {
     private static final String RATE_LIMIT_KEY_PREFIX = "reset:pwd:rate:";
 
     /**
-     * 标记nonce已使用（防重放攻击）。
+     * 标记nonce已使用（防重放攻击）
      *
      * @param nonce         随机串
      * @param expireMinutes 过期时间（分钟）
@@ -41,7 +41,7 @@ public class ResetPwdRedisUtil {
     }
 
     /**
-     * 检查nonce是否已使用（防重放）。
+     * 检查nonce是否已使用（防重放）
      *
      * @param nonce 随机串
      * @return true=已使用/已过期，false=未使用
@@ -59,7 +59,7 @@ public class ResetPwdRedisUtil {
     }
 
     /**
-     * 忘记密码接口限流。
+     * 忘记密码接口限流
      *
      * @param uniqueKey     限流标识
      * @param limit         限制次数

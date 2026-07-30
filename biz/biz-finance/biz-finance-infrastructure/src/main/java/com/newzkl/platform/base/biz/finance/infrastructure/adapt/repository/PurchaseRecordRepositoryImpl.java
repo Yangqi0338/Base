@@ -2,11 +2,14 @@ package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.PurchaseRecordRepository;
 import com.newzkl.platform.base.biz.finance.infrastructure.dao.PurchaseRecordDAO;
 import com.newzkl.platform.base.biz.finance.infrastructure.entity.PurchaseRecordDO;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
+import com.newzkl.platform.base.biz.finance.model.pay.res.SeatPackageOrderInfo;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -40,7 +43,7 @@ public class PurchaseRecordRepositoryImpl extends RepositorySupport implements P
         PurchaseRecordDO purchaseRecordDO = purchaseRecordDAO.selectById(id);
         PurchaseRecordVO purchaseRecord = TransferUtils.transfer(purchaseRecordDO, PurchaseRecordVO::new);
         if (purchaseRecord != null) {
-
+            fillSeatPackageOrderInfo(purchaseRecord);
         }
         return purchaseRecord;
     }
@@ -54,19 +57,41 @@ public class PurchaseRecordRepositoryImpl extends RepositorySupport implements P
     @Override
     public List<PurchaseRecordVO> queryList(PurchaseRecordQuery query) {
         List<PurchaseRecordDO> doList = purchaseRecordDAO.selectList(purchaseRecordDAO.getLw(query));
-        return TransferUtils.transfers(doList, PurchaseRecordVO.class);
+        List<PurchaseRecordVO> result = TransferUtils.transfers(doList, PurchaseRecordVO.class);
+        result.forEach(this::fillSeatPackageOrderInfo);
+        return result;
     }
 
     /**
      * 查询分页
      *
      * @param query 查询条件
-     * @return 分页
+     * @return 购买记录分页
      */
     @Override
-    public List<PurchaseRecordVO> queryPage(PurchaseRecordQuery query) {
+    public Page<PurchaseRecordVO> queryPage(PurchaseRecordQuery query) {
         Page<PurchaseRecordDO> doList = purchaseRecordDAO.selectPage(RepositorySupport.page(query), purchaseRecordDAO.getLw(query));
-        return TransferUtils.transfers(doList.getRecords(), PurchaseRecordVO.class);
+        Page<PurchaseRecordVO> result = TransferUtils.transferPage(doList, PurchaseRecordVO.class);
+        result.getRecords().forEach(this::fillSeatPackageOrderInfo);
+        return result;
+    }
+
+    /**
+     * 从 orderInfo JSON 字符串反序列化填充 seatPackageOrderInfo
+     *
+     * <p>purchase_record.order_info 存储的是 {@code SeatPackageOrderInfo} 的 JSON 序列化，
+     * 查询时需手动解析后写入 VO，前端通过 {@code seatPackageOrderInfo.purchaseNum} 等读取
+     *
+     * @param vo 待填充的购买记录 VO
+     */
+    private void fillSeatPackageOrderInfo(PurchaseRecordVO vo) {
+        if (StrUtil.isNotBlank(vo.getOrderInfo())) {
+            try {
+                vo.setSeatPackageOrderInfo(JSONUtil.toBean(vo.getOrderInfo(), SeatPackageOrderInfo.class));
+            } catch (Exception ignored) {
+                // orderInfo 格式异常时跳过，不影响其他字段
+            }
+        }
     }
 
     /**

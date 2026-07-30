@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 条件参数。
+ * 条件参数
  *
  * @author fang
  */

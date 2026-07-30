@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 收货地址查询入参。
+ * 收货地址查询入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.address.model.req.ShipAddressQuery}。
- * 旧 {@code id} / {@code idList} / {@code accountId} 字段由父类 {@link BizPageQuery} 提供, 此处不重复声明。</p>
+ * 旧 {@code id} / {@code idList} / {@code accountId} 字段由父类 {@code BizPageQuery} 提供, 此处不重复声明。</p>
  *
  * @author KC
  */

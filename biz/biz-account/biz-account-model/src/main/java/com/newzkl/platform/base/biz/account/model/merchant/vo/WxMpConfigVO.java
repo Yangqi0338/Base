@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 微信公众号配置值对象 (商户表 {@code wx_mp_config} JSON 列)。
+ * 微信公众号配置值对象 (商户表 {@code wx_mp_config} JSON 列)
  *
  * <p>迁移自旧 {@code com.zkl.scm.rpc.model.WxMpConfigVO} (旧位于 scm-common/common-rpc,
  * 因仅商户切片使用, 本仓收敛到账户域 model)。</p>

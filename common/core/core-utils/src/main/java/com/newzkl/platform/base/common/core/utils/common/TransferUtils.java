@@ -136,7 +136,7 @@ public class TransferUtils {
     }
 
     /**
-     * 转换分页对象 - 使用 Function 方式。
+     * 转换分页对象 - 使用 Function 方式
      *
      * @param sourcePage 源分页对象
      * @param function   目标对象的构造器

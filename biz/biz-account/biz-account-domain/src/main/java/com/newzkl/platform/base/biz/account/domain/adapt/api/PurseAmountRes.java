@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 钱包余额结果。
+ * 钱包余额结果
  *
  * <p>迁移: 跨域 finance 结构 {@code com.zkl.scm.finance.rpc.model.purse.res.PurseAmountRes}
  * 降级为 account 本地端口 DTO。</p>

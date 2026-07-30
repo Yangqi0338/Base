@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 保证金缴纳流水。
+ * 保证金缴纳流水
  *
  * <p>迁移: 原 {@code com.zkl.scm.finance.model.pay.vo.PromiseFlowVO};
  * 因位于 account 对外服务签名 (IdentityService#submitPromiseFlow) 上,

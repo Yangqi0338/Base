@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link SuggestDomainImpl} 委派行为测试 (仓储端口 mock, 不连库)。
+ * {@code SuggestDomainImpl} 委派行为测试 (仓储端口 mock, 不连库)
  *
  * @author KC
  */

@@ -1,0 +1,71 @@
+package com.newzkl.platform.base.biz.sys.infrastructure.entity;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 项目数据对象
+ *
+ * @author KC
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("project")
+public class ProjectDO extends BaseDO {
+
+    /**
+     * 名称
+     */
+    private String name;
+
+    /**
+     * 简介
+     *
+     * <p>{@code desc} 为 SQL 保留字, 列名需反引号包裹。</p>
+     */
+    @TableField("`desc`")
+    private String desc;
+
+    /**
+     * 省编码
+     */
+    private Integer province;
+
+    /**
+     * 市编码
+     */
+    private Integer city;
+
+    /**
+     * 区编码
+     */
+    private Integer area;
+
+    /**
+     * 合作金额
+     */
+    private Integer basicAmount;
+
+    /**
+     * 标签 (逗号分隔串)
+     */
+    private String flags;
+
+    /**
+     * 详情
+     */
+    private String detail;
+
+    /**
+     * 意向人数
+     */
+    private Integer interestNum;
+
+    /**
+     * 意向人
+     */
+    private String interestPerson;
+}

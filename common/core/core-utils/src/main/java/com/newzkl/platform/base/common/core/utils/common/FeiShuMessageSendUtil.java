@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * 飞书机器人消息推送工具。
+ * 飞书机器人消息推送工具
  *
  * @author fang
  */
@@ -24,7 +24,7 @@ public class FeiShuMessageSendUtil {
     private static Boolean feishuTrackingSwitch;
 
     /**
-     * 向飞书机器人发送文本消息。
+     * 向飞书机器人发送文本消息
      *
      * @param message 要发送的消息内容
      */
@@ -37,7 +37,7 @@ public class FeiShuMessageSendUtil {
     }
 
     /**
-     * 向飞书机器人发送文本消息。
+     * 向飞书机器人发送文本消息
      *
      * @param webhookUrl 飞书机器人的 Webhook 地址
      * @param message    要发送的消息内容
@@ -58,7 +58,7 @@ public class FeiShuMessageSendUtil {
     }
 
     /**
-     * 发送请求的通用方法。
+     * 发送请求的通用方法
      *
      * @param webhookUrl  飞书机器人的 Webhook 地址
      * @param requestBody 请求体

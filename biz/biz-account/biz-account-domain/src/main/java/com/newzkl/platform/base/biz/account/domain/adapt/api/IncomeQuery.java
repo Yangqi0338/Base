@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 收益查询入参。
+ * 收益查询入参
  *
  * <p>迁移: 跨域 finance 结构 {@code com.zkl.scm.finance.rpc.model.earnings.req.IncomeQuery}
  * 降级为 account 本地端口 DTO。</p>
@@ -44,7 +44,7 @@ public class IncomeQuery implements Serializable {
     private List<RoleEnum.CompanyRole> roleList;
 
     /**
-     * 设置单个消费类型 (内部转为集合)。
+     * 设置单个消费类型 (内部转为集合)
      *
      * @param consumeType 消费类型
      */

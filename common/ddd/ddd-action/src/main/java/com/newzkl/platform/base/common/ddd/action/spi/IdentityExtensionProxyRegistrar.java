@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
 /**
- * 身份扩展点透明代理注册器。
+ * 身份扩展点透明代理注册器
  *
- * <p>启动早期扫描类路径上标注 {@link IdentityExtension} 的接口, 为每个接口注册一个 {@code @Primary} 的
- * {@link IdentityExtensionProxyFactoryBean} bean。调用方按接口类型注入时命中该主代理 bean (而非某个具体实现 bean),
- * 从而透明地获得 {@link IdentityDispatcher} 的分发代理。</p>
+ * <p>启动早期扫描类路径上标注 {@code IdentityExtension} 的接口, 为每个接口注册一个 {@code @Primary} 的
+ * {@code IdentityExtensionProxyFactoryBean} bean。调用方按接口类型注入时命中该主代理 bean (而非某个具体实现 bean),
+ * 从而透明地获得 {@code IdentityDispatcher} 的分发代理。</p>
  *
  * @author KC
  */
@@ -52,7 +52,7 @@ public class IdentityExtensionProxyRegistrar implements BeanDefinitionRegistryPo
     }
 
     /**
-     * 构建仅接受 {@link IdentityExtension} 标注接口的扫描器。
+     * 构建仅接受 {@code IdentityExtension} 标注接口的扫描器
      *
      * <p>使用扫描器自带的默认 {@code StandardEnvironment}, 避免依赖 {@code EnvironmentAware}
      * (BDRPP 阶段 aware 回调不可靠)。</p>
@@ -74,7 +74,7 @@ public class IdentityExtensionProxyRegistrar implements BeanDefinitionRegistryPo
     }
 
     /**
-     * 为扩展点接口注册 {@code @Primary} 代理 bean。
+     * 为扩展点接口注册 {@code @Primary} 代理 bean
      *
      * @param registry      bean 定义注册表
      * @param extensionType 扩展点接口
@@ -96,7 +96,7 @@ public class IdentityExtensionProxyRegistrar implements BeanDefinitionRegistryPo
     }
 
     /**
-     * 按类名加载 Class, 加载失败返回 {@code null}。
+     * 按类名加载 Class, 加载失败返回 {@code null}
      *
      * @param className 全限定类名
      * @return Class 或 null

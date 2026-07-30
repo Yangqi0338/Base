@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * MarketErrorCode.
+ * MarketErrorCode
  *
  * @author KC
  */

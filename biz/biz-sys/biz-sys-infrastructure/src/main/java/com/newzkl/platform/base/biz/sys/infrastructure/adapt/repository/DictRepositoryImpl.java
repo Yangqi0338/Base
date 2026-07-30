@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 字典仓储实现。
+ * 字典仓储实现
  *
  * <p>分页在本层内部执行 (Page 不外泄), 对领域层降级为 List。</p>
  *

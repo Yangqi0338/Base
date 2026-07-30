@@ -6,10 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 虚拟资产 (期权) 变更入参。
+ * 虚拟资产 (期权) 变更入参
  *
  * <p>迁移: 原 {@code com.zkl.scm.finance.rpc.model.req.VirtualAssetsAlterReq};
- * 因位于 account 出站端口 {@link FinanceVirtualAssetsApi} 签名上, 在 account 域内保留一份中性 DTO。</p>
+ * 因位于 account 出站端口 {@code FinanceVirtualAssetsApi} 签名上, 在 account 域内保留一份中性 DTO。</p>
  *
  * @author KC
  */

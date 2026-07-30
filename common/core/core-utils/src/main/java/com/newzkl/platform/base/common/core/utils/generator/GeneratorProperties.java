@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 昵称 / 头像随机生成器的字库配置。
+ * 昵称 / 头像随机生成器的字库配置
  *
  * <p>原为 Spring Boot {@code @ConfigurationProperties}，迁移后降级为纯静态字库；
  * 如需外部覆盖可通过 setter 注入。</p>

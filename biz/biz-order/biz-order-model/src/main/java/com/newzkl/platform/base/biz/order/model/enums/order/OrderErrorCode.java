@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 订单域错误码。
+ * 订单域错误码
  *
- * <p>迁移: 原 {@code com.zkl.scm.model.exception.goods.OrderErrorCode}, 实现平台统一 {@link ErrorCode} 接口。</p>
+ * <p>迁移: 原 {@code com.zkl.scm.model.exception.goods.OrderErrorCode}, 实现平台统一 {@code ErrorCode} 接口。</p>
  *
  * @author KC
  */

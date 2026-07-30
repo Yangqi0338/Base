@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * 收货地址持久化对象。
+ * 收货地址持久化对象
  *
  * <p>对应旧表 {@code ship_address} (旧 {@code com.zkl.scm.user.infrastructure.entity.ShipAddressDO})。
- * id / createTime / updateTime / delFlag / executor 由 {@link BaseDO} 提供。</p>
+ * id / createTime / updateTime / delFlag / executor 由 {@code BaseDO} 提供。</p>
  *
  * @author KC
  */

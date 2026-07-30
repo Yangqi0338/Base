@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.UserFollowApi;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link UserFollowApi} 默认兜底实现。
+ * {@code UserFollowApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 用户关注域(user)跨域链延迟, 入口 starter 侧远程 consumer 覆盖。</p>
  *

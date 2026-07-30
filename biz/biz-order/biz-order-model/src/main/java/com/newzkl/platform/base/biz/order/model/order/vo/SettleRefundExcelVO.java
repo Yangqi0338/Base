@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 结算类型明细 - 售后冲正导出 Excel 对象。
+ * 结算类型明细 - 售后冲正导出 Excel 对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.application.excel.SettleRefundExcelVO}。列名与列宽保持不变,
  * {@code c4} 为"结算总额"(负值冲正)。</p>

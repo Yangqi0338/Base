@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 
-import com.newzkl.platform.base.common.core.mq.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.mq.constant.MQ;
+import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.MemberDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.MemberDO;

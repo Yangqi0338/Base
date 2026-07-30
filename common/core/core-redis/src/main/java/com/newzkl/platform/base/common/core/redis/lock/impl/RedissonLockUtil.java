@@ -6,7 +6,7 @@ import org.redisson.api.RLock;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Redis 分布式锁工具类（基于 {@link DistributedLocker} 封装）。
+ * Redis 分布式锁工具类（基于 {@code DistributedLocker} 封装）
  *
  * @author yangzhilong
  */

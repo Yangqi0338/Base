@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 渠道商当前服务费结果。
+ * 渠道商当前服务费结果
  *
  * <p>迁移: 跨域 finance 结构
  * {@code com.zkl.scm.finance.rpc.model.account.res.ChannelServiceAmountRes}

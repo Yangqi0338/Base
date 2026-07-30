@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 团队部门(直推)条件：直推用户满足 count 个 level 的 role。
+ * 团队部门(直推)条件：直推用户满足 count 个 level 的 role
  *
  * @author muc_fang
  */

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Spring Data Redis 序列化配置类。
+ * Spring Data Redis 序列化配置类
  *
  * @author niu
  */
@@ -50,7 +50,7 @@ public class RedisConfig {
     }
 
     /**
-     * 创建并注册 Redisson 客户端 Bean。
+     * 创建并注册 Redisson 客户端 Bean
      *
      * @return Redisson 自动配置定制器
      */

@@ -1,150 +1,367 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.action.cmd.SpuCmd;
-import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
-import com.newzkl.platform.base.biz.goods.application.goods.ext.SpuQueryExt;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
+import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
+import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.GoldVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.MarketSimpleSpuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
+import com.newzkl.platform.base.biz.goods.rpc.model.spu.SelectorSpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
+import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 商品-商品库控制器。
+ * 商品-商品库控制器
  *
- * @author fang
+ * @author KC
  */
 @RestController
 @RequestMapping("/goods/spu")
 @RequiredArgsConstructor
+@Slf4j
 public class SpuController {
 
-    private final SpuService spuService;
+    /**
+     * 黄金实时价格缓存 key
+     */
+    private static final String GOLD_REAL_TIME_PRICE_KEY = "GoldRealTimePrice::realTimePrice";
+    /**
+     * 黄金价格更新时间缓存 key
+     */
+    private static final String GOLD_UPDATE_TIME_KEY = "GoldRealTimePrice::updateTime";
+
     private final SpuDomain spuDomain;
-    private final GoodsQueryService goodsQueryService;
-    private final SpuQueryExt spuQueryExt;
+    private final SpuService spuService;
 
     /**
-     * 外部商品修改。
+     * 外部商品价格修改
      *
      * @param outSpuEditCommand 外部商品修改命令
-     * @return 成功结果
+     * @return 空结果
      */
     @PostMapping("spuSalePriceEdit")
-    public PlatformResult<Void> outSpuEdit(@Validated @RequestBody OutSpuEditCommand outSpuEditCommand) {
+    public PlatformResult<Long> outSpuEdit(@Validated @RequestBody OutSpuEditCommand outSpuEditCommand) {
         spuDomain.outSpuEdit(outSpuEditCommand);
         return PlatformResult.success();
     }
 
     /**
-     * 商品提交审核。
+     * 创建商品
      *
-     * @param idObj 商品 ID 命令
-     * @return 提交结果 ID
+     * <p>供应商必填供货价, 渠道商必填销售价; 其余角色不支持。</p>
+     *
+     * @param spuDTO 商品请求
+     * @return 商品主键
      */
-    @PostMapping("spuSubmit")
-    public PlatformResult<Long> spuSubmit(@Validated @RequestBody SpuCmd.Id idObj) {
-        Long accountId = SecurityUtils.getAccountId();
-        return PlatformResult.success(spuService.supplierSpuSubmit(accountId, idObj.getId()));
+    @PostMapping("spuCreate")
+    public PlatformResult<Long> spuCreate(@Validated @RequestBody SpuDTO spuDTO) {
+        if (spuDTO.getId() != null) {
+            ThrowsException.exception(BaseErrorCode.PARAM);
+        }
+        Long roleId = SecurityUtils.getRoleId();
+        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
+            for (SkuDTO skuDTO : spuDTO.getSkuList()) {
+                if (skuDTO.getSupplyPrice() == null) {
+                    ThrowsException.exception(BaseErrorCode.PARAM, "缺少供货价");
+                }
+            }
+            spuDTO.setChannelType(SpuEnum.ChannelType.SELECTION);
+        } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+            for (SkuDTO skuDTO : spuDTO.getSkuList()) {
+                if (skuDTO.getSalePrice() == null) {
+                    ThrowsException.exception(BaseErrorCode.PARAM, "缺少销售价");
+                }
+            }
+            spuDTO.setChannelType(SpuEnum.ChannelType.CUSTOM);
+        } else {
+            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
+        }
+        spuDTO.setRole(RoleEnum.CompanyRole.getByCode(roleId));
+        spuDTO.setAccountId(SecurityUtils.getAccountId());
+        return PlatformResult.success(spuDomain.spuCreate(spuDTO));
     }
 
     /**
-     * 商品上下架。
+     * 商品上下架
      *
      * @param upCommand 上下架命令
-     * @return 成功结果
+     * @return 空结果
      */
     @PostMapping("spuUp")
-    public PlatformResult<Void> spuUp(@Validated @RequestBody SpuCmd.UpCommand upCommand) {
-        spuService.spuUp(upCommand.getEnable(), upCommand.getSpuIdList());
+    public PlatformResult<Long> spuUp(@Validated @RequestBody SpuCmd.UpCommand upCommand) {
+        spuDomain.spuUp(upCommand.getEnable(), upCommand.getSpuIdList());
         return PlatformResult.success();
     }
 
     /**
-     * 删除商品。
+     * 修改商品
      *
-     * @param idListObj ID 列表
-     * @return 成功结果
+     * <p>供应商不允许改动商品状态。</p>
+     *
+     * @param spuDTO 商品请求
+     * @return 空结果
+     */
+    @PostMapping("spuUpdate")
+    public PlatformResult<Void> spuUpdate(@RequestBody SpuDTO spuDTO) {
+        if (spuDTO.getId() == null) {
+            ThrowsException.exception(BaseErrorCode.PARAM);
+        }
+        Long roleId = SecurityUtils.getRoleId();
+        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
+            spuDTO.setState(null);
+        } else if (!RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
+        }
+        spuDomain.spuPreUpdate(spuDTO);
+        return PlatformResult.success();
+    }
+
+    /**
+     * 删除商品
+     *
+     * <p>仅供应商可删除, 平台不支持。</p>
+     *
+     * @param idList 主键列表命令
+     * @return 空结果
      */
     @PostMapping("spuDelete")
-    public PlatformResult<Void> spuDelete(@RequestBody IdListCommand idListObj) {
-        spuDomain.spuDelete(idListObj.getIdList());
+    public PlatformResult<Void> spuDelete(@RequestBody CommonCmd.IdList idList) {
+        Long roleId = SecurityUtils.getRoleId();
+        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
+            spuDomain.spuDelete(idList.getIdList());
+        } else if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(roleId)) {
+            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
+        }
         return PlatformResult.success();
     }
 
     /**
-     * 商品详情。
+     * 商品详情
      *
-     * @param id            商品 ID
+     * <p>非供应商角色返回脱敏后的数据。</p>
+     *
+     * @param id            商品主键
      * @param needExtraInfo 是否需要额外信息
-     * @return 商品 VO
+     * @return 商品详情
      */
     @GetMapping("spu")
     public PlatformResult<SpuVO> spu(@RequestParam("id") Long id,
-                                @RequestParam(value = "needExtraInfo", required = false, defaultValue = "false") Boolean needExtraInfo) {
-        return PlatformResult.success(spuQueryExt.spu(id, needExtraInfo));
+                                    @RequestParam(value = "needExtraInfo", required = false, defaultValue = "false") Boolean needExtraInfo) {
+        SpuQuery spuQuery = new SpuQuery();
+        spuQuery.setId(id);
+        SpuVO spu = spuDomain.voByQuery(spuQuery);
+        if (!RoleEnum.CompanyRole.SUPPLIER.getCode().equals(SecurityUtils.getRoleId()) && spu != null) {
+            spu.doDesensitized();
+        }
+        return PlatformResult.success(spu);
     }
 
     /**
-     * 货盘选品。
+     * 商品分页
      *
-     * @param spuVO 货盘商品视图
-     * @return 商品 ID
+     * <p>供应商与渠道商仅可见自身商品。</p>
+     *
+     * @param spuQuery 商品查询条件
+     * @return 商品分页
      */
-    @PostMapping("/palletSelectGoods")
-    public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
-        return PlatformResult.success(spuService.palletSelectGoods(spuVO));
+    @PostMapping("spuPage")
+    public PlatformResult<Page<SpuVO>> spuPageVOList(@RequestBody SpuQuery spuQuery) {
+        Long roleId = SecurityUtils.getRoleId();
+        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)
+                || RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+            spuQuery.setAccountId(SecurityUtils.getAccountId());
+        }
+        spuQuery.setRole(RoleEnum.CompanyRole.getByCode(roleId));
+        return PlatformResult.success(spuDomain.querySpuPage(spuQuery));
     }
 
     /**
-     * 移动 APP 供应商商品统计。
+     * SKU 列表
      *
-     * @param query 统计查询
-     * @return 供应商商品统计
-     */
-    @GetMapping("supplierSpuStatistics")
-    public PlatformResult<SupplierSpuStatisticsVO> supplierSpuStatistics(@ModelAttribute SupplierSpuStatisticsQuery query) {
-        return PlatformResult.success(spuService.supplierSpuStatistics(query));
-    }
-
-    /**
-     * SKU 列表。
-     *
-     * @param skuQuery SKU 查询
+     * @param skuQuery SKU 查询条件
      * @return SKU 列表
      */
     @PostMapping("skuList")
-    public PlatformResult<List<SkuVO>> skuList(@RequestBody SkuQuery skuQuery) {
+    public PlatformResult<List<SkuVO>> skuPageVOList(@RequestBody SkuQuery skuQuery) {
         return PlatformResult.success(spuDomain.skuVOList(skuQuery));
     }
 
     /**
-     * SKU 库存操作。
+     * 甄选师查看供应商商品分页
+     *
+     * @param spuQuery 商品查询条件
+     * @return 甄选师视角商品分页
+     */
+    @PostMapping("selectorSpuPageVO")
+    public PlatformResult<Page<SelectorSpuVO>> selectorSpuPageVO(@RequestBody SpuQuery spuQuery) {
+        if (spuQuery.getAccountId() == null) {
+            return PlatformResult.fail();
+        }
+        if (SpuEnum.State.STORE == spuQuery.getState() && AuditEnum.State.CUSTOM == spuQuery.getAuditState()) {
+            spuQuery.setAuditStateList(Arrays.asList(AuditEnum.State.CUSTOM, AuditEnum.State.STOP));
+        }
+        Page<SpuVO> spuPage = spuDomain.querySpuPage(spuQuery);
+        Page<SelectorSpuVO> resultPage = new Page<>();
+        resultPage.setCurrent(spuPage.getCurrent());
+        resultPage.setSize(spuPage.getSize());
+        resultPage.setTotal(spuPage.getTotal());
+        resultPage.setPages(spuPage.getPages());
+        resultPage.setRecords(spuPage.getRecords().stream()
+                .map(it -> BeanUtil.copyProperties(it, SelectorSpuVO.class))
+                .collect(Collectors.toList()));
+        return PlatformResult.success(resultPage);
+    }
+
+    /**
+     * SKU 库存操作
      *
      * @param stockExecuteReq 库存操作请求列表
-     * @return 成功结果
+     * @return 空结果
      */
     @PostMapping("stockExecute")
     public PlatformResult<Void> stockExecute(@RequestBody List<StockExecuteReq> stockExecuteReq) {
         spuDomain.stockExecute(stockExecuteReq);
         return PlatformResult.success();
     }
+
+    /**
+     * 获取黄金实时价格
+     *
+     * @return 黄金实时价格
+     */
+    @GetMapping("/getGoldRealTimePrice")
+    public PlatformResult<GoldVO> getGoldRealTimePrice() {
+        GoldVO goldVO = new GoldVO();
+        goldVO.setRealTimePrice(RedisUtil.get(GOLD_REAL_TIME_PRICE_KEY));
+        goldVO.setUpdateTime(RedisUtil.get(GOLD_UPDATE_TIME_KEY));
+        return PlatformResult.success(goldVO);
+    }
+
+    /**
+     * 货盘选品
+     *
+     * <p>仅平台角色可用, 落库为外部供应链商品草稿。</p>
+     *
+     * @param spuVO 商品视图对象
+     * @return 商品主键
+     */
+    @PostMapping("/palletSelectGoods")
+    public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
+        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
+            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
+        }
+        spuVO.setChannelType(SpuEnum.ChannelType.OUT);
+        return PlatformResult.success(spuService.palletSelectGoods(spuVO));
+    }
+
+    /**
+     * 选品市场查询全量商品
+     *
+     * <p>固定只查在售商品。</p>
+     *
+     * @param spuQuery 商品查询条件
+     * @return 商品分页
+     */
+    @PostMapping("marketQueryAllSpu")
+    public PlatformResult<Page<SpuVO>> marketQueryAllSpu(@RequestBody SpuQuery spuQuery) {
+        spuQuery.setState(SpuEnum.State.SALE);
+        return PlatformResult.success(marketSpuPage(spuQuery));
+    }
+
+    /**
+     * 选品市场查询全量商品-简化
+     *
+     * <p>固定只查在售商品, 出参仅保留编码/名称/图片与铺货标识。</p>
+     *
+     * @param spuQuery 商品查询条件
+     * @return 简化商品分页
+     */
+    @PostMapping("marketSearchAllSpu")
+    public PlatformResult<Page<MarketSimpleSpuVO>> marketSearchAllSpu(@RequestBody SpuQuery spuQuery) {
+        spuQuery.setState(SpuEnum.State.SALE);
+        Page<SpuVO> spuPage = marketSpuPage(spuQuery);
+        Page<MarketSimpleSpuVO> resultPage = new Page<>();
+        resultPage.setCurrent(spuPage.getCurrent());
+        resultPage.setSize(spuPage.getSize());
+        resultPage.setTotal(spuPage.getTotal());
+        resultPage.setPages(spuPage.getPages());
+        resultPage.setRecords(spuPage.getRecords().stream()
+                .map(it -> BeanUtil.copyProperties(it, MarketSimpleSpuVO.class))
+                .collect(Collectors.toList()));
+        return PlatformResult.success(resultPage);
+    }
+
+    /**
+     * 供应商商品统计
+     *
+     * <p>仅供应商角色可用, 强制按自身账号过滤。</p>
+     *
+     * @param spuQuery 商品查询条件
+     * @return 带统计字段的商品分页
+     */
+    @PostMapping("spuCount")
+    public PlatformResult<Page<SpuVO>> spuCount(@RequestBody SpuQuery spuQuery) {
+        Long roleId = SecurityUtils.getRoleId();
+        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
+            spuQuery.setAccountId(SecurityUtils.getAccountId());
+        } else {
+            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
+        }
+        return PlatformResult.success(spuDomain.querySpuPage(spuQuery));
+    }
+
+    /**
+     * 选品市场商品分页查询
+     *
+     * <p>源实现会用 market 域铺货关系回填 {@code choose} 标识, Base 侧无对等端口,
+     * 该字段保持默认 false。</p>
+     *
+     * @param spuQuery 商品查询条件
+     * @return 商品分页
+     */
+    private Page<SpuVO> marketSpuPage(SpuQuery spuQuery) {
+        log.warn("TODO[capability-gap]: 选品市场商品未回填已铺货标识 choose, 缺 market 域铺货商品查询端口");
+        return spuDomain.querySpuPage(spuQuery);
+    }
+
+    // TODO[service-gap]: 以下源端点未迁, 依赖 Base 侧尚不存在的能力, 待补齐后按原契约恢复:
+    // 1. spuSubmit (POST spuSubmit)            → SpuService#supplierSpuSubmit 当前抛 UnsupportedOperationException,
+    //    缺商品位扣减与审批提交端口
+    // 2. supplierSpuStatistics (GET supplierSpuStatistics) → SpuService#supplierSpuStatistics 当前抛
+    //    UnsupportedOperationException, 缺供应商主体查询端口
+    // 3. palletSpuPage (POST /palletSpuPage)   → 源走会订货外部接口 HuiDingHuoApiUtils#batchGetProducts, Base 无该外部链路
+    // 4. palletSpu (POST /palletSpu)           → 源走会订货外部接口 HuiDingHuoApiUtils#getProductById, Base 无该外部链路
+    // 5. spuPageVOListInMarket (POST spuPageVOListInMarket) → 依赖 biz-market 的 IMarketFacade 跨域调用, 无对等 port
+    // 6. querySupplierSpuPage (POST querySupplierSpuPage) → 需 biz-account 的 OperatorFacade#supplierIdListByType,
+    //    biz-goods 各模块 pom 未声明 biz-account-facade 依赖, 补依赖需改 pom
+    // 7. spuUpload (POST spuUpload)            → 依赖 SpuImportService/QiConfigProperties Excel 导入链路, 未迁
 }

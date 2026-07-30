@@ -10,7 +10,7 @@ import org.dromara.autotable.annotation.Index;
 // TODO[pom-gap mybatis-plus-ext]: import org.dromara.mpe.autofill.annotation.JsonSerializable; (parent 已 depMgmt mybatis-plus-ext, infra 需补依赖)
 
 /**
- * 等级持久化对象。
+ * 等级持久化对象
  *
  * @author fang
  */

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 认证授权域 Redis key 枚举。
+ * 认证授权域 Redis key 枚举
  *
  * <p>沿用本仓按域复制 {@code RedisEnum} 的既有惯例 (biz-order / biz-finance / biz-goods / biz-market
  * 各持一份)。biz-auth 仅收录 RBAC / 网关鉴权两类 key, key 字符串与 biz-account 原枚举逐字一致,
@@ -16,7 +16,7 @@ import lombok.Getter;
 public class RedisEnum {
 
     /**
-     * Redis key 定义。
+     * Redis key 定义
      */
     @Getter
     @AllArgsConstructor
@@ -36,7 +36,7 @@ public class RedisEnum {
         private final String value;
 
         /**
-         * 格式化取 key。
+         * 格式化取 key
          *
          * @param params 占位参数
          * @return 完整 key
@@ -46,7 +46,7 @@ public class RedisEnum {
         }
 
         /**
-         * 取 key (带模块前缀, 模块编码为空则返回裸 key)。
+         * 取 key (带模块前缀, 模块编码为空则返回裸 key)
          *
          * @return 完整 key
          */

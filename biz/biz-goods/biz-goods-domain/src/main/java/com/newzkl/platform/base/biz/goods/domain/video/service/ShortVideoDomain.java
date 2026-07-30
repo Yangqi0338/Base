@@ -6,14 +6,14 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
 
 /**
- * 商品-短视频领域服务。
+ * 商品-短视频领域服务
  *
  * @author KC
  */
 public interface ShortVideoDomain {
 
     /**
-     * 新增短视频。
+     * 新增短视频
      *
      * @param req 短视频请求
      * @return 短视频 ID
@@ -21,21 +21,21 @@ public interface ShortVideoDomain {
     Long add(ShortVideoReq req);
 
     /**
-     * 编辑短视频。
+     * 编辑短视频
      *
      * @param req 短视频请求 (id 必填)
      */
     void edit(ShortVideoReq req);
 
     /**
-     * 删除短视频。
+     * 删除短视频
      *
      * @param id 短视频 ID
      */
     void del(Long id);
 
     /**
-     * 短视频详情。
+     * 短视频详情
      *
      * @param id 短视频 ID
      * @return 短视频视图对象
@@ -43,7 +43,7 @@ public interface ShortVideoDomain {
     ShortVideoVO detail(Long id);
 
     /**
-     * 短视频分页。
+     * 短视频分页
      *
      * @param query 短视频查询
      * @return 短视频分页

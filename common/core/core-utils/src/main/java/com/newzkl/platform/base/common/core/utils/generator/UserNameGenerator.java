@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 import static com.newzkl.platform.base.common.core.utils.generator.GeneratorProperties.*;
 
 /**
- * 用户名组装生成。
+ * 用户名组装生成
  *
  * @author sijiwang
  */
 public class UserNameGenerator extends PropertiesRandomGenerator {
 
     /**
-     * 随机组合不同列表的字。
+     * 随机组合不同列表的字
      */
     @SafeVarargs
     private static String combineLists(List<String>... lists) {
@@ -23,7 +23,7 @@ public class UserNameGenerator extends PropertiesRandomGenerator {
     }
 
     /**
-     * 生成一个随机的昵称。
+     * 生成一个随机的昵称
      *
      * @return 多样化的昵称
      */

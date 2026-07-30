@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * app 版本视图对象。
+ * app 版本视图对象
  *
  * @author niu
  */

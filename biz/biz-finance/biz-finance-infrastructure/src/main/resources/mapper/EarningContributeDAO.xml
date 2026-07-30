@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.EarningContributeDAO">
+
+    <!-- 更新客户贡献数据 (迁移自 new-scm EarningContributeDAO.xml 的 alterAccountContribute) -->
+    <!-- 源侧 alterType 是 Integer 直接比 1/2/3, Base AlterAccountContributeDataReq.alterType 是 EarningsEnum.ContributeType 枚举, 故比其 type 值 -->
+    <update id="alterAccountContribute">
+        update earning_contribute
+        <set>
+            <if test="alterType != null and alterType.type == 1">
+                total_consume = total_consume + #{alterValue}
+            </if>
+            <if test="alterType != null and alterType.type == 2">
+                earning_contribute = earning_contribute + #{alterValue}
+            </if>
+            <if test="alterType != null and alterType.type == 3">
+                service_change_contribute = service_change_contribute + #{alterValue}
+            </if>
+        </set>
+        where account_id = #{accountId}
+              and account_type = #{accountType}
+    </update>
+
+</mapper>

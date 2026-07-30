@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-user SupplierDAO.xml
+     适配: Base supplier 表已无 role_id/role_name/username/invite_id/goods_*_count/total_* 列
+           (账号属性收敛 account 表, 统计收敛 count_sale 表), username/invite_id 改 join account 取;
+           getSettlementConfig 源取 period_set_config, 按方法名 + Base 调用方(limitAmount 结算配置) 改取 settlement_config_v_o;
+           resetUserOrderCount 的目标列 Base 全部不存在, 退化为 no-op, 见 findings -->
+<mapper namespace="com.newzkl.platform.base.biz.account.infrastructure.dao.SupplierDAO">
+
+    <!-- listSelectorSupplierVOByQuery 共享条件, 字段按 Base SupplierQuery 实有展开 -->
+    <sql id="selectorWhere">
+        <if test="query.idList != null and query.idList.size() > 0">
+            and t.id in
+            <foreach collection="query.idList" item="item" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+        <if test="query.stateList != null and query.stateList.size() > 0">
+            and t.state in
+            <foreach collection="query.stateList" item="item" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+        <if test="query.auditState != null">
+            and t.`audit_state` = #{query.auditState}
+        </if>
+        <if test="query.promisePayState != null">
+            and t.`promise_pay_state` = #{query.promisePayState}
+        </if>
+        <if test="query.periodSetState != null">
+            and t.`period_set_state` = #{query.periodSetState}
+        </if>
+        <if test="query.companyName != null and query.companyName != ''" >
+            and t.`name`  like CONCAT('%',#{query.companyName},'%')
+        </if>
+        <if test="query.username != null and query.username != ''">
+            and a.`username`  like CONCAT('%',#{query.username},'%')
+        </if>
+        <if test="query.inviteId != null">
+            and a.`invite_account_id` = #{query.inviteId}
+        </if>
+        <if test="query.industryId != null">
+            and t.`industry_id_list` like CONCAT('%',#{query.industryId},'%')
+        </if>
+        <if test="query.companyAreaCode != null">
+            and t.`company_area_code` = #{query.companyAreaCode}
+        </if>
+        <if test="query.createStartTime != null">
+            and t.`create_time` &gt;= #{query.createStartTime}
+        </if>
+        <if test="query.createEndTime != null">
+            and t.`create_time` &lt; #{query.createEndTime}
+        </if>
+    </sql>
+
+    <!-- 甄选师查看供应商列表; Base 无 goods_*/role_name/name_auth_info 列, 对应 VO 字段落 null -->
+    <select id="listSelectorSupplierVOByQuery" resultType="com.newzkl.platform.base.biz.account.model.vo.SelectorSupplierVO">
+        select
+        t.`id`,t.`body_type`,a.`username`,t.`name`,t.`state`,t.`audit_state`,t.`company_info`,t.`promise_pay_state`,t.`promise_pay_amount`,t.`create_time`,t.`update_time`,t.`promise_pay_audit_state`,t.`period_set_state`,t.`period_set_config`,t.`should_promise_pay_amount`,t.`audit_refuse_reason`,t.`industry_id_list`,t.`receive_address`,t.`in_time`
+        , a.role_id_list, a.real_name
+        from supplier t
+        left join account a on t.id = a.id
+        <where>
+            t.del_flag = 0
+            <include refid="selectorWhere"></include>
+        </where>
+        ORDER BY t.`create_time` desc
+    </select>
+
+    <!-- 源取 supplier.invite_id, Base 该列已收敛 account.invite_account_id -->
+    <select id="supplierRelationVO" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierRelationVO">
+        select t.id, a.invite_account_id as up_selector_id
+        from supplier t
+        left join account a on t.id = a.id
+        <where>
+            t.del_flag = 0
+            <if test="supplierIdList != null and supplierIdList.size() > 0">
+                and t.id in
+                <foreach collection="supplierIdList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="changeColumn">
+        update supplier set
+        `${toColumn}` = `${fromColumn}`
+        <if test="id != null">
+            where id = #{id,jdbcType=BIGINT}
+        </if>
+    </update>
+
+    <update id="resetColumn">
+        update supplier set
+        <foreach collection="columnList" item="column" separator="," close="" open="">
+            `${column}` = 0
+        </foreach>
+        <if test="id != null">
+            where id = #{id,jdbcType=BIGINT}
+        </if>
+    </update>
+
+    <select id="supplierDescVOList" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO">
+        select t.id, a.username, t.`name` as 'company_name'
+        from supplier t
+        left join account a on t.id = a.id
+        <where>
+            t.del_flag = 0
+            <if test="supplierIdList != null and supplierIdList.size() > 0">
+                and t.id in
+                <foreach collection="supplierIdList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- Base 已无 total_order_number/goods_sale_count 等冗余统计列(收敛 count_sale 表), 源清零语句无目标列, 退化 no-op 待裁决 -->
+    <update id="resetUserOrderCount">
+        update supplier set update_time = update_time where 1 = 0
+    </update>
+
+    <!-- 源取 period_set_config; Base 调用方解析 limitAmount(结算配置), 按语义改取 settlement_config_v_o -->
+    <select id="getSettlementConfig" resultType="java.lang.String">
+        select settlement_config_v_o from supplier
+        where id = #{id,jdbcType=BIGINT} and del_flag = 0
+    </select>
+
+    <!-- 源按 supplier.invite_id 分组, Base 改按 account.invite_account_id -->
+    <select id="selectCountByInviteId" resultType="com.newzkl.platform.base.biz.account.model.vo.OperatorInviteCountVO">
+        select
+        a.`invite_account_id` as invite_id, count(t.`id`) as 'inviteCount'
+        from supplier t
+        left join account a on t.id = a.id
+        where t.del_flag = 0
+        and a.`invite_account_id` in
+        <foreach item="item" collection="inviteIds" separator="," close=")" open="(">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+        group by a.`invite_account_id`
+    </select>
+
+    <!-- BizCountMap 合计, supplier alias t, account alias a, 与 getJoinQw 约定一致 -->
+    <select id="countWithAccountByCondition" resultType="java.util.Map">
+        select
+        ${query.fieldSQL}
+        from supplier t
+        left join account a on t.id = a.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        ${query.groupSQL}
+        ${query.sortSQL}
+    </select>
+
+    <update id="columnByQuery">
+        update supplier t set
+        <foreach collection="columnList" item="column" separator="," close="" open="">
+            t.`${column.name}` = t.`${column.name}` + #{column.count,jdbcType=INTEGER}
+        </foreach>
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </update>
+
+    <select id="pageListWithAccount" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO">
+        select
+        t.*, a.username, a.real_name, a.role_id_list
+        from supplier t
+        left join account a on t.id = a.id
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

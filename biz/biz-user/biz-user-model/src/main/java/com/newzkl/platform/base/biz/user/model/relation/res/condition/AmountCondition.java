@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 金额条件。
+ * 金额条件
  *
  * @author fang
  */

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.enums;
 
 /**
- * 门店域缓存 key 常量。
+ * 门店域缓存 key 常量
  *
  * @author KC
  */

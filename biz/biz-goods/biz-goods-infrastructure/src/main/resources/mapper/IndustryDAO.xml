@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.IndustryDAO">
+
+    <!-- 列表查询条件 (迁移自 new-scm IndustryDAO.xml 的 where) -->
+    <sql id="querySQL">
+        <if test="query.id != null">
+            and t.`id` = #{query.id}
+        </if>
+        <if test="query.idList != null and query.idList.size() > 0">
+            and t.id in
+            <foreach collection="query.idList" item="item" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+        <if test="query.name != null and query.name != ''">
+            and t.`name` like CONCAT('%',#{query.name},'%')
+        </if>
+        <if test="query.categoryId != null">
+            and t.`category_id_list` like CONCAT('%',#{query.categoryId},'%')
+        </if>
+        <if test="query.notIndustryId != null">
+            and t.`id` &lt;&gt; #{query.notIndustryId}
+        </if>
+        <if test="query.notIndustryIdList != null and query.notIndustryIdList.size() > 0">
+            and t.id not in
+            <foreach collection="query.notIndustryIdList" item="item" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+    </sql>
+
+    <!-- 行业分页 (迁移自 new-scm IndustryDAO.xml 的 listByQuery; 分页壳由 PageInfo 改为 MyBatis-Plus Page) -->
+    <select id="queryPage" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO">
+        select
+        t.`id`,t.`account_id`,t.`name`,t.`desc`,t.`create_time`,t.`update_time`,t.`category_id_list`
+        from industry t
+        <where>
+            and t.del_flag = 0
+            <include refid="querySQL"/>
+        </where>
+    </select>
+
+</mapper>

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 用户关注列表分页查询请求。
+ * 用户关注列表分页查询请求
  *
  * <p>迁移说明：源类位于 study 子域（model.study.req.UserFollowPageReq），
  * relation 子域的关注仓储直接引用。为保持 biz-user 自包含、避免跨子域耦合，

@@ -95,6 +95,16 @@ public class AccountPurseConfigDomainImpl implements AccountPurseConfigDomain {
         return accountPurseConfigRepository.querySupplierConfig();
     }
 
+    /**
+     * 保存供应商配置
+     *
+     * @param configSupplierVO 供应商配置
+     */
+    @Override
+    public void saveSupplierConfig(ConfigSupplierVO configSupplierVO) {
+        accountPurseConfigRepository.saveSupplierConfig(configSupplierVO);
+    }
+
     @Override
     public ChannelConfigVO defaultChannelConfig() {
         return accountPurseConfigRepository.defaultChannelConfig();

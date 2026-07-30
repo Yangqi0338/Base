@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 样板店应用服务实现。
+ * 样板店应用服务实现
  *
  * @author niu
  */
@@ -60,7 +60,7 @@ public class ModelShopServiceImpl implements ModelShopService {
     }
 
     /**
-     * 取消样板店。
+     * 取消样板店
      *
      * @param store 门店
      */
@@ -74,7 +74,7 @@ public class ModelShopServiceImpl implements ModelShopService {
     }
 
     /**
-     * 应用样板店。
+     * 应用样板店
      *
      * @param store           门店
      * @param targetStyleCode 目标样式编码
@@ -138,7 +138,7 @@ public class ModelShopServiceImpl implements ModelShopService {
     }
 
     /**
-     * 同步商品数据。
+     * 同步商品数据
      *
      * @param targetChannelId 目标渠道 ID
      * @param goodIdList      商品 ID 集合

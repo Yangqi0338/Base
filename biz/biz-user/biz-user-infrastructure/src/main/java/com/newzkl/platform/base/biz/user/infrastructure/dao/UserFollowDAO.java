@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.entity.UserFollowDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 用户关注 Mapper。
+ * 用户关注 Mapper
  *
  * @author sijiwang
  */

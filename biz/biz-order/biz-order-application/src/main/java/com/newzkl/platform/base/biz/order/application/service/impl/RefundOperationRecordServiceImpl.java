@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 售后操作记录 (协商记录) 应用服务实现。
+ * 售后操作记录 (协商记录) 应用服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.application.service.impl.RefundOperationRecordServiceImpl}。
  * 偏离说明: 旧实现每个方法用 try/catch 把任意异常包成 {@code OPERATE_FAIL} 并 {@code return null},
@@ -82,7 +82,7 @@ public class RefundOperationRecordServiceImpl implements RefundOperationRecordSe
     }
 
     /**
-     * 领域模型转视图对象 (null 安全)。
+     * 领域模型转视图对象 (null 安全)
      *
      * @param record 领域模型
      * @return 视图对象, 入参为 null 时返回 null

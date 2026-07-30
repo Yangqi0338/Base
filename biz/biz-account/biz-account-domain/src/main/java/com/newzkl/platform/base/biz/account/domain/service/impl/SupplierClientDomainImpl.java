@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -23,14 +24,20 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.SupplierAssembler;
+import com.newzkl.platform.base.biz.account.model.exception.SupplierErrorCode;
 import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author muc_fang
@@ -40,6 +47,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SupplierClientDomainImpl implements SupplierClientDomain {
+
+    /**
+     * 供应商可经营的最大行业数 (旧 {@code SupplierEnum.maxIndustryNum})
+     */
+    private static final int MAX_INDUSTRY_NUM = 5;
 
     private final SupplierRepository supplierRepository;
     private final SupplierAssembler supplierAssembler;
@@ -194,5 +206,101 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 
         // 查account数据
         return TransferUtils.transferPage(supplierPageList, supplierAssembler::accountVO2Res);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void periodSet(Long id, String periodSetConfig) {
+        SupplierVO item = new SupplierVO();
+        item.setId(id);
+        item.setPeriodSetState(CommonEnum.YesOrNo.YES);
+        item.setPeriodSetConfig(periodSetConfig);
+        supplierRepository.supplierEdit(item);
+        tripInState(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void shouldPromisePayAmountSet(Long id, Integer shouldPromisePayAmount, Integer promisePayConfig) {
+        SupplierVO item = new SupplierVO();
+        item.setId(id);
+        item.setShouldPromisePayAmount(shouldPromisePayAmount);
+        item.setPromisePayConfig(promisePayConfig);
+        supplierRepository.supplierEdit(item);
+        tripInState(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addIndustry(Long id, List<Long> industryIdList) {
+        SupplierVO current = supplierRepository.supplier(id);
+        if (current == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "供应商");
+        }
+        List<Long> merged = new ArrayList<>(toLongList(current.getIndustryIdList()));
+        if (CollUtil.isNotEmpty(industryIdList)) {
+            merged.addAll(industryIdList);
+        }
+        List<Long> distinct = merged.stream().distinct().collect(Collectors.toList());
+        // 保留旧限制: 供应商本人操作时受最大行业数约束, 平台角色不限
+        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(SecurityUtils.getRoleId())
+                && distinct.size() > MAX_INDUSTRY_NUM) {
+            throw new PlatformException(SupplierErrorCode.OVER_INDUSTRY);
+        }
+        SupplierVO item = new SupplierVO();
+        item.setId(id);
+        item.setIndustryIdList(CollUtil.join(distinct, ","));
+        supplierRepository.supplierEdit(item);
+    }
+
+    @Override
+    public void supplierInviteIdEdit(Long id, Long inviteId) {
+        SupplierVO item = new SupplierVO();
+        item.setId(id);
+        item.setInviteId(inviteId);
+        supplierRepository.supplierEdit(item);
+    }
+
+    /**
+     * 触发入驻判定
+     *
+     * <p>逐字保留旧 {@code Supplier#tripInState}: 账期已设置的前提下, 保证金已缴纳
+     * 或缴纳配置为延迟(1)时把供应商状态置为已入驻; 其余情形不动状态。</p>
+     *
+     * @param id 供应商账号ID
+     */
+    private void tripInState(Long id) {
+        SupplierVO current = supplierRepository.supplier(id);
+        if (current == null || current.getPeriodSetState() != CommonEnum.YesOrNo.YES) {
+            return;
+        }
+        boolean promisePaid = current.getPromisePayState() == CommonEnum.YesOrNo.YES;
+        boolean delayConfig = Objects.equals(1, current.getPromisePayConfig());
+        if (!promisePaid && !delayConfig) {
+            return;
+        }
+        SupplierVO item = new SupplierVO();
+        item.setId(id);
+        item.setState(SupplierEnum.State.NORMAL);
+        supplierRepository.supplierEdit(item);
+    }
+
+    /**
+     * 逗号分隔的 ID 串转 ID 列表
+     *
+     * <p>等价旧 {@code ScmUtil.stringToLongList}: 空串或含 "null" 片段时返回空列表。</p>
+     *
+     * @param source 逗号分隔的 ID 串
+     * @return ID 列表, 无则空列表
+     */
+    private List<Long> toLongList(String source) {
+        if (StrUtil.isEmpty(source) || source.contains("null")) {
+            return new ArrayList<>();
+        }
+        return StrUtil.split(source, ',').stream()
+                .map(String::trim)
+                .filter(StrUtil::isNotEmpty)
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
     }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Redis 字符串（String）类型操作工具类。
+ * Redis 字符串（String）类型操作工具类
  *
  * @author sijiwang
  */

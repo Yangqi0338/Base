@@ -75,10 +75,10 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
     }
 
     @Override
-    public List<PaymentVO> tradeOrderQuery(PaymentQuery query) {
+    public Page<PaymentVO> tradeOrderQuery(PaymentQuery query) {
         LambdaQueryWrapper<PaymentDO> queryWrapper = paymentDAO.getLw(query)
                 .orderByDesc(PaymentDO::getId);
         Page<PaymentDO> pageList = paymentDAO.selectPage(RepositorySupport.page(query), queryWrapper);
-        return TransferUtils.transfers(pageList.getRecords(), PaymentVO.class);
+        return TransferUtils.transferPage(pageList, PaymentVO.class);
     }
 }

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * 开通码领域视图对象。
+ * 开通码领域视图对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.entity.Cdk}。
  * 语义为"角色/门店开通码", 由平台/运营商生成并逐级分配, 最终由账号兑换以开通数字门店等权限,

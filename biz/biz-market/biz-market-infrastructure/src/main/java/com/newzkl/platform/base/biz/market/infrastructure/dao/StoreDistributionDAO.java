@@ -52,7 +52,7 @@ public interface StoreDistributionDAO extends BaseMapper<StoreDistributionDO> {
     /**
      * 查询铺货商品sku信息
      */
-    List<DistributionGoodsInfoVO> queryGoodsDistributionSku(Long goodsId);
+    List<DistributionGoodsInfoVO> queryGoodsDistributionSku(@Param("goodsId") Long goodsId);
 
     /**
      * 查询门店铺货商品的分类列表

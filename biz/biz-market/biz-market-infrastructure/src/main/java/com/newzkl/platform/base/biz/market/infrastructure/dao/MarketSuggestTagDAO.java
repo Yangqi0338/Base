@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * 建议标签提交记录 DAO。
+ * 建议标签提交记录 DAO
  *
  * @author KC
  */
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public interface MarketSuggestTagDAO extends BaseMapper<MarketSuggestTagDO> {
 
     /**
-     * 组装查询条件。
+     * 组装查询条件
      *
      * <p>迁移: 替代旧 {@code MarketSuggestTagDAO.xml#queryByAccountId} 的 operator 分支 SQL。
      * operator=true 按 {@code opeartor_id} + 可选 mobile 过滤; 否则按 {@code account_id} 过滤。

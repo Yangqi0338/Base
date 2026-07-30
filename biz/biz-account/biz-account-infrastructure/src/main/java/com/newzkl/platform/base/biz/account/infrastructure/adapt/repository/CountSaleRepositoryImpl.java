@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 销售统计仓储实现。
+ * 销售统计仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.infrastructure.repository.CountSaleRepositoryImpl}。
  * 旧 mapper xml 的 {@code insert} / {@code updateByPrimaryKeySelective} /

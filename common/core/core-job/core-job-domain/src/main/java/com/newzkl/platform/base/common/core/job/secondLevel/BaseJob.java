@@ -15,11 +15,11 @@ import java.util.function.Function;
  * Job 抽象基类 — 统一处理 ExecuteLog 状态机
  * <p>子类继承后:
  * <ul>
- * <li>实现 {@link #fill} 按 jobName 路由到对应 collectActive*ExecuteLogs</li>
+ * <li>实现 {@link BaseJob#fill} 按 jobName 路由到对应 collectActive*ExecuteLogs</li>
  * <li>{@code @XxlJob} 方法签名固定: {@code  → List<ExecuteLogDTO>}</li>
  * <li>方法体仅写纯业务 </li>
  * </ul>
- * <p>MQ clear 由 JobAspect 负责。
+ * <p>MQ clear 由 JobAspect 负责
  */
 @Slf4j
 public abstract class BaseJob {

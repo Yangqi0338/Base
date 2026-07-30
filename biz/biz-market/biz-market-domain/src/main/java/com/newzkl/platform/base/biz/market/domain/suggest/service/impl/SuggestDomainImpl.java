@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * {@link SuggestDomain} 实现。
+ * {@code SuggestDomain} 实现
  *
  * <p>迁移自 {@code com.zkl.scm.market.domain.other.service.impl.SuggestServiceImpl},
  * 与旧实现一致仅做委派。</p>

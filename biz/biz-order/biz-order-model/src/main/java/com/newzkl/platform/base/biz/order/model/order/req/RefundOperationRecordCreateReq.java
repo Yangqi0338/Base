@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 售后操作记录-新增请求对象。
+ * 售后操作记录-新增请求对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.domain.refund.model.req.RefundOperationRecordCreateReq}。
  * 旧 {@code spuOrderId} (Long) 改为业务单号 {@code spuOrderNo} (String), 与中台订单模型对齐;

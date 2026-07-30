@@ -50,16 +50,28 @@ public class BankRepositoryImpl implements BankRepository {
     }
 
     /**
-     * 查询列表
+     * 查询分页
      *
      * @param query 查询条件
-     * @return 列表
+     * @return 银行分页
      */
     @Override
-    public List<BankVO> queryPage(BankQuery query) {
+    public Page<BankVO> queryPage(BankQuery query) {
         LambdaQueryWrapper<BankDO> queryWrapper = bankDAO.getLw(query);
         Page<BankDO> pageList = bankDAO.selectPage(RepositorySupport.page(query), queryWrapper);
-        return TransferUtils.transfers(pageList.getRecords(), BankVO.class);
+        return TransferUtils.transferPage(pageList, BankVO.class);
+    }
+
+    /**
+     * 查询银行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行列表
+     */
+    @Override
+    public List<BankVO> queryList(BankQuery query) {
+        List<BankDO> bankList = bankDAO.selectList(bankDAO.getLw(query));
+        return TransferUtils.transfers(bankList, BankVO.class);
     }
 
     /**
@@ -119,11 +131,29 @@ public class BankRepositoryImpl implements BankRepository {
         bankDAO.deleteById(id);
     }
 
+    /**
+     * 查询支行分页
+     *
+     * @param query 查询条件
+     * @return 银行支行分页
+     */
     @Override
-    public List<BankBranchVO> queryBranchPage(BankQuery query) {
+    public Page<BankBranchVO> queryBranchPage(BankQuery query) {
         LambdaQueryWrapper<BankBranchDO> queryWrapper = branchDAO.getLw(query);
         Page<BankBranchDO> pageList = branchDAO.selectPage(RepositorySupport.page(query), queryWrapper);
-        return TransferUtils.transfers(pageList.getRecords(), BankBranchVO.class);
+        return TransferUtils.transferPage(pageList, BankBranchVO.class);
+    }
+
+    /**
+     * 查询银行支行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行支行列表
+     */
+    @Override
+    public List<BankBranchVO> queryBranchList(BankQuery query) {
+        List<BankBranchDO> branchList = branchDAO.selectList(branchDAO.getLw(query));
+        return TransferUtils.transfers(branchList, BankBranchVO.class);
     }
 }
 

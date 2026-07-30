@@ -21,11 +21,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 等级领域服务实现。
+ * 等级领域服务实现
  *
  * @author fang
  */
-@Service
+@Service("userLevelDomainImpl")
 @RequiredArgsConstructor
 public class LevelDomainImpl implements LevelDomain {
 

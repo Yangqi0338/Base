@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * {@link IdentityDispatcher} 分发三分支单测: 命中 / catch-all 兜底 / 无命中报错。
+ * {@code IdentityDispatcher} 分发三分支单测: 命中 / catch-all 兜底 / 无命中报错
  *
  * @author KC
  */
@@ -54,7 +54,7 @@ class IdentityDispatcherTest {
     }
 
     /**
-     * 测试用扩展点。
+     * 测试用扩展点
      */
     @IdentityExtension
     interface Greeter {

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 商品-短视频仓储实现。
+ * 商品-短视频仓储实现
  *
  * @author KC
  */
@@ -28,7 +28,7 @@ import java.util.List;
 public class ShortVideoRepositoryImpl implements ShortVideoRepository {
 
     /**
-     * 视频类型: 短视频。
+     * 视频类型: 短视频
      */
     private static final Integer TYPE_SHORT = 1;
 
@@ -80,7 +80,7 @@ public class ShortVideoRepositoryImpl implements ShortVideoRepository {
     }
 
     /**
-     * 写入视频-SPU 关联关系。
+     * 写入视频-SPU 关联关系
      *
      * @param videoId   视频 ID
      * @param spuIdList 关联 SPU ID 列表

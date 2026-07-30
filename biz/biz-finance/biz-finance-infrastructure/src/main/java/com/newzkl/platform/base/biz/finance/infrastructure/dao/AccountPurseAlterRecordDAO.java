@@ -49,5 +49,5 @@ public interface AccountPurseAlterRecordDAO extends BaseMapper<AccountPurseAlter
      * @param remark
      * @return
      */
-    Integer querySupplierSettleData(Integer remark);
+    Integer querySupplierSettleData(@Param("remark") Integer remark);
 }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
@@ -22,7 +23,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 /**
- * 购买记录控制器。
+ * 购买记录控制器
  *
  * @author kc
  */
@@ -34,7 +35,7 @@ public class PurchaseRecordController {
     private final PurchaseRecordDomain purchaseRecordDomain;
 
     /**
-     * 购买记录详情。
+     * 购买记录详情
      *
      * @param id 主键
      * @return 单条数据
@@ -49,7 +50,7 @@ public class PurchaseRecordController {
     }
 
     /**
-     * 新增购买记录。
+     * 新增购买记录
      *
      * @param saveCommand 编辑命令
      * @return 新增结果
@@ -64,7 +65,7 @@ public class PurchaseRecordController {
     }
 
     /**
-     * 编辑购买记录。
+     * 编辑购买记录
      *
      * @param saveCommand 编辑命令
      * @return 编辑结果
@@ -80,7 +81,7 @@ public class PurchaseRecordController {
     }
 
     /**
-     * 删除购买记录。
+     * 删除购买记录
      *
      * @param id 主键
      * @return 删除结果
@@ -96,17 +97,28 @@ public class PurchaseRecordController {
     }
 
     /**
-     * 查询购买记录分页列表。
+     * 查询购买记录分页列表
+     *
+     * <p>⚠️ 出参契约: 旧接口返 PageHelper 的 {@code PageInfo}
+     * ({@code list}/{@code total}/{@code pageNum}/{@code pageSize}),
+     * 本仓按 {@code rules/Architecture.md} 改为 MyBatis-Plus {@code Page}
+     * ({@code records}/{@code total}/{@code current}/{@code size})。
+     * <b>前端需把 {@code res.data.list} 改成 {@code res.data.records}</b> ——
+     * 调用方: channel-admin</p>
      *
      * @param query 查询条件
-     * @return 分页列表
+     * @return 购买记录分页
      */
     @PostMapping("/queryPage")
-    public PlatformResult<List<PurchaseRecordVO>> queryPage(@RequestBody @Valid PurchaseRecordQuery query) {
+    public PlatformResult<Page<PurchaseRecordVO>> queryPage(@RequestBody @Valid PurchaseRecordQuery query) {
         Long role = SecurityUtils.getRoleId();
         if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(role)) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(purchaseRecordDomain.queryPage(query));
     }
+
+    // TODO[service-gap]: 源 /goodsSeatPurchaseRecordExport 未迁 — 导出行模型
+    //   GoodsSeatPurchaseRecordExportVO 在 Base biz-finance-model 中不存在, Excel 表头本身也是对外契约,
+    //   不凭推测新建; 待该 VO 按源逐字补齐后再 wire。
 }

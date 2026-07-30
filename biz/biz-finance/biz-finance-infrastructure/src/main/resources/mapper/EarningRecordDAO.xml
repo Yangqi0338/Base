@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.EarningRecordDAO">
+
+    <!-- 查询总分润金额 (迁移自 new-scm EarningRecordDAO.xml 的 queryTotalEarning) -->
+    <select id="queryTotalEarning" resultType="java.lang.Integer">
+        select sum(amount)
+        from earning_record
+        where consume_type = 3
+          and earning_type = 1
+          and `state` = #{state}
+    </select>
+
+    <!-- 更新分润记录结算状态 (迁移自 new-scm EarningRecordDAO.xml 的 alterEarningRecordState) -->
+    <update id="alterEarningRecordState">
+        update earning_record
+        set `state` = #{state}
+        where join_order_no = #{skuOrderId}
+          and consume_type = 3
+          and `state` = 0
+    </update>
+
+</mapper>

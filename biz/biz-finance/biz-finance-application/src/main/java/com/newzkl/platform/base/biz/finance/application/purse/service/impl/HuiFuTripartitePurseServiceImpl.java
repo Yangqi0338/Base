@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * 汇付三方钱包处理编排实现。
+ * 汇付三方钱包处理编排实现
  *
  * @author kc
  */

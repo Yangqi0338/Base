@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 收货地址应用服务实现。
+ * 收货地址应用服务实现
  *
  * <p>核心职责：1. 上下文参数填充 2. 跨领域服务编排 3. 日志记录。</p>
  *

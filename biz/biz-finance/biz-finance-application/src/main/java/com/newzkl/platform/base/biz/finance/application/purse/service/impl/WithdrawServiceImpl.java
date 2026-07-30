@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 提现业务编排实现。
+ * 提现业务编排实现
  *
  * @author niu
  */

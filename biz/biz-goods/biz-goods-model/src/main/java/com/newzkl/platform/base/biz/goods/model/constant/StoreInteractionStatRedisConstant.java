@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.constant;
 
 /**
- * 互动统计模块 Redis 常量。
+ * 互动统计模块 Redis 常量
  *
  * <p>统一管理互动统计缓存 Key、分布式锁 Key 及锁配置参数, 供互动统计领域服务与
  * MQ 消费者、定时同步任务共用。</p>

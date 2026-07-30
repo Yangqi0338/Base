@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 身份扩展点注册器。
+ * 身份扩展点注册器
  *
- * <p>启动期 (所有单例实例化完成后) 扫描全部 {@link IdentityImpl} bean, 按其实现的
- * {@link IdentityExtension} 扩展点接口分组, 对同一扩展点下各实现的身份条件执行两两不相交校验,
- * 校验通过则填充 {@link IdentityDispatcher} 注册表, 违反则抛 {@link IllegalStateException} 阻止启动。</p>
+ * <p>启动期 (所有单例实例化完成后) 扫描全部 {@code IdentityImpl} bean, 按其实现的
+ * {@code IdentityExtension} 扩展点接口分组, 对同一扩展点下各实现的身份条件执行两两不相交校验,
+ * 校验通过则填充 {@code IdentityDispatcher} 注册表, 违反则抛 {@code IllegalStateException} 阻止启动。</p>
  *
  * @author KC
  */
@@ -65,7 +65,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
     }
 
     /**
-     * 解析实现类所实现的、标注 {@link IdentityExtension} 的接口集合。
+     * 解析实现类所实现的、标注 {@code IdentityExtension} 的接口集合
      *
      * @param beanClass 实现类
      * @return 扩展点接口列表
@@ -81,7 +81,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
     }
 
     /**
-     * 校验并登记单个扩展点的全部实现。
+     * 校验并登记单个扩展点的全部实现
      *
      * @param ext         扩展点接口
      * @param descriptors 实现描述列表
@@ -95,7 +95,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
     }
 
     /**
-     * 对同一扩展点下所有实现的身份条件执行两两不相交校验。
+     * 对同一扩展点下所有实现的身份条件执行两两不相交校验
      *
      * <p>任意两实现条件集交集非空即冲突; 两个 catch-all (空条件) 视为重叠冲突。</p>
      *
@@ -129,7 +129,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
     }
 
     /**
-     * 求两身份条件集的交集。
+     * 求两身份条件集的交集
      *
      * @param x 条件集 x
      * @param y 条件集 y
@@ -151,7 +151,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
     }
 
     /**
-     * 实现描述。
+     * 实现描述
      *
      * @param bean      实现实例
      * @param implClass 实现类 (已解包 AOP 代理)

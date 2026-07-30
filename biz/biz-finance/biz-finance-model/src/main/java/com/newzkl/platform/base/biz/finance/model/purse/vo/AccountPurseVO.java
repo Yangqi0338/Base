@@ -38,7 +38,7 @@ public class AccountPurseVO {
     private PurseEnum.PurseType purseType;
 
     /**
-     * 客户类型, 取值见 {@link PurseEnum.FinanceUser} (1 进账 2 出账)
+     * 客户类型, 取值见 {@code PurseEnum.FinanceUser} (1 进账 2 出账)
      */
     private PurseEnum.FinanceUser accountType;
 

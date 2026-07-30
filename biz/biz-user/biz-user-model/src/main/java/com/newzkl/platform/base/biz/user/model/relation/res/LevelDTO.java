@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 等级领域模型。
+ * 等级领域模型
  *
  * @author fang
  */

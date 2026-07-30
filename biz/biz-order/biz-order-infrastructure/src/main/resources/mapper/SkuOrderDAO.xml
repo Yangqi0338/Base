@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-sale SkuOrderDAO.xml / SpuOrderDAO.xml(checkSpuOrderState)
+     适配: order_id -> order_no, spu_order_id -> spu_order_no, id -> sku_order_no(售后批改),
+           count -> buy_num, deliver_count -> delivery_quantity,
+           refunding_count/refunded_count -> refunding_quantity/refunded_quantity -->
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.SkuOrderDAO">
+
+    <!-- 源 updateOrderStateByOrderId 的 orderNo 适配版 -->
+    <update id="updateSkuOrderStateByOrderNo">
+        update `sku_order` t set t.order_state = #{toState,jdbcType=INTEGER},
+        <if test="closeReason != null">
+            t.close_reason = #{closeReason,jdbcType=VARCHAR},
+        </if>
+        t.order_state_log = CONCAT(t.order_state_log, ',', #{toState,jdbcType=INTEGER})
+        where t.order_no = #{orderNo,jdbcType=VARCHAR} and t.order_state = #{sourceState,jdbcType=INTEGER}
+    </update>
+
+    <!-- 源 updateSkuRefundingCount 的 spuOrderNo 适配版(Base 签名由 orderId 改为 spuOrderNo) -->
+    <update id="updateSkuRefundingQuantity">
+        update sku_order
+        <set>
+            `refunding_quantity` = `refunding_quantity` + #{count}
+        </set>
+        where `spu_order_no` = #{spuOrderNo,jdbcType=VARCHAR}
+        and `sku_id` = #{skuId}
+        and `buy_num` &gt;= `refunding_quantity` + #{count} + `refunded_quantity`
+    </update>
+
+    <select id="skuRefundResList" resultType="com.newzkl.platform.base.biz.order.model.order.res.SkuRefundRes">
+        select
+            t.sku_id,
+            t.spu_id,
+            t.buy_num as order_count,
+            t.sku_order_no,
+            t.spu_order_no,
+            t.refunding_quantity as refunding_count,
+            t.refunded_quantity as refunded_count,
+            t.delivery_quantity as deliver_count,
+            t.order_state as sku_order_state,
+            t.sku_snapshot,
+            t1.supplier_id
+        from sku_order t left join spu_order t1 on t.spu_order_no = t1.spu_order_no
+        <where>
+            t.order_no = #{orderNo,jdbcType=VARCHAR}
+            and t.del_flag = 0
+            <if test="skuIds != null and skuIds.size() > 0">
+                and t.`sku_id` in
+                <foreach collection="skuIds" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="skuOrderEditForRefundClose">
+        update sku_order t set
+        t.refunding_quantity = 0
+        where
+        t.`sku_order_no` in
+        <foreach collection="skuOrderNo" item="item" separator="," close=")" open="(">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <!-- MySQL SET 从左到右求值, order_state 的 if 用的是更新后的 refunded_quantity, 与源侧一致 -->
+    <update id="skuOrderEditForRefundPass">
+        update sku_order t set
+            t.refunded_quantity = t.refunded_quantity + t.refunding_quantity,
+            t.refunding_quantity = 0,
+            t.order_state = if(t.refunded_quantity + t.refunding_quantity = t.buy_num, 99, t.order_state)
+        where
+            t.`sku_order_no` in
+        <foreach collection="skuOrderNo" item="item" separator="," close=")" open="(">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <!-- 源 SpuOrderDAO.checkSpuOrderState 的 orderNo 适配版 -->
+    <select id="checkSpuOrderState" resultType="com.newzkl.platform.base.biz.order.model.order.res.OrderStateCheckRes">
+        SELECT
+            t1.spu_order_no,
+            t1.order_no,
+            t1.order_state as current_state,
+            MIN(t.order_state) as to_state
+        FROM
+            sku_order t left join spu_order t1 on t.spu_order_no = t1.spu_order_no
+        WHERE
+            t1.order_no IN
+        <foreach collection="orderNos" item="item" separator="," close=")" open="(">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and t.del_flag = 0
+        GROUP BY t.spu_order_no, t1.order_no
+    </select>
+
+</mapper>

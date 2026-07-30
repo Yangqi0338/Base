@@ -8,11 +8,11 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * 虚拟资产。
+ * 虚拟资产
  *
  * <p>迁移自 new-scm {@code com.zkl.scm.finance.infrastructure.entity.VirtualAssets}。
  * 旧实体无 {@code @TableName} (表名写在 mapper xml), 新实体显式声明。
- * {@code id}/{@code createTime} 由 {@link BaseDO} 提供, 不再重复声明。</p>
+ * {@code id}/{@code createTime} 由 {@code BaseDO} 提供, 不再重复声明。</p>
  *
  * @author KC
  */
@@ -22,35 +22,35 @@ import org.dromara.autotable.annotation.Index;
 public class VirtualAssetsDO extends BaseDO {
 
     /**
-     * 客户id。
+     * 客户id
      */
     @Index
     private Long accountId;
 
     /**
-     * 客户名称。
+     * 客户名称
      */
     private String accountName;
 
     /**
-     * 客户类型。
+     * 客户类型
      */
     @Index
     private PurseEnum.FinanceUser accountType;
 
     /**
-     * 资产类型。
+     * 资产类型
      */
     @Index
     private Integer assetsType;
 
     /**
-     * 资产值。
+     * 资产值
      */
     private Integer assetsValue;
 
     /**
-     * 累计资产。
+     * 累计资产
      */
     private Integer totalAssets;
 }

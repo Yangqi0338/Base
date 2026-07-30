@@ -1,8 +1,5 @@
 package com.newzkl.platform.base.biz.store.domain.resource.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.biz.store.model.resource.req.QueryPictureResourceReq;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureMenuVO;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureResourceVO;
 import com.newzkl.platform.base.biz.store.domain.resource.repository.PictureResourceRepository;
@@ -33,15 +30,5 @@ public class PictureResourceImpl implements PictureResource {
     @Override
     public void savePictureResource(PictureResourceVO pictureResource) {
         pictureResourceRepository.savePictureResource(pictureResource);
-    }
-
-    @Override
-    public Page<PictureMenuVO> queryMenu(PageQuery query) {
-        return pictureResourceRepository.queryMenu(query);
-    }
-
-    @Override
-    public Page<PictureResourceVO> queryResource(QueryPictureResourceReq req) {
-        return pictureResourceRepository.queryResource(req);
     }
 }

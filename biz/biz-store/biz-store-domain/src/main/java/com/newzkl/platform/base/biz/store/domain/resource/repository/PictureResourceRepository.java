@@ -1,8 +1,5 @@
 package com.newzkl.platform.base.biz.store.domain.resource.repository;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.biz.store.model.resource.req.QueryPictureResourceReq;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureMenuVO;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureResourceVO;
 
@@ -25,19 +22,4 @@ public interface PictureResourceRepository {
      * @param pictureResource
      */
     void savePictureResource(PictureResourceVO pictureResource);
-
-
-    /**
-     * 查询目录
-     * @param query
-     * @return
-     */
-    Page<PictureMenuVO> queryMenu(PageQuery query);
-
-    /**
-     * 查询资源
-     * @param req
-     * @return
-     */
-    Page<PictureResourceVO> queryResource(QueryPictureResourceReq req);
 }

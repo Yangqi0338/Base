@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.OpenapiDeveloperApi
 import org.springframework.stereotype.Component;
 
 /**
- * {@link OpenapiDeveloperApi} 默认兜底实现。
+ * {@code OpenapiDeveloperApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 开放平台(openapi)为独立服务, 跨域 provider 链已整体延迟。
  * 入口 starter 侧应以远程 Dubbo consumer 覆盖此默认实现。</p>

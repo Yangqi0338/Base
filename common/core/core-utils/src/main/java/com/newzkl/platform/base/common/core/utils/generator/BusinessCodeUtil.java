@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 业务Code生成工具类。
+ * 业务Code生成工具类
  * 线程安全，支持日期切换自动重置。
  *
  * @author fang
@@ -25,7 +25,7 @@ public class BusinessCodeUtil {
     }
 
     /**
-     * 用于外部增加。
+     * 用于外部增加
      *
      * @param businessType 业务类型
      * @param generator    生成器
@@ -45,7 +45,7 @@ public class BusinessCodeUtil {
     }
 
     /**
-     * 生成带时间戳的业务Code（格式：前缀 + 日期 + 时间 + 4位序列号）。
+     * 生成带时间戳的业务Code（格式：前缀 + 日期 + 时间 + 4位序列号）
      *
      * @param businessType 业务类型
      * @return 业务Code
@@ -55,7 +55,7 @@ public class BusinessCodeUtil {
     }
 
     /**
-     * 生成自定义长度的业务Code。
+     * 生成自定义长度的业务Code
      *
      * @param type           业务类型
      * @param sequenceLength 序列号长度
@@ -67,7 +67,7 @@ public class BusinessCodeUtil {
     }
 
     /**
-     * 批量生成业务Code。
+     * 批量生成业务Code
      *
      * @param type  业务类型
      * @param count 生成数量

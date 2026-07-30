@@ -1,11 +1,12 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
@@ -76,9 +77,9 @@ public class StoreCategoryRepositoryImpl implements StoreCategoryRepository {
      * @return 分页
      */
     @Override
-    public IPage<StoreCategoryRes> queryPage(StoreCategoryQuery query) {
-        IPage<StoreCategoryDO> doList = dao.selectPage(com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport.page(query), buildLambdaQw(query));
-        return doList.convert(source -> TransferUtils.transfer(source, StoreCategoryRes::new));
+    public Page<StoreCategoryRes> queryPage(StoreCategoryQuery query) {
+        Page<StoreCategoryDO> doPage = dao.selectPage(RepositorySupport.page(query), buildLambdaQw(query));
+        return TransferUtils.transferPage(doPage, StoreCategoryRes::new);
     }
 
     /**

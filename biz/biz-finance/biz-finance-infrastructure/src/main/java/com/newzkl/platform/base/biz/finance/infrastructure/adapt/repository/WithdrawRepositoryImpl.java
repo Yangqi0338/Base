@@ -75,9 +75,9 @@ public class WithdrawRepositoryImpl implements WithdrawRepository {
     }
 
     @Override
-    public List<RollOutApplyVO> queryRollOutApplyPage(RollOutApplyQuery query) {
+    public Page<RollOutApplyVO> queryRollOutApplyPage(RollOutApplyQuery query) {
         Page<AccountPurseRollOutDO> pageList = rollOutDAO.selectPage(RepositorySupport.page(query), rollOutDAO.getLw(query));
-        return TransferUtils.transfers(pageList.getRecords(), RollOutApplyVO.class);
+        return TransferUtils.transferPage(pageList, RollOutApplyVO.class);
     }
 
     @Override
@@ -129,11 +129,11 @@ public class WithdrawRepositoryImpl implements WithdrawRepository {
     }
 
     @Override
-    public List<WithdrawRecordVO> queryTripartiteWithdrawRecordList(TripartiteWithdrawRecordQuery query) {
+    public Page<WithdrawRecordVO> queryTripartiteWithdrawRecordList(TripartiteWithdrawRecordQuery query) {
         Page<AccountWithdrawRecordDO> pageList = accountWithdrawRecordDAO.selectPage(RepositorySupport.page(query),
                 accountWithdrawRecordDAO.getLw(query).orderBy(query)
         );
-        return TransferUtils.transfers(pageList.getRecords(), WithdrawRecordVO.class);
+        return TransferUtils.transferPage(pageList, WithdrawRecordVO.class);
     }
 
     @Override

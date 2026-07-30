@@ -1,15 +1,16 @@
 package com.newzkl.platform.base.biz.store.action.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreCategoryDomain;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveCommand;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -22,13 +23,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.groups.Default;
 import java.util.List;
 
 /**
- * 门店分类控制器。
+ * 门店分类控制器
  *
- * @author kc
+ * <p>迁移自旧 {@code com.zkl.scm.terminal.interfaces.controller.StoreCategoryController},
+ * 端点路径与 HTTP 方法逐字保留。分页出参由旧 {@code PageInfo} 壳改为 MyBatis-Plus {@code Page}。</p>
+ *
+ * @author KC
  */
 @RestController
 @RequestMapping("/storeCategory")
@@ -39,48 +42,47 @@ public class StoreCategoryController {
     private final StoreCategoryDomain storeCategoryDomain;
 
     /**
-     * 分类详情。
+     * 门店分类详情
      *
-     * @param id 分类 ID
-     * @return 分类
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
+     * @param id 主键
+     * @return 单条数据
      */
-    @Deprecated
     @GetMapping("/{id}")
     public PlatformResult<StoreCategory> detail(@PathVariable Long id) {
-        return PlatformResult.success(storeCategoryDomain.detail(id));
+        StoreCategory dto = storeCategoryDomain.detail(id);
+        return PlatformResult.success(dto);
     }
 
     /**
-     * 新增分类。
+     * 新增门店分类
      *
-     * @param saveCommand 保存命令
-     * @return 分类 ID
+     * @param saveCommand 编辑命令
+     * @return 新增结果
      */
     @PostMapping("/add")
     public PlatformResult<Long> add(@Validated @RequestBody StoreCategorySaveCommand saveCommand) {
-        return PlatformResult.success(storeCategoryDomain.add(saveCommand));
+        Long id = storeCategoryDomain.add(saveCommand);
+        return PlatformResult.success(id);
     }
 
     /**
-     * 编辑分类。
+     * 编辑门店分类
      *
-     * @param saveCommand 保存命令
-     * @return 成功结果
+     * @param saveCommand 编辑命令
+     * @return 编辑结果
      */
     @PutMapping("/edit")
-    public PlatformResult<Void> edit(@Validated({UpdateCommand.class, Default.class}) @RequestBody StoreCategorySaveCommand saveCommand) {
+    public PlatformResult<Void> edit(
+            @Validated({UpdateCommand.class, Default.class}) @RequestBody StoreCategorySaveCommand saveCommand) {
         storeCategoryDomain.edit(saveCommand);
         return PlatformResult.success();
     }
 
     /**
-     * 删除分类。
+     * 删除门店分类
      *
-     * @param id 分类 ID
-     * @return 成功结果
+     * @param id 主键
+     * @return 删除结果
      */
     @DeleteMapping("/del/{id}")
     public PlatformResult<Void> del(@PathVariable Long id) {
@@ -89,39 +91,35 @@ public class StoreCategoryController {
     }
 
     /**
-     * 分类列表。
+     * 查询门店分类列表
      *
      * @param query 查询条件
-     * @return 分类列表
+     * @return 列表
      */
     @PostMapping("/queryList")
     public PlatformResult<List<StoreCategoryRes>> queryList(@RequestBody StoreCategoryQuery query) {
-        applySort(query);
-        return PlatformResult.success(storeCategoryDomain.queryList(query));
-    }
-
-    /**
-     * 分类分页。
-     *
-     * @param query 查询条件
-     * @return 分类分页
-     */
-    @PostMapping("/queryPage")
-    public PlatformResult<IPage<StoreCategoryRes>> queryPage(@RequestBody StoreCategoryQuery query) {
-        applySort(query);
-        return PlatformResult.success(storeCategoryDomain.queryPage(query));
-    }
-
-    /**
-     * 按角色应用排序: 平台按创建时间倒序, 其余按 index。
-     *
-     * @param query 查询条件
-     */
-    private void applySort(StoreCategoryQuery query) {
         if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
-            query.addDescSortField("id");
+            query.addDescSortField("create_time");
         } else {
             query.addSortField("`index`");
         }
+        List<StoreCategoryRes> result = storeCategoryDomain.queryList(query);
+        return PlatformResult.success(result);
+    }
+
+    /**
+     * 查询门店分类分页列表
+     *
+     * @param query 查询条件
+     * @return 分页列表
+     */
+    @PostMapping("/queryPage")
+    public PlatformResult<Page<StoreCategoryRes>> queryPage(@RequestBody StoreCategoryQuery query) {
+        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
+            query.addDescSortField("create_time");
+        } else {
+            query.addSortField("`index`");
+        }
+        return PlatformResult.success(storeCategoryDomain.queryPage(query));
     }
 }

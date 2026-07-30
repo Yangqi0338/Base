@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * 短视频仓储实现单元测试 (DAO mock, 不连库)。
+ * 短视频仓储实现单元测试 (DAO mock, 不连库)
  *
  * @author KC
  */

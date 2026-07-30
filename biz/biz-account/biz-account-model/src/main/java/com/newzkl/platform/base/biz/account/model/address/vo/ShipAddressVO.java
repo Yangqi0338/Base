@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 收货地址领域视图对象。
+ * 收货地址领域视图对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.address.model.entity.ShipAddress} 与
  * {@code ...model.vo.ShipAddressVO} (旧实体持有 repository 引用的充血写法已去除)。</p>

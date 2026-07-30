@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.ReportDAO">
+
+    <!-- 列表查询条件 (迁移自 new-scm ReportDAO.xml 的 querySQL)
+         categoryId/spuId: 源侧 EXISTS 打 report_category_relation / report_spu_relation 关联表,
+         Base 无此两表, 2026-07-29 用户定案改打 report 表冗余列, like 右模糊:
+         存储逗号拼接且末字符必须为 ',' (如 '1,11,2,'), 查询 like CONCAT(#{id}, ',%'), 见 findings -->
+    <sql id="querySQL">
+        <if test="query.name != null and query.name.trim() != ''">
+            and `name` like concat('%', #{query.name}, '%')
+        </if>
+        <if test="query.idList != null and query.idList.size() > 0">
+            and id in
+            <foreach collection="query.idList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="query.categoryId != null">
+            and category_id_list like CONCAT(#{query.categoryId,jdbcType=BIGINT}, ',%')
+        </if>
+        <if test="query.spuId != null">
+            and spu_id_list like CONCAT(#{query.spuId,jdbcType=BIGINT}, ',%')
+        </if>
+        <if test="query.createStartTime != null">
+            and create_time &gt;= #{query.createStartTime}
+        </if>
+        <if test="query.createEndTime != null">
+            and create_time &lt; #{query.createEndTime}
+        </if>
+    </sql>
+
+    <!-- 防止空查询 要使用<where>标签，否则当无条件时，or清除不了导致语法错误。
+         (迁移自 new-scm ReportDAO.xml 的 preventEmptyQuerySql; 此处刻意不加 del_flag 过滤,
+         否则空条件时会由"一行都不更新"变成"更新全表", 破坏该守卫) -->
+    <sql id="preventEmptyQuerySql">
+        <include refid="querySQL"/>
+        or 1 = 0
+    </sql>
+
+    <!-- 报告列表 (迁移自 new-scm ReportDAO.xml 的 listByQuery) -->
+    <select id="listByQuery" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO">
+        select * from report
+        <where>
+            and del_flag = 0
+            <include refid="querySQL"/>
+        </where>
+    </select>
+
+    <!-- 报告分页 (源 new-scm ReportDAO.xml 无 queryPage, 按 listByQuery 加 MyBatis-Plus Page 分页壳派生) -->
+    <select id="queryPage" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO">
+        select * from report
+        <where>
+            and del_flag = 0
+            <include refid="querySQL"/>
+        </where>
+    </select>
+
+    <!-- 按条件更新名称与路径 (迁移自 new-scm ReportDAO.xml 的 updateByQuery) -->
+    <update id="updateByQuery">
+        update report set
+        name = #{model.name,jdbcType=VARCHAR},
+        path = #{model.path,jdbcType=BIGINT}
+        <where>
+            <include refid="preventEmptyQuerySql"/>
+        </where>
+    </update>
+
+    <!-- 按条件计数 (迁移自 new-scm ReportDAO.xml 的 countByQuery) -->
+    <select id="countByQuery" resultType="int">
+        select count(1) from report
+        <where>
+            and del_flag = 0
+            <include refid="querySQL"/>
+        </where>
+    </select>
+
+    <!-- 按条件取ID列表 (迁移自 new-scm ReportDAO.xml 的 idByQuery) -->
+    <select id="idByQuery" resultType="java.lang.Long">
+        select id from report
+        <where>
+            and del_flag = 0
+            <include refid="querySQL"/>
+        </where>
+    </select>
+
+</mapper>

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link MerchantCategoryRepositoryImpl} 单元测试 (DAO 全 mock, 不连库)。
+ * {@code MerchantCategoryRepositoryImpl} 单元测试 (DAO 全 mock, 不连库)
  *
  * @author KC
  */

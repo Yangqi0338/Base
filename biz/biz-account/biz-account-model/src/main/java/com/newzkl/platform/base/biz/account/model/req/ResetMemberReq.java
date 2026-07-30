@@ -6,6 +6,10 @@ import lombok.Data;
 /**
  * 找回密码
  *
+ * <p>字段名逐字沿用旧 {@code com.zkl.scm.user.domain.account.model.req.ResetMemberCommand}。
+ * 实际业务参数全在 {@code sign} 的 AES 密文里 (解出 {@code ResetMemberVO}),
+ * 其余明文字段旧代码也不读, 仅为兼容前端已有请求体形态而保留</p>
+ *
  * @author sijiwang
  */
 @Data
@@ -20,6 +24,11 @@ public class ResetMemberReq {
      * 发验证码的手机号（现在绑定的手机号）
      */
     private String phone;
+
+    /**
+     * 设备码
+     */
+    private String deviceCode;
 
     /**
      * 验证码

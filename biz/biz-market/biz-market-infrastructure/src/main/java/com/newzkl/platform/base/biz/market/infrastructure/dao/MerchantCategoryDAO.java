@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * 商户分类 DAO。
+ * 商户分类 DAO
  *
  * <p>迁移: 旧 {@code CategoryDAO.xml} 手写 SQL 全部删除, 改由 MyBatis-Plus
- * {@link BaseMapper} + {@link #getLw} 条件组装替代。</p>
+ * {@code BaseMapper} + {@link MerchantCategoryDAO#getLw} 条件组装替代。</p>
  *
  * @author KC
  */
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 public interface MerchantCategoryDAO extends BaseMapper<MerchantCategoryDO> {
 
     /**
-     * 组装查询条件。
+     * 组装查询条件
      *
      * @param query 查询条件
      * @return 条件包装器
@@ -39,7 +39,7 @@ public interface MerchantCategoryDAO extends BaseMapper<MerchantCategoryDO> {
     }
 
     /**
-     * 组装平台源幂等校验条件。
+     * 组装平台源幂等校验条件
      *
      * <p>替代旧 {@code countByCodeAndAccountId(code, accountId)} 手写 SQL。</p>
      *

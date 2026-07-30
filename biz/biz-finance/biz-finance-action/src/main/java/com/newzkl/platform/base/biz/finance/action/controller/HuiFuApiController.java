@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 /**
- * 汇付三方账户控制器。
+ * 汇付三方账户控制器
  *
  * @author niu
  */
@@ -32,7 +32,7 @@ public class HuiFuApiController {
     private final TripartitePurseDomain tripartitePurseDomain;
 
     /**
-     * 汇付企业开户。
+     * 汇付企业开户
      *
      * @param request 企业开户申请
      * @return 开户结果
@@ -43,7 +43,7 @@ public class HuiFuApiController {
     }
 
     /**
-     * 用户汇付开户。
+     * 用户汇付开户
      *
      * @param request 个人开户申请
      * @return 开户结果
@@ -54,7 +54,7 @@ public class HuiFuApiController {
     }
 
     /**
-     * 三方钱包信息。
+     * 三方钱包信息
      *
      * @return 三方账户
      */

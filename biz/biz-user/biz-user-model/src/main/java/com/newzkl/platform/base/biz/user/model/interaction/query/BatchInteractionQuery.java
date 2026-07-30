@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 批量检查用户互动的查询参数。
+ * 批量检查用户互动的查询参数
  *
  * @author sijiwang
  */

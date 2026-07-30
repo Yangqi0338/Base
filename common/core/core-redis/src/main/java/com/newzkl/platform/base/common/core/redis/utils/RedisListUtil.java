@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Redis 列表（List）类型操作工具类。
+ * Redis 列表（List）类型操作工具类
  *
  * @author sijiwang
  */

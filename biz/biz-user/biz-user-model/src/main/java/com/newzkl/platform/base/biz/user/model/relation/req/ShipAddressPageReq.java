@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 收货地址分页查询请求参数。
+ * 收货地址分页查询请求参数
  *
  * <p>支持多条件组合查询，默认按默认地址+更新时间排序。</p>
  *
  * <p>迁移说明：源类继承 MyBatis-Plus Page（extension），model 层无 MP extension 依赖，
- * 改继承 {@link BizPageQuery}；infra 层据此构造 MP Page 分页。</p>
+ * 改继承 {@code BizPageQuery}；infra 层据此构造 MP Page 分页。</p>
  *
  * @author sijiwang
  */

@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 商户仓储实现。
+ * 商户仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.infrastructure.repository.MerchantRepositoryImpl}。
  * 旧 {@code updateByPrimaryKeySelective} / {@code deleteByQuery} 自定义 SQL 改用

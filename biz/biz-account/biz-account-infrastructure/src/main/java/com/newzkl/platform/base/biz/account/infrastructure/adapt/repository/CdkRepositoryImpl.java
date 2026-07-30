@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.repository.CdkRepository;
-import com.newzkl.platform.base.biz.account.infrastructure.dao.CdkDAO;
+import com.newzkl.platform.base.biz.account.infrastructure.dao.AccountCdkDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.CdkDO;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkEditReq;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 开通码仓储实现。
+ * 开通码仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.infrastructure.repository.CdkRepositoryImpl}。
  * 旧 mapper xml 的 {@code insertBatch} / {@code cdkEditForToCdk} / {@code existValue} /
@@ -32,11 +32,11 @@ import java.util.stream.Collectors;
  *
  * @author KC
  */
-@Repository
+@Repository("accountCdkRepositoryImpl")
 @RequiredArgsConstructor
 public class CdkRepositoryImpl implements CdkRepository {
 
-    private final CdkDAO cdkDAO;
+    private final AccountCdkDAO cdkDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

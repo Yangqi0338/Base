@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商户出参。
+ * 商户出参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.vo.MerchantVO} 的对外出参角色。
  * 旧出参 {@code wxMpConfig} 为原始 JSON 字符串, 本仓改为强类型值对象;

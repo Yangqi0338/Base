@@ -14,7 +14,7 @@ import java.util.List;
 * 操作日志
 * @author fang
 */
-@Service
+@Service("goodsExecuteLogDomainImpl")
 @RequiredArgsConstructor
 public class ExecuteLogDomainImpl implements ExecuteLogDomain {
 

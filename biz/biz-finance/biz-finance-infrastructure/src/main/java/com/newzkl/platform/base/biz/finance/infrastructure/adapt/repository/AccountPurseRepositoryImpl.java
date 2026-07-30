@@ -139,7 +139,9 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
     public int addAccountPurseAmount(AccountPurseQuery query, Integer amount, boolean isAddTotal, boolean isAddTotalPurse) {
         if (isAddTotalPurse) {
             // 非总账号且要增加总账户资金
-            query.add(query.getPurseTypeList(), PurseEnum.PurseType.TOTAL);
+            // QuerySupport#add 在 list 为 null 时是在**新 list** 上追加并返回, 不改原对象,
+            // 丢返回值会让 TOTAL 静默丢失, 必须赋回
+            query.setPurseTypeList(query.add(query.getPurseTypeList(), PurseEnum.PurseType.TOTAL));
         }
 
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
@@ -157,7 +159,8 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
     public int subAccountPurseAmount(AccountPurseQuery query, Integer amount, boolean isSubTotal, boolean isSubTotalPurse, boolean isNegative) {
         if (isSubTotalPurse) {
             // 非总账号且要增加总账户资金
-            query.add(query.getPurseTypeList(), PurseEnum.PurseType.TOTAL);
+            // 同 addAccountPurseAmount: QuerySupport#add 对 null list 返回新 list, 丢返回值即静默丢 TOTAL
+            query.setPurseTypeList(query.add(query.getPurseTypeList(), PurseEnum.PurseType.TOTAL));
         }
 
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
@@ -180,9 +183,9 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
     }
 
     @Override
-    public List<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery query) {
+    public Page<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery query) {
         Page<AccountPurseAlterRecordDO> page = accountPurseAlterRecordDAO.selectPage(RepositorySupport.page(query), accountPurseAlterRecordDAO.getLw(query));
-        return TransferUtils.transfers(page.getRecords(), AccountPurseAlterRecordVO.class);
+        return TransferUtils.transferPage(page, AccountPurseAlterRecordVO.class);
     }
 
     @Override

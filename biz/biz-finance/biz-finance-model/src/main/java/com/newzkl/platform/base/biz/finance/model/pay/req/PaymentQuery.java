@@ -25,7 +25,7 @@ public class PaymentQuery extends PageQuery {
     private List<Long> orderNoList;
 
     /**
-     * {@link EarningsEnum }
+     * {@code EarningsEnum}
      * 1: "礼包" ,2, "渠道商充值" ,3: "商品" ,4: "兑换码" ,5: "供应商运营账户充值" ,6: "分红"
      * <p>
      * 消费类型

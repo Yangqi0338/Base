@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 钱包额度信息 (跨域 finance PurseAmountRes 降级为 store 本地 DTO)。
+ * 钱包额度信息 (跨域 finance PurseAmountRes 降级为 store 本地 DTO)
  *
  * @author KC
  */

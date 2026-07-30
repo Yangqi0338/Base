@@ -25,9 +25,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 用户互动操作仓储实现。
+ * 用户互动操作仓储实现
  *
- * <p>迁移说明：queryByUserPage 降级为 List(TODO[page-meta])；排序字段
+ * <p>迁移说明：queryByUserPage 保留 Page 分页壳直返；排序字段
  * createdTime 源不存在于 DO，改用 BaseDO.createTime。</p>
  *
  * @author sijiwang
@@ -90,8 +90,7 @@ public class UserInteractionRepositoryImpl implements UserInteractionRepository 
     }
 
     @Override
-    public List<InteractionRPCVO> queryByUserPage(InteractionPageQueryRPC pageDTO) {
-        // TODO[page-meta] 领域层降级为 List，total 不再上抛。
+    public Page<InteractionRPCVO> queryByUserPage(InteractionPageQueryRPC pageDTO) {
         Page<UserInteractionDO> mpPage = new Page<>(pageDTO.getPageNo(), pageDTO.getPageSize());
 
         LambdaQueryWrapper<UserInteractionDO> queryWrapper = new LambdaQueryWrapper<>();
@@ -109,7 +108,7 @@ public class UserInteractionRepositoryImpl implements UserInteractionRepository 
         }
 
         Page<UserInteractionDO> interactionPage = interactionMapper.selectPage(mpPage, queryWrapper);
-        return TransferUtils.transfers(interactionPage.getRecords(), InteractionRPCVO::new);
+        return TransferUtils.transferPage(interactionPage, InteractionRPCVO.class);
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户收藏领域实体。
+ * 用户收藏领域实体
  *
  * <p>代表“用户收藏商品”这一核心业务概念，包含业务属性，是领域层核心。</p>
  *
@@ -76,6 +76,18 @@ public class UserCollection {
      * 商品主图URL (快照)
      */
     private String mainImage;
+
+    /**
+     * 已售数量（销量）
+     *
+     * <p>对齐源 {@code UserCollectionVO.sellNum}，前端 {@code mmt-app/pages/subOrder/collection.vue}
+     * 渲染「已售{{item.sellNum}}」。源值来自 {@code IDistributionRpcFacade#queryGoodsSellNum}
+     * 实时富化（非收藏快照列）。</p>
+     *
+     * <p>TODO[infra-gap] 该能力在 biz-market（{@code DistributionDomain#queryGoodsSellNum}），
+     * biz-user 无对应出站端口，当前恒为 null。</p>
+     */
+    private Integer sellNum;
 
     /**
      * 是否有效：true-有效，false-无效（商品下架等）

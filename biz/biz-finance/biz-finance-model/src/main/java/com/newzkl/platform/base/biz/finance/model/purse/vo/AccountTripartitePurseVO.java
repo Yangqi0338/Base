@@ -61,6 +61,11 @@ public class AccountTripartitePurseVO extends BaseRes {
 
 
     /**
+     * 银行名称（源 account_tripartite_purse.bank_name）
+     */
+    private String bankName;
+
+    /**
      * 银行卡号
      */
     private String bankNo;

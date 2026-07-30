@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 平台账号数据对象。
+ * 平台账号数据对象
  *
  * @author KC
  */
@@ -16,37 +16,37 @@ import lombok.EqualsAndHashCode;
 public class AdminAccountDO extends BaseDO {
 
     /**
-     * 昵称。
+     * 昵称
      */
     private String nickname;
 
     /**
-     * 头像。
+     * 头像
      */
     private String face;
 
     /**
-     * 手机号。
+     * 手机号
      */
     private String phone;
 
     /**
-     * 登录名称。
+     * 登录名称
      */
     private String username;
 
     /**
-     * 密码密文。
+     * 密码密文
      */
     private String password;
 
     /**
-     * 帐号状态 (0 正常 1 冻结)。
+     * 帐号状态 (0 正常 1 冻结)
      */
     private Integer state;
 
     /**
-     * 后台角色 id 列表 (JSON/逗号串)。
+     * 后台角色 id 列表 (JSON/逗号串)
      */
     private String aroleIdList;
 }

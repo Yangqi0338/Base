@@ -9,7 +9,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * {@link GoodsCategoryApiDefaultImpl} 兜底行为测试。
+ * {@code GoodsCategoryApiDefaultImpl} 兜底行为测试
  *
  * @author KC
  */

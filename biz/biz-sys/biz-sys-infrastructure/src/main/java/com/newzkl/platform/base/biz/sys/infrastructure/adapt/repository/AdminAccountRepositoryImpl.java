@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 平台账号仓储实现。
+ * 平台账号仓储实现
  *
  * <p>分页在本层内部执行 (Page 不外泄), 对领域层降级为 List。</p>
  *

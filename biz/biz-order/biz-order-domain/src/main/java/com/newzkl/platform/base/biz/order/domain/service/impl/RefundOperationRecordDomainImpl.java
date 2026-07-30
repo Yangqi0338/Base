@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 售后操作记录 (协商记录) 领域服务实现。
+ * 售后操作记录 (协商记录) 领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.domain.refund.service.impl.RefundOperationRecordDomainServiceImpl}。
  * 旧 {@code org.springframework.util.Assert} 校验改抛 {@code PlatformException},

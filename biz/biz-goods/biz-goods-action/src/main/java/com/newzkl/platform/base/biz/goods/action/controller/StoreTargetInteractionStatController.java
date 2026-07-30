@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTarge
 import com.newzkl.platform.base.biz.goods.model.goods.res.interaction.StoreTargetInteractionStatPageRes;
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionEvent;
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
+import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 门店对象互动统计控制器。
+ * 门店对象互动统计控制器
  *
- * <p>对外提供互动统计的提交、查询、删除及汇总 HTTP 接口。</p>
- *
- * @author sijiwang
+ * @author KC
  */
 @RestController
 @RequestMapping("/goods/store")
@@ -40,98 +40,147 @@ public class StoreTargetInteractionStatController {
     private final StoreTargetInteractionStatService statService;
 
     /**
-     * 提交互动统计 (点赞/浏览/转发)。
+     * 提交互动统计 (点赞/浏览/转发)
      *
-     * @param requestVO 互动统计请求
-     * @return 成功结果
+     * @param req 互动统计请求
+     * @return 空结果
      */
     @PostMapping("/interaction")
-    public PlatformResult<String> submitInteraction(@Validated @RequestBody InteractionStatReq requestVO) {
-        statService.submitInteraction(requestVO);
+    public PlatformResult<String> submitInteraction(@Validated @RequestBody InteractionStatReq req) {
+        log.info("接收互动统计请求：{}", req);
+        statService.submitInteraction(req);
         return PlatformResult.success();
     }
 
     /**
-     * 查询单个统计记录 (门店+目标)。
+     * 查询单条统计记录 (门店 + 目标)
      *
-     * @param queryVO 查询条件
+     * @param req 门店目标查询请求
      * @return 统计记录
      */
     @PostMapping("/interaction/query")
-    public PlatformResult<StoreTargetInteractionStat> findByStoreTarget(@Validated @RequestBody BatchSyncStatReq queryVO) {
-        return PlatformResult.success(statService.findByStoreTarget(queryVO));
+    public PlatformResult<StoreTargetInteractionStat> findByStoreTarget(@Validated @RequestBody BatchSyncStatReq req) {
+        return PlatformResult.success(statService.findByStoreTarget(req));
     }
 
     /**
-     * 删除统计记录 (门店+目标)。
+     * 删除统计记录 (门店 + 目标)
      *
-     * @param queryVO 查询条件
-     * @return 是否删除成功
+     * @param req 门店目标查询请求
+     * @return 是否成功
      */
     @DeleteMapping("/interaction/delete")
-    public PlatformResult<Boolean> deleteByStoreTarget(@Validated @RequestBody BatchSyncStatReq queryVO) {
-        return PlatformResult.success(statService.deleteByStoreTarget(queryVO));
+    public PlatformResult<Boolean> deleteByStoreTarget(@Validated @RequestBody BatchSyncStatReq req) {
+        return PlatformResult.success(statService.deleteByStoreTarget(req));
     }
 
     /**
-     * 分页查询统计记录。
+     * 统计记录分页
      *
-     * @param queryVO 分页查询条件
+     * @param req 分页查询请求
      * @return 分页结果
      */
     @PostMapping("/interaction/page")
-    public PlatformResult<StoreTargetInteractionStatPageRes> pageQuery(@Validated @RequestBody StoreTargetInteractionStatPageReq queryVO) {
-        return PlatformResult.success(statService.pageQuery(queryVO));
+    public PlatformResult<StoreTargetInteractionStatPageRes> pageQuery(@Validated @RequestBody StoreTargetInteractionStatPageReq req) {
+        return PlatformResult.success(statService.pageQuery(req));
     }
 
     /**
-     * 批量查询统计记录。
+     * 批量查询统计记录
      *
-     * @param queryVO 批量查询条件
+     * @param req 批量查询请求
      * @return 统计记录列表
      */
     @PostMapping("/interaction/batch")
-    public PlatformResult<List<StoreTargetInteractionStat>> batchQuery(@Validated @RequestBody StoreTargetInteractionStatBatchReq queryVO) {
-        return PlatformResult.success(statService.batchQuery(queryVO));
+    public PlatformResult<List<StoreTargetInteractionStat>> batchQuery(@Validated @RequestBody StoreTargetInteractionStatBatchReq req) {
+        return PlatformResult.success(statService.batchQuery(req));
     }
 
     /**
-     * 处理互动统计事件 (缓存更新)。
+     * 互动事件远程处理 (MQ 消费入口验证)
      *
-     * @param requestVO 互动统计事件
-     * @return 成功结果
+     * @param event 互动事件
+     * @return 空结果
      */
     @PostMapping("/remoteProcess")
-    public PlatformResult<String> remoteProcess(@Validated @RequestBody StoreTargetInteractionEvent requestVO) {
-        statService.remoteProcess(requestVO);
+    public PlatformResult<String> remoteProcess(@Validated @RequestBody StoreTargetInteractionEvent event) {
+        log.info("测试MQ方法请求：{}", event);
+        statService.remoteProcess(event);
         return PlatformResult.success();
     }
 
     /**
-     * 按目标类型与目标 ID 汇总统计。
+     * 按目标类型与目标主键查询汇总统计
      *
      * @param targetType 目标类型
-     * @param targetId   目标 ID
+     * @param targetId   目标主键
      * @return 汇总统计列表
      */
     @GetMapping("/summary")
     public PlatformResult<List<StoreTargetInteractionSummaryObj>> summaryByTargetTypeAndIdList(@RequestParam String targetType,
-                                                                                          @RequestParam Long targetId) {
+                                                                                              @RequestParam Long targetId) {
         return PlatformResult.success(statService.summaryByTargetTypeAndIdList(
                 Collections.singletonList(targetType), Collections.singletonList(targetId)));
     }
 
     /**
-     * 按发布者 ID 汇总统计。
+     * 查询指定缓存 key
      *
-     * @param publisherId 发布者 ID
-     * @return 汇总统计结果
+     * @param key 缓存 key
+     * @return 缓存值
+     */
+    @GetMapping("/interaction/cache")
+    public PlatformResult<String> queryCache(@RequestParam String key) {
+        return PlatformResult.success(RedisUtil.get(key));
+    }
+
+    /**
+     * 删除指定缓存 key
+     *
+     * @param key 缓存 key
+     * @return 空结果
+     */
+    @GetMapping("/deleteCache")
+    public PlatformResult<String> deleteCache(@RequestParam String key) {
+        RedisUtil.del(key);
+        return PlatformResult.success();
+    }
+
+    /**
+     * 判断缓存 key 是否存在
+     *
+     * @param key 缓存 key
+     * @return 是否存在
+     */
+    @GetMapping("/existsCache")
+    public PlatformResult<Boolean> existsCache(@RequestParam String key) {
+        return PlatformResult.success(RedisUtil.exists(key));
+    }
+
+    /**
+     * 按 key 前缀查询全部匹配的键值
+     *
+     * @param pattern key 前缀/匹配模式 (例如 goods:*)
+     * @return 键值集合
+     */
+    @GetMapping("/getAllByPattern")
+    public PlatformResult<Map<String, Object>> getAllByPattern(@RequestParam String pattern) {
+        try {
+            return PlatformResult.success(RedisUtil.getAllByKeyPattern(pattern));
+        } catch (Exception e) {
+            log.error("根据前缀查询Redis数据失败，pattern:{}", pattern, e);
+            return PlatformResult.fail("查询失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 按发布者主键查询汇总统计
+     *
+     * @param publisherId 发布者主键
+     * @return 汇总统计
      */
     @GetMapping("/selectSummaryByPublisherId")
     public PlatformResult<StoreTargetInteractionSummaryObj> selectSummaryByPublisherId(@RequestParam Long publisherId) {
         return PlatformResult.success(statService.selectSummaryByPublisherId(publisherId));
     }
-
-    // TODO[debug-drop]: 源 queryCache/deleteCache/existsCache/getAllByPattern 为直连 RedisUtil 的调试端点,
-    // 属基建调试脚手架 (非业务), 迁移中裁剪; 如需 Redis 运维接口应经 sys 域统一提供。
 }

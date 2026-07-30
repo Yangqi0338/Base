@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.market.infrastructure.dao.MarketGoodsRelationDAO">
+
+    <!-- 市场商品关系列表映射 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 ResultMap) -->
+    <!-- 注意列到属性的错位映射为源侧语义: sale_num->sellNum, sell_num->clientSellNum, create_time->time -->
+    <resultMap id="GoodsRelationListResultMap"
+               type="com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="sale_num" jdbcType="INTEGER" property="sellNum"/>
+        <result column="sell_num" jdbcType="INTEGER" property="clientSellNum"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="time"/>
+        <result column="name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="img" jdbcType="VARCHAR" property="goodsPicture"/>
+        <result column="sale_price_began" jdbcType="INTEGER" property="salePriceBegan"/>
+        <result column="sale_price_end" jdbcType="INTEGER" property="salePriceEnd"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="selection_num" jdbcType="INTEGER" property="selectionNum"/>
+        <result column="max_profit" jdbcType="INTEGER" property="maxProfit"/>
+        <result column="market_price" jdbcType="INTEGER" property="marketPrice"/>
+        <result column="market_name" jdbcType="VARCHAR" property="marketName"/>
+        <result column="market_id" jdbcType="BIGINT" property="marketId"/>
+        <result column="discount_rate" jdbcType="INTEGER" property="discountRate"/>
+        <result column="unit_price" jdbcType="INTEGER" property="unitPrice"/>
+        <result column="goods_info" jdbcType="LONGVARCHAR" property="goodsInfo"/>
+    </resultMap>
+
+    <!-- 统计SPU关联的市场数量 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 getSpuRelevancyMarketNum) -->
+    <select id="getSpuRelevancyMarketNum"
+            resultType="com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO">
+        SELECT
+            a.goods_id as spuId,
+            COUNT(DISTINCT a.market_id) as marketNum
+        FROM
+            market_goods_relation a
+        WHERE
+            a.relation_type = 2
+            AND a.state = 1
+            <if test="spuIdList != null and spuIdList.size() > 0">
+                AND a.goods_id IN
+                <foreach collection="spuIdList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        GROUP BY
+            a.goods_id
+    </select>
+
+    <!-- 市场商品关系列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 queryGoodsRelationList) -->
+    <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
+    <select id="queryGoodsRelationList" resultMap="GoodsRelationListResultMap">
+        select mgr.id, mgr.goods_id,mgr.sell_num,mgr.create_time,mgr.market_id,mgr.discount_rate,mgr.goods_info,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.market_price,
+               sp.selection_num,mt.market_name,(sp.unit_price - sp.sale_price_began) as max_profit,sp.unit_price, (sp.virtual_sale_num + sp.sale_num) as sale_num
+        from market_goods_relation mgr,spu sp,market mt
+        <where>
+            mgr.goods_id = sp.id
+            and mgr.market_id = mt.id
+            <if test="req.userId!=null">
+                and mgr.user_id = #{req.userId}
+            </if>
+            <if test="req.relationType != null">
+                and mgr.relation_type = #{req.relationType}
+            </if>
+            <if test="req.marketId != null">
+                and mgr.market_id = #{req.marketId}
+            </if>
+            <if test="req.goodsId != null">
+                and mgr.goods_id = #{req.goodsId}
+            </if>
+            <if test="req.goodsName != null and req.goodsName.trim() != ''">
+                and sp.`name` like CONCAT('%',#{req.goodsName},'%')
+            </if>
+            <if test="req.categoryId != null">
+                and sp.`category_id` = #{req.categoryId}
+            </if>
+            <if test="req.salePriceL!=null">
+                <![CDATA[ AND sale_price >= #{req.salePriceL} ]]>
+            </if>
+            <if test="req.salePriceR!=null">
+                <![CDATA[ AND sale_price <= #{req.salePriceR} ]]>
+            </if>
+            <if test="req.spuState!=null">
+                and sp.`state` = #{req.spuState}
+            </if>
+            <if test="req.goodsIdList != null and req.goodsIdList.size() > 0">
+                and mgr.goods_id  in
+                <foreach collection="req.goodsIdList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            and mgr.state = 1
+        </where>
+
+        order by mgr.create_time desc
+    </select>
+
+    <!-- 渠道商已绑定市场的商品关系列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 queryClientBindMarketGoodsRelationList) -->
+    <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
+    <select id="queryClientBindMarketGoodsRelationList" resultMap="GoodsRelationListResultMap">
+        select mgr.id, mgr.goods_id,mgr.sell_num,mgr.create_time,mgr.discount_rate,sp.sale_num,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,sp.market_price
+        ,sp.max_profit
+        from market_bind mb,market_goods_relation mgr,spu sp
+        <where>
+            mb.market_id = mgr.market_id
+            and mgr.goods_id = sp.id
+            and mb.user_id = #{req.userId}
+            <if test="req.bindType!=null">
+                and mb.bind_type = #{req.bindType}
+            </if>
+            <if test="req.relationType != null">
+                and mgr.relation_type = #{req.relationType}
+            </if>
+            <if test="req.marketId != null">
+                and mb.market_id = #{req.marketId}
+            </if>
+            <if test="req.goodsName != null and req.goodsName.trim()!='' ">
+                and sp.`name` like CONCAT('%',#{req.goodsName},'%')
+            </if>
+            <if test="req.goodsId != null">
+                and mgr.goods_id = #{req.goodsId}
+            </if>
+            <if test="req.categoryId != null">
+                and sp.category_id = #{req.categoryId}
+            </if>
+        </where>
+        <if test="req.timeSort != null">
+            <if test="req.timeSort == 1">
+                order by mgr.create_time desc
+            </if>
+            <if test="req.timeSort == 2">
+                order by mgr.create_time asc
+            </if>
+        </if>
+        <if test="req.priceSort != null">
+            <if test="req.priceSort == 1">
+                order by sp.sale_price_began desc
+            </if>
+            <if test="req.priceSort == 2">
+                order by sp.sale_price_began asc
+            </if>
+        </if>
+        <if test="req.profitSort != null">
+            <if test="req.profitSort == 1">
+                order by sp.max_profit desc
+            </if>
+            <if test="req.profitSort == 2">
+                order by sp.max_profit asc
+            </if>
+        </if>
+        <if test="req.timeSort == null and req.priceSort == null  and req.profitSort == null">
+            order by mgr.create_time desc
+        </if>
+    </select>
+
+    <!-- 平台添加市场商品-查询未添加商品 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 platformQueryMarketNotAddGoodsList) -->
+    <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
+    <select id="platformQueryMarketNotAddGoodsList" resultMap="GoodsRelationListResultMap">
+        select sp.id as goods_id,sp.`name`,sp.img,sp.sale_num,mgr.id,mgr.discount_rate,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,sp.market_price,sp.max_profit,sp.supplier_price_began,sp.supplier_price_end
+        from spu sp
+        left join market_goods_relation mgr on sp.id = mgr.goods_id and market_id = #{req.marketId} and mgr.relation_type = 2  and mgr.state = 1
+        where sp.audit_state = 2
+        <if test="req.goodsName != null">
+            and sp.name like CONCAT('%',#{req.goodsName},'%')
+        </if>
+        order by sp.create_time desc
+    </select>
+
+    <!-- 运营商添加市场商品-查询未添加商品 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 operateQueryMarketNotAddGoodsList) -->
+    <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
+    <select id="operateQueryMarketNotAddGoodsList" resultMap="GoodsRelationListResultMap">
+        select mgrn.id, mgry.goods_id,mgry.sell_num,mgry.create_time,mgry.discount_rate,sp.sale_num,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,
+               sp.market_price,sp.max_profit
+        from market_bind mb
+         inner join market_goods_relation mgry on mb.market_id = mgry.market_id and mgry.relation_type = 1 and mgry.state = 1
+        inner join spu sp on mgry.goods_id = sp.id
+        left join market_goods_relation mgrn on mgry.goods_id = mgrn.goods_id and mgrn.user_id = #{req.accountId} and mgrn.relation_type = 2 and mgrn.market_id = #{req.marketId} and mgrn.state = 1
+        where mb.user_id = #{req.accountId}
+        and mb.state = 1
+        and mb.bind_type = 1
+        <if test="req.goodsName != null">
+            and sp.name like CONCAT('%',#{req.goodsName},'%')
+        </if>
+        order by mgry.create_time desc
+    </select>
+
+    <!-- 渠道商市场未选商品列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 channelMarketGoodsList) -->
+    <!-- Base DAO 方法名沿用 repository/service 层的 channelMarketNotSelectedGoodsList, 源 DAO id 为 channelMarketGoodsList -->
+    <select id="channelMarketNotSelectedGoodsList"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO">
+        select mgrn.id, mgry.goods_id, mgry.discount_rate, mgry.sell_num as clientSellNum,
+        mgry.market_id,
+        sp.`name` as goodsName,sp.img as goodsPicture,
+        sp.sale_price_end,sp.state,sp.selection_num,sp.unit_price,
+        (mgrn.id is not null) as choose,
+        sp.create_time as time,
+
+        <!-- 排序字段 -->
+        (sp.virtual_sale_num + sp.sale_num) as sellNum,
+        (sp.unit_price - sp.sale_price_began) as maxProfit,
+        sp.market_price as marketPrice,
+        sp.sale_price_began as salePriceBegan,
+        sp.create_time as createTime
+    from market_bind mb
+        inner join market_goods_relation mgry on mb.market_id = mgry.market_id and mgry.relation_type = 2 and mgry.state = 1
+        inner join spu sp on mgry.goods_id = sp.id
+        left join market_goods_relation mgrn on mgry.goods_id = mgrn.goods_id and mgrn.user_id = #{req.accountId}
+        and mgrn.relation_type = 3 and mgrn.state = 1 and mgrn.market_id = #{req.marketId}
+    where
+        mb.user_id = #{req.accountId}
+        and mb.market_id = #{req.marketId}
+        ${req.buildInSQL('marketIdList','mb.market_id')}
+        and mb.state = 1
+        and mb.bind_type = 3
+        <if test="req.goodsName != null">
+            and sp.name like CONCAT('%',#{req.goodsName},'%')
+        </if>
+        <if test="req.choose == 1">
+            and mgrn.id is not null
+        </if>
+        <if test="req.categoryId != null">
+            and sp.category_id = #{req.categoryId}
+        </if>
+        <if test="req.salePriceL != null and req.salePriceR != null">
+            and (sp.sale_price_began between #{req.salePriceL} and #{req.salePriceR} or sp.sale_price_end between
+            #{req.salePriceL} and #{req.salePriceR})
+        </if>
+        ${req.buildBetweenSQL('sp.unit_price','unitPriceL','unitPriceR')}
+        ${req.buildBetweenSQL('(sp.unit_price - sp.sale_price_began)','maxProfitL','maxProfitR')}
+        ${req.buildBetweenSQL('(sp.virtual_sale_num + sp.sale_num)','sellNumL','sellNumR')}
+        ${req.sortSQL}
+    </select>
+
+    <!-- 渠道商铺货已选商品列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 channelDistributionSelectedGoodsList) -->
+    <!-- 源侧入参为裸 Long accountId, Base 签名是 @Param("req") PlatformQueryMarketNotAddGoodsReq, 取 req.accountId -->
+    <select id="channelDistributionSelectedGoodsList" resultMap="GoodsRelationListResultMap">
+        select sd.id, mgr.goods_id,mgr.sell_num,sp.create_time,mgr.market_id,mgr.discount_rate,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,
+               sp.market_price,(sp.unit_price - sp.sale_price_began) as max_profit,sp.unit_price, (sp.virtual_sale_num + sp.sale_num) as sale_num
+        from market_goods_relation mgr
+        left join spu sp on mgr.goods_id = sp.id
+        left join store_distribution sd on sp.id = sd.goods_id and sd.channel_id = #{req.accountId} and sd.store_id = #{req.accountId} and sd.data_type = 0
+        where mgr.user_id = #{req.accountId}
+        and mgr.relation_type = 3
+    </select>
+
+    <!-- 开放API-渠道商SPU关系列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 selectList) -->
+    <!-- Base DAO 改名 channelSpuRelationList 以避开 BaseMapper.selectList; 源侧裸参数改 req. 前缀 -->
+    <!-- 排序: 源侧手写 order by + foreach(sortField/sortMode), 空集合会产生残留 order by, 此处改用等价的 ${req.sortSQL} -->
+    <select id="channelSpuRelationList"
+            resultType="com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO">
+        select mgr.id,mgr.discount_rate,mt.market_type,sp.id as spu_id,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state as spu_state,sp.unit_price,mgr.goods_info,sp.min_pricing_num
+        from market_goods_relation mgr,spu sp,market mt
+        <where>
+            mgr.goods_id = sp.id
+            and mgr.market_id = mt.id
+            and mgr.user_id = #{req.userId}
+            and mgr.relation_type = #{req.relationType}
+            <if test="req.marketId != null">
+                and mgr.market_id = #{req.marketId}
+            </if>
+            <if test="req.goodsName != null and req.goodsName != ''">
+                and sp.`name` like CONCAT('%',#{req.goodsName},'%')
+            </if>
+            <if test="req.categoryId != null">
+                and sp.`category_id` = #{req.categoryId}
+            </if>
+            <if test="req.spuState != null">
+                and sp.`state` = #{req.spuState}
+            </if>
+            <if test="req.goodsIdList != null and req.goodsIdList.size() > 0">
+                and mgr.goods_id  in
+                <foreach collection="req.goodsIdList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            and mgr.state = 1
+        </where>
+        ${req.sortSQL}
+    </select>
+
+</mapper>

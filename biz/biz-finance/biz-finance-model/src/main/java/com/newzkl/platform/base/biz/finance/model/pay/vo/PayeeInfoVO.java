@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.model.pay.vo;
 import lombok.Data;
 
 /**
- * 现金流收款方配置。
+ * 现金流收款方配置
  *
  * <p>迁移自 new-scm {@code domain.pay.model.vo.PayeeInfoVO}。</p>
  *
@@ -23,12 +23,12 @@ public class PayeeInfoVO {
     private String payeeType;
 
     /**
-     * 收款比例。
+     * 收款比例
      */
     private Integer payeeRatio;
 
     /**
-     * 收款方名称。
+     * 收款方名称
      */
     private String payeeName;
 }

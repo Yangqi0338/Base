@@ -10,7 +10,7 @@ import org.dromara.autotable.annotation.Index;
 // TODO[pom-gap mybatis-plus-ext]: import org.dromara.mpe.autofill.annotation.JsonSerializable; (parent 已 depMgmt mybatis-plus-ext, infra 需补依赖)
 
 /**
- * 收货地址数据库实体。
+ * 收货地址数据库实体
  *
  * <p>与数据库表 ship_address 一一对应。</p>
  *

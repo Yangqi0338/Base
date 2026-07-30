@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 采购金分配编排实现 (平台线下)。
+ * 采购金分配编排实现 (平台线下)
  *
  * @author niu
  */

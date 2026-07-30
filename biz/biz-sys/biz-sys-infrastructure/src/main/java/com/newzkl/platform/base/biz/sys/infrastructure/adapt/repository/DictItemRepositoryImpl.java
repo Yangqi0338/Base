@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 字典条目仓储实现。
+ * 字典条目仓储实现
  *
  * @author KC
  */

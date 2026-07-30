@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商户写入入参。
+ * 商户写入入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.req.MerchantCommand}。
- * 旧 {@code id} 字段由父类 {@link BaseReq} 提供, 此处不重复声明。</p>
+ * 旧 {@code id} 字段由父类 {@code BaseReq} 提供, 此处不重复声明。</p>
  *
  * @author KC
  */

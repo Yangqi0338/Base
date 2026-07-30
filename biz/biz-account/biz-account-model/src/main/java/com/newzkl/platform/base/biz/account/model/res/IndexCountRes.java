@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 首页统计结果。
+ * 首页统计结果
  *
  * <p>迁移: 原 {@code com.zkl.scm.user.domain.role.model.res.IndexCountRes};
  * 原字段 {@code selectorPermissionVO} 为跨域等级权限结构 {@code PermissionRpcVO},

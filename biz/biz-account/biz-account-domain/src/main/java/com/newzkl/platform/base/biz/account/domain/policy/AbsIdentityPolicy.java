@@ -109,7 +109,7 @@ public abstract class AbsIdentityPolicy {
      *
      */
     // TODO[cross-domain relation]: findLevelUpTeamUser(Long,Long) 返回 Map<Integer,List<TeamUserCountReq>> (relation DTO), 迁 biz-user 后恢复
-    // 原逻辑: 按直属/非直属分组统计下级账号结构的角色人数, 供升级条件计算。
+    // 原逻辑: 按直属/非直属分组统计下级账号结构的角色人数, 供升级条件计算
 
     /**
      * 获取直属和非直属的下级账号结构

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.virtual.service.VirtualAssetsDomain;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.virtual.query.VirtualAssetsQuery;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 虚拟资产控制器。
+ * 虚拟资产控制器
  *
  * <p>迁移自 new-scm {@code com.zkl.scm.finance.interfaces.purse.VirtualAssetsController}。
  * 旧出参为 {@code PageInfo}, 新出参统一降级为 {@code List} (分页壳由响应层承担)。
@@ -34,7 +35,7 @@ public class VirtualAssetsController {
     private final VirtualAssetsDomain virtualAssetsDomain;
 
     /**
-     * 查询虚拟资产。
+     * 查询虚拟资产
      *
      * <p>账户 id / 账户类型缺省时按当前登录态补齐, 避免越权查看他人资产。</p>
      *
@@ -53,15 +54,22 @@ public class VirtualAssetsController {
     }
 
     /**
-     * 查询虚拟资产变动记录。
+     * 查询虚拟资产变动记录
      *
      * <p>账户 id / 账户类型缺省时按当前登录态补齐, 避免越权查看他人流水。</p>
      *
+     * <p>⚠️ 出参契约: 旧接口返 PageHelper 的 {@code PageInfo}
+     * ({@code list}/{@code total}/{@code pageNum}/{@code pageSize}),
+     * 本仓按 {@code rules/Architecture.md} 改为 MyBatis-Plus {@code Page}
+     * ({@code records}/{@code total}/{@code current}/{@code size})。
+     * <b>前端需把 {@code res.data.list} 改成 {@code res.data.records}</b> ——
+     * 调用方: yys-admin</p>
+     *
      * @param query 查询入参
-     * @return 变动记录列表
+     * @return 变动记录分页
      */
     @PostMapping("/queryVirtualAssetsRecord")
-    public PlatformResult<List<VirtualAssetsRecordRes>> queryVirtualAssetsRecord(
+    public PlatformResult<Page<VirtualAssetsRecordRes>> queryVirtualAssetsRecord(
             @RequestBody VirtualAssetsRecordQuery query) {
         if (query.getAccountId() == null) {
             query.setAccountId(SecurityUtils.getAccountId());

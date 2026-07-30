@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
- * 渠道商充值服务费配置入参。
+ * 渠道商充值服务费配置入参
  *
  * <p>迁移: 跨域 finance 结构
  * {@code com.zkl.scm.finance.rpc.model.account.req.ChargeConfigChannelReq}

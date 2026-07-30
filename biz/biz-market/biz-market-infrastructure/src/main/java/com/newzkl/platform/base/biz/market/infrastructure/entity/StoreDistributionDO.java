@@ -79,4 +79,8 @@ public class StoreDistributionDO extends BaseDO {
      * 推荐时间
      */
     private LocalDateTime recommendationTime;
+    /**
+     * 上架时间
+     */
+    private LocalDateTime upTime;
 }

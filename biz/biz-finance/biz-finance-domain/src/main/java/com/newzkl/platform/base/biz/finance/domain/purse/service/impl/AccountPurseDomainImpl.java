@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.purse.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseRepository;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.biz.finance.model.assembler.AccountPurseAlterRecordAssembler;
@@ -94,16 +95,36 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     /**
      * 修改账户余额
      *
+     * <p>🔴 2026-07-30 修资金安全缺陷: 原实现 {@code new AccountPurseQuery()} 建出空对象后
+     * **从未从 {@code req} 填** accountId / accountType / purseType 就传给仓储。而
+     * {@code AccountPurseDAO#getLw} 三个条件全是 {@code notEmptyIn/notEmptyEq}(空值跳过),
+     * 拼出的 {@code LambdaUpdateWrapper} 无任何 WHERE 约束 →
+     * {@code UPDATE account_purse SET earnings = earnings ± ?} **全表动账**。
+     * 现按 req 填三个作用域字段, 并加空作用域断言兜底
+     *
      * @param relateAward      是否关联账户流水
      * @param earningAlterType 加还是减
+     * @param reqs             动账明细, 每条必带 accountId / accountType / purseType
+     * @return 恒 true (失败走异常)
+     * @throws IllegalArgumentException 任一明细缺 accountId / accountType / purseType 时抛出,
+     *                                  防止退化为无 WHERE 的全表 UPDATE
      */
     public boolean doPurseAmount(boolean relateAward, EarningsEnum.PurseAlterTypeEnum earningAlterType, AccountPurseAlterRecordReq[] reqs) {
         if (ArrayUtil.isEmpty(reqs)) return true;
 
         List<AccountPurseAlterRecordVO> recordVOList = new ArrayList<>();
         for (AccountPurseAlterRecordReq req : reqs) {
-            AccountPurseQuery query = new AccountPurseQuery();
             PurseEnum.PurseType purseType = req.getPurseType();
+            // 动账作用域三要素缺一不可: 任一为空都会让 getLw 少拼一个 WHERE 条件, 扩大动账范围
+            if (req.getAccountId() == null || req.getAccountType() == null || purseType == null) {
+                throw new IllegalArgumentException(
+                        "动账作用域不完整, 拒绝执行: accountId=" + req.getAccountId()
+                                + ", accountType=" + req.getAccountType() + ", purseType=" + purseType);
+            }
+            AccountPurseQuery query = new AccountPurseQuery();
+            query.setAccountId(req.getAccountId());
+            query.setAccountType(req.getAccountType());
+            query.setPurseType(purseType);
 
             if (earningAlterType == EarningsEnum.PurseAlterTypeEnum.IN) {
                 accountPurseRepository.addAccountPurseAmount(query, req.getAmount(), relateAward, purseType.isTotalRelation());
@@ -131,7 +152,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     }
 
     @Override
-    public List<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req) {
+    public Page<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req) {
         return accountPurseRepository.queryAccountPurseAlterRecords(req);
     }
 
@@ -140,8 +161,8 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
         req.addDescSortField("amount");
         req.resetQuerySingle();
 
-        List<AccountPurseAlterRecordVO> recordPage = queryAccountPurseAlterRecords(req);
-        return CollUtil.getFirst(recordPage);
+        // 只取首条, 分页壳里的 total 用不上
+        return CollUtil.getFirst(queryAccountPurseAlterRecords(req).getRecords());
     }
 
     @Override

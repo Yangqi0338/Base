@@ -6,7 +6,9 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.report.ReportQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.report.ReportReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.report.ReportRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO;
+import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 商品-报告控制器。
+ * 商品-报告控制器
  *
- * @author kc
+ * @author KC
  */
 @RestController
 @RequestMapping("/goods/report")
@@ -33,10 +35,10 @@ public class ReportController {
     private final ReportDomain reportDomain;
 
     /**
-     * 新增报告。
+     * 新增报告
      *
-     * @param req 新增请求
-     * @return 主键
+     * @param req 报告请求
+     * @return 报告主键
      */
     @PostMapping("/add")
     public PlatformResult<Long> add(@Validated @RequestBody ReportReq req) {
@@ -44,10 +46,10 @@ public class ReportController {
     }
 
     /**
-     * 报告详情。
+     * 报告详情
      *
-     * @param id 主键
-     * @return 详情
+     * @param id 报告主键
+     * @return 报告详情
      */
     @GetMapping("/{id}")
     public PlatformResult<ReportRes> detail(@PathVariable Long id) {
@@ -55,22 +57,22 @@ public class ReportController {
     }
 
     /**
-     * 编辑报告。
+     * 编辑报告
      *
-     * @param req 编辑请求
-     * @return 成功结果
+     * @param req 报告请求 (id 必填)
+     * @return 空结果
      */
     @PutMapping("/edit")
-    public PlatformResult<Void> edit(@Validated @RequestBody ReportReq req) {
+    public PlatformResult<Void> edit(@Validated({UpdateCommand.class, Default.class}) @RequestBody ReportReq req) {
         reportDomain.edit(req);
         return PlatformResult.success();
     }
 
     /**
-     * 删除报告。
+     * 删除报告
      *
-     * @param id 主键
-     * @return 成功结果
+     * @param id 报告主键
+     * @return 空结果
      */
     @DeleteMapping("/del/{id}")
     public PlatformResult<Void> del(@PathVariable Long id) {
@@ -79,10 +81,10 @@ public class ReportController {
     }
 
     /**
-     * 查询报告列表。
+     * 报告列表
      *
-     * @param query 查询条件
-     * @return 列表
+     * @param query 报告查询条件
+     * @return 报告列表
      */
     @PostMapping("/queryList")
     public PlatformResult<List<ReportVO>> queryList(@RequestBody ReportQuery query) {
@@ -90,10 +92,10 @@ public class ReportController {
     }
 
     /**
-     * 查询报告分页列表。
+     * 报告分页
      *
-     * @param query 查询条件
-     * @return 分页列表
+     * @param query 报告查询条件
+     * @return 报告分页
      */
     @PostMapping("/queryPageList")
     public PlatformResult<Page<ReportVO>> queryPageList(@RequestBody ReportQuery query) {

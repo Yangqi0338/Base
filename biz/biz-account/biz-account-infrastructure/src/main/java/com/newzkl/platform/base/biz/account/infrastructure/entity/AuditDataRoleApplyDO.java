@@ -14,7 +14,7 @@ import org.dromara.autotable.annotation.Index;
  * 数据角色申请审核数据实体类
  * <p>
  * 用于存储用户申请数据角色时的审核相关信息，
- * 包括账户信息、角色类型、身份认证信息以及邀请人信息等。
+ * 包括账户信息、角色类型、身份认证信息以及邀请人信息等
  * </p>
  *
  * @author system

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@link PurseApi} 默认兜底实现。
+ * {@code PurseApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 钱包域(finance)跨域链延迟, 入口 starter 侧远程 consumer 覆盖。</p>
  *

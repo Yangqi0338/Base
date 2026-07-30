@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link PayOrderController} 充值入口测试。
+ * {@code PayOrderController} 充值入口测试
  *
  * @author KC
  */

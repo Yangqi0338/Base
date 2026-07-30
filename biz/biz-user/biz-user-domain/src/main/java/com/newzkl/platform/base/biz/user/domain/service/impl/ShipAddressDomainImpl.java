@@ -23,21 +23,21 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 收货地址领域服务实现。
+ * 收货地址领域服务实现
  *
  * <p>依赖仓储完成数据访问，专注于业务规则校验和核心逻辑处理。</p>
  *
  * @author sijiwang
  */
 @Slf4j
-@Service
+@Service("userShipAddressDomainImpl")
 @RequiredArgsConstructor
 public class ShipAddressDomainImpl implements ShipAddressDomain {
 
     private final ShipAddressRepository shipAddressRepository;
 
     /**
-     * 校验编码和名称的非空一致性。
+     * 校验编码和名称的非空一致性
      *
      * @param code      编码字段
      * @param name      名称字段
@@ -53,7 +53,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
     }
 
     /**
-     * 拼接省市区街道完整地址。
+     * 拼接省市区街道完整地址
      *
      * @param province 省份名称
      * @param city     城市名称

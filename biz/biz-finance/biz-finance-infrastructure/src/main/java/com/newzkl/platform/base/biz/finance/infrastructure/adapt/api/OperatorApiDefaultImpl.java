@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.domain.adapt.api.OperatorApi;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link OperatorApi} 默认兜底实现。
+ * {@code OperatorApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 运营商域(user)为独立服务, 跨域 provider 链已整体延迟。
  * 入口 starter 侧应以远程 Dubbo consumer 覆盖此默认实现。</p>

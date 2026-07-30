@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 收货地址领域DTO。
+ * 收货地址领域DTO
  *
  * <p>核心业务模型，封装收货地址的核心属性，与数据库DO隔离。</p>
  *

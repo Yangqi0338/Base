@@ -82,4 +82,9 @@ public class AccountPurseRollOutDO extends BaseDO {
      */
     private Integer handlingFee;
 
+    /**
+     * 申请时间
+     */
+    private LocalDateTime applyTime;
+
 }

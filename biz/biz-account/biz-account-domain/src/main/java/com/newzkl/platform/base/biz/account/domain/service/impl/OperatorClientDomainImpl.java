@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.support.OperatorConfigVO;
@@ -12,6 +14,7 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.DealerRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.OperatorRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.SelectorRepository;
+import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
 import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.req.web.DealerProxySaveReq;
@@ -46,6 +49,7 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     private final OperatorRepository operatorRepository;
     private final DealerRepository dealerRepository;
     private final SelectorRepository selectorRepository;
+    private final SupplierRepository supplierRepository;
     private final OperatorAssembler operatorAssembler;
 
     @Override
@@ -195,6 +199,14 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     }
 
     @Override
+    public int dealerServiceFeeConfigEdit(Long id, Double serviceRate) {
+        DealerVO item = new DealerVO();
+        item.setId(id);
+        item.setServiceRate(serviceRate);
+        return dealerRepository.dealerEdit(item);
+    }
+
+    @Override
     public int dealerDelete(List<Long> dealerIdList) {
         return dealerRepository.dealerDelete(dealerIdList);
     }
@@ -261,6 +273,14 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
         SelectorVO item = TransferUtils.transfer(selectorEditReq, SelectorVO::new, (c, v) -> {
             v.setId(id);
         });
+        return selectorRepository.selectorEdit(item);
+    }
+
+    @Override
+    public int selectorLevelEdit(Long id, Integer level) {
+        SelectorVO item = new SelectorVO();
+        item.setId(id);
+        item.setLevel(level);
         return selectorRepository.selectorEdit(item);
     }
 
@@ -339,5 +359,54 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
     @Override
     public OperatorDomainInfo getOperatorDomainInfo(Long operatorId) {
         return operatorRepository.getOperatorDomainInfo(operatorId);
+    }
+
+    /**
+     * 按运营类型查运营商可见的供应商 ID 列表
+     *
+     * <p>迁自旧 {@code IOperatorDomainImpl#supplierIdListByType}, 三个分支口径逐字保持。
+     * 偏离: 旧 {@code OperatorVO.type} 是 {@code Integer}, Base 已换成
+     * {@code OperatorEnum.Type} 枚举, 故比较落在枚举 code 上。</p>
+     *
+     * @param accountId  运营商账号 ID
+     * @param searchType 查询用的运营类型, 为 null 时取该运营商自身类型
+     * @return 可见供应商 ID 列表; 运营商不存在时返回空列表
+     */
+    @Override
+    public List<Long> supplierIdListByType(Long accountId, Integer searchType) {
+        OperatorVO operator = operatorRepository.operator(accountId);
+        if (operator == null) {
+            return Collections.emptyList();
+        }
+        Integer operatorType = operator.getType() == null ? null : operator.getType().getCode();
+        List<Integer> allowTypeList = new ArrayList<>();
+        allowTypeList.add(OperatorEnum.Type.ORGANIZE.getCode());
+        allowTypeList.add(operatorType);
+
+        Integer type = Opt.ofNullable(searchType).orElse(operatorType);
+        OperatorEnum.Type dataType = type == null ? null : OperatorEnum.Type.findByCode(type);
+        if (!allowTypeList.contains(type) || dataType == null) {
+            throw new PlatformException(BaseErrorCode.PARAM, "不可用的运营类型");
+        }
+
+        String typeForeignId = operator.getTypeForeignId();
+        SupplierQuery query = new SupplierQuery();
+        switch (dataType) {
+            case ORGANIZE:
+                // 机构: 看自己招募的所有供应商
+                query.setInviteId(accountId);
+                break;
+            case INDUSTRY:
+                // 行业: 看同行业的供应商
+                query.setIndustryId(NumberUtil.parseLong(typeForeignId, null));
+                break;
+            case AREA:
+                // 区域: typeForeignId 为省市区逗号串, 取最后一段作为公司区域码
+                query.setCompanyAreaCode(NumberUtil.parseLong(CollUtil.getLast(StrUtil.split(typeForeignId, ',')), null));
+                break;
+            default:
+                throw new PlatformException(BaseErrorCode.PARAM, "不可用的运营类型");
+        }
+        return supplierRepository.idByQuery(query);
     }
 }

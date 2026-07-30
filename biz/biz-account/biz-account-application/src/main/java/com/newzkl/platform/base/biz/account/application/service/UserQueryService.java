@@ -127,10 +127,10 @@ public interface UserQueryService {
     int countByQuery(ChannelQuery channelQuery);
 
     /**
-     * 开通码分页。
+     * 开通码分页
      *
      * <p>迁移补充: 旧 {@code IUserQueryService.cdkPage} 返回 PageHelper 的 {@code PageInfo},
-     * 中台统一返回 MyBatis-Plus {@link Page}, 记录类型为出参对象 {@link CdkRes}。</p>
+     * 中台统一返回 MyBatis-Plus {@code Page}, 记录类型为出参对象 {@code CdkRes}。</p>
      *
      * @param cdkQuery 开通码查询
      * @return 开通码分页
@@ -139,6 +139,18 @@ public interface UserQueryService {
     Page<CdkRes> cdkPage(CdkQuery cdkQuery);
 
     SupplierVO supplierVO(Long supplierId);
+
+    /**
+     * 供应商对外视图
+     *
+     * <p>迁移自旧 {@code IUserQueryService#supplierOutVO}, 供甄选师查看供应商详情用。
+     * 旧实现逐字段手工拷贝 {@code SupplierVO} 到 {@code SupplierOutVO}, 中台化后同名字段整体转换。</p>
+     *
+     * @param supplierId 供应商账号ID
+     * @return 供应商对外视图, 无则 null
+     * @author KC
+     */
+    SupplierOutRes supplierOutVO(Long supplierId);
 
     Page<SelectorSupplierVO> selectorSupplierVO(SupplierQuery supplierQuery);
 

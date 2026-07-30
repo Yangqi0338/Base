@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * 角色领域视图对象。
+ * 角色领域视图对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.entity.Role} (表 {@code role})。
  * 语义为"可申请的企业角色配置"(角色名 / 申请条件 / 提供服务 / 资料组), 与鉴权角色

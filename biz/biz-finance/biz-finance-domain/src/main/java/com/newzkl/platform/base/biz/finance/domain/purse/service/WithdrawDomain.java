@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.purse.service;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -45,12 +46,12 @@ public interface WithdrawDomain {
     boolean rollOutApplyAudit(RollOutApplyAuditReq req);
 
     /**
-     * 查询转出申请
+     * 查询转出申请分页
      *
-     * @param req
-     * @return
+     * @param req 转出申请查询
+     * @return 转出申请分页
      */
-    List<RollOutApplyVO> queryRollOutApplyPage(RollOutApplyQuery req);
+    Page<RollOutApplyVO> queryRollOutApplyPage(RollOutApplyQuery req);
 
     /**
      * 查询转出申请根据id
@@ -103,12 +104,12 @@ public interface WithdrawDomain {
     WithdrawRecordVO queryTripartiteWithdrawRecord(Long id);
 
     /**
-     * 查询提现记录
+     * 查询提现记录分页
      *
-     * @param req
-     * @return
+     * @param req 三方提现记录查询
+     * @return 提现记录分页
      */
-    List<WithdrawRecordVO> queryTripartiteWithdrawRecordList(TripartiteWithdrawRecordQuery req);
+    Page<WithdrawRecordVO> queryTripartiteWithdrawRecordList(TripartiteWithdrawRecordQuery req);
 
     /**
      * 查询转出申请

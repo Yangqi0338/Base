@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * ID 列表通用入参。
+ * ID 列表通用入参
  *
  * @author muc_fang
  */
@@ -17,13 +17,13 @@ import java.util.List;
 public class IdListCommand implements Serializable {
 
     /**
-     * ID 列表。
+     * ID 列表
      */
     @NotEmpty
     private List<Long> idList;
 
     /**
-     * 设置单个 ID (置于列表首位)。
+     * 设置单个 ID (置于列表首位)
      *
      * @param id ID
      */

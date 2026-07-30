@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 渠道商。
+ * 渠道商
  *
  * <p>迁移: 跨域 user 结构 {@code com.zkl.scm.user.model.account.res.ChannelRes}
  * 降级为 order 本地 DTO。</p>

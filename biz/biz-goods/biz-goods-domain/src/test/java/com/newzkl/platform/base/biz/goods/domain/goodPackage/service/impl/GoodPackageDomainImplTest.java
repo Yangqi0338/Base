@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * 商品套餐领域服务单元测试 (仓储端口 mock, 不连库)。
+ * 商品套餐领域服务单元测试 (仓储端口 mock, 不连库)
  *
  * @author KC
  */

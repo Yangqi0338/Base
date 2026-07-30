@@ -37,7 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link LevelDomainImpl} 行为测试。
+ * {@code LevelDomainImpl} 行为测试
  *
  * <p>纯 JUnit 5 + Mockito, 不启动 Spring 容器, 不连数据库。</p>
  *
@@ -59,7 +59,7 @@ class LevelDomainImplTest {
     private LevelDomainImpl levelDomain;
 
     /**
-     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物。
+     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物
      */
     private final LevelAssembler assembler = new LevelAssembler() {
         @Override
@@ -84,7 +84,7 @@ class LevelDomainImplTest {
     }
 
     /**
-     * 构造校验可通过的等级入参。
+     * 构造校验可通过的等级入参
      *
      * @return 等级入参
      */

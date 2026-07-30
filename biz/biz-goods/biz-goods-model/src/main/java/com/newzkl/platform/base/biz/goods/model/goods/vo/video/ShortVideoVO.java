@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * 商品-短视频视图对象。
+ * 商品-短视频视图对象
  *
  * <p>迁移偏离: new-scm 用泛型 {@code Video}/{@code VideoVO} 基类支撑长/短视频两型,
  * 本轮仅短视频入 scope, 故扁平化为独立视图, 不引入基类 (YAGNI)。
@@ -20,37 +20,37 @@ import java.util.List;
 public class ShortVideoVO extends BaseRes {
 
     /**
-     * 视频路径。
+     * 视频路径
      */
     private String path;
 
     /**
-     * 封面路径。
+     * 封面路径
      */
     private String coverPath;
 
     /**
-     * 关联 SPU ID (列表查询取第一个关联)。
+     * 关联 SPU ID (列表查询取第一个关联)
      */
     private Long spuId;
 
     /**
-     * 关联 SPU 编码。
+     * 关联 SPU 编码
      */
     private String code;
 
     /**
-     * 关联 SPU 名称。
+     * 关联 SPU 名称
      */
     private String name;
 
     /**
-     * 关联 SPU 图片。
+     * 关联 SPU 图片
      */
     private String img;
 
     /**
-     * 关联 SPU ID 列表 (详情查询填充)。
+     * 关联 SPU ID 列表 (详情查询填充)
      */
     private List<Long> spuIdList;
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 会员分组信息 (跨域 user AccountGroupVO 降级为 store 本地最小 DTO)。
+ * 会员分组信息 (跨域 user AccountGroupVO 降级为 store 本地最小 DTO)
  *
  * @author KC
  */

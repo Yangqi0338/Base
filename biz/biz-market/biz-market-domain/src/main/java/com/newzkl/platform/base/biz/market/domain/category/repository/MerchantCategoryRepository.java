@@ -8,17 +8,17 @@ import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
 import java.util.List;
 
 /**
- * 商户分类仓储端口。
+ * 商户分类仓储端口
  *
  * <p>迁移自 {@code com.zkl.scm.market.domain.category.repository.ICategoryRepository},
- * 通用扁平 CRUD 复用 {@link CategoryRepository}, 此处仅扩展平台同步所需能力。</p>
+ * 通用扁平 CRUD 复用 {@code CategoryRepository}, 此处仅扩展平台同步所需能力。</p>
  *
  * @author KC
  */
 public interface MerchantCategoryRepository extends CategoryRepository<CategoryVO, CategoryQuery> {
 
     /**
-     * 批量落库 (平台分类同步用)。
+     * 批量落库 (平台分类同步用)
      *
      * <p>入参每条须已带 {@code id}/{@code pid}/{@code sourceId}/{@code accountId},
      * 由领域层完成两趟 remap 后传入; 仓储层不再改写层级。</p>
@@ -28,7 +28,7 @@ public interface MerchantCategoryRepository extends CategoryRepository<CategoryV
     void batchSave(List<CategoryReq> reqList);
 
     /**
-     * 判断该账号是否已同步过指定平台源分类。
+     * 判断该账号是否已同步过指定平台源分类
      *
      * <p>替代旧 {@code checkExist(code, accountId)} 幂等校验。</p>
      *

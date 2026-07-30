@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.market.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
@@ -57,6 +59,9 @@ public class MarketGoodsRelationDO extends BaseDO {
     private Integer discountRate;
     /**
      * 商品信息
+     *
+     * @ext 库中以 JSON 列存放, 走 {@code JacksonTypeHandler} 序列化; 依赖类级 {@code autoResultMap = true} 才生效
      */
+    @TableField(typeHandler = JacksonTypeHandler.class)
     private MarketGoodsInfoVO goodsInfo;
 }

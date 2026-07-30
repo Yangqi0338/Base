@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Redis 集合（Set）类型操作工具类。
+ * Redis 集合（Set）类型操作工具类
  *
  * @author sijiwang
  */

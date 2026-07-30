@@ -9,7 +9,7 @@ import org.dromara.autotable.annotation.Index;
 import java.time.LocalDateTime;
 
 /**
- * 开通码持久化对象。
+ * 开通码持久化对象
  *
  * <p>对应旧表 {@code cdk} (旧 {@code com.zkl.scm.user.infrastructure.entity.CdkDO})。
  * 语义为角色/门店开通码, 与商品域虚拟商品兑换码不是同一概念。</p>

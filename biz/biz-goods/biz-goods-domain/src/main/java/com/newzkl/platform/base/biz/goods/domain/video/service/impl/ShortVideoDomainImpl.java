@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 商品-短视频领域服务实现。
+ * 商品-短视频领域服务实现
  *
  * @author KC
  */
@@ -60,7 +60,7 @@ public class ShortVideoDomainImpl implements ShortVideoDomain {
     }
 
     /**
-     * 合并单个 spuId 到关联列表并校验非空。
+     * 合并单个 spuId 到关联列表并校验非空
      *
      * <p>迁移修正: new-scm 无条件 {@code spuIdList.add(getSpuId())} 会把 null 塞入列表,
      * 令后续空校验永不生效。此处仅在 spuId 非空时追加。</p>

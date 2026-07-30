@@ -33,12 +33,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * 交易-结算单控制器。
+ * 交易-结算单控制器
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.interfaces.controller.SettleController},
  * 7 端点路径与 HTTP 方法保持不变。偏离说明:</p>
  * <ul>
- *   <li>旧 controller 直连 {@code ISettleRepository} (跨层), 新版改注入 {@link SettleDomain}。</li>
+ *   <li>旧 controller 直连 {@code ISettleRepository} (跨层), 新版改注入 {@code SettleDomain}。</li>
  *   <li>分页出参由 {@code PageInfo} 改为 MyBatis-Plus {@code Page} (前端分页壳字段变化)。</li>
  *   <li>{@code SecurityUtils.getRole()} 已不存在, 改用 {@code getRoleId()}。</li>
  *   <li>旧 {@code @Limit(FuncCons...)} 权限点不在本层声明, 鉴权切面归入口 starter。</li>
@@ -69,7 +69,7 @@ public class SettleController {
     private final SettleDomain settleDomain;
 
     /**
-     * 结算单分页 (供应商登录态自动收窄到自身)。
+     * 结算单分页 (供应商登录态自动收窄到自身)
      *
      * @param settleRecordQuery 结算单查询
      * @return 结算单分页
@@ -83,7 +83,7 @@ public class SettleController {
     }
 
     /**
-     * 结算单明细分页。
+     * 结算单明细分页
      *
      * @param settleRecordItemQuery 结算单明细查询
      * @return 结算单明细分页
@@ -95,7 +95,7 @@ public class SettleController {
     }
 
     /**
-     * 修改结算单 (标签)。
+     * 修改结算单 (标签)
      *
      * @param settleRecordEditReq 结算单修改入参
      * @return 成功结果
@@ -107,7 +107,7 @@ public class SettleController {
     }
 
     /**
-     * 结算类型明细 (商品 / 运费 / 售后冲正)。
+     * 结算类型明细 (商品 / 运费 / 售后冲正)
      *
      * @param settleTypeList 结算类型查询
      * @return 待结算订单列表
@@ -118,7 +118,7 @@ public class SettleController {
     }
 
     /**
-     * 结算单视图对象。
+     * 结算单视图对象
      *
      * @param idObj 结算单 ID
      * @return 结算单视图对象
@@ -129,7 +129,7 @@ public class SettleController {
     }
 
     /**
-     * 结算类型明细导出 (按 type 走 3 套模板)。
+     * 结算类型明细导出 (按 type 走 3 套模板)
      *
      * @param response       HTTP 响应 (直接写 xlsx 流)
      * @param settleTypeList 结算类型查询
@@ -146,7 +146,7 @@ public class SettleController {
     }
 
     /**
-     * 按结算类型写出对应模板的 Excel。
+     * 按结算类型写出对应模板的 Excel
      *
      * @param response HTTP 响应
      * @param listReq  结算类型查询 (取 type 分支)

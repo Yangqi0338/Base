@@ -241,7 +241,7 @@ abstract class AmountReq {
         private String remark;
         /**
          * 是否垫资退款 String(2) N Y 是垫资出款， N 是普通出款，为空默认N；示例值： N
-         * 注意：延时交易退款在【交易确认退款】接口中设置loan_flag为垫资，本接口不可再次设置垫资。
+         * 注意：延时交易退款在【交易确认退款】接口中设置loan_flag为垫资，本接口不可再次设置垫资
          */
         @Size(max = 2, message = "是否垫资退款长度不能超过2位")
         @Pattern(regexp = "^(Y|N)?$", message = "是否垫资退款只能是Y或N（为空默认N）")
@@ -343,7 +343,7 @@ abstract class AmountReq {
         @Data
         public static class WxData {
             /**
-             * 退款商品详情 Object N 原订单为单品优惠订单 & 非全额退款时，退款商品详情必填。
+             * 退款商品详情 Object N 原订单为单品优惠订单 & 非全额退款时，退款商品详情必填
              * 原订单为单品优惠订单规则：原订单的 wx_data 中，promotion_flag值为“Y-是”。
              */
             @Valid

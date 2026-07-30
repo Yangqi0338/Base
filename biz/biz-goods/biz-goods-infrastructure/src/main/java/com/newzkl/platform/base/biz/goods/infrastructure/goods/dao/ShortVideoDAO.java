@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * 商品-短视频 DAO。
+ * 商品-短视频 DAO
  *
  * <p>CRUD 走 MyBatis-Plus, 仅列表 join 查询落 {@code ShortVideoDAO.xml}。</p>
  *
@@ -19,7 +19,7 @@ import org.apache.ibatis.annotations.Param;
 public interface ShortVideoDAO extends BaseMapper<ShortVideoDO> {
 
     /**
-     * 短视频分页 (join video_spu_relation + spu)。
+     * 短视频分页 (join video_spu_relation + spu)
      *
      * @param page  分页对象
      * @param query 短视频查询

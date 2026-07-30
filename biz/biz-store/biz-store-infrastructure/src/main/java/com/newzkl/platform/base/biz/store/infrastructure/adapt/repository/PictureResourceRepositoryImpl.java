@@ -1,9 +1,6 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.biz.store.model.resource.req.QueryPictureResourceReq;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureMenuVO;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureResourceVO;
 import com.newzkl.platform.base.biz.store.domain.resource.repository.PictureResourceRepository;
@@ -60,18 +57,5 @@ public class PictureResourceRepositoryImpl implements PictureResourceRepository 
             resourcePicture.setCreateTime(LocalDateTime.now());
             resourcePictureDAO.insert(resourcePicture);
         }
-    }
-
-    @Override
-    public Page<PictureMenuVO> queryMenu(PageQuery query) {
-        Page<PictureMenuVO> page = new Page<>(query.getPageNo(), query.getPageSize());
-        return page.setRecords(resourcePictureMenuDAO.queryMenu(SecurityUtils.getAccountId()));
-    }
-
-    @Override
-    public Page<PictureResourceVO> queryResource(QueryPictureResourceReq req) {
-        req.setChannelId(SecurityUtils.getAccountId());
-        Page<PictureResourceVO> page = new Page<>(req.getPageNo(), req.getPageSize());
-        return page.setRecords(resourcePictureDAO.queryResource(req));
     }
 }

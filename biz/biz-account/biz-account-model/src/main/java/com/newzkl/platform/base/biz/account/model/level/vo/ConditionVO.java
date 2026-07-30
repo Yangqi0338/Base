@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 等级升级条件值对象 (DB 以 JSON 列存储)。
+ * 等级升级条件值对象 (DB 以 JSON 列存储)
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.level.model.vo.ConditionVO}。
  * 旧类的 amount / goods / team / teamDirect / teamNoDirect 五类条件属等级升级计算引擎,

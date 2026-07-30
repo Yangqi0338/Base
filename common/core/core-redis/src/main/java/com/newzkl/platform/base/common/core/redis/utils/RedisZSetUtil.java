@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
- * Redis 有序集合（ZSet）类型操作工具类。
+ * Redis 有序集合（ZSet）类型操作工具类
  *
  * @author sijiwang
  */

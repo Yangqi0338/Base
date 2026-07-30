@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 上级链路结果 (跨域 user 结构降级为 finance 本地 DTO)。
+ * 上级链路结果 (跨域 user 结构降级为 finance 本地 DTO)
  *
  * <p>迁移: 原 {@code com.zkl.scm.user.model.account.res.UpIdRes};
  * 原依赖 {@code BizUtil.getOperatorLevelUpEnumList} 已内联, 去除跨域耦合。</p>

@@ -7,9 +7,12 @@ import com.newzkl.platform.base.biz.order.model.order.req.CommitOrderPreReq;
 import com.newzkl.platform.base.biz.order.model.order.req.SpuOrderPageReq;
 import com.newzkl.platform.base.biz.order.model.order.res.CreateOrderRes;
 import com.newzkl.platform.base.biz.order.model.order.vo.OrderStateCountVO;
+import com.newzkl.platform.base.biz.order.model.order.vo.SpuOrderExcelVO;
+import com.newzkl.platform.base.biz.order.model.order.vo.SpuOrderItemExcelVO;
 import com.newzkl.platform.base.biz.order.model.order.vo.SpuOrderVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sijiwang
@@ -90,4 +93,37 @@ public interface QueryOrderService {
      * @return 领域模型列表
      */
     List<SkuOrder> getBySpuOrderNo(String spuOrderNo);
+
+    /**
+     * 运营商视角统计各订单状态的 SPU 订单数
+     *
+     * <p>迁移自旧 {@code IOrderService#spuOrderStateCountMap}。</p>
+     *
+     * @param req                查询条件, 调用方已按业务预置可见状态集合
+     * @param operatorAccountId 当前登录运营商账号 ID
+     * @return 订单状态 → 订单数, 无数据的状态补 0
+     */
+    Map<Integer, Integer> spuOrderStateCountMap(SpuOrderPageReq req, Long operatorAccountId);
+
+    /**
+     * 装配 SPU 订单导出行
+     *
+     * <p>迁移自旧 {@code OrderController#data}: 取当页 SPU 订单, 逐条换算金额、状态文案、
+     * 收货信息与 SKU 数量合计。</p>
+     *
+     * @param req 查询条件, 调用方已按登录角色收敛可见范围
+     * @return 导出行列表, 恒非 null
+     */
+    List<SpuOrderExcelVO> exportSpuOrder(SpuOrderPageReq req);
+
+    /**
+     * 装配 SPU 订单明细 (SKU 粒度) 导出行
+     *
+     * <p>迁移自旧 {@code IQueryService#querySpuOrderItemExcelVO}: 先按条件取全部命中 SPU 订单
+     * (不分页), 再取其下 SKU 子单逐条装配。</p>
+     *
+     * @param req 查询条件, 调用方已按登录角色收敛可见范围
+     * @return 导出行列表, 恒非 null
+     */
+    List<SpuOrderItemExcelVO> exportSpuOrderItem(SpuOrderPageReq req);
 }

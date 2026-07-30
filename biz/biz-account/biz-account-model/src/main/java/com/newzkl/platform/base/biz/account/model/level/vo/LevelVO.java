@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 等级领域视图对象。
+ * 等级领域视图对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.level.model.entity.Level}。
  * 旧 {@code LevelVO} 携带的 {@code isMeet} 等级计算行为属升级引擎, 未随本切片迁移。</p>

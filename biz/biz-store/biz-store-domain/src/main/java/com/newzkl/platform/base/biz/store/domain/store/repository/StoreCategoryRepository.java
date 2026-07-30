@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.domain.store.repository;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
@@ -36,7 +36,7 @@ public interface StoreCategoryRepository {
      * @param query 查询条件
      * @return 分页
      */
-    IPage<StoreCategoryRes> queryPage(StoreCategoryQuery query);
+    Page<StoreCategoryRes> queryPage(StoreCategoryQuery query);
 
     /**
      * 新增数据

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 角色 DAO。
+ * 角色 DAO
  *
  * <p>面向 {@code role} 表 (可申请的企业角色配置), 与鉴权角色 {@code auth_role} 的 DAO 无关。</p>
  *
@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface RoleDAO extends BaseMapper<RoleDO> {
 
     /**
-     * 构建角色查询条件。
+     * 构建角色查询条件
      *
      * <p>对齐旧 mapper {@code RoleDAO.xml} 的 where 片段: id / idList 精确匹配,
      * {@code name} 模糊匹配; 排序沿用旧 {@code listByQuery} 的按创建时间倒序。</p>

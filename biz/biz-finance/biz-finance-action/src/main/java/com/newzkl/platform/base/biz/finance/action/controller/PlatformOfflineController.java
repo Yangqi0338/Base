@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 平台采购金分配控制器。
+ * 平台采购金分配控制器
  *
  * @author niu
  */
@@ -24,7 +24,7 @@ public class PlatformOfflineController {
     private final PurseService purseService;
 
     /**
-     * 平台给运营商分配采购金。
+     * 平台给运营商分配采购金
      *
      * @param req 分配请求
      * @return 处理结果
@@ -38,7 +38,7 @@ public class PlatformOfflineController {
     }
 
     /**
-     * 运营商给渠道商分配采购金。
+     * 运营商给渠道商分配采购金
      *
      * @param req 分配请求
      * @return 处理结果

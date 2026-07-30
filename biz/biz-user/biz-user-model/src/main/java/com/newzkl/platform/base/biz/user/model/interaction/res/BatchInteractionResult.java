@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 批量检查用户互动的返回结果。
+ * 批量检查用户互动的返回结果
  *
  * @author sijiwang
  */

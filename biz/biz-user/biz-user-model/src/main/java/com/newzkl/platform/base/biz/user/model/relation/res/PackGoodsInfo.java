@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
- * 礼包商品信息。
+ * 礼包商品信息
  *
  * @author fang
  */

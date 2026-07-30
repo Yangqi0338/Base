@@ -47,7 +47,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
- * Supports reading and writing to the schema history table.
+ * Supports reading and writing to the schema history table
  */
 @Slf4j
 class JdbcTableSchemaHistory extends SchemaHistory {
@@ -55,26 +55,26 @@ class JdbcTableSchemaHistory extends SchemaHistory {
     private final SqlScriptFactory sqlScriptFactory;
 
     /**
-     * The database to use.
+     * The database to use
      */
     private final Database database;
 
     /**
-     * Connection with access to the database.
+     * Connection with access to the database
      */
     private final Connection<?> connection;
 
     private final JdbcTemplate jdbcTemplate;
 
     /**
-     * Applied migration cache.
+     * Applied migration cache
      */
     private final LinkedList<AppliedMigration> cache = new LinkedList<>();
 
     private final Configuration configuration;
 
     /**
-     * Creates a new instance of the schema history table support.
+     * Creates a new instance of the schema history table support
      *
      * @param database The database to use.
      * @param table The schema history table used by Flyway.

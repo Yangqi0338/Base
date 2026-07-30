@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
 import java.util.List;
 
 /**
- * 商户分类领域服务。
+ * 商户分类领域服务
  *
  * <p>迁移自 {@code com.zkl.scm.market.domain.category.service.ICategoryDomain},
  * 按新规范去 {@code I} 前缀。</p>
@@ -19,7 +19,7 @@ import java.util.List;
 public interface CategoryDomain {
 
     /**
-     * 新建单条自营分类。
+     * 新建单条自营分类
      *
      * @param req 分类请求
      * @return 新分类ID
@@ -27,21 +27,21 @@ public interface CategoryDomain {
     Long categorySave(CategoryReq req);
 
     /**
-     * 编辑分类。
+     * 编辑分类
      *
      * @param req 编辑请求 (id + 分类内容)
      */
     void categoryEdit(CategoryEditReq req);
 
     /**
-     * 删除分类。
+     * 删除分类
      *
      * @param idList 分类ID列表
      */
     void categoryDelete(List<Long> idList);
 
     /**
-     * 查询分类树。
+     * 查询分类树
      *
      * @param query 查询条件
      * @return 树形分类列表, 恒非 null
@@ -49,7 +49,7 @@ public interface CategoryDomain {
     List<CategoryVO> categoryTree(CategoryQuery query);
 
     /**
-     * 同步平台分类到当前商户。
+     * 同步平台分类到当前商户
      *
      * <p>层级模型由旧 {@code code}/{@code pcode} (平台分类ID) 改为本表自身
      * {@code pid} 制, 故需两趟 remap: 第一趟为每个平台节点分配新雪花 id 并建立

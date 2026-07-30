@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BankQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankVO;
@@ -23,12 +24,20 @@ public interface BankRepository {
     BankVO detail(Long id);
 
     /**
-     * 查询列表
+     * 查询分页
      *
      * @param query 查询条件
-     * @return 列表
+     * @return 银行分页
      */
-    List<BankVO> queryPage(BankQuery query);
+    Page<BankVO> queryPage(BankQuery query);
+
+    /**
+     * 查询银行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行列表
+     */
+    List<BankVO> queryList(BankQuery query);
 
     /**
      * 新增数据
@@ -60,11 +69,19 @@ public interface BankRepository {
     void del(Long id);
 
     /**
-     * 查询列表
+     * 查询支行分页
      *
      * @param query 查询条件
-     * @return 列表
+     * @return 银行支行分页
      */
-    List<BankBranchVO> queryBranchPage(BankQuery query);
+    Page<BankBranchVO> queryBranchPage(BankQuery query);
+
+    /**
+     * 查询银行支行全量列表, 不分页
+     *
+     * @param query 查询条件
+     * @return 银行支行列表
+     */
+    List<BankBranchVO> queryBranchList(BankQuery query);
 }
 

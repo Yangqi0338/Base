@@ -79,7 +79,7 @@ public class RecordSqlFlywayHandler extends RecordSqlFileHandler {
      * <p>
      * fat jar 部署时 CodeSource URI 形如 {@code jar:nested:/...!/BOOT-INF/lib/xxx.jar}，
      * 非 hierarchical，无法 {@code new File}；此时回退到 {@code java.io.tmpdir}，
-     * 文件落临时盘但不影响 {@link #doSchemaHistory} 写库。
+     * 文件落临时盘但不影响 {@link RecordSqlFlywayHandler#doSchemaHistory} 写库。
      * </p>
      * @ext URI
      * @ext 关键路径

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 新增收货地址请求参数。
+ * 新增收货地址请求参数
  *
  * <p>入参校验规则：核心字段非空，默认值合理。</p>
  *

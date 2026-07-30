@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- countUserOrderCount 业务(按角色统计 emp 人数)已定案删除(KC, 2026-07-29): 职位信息暂时无用, 后续有用再说 -->
+<mapper namespace="com.newzkl.platform.base.biz.account.infrastructure.dao.EmpDAO">
+
+</mapper>

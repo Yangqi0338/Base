@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link IdentityExtensionRegistrar} 启动期两两不相交校验单测。
+ * {@code IdentityExtensionRegistrar} 启动期两两不相交校验单测
  *
  * @author KC
  */
@@ -52,7 +52,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /**
-     * 构造注入了指定 impl bean 的注册器 (以动态代理伪造 ApplicationContext)。
+     * 构造注入了指定 impl bean 的注册器 (以动态代理伪造 ApplicationContext)
      *
      * @param dispatcher 分发器
      * @param beans      impl 实例
@@ -78,7 +78,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /**
-     * 测试扩展点。
+     * 测试扩展点
      */
     @IdentityExtension
     interface Foo {

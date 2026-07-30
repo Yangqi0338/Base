@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * SpEL 表达式解析帮助类。
+ * SpEL 表达式解析帮助类
  *
  * @author lixianglin
  */

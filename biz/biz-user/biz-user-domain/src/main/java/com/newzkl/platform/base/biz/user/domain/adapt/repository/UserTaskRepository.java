@@ -7,13 +7,13 @@ import com.newzkl.platform.base.biz.user.model.relation.vo.UserTaskVO;
 import java.util.List;
 
 /**
- * 用户任务(user_task)存储接口。
+ * 用户任务(user_task)存储接口
  *
  * @author kc
  */
 public interface UserTaskRepository {
     /**
-     * 详情。
+     * 详情
      *
      * @param id 主键
      * @return 详情
@@ -21,7 +21,7 @@ public interface UserTaskRepository {
     UserTaskRes detail(Long id);
 
     /**
-     * 查询列表。
+     * 查询列表
      *
      * @param query 查询条件
      * @return 列表
@@ -29,14 +29,14 @@ public interface UserTaskRepository {
     List<UserTaskVO> queryList(UserTaskQuery query);
 
     /**
-     * 新增数据。
+     * 新增数据
      *
      * @param userTask 新增实体
      */
     void insert(UserTaskRes userTask);
 
     /**
-     * 修改数据。
+     * 修改数据
      *
      * @param userTask 编辑实体
      * @param query    编辑查询
@@ -44,14 +44,14 @@ public interface UserTaskRepository {
     void edit(UserTaskRes userTask, UserTaskQuery query);
 
     /**
-     * 删除。
+     * 删除
      *
      * @param id 主键
      */
     void del(Long id);
 
     /**
-     * 最后的任务。
+     * 最后的任务
      *
      * @param query 查询条件
      * @return 最后一条任务

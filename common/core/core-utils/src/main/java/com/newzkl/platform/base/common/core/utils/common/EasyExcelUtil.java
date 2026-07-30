@@ -25,7 +25,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 /**
- * EasyExcel 导入 / 导出封装工具。
+ * EasyExcel 导入 / 导出封装工具
  *
  * @author fang
  */

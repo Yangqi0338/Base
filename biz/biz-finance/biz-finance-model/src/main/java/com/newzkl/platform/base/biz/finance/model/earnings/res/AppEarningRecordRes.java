@@ -63,6 +63,11 @@ public class AppEarningRecordRes extends BaseRes {
     private Long joinOrderNo;
 
     /**
+     * 关联交易单号（语义: 关联的交易流水号，与 joinOrderNo 含义不同）
+     */
+    private Long joinTradeNo;
+
+    /**
      * 礼包信息
      */
     private PickPackInfoVO packInfoVO;

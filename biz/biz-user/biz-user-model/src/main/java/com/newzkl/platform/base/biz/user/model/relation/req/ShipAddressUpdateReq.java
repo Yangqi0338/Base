@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * 更新收货地址请求参数。
+ * 更新收货地址请求参数
  *
  * <p>核心规则：ID必填，其他字段按需更新。</p>
  *

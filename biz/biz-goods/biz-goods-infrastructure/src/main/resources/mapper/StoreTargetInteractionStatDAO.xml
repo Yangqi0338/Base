@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.StoreTargetInteractionStatDAO">
+
+    <sql id="tableName">store_target_interaction_stat</sql>
+
+    <!-- 列清单 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 baseColumns;
+         源 created_time/updated_time 在 Base 由 BaseDO 统一为 create_time/update_time) -->
+    <sql id="baseColumns">
+        id, store_id, publisher_id, target_type, target_id, view_count, like_count, share_count,
+        create_time, update_time, ext_json
+    </sql>
+
+    <!-- 批量插入或更新 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 batchInsertOrUpdate) -->
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        INSERT INTO <include refid="tableName"/> (
+        store_id, publisher_id, target_type, target_id, view_count, like_count, share_count,
+        create_time, update_time, ext_json
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.storeId},
+            #{item.publisherId},
+            #{item.targetType},
+            #{item.targetId},
+            #{item.viewCount},
+            #{item.likeCount},
+            #{item.shareCount},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.extJson}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        store_id = IFNULL(VALUES(store_id), store_id),
+        publisher_id = IFNULL(VALUES(publisher_id), publisher_id),
+        view_count = VALUES(view_count),
+        like_count = VALUES(like_count),
+        share_count = VALUES(share_count),
+        update_time = NOW(),
+        ext_json = VALUES(ext_json)
+    </insert>
+
+    <!-- 按门店+目标查单条 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectByStoreTarget) -->
+    <select id="selectByStoreTarget"
+            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE target_id = #{targetId}
+        AND target_type = #{targetType}
+        <if test="storeId != null">
+            AND store_id = #{storeId}
+        </if>
+        LIMIT 1
+    </select>
+
+    <!-- 按门店+目标物理删除 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 deleteByStoreTarget) -->
+    <delete id="deleteByStoreTarget">
+        DELETE FROM <include refid="tableName"/>
+        WHERE store_id = #{storeId}
+        AND target_type = #{targetType}
+        AND target_id = #{targetId}
+    </delete>
+
+    <!-- 条件分页 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectPageByCondition) -->
+    <select id="selectPageByCondition"
+            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        SELECT <include refid="baseColumns"/>
+        FROM <include refid="tableName"/>
+        <where>
+            <!-- 门店ID -->
+            <if test="condition.storeId != null">
+                AND store_id = #{condition.storeId}
+            </if>
+            <!-- 目标类型 -->
+            <if test="condition.targetType != null and condition.targetType != ''">
+                AND target_type = #{condition.targetType}
+            </if>
+            <!-- 目标ID列表 -->
+            <if test="condition.targetIdList != null and condition.targetIdList.size() > 0">
+                AND target_id IN
+                <foreach collection="condition.targetIdList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <!-- 浏览量最小值 -->
+            <if test="condition.viewCountMin != null">
+                AND view_count &gt;= #{condition.viewCountMin}
+            </if>
+            <!-- 点赞量最小值 -->
+            <if test="condition.likeCountMin != null">
+                AND like_count &gt;= #{condition.likeCountMin}
+            </if>
+            <!-- 分享量最小值 -->
+            <if test="condition.shareCountMin != null">
+                AND share_count &gt;= #{condition.shareCountMin}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+    <!-- 条件列表 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectListByCondition) -->
+    <select id="selectListByCondition"
+            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        SELECT <include refid="baseColumns"/>
+        FROM <include refid="tableName"/>
+        <where>
+            <!-- 门店ID列表 -->
+            <if test="condition.storeIdList != null and condition.storeIdList.size() > 0">
+                AND store_id IN
+                <foreach collection="condition.storeIdList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <!-- 目标类型 -->
+            <if test="condition.targetType != null and condition.targetType != ''">
+                AND target_type = #{condition.targetType}
+            </if>
+            <!-- 目标ID列表 -->
+            <if test="condition.targetIdList != null and condition.targetIdList.size() > 0">
+                AND target_id IN
+                <foreach collection="condition.targetIdList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+
+            <if test="condition.viewCountMin != null">
+                AND view_count &gt;= #{condition.viewCountMin}
+            </if>
+            <if test="condition.viewCountMax != null">
+                AND view_count &lt;= #{condition.viewCountMax}
+            </if>
+
+            <if test="condition.likeCountMin != null">
+                AND like_count &gt;= #{condition.likeCountMin}
+            </if>
+            <if test="condition.likeCountMax != null">
+                AND like_count &lt;= #{condition.likeCountMax}
+            </if>
+
+            <if test="condition.shareCountMin != null">
+                AND share_count &gt;= #{condition.shareCountMin}
+            </if>
+            <if test="condition.shareCountMax != null">
+                AND share_count &lt;= #{condition.shareCountMax}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+    <!-- 单条插入 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 insert) -->
+    <insert id="insert"
+            parameterType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        INSERT INTO <include refid="tableName"/> (
+        store_id, publisher_id, target_type, target_id, view_count, like_count, share_count,
+        create_time, update_time, ext_json
+        )
+        VALUES (
+        #{storeId}, #{publisherId}, #{targetType}, #{targetId}, #{viewCount}, #{likeCount}, #{shareCount},
+        #{createTime}, #{updateTime}, #{extJson}
+        )
+    </insert>
+
+    <!-- 按主键选择性更新 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 updateById) -->
+    <update id="updateById"
+            parameterType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        UPDATE <include refid="tableName"/>
+        SET
+        <if test="storeId != null">store_id = #{storeId},</if>
+        <if test="publisherId != null">publisher_id = #{publisherId},</if>
+        <if test="targetType != null">target_type = #{targetType},</if>
+        <if test="targetId != null">target_id = #{targetId},</if>
+        <if test="viewCount != null">view_count = #{viewCount},</if>
+        <if test="likeCount != null">like_count = #{likeCount},</if>
+        <if test="shareCount != null">share_count = #{shareCount},</if>
+        <if test="updateTime != null">update_time = #{updateTime},</if>
+        <if test="extJson != null">ext_json = #{extJson}</if>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 按目标类型+目标ID列表查 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectByTargetTypeAndIdList) -->
+    <select id="selectByTargetTypeAndIdList"
+            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="targetTypeList != null and targetTypeList.size() > 0">
+                target_type IN
+                <foreach collection="targetTypeList" item="type" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="targetIdList != null and targetIdList.size() > 0">
+                AND target_id IN
+                <foreach collection="targetIdList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 按门店ID列表汇总 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectSummaryByStoreIdList;
+         源 resultType 为 StoreTargetInteractionSummaryEntity, Base 对应 StoreTargetInteractionSummaryObj) -->
+    <select id="selectSummaryByStoreIdList"
+            resultType="com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj">
+        SELECT
+        SUM(view_count) AS totalViewCount,
+        SUM(like_count) AS totalLikeCount,
+        SUM(share_count) AS totalShareCount
+        FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="targetIdList != null and targetIdList.size() > 0">
+                target_id IN
+                <foreach collection="targetIdList" item="targetId" open="(" separator="," close=")">
+                    #{targetId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 按发布者汇总 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectSummaryByPublisherId) -->
+    <select id="selectSummaryByPublisherId"
+            resultType="com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj">
+        SELECT
+        SUM(view_count) AS totalViewCount,
+        SUM(like_count) AS totalLikeCount,
+        SUM(share_count) AS totalShareCount
+        FROM
+        <include refid="tableName"/>
+        <where>
+            publisher_id =  #{publisherId}
+        </where>
+    </select>
+
+    <!-- 按发布者查明细 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectByPublisherId) -->
+    <select id="selectByPublisherId"
+            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            publisher_id =  #{publisherId}
+        </where>
+    </select>
+
+</mapper>

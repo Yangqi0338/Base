@@ -29,10 +29,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link ShipAddressDomainImpl} 行为测试。
+ * {@code ShipAddressDomainImpl} 行为测试
  *
  * <p>纯 JUnit 5 + Mockito, 不启动 Spring 容器, 不连数据库。
- * 登录态通过 {@link SecurityContextHolder} 直接种入。</p>
+ * 登录态通过 {@code SecurityContextHolder} 直接种入。</p>
  *
  * @author KC
  */
@@ -50,7 +50,7 @@ class ShipAddressDomainImplTest {
     private ShipAddressDomainImpl shipAddressDomain;
 
     /**
-     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物。
+     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物
      */
     private final ShipAddressAssembler assembler = new ShipAddressAssembler() {
         @Override

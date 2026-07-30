@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 渠道联系人更新入参 (跨域 user ChannelContactReq 降级为 store 本地 DTO)。
+ * 渠道联系人更新入参 (跨域 user ChannelContactReq 降级为 store 本地 DTO)
  *
  * @author KC
  */

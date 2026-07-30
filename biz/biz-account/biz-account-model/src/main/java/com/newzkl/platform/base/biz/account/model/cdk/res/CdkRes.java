@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * 开通码出参。
+ * 开通码出参
  *
  * <p>旧 {@code CdkRes} 为空壳类, 旧接口直接外泄 rpc 模型 {@code CdkVO};
  * 本仓补齐为对外出参对象, 字段与旧 mapper {@code page_column} 一致。</p>

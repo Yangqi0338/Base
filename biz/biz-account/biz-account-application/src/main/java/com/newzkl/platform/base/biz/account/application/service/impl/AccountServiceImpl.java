@@ -8,8 +8,13 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.DistributionRandomInfo;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceEarningApi;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.MarketDistributionApi;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.UserSocialApi;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
@@ -26,6 +31,7 @@ import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.AccountFinanceVO;
 import com.newzkl.platform.base.biz.account.model.res.AppHomePageDataVO;
+import com.newzkl.platform.base.biz.account.model.res.UserHomePageRes;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.CustomSaveBatchReq;
@@ -55,6 +61,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    /**
+     * 用户主页展示的门店商品条数上限 (旧实现硬编码 3)
+     */
+    private static final int USER_HOME_PAGE_GOODS_LIMIT = 3;
+
     private final AccountDomain accountDomain;
     private final AccountRepository accountRepository;
     private final SupplierRepository supplierRepository;
@@ -62,6 +73,9 @@ public class AccountServiceImpl implements AccountService {
     private final AccountAssembler accountAssembler;
 
     private final FinanceEarningApi financeEarningApi;
+    private final UserSocialApi userSocialApi;
+    private final MarketDistributionApi marketDistributionApi;
+    private final GoodsStoreApi goodsStoreApi;
 
 
     @Override
@@ -322,6 +336,57 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void accountDelete(List<Long> idList) {
         accountDomain.accountDelete(idList);
+    }
+
+    @Override
+    public UserHomePageRes getUserHomePage(Long userId, Long currentUserId) {
+        if (userId == null) {
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "用户ID不能为空");
+        }
+        UserHomePageRes res = new UserHomePageRes();
+        res.setUserId(userId);
+        // 当前用户是否关注被查看用户 (看自己恒 false)
+        if (currentUserId != null && !currentUserId.equals(userId)) {
+            res.setIsFollowed(userSocialApi.isFollowed(currentUserId, userId));
+        } else {
+            res.setIsFollowed(Boolean.FALSE);
+        }
+        MemberVO member = userClientDomain.member(userId);
+        if (Objects.nonNull(member)) {
+            res.setNickname(member.getNickname());
+            res.setHead(member.getHead());
+            res.setBackgroundImg(member.getBackgroundImg());
+        }
+        res.setFollowingCount(userSocialApi.countFollowing(userId));
+        res.setFollowerCount(userSocialApi.countFollower(userId));
+        // 被查看用户的门店 + 门店下最多 3 个铺货商品
+        StoreRPCVO store = goodsStoreApi.storeByChannelId(userId);
+        if (store != null && store.getId() != null) {
+            res.setHasStore(Boolean.TRUE);
+            UserHomePageRes.StoreInfo storeInfo = new UserHomePageRes.StoreInfo();
+            storeInfo.setStoreId(store.getId());
+            storeInfo.setStoreName(store.getName());
+            storeInfo.setStoreLogo(store.getLogo());
+            List<DistributionRandomInfo> goodsList = marketDistributionApi
+                    .queryRandomDistributionByStoreIdList(Collections.singletonList(store.getId()), USER_HOME_PAGE_GOODS_LIMIT)
+                    .get(store.getId());
+            if (CollUtil.isNotEmpty(goodsList)) {
+                storeInfo.setGoodsList(goodsList.stream().map(item -> {
+                    UserHomePageRes.GoodsInfo goodsInfo = new UserHomePageRes.GoodsInfo();
+                    goodsInfo.setDistributionId(item.getId());
+                    goodsInfo.setGoodsId(item.getGoodsId());
+                    goodsInfo.setName(item.getName());
+                    goodsInfo.setImg(item.getImg());
+                    goodsInfo.setSellPrice(item.getSellPrice());
+                    return goodsInfo;
+                }).collect(Collectors.toList()));
+            }
+            res.setStoreInfo(storeInfo);
+        } else {
+            res.setHasStore(Boolean.FALSE);
+        }
+        res.setLikeCount(userSocialApi.totalLikeCount(userId));
+        return res;
     }
 
 }

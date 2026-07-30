@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 账号已开通角色视图。
+ * 账号已开通角色视图
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.rpc.model.account.AccountRoleVO}。
  * 旧实现由 {@code AccountDAO.xml#accountRoleVO} 以 supplier / channel 两表 UNION 直接取

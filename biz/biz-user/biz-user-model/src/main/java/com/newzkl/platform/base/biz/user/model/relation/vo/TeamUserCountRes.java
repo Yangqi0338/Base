@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 团队用户数量统计结果。
+ * 团队用户数量统计结果
  *
  * @author muc_fang
  */

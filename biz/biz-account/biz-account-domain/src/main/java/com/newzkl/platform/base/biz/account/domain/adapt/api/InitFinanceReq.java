@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 初始化钱包入参。
+ * 初始化钱包入参
  *
  * <p>迁移: 跨域 finance 结构 {@code com.zkl.scm.finance.rpc.model.purse.req.InitFinanceReq}
  * 降级为 account 本地端口 DTO。</p>

@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.util.stream.Stream;
 
 /**
- * 通用枚举集合: 客户端 / 是否 / 符号 / 请求状态 等平台级通用状态。
+ * 通用枚举集合: 客户端 / 是否 / 符号 / 请求状态 等平台级通用状态
  *
  * @author fang
  */

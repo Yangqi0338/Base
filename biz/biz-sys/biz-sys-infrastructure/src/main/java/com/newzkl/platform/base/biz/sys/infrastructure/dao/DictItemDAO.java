@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 字典条目 DAO。
+ * 字典条目 DAO
  *
  * @author KC
  */
@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface DictItemDAO extends BaseMapper<DictItemDO> {
 
     /**
-     * 构建按父字典 id 的查询条件 (按 sort 升序)。
+     * 构建按父字典 id 的查询条件 (按 sort 升序)
      *
      * @param dictId 父字典 id
      * @return 查询条件

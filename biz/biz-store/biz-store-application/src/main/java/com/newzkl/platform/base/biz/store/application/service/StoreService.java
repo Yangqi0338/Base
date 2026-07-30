@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 
 /**
- * 门店应用服务。
+ * 门店应用服务
  *
  * @author KC
  */

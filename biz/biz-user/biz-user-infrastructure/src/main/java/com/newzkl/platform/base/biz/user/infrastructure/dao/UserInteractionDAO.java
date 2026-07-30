@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.entity.UserInteractionDO
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 用户互动操作 Mapper。
+ * 用户互动操作 Mapper
  *
  * @author sijiwang
  */

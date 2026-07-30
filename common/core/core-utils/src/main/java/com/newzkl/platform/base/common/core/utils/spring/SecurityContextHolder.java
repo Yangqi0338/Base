@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 获取当前线程变量中的用户id、用户名称、Token等信息。
+ * 获取当前线程变量中的用户id、用户名称、Token等信息
  * 注意：必须在网关通过请求头传入，并在拦截器设置值，否则无法获取。
  *
  * @author ruoyi

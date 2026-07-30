@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@link AuthApi} 的本域实现。
+ * {@code AuthApi} 的本域实现
  *
  * <p>把 biz-auth 内部的 {@code RoleDomain} / {@code AuthRepository} 出参转换为 facade 传输对象,
  * 使其他域无需引用 biz-auth-model 即可查角色。</p>
@@ -60,7 +60,7 @@ public class AuthApiProvider implements AuthApi {
     }
 
     /**
-     * 内部出参转 facade 传输对象。
+     * 内部出参转 facade 传输对象
      *
      * @param res 角色出参
      * @return facade 角色信息, 入参为 null 时返回 null

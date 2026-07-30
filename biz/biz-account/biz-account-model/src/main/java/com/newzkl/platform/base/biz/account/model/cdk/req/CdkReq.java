@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 开通码写入入参。
+ * 开通码写入入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.req.CdkCommand}
  * (旧 {@code operator} 为 String 类型的运营商 ID, 本仓收敛为 Long)。</p>

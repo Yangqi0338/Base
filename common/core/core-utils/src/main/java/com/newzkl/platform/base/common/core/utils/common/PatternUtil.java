@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 正则常量与文本处理工具。
+ * 正则常量与文本处理工具
  *
  * @author fang
  */
@@ -52,7 +52,7 @@ public class PatternUtil {
     public static final String CHINESE_NAME = "^[⺀-\u9fff·]{2,60}$";
     private static final Pattern DOUBLE_QUOTE_SRC_PATTERN = Pattern.compile("src=\"(.*?)\"", Pattern.CASE_INSENSITIVE);
     /**
-     * 中国大陆手机号正则表达式（支持最新号段）。
+     * 中国大陆手机号正则表达式（支持最新号段）
      */
     private static final Pattern CHINA_PHONE_PATTERN = Pattern.compile("^1[3-9]\\d{9}$");
 
@@ -92,7 +92,7 @@ public class PatternUtil {
     }
 
     /**
-     * 判断是否为中国大陆手机号（严格校验）。
+     * 判断是否为中国大陆手机号（严格校验）
      *
      * @param phone 待校验的手机号字符串
      * @return true-是有效手机号，false-无效

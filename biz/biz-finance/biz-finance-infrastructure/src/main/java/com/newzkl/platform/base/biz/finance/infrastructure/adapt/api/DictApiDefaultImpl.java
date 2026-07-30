@@ -4,14 +4,14 @@ import com.newzkl.platform.base.biz.finance.domain.adapt.api.DictApi;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link DictApi} 默认兜底实现。
+ * {@code DictApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 字典域(user)为独立服务, 跨域 provider 链已整体延迟。
  * 入口 starter 侧应以远程 Dubbo consumer 覆盖此默认实现。</p>
  *
  * @author KC
  */
-@Component
+@Component("financeDictApiDefaultImpl")
 public class DictApiDefaultImpl implements DictApi {
 
     @Override

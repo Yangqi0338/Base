@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -163,5 +164,30 @@ public class OrderDeliveryDomainImpl implements OrderDeliveryDomain {
     @Override
     public Page<OrderDelivery> pageDelivery(OrderDeliveryPageReq pageReq) {
         return orderDeliveryRepository.pageQuery(pageReq);
+    }
+
+    @Override
+    public Map<Long, List<OrderDelivery>> deliverInfoBySpuOrderNo(String spuOrderNo) {
+        List<SkuOrder> skuOrders = skuOrderRepository.getBySpuOrderNo(spuOrderNo);
+        if (skuOrders == null || skuOrders.isEmpty()) {
+            return new HashMap<>();
+        }
+        List<String> skuOrderNos = skuOrders.stream().map(SkuOrder::getSkuOrderNo).collect(Collectors.toList());
+        List<OrderDeliveryItem> items = orderDeliveryItemRepository.selectBySkuOrderNos(skuOrderNos);
+        if (items == null || items.isEmpty()) {
+            return new HashMap<>();
+        }
+        // 发货单号 -> 发货单, 同一发货单多条明细只查一次
+        Map<String, OrderDelivery> deliveryMap = new HashMap<>();
+        Map<Long, List<OrderDelivery>> result = new HashMap<>();
+        for (OrderDeliveryItem item : items) {
+            OrderDelivery delivery = deliveryMap.computeIfAbsent(item.getDeliveryNo(),
+                    no -> orderDeliveryRepository.findByDeliveryNo(no).orElse(null));
+            if (delivery == null) {
+                continue;
+            }
+            result.computeIfAbsent(item.getSkuId(), k -> new ArrayList<>()).add(delivery);
+        }
+        return result;
     }
 }

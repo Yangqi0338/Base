@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 分布式锁注解。
+ * 分布式锁注解
  *
  * <p>迁移说明: 原 {@code prefix()} 默认值引用业务枚举 {@code RedisEnum.Key}，
  * 通用层不承载业务枚举，已移除该属性 (实际切面未使用)。</p>
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DistributedLock {
     /**
-     * 锁的key，默认使用方法名作为key spEl。
+     * 锁的key，默认使用方法名作为key spEl
      *
      * @return key
      */
@@ -28,14 +28,14 @@ public @interface DistributedLock {
     String key() default "";
 
     /**
-     * 获取锁的最大等待时间（单位：秒）。
+     * 获取锁的最大等待时间（单位：秒）
      *
      * @return 等待时间
      */
     long waitTime() default 3;
 
     /**
-     * 上锁后有效时间（单位：秒）。
+     * 上锁后有效时间（单位：秒）
      *
      * @return 租约时间
      */

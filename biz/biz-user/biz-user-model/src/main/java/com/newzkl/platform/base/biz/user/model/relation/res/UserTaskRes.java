@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 用户任务(UserTask)领域结果类。
+ * 用户任务(UserTask)领域结果类
  *
  * @author kc
  */

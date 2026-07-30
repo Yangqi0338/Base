@@ -28,14 +28,14 @@ public class TLSSigAPIv2 {
      * 【参数说明】
      *
      * @param userid
-     *            - 用户id，限制长度为32字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
+     *            - 用户id，限制长度为32字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符
      * @param expire
      *            - UserSig 票据的过期时间，单位是秒，比如 86400 代表生成的 UserSig 票据在一天后就无法再使用了。
      * @return usersig -生成的签名
      */
 
     /**
-     * Function: Used to issue UserSig that is required by the TRTC and IM services.
+     * Function: Used to issue UserSig that is required by the TRTC and IM services
      * <p>
      * Parameter description:
      *
@@ -80,7 +80,7 @@ public class TLSSigAPIv2 {
      */
 
     /**
-     * Function: Used to issue PrivateMapKey that is optional for room entry.
+     * Function: Used to issue PrivateMapKey that is optional for room entry
      * PrivateMapKey must be used together with UserSig but with more powerful
      * permission control capabilities. - UserSig can only control whether a UserID
      * has permission to use the TRTC service. As long as the UserSig is correct,
@@ -150,7 +150,7 @@ public class TLSSigAPIv2 {
      */
 
     /**
-     * Function: Used to issue PrivateMapKey that is optional for room entry.
+     * Function: Used to issue PrivateMapKey that is optional for room entry
      * PrivateMapKey must be used together with UserSig but with more powerful
      * permission control capabilities. - UserSig can only control whether a UserID
      * has permission to use the TRTC service. As long as the UserSig is correct,

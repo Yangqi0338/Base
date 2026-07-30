@@ -1,13 +1,14 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawConfig;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
-// TODO[pom-gap mybatis-plus-ext]: import org.dromara.mpe.autofill.annotation.JsonSerializable; (annotation 依赖延迟补)
 
 /**
  * @author 提现记录
@@ -35,8 +36,10 @@ public class AccountWithdrawRecordDO extends BaseDO {
 
     /**
      * 配置
+     *
+     * @ext 库中以 JSON 列存放, 走 {@code JacksonTypeHandler} 序列化; 依赖类级 {@code autoResultMap = true} 才生效
      */
-    // TODO[pom-gap mybatis-plus-ext]: @JsonSerializable (autofill json, 依赖延迟补)
+    @TableField(typeHandler = JacksonTypeHandler.class)
     private WithdrawConfig config;
 
     /**

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 门店。
+ * 门店
  *
  * <p>迁移: 跨域 goods 结构 {@code com.zkl.scm.goods.rpc.model.store.StoreRPCVO}
  * 降级为 account 本地端口 DTO。</p>

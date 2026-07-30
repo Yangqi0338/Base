@@ -12,10 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 /**
- * 权限获取工具类。
+ * 权限获取工具类
  *
  * <p>迁移说明: 原 {@code getRole()} 依赖业务枚举 {@code RoleEnum.CompanyRole}，
- * 已随业务枚举下沉到业务层，通用层仅保留 {@link #getRoleId()}。</p>
+ * 已随业务枚举下沉到业务层，通用层仅保留 {@link SecurityUtils#getRoleId}。</p>
  *
  * @author ruoyi
  */
@@ -30,7 +30,7 @@ public class SecurityUtils {
     }
 
     /**
-     * 判断密码是否相同。
+     * 判断密码是否相同
      *
      * @param rawPassword     真实密码
      * @param encodedPassword 加密后字符
@@ -47,7 +47,7 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取当前员工ID。
+     * 获取当前员工ID
      *
      * <p>主账号无员工ID, 返回 {@code null}; 员工账号返回其员工ID。</p>
      *
@@ -62,7 +62,7 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取当前上级运营商ID。
+     * 获取当前上级运营商ID
      *
      * @return 运营商ID, 未设置时返回 null
      */
@@ -75,7 +75,7 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取当前 IM 用户账号。
+     * 获取当前 IM 用户账号
      *
      * @return IM 用户账号
      */

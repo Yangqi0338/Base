@@ -21,21 +21,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 支付订单控制器。
+ * 支付订单控制器
  *
  * <p>迁移自 new-scm {@code com.zkl.scm.finance.interfaces.pay.PayOrderController}。
- * 旧实现经 {@code IOrderPayApi} Dubbo 调用, 新实现直接编排 {@link CashPayService};
- * 旧出参 {@code PayBaseResult} 收敛为具体的 {@link HuiFuPayRes} (汇付是当前唯一通道)。</p>
+ * 旧实现经 {@code IOrderPayApi} Dubbo 调用, 新实现直接编排 {@code CashPayService};
+ * 旧出参 {@code PayBaseResult} 收敛为具体的 {@code HuiFuPayRes} (汇付是当前唯一通道)。</p>
  *
  * @author KC
  */
 @RestController
-@RequestMapping("/payOrder")
+@RequestMapping("payOrder")
 @RequiredArgsConstructor
 public class PayOrderController {
 
     /**
-     * 渠道商充值的商品描述 (用户拉起支付时可见)。
+     * 渠道商充值的商品描述 (用户拉起支付时可见)
      */
     private static final String CHANNEL_RECHARGE = "采购金";
 
@@ -44,9 +44,10 @@ public class PayOrderController {
     private final AccountPurseConfigDomain accountPurseConfigDomain;
 
     /**
-     * 渠道商充值采购金。
+     * 渠道商充值采购金
      *
-     * <p>TODO[auth-defer]: 旧实现带 {@code @RoleLimit(CHANNEL)}, 鉴权注解整体延后, 暂由网关侧兜住。</p>
+     * <p>鉴权说明: 旧实现带 {@code @RoleLimit(CHANNEL)}。Base 不迁鉴权注解, 角色校验由入口
+     * (网关 / 鉴权基建) 统一承担。</p>
      *
      * <p>注意: 旧实现校验的是配置里的 {@code minimumWithdrawalAmount} (最小提现金额) 而非
      * {@code minimumRechargeAmount}, 此处按旧行为原样迁移, 避免线上字典只配了提现阈值时改变准入。</p>
@@ -73,7 +74,7 @@ public class PayOrderController {
     }
 
     /**
-     * 供应商充值运营账户。
+     * 供应商充值运营账户
      *
      * @param rechargeAmount 充值金额 (分)
      * @param payType        支付方式 1:微信 2:支付宝
@@ -89,7 +90,7 @@ public class PayOrderController {
     }
 
     /**
-     * 组装支付入参的公共部分 (订单号、金额、登录态、支付方式)。
+     * 组装支付入参的公共部分 (订单号、金额、登录态、支付方式)
      *
      * @param consumeType 消费类型
      * @param amount      金额 (分), 订单金额与支付金额一致

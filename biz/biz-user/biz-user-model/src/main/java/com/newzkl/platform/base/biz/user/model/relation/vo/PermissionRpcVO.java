@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 等级权限 RPC 视图对象。
+ * 等级权限 RPC 视图对象
  *
  * @author muc_fang
  */
@@ -27,7 +27,7 @@ public class PermissionRpcVO implements Serializable {
     private RoleEnum.CompanyRole role;
 
     /**
-     * 直推奖配置。
+     * 直推奖配置
      */
     @Data
     public static class DirectConfig implements Serializable {
@@ -63,7 +63,7 @@ public class PermissionRpcVO implements Serializable {
         private double orderRatio;
 
         /**
-         * 获取有效的直推礼包收益配置。
+         * 获取有效的直推礼包收益配置
          *
          * @return 有效收益比例列表
          */

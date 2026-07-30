@@ -34,6 +34,13 @@ public interface AccountPurseConfigRepository {
     ConfigSupplierVO querySupplierConfig();
 
     /**
+     * 保存供应商配置
+     *
+     * @param configSupplierVO 供应商配置
+     */
+    void saveSupplierConfig(ConfigSupplierVO configSupplierVO);
+
+    /**
      * 查询全局供应商配置
      */
     ChannelConfigVO defaultChannelConfig();

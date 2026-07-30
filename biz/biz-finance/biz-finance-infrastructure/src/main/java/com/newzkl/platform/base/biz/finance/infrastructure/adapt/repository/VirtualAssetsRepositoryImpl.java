@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 虚拟资产仓储实现。
+ * 虚拟资产仓储实现
  *
  * <p>迁移自 new-scm {@code VirtualAssetsRepositoryImpl}。旧实现走手写 XML SQL + PageHelper,
  * 新实现改为 MyBatis-Plus 原生 {@code selectPage}, 因此无需 {@code VirtualAssetsDAO.xml}。
@@ -27,12 +27,12 @@ import java.util.List;
 public class VirtualAssetsRepositoryImpl extends RepositorySupport implements VirtualAssetsRepository {
 
     /**
-     * 虚拟资产 DAO。
+     * 虚拟资产 DAO
      */
     private final VirtualAssetsDAO virtualAssetsDAO;
 
     /**
-     * 分页查询虚拟资产。
+     * 分页查询虚拟资产
      *
      * @param query 查询条件
      * @return 虚拟资产列表, 永不为 null

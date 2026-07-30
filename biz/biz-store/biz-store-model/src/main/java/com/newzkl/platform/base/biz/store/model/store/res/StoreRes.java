@@ -85,7 +85,7 @@ public class StoreRes extends BaseRes {
     private String storeId;
 
     /**
-     * {@link com.newzkl.platform.base.biz.store.model.enums.StoreTypeEnum}
+     * {@code com.newzkl.platform.base.biz.store.model.enums.StoreTypeEnum}
      */
     private String storeType;
 

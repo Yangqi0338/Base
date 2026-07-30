@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.dao.UserFollowDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.UserFollowDO;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserFollowPageReq;
 import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollow;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,9 +19,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 用户关注仓储实现。
+ * 用户关注仓储实现
  *
- * <p>迁移说明：findFollowingPage/findFollowerPage 降级为 List(TODO[page-meta])，
+ * <p>迁移说明：findFollowingPage/findFollowerPage 保留 Page 分页壳直返，
  * infra 手动 new Page 执行分页。</p>
  *
  * @author sijiwang
@@ -33,7 +34,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     private UserFollowDAO userFollowDAO;
 
     /**
-     * 数据对象转领域实体。
+     * 数据对象转领域实体
      *
      * @param doObj 数据对象
      * @return 领域实体
@@ -51,7 +52,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     /**
-     * 领域实体转数据对象。
+     * 领域实体转数据对象
      *
      * @param entity 领域实体
      * @return 数据对象
@@ -100,13 +101,12 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public List<UserFollow> findFollowingPage(UserFollowPageReq query) {
-        // TODO[page-meta] 领域层降级为 List，infra 手动 new Page。
+    public Page<UserFollow> findFollowingPage(UserFollowPageReq query) {
         Page<UserFollowDO> page = new Page<>(query.getPageNo(), query.getPageSize());
         Page<UserFollowDO> doPage = userFollowDAO.selectPage(page, new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowerId, query.getUserId())
                 .orderByDesc(UserFollowDO::getId));
-        return doPage.getRecords().stream().map(this::toDomain).collect(Collectors.toList());
+        return TransferUtils.transferPage(doPage, this::toDomain);
     }
 
     @Override
@@ -118,13 +118,12 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public List<UserFollow> findFollowerPage(UserFollowPageReq query) {
-        // TODO[page-meta] 领域层降级为 List，infra 手动 new Page。
+    public Page<UserFollow> findFollowerPage(UserFollowPageReq query) {
         Page<UserFollowDO> page = new Page<>(query.getPageNo(), query.getPageSize());
         Page<UserFollowDO> doPage = userFollowDAO.selectPage(page, new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowingId, query.getUserId())
                 .orderByDesc(UserFollowDO::getId));
-        return doPage.getRecords().stream().map(this::toDomain).collect(Collectors.toList());
+        return TransferUtils.transferPage(doPage, this::toDomain);
     }
 
     @Override

@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 售后操作记录-修改请求对象。
+ * 售后操作记录-修改请求对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.domain.refund.model.req.RefundOperationRecordUpdateReq}。
  * 仅开放描述性字段修改, 业务主数据 (售后单/操作人/状态) 由领域层从原记录回填, 与旧实现一致;

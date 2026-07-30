@@ -6,14 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 互动枚举。
+ * 互动枚举
  *
  * @author sijiwang
  */
 public class InteractionEnum {
 
     /**
-     * 被操作对象类型。
+     * 被操作对象类型
      */
     @Getter
     @AllArgsConstructor
@@ -42,7 +42,7 @@ public class InteractionEnum {
         private final String desc;
 
         /**
-         * 根据编码获取枚举。
+         * 根据编码获取枚举
          *
          * @param code 编码
          * @return 匹配的枚举
@@ -58,7 +58,7 @@ public class InteractionEnum {
     }
 
     /**
-     * 操作类型枚举。
+     * 操作类型枚举
      */
     @Getter
     @AllArgsConstructor
@@ -77,7 +77,7 @@ public class InteractionEnum {
         private final String desc;
 
         /**
-         * 根据编码获取枚举。
+         * 根据编码获取枚举
          *
          * @param code 编码
          * @return 匹配的枚举

@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 标记 XXL-Job handler 为秒级扫描的 reload 入口。
+ * 标记 XXL-Job handler 为秒级扫描的 reload 入口
  * 与 @XxlJob 同一方法上共存：@XxlJob 由 XXL-Job 框架触发执行，@SecondLevelJob 用于本平台扫描注册。
  */
 @Target(ElementType.METHOD)

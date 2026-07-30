@@ -9,7 +9,7 @@ import org.dromara.autotable.annotation.TableIndexes;
 import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 
 /**
- * 用户关注持久化对象。
+ * 用户关注持久化对象
  *
  * @author sijiwang
  */

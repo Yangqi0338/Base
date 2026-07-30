@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link CountSaleDomainImpl} 行为测试。
+ * {@code CountSaleDomainImpl} 行为测试
  *
  * <p>纯 JUnit 5 + Mockito, 不启动 Spring 容器, 不连数据库。</p>
  *

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 角色领域服务实现。
+ * 角色领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.IRoleDomainImpl}。
  * 旧实现把 {@code dataGroupIdList} 手工 {@code JSONObject.toJSONString} 后写 String 列,

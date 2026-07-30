@@ -18,7 +18,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 /**
- * 字典条目仓储实现单元测试 (DAO mock, 不连库)。
+ * 字典条目仓储实现单元测试 (DAO mock, 不连库)
  *
  * @author KC
  */

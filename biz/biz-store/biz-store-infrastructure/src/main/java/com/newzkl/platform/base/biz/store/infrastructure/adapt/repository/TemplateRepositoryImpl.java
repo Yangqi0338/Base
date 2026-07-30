@@ -1,9 +1,6 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import cn.hutool.json.JSONUtil;
-import com.newzkl.platform.base.biz.store.model.fitment.req.FitmentPageQuery;
-import com.newzkl.platform.base.biz.store.model.fitment.req.FitmentTemplateQuery;
 import com.newzkl.platform.base.biz.store.model.fitment.vo.FitmentPageVO;
 import com.newzkl.platform.base.biz.store.model.fitment.vo.FitmentTemplateVO;
 import com.newzkl.platform.base.biz.store.domain.fitment.repository.TemplateRepository;
@@ -12,6 +9,7 @@ import com.newzkl.platform.base.biz.store.infrastructure.dao.FitmentTemplateDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.FitmentPageDO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.FitmentTemplateDO;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,10 +54,6 @@ public class TemplateRepositoryImpl implements TemplateRepository {
         template.setState(fitmentTemplate.getState());
         template.setShopId(fitmentTemplate.getShopId());
         template.setCreateTime(fitmentTemplate.getCreateTime());
-        // 若是默认模板，先将其他设置为非默认
-        if (fitmentTemplate.getDefaultTemplate() == 1){
-            fitmentTemplateDAO.alterTemplateDefaultSate(template.getChannelId());
-        }
         if (template.getId() == null){
             template.setId(SnowflakeIdAble.getSnowflakeId());
             template.setCreateTime(LocalDateTime.now());
@@ -93,38 +87,6 @@ public class TemplateRepositoryImpl implements TemplateRepository {
     }
 
     @Override
-    public Page<FitmentTemplateVO> queryTemplate(FitmentTemplateQuery req) {
-        Page<FitmentTemplateVO> page = new Page<>(req.getPageNo(), req.getPageSize());
-        return page.setRecords(fitmentTemplateDAO.queryTemplate(req));
-    }
-
-    @Override
-    public FitmentTemplateVO queryTemplate(Long id) {
-        return fitmentTemplateDAO.queryTemplateById(id);
-    }
-
-    @Override
-    public Page<FitmentPageVO> queryPage(FitmentPageQuery req) {
-        Page<FitmentPageVO> page = new Page<>(req.getPageNo(), req.getPageSize());
-        return page.setRecords(fitmentPageDAO.queryPage(req));
-    }
-
-    @Override
-    public List<FitmentPageVO> queryPageList(Long templateId) {
-        return fitmentPageDAO.queryPageList(templateId);
-    }
-
-    @Override
-    public FitmentPageVO queryPage(Long id) {
-        return fitmentPageDAO.queryPageById(id);
-    }
-
-    @Override
-    public FitmentTemplateVO queryTemplateDefault() {
-        return fitmentTemplateDAO.queryTemplateDefault();
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public Long copyTemplate(Long templateId,Long channelId, Long shopId) {
         LocalDateTime now = LocalDateTime.now();
@@ -137,7 +99,8 @@ public class TemplateRepositoryImpl implements TemplateRepository {
         fitmentTemplate.setShopId(shopId);
         fitmentTemplateDAO.insert(fitmentTemplate);
 
-        List<FitmentPageDO> fitmentPages = fitmentPageDAO.queryPageByTemplateId(templateId);
+        List<FitmentPageDO> fitmentPages = fitmentPageDAO.selectList(
+                new BaseLambdaQueryWrapper<FitmentPageDO>().eq(FitmentPageDO::getTemplateId, templateId));
         fitmentPages.forEach(x->{
             x.setId(SnowflakeIdAble.getSnowflakeId());
             x.setTemplateId(newTemplateId);
@@ -146,11 +109,5 @@ public class TemplateRepositoryImpl implements TemplateRepository {
             fitmentPageDAO.insert(x);
         });
         return newTemplateId;
-    }
-
-
-    @Override
-    public Long queryModelShopTemplateId(Long modelShopId) {
-        return fitmentTemplateDAO.queryModelShopTemplateId(modelShopId);
     }
 }

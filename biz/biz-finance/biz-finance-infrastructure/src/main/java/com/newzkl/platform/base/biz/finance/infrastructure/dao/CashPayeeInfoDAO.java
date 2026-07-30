@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.finance.infrastructure.entity.CashPayeeInfoD
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 现金支付收款方配置 DAO。
+ * 现金支付收款方配置 DAO
  *
  * <p>迁移自 new-scm {@code CashPayeeInfoDAO}。旧三个自定义方法
  * ({@code savePayeeInfo} / {@code queryPayeeInfos} / {@code delOldPayeeInfo})
@@ -18,7 +18,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CashPayeeInfoDAO extends BaseMapper<CashPayeeInfoDO> {
 
     /**
-     * 按消费类型构建查询条件。
+     * 按消费类型构建查询条件
      *
      * @param consumeType 消费类型
      * @return 查询条件

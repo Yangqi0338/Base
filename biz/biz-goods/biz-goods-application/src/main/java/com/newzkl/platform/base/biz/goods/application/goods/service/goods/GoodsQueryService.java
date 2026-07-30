@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.goods.application.goods.service.goods;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 
 /**
- * 商品查询应用服务。
+ * 商品查询应用服务
  *
  * <p>迁移调整: 原 {@code GoodsQueryService} 聚合了选品市场 (MarketSpuVO)、汇订货 (HuiDingHuo)、
  * openapi/rpc 等跨服务查询能力, 这些方法依赖 biz-market 与外部 rpc 契约, 不属于纯商品域范畴,
@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 public interface GoodsQueryService {
 
     /**
-     * 查询 spu 详情。
+     * 查询 spu 详情
      *
      * @param spuId spu 主键
      * @return spu 视图对象
@@ -25,7 +25,7 @@ public interface GoodsQueryService {
     }
 
     /**
-     * 查询 spu 详情。
+     * 查询 spu 详情
      *
      * @param spuId         spu 主键
      * @param needExtraInfo 是否需要额外信息

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link OrderStateRecordController} 入参组装测试。
+ * {@code OrderStateRecordController} 入参组装测试
  *
  * @author KC
  */

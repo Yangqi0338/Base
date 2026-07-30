@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Redis 哈希（Hash）类型操作工具类。
+ * Redis 哈希（Hash）类型操作工具类
  *
  * @author sijiwang
  */

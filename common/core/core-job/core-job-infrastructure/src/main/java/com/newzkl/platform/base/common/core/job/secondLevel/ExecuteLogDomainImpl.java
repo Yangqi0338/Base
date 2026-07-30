@@ -28,7 +28,7 @@ import java.util.Objects;
  * 执行日志 Domain 实现
  */
 @Slf4j
-@Service
+@Service("jobExecuteLogDomainImpl")
 @RequiredArgsConstructor
 public class ExecuteLogDomainImpl implements ExecuteLogDomain {
 

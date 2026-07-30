@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * 售后操作记录表 DO。
+ * 售后操作记录表 DO
  *
  * <p>迁移补充: 原 {@code spu_order_id} (Long) 收敛为业务单号 {@code spu_order_no} (String),
  * 与 {@code OrderStateRecordDO} / {@code SettleOrderWaitDO} / {@code RefundOperationRecordVO} 对齐。</p>

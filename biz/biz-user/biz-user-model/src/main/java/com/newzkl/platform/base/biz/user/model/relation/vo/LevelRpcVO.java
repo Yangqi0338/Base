@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 等级 RPC 视图对象。
+ * 等级 RPC 视图对象
  *
  * @author muc_fang
  */

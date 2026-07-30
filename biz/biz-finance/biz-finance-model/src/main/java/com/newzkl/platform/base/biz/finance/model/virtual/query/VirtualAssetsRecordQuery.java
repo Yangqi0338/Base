@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 虚拟资产变动记录查询入参。
+ * 虚拟资产变动记录查询入参
  *
  * <p>迁移自 new-scm {@code com.zkl.scm.finance.domain.virtual.model.req.QueryVirtualAssetsRecordReq}。</p>
  *
@@ -17,27 +17,27 @@ import lombok.EqualsAndHashCode;
 public class VirtualAssetsRecordQuery extends PageQuery {
 
     /**
-     * 客户id。
+     * 客户id
      */
     private Long accountId;
 
     /**
-     * 客户类型。
+     * 客户类型
      */
     private PurseEnum.FinanceUser accountType;
 
     /**
-     * 资产类型。
+     * 资产类型
      */
     private Integer assetsType;
 
     /**
-     * 业务类型。
+     * 业务类型
      */
     private Integer businessType;
 
     /**
-     * 变动类型。
+     * 变动类型
      */
     private Integer alterType;
 }

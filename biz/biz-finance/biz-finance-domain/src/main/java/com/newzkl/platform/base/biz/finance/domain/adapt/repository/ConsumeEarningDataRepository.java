@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.earnings.res.AppEarningRecordRes;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.EarningRecordVO;
@@ -27,14 +28,20 @@ public interface ConsumeEarningDataRepository {
     void saveEarningRecord(List<EarningRecordVO> earningInfos);
 
     /**
-     * 查询分润记录
+     * 查询分润记录分页
      *
-     * @param query
-     * @return
+     * @param query 分润记录查询
+     * @return 分润记录分页
      */
-    List<EarningRecordVO> queryEarningRecord(EarningRecordQuery query);
+    Page<EarningRecordVO> queryEarningRecord(EarningRecordQuery query);
 
-    List<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery query);
+    /**
+     * 查询 APP 分润记录分页
+     *
+     * @param query 分润记录查询
+     * @return APP 分润记录分页
+     */
+    Page<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery query);
 
     /**
      * 查询客户带分润金额

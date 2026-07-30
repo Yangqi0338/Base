@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 结算类型明细 - 商品导出 Excel 对象。
+ * 结算类型明细 - 商品导出 Excel 对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.application.excel.SettleGoodsExcelVO}
  * (旧在 application 模块, 新随其他 Excel VO 统一落 model)。列名与列宽保持不变。</p>

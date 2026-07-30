@@ -1,8 +1,10 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.biz.finance.model.pay.res.SeatPackageOrderInfo;
 import lombok.Data;
 
 
@@ -71,9 +73,15 @@ public class PurchaseRecordVO extends BaseRes {
     private String tripartiteTradeNo;
 
     /**
-     * 订单信息
+     * 订单信息（原始 JSON，不序列化到出参）
      */
+    @JsonIgnore
     private String orderInfo;
+
+    /**
+     * 席位套餐订单信息（从 orderInfo JSON 反序列化，前端读此字段获取 purchaseNum 等）
+     */
+    private SeatPackageOrderInfo seatPackageOrderInfo;
 
 }
 

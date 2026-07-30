@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 等级出参。
+ * 等级出参
  *
  * <p>旧 {@code /user/level/levelList} 直接外泄领域实体 {@code Level}, 新架构以出参对象替代,
  * 字段一一对应, 不改前端契约。</p>

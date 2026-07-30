@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.virtual.service.VirtualAssetsDomain;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.virtual.query.VirtualAssetsQuery;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link VirtualAssetsController} 登录态补齐测试。
+ * {@code VirtualAssetsController} 登录态补齐测试
  *
  * @author KC
  */
@@ -82,7 +83,7 @@ class VirtualAssetsControllerTest {
     @Test
     @DisplayName("变动记录查询: 入参缺省时按登录态补齐账户 id 与账户类型")
     void queryVirtualAssetsRecordShouldFillCurrentLoginState() {
-        when(virtualAssetsDomain.queryVirtualAssetsRecord(any())).thenReturn(List.of());
+        when(virtualAssetsDomain.queryVirtualAssetsRecord(any())).thenReturn(new Page<>());
 
         virtualAssetsController.queryVirtualAssetsRecord(new VirtualAssetsRecordQuery());
 

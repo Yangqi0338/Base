@@ -10,7 +10,7 @@ import org.dromara.autotable.annotation.Index;
 import java.math.BigDecimal;
 
 /**
- * 用户商品收藏持久化对象。
+ * 用户商品收藏持久化对象
  *
  * @author sijiwang
  */

@@ -72,6 +72,7 @@ app-test/
 .omx
 .claude/worktrees/
 .codegraph/
+.codebase-memory/
 
 # IDE 插件本地配置
 .apifox-helper.properties

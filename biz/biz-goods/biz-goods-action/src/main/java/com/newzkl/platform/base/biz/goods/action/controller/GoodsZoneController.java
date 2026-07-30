@@ -19,22 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 商品分组控制器。
+ * 商品分组控制器
  *
- * @author sijiwang
+ * @author KC
  */
 @RestController
 @RequestMapping("/goods/zone")
 @RequiredArgsConstructor
 public class GoodsZoneController {
 
+    /**
+     * 默认操作人标识, 与 new-scm 保持一致
+     */
+    private static final String SYSTEM_OPERATOR = "system";
+
     private final GoodsZoneService goodsZoneService;
 
     /**
-     * 新增商品分组。
+     * 新增商品分组
      *
-     * @param addReq 新增请求
-     * @return 分组结果
+     * @param addReq 分组新增请求
+     * @return 分组详情
      */
     @PostMapping("/add")
     public PlatformResult<GoodsZoneRes> add(@Validated @RequestBody GoodsZoneAddReq addReq) {
@@ -44,10 +49,10 @@ public class GoodsZoneController {
     }
 
     /**
-     * 编辑商品分组。
+     * 编辑商品分组
      *
-     * @param addReq 编辑请求
-     * @return 分组结果
+     * @param addReq 分组编辑请求
+     * @return 分组详情
      */
     @PostMapping("/edit")
     public PlatformResult<GoodsZoneRes> edit(@Validated @RequestBody GoodsZoneAddReq addReq) {
@@ -57,31 +62,31 @@ public class GoodsZoneController {
     }
 
     /**
-     * 启用商品分组。
+     * 启用商品分组
      *
-     * @param id 分组 ID
+     * @param id 分组主键
      * @return 是否成功
      */
     @PostMapping("/enable/{id}")
     public PlatformResult<Boolean> enable(@PathVariable Long id) {
-        return PlatformResult.success(goodsZoneService.enable(id, SecurityUtils.getNickName()));
+        return PlatformResult.success(goodsZoneService.enable(id, SYSTEM_OPERATOR));
     }
 
     /**
-     * 禁用商品分组。
+     * 禁用商品分组
      *
-     * @param id 分组 ID
+     * @param id 分组主键
      * @return 是否成功
      */
     @PostMapping("/disable/{id}")
     public PlatformResult<Boolean> disable(@PathVariable Long id) {
-        return PlatformResult.success(goodsZoneService.disable(id, SecurityUtils.getNickName()));
+        return PlatformResult.success(goodsZoneService.disable(id, SYSTEM_OPERATOR));
     }
 
     /**
-     * 根据 ID 查询详情。
+     * 商品分组详情
      *
-     * @param id 主键 ID
+     * @param id 分组主键
      * @return 分组详情
      */
     @GetMapping("/get/{id}")
@@ -90,10 +95,10 @@ public class GoodsZoneController {
     }
 
     /**
-     * 分页查询分组列表。
+     * 商品分组分页
      *
-     * @param queryReq 分页条件
-     * @return 分页结果
+     * @param queryReq 分组分页查询条件
+     * @return 分组分页
      */
     @PostMapping("/page")
     public PlatformResult<Page<GoodsZoneRes>> pageQuery(@RequestBody GoodsZonePageReq queryReq) {
@@ -101,9 +106,9 @@ public class GoodsZoneController {
     }
 
     /**
-     * 查询所有启用的分组。
+     * 查询全部启用分组
      *
-     * @return 分组列表
+     * @return 启用分组列表
      */
     @GetMapping("/listEnabled")
     public PlatformResult<List<GoodsZoneRes>> listAllEnabled() {
@@ -111,9 +116,9 @@ public class GoodsZoneController {
     }
 
     /**
-     * 删除商品分组。
+     * 删除商品分组
      *
-     * @param id 主键 ID
+     * @param id 分组主键
      * @return 是否成功
      */
     @PostMapping("/delete/{id}")

@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商户分类同步请求。
+ * 商户分类同步请求
  *
  * <p>迁移自 {@code com.zkl.scm.rpc.model.CategorySyncReq}, 仅保留平台根分类ID
- * (由 {@link BaseReq} 的 {@code id} 承载)。</p>
+ * (由 {@code BaseReq} 的 {@code id} 承载)。</p>
  *
  * @author KC
  */

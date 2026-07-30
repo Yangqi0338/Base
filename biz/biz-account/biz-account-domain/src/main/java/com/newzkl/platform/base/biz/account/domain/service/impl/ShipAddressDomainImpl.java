@@ -19,15 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 收货地址领域服务实现。
+ * 收货地址领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.address.service.impl.ShipAddressDomainImpl}。
  * 旧实现的充血写法 (向实体回塞 repository 引用) 已去除; 旧 {@code SecurityUtils.getRole()}
- * 在中台通用层已不存在, 改用 {@link SecurityUtils#getRoleId()}。</p>
+ * 在中台通用层已不存在, 改用 {@link SecurityUtils#getRoleId}。</p>
  *
  * @author KC
  */
-@Service
+@Service("accountShipAddressDomainImpl")
 @RequiredArgsConstructor
 public class ShipAddressDomainImpl implements ShipAddressDomain {
 
@@ -88,7 +88,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
     }
 
     /**
-     * 判断是否为默认地址标记。
+     * 判断是否为默认地址标记
      *
      * @param flag 是否默认标记
      * @return true 表示默认地址

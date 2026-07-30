@@ -26,19 +26,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 等级领域服务实现。
+ * 等级领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.level.service.impl.LevelDomainImpl}。
- * 旧实现直连 {@code @DubboReference IPackGoodsFacade}, 中台化后改走出站端口 {@link PackGoodsApi}。</p>
+ * 旧实现直连 {@code @DubboReference IPackGoodsFacade}, 中台化后改走出站端口 {@code PackGoodsApi}。</p>
  *
  * @author KC
  */
-@Service
+@Service("accountLevelDomainImpl")
 @RequiredArgsConstructor
 public class LevelDomainImpl implements LevelDomain {
 
     /**
-     * 入会礼包默认等级值 (旧实现硬编码为 1, 保留该语义)。
+     * 入会礼包默认等级值 (旧实现硬编码为 1, 保留该语义)
      */
     private static final int DEFAULT_LEVEL_VALUE = 1;
 
@@ -108,7 +108,7 @@ public class LevelDomainImpl implements LevelDomain {
     }
 
     /**
-     * 领域视图列表转出参列表 (空集合而非 null)。
+     * 领域视图列表转出参列表 (空集合而非 null)
      *
      * @param levelList 等级领域视图列表
      * @return 等级出参列表

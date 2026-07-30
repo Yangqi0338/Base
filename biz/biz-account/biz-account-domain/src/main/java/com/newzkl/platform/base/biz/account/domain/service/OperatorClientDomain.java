@@ -74,6 +74,18 @@ public interface OperatorClientDomain {
 
     DealerVO dealerProxySave(DealerProxySaveReq dealerRegisterCommand, Long inviteAccountId, Long accountId, boolean isRegisterOnce);
 
+    /**
+     * 交易师服务费率修改
+     *
+     * <p>迁自旧充血实体 {@code Dealer.serviceFeeConfigEdit(Double)}: 只写 {@code service_rate} 单列,
+     * 其余列不动。中台贫血模型下按主键做部分列更新, 语义与旧一致</p>
+     *
+     * @param id          交易师账号 ID
+     * @param serviceRate 服务费率
+     * @return 影响行数
+     */
+    int dealerServiceFeeConfigEdit(Long id, Double serviceRate);
+
     Long selectorCustomSave(SelectorCustomSaveReq req, boolean isRegisterOnce);
 
     Long selectorSave(SelectorVO selector);
@@ -103,6 +115,19 @@ public interface OperatorClientDomain {
      */
     void selectorLevelUp(Long accountId, Integer level);
 
+    /**
+     * 甄选师等级直接改写
+     *
+     * <p>迁自旧充血实体 {@code Selector.selectorLevelEdit(Integer)}: 只写 {@code level} 单列,
+     * 不做「新等级须高于旧等级」判断, 也不触发上级等级重算 —— 与
+     * {@link OperatorClientDomain#selectorLevelUp} 的升级语义不同, 是平台侧的人工改写</p>
+     *
+     * @param id    甄选师账号 ID
+     * @param level 等级
+     * @return 影响行数
+     */
+    int selectorLevelEdit(Long id, Integer level);
+
     SelectorVO selectorProxySave(SelectorProxySaveReq selectorProxySaveReq, Long inviteAccountId, Long accountId);
 
     /**
@@ -112,5 +137,20 @@ public interface OperatorClientDomain {
      * @return
      */
     OperatorDomainInfo getOperatorDomainInfo(Long id);
+
+    /**
+     * 按运营类型查运营商可见的供应商 ID 列表
+     *
+     * <p>迁自旧 {@code IOperatorDomainImpl#supplierIdListByType}。运营类型决定可见口径:
+     * 机构=看自己招募的供应商 (inviteId), 行业=看同行业 (industryId),
+     * 区域=看同区域 (companyAreaCode, 取 typeForeignId 逗号串的最后一段)。</p>
+     *
+     * @param accountId  运营商账号 ID
+     * @param searchType 查询用的运营类型, 为 null 时取该运营商自身类型
+     * @return 可见供应商 ID 列表; 运营商不存在时返回空列表
+     * @throws com.newzkl.platform.base.common.core.model.exception.PlatformException
+     *         传入的运营类型不在该运营商可用范围内时抛出
+     */
+    List<Long> supplierIdListByType(Long accountId, Integer searchType);
 
 }

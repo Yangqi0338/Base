@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 门店账号关联入参。
+ * 门店账号关联入参
  *
  * <p>迁移: 跨域 goods 结构
  * {@code com.zkl.scm.goods.rpc.model.store.req.StoreAccountCreateRPCReq}

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository;
 
-import com.newzkl.platform.base.common.core.mq.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.biz.order.model.support.MQ;
 import com.newzkl.platform.base.biz.order.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;

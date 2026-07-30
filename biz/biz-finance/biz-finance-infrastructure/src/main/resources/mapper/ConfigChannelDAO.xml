@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.ConfigChannelDAO">
+
+    <!-- 批量查询渠道商配置 (迁移自 new-scm ConfigChannelDAO.xml 的 batchQueryChannelConfig) -->
+    <!-- 源侧返回 BatchQueryChannelConfigRes, Base 对应 BatchQueryConfigChannelRes -->
+    <select id="batchQueryChannelConfig"
+            resultType="com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes">
+        select cc.channel_id as channelId,cc.operator_config as operatorConfig,cc.operator_now_value as operatorNowValue,ap.earnings as amount
+        from config_channel cc
+        left join account_purse ap on cc.channel_id = ap.account_id and ap.account_type = 2
+        where cc.channel_id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

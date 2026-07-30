@@ -29,9 +29,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link SuggestRepositoryImpl} 单元测试 (DAO / 出站端口全 mock, 不连库)。
+ * {@code SuggestRepositoryImpl} 单元测试 (DAO / 出站端口全 mock, 不连库)
  *
- * <p>静态门面 {@link SecurityUtils} 用 {@code mockStatic} 隔离。</p>
+ * <p>静态门面 {@code SecurityUtils} 用 {@code mockStatic} 隔离。</p>
  *
  * @author KC
  */

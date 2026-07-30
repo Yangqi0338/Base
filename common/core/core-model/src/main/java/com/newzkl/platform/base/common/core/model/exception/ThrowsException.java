@@ -24,7 +24,7 @@ public class ThrowsException {
     // ========== 格式化方法 ==========
 
     /**
-     * 将错误编号对应的消息使用 params 进行格式化。
+     * 将错误编号对应的消息使用 params 进行格式化
      *
      * @param code           错误编号
      * @param messagePattern 消息模版

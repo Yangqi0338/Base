@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Redis 操作层门面（转发到各子工具类）。
+ * Redis 操作层门面（转发到各子工具类）
  *
  * @author sijiwang
  */

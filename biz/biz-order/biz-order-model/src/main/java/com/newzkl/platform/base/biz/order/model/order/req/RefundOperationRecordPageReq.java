@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 售后操作记录-分页查询请求对象。
+ * 售后操作记录-分页查询请求对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.domain.refund.model.req.RefundOperationRecordPageReq}。
  * 沿用旧 {@code current}/{@code size} 分页字段 (与同域 {@code OrderStateRecordPageReq} 一致,

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 平台账号领域服务实现。
+ * 平台账号领域服务实现
  *
  * <p>BCrypt 加密收敛在本层 (旧 controller {@code new BCryptPasswordEncoder().encode} 剥离);
  * 校验复用 {@link SecurityUtils#matchesPassword}。登录 token 签发归入口 starter。</p>
@@ -88,7 +88,7 @@ public class AdminAccountDomainImpl implements AdminAccountDomain {
     }
 
     /**
-     * 明文密码存在则 BCrypt 加密 (置回请求对象)。
+     * 明文密码存在则 BCrypt 加密 (置回请求对象)
      *
      * @param req 账号请求
      */

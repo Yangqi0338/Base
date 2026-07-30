@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 售后-协商 (操作) 记录控制器。
+ * 售后-协商 (操作) 记录控制器
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.interfaces.controller.RefundOperationRecordController},
  * 保留端点路径与 HTTP 方法不变。分页出参由旧 {@code IPage} 壳改为 MyBatis-Plus {@code Page}。</p>
@@ -36,7 +36,7 @@ public class RefundOperationRecordController {
     private final RefundOperationRecordService refundOperationRecordService;
 
     /**
-     * 新增售后操作记录。
+     * 新增售后操作记录
      *
      * @param req 新增入参
      * @return 视图对象
@@ -47,7 +47,7 @@ public class RefundOperationRecordController {
     }
 
     /**
-     * 修改售后操作记录 (仅描述性字段)。
+     * 修改售后操作记录 (仅描述性字段)
      *
      * @param req 修改入参
      * @return 视图对象
@@ -58,7 +58,7 @@ public class RefundOperationRecordController {
     }
 
     /**
-     * 删除售后操作记录。
+     * 删除售后操作记录
      *
      * @param idObj 主键 ID 入参
      * @return 成功结果
@@ -70,7 +70,7 @@ public class RefundOperationRecordController {
     }
 
     /**
-     * 按售后单 ID 查询操作记录列表。
+     * 按售后单 ID 查询操作记录列表
      *
      * @param refundId 售后单 ID
      * @return 视图对象列表
@@ -81,7 +81,7 @@ public class RefundOperationRecordController {
     }
 
     /**
-     * 分页查询售后操作记录。
+     * 分页查询售后操作记录
      *
      * @param req 分页查询入参
      * @return 分页结果

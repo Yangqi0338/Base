@@ -43,9 +43,9 @@ import java.util.Map;
  * <p>迁移调整:</p>
  * <ul>
  *   <li>{@code javax.servlet.*} → {@code jakarta.servlet.*} (Spring Boot 3);</li>
- *   <li>验签走 {@link HuiFuMethod#verify} (旧 {@code verify(String, HttpServletRequest)}
+ *   <li>验签走 (旧 {@code verify(String, HttpServletRequest)}
  *       重载已在 domain 层裁掉, sign 提取属入口层职责, 由本控制器完成);</li>
- *   <li>{@code Y P N} 裸串收敛为 {@link PurseEnum.TripartitePurchaseAuditStatus};</li>
+ *   <li>{@code Y P N} 裸串收敛</li>
  *   <li>{@code queryPageAccountTripartitePurse} 在 Base 直接返回 {@code List},
  *       旧代码的 {@code .getList()} 去掉;</li>
  *   <li>{@code AccountTripartitePurseVO.userStatus} 在 Base 已是枚举, 三方状态串经
@@ -53,6 +53,9 @@ import java.util.Map;
  * </ul>
  *
  * <p>回调接口不做鉴权 (三方直连), 安全性由验签保证</p>
+ *
+ * <p>通道范围: 仅汇付。连连通道已整体删除, 旧 {@code /personPurseNotify} 随通道一并去掉;
+ * {@code /rollOutNotify} / {@code /withdrawOutNotify} 因对外路径需保留, 留空壳 (见对应方法)。</p>
  *
  * @author KC
  */
@@ -63,12 +66,12 @@ import java.util.Map;
 public class NotifyController {
 
     /**
-     * 三方要求的成功应答体。
+     * 三方要求的成功应答体
      */
     private static final String SUCCESS = "Success";
 
     /**
-     * 汇付通知类型 - 审核消息。
+     * 汇付通知类型 - 审核消息
      */
     private static final String NOTIFY_TYPE_AUDIT = "A";
 
@@ -77,7 +80,7 @@ public class NotifyController {
     private final CashPayService cashPayService;
 
     /**
-     * 消费支付结果回调 (汇付)。
+     * 消费支付结果回调 (汇付)
      *
      * @param request 回调请求
      * @return 成功返回 {@code Success}; 非成功状态返回 {@code null} 触发三方重试
@@ -95,7 +98,7 @@ public class NotifyController {
     }
 
     /**
-     * 查询支付状态缓存。
+     * 查询支付状态缓存
      *
      * @param businessKey 业务键
      * @param key         业务单键
@@ -109,7 +112,7 @@ public class NotifyController {
     }
 
     /**
-     * 绑卡审核结果回调 (汇付)。
+     * 绑卡审核结果回调 (汇付)
      *
      * @param request 回调请求
      * @return 成功返回 {@code Success}; 缺少 {@code data} 或验签失败返回 {@code null}
@@ -136,7 +139,47 @@ public class NotifyController {
     }
 
     /**
-     * 按汇付审核结果更新三方账户状态。
+     * 转出结果回调 (路径保留壳)
+     *
+     * <p>路径逐字取自 new-scm {@code PayNotifyController#rollOutNotify}, 供对外契约与
+     * apifox 扫描保持一致。</p>
+     *
+     * <p>业务从未走到: 旧实现由连连通道驱动 (入口第一步为连连验签), 连连通道已整体删除,
+     * Base 不具备该报文的验签能力。本方法仅保留路径壳, <b>不做任何落账 / 状态变更</b>,
+     * 也不解析报文 —— 无验签即处理等同于把资金状态机暴露给未认证请求。</p>
+     *
+     * <p>TODO: 待确定替代通道 (如汇付转出回调) 后, 连同验签一并实现; 在此之前不得接线上流量。</p>
+     *
+     * @return 固定返回 {@code null} (不应答成功, 不诱导三方认为已受理)
+     */
+    @PostMapping("/rollOutNotify")
+    public String rollOutNotify() {
+        log.warn("/notify/rollOutNotify 命中未实现的路径壳, 已忽略");
+        return null;
+    }
+
+    /**
+     * 提现出账结果回调 (路径保留壳)
+     *
+     * <p>路径逐字取自 new-scm {@code PayNotifyController#withdrawOutNotify}, 供对外契约与
+     * apifox 扫描保持一致。</p>
+     *
+     * <p>业务从未走到: 旧实现由连连通道驱动 (入口第一步为连连验签), 连连通道已整体删除,
+     * Base 不具备该报文的验签能力。本方法仅保留路径壳, <b>不做任何落账 / 状态变更</b>,
+     * 也不解析报文。</p>
+     *
+     * <p>TODO: 待确定替代通道后, 连同验签一并实现; 在此之前不得接线上流量。</p>
+     *
+     * @return 固定返回 {@code null} (不应答成功, 不诱导三方认为已受理)
+     */
+    @PostMapping("/withdrawOutNotify")
+    public String withdrawOutNotify() {
+        log.warn("/notify/withdrawOutNotify 命中未实现的路径壳, 已忽略");
+        return null;
+    }
+
+    /**
+     * 按汇付审核结果更新三方账户状态
      *
      * @param auditInfo 审核信息
      */
@@ -172,7 +215,7 @@ public class NotifyController {
     }
 
     /**
-     * 汇付回调验签。
+     * 汇付回调验签
      *
      * @param data    回调业务报文 ({@code resp_data})
      * @param request 回调请求 (取 {@code sign} 参数)
@@ -183,7 +226,7 @@ public class NotifyController {
     }
 
     /**
-     * 解析汇付异步回调报文。
+     * 解析汇付异步回调报文
      *
      * <p>汇付以 {@code application/x-www-form-urlencoded} 推送, 但部分环境下 Spring 未完成
      * 表单解析, 故先手工解析请求体, 缺失字段再回退到 {@code request.getParameter}。</p>
@@ -203,7 +246,7 @@ public class NotifyController {
     }
 
     /**
-     * 取表单解析结果, 空白时回退请求参数。
+     * 取表单解析结果, 空白时回退请求参数
      *
      * @param params  手工解析出的表单参数
      * @param request 回调请求
@@ -215,7 +258,7 @@ public class NotifyController {
     }
 
     /**
-     * 以 UTF-8 读尽请求体。
+     * 以 UTF-8 读尽请求体
      *
      * @param request 请求
      * @return 请求体字符串
@@ -234,7 +277,7 @@ public class NotifyController {
     }
 
     /**
-     * 解析并解码 urlencoded 表单串。
+     * 解析并解码 urlencoded 表单串
      *
      * <p>迁移调整: 旧实现按 key/value 打 {@code log.error} 输出全部回调明细 (含签名),
      * 属日志噪音与敏感信息外泄, 迁移时删除。</p>

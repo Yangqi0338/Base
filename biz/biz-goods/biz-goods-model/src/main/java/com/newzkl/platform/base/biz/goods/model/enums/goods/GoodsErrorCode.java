@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 商品域错误码。
+ * 商品域错误码
  *
  * <p>迁移新增: 镜像 finance/order 域错误码约定 ({@code implements ErrorCode}), 收敛商品域
  * (spu/brand/freight/goodsZone/interaction/report) 通用错误码。域内既有 {@code SpuErrorCode}、
@@ -38,11 +38,11 @@ public enum GoodsErrorCode implements ErrorCode {
     ;
 
     /**
-     * 状态码。
+     * 状态码
      */
     private final Integer code;
     /**
-     * 状态码对应说明文案。
+     * 状态码对应说明文案
      */
     private final String message;
 }

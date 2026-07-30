@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.repository.ShipAddressRepository;
-import com.newzkl.platform.base.biz.account.infrastructure.dao.ShipAddressDAO;
+import com.newzkl.platform.base.biz.account.infrastructure.dao.AccountShipAddressDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.ShipAddressDO;
 import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressQuery;
 import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
@@ -17,19 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 收货地址仓储实现。
+ * 收货地址仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.infrastructure.repository.ShipAddressRepositoryImpl}。
  * 旧 mapper xml 的 {@code setOtherNotDefault} 自定义 SQL 改用 MyBatis-Plus
- * {@link LambdaUpdateWrapper} 表达, 本仓不写 mapper xml。</p>
+ * {@code LambdaUpdateWrapper} 表达, 本仓不写 mapper xml。</p>
  *
  * @author KC
  */
-@Repository
+@Repository("accountShipAddressRepositoryImpl")
 @RequiredArgsConstructor
 public class ShipAddressRepositoryImpl implements ShipAddressRepository {
 
-    private final ShipAddressDAO shipAddressDAO;
+    private final AccountShipAddressDAO shipAddressDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

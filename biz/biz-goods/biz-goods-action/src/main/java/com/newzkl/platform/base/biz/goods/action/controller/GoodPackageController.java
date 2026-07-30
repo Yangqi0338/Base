@@ -1,92 +1,112 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.goodPackage.service.GoodPackageDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
-import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
- * 商品-套餐控制器。
- *
- * <p>商品域「商品套餐/组包」配置, 区别于甄选师「入会礼包」(归 biz-benefit-order)。</p>
- *
- * <p>迁移偏离: 旧 {@code /api/good-packages} REST 风格 (PathVariable + 散装 RequestParam)
- * 统一为 {@code /goods/goodPackage} + POST + RequestBody, 返回 {@code PlatformResult}。</p>
+ * 商品套餐控制器
  *
  * @author KC
  */
 @RestController
-@RequestMapping("/goods/goodPackage")
+@RequestMapping("/api/good-packages")
 @RequiredArgsConstructor
 public class GoodPackageController {
+
+    /**
+     * 套餐启用状态
+     */
+    private static final int STATE_ENABLED = 1;
 
     private final GoodPackageDomain goodPackageDomain;
 
     /**
-     * 创建套餐。
+     * 创建套餐
      *
      * @param req 套餐请求
-     * @return 套餐主键 ID
+     * @return 套餐主键
      */
-    @PostMapping("create")
-    public PlatformResult<Long> create(@Validated @RequestBody GoodPackageReq req) {
+    @PostMapping
+    public PlatformResult<Long> create(@Valid @RequestBody GoodPackageReq req) {
         return PlatformResult.success(goodPackageDomain.create(req));
     }
 
     /**
-     * 修改套餐。
+     * 更新套餐
      *
-     * @param req 套餐请求 (id 必填)
-     * @return 成功结果
+     * @param id           套餐主键
+     * @param packageName  套餐名称
+     * @param goodsNum     商品数量
+     * @param packagePrice 套餐价格
+     * @param packageDesc  套餐描述
+     * @return 空结果
      */
-    @PostMapping("update")
-    public PlatformResult<Void> update(@Validated(UpdateCommand.class) @RequestBody GoodPackageReq req) {
+    @PutMapping("/{id}")
+    public PlatformResult<Void> update(@PathVariable Long id,
+                                       @RequestParam String packageName,
+                                       @RequestParam Long goodsNum,
+                                       @RequestParam Integer packagePrice,
+                                       @RequestParam String packageDesc) {
+        GoodPackageReq req = new GoodPackageReq();
+        req.setId(id);
+        req.setPackageName(packageName);
+        req.setGoodsNum(goodsNum);
+        req.setPackagePrice(packagePrice);
+        req.setPackageDesc(packageDesc);
         goodPackageDomain.update(req);
         return PlatformResult.success();
     }
 
     /**
-     * 停用套餐。
+     * 停用套餐
      *
-     * @param id 套餐主键 ID
-     * @return 成功结果
+     * @param id 套餐主键
+     * @return 空结果
      */
-    @PostMapping("disable")
-    public PlatformResult<Void> disable(@RequestParam("id") Long id) {
+    @PutMapping("/{id}/disable")
+    public PlatformResult<Void> disable(@PathVariable Long id) {
         goodPackageDomain.disable(id);
         return PlatformResult.success();
     }
 
     /**
-     * 套餐详情 (按套餐业务编码)。
+     * 查询全部启用套餐
      *
-     * @param packageId 套餐业务编码
-     * @return 套餐视图对象
+     * @return 启用套餐列表
      */
-    @GetMapping("detail")
-    public PlatformResult<GoodPackageVO> detail(@RequestParam("packageId") String packageId) {
-        return PlatformResult.success(goodPackageDomain.detailByPackageId(packageId));
+    @GetMapping("/enabled")
+    public PlatformResult<List<GoodPackageVO>> getEnabledPackages() {
+        GoodPackageQuery query = new GoodPackageQuery();
+        query.setState(STATE_ENABLED);
+        query.resetQueryList();
+        return PlatformResult.success(goodPackageDomain.page(query).getRecords());
     }
 
     /**
-     * 套餐分页 (传 state=1 取启用套餐, 替代旧 {@code GET /enabled})。
+     * 按套餐业务编码查详情
      *
-     * @param query 套餐查询
-     * @return 套餐分页
+     * @param packageId 套餐业务编码
+     * @return 套餐详情
      */
-    @PostMapping("page")
-    public PlatformResult<Page<GoodPackageVO>> page(@RequestBody GoodPackageQuery query) {
-        return PlatformResult.success(goodPackageDomain.page(query));
+    @GetMapping("/{packageId}")
+    public PlatformResult<GoodPackageVO> getByPackageId(@PathVariable String packageId) {
+        return PlatformResult.success(goodPackageDomain.detailByPackageId(packageId));
     }
+
+    // 源 enable (PUT /{id}/enable) 标注 @Deprecated, 按规则不迁。
 }

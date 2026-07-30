@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.UserTaskQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 用户任务(user_task) Mapper。
+ * 用户任务(user_task) Mapper
  *
  * <p>迁移说明：源 DAO 被 import 但无文件，据用法补建。getLw 使用原生 MP LambdaQueryWrapper。</p>
  *
@@ -19,7 +19,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserTaskDAO extends BaseMapper<UserTaskDO> {
 
     /**
-     * 构造用户任务查询包装器。
+     * 构造用户任务查询包装器
      *
      * @param query 查询条件
      * @return LambdaQueryWrapper

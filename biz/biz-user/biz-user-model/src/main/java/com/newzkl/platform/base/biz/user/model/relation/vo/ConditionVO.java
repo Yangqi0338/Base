@@ -11,7 +11,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 条件计算模型。
+ * 条件计算模型
  *
  * @author fang
  */

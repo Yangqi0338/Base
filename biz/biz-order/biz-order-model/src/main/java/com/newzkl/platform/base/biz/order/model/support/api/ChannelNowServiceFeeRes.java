@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 渠道商当前服务费。
+ * 渠道商当前服务费
  *
  * <p>迁移: 跨域 finance 结构 {@code com.zkl.scm.finance.model.account.res.ChannelNowServiceFeeRes}
  * 降级为 order 本地 DTO。</p>

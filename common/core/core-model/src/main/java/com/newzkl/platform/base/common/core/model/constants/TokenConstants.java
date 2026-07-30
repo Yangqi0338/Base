@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.core.model.constants;
 
 /**
- * 令牌与请求头透传字段常量。
+ * 令牌与请求头透传字段常量
  *
  * @author muc_fang
  */

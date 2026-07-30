@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.cdk.vo.CdkVO;
 import java.util.List;
 
 /**
- * 开通码领域服务。
+ * 开通码领域服务
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.ICdkDomain}。
  * 语义为角色/门店开通码 (表 {@code cdk}), 与商品域的虚拟商品兑换码无关。
@@ -22,7 +22,7 @@ import java.util.List;
 public interface CdkDomain {
 
     /**
-     * 开通码保存。
+     * 开通码保存
      *
      * @param req 开通码入参
      * @return 主键 ID
@@ -30,7 +30,7 @@ public interface CdkDomain {
     Long save(CdkReq req);
 
     /**
-     * 开通码修改。
+     * 开通码修改
      *
      * @param id  开通码 ID
      * @param req 开通码入参
@@ -39,7 +39,7 @@ public interface CdkDomain {
     int edit(Long id, CdkReq req);
 
     /**
-     * 开通码删除。
+     * 开通码删除
      *
      * @param idList ID 列表
      * @return 影响行数
@@ -47,7 +47,7 @@ public interface CdkDomain {
     int delete(List<Long> idList);
 
     /**
-     * 开通码领域视图。
+     * 开通码领域视图
      *
      * @param id 开通码 ID
      * @return 开通码领域视图, 无则 null
@@ -55,7 +55,7 @@ public interface CdkDomain {
     CdkVO cdk(Long id);
 
     /**
-     * 开通码详情 (对外出参)。
+     * 开通码详情 (对外出参)
      *
      * @param id 开通码 ID
      * @return 开通码出参, 无则 null
@@ -63,7 +63,7 @@ public interface CdkDomain {
     CdkRes detail(Long id);
 
     /**
-     * 开通码分页。
+     * 开通码分页
      *
      * @param query 查询条件
      * @return 分页结果
@@ -71,7 +71,7 @@ public interface CdkDomain {
     Page<CdkRes> pageList(CdkQuery query);
 
     /**
-     * 按查询条件取开通码 ID 列表。
+     * 按查询条件取开通码 ID 列表
      *
      * @param query 查询条件
      * @return ID 列表, 无数据返回空集合
@@ -79,7 +79,7 @@ public interface CdkDomain {
     List<Long> idByQuery(CdkQuery query);
 
     /**
-     * 随机生成开通码。
+     * 随机生成开通码
      *
      * <p>保留旧语义: 单次上限 1000 个; 生成 12 位随机值并与库内同系统类型已有值去重 (递归补足);
      * 归属人角色固定为运营商。</p>
@@ -92,7 +92,7 @@ public interface CdkDomain {
     List<String> randomCreateCdk(Long belowId, Integer number, Integer systemType);
 
     /**
-     * 按给定值直接生成开通码。
+     * 按给定值直接生成开通码
      *
      * @param belowId    归属运营商 ID
      * @param systemType 系统类型
@@ -102,7 +102,7 @@ public interface CdkDomain {
     List<Long> directCreateCdk(Long belowId, Integer systemType, List<String> valueList);
 
     /**
-     * 分配开通码。
+     * 分配开通码
      *
      * <p>保留旧语义: 运营商可分配给交易师或渠道商, 交易师仅可分配给渠道商, 其余组合抛业务异常。</p>
      *
@@ -112,7 +112,7 @@ public interface CdkDomain {
     int toCdk(ToCdkCommand command);
 
     /**
-     * 修改开通码兑换状态。
+     * 修改开通码兑换状态
      *
      * <p>保留旧语义: 用户已使用 ({@code useType == 0}) 的开通码不允许改回未使用。</p>
      *

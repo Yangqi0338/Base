@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-user OperatorDAO.xml
+     适配: where 字段按 Base OperatorQuery 实有展开(源 name/username/typeForeignId 单值分支 Base 无对应字段, 删) -->
+<mapper namespace="com.newzkl.platform.base.biz.account.infrastructure.dao.OperatorDAO">
+
+    <select id="groupCountByQuery" resultType="java.util.Map">
+        select
+        <if test="query.groupField != null and query.groupField.size() > 0">
+            <foreach collection="query.groupField" item="item" separator=",">
+                ${item},
+                count(${item}) as ${item}_count
+            </foreach>
+        </if>
+        from operator t
+        <where>
+            t.del_flag = 0
+            <if test="query.id != null">
+                and t.`id` = #{query.id}
+            </if>
+            <if test="query.idList != null and query.idList.size() > 0">
+                and t.`id` in
+                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query.type != null">
+                and t.`type` = #{query.type}
+            </if>
+            ${query.buildInSQL('typeForeignIdList','t.type_foreign_id')}
+            <if test="query.typeForeignNameEq != null and query.typeForeignNameEq != '' ">
+                and t.`type_foreign_name` = #{query.typeForeignNameEq}
+            </if>
+            <if test="query.notTypeForeignIdList != null and query.notTypeForeignIdList.size() > 0">
+                and t.type_foreign_id not in
+                <foreach collection="query.notTypeForeignIdList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query.domain != null and query.domain != '' ">
+                and t.`domain`  like CONCAT('%',#{query.domain},'%')
+            </if>
+        </where>
+        ${query.groupSQL}
+    </select>
+
+</mapper>

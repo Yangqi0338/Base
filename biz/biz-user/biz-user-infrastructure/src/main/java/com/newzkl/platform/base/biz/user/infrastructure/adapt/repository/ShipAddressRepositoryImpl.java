@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.ShipAddressRepository;
-import com.newzkl.platform.base.biz.user.infrastructure.dao.ShipAddressDAO;
+import com.newzkl.platform.base.biz.user.infrastructure.dao.UserShipAddressDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.ShipAddressDO;
 import com.newzkl.platform.base.biz.user.model.relation.dto.ShipAddressDTO;
 import com.newzkl.platform.base.biz.user.model.relation.req.ShipAddressPageReq;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 收货地址仓储实现。
+ * 收货地址仓储实现
  *
  * <p>迁移说明：新 common BaseDO 使用 delFlag(@TableLogic)，源 isDeleted/deletedTime
  * 字段不存在，逻辑删除交由 MP removeById 处理；pageQuery 降级为 List(TODO[page-meta])。</p>
@@ -29,8 +29,8 @@ import java.util.Optional;
  * @author sijiwang
  */
 @Slf4j
-@Repository
-public class ShipAddressRepositoryImpl extends ServiceImpl<ShipAddressDAO, ShipAddressDO> implements ShipAddressRepository {
+@Repository("userShipAddressRepositoryImpl")
+public class ShipAddressRepositoryImpl extends ServiceImpl<UserShipAddressDAO, ShipAddressDO> implements ShipAddressRepository {
 
     @Override
     public ShipAddressDTO save(ShipAddressDTO dto) {

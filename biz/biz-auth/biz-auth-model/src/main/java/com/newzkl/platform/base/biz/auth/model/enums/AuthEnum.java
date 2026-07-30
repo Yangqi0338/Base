@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * RBAC 权限枚举集。
+ * RBAC 权限枚举集
  *
  * <p>原 {@code com.newzkl.platform.base.biz.account.model.enums.AuthEnum} 在 biz-auth 切分时按语义拆分:
  * 本类保留 RBAC 侧 (系统 / 权限关系 / 关系对象 / 功能点类型); 员工类型 {@code EmpType} 属账号语义,
@@ -15,7 +15,7 @@ import lombok.Getter;
 public class AuthEnum {
 
     /**
-     * 系统类型。
+     * 系统类型
      */
     @Getter
     @AllArgsConstructor
@@ -27,7 +27,7 @@ public class AuthEnum {
     }
 
     /**
-     * 权限关系类型。
+     * 权限关系类型
      */
     @Getter
     @AllArgsConstructor
@@ -43,7 +43,7 @@ public class AuthEnum {
     }
 
     /**
-     * 关系对象类型。
+     * 关系对象类型
      */
     @Getter
     @AllArgsConstructor
@@ -58,7 +58,7 @@ public class AuthEnum {
     }
 
     /**
-     * 功能点类型。
+     * 功能点类型
      */
     @Getter
     @AllArgsConstructor

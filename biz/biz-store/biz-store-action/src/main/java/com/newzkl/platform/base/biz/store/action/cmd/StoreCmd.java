@@ -8,14 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 门店入参命令集合。
+ * 门店入参命令集合
  *
  * @author fang
  */
 public class StoreCmd {
 
     /**
-     * 门店 ID 命令。
+     * 门店 ID 命令
      */
     @Data
     public static class ID {
@@ -23,7 +23,7 @@ public class StoreCmd {
     }
 
     /**
-     * 门店 ID 列表命令。
+     * 门店 ID 列表命令
      */
     @Data
     public static class IDList {
@@ -32,7 +32,7 @@ public class StoreCmd {
     }
 
     /**
-     * 门店编辑命令。
+     * 门店编辑命令
      */
     @Data
     public static class Edit {

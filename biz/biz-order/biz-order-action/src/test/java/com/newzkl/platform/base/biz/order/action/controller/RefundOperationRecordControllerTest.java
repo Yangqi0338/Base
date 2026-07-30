@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link RefundOperationRecordController} 端点透传测试。
+ * {@code RefundOperationRecordController} 端点透传测试
  *
  * @author KC
  */

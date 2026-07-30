@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 分布式锁切面。
+ * 分布式锁切面
  */
 @Aspect
 @Component

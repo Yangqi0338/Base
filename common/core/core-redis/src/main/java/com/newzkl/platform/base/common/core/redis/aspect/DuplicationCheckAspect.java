@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 重复提交校验切面。
+ * 重复提交校验切面
  *
  * @author 孔祥基
  */

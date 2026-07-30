@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.res.CountSaleVO;
 import java.util.List;
 
 /**
- * 销售统计领域服务。
+ * 销售统计领域服务
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.count.service.ICountSaleDomain}。
  * 旧 {@code countSaleEdit(List<EditColumnDTO>, Long)} 列自增能力仅供统计定时任务使用,
@@ -19,7 +19,7 @@ import java.util.List;
 public interface CountSaleDomain {
 
     /**
-     * 新建销售统计。
+     * 新建销售统计
      *
      * @param req 销售统计入参
      * @return 主键 ID
@@ -27,7 +27,7 @@ public interface CountSaleDomain {
     Long save(CountSaleReq req);
 
     /**
-     * 修改销售统计。
+     * 修改销售统计
      *
      * <p>以入参 {@code id} 为更新目标, 与旧 {@code countSaleEdit(Long, CountSaleCommand)} 一致。</p>
      *
@@ -38,7 +38,7 @@ public interface CountSaleDomain {
     int edit(Long id, CountSaleReq req);
 
     /**
-     * 删除销售统计。
+     * 删除销售统计
      *
      * @param idList ID 列表
      * @return 影响行数
@@ -46,7 +46,7 @@ public interface CountSaleDomain {
     int delete(List<Long> idList);
 
     /**
-     * 销售统计详情。
+     * 销售统计详情
      *
      * @param id 销售统计 ID
      * @return 销售统计视图, 无则 null
@@ -54,7 +54,7 @@ public interface CountSaleDomain {
     CountSaleVO detail(Long id);
 
     /**
-     * 按查询条件取单条销售统计。
+     * 按查询条件取单条销售统计
      *
      * @param query 查询条件
      * @return 销售统计视图, 无则 null
@@ -62,7 +62,7 @@ public interface CountSaleDomain {
     CountSaleVO findByQuery(CountSaleQuery query);
 
     /**
-     * 销售统计分页。
+     * 销售统计分页
      *
      * @param query 查询条件
      * @return 分页结果

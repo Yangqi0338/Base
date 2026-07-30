@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 开放平台开发者初始化入参。
+ * 开放平台开发者初始化入参
  *
  * <p>迁移: 跨域 openapi 结构
  * {@code com.zkl.scm.openapi.rpc.model.req.DeveloperInitReq}

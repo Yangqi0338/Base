@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 商户自助注册入参。
+ * 商户自助注册入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.req.MerchantCustomSaveReq}。
  * 商户主键取 {@code accountId} (与账号同 ID), 故不复用 {@code BaseReq#id}。</p>

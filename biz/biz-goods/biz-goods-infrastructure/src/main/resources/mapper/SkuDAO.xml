@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SkuDAO">
+
+    <!-- 按 SKU 聚合出 SPU 冗余统计列 (迁移自 new-scm SkuDAO.xml 的 countSkuById) -->
+    <select id="countSkuById"
+            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO">
+        select
+        min(t2.market_price) as market_price,
+        min(t2.supply_price) as supply_price,
+        min(t2.sale_price) as sale_price,
+        min(t2.unit_price) as unit_price,
+        max(t2.market_price - t2.sale_price) as max_profit,
+        min(t2.market_price) as market_price_began,
+        max(t2.market_price) as market_price_end,
+        min(t2.sale_price) as sale_price_began,
+        max(t2.sale_price) as sale_price_end,
+        min(t2.unit_price) as unit_price_began,
+        max(t2.unit_price) as unit_price_end,
+        min(t2.supply_price) as supplier_price_began,
+        max(t2.supply_price) as supplier_price_end,
+        min(t2.weight) as min_pricing_num,
+        sum(t2.inventory) as inventory
+        from sku t2 where t2.spu_id = #{spuId,jdbcType=BIGINT}
+        group by t2.spu_id
+    </select>
+
+    <!-- 订单商品信息: storeId 为空走渠道选品(market_goods_relation), 非空走门店铺货(store_distribution)
+         (迁移自 new-scm SkuDAO.xml 的 queryOrderGoodsInfoVOList) -->
+    <select id="queryOrderGoodsInfoVOList"
+            resultType="com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO">
+        SELECT
+        t.id AS sku_id,
+        t.`img` ,
+        t.`name` ,
+        t.`weight` ,
+        t.`volume` ,
+        t.`spu_id` ,
+        t.`supply_price` ,
+        t.`inventory` ,
+        t.`sale_attribute` as sale_attribute_json,
+        t.`sale_price`,
+        t.out_sku_id as outSkuId,
+        t.buy_start_qty,
+        t.`expand` as expand,
+        <if test="storeId == null">
+            GROUP_CONCAT(DISTINCT t1.market_id ORDER BY t1.market_id) as twoMarketIds,
+            MAX(IF(t1.id IS NOT NULL, 1, 0)) as is_select,
+        </if>
+        <if test="storeId != null">
+            GROUP_CONCAT(DISTINCT t1.market_id ORDER BY t1.market_id) as twoMarketIds,
+            MAX(t1.sell_price) as store_price,
+        </if>
+        t2.account_id as supplier_id,
+        t2.freight_template_id,
+        t2.state as spu_state,
+        t2.img as spu_img,
+        t2.name as spu_name,
+        t2.out_spu_id as outSpuId,
+        t2.channel_type as spu_channel_type
+        FROM
+        sku t
+        <if test="storeId == null">
+            LEFT JOIN market_goods_relation t1 ON t.spu_id = t1.goods_id
+        </if>
+        <if test="storeId != null">
+            LEFT JOIN store_distribution t1 ON t.id = t1.sku_id
+        </if>
+        LEFT JOIN spu t2 on t.spu_id = t2.id
+        <where>
+            <if test="storeId == null">
+                and t1.user_id = #{channelId}
+                and t1.relation_type = 3 and t1.state = 1
+            </if>
+            <if test="storeId != null">
+                and t1.channel_id = #{channelId}
+                and t1.store_id = #{storeId}
+            </if>
+
+            <if test="list != null and list.size() > 0">
+                and t.id in
+                <foreach collection="list" item="item" separator="," close=")" open="(">
+                    #{item.skuId}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY
+        t.id, t.spu_id
+    </select>
+
+    <!-- 按 SKU ID 列表查订单商品信息 (迁移自 new-scm SkuDAO.xml 的 queryOrderSkuInfoVOList) -->
+    <select id="queryOrderSkuInfoVOList"
+            resultType="com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO">
+        SELECT
+        t.id AS sku_id,
+        t.`img` ,
+        t.`name` ,
+        t.`weight` ,
+        t.`volume` ,
+        t.`spu_id` ,
+        t.`supply_price` ,
+        t.`inventory` ,
+        t.`sale_attribute` as sale_attribute_json,
+        t.`sale_price`,
+        t.out_sku_id as outSkuId,
+        t2.account_id as supplier_id,
+        t2.freight_template_id,
+        t2.state as spu_state,
+        t2.img as spu_img,
+        t2.name as spu_name,
+        t2.out_spu_id as outSpuId,
+        t2.channel_type as spu_channel_type,
+        t.buy_start_qty,
+        t.expand
+        FROM
+        sku t
+        LEFT JOIN spu t2 on t.spu_id = t2.id
+        where t.id in
+        <foreach collection="skuIdList" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

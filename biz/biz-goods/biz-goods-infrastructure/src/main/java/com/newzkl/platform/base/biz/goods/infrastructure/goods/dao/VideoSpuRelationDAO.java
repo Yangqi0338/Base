@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.Collection;
 
 /**
- * 视频-商品关联 DAO。
+ * 视频-商品关联 DAO
  *
  * @author KC
  */
@@ -17,7 +17,7 @@ import java.util.Collection;
 public interface VideoSpuRelationDAO extends BaseMapper<VideoSpuRelationDO> {
 
     /**
-     * 构建按视频 ID 与类型的查询条件。
+     * 构建按视频 ID 与类型的查询条件
      *
      * @param videoIdList 视频 ID 列表
      * @param type        视频类型

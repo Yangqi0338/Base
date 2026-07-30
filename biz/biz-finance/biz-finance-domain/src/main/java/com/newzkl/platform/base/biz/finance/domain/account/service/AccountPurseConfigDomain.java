@@ -79,7 +79,14 @@ public interface AccountPurseConfigDomain {
     ConfigSupplierVO querySupplierConfig();
 
     /**
-     * 查询全局数智门店配置。
+     * 保存供应商配置
+     *
+     * @param configSupplierVO 供应商配置
+     */
+    void saveSupplierConfig(ConfigSupplierVO configSupplierVO);
+
+    /**
+     * 查询全局数智门店配置
      *
      * <p>取字典 {@code DictEnum.Key.CHANNEL_CONFIG}, 字典缺省时返回金额阈值全 0 的兜底对象, 永不为 null。</p>
      *

@@ -47,6 +47,6 @@ public interface AccountTripartitePurseDAO extends BaseMapper<AccountTripartiteP
      * @param accountId
      * @return
      */
-    String queryCommitInfo(Long accountId);
+    String queryCommitInfo(@Param("accountId") Long accountId);
 
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 等级查询。
+ * 等级查询
  *
  * @author fang
  */

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 行政区域节点。
+ * 行政区域节点
  *
  * @author muc_fang
  */
@@ -41,7 +41,7 @@ public class Area {
     private Integer flag;
 
     /**
-     * 将树形区域平铺, 并按父编码过滤。
+     * 将树形区域平铺, 并按父编码过滤
      *
      * @param areaList   区域树
      * @param parentCode 父编码, 为 null 时不过滤
@@ -56,7 +56,7 @@ public class Area {
     }
 
     /**
-     * 递归平铺区域节点。
+     * 递归平铺区域节点
      *
      * @param areaList 结果列表
      * @param area     当前节点
@@ -71,7 +71,7 @@ public class Area {
     }
 
     /**
-     * 按名称匹配收集区域编码 (最多 3 级)。
+     * 按名称匹配收集区域编码 (最多 3 级)
      *
      * @param codeList 编码收集列表
      * @param nameStr  待匹配名称串

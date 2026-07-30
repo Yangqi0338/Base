@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.ExecuteLogRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.assembler.ExecuteLogAssembler;
-import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.ExecuteLogDAO;
+import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.GoodsExecuteLogDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.ExecuteLogDO;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.executeLog.ExecuteLog;
 import com.newzkl.platform.base.biz.goods.model.goods.query.executeLog.ExecuteLogQuery;
@@ -21,11 +21,11 @@ import java.util.List;
  *
  * @author fang
  */
-@Repository
+@Repository("goodsExecuteLogRepositoryImpl")
 @RequiredArgsConstructor
 public class ExecuteLogRepositoryImpl implements ExecuteLogRepository {
 
-    private final ExecuteLogDAO executeLogDAO;
+    private final GoodsExecuteLogDAO executeLogDAO;
     private final ExecuteLogAssembler executeLogAssembler;
 
     @Override

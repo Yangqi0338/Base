@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.function.Function;
 
 /**
- * 忽略 null 值的字符串拼接器。
+ * 忽略 null 值的字符串拼接器
  *
  * @author fang
  */

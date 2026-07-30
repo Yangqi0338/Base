@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-sale SettleRecordDAO.xml
+     适配: settleTypeList 的 join 键 sku_order_id/spu_order_id -> sku_order_no/spu_order_no
+     已知偏差: Base sku_order 无 sku_sale_attribute / spu_order 无 spu_name/spu_img(已并入快照 JSON),
+               settleTypeList 不再取 skuName/spuName/spuImg, 仅保留 spo.create_time as createOrderTime, 见 findings -->
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.SettleRecordDAO">
+
+    <select id="totalSettleAmount" resultType="java.lang.Integer">
+        SELECT sum(settle_money) from settle_record where del_flag = 0
+    </select>
+
+    <!-- 源侧同样只有 label 单分支 <set>, label 为空会语法错误, 调用方保证非空, 原样保留 -->
+    <update id="updateById">
+        update settle_record t
+        <set>
+            <if test="model.label != null">
+                t.`label` = #{model.label},
+            </if>
+        </set>
+        where t.id = #{model.id,jdbcType=BIGINT}
+    </update>
+
+    <select id="settleTypeList" resultType="com.newzkl.platform.base.biz.order.model.order.vo.SettleOrderWaitVO">
+        <choose>
+            <when test="query.type == 0">
+                select sw.*, spo.create_time as createOrderTime from settle_order_wait sw
+                left join spu_order spo on sw.spu_order_no = spo.spu_order_no
+            </when>
+            <otherwise>
+                select sw.* from settle_order_wait sw
+            </otherwise>
+        </choose>
+        where sw.settle_record_id = #{query.settleRecordId}
+        and sw.`type` = #{query.type}
+        and sw.del_flag = 0
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Integer">
+        select
+            count(t.id)
+        from settle_record t
+        <where>
+            t.del_flag = 0
+            <if test="query.id != null">
+                and t.`id` = #{query.id}
+            </if>
+            <if test="query.idList != null and query.idList.size() > 0">
+                and t.`id` in
+                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query.supplierId != null">
+                and t.`supplier_id` = #{query.supplierId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

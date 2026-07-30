@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商户查询入参。
+ * 商户查询入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.req.MerchantQuery}。
- * 旧 {@code id} / {@code idList} 字段由父类 {@link BizPageQuery} 提供, 此处不重复声明。</p>
+ * 旧 {@code id} / {@code idList} 字段由父类 {@code BizPageQuery} 提供, 此处不重复声明。</p>
  *
  * @author KC
  */

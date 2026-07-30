@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * 运营商建议标签配置 DAO。
+ * 运营商建议标签配置 DAO
  *
  * @author KC
  */
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface MarketSuggestTagConfigDAO extends BaseMapper<MarketSuggestTagConfigDO> {
 
     /**
-     * 按账户组装查询条件。
+     * 按账户组装查询条件
      *
      * <p>迁移: 替代旧 {@code MarketSuggestTagConfigDAO.queryByAccountId} 手写 SQL。</p>
      *

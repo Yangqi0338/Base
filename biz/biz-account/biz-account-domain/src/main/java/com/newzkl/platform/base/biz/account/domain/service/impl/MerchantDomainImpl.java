@@ -26,10 +26,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 商户领域服务实现。
+ * 商户领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.IMerchantDomainImpl}。
- * 旧 {@code ThrowsException.exception(...)} 换为 {@link PlatformException};
+ * 旧 {@code ThrowsException.exception(...)} 换为 {@code PlatformException};
  * 旧 {@code CommonEnum.Switch.ON} 在中台通用层为 {@code CommonEnum.YesOrNo.YES} (码值 1 一致);
  * 登录态取值 (accountId) 由旧的 controller/应用层下沉到本层。</p>
  *

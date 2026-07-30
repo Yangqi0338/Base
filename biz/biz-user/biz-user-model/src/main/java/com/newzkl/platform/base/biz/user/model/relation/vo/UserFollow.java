@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 用户关注领域实体。
+ * 用户关注领域实体
  *
  * @author sijiwang
  */

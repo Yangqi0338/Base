@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 虚拟资产出参。
+ * 虚拟资产出参
  *
  * <p>迁移自 new-scm {@code com.zkl.scm.finance.domain.virtual.model.vo.VirtualAssetsVO}。
- * {@code id}/{@code createTime} 由 {@link BaseRes} 提供, 不再重复声明。</p>
+ * {@code id}/{@code createTime} 由 {@code BaseRes} 提供, 不再重复声明。</p>
  *
  * @author KC
  */
@@ -18,32 +18,32 @@ import lombok.EqualsAndHashCode;
 public class VirtualAssetsRes extends BaseRes {
 
     /**
-     * 客户id。
+     * 客户id
      */
     private Long accountId;
 
     /**
-     * 客户名称。
+     * 客户名称
      */
     private String accountName;
 
     /**
-     * 客户类型。
+     * 客户类型
      */
     private PurseEnum.FinanceUser accountType;
 
     /**
-     * 资产类型。
+     * 资产类型
      */
     private Integer assetsType;
 
     /**
-     * 资产值。
+     * 资产值
      */
     private Integer assetsValue;
 
     /**
-     * 累计资产。
+     * 累计资产
      */
     private Integer totalAssets;
 }

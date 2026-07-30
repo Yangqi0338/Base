@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 角色访问限制标记注解。
+ * 角色访问限制标记注解
  *
  * <p>标注在 controller 方法/类上, 声明允许访问的角色集合。</p>
  *
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 public @interface RoleLimit {
 
     /**
-     * 允许访问的角色集合。
+     * 允许访问的角色集合
      *
      * @return 角色数组, 默认空 (不限制)
      */

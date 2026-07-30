@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link DistributionApi} 默认兜底实现。
+ * {@code DistributionApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 分销域(market)跨域链延迟, 入口 starter 侧远程 consumer 覆盖。</p>
  *

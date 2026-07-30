@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.stream.Stream;
 
 /**
- * 分润枚举（迁移精简版：relation 仅用到 {@link ConsumeType}）。
+ * 分润枚举（迁移精简版：relation 仅用到 {@code ConsumeType}）
  *
  * <p>源 EarningsEnum 依赖 finance 域 PurseEnum（未迁移），此处仅保留 relation 所需的 ConsumeType。
  * 其余枚举（ContributeType/State/EarningType/Type/PurseAlterTypeEnum）随 finance 域迁移。</p>
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class EarningsEnum implements Serializable {
 
     /**
-     * 消费类型。
+     * 消费类型
      */
     @AllArgsConstructor
     @Getter
@@ -52,7 +52,7 @@ public class EarningsEnum implements Serializable {
         private final String info;
 
         /**
-         * 根据类型编码获取枚举。
+         * 根据类型编码获取枚举
          *
          * @param consumeType 类型编码
          * @return 匹配的枚举

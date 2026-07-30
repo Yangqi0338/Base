@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
 /**
- * 用户任务(UserTask)查询类。
+ * 用户任务(UserTask)查询类
  *
  * @author kc
  */

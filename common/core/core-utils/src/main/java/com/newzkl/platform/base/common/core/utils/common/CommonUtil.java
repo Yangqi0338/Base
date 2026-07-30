@@ -30,7 +30,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * 通用集合 / 流 / 字符串 / 数值处理工具。
+ * 通用集合 / 流 / 字符串 / 数值处理工具
  *
  * @author 孔祥基
  */
@@ -56,7 +56,7 @@ public class CommonUtil {
     }
 
     /**
-     * 比较变更字段。
+     * 比较变更字段
      */
     public static StringBuilder updateStr(Object oldObj, Object newObj, JSONObject fieldJson, JSONArray jsonArray) {
         ArrayList<String> arrayList = new ArrayList<>(fieldJson.keySet());
@@ -89,7 +89,7 @@ public class CommonUtil {
     }
 
     /**
-     * 比较所有记录字段。
+     * 比较所有记录字段
      */
     public static JSONArray recordField(Object newEntity, Object oldEntity) {
         JSONArray jsonArray = new JSONArray();
@@ -146,7 +146,7 @@ public class CommonUtil {
     }
 
     /**
-     * 去除参数。
+     * 去除参数
      */
     public static String removeQuery(String url) {
         if (StrUtil.isBlank(url)) {
@@ -195,7 +195,7 @@ public class CommonUtil {
     }
 
     /**
-     * 判断是否图片。
+     * 判断是否图片
      */
     public static boolean isImage(String fileName, boolean throwException) {
         String s = FileUtil.extName(fileName).toLowerCase();
@@ -494,22 +494,22 @@ public class CommonUtil {
     private static final ConcurrentHashMap<Class<?>, JavaClass> JAVA_CLASS_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * 平台代码包名前缀，仅该前缀下的类走磁盘源码定位。
+     * 平台代码包名前缀，仅该前缀下的类走磁盘源码定位
      */
     private static final String PLATFORM_PACKAGE_PREFIX = "com.newzkl.platform";
 
     /**
-     * Maven 标准源码目录相对片段。
+     * Maven 标准源码目录相对片段
      */
     private static final String SRC_MAIN_JAVA = "src" + File.separator + "main" + File.separator + "java";
 
     /**
-     * 类 → 所在模块源码根目录 缓存，未命中缓存空串。
+     * 类 → 所在模块源码根目录 缓存，未命中缓存空串
      */
     private static final ConcurrentHashMap<String, String> CLASS_DIR_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * 工程内全部模块源码根目录缓存，首次调用时扫描。
+     * 工程内全部模块源码根目录缓存，首次调用时扫描
      */
     private static volatile List<File> SOURCE_ROOT_CACHE;
 
@@ -556,7 +556,7 @@ public class CommonUtil {
     }
 
     /**
-     * 扫描工程内全部 Maven 模块的 {@code src/main/java} 目录。
+     * 扫描工程内全部 Maven 模块的 {@code src/main/java} 目录
      * @ext 从当前工作目录向上找到聚合工程根(最外层含 pom.xml 的目录)，再沿含 pom.xml 的子目录递归，
      * 天然适配 biz/biz-xxx/biz-xxx-yyy、common/core/core-xxx、common/core/core-mq/core-mq-yyy 等多级嵌套
      *
@@ -582,7 +582,7 @@ public class CommonUtil {
     }
 
     /**
-     * 从工作目录向上定位聚合工程根目录。
+     * 从工作目录向上定位聚合工程根目录
      *
      * @return 最外层含 pom.xml 的目录，均不含时返回 null
      */
@@ -599,7 +599,7 @@ public class CommonUtil {
     }
 
     /**
-     * 沿模块树递归收集源码根目录。
+     * 沿模块树递归收集源码根目录
      *
      * @param moduleDir 模块目录
      * @param roots     收集容器

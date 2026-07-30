@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.AccountPurseAlterRecordDAO">
+
+    <!-- 批量保存客户账户变动记录 (迁移自 new-scm AccountPurseAlterRecordDAO.xml 的 saveAccountPurseAlterRecord) -->
+    <insert id="saveAccountPurseAlterRecord" parameterType="java.util.List">
+        insert into account_purse_alter_record (id, account_id, account_type,purse_type,
+        alter_type, amount, join_record_id,remark,
+        create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id}, #{item.accountId}, #{item.accountType},#{item.purseType},
+            #{item.alterType},  #{item.amount}, #{item.joinRecordId},#{item.remark},now()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 查询客户账户变动记录 (迁移自 new-scm AccountPurseAlterRecordDAO.xml 的 queryAccountPurseAlterRecords) -->
+    <!-- 源侧 QueryResultMap 把 create_time 映射到 time, Base AccountPurseAlterRecordVO 继承 BaseRes 只有 createTime, 故改用 resultType 由驼峰自动映射 -->
+    <!-- 源侧 alter_type 单值过滤, Base Query 只有 alterTypeList, 改 in; 源侧 remarkList 过滤 Base Query 无对应字段, 已删 -->
+    <select id="queryAccountPurseAlterRecords"
+            resultType="com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO">
+        select
+        id, account_id, account_type, purse_type, alter_type, amount, join_record_id, remark,
+        create_time
+        from account_purse_alter_record
+        <where>
+            and account_type = #{accountType}
+            <if test="accountId != null and accountId > 0">
+                and account_id = #{accountId}
+            </if>
+            <if test="purseType != null">
+                and purse_type = #{purseType}
+            </if>
+            <if test="alterTypeList != null and alterTypeList.size() > 0">
+                and alter_type in
+                <foreach collection="alterTypeList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="idList != null and idList.size() > 0">
+                and `id` in
+                <foreach collection="idList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="createStartTime != null">
+                and create_time >= #{createStartTime}
+            </if>
+            <if test="createEndTime != null">
+                and create_time &lt; #{createEndTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <!-- 查询供应商结算数据 (迁移自 new-scm AccountPurseAlterRecordDAO.xml 的 querySupplierSettleData) -->
+    <select id="querySupplierSettleData" resultType="java.lang.Integer">
+        SELECT SUM(amount)
+        FROM account_purse_alter_record
+        where account_type = 1
+        and remark = #{remark}
+    </select>
+
+</mapper>

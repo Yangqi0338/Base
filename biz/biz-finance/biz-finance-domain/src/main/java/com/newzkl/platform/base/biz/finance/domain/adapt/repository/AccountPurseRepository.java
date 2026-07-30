@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPurseRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleDataRes;
@@ -116,12 +117,16 @@ public interface AccountPurseRepository {
     void saveAccountPurseAlterRecord(List<AccountPurseAlterRecordVO> accountPurseAlterRecords);
 
     /**
-     * 查询客户账户变动记录
+     * 分页查询客户账户变动记录
      *
-     * @param req
-     * @return
+     * <p>返回分页对象而非裸 {@code List}: 实现内本就执行 {@code selectPage} 已拿到 {@code total},
+     * 丢掉分页壳等于 count 查询白跑, 且前端分页器无总数可用。
+     * 见 {@code rules/Architecture.md} 语义迁移条「{@code PageInfo}→{@code IPage/Page} 直返」</p>
+     *
+     * @param req 变动记录查询
+     * @return 变动记录分页
      */
-    List<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req);
+    Page<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req);
 
     /**
      * 增加客户三方账户余额

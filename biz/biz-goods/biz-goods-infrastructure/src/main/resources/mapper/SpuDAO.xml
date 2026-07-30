@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SpuDAO">
+
+    <!-- 扣减 SPU 冗余库存 (迁移自 new-scm SpuDAO.xml 的 cutInventory) -->
+    <update id="cutInventory">
+        update spu set inventory = inventory - #{count,jdbcType=INTEGER}
+        where id = (select spu_id from sku where id = #{skuId,jdbcType=BIGINT}) and inventory &gt;= #{count,jdbcType=INTEGER}
+    </update>
+
+    <!-- 回补 SPU 冗余库存 (迁移自 new-scm SpuDAO.xml 的 addInventory) -->
+    <update id="addInventory">
+        update spu set inventory = inventory + #{count,jdbcType=INTEGER}
+        where id = (select spu_id from sku where id = #{skuId,jdbcType=BIGINT})
+    </update>
+
+    <!-- 按分类分组统计 SPU 数 (迁移自 new-scm SpuDAO.xml 的 countSpuByCategory) -->
+    <select id="countSpuByCategory"
+            resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO">
+        SELECT
+        t.category_Id as id, COUNT(t.id) as spu_Num
+        FROM
+        spu t
+        WHERE
+        t.category_Id IN
+        <foreach collection="categoryIdList" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+        GROUP BY
+        t.category_Id
+    </select>
+
+    <!-- 按列名增量更新单个 SPU (迁移自 new-scm SpuDAO.xml 的 editColumn) -->
+    <update id="editColumn">
+        update spu set
+        <foreach collection="columnList" item="column" separator="," close="" open="">
+            `${column.name}` = `${column.name}` + #{column.count,jdbcType=INTEGER}
+        </foreach>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 按时间分组统计 SPU 数 (迁移自 new-scm SpuDAO.xml 的 spuCount) -->
+    <select id="spuCount" resultType="com.newzkl.platform.base.common.ddd.model.res.GroupCountRes">
+        select
+        <if test="query.groupType == 0">
+            DATE_FORMAT(create_time, '%Y-%m-%d-%h') as transDay,
+        </if>
+        <if test="query.groupType == 1">
+            DATE_FORMAT(create_time, '%Y-%m-%d') as transDay,
+        </if>
+        count(*) as transNum
+        from spu
+        where UNIX_TIMESTAMP(create_time) * 1000 between #{query.createBeginTime} and #{query.createEndTime}
+        group by transDay
+        order by transDay asc
+    </select>
+
+    <!-- 供应商库存紧张/售完计数 (迁移自 new-scm SpuDAO.xml 的 goodsCountVO) -->
+    <select id="goodsCountVO" resultType="com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO">
+        SELECT
+            sum(if(t.inventory = 0 , 1, 0)) as 'stockWarn',
+            sum(if(t.inventory_warning > t.inventory, 1,0))  as 'stockEmpty'
+        FROM
+            sku t
+            LEFT JOIN spu t1 ON t.spu_id = t1.id
+        WHERE
+            t1.account_id = #{supplierId,jdbcType=BIGINT}
+    </select>
+
+    <!-- 按 QueryWrapper 条件查 SPU 列表 (迁移自 new-scm SpuDAO.xml 的 supplierSpuList; Base 返回 SpuDO 故取全列) -->
+    <select id="listQuery" resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO">
+        select * from spu t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <!-- 按供应商分组统计 (迁移自 new-scm SpuDAO.xml 的 countByCondition) -->
+    <select id="countByCondition" resultType="java.util.Map">
+        select
+        ${query.fieldSQL}
+        from spu t
+        <where>
+            ${query.buildInSQL('supplierIdList', 'account_id')}
+            <if test="query.createStartTime != null">
+                AND create_time >= #{query.createStartTime}
+            </if>
+            <if test="query.createEndTime != null">
+                AND create_time &lt; #{query.createEndTime}
+            </if>
+        </where>
+        ${query.groupSQL}
+        ${query.sortSQL}
+    </select>
+
+    <!-- SPU 视图分页 (迁移自 new-scm SpuDAO.xml 的 voByQuery; 分页壳由 PageInfo 改为 MyBatis-Plus Page + QueryWrapper) -->
+    <select id="voPageByQuery" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO">
+        select
+        t.*, t1.free_post, t1.name as freight_template_name,
+        min(t2.market_price) as market_price_began,
+        max(t2.market_price) as market_price_end
+        from spu t
+        left join freight_template t1 on t.freight_template_id = t1.id
+        left join sku t2 on t.id = t2.spu_id
+        ${ew.customSqlSegment}
+        group by t.id
+    </select>
+
+</mapper>

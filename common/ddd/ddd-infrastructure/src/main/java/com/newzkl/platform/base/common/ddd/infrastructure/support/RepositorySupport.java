@@ -45,7 +45,7 @@ public abstract class RepositorySupport {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * 慎用！！！！！！！！。
+     * 慎用！！！！！！！！
      * 根据id物理删除数据
      *
      * @param id 主键id
@@ -61,7 +61,7 @@ public abstract class RepositorySupport {
         return update > 0;
     }
     /**
-     * 慎用！！！！！！！！。
+     * 慎用！！！！！！！！
      * 根据构造器物理删除数据
      *
      * @param queryWrapper 构造器
@@ -118,8 +118,8 @@ public abstract class RepositorySupport {
     }
 
     /**
-     * 由分页查询构建 mybatis-plus 分页对象.
-     * <p>新 common {@link PageQuery} 不再耦合 mybatis-plus {@link Page},
+     * 由分页查询构建 mybatis-plus 分页对象
+     * <p>新 common {@code PageQuery} 不再耦合 mybatis-plus {@code Page},
      * 转换逻辑收敛于此静态方法。</p>
      *
      * @param query 分页查询

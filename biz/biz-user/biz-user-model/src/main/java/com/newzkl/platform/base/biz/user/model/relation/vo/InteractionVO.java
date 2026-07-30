@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 互动操作查询结果视图对象。
+ * 互动操作查询结果视图对象
  *
  * @author sijiwang
  */

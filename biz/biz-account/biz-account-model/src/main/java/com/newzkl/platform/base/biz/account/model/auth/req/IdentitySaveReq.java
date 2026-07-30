@@ -62,25 +62,25 @@ public class IdentitySaveReq extends AccountSaveReq {
     private Double serviceRate;
 
     /**
-     * 运营商标识。
+     * 运营商标识
      *
      * <p>迁移说明: 原 {@code com.zkl.scm.user.domain.account.model.req.CustomSaveReq#operatorMark}
-     * 为 {@code Integer}, 此处按新模型规范改用枚举 {@link CommonEnum.YesOrNo}。</p>
+     * 为 {@code Integer}, 此处按新模型规范改用枚举 {@code CommonEnum.YesOrNo}。</p>
      */
     private CommonEnum.YesOrNo operatorMark;
 
     /**
-     * 注册来源域名。
+     * 注册来源域名
      *
      * <p>迁移说明: 原 {@code CustomSaveReq#registerDomain}, 类型不变。</p>
      */
     private String registerDomain;
 
     /**
-     * 渠道商类型。
+     * 渠道商类型
      *
      * <p>迁移说明: 原 {@code CustomSaveReq#channelType} 为 {@code String}, 此处按新模型规范
-     * 改用枚举 {@link ChannelEnum.ChannelType}, 与 {@code ChannelCustomSaveReq#channelType} 对齐。</p>
+     * 改用枚举 {@code ChannelEnum.ChannelType}, 与 {@code ChannelCustomSaveReq#channelType} 对齐。</p>
      */
     private ChannelEnum.ChannelType channelType;
 

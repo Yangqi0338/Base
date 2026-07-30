@@ -6,7 +6,7 @@ import org.redisson.api.RAtomicLong;
 import org.springframework.stereotype.Component;
 
 /**
- * Redis 原子数值类型操作工具类。
+ * Redis 原子数值类型操作工具类
  *
  * @author sijiwang
  */

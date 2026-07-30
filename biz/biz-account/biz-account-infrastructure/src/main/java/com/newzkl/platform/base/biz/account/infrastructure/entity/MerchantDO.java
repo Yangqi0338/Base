@@ -10,12 +10,12 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * 商户持久化对象。
+ * 商户持久化对象
  *
  * <p>对应旧表 {@code merchant} (旧 {@code com.zkl.scm.user.infrastructure.entity.MerchantDO})。
  * 主键与账号 ID 同值 (商户注册时以 accountId 写入), 故写入走 insert 而非自动主键。
  * 旧实现的 {@code wx_mp_config} 列以 String 存 JSON 并由业务手工序列化,
- * 本仓改为 {@link JacksonTypeHandler} 自动映射 (同 {@link LevelDO} 范式, 需
+ * 本仓改为 {@code JacksonTypeHandler} 自动映射 (同 {@code LevelDO} 范式, 需
  * {@code @TableName(autoResultMap = true)})。</p>
  *
  * @author KC

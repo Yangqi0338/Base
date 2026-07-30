@@ -36,7 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 通用业务工具类。
+ * 通用业务工具类
  *
  * <p>迁移说明: 原依赖 {@code RoleEnum.CompanyRole} 的角色相关方法
  * (getOptionMapJson / findClientRoleList / getLevelEnumList / clientContainRole 等)
@@ -143,7 +143,7 @@ public class BizUtil {
     }
 
     /**
-     * 将 list 转换为树。
+     * 将 list 转换为树
      *
      * @param list 节点列表
      * @param <T>  节点类型
@@ -284,7 +284,7 @@ public class BizUtil {
     }
 
     /**
-     * 检查是否在状态中。
+     * 检查是否在状态中
      *
      * @param asList    合法状态集合
      * @param state     当前状态
@@ -305,10 +305,10 @@ public class BizUtil {
     }
 
     /**
-     * 生成指定长度的随机码 (数字 + 小写字母混合)。
+     * 生成指定长度的随机码 (数字 + 小写字母混合)
      *
      * <p>每一位以约 50% 概率取 0-9 数字, 否则取 a-z 小写字母。
-     * 与 {@link #generateDiffCode(int)} 不同, 本方法不依赖 MD5 摘要长度,
+     * 与 {@link BizUtil#generateDiffCode} 不同, 本方法不依赖 MD5 摘要长度,
      * 因此支持大于 32 的长度 (常用于 openapi secret 等 32 位凭证)。</p>
      *
      * <p>迁移说明: 原 {@code com.zkl.scm.model.utils.ScmUtil#generateCode(int)},
@@ -377,7 +377,7 @@ public class BizUtil {
     }
 
     /**
-     * 根据企业角色码计算下级类型。
+     * 根据企业角色码计算下级类型
      *
      * <p>用于权限功能点归属判定: 平台管理员(角色码 0)对应下级类型 1,
      * 市场管理员(角色码 1)对应下级类型 2, 其余角色对应 0。</p>
@@ -428,7 +428,7 @@ public class BizUtil {
     }
 
     /**
-     * 大于0。
+     * 大于0
      *
      * @param number 数值
      * @return 是否大于0
@@ -438,7 +438,7 @@ public class BizUtil {
     }
 
     /**
-     * 查找某个类在项目的目录位置。
+     * 查找某个类在项目的目录位置
      *
      * @param clazz 目标类
      * @return 目录路径
@@ -525,7 +525,7 @@ public class BizUtil {
     }
 
     /**
-     * 根据分转换为元，默认使用2位小数，不足的用0补齐，向下取整。
+     * 根据分转换为元，默认使用2位小数，不足的用0补齐，向下取整
      *
      * @param value 分
      * @return 元字符串
@@ -543,14 +543,14 @@ public class BizUtil {
     }
 
     /**
-     * 拼接父账号层级关系。
+     * 拼接父账号层级关系
      */
     public static String getPidList(String pidList, Long accountId) {
         return concatParentAccountStr(pidList, accountId + "");
     }
 
     /**
-     * 替换父账号角色。
+     * 替换父账号角色
      */
     public static String replacePRoleList(String pidList, Long accountId, String pRoleList, String newRole) {
         int index = CollUtil.indexOf(StrUtil.split(pidList, ","), (it) -> it.equals(accountId + ""));
@@ -563,28 +563,28 @@ public class BizUtil {
     }
 
     /**
-     * 拼接父账号角色。
+     * 拼接父账号角色
      */
     public static String getPRoleList(String pRoleList, String roleIdList) {
         return concatParentAccountStr(pRoleList, roleIdList) + ";";
     }
 
     /**
-     * 拼接角色列表。
+     * 拼接角色列表
      */
     public static String getRoleList(String roleList, Long roleId) {
         return concatParentAccountStr(roleList, roleId + "");
     }
 
     /**
-     * 拼接父账号层级关系。
+     * 拼接父账号层级关系
      */
     public static String concatParentAccountStr(String pStr, String str) {
         return StrUtil.concat(true, pStr, str, ",");
     }
 
     /**
-     * 根据充值金额阶梯配置，查找匹配的阶梯值。
+     * 根据充值金额阶梯配置，查找匹配的阶梯值
      */
     public static Double findStepValue(TreeMap<Integer, Double> config, Double defaultValue, Integer rechargeAmount) {
         Double nowValue = 0.0;
@@ -633,7 +633,7 @@ public class BizUtil {
     }
 
     /**
-     * 主次数据同步（不做赋值）。
+     * 主次数据同步（不做赋值）
      *
      * @param majorData     主数据
      * @param secondaryData 次数据

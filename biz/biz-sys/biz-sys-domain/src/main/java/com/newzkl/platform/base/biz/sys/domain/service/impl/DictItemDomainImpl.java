@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 字典条目领域服务实现。
+ * 字典条目领域服务实现
  *
  * @author KC
  */

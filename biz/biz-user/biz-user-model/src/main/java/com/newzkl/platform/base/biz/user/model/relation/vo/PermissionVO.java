@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 等级权限值对象。
+ * 等级权限值对象
  *
  * @author muc_fang
  */
@@ -20,7 +20,7 @@ public class PermissionVO implements Serializable {
     private DirectConfig directConfig;
 
     /**
-     * 直推奖配置。
+     * 直推奖配置
      */
     @Data
     public static class DirectConfig implements Serializable {
@@ -47,7 +47,7 @@ public class PermissionVO implements Serializable {
         private double directSupplierOrder;
 
         /**
-         * 校验直推礼包配置是否有效。
+         * 校验直推礼包配置是否有效
          *
          * @return 是否有效
          */

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-user ChannelDAO.xml
+     适配: Base channel 表已无 up_dealer_id/up_operator_id/service_fee_config_v_o/dealer_earnings/license 等列
+           (层级收敛 account.pid/pid_list, 费率配置迁 finance 域), serviceFeeConfigVO/channelUpId 按 account 层级改写;
+           resetUserOrderCount 目标列 Base 不存在, 退化 no-op, 见 findings -->
+<mapper namespace="com.newzkl.platform.base.biz.account.infrastructure.dao.ChannelDAO">
+
+    <!-- 源取 channel.service_fee_config_v_o + dealer/operator join; Base 费率配置已迁 finance 域,
+         仅可补 id/上级(dealer 费率), one_amount_json/two_amount_json 落 null -->
+    <select id="serviceFeeConfigVO" resultType="com.newzkl.platform.base.biz.account.model.vo.ChannelEarningsConfigVO">
+        select
+        t.id,
+        a.pid as up_dealer_id,
+        t1.service_rate as dealer_rate
+        from channel t
+        left join account a on t.id = a.id
+        left join dealer t1 on t1.id = a.pid
+        where t.id = #{accountId,jdbcType=BIGINT} and t.del_flag = 0
+    </select>
+
+    <!-- 源取 channel.up_operator_id/up_dealer_id; Base 上级关系收敛 account.pid, direct_role_id 需 Java 解析 p_role_list, SQL 不填 -->
+    <select id="channelUpId" resultType="com.newzkl.platform.base.biz.account.model.res.UpIdRes">
+        select
+        a.pid as one_id
+        from account a
+        where a.id = #{accountId,jdbcType=BIGINT} and a.del_flag = 0
+    </select>
+
+    <!-- Base 已无 total_order_number 等冗余统计列(收敛 count_sale 表), 源清零语句无目标列, 退化 no-op 待裁决 -->
+    <update id="resetUserOrderCount">
+        update channel set update_time = update_time where 1 = 0
+    </update>
+
+    <update id="columnByQuery">
+        update channel t set
+        <foreach collection="columnList" item="column" separator="," close="" open="">
+            t.`${column.name}` = t.`${column.name}` + #{column.count,jdbcType=INTEGER}
+        </foreach>
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </update>
+
+    <select id="hasStore" resultType="java.lang.Integer">
+        select store_permission
+        from channel
+        where id = #{accountId,jdbcType=BIGINT} and del_flag = 0
+    </select>
+
+</mapper>

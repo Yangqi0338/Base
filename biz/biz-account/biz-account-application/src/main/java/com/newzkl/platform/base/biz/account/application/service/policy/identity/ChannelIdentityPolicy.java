@@ -214,10 +214,10 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         return new IdentityRegisterRes(null, accountId, developerInitReq.getAppId(), developerInitReq.getSecret());
     }
     /**
-     * 渠道商不支持代理注册。
+     * 渠道商不支持代理注册
      *
      * <p>迁移说明: 旧实现为 {@code void proxyRegister(String)} 空方法体(静默无操作)。
-     * 新签名要求返回 {@link IdentityRegisterRes}, 无法保留"空实现"语义,
+     * 新签名要求返回 {@code IdentityRegisterRes}, 无法保留"空实现"语义,
      * 故显式抛出不支持异常, 避免调用方误判为注册成功。</p>
      *
      * @param proxySaveReq 代理注册参数

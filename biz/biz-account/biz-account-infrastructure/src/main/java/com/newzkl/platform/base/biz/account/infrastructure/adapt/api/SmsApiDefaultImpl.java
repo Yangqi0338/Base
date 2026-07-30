@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link SmsApi} 默认兜底实现。
+ * {@code SmsApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 短信通道为独立能力, 跨域 provider 链已整体延迟。
  * 入口 starter 侧应以真实短信实现覆盖此默认实现。</p>

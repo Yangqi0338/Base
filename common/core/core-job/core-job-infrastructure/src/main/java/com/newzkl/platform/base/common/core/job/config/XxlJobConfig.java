@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 
 /**
- * XXL-Job 配置, 仅通过 {@link EnableXXLJob} 注解引入
+ * XXL-Job 配置, 仅通过 {@code EnableXXLJob} 注解引入
  */
 @Slf4j
 @DependsOn({"xxlJobProperties"})

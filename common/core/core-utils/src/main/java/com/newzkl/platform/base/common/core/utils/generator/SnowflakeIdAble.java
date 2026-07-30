@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Random;
 
 /**
- * 雪花 ID 生成器。
+ * 雪花 ID 生成器
  *
  * @author fang
  */
@@ -23,7 +23,7 @@ public class SnowflakeIdAble implements IdentifierGenerator, Generator {
     }
 
     /**
-     * 生成1-31之间的随机数。
+     * 生成1-31之间的随机数
      *
      * @return 随机 workerId
      */

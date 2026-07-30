@@ -24,6 +24,13 @@ public class CategoryVO extends BaseRes {
 	 */
 	private String img;
 	/**
+	 * 商品数
+	 * <p>
+	 * 非本表列, 由 {@code SpuRepository#countSpuByCategory} 按分类分组统计后回填
+	 * (对应 {@code SpuDAO.xml} 的 {@code spu_Num} 别名)。未走该富化的查询此值为 null
+	 */
+	private Integer spuNum;
+	/**
 	 * 描述
 	 */
 	private String desc;

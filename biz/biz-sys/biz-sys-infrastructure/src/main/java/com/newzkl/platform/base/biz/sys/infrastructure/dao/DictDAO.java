@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.sys.model.dict.query.DictQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 字典 DAO。
+ * 字典 DAO
  *
  * @author fang
  */
@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface DictDAO extends BaseMapper<DictDO> {
 
     /**
-     * 构建字典查询条件。
+     * 构建字典查询条件
      *
      * @param dictQuery 字典查询
      * @return 查询条件

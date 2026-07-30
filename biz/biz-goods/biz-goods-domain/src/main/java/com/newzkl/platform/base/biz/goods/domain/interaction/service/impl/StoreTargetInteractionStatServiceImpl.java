@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * 门店对象互动统计领域服务实现。
+ * 门店对象互动统计领域服务实现
  *
  * <p>缓存存储互动统计最终值, 同步任务用缓存值覆盖数据库, 解决查询延迟问题。互动提交、
  * MQ 消费处理、缓存同步任务共用此服务。</p>
@@ -336,7 +336,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
         return new StoreTargetInteractionSummaryObj(null, publisherId, null, null, totalView, totalLike, totalShare);
     }
     /**
-     * 用缓存最新值填充统计记录的计数字段。
+     * 用缓存最新值填充统计记录的计数字段
      *
      * @param stat 统计记录
      */
@@ -350,7 +350,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     }
 
     /**
-     * 缓存不存在时从数据库加载值初始化缓存。
+     * 缓存不存在时从数据库加载值初始化缓存
      *
      * @param redisStatKey   缓存 Key
      * @param targetTypeCode 目标类型编码
@@ -368,7 +368,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     }
 
     /**
-     * 更新 Redis 最终值 (加分布式锁保证原子性)。
+     * 更新 Redis 最终值 (加分布式锁保证原子性)
      *
      * @param redisStatKey 缓存 Key
      * @param actionType   互动类型
@@ -401,7 +401,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     }
 
     /**
-     * 分批处理缓存 Key, 用缓存最终值覆盖数据库。
+     * 分批处理缓存 Key, 用缓存最终值覆盖数据库
      *
      * @param batchKeyList 缓存 Key 批次
      */
@@ -467,7 +467,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     }
 
     /**
-     * 初始化默认统计记录到数据库与缓存。
+     * 初始化默认统计记录到数据库与缓存
      *
      * @param targetTypeCode 目标类型编码
      * @param targetId       目标 ID
@@ -602,7 +602,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     }
 
     /**
-     * 缓存中存储的最终统计值。
+     * 缓存中存储的最终统计值
      */
     @Data
     @NoArgsConstructor

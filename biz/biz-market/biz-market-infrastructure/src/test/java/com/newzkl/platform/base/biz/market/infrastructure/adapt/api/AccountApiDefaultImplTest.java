@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * {@link AccountApiDefaultImpl} 兜底行为测试。
+ * {@code AccountApiDefaultImpl} 兜底行为测试
  *
  * @author KC
  */

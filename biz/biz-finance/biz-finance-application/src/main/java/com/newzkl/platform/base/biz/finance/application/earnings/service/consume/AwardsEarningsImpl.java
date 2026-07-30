@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 活动分润 (奖励分红) 消费策略实现。
+ * 活动分润 (奖励分红) 消费策略实现
  *
  * @author niu
  */

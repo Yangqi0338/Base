@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * 角色出参。
+ * 角色出参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.vo.RoleVO} 的对外出参角色。
  * 旧出参含 {@code dataGroupIdListJson} (库内原始 JSON 串) 与 {@code dataGroupVOList}

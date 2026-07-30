@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 销售统计入参。
+ * 销售统计入参
  *
  * <p>迁移: 原 {@code com.zkl.scm.user.domain.count.model.req.CountSaleCommand}。
  * 原 {@code accountId} 声明为 {@code Integer} 与表 {@code bigint} 及领域其余模型不一致 (笔误),
- * 本仓统一为 {@link Long}。</p>
+ * 本仓统一为 {@code Long}。</p>
  *
  * @author KC
  */

@@ -10,11 +10,12 @@ import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.req.ModelShopUpdateReq;
 import com.newzkl.platform.base.biz.store.model.template.req.QueryModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopDataRes;
+import com.newzkl.platform.base.biz.store.model.template.res.ModelShopRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStyleRes;
-import com.newzkl.platform.base.biz.store.model.template.res.ModelShopRes;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,22 +26,27 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 样板店控制器。
+ * 样板店相关接口
  *
- * @author niu
+ * <p>迁移自旧 {@code com.zkl.scm.terminal.interfaces.controller.ModelShopController},
+ * 端点路径与 HTTP 方法逐字保留。</p>
+ *
+ * @author KC
  */
 @RestController
 @RequestMapping("/modelShop")
 @RequiredArgsConstructor
+@Slf4j
 public class ModelShopController {
 
     private final ModelShopDomain modelShopDomain;
+
     private final ModelShopService modelShopService;
 
     /**
-     * 申请成为样板店。
+     * 申请成为样板店
      *
-     * @param req 申请请求
+     * @param req 申请入参
      * @return 成功结果
      */
     @PostMapping("/applyModelShop")
@@ -50,9 +56,9 @@ public class ModelShopController {
     }
 
     /**
-     * 修改样板店。
+     * 修改样板店
      *
-     * @param req 修改请求
+     * @param req 修改入参
      * @return 成功结果
      */
     @PostMapping("/updateModelShop")
@@ -62,9 +68,9 @@ public class ModelShopController {
     }
 
     /**
-     * 审核样板店。
+     * 审核样板店
      *
-     * @param req 审核请求
+     * @param req 审核入参
      * @return 成功结果
      */
     @PostMapping("/auditModelShop")
@@ -74,9 +80,9 @@ public class ModelShopController {
     }
 
     /**
-     * 样板店分页。
+     * 样板店分页
      *
-     * @param req 查询请求
+     * @param req 查询入参
      * @return 样板店分页
      */
     @PostMapping("/queryModelShopPage")
@@ -85,9 +91,9 @@ public class ModelShopController {
     }
 
     /**
-     * 样板店数据。
+     * 样板店数据
      *
-     * @param query 数据查询
+     * @param query 查询条件
      * @return 样板店数据
      */
     @PostMapping("/modelShopData")
@@ -96,9 +102,9 @@ public class ModelShopController {
     }
 
     /**
-     * 样板店门店分页。
+     * 样板店门店分页
      *
-     * @param query 门店分页查询
+     * @param query 查询条件
      * @return 门店分页
      */
     @PostMapping("/modelShopStorePage")
@@ -107,9 +113,9 @@ public class ModelShopController {
     }
 
     /**
-     * 使用样板店。
+     * 使用样板店
      *
-     * @param styleCode 样式编码, 为空表示取消
+     * @param styleCode 样式编码
      * @return 成功结果
      */
     @GetMapping("/useModelShop")
@@ -119,9 +125,9 @@ public class ModelShopController {
     }
 
     /**
-     * 样板店列表 (脉脉通展示)。
+     * 样板店列表 (脉脉通展示)
      *
-     * @return 样板店列表
+     * @return 样板店样式列表
      */
     @GetMapping("/queryModelShopList")
     public PlatformResult<List<ModelShopStyleRes>> queryModelShopList() {
@@ -129,9 +135,9 @@ public class ModelShopController {
     }
 
     /**
-     * 删除样板店。
+     * 删除样板店
      *
-     * @param id 样板店 ID
+     * @param id 主键
      * @return 成功结果
      */
     @GetMapping("/deleteModelShop")
@@ -141,7 +147,7 @@ public class ModelShopController {
     }
 
     /**
-     * 同步样板店。
+     * 同步样板店
      *
      * @return 成功结果
      */

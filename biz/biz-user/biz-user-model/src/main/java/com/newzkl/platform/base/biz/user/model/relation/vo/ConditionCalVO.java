@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 升级条件计算值对象。
+ * 升级条件计算值对象
  *
  * @author muc_fang
  */

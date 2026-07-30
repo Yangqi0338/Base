@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link CategoryDomain} 实现。
+ * {@code CategoryDomain} 实现
  *
  * <p>迁移自 {@code com.zkl.scm.market.domain.category.service.impl.CategoryDomainImpl}。</p>
  *
@@ -36,22 +36,22 @@ import java.util.Map;
 public class CategoryDomainImpl implements CategoryDomain {
 
     /**
-     * 分类来源类型: 平台同步。
+     * 分类来源类型: 平台同步
      */
     private static final int TYPE_PLATFORM = 0;
 
     /**
-     * 分类来源类型: 自营。
+     * 分类来源类型: 自营
      */
     private static final int TYPE_SELF = 1;
 
     /**
-     * 顶层分类 pid。
+     * 顶层分类 pid
      */
     private static final long ROOT_PID = 0L;
 
     /**
-     * 平台根分类ID前缀长度。
+     * 平台根分类ID前缀长度
      *
      * <p>迁移保留旧行为: 旧实现对入参 id 取前两位作为一级分类 id, 再按
      * {@code LEFT(id, 2)} 匹配整棵子树。</p>
@@ -145,7 +145,7 @@ public class CategoryDomainImpl implements CategoryDomain {
     }
 
     /**
-     * 解析平台根分类ID。
+     * 解析平台根分类ID
      *
      * <p>迁移保留旧行为: 入参不足两位视为参数错误, 否则取前两位。</p>
      *
@@ -164,7 +164,7 @@ public class CategoryDomainImpl implements CategoryDomain {
     }
 
     /**
-     * 平台 pid 映射为本表 pid。
+     * 平台 pid 映射为本表 pid
      *
      * @param platformPid 平台父分类ID
      * @param remap       平台id -> 新id 映射
@@ -180,7 +180,7 @@ public class CategoryDomainImpl implements CategoryDomain {
     }
 
     /**
-     * 扁平分类列表组装为树。
+     * 扁平分类列表组装为树
      *
      * <p>迁移变更: 旧实现用 {@code BizUtil.listToTree} (要求 VO 实现 PlatformTreeNode 且
      * pid 为 null 时拆箱 NPE); 新实现内联按 {@code id}/{@code pid} 组装, VO 保持纯 POJO。</p>

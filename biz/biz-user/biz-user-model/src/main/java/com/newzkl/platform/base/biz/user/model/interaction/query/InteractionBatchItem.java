@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 批量互动检查的子项参数。
+ * 批量互动检查的子项参数
  *
  * @author sijiwang
  */
@@ -30,7 +30,7 @@ public class InteractionBatchItem implements Serializable {
     private Long targetId;
 
     /**
-     * 构造方法。
+     * 构造方法
      *
      * @param targetId 目标ID
      * @param userId   用户ID

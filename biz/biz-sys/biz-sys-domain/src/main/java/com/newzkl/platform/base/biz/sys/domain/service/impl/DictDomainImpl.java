@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 字典领域服务实现。
+ * 字典领域服务实现
  *
  * @author fang
  */
@@ -53,7 +53,7 @@ public class DictDomainImpl implements DictDomain {
     }
 
     /**
-     * 请求转视图对象。
+     * 请求转视图对象
      *
      * @param req 字典请求
      * @return 字典视图对象

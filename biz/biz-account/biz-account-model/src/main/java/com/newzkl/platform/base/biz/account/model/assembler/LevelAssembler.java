@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.model.BaseAssembler;
 import org.mapstruct.Mapper;
 
 /**
- * 等级转换器。
+ * 等级转换器
  *
  * @author KC
  */
@@ -15,7 +15,7 @@ import org.mapstruct.Mapper;
 public interface LevelAssembler extends BaseAssembler<LevelReq, LevelVO> {
 
     /**
-     * 领域视图转对外出参。
+     * 领域视图转对外出参
      *
      * @param it 领域视图
      * @return 对外出参

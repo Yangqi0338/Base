@@ -12,10 +12,10 @@ import java.util.Currency;
 /**
  * Money 值对象 — 子类化 hutool Money, 工厂方法按分/元分流
  * <p>of 入参为分; of 入参为元.</p>
- * <p>NULL sentinel: of / null 输入返回 {@link #NULL} 单例 ,
+ * <p>NULL sentinel: of / null 输入返回 {@link Money#NULL} 单例 ,
  * 业务运算 / 序列化 / TypeHandler 一致按未设置语义处理, 调用方无需做 != null 判断.</p>
  * <p>业务运算用本类 static add/subtract/multiply/divide, 委派 hutool 父类同名方法 , 再包成子类型.</p>
- * <p>hutool JSONUtil 支持: 实现 {@link JSONString} 控制序列化, 注册 {@link ConverterRegistry} 自定义转换器控制 toBean 反序列化.</p>
+ * <p>hutool JSONUtil 支持: 实现 {@code JSONString} 控制序列化, 注册 {@code ConverterRegistry} 自定义转换器控制 toBean 反序列化.</p>
  * @ext Long
  * @ext Long cent
  * @ext null

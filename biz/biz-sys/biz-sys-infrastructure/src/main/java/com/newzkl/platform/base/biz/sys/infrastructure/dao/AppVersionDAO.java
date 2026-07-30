@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.sys.model.appversion.query.AppVersionQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * app 版本 DAO。
+ * app 版本 DAO
  *
  * @author fang
  */
@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AppVersionDAO extends BaseMapper<AppVersionDO> {
 
     /**
-     * 构建 app 版本查询条件。
+     * 构建 app 版本查询条件
      *
      * @param query 查询条件
      * @return 查询条件

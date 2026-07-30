@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 用户任务(user_task)存储实现。
+ * 用户任务(user_task)存储实现
  *
  * <p>迁移说明：源使用 MapStruct UserTaskAssembler(domain2VO)，改用 TransferUtils 直接转换，
  * 避免引入 MapStruct 注解处理链路。</p>

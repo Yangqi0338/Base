@@ -30,7 +30,7 @@ import java.util.Set;
  * @Description: 订单
  * @date 2024/1/3115:56
  */
-@Service
+@Service("goodsCdkDomainImpl")
 @Slf4j
 @RequiredArgsConstructor
 public class CdkDomainImpl implements CdkDomain {

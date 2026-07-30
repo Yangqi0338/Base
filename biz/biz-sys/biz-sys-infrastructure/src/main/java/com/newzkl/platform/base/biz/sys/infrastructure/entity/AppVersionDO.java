@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * app 版本管理数据对象。
+ * app 版本管理数据对象
  *
  * @author fang
  */

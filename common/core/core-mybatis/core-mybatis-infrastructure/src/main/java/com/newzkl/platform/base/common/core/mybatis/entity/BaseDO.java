@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public abstract class BaseDO extends BaseIdDO {
 
     /**
-     * 操作人信息。
+     * 操作人信息
      * @ext creator/updater 合并, JSON 列, 含 id 与名称
      */
     @JsonSerializable
@@ -28,19 +28,19 @@ public abstract class BaseDO extends BaseIdDO {
     protected ExecutorDTO executor;
 
     /**
-     * 创建时间。
+     * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
     protected LocalDateTime createTime;
 
     /**
-     * 更新时间。
+     * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     protected LocalDateTime updateTime;
 
     /**
-     * 逻辑删除标记。
+     * 逻辑删除标记
      * @ext 正常 0, 删除为 NULL(确保唯一索引生效)
      */
     @TableLogic(value = "0", delval = "NULL")
@@ -48,7 +48,7 @@ public abstract class BaseDO extends BaseIdDO {
     protected Integer delFlag;
 
     /**
-     * 预插入清理。
+     * 预插入清理
      */
     public void preInsert() {
         setId(null);
@@ -57,7 +57,7 @@ public abstract class BaseDO extends BaseIdDO {
     }
 
     /**
-     * 预更新清理。
+     * 预更新清理
      */
     public void preUpdate() {
         this.updateTime = null;

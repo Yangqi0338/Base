@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Redis 通用键（Key）操作工具类。
+ * Redis 通用键（Key）操作工具类
  *
  * @author sijiwang
  */

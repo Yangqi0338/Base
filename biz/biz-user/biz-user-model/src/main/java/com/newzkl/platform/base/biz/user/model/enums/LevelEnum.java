@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 等级相关枚举。
+ * 等级相关枚举
  *
  * @author fang
  */
 public class LevelEnum {
 
     /**
-     * 用户默认密码。
+     * 用户默认密码
      */
     public static final String USER_DEFAULT_PASSWORD = "123456";
 
     /**
-     * 业绩升级条件包含范围。
+     * 业绩升级条件包含范围
      */
     @Getter
     @AllArgsConstructor
@@ -33,7 +33,7 @@ public class LevelEnum {
     }
 
     /**
-     * 条件满足类型。
+     * 条件满足类型
      */
     @Getter
     @AllArgsConstructor

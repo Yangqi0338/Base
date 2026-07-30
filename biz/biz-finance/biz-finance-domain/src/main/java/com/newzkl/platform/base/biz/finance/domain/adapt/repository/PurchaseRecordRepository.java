@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 
@@ -32,9 +33,9 @@ public interface PurchaseRecordRepository {
      * 查询分页
      *
      * @param query 查询条件
-     * @return 分页
+     * @return 购买记录分页
      */
-    List<PurchaseRecordVO> queryPage(PurchaseRecordQuery query);
+    Page<PurchaseRecordVO> queryPage(PurchaseRecordQuery query);
 
     /**
      * 新增数据

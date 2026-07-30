@@ -3,7 +3,13 @@ import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.PhoneUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
+import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
@@ -26,11 +32,13 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,8 +53,114 @@ public class AdminClientDomainImpl implements AdminClientDomain {
     private final EmpAssembler empAssembler;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void batchEmpCreate(List<EmpCreateReq> empCreateReqList, Long parentAccountId) {
+        if (CollUtil.isEmpty(empCreateReqList)) {
+            return;
+        }
+        if (parentAccountId == null) {
+            throw new PlatformException(BaseErrorCode.PARAM, "主账号ID不能为空");
+        }
+        CommonEnum.Client client = CommonEnum.Client.ADMIN;
+        AccountVO parentAccount = accountRepository.account(client, parentAccountId);
+        if (parentAccount == null) {
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
+        }
+        for (EmpCreateReq req : empCreateReqList) {
+            empCreate(req, parentAccount, client);
+        }
+    }
 
+    /**
+     * 单个员工落库
+     *
+     * <p>旧 {@code EmpDomainImpl.empCreate} 一行写完 {@code emp} 表 (自带 username/password/account_id);
+     * Base 拆表后先写 {@code account} 再写同主键的 {@code emp}</p>
+     *
+     * @param req           员工新增请求
+     * @param parentAccount 主账号
+     * @param client        端
+     */
+    private void empCreate(EmpCreateReq req, AccountVO parentAccount, CommonEnum.Client client) {
+        String username = req.getUsername();
+        if (StrUtil.equals(parentAccount.getUsername(), username)) {
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
+        }
+        AccountQuery existQuery = new AccountQuery();
+        existQuery.setUsername(username);
+        existQuery.setMainAccountId(parentAccount.getId());
+        existQuery.setClient(client);
+        if (accountRepository.selectCount(existQuery) > 0) {
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
+        }
+
+        // 企业角色: 旧入参 companyRoleId 为空时退化为平台员工, 与旧 emp 默认语义一致
+        List<RoleEnum.CompanyRole> roleList = CollUtil.isEmpty(req.getCompanyRoleId())
+                ? List.of(RoleEnum.CompanyRole.EMP)
+                : req.getCompanyRoleId().stream().map(RoleEnum.CompanyRole::getByCode).filter(Objects::nonNull).toList();
+        if (CollUtil.isEmpty(roleList)) {
+            throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
+        }
+        roleList.forEach(role -> {
+            if (!StrUtil.contains(parentAccount.getRoleIdList(), role.getCodeStr())) {
+                throw new PlatformException(AccountErrorCode.NOT_OPEN_ROLE);
+            }
+        });
+
+        Long accountId = SnowflakeIdAble.getSnowflakeId();
+        AccountVO account = new AccountVO();
+        account.init(roleList, username, null, parentAccount.getId(), null);
+        account.setId(accountId);
+        account.setPassword(account.getNewPassword(req.getPassword()));
+        accountRepository.accountSave(account);
+
+        EmpVO emp = new EmpVO();
+        emp.setId(accountId);
+        emp.setType(AuthEnum.EmpType.SIMPLE);
+        if (req.getRoleId() != null) {
+            emp.setJobIdList(String.valueOf(req.getRoleId()));
+        }
+        empRepository.save(emp);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int empEdit(EmpCreateReq empCreateReq) {
+        Long id = empCreateReq.getId();
+        if (id == null) {
+            throw new PlatformException(BaseErrorCode.PARAM, "缺少ID");
+        }
+        int count = 0;
+        AccountVO account = new AccountVO();
+        account.setId(id);
+        account.setUsername(empCreateReq.getUsername());
+        if (StrUtil.isNotEmpty(empCreateReq.getPassword())) {
+            account.setPassword(account.getNewPassword(empCreateReq.getPassword()));
+        }
+        if (CollUtil.isNotEmpty(empCreateReq.getCompanyRoleId())) {
+            account.setRoleIdList(CollUtil.join(empCreateReq.getCompanyRoleId(), ","));
+        }
+        if (accountRepository.accountEdit(account, null)) {
+            count++;
+        }
+        if (empCreateReq.getRoleId() != null) {
+            EmpVO emp = new EmpVO();
+            emp.setId(id);
+            emp.setJobIdList(String.valueOf(empCreateReq.getRoleId()));
+            count += empRepository.edit(emp);
+        }
+        return count;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int empDelete(List<Long> empIdList) {
+        if (CollUtil.isEmpty(empIdList)) {
+            return 0;
+        }
+        int count = empRepository.delete(empIdList);
+        accountRepository.accountDelete(empIdList);
+        return count;
     }
 
     @Override

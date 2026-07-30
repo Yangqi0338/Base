@@ -34,7 +34,7 @@ public interface AccountPurseRollOutDAO extends BaseMapper<AccountPurseRollOutDO
      * @param id
      * @return
      */
-    AccountPurseRollOutDO selectForUpdateById(Long id);
+    AccountPurseRollOutDO selectForUpdateById(@Param("id") Long id);
 
     /**
      * 更新转出申请主键流水号 三方打款余额不足时使用

@@ -32,10 +32,10 @@ public class OperatorAccountPolicy extends AbsAccountPolicy {
     }
 
     /**
-     * 运营商端账号代理注册。
+     * 运营商端账号代理注册
      *
      * <p>迁移说明: 旧实现为 {@code void proxyRegister(String)} 空方法体(静默无操作)。
-     * 新签名要求返回 {@link AccountRegisterRes}, 为保持与本类 {@link #customRegister} 一致的
+     * 新签名要求返回 {@code AccountRegisterRes}, 为保持与本类 {@link OperatorAccountPolicy#customRegister} 一致的
      * "未实现即返回 null" 语义, 此处返回 null。</p>
      *
      * @param proxySaveReq 代理注册参数

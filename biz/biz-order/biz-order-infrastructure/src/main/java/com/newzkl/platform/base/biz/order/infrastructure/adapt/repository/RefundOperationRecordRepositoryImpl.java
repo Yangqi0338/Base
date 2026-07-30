@@ -15,11 +15,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 售后操作记录 仓储实现。
+ * 售后操作记录 仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.infrastructure.repository.RefundOperationRecordRepositoryImpl}。
  * 旧 MapStruct assembler 改为 {@code TransferUtils}; 旧分页三参签名收敛为
- * {@link RefundOperationRecordPageReq} 单参, 检索条件与旧实现一致 (仅 refundId / operatorRoleCode 参与筛选)。</p>
+ * {@code RefundOperationRecordPageReq} 单参, 检索条件与旧实现一致 (仅 refundId / operatorRoleCode 参与筛选)。</p>
  *
  * @author sijiwang
  * @since 2026-01-23
@@ -97,7 +97,7 @@ public class RefundOperationRecordRepositoryImpl implements RefundOperationRecor
     }
 
     /**
-     * DO 列表转领域模型列表 (空集合安全)。
+     * DO 列表转领域模型列表 (空集合安全)
      *
      * @param doList DO 列表
      * @return 领域模型列表, 永不为 null

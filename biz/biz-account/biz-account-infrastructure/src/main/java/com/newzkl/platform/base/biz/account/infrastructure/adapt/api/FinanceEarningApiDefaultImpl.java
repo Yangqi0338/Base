@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link FinanceEarningApi} 默认兜底实现。
+ * {@code FinanceEarningApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 资金域(finance)为独立服务, 跨域 provider 链已整体延迟。
  * 入口 starter 侧应以远程 Dubbo consumer 覆盖此默认实现。</p>

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 用户互动操作领域实体（存储点赞、转发记录）。
+ * 用户互动操作领域实体（存储点赞、转发记录）
  *
  * <p>物理删除：取消操作时直接删除记录。</p>
  *

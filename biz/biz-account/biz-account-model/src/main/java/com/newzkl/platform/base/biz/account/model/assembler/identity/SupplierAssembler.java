@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * 供应商
+ * 供应商装配器
  *
  * @author fang
  */
@@ -23,5 +23,14 @@ public interface SupplierAssembler extends BaseAssembler<SupplierReq, SupplierVO
     })
     SupplierVO req2VO(SupplierReq req);
 
+    /**
+     * 供应商联表视图转分页出参
+     *
+     * @param it 供应商联表视图
+     * @return 供应商分页出参
+     */
+    @Mappings({
+            @Mapping(target = "roleId", expression = "java(it.getRole() == null ? null : it.getRole().getCode())")
+    })
     SupplierRes accountVO2Res(SupplierAccountVO it);
 }

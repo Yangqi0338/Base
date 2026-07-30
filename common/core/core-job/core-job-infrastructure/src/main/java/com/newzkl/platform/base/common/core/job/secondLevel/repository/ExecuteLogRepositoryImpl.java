@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.core.job.dto.ExecuteLogDTO;
 import com.newzkl.platform.base.common.core.job.model.ExecuteLogEnum;
 import com.newzkl.platform.base.common.core.job.req.ExecuteLogQuery;
 import com.newzkl.platform.base.common.core.job.secondLevel.ExecuteLogRepository;
-import com.newzkl.platform.base.common.core.job.secondLevel.dao.ExecuteLogDAO;
+import com.newzkl.platform.base.common.core.job.secondLevel.dao.JobExecuteLogDAO;
 import com.newzkl.platform.base.common.core.job.secondLevel.entity.ExecuteLogDO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -25,11 +25,11 @@ import java.util.List;
  * 执行日志仓储实现
  */
 @Slf4j
-@Repository
+@Repository("jobExecuteLogRepositoryImpl")
 public class ExecuteLogRepositoryImpl extends RepositorySupport implements ExecuteLogRepository {
 
     @Autowired
-    private ExecuteLogDAO executeLogDAO;
+    private JobExecuteLogDAO executeLogDAO;
 
     @Override
     public Long insert(ExecuteLogDTO dto) {

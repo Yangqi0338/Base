@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.earnings.service;
 
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.earnings.res.AppEarningRecordRes;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.EarningRecordVO;
@@ -15,12 +15,12 @@ import com.newzkl.platform.base.biz.finance.model.earnings.vo.TotalEarningVO;
 public interface EarningDomain {
 
     /**
-     * 查询分润记录
+     * 查询分润记录分页
      *
-     * @param query
-     * @return
+     * @param query 分润记录查询
+     * @return 分润记录分页
      */
-    List<EarningRecordVO> queryEarningRecord(EarningRecordQuery query);
+    Page<EarningRecordVO> queryEarningRecord(EarningRecordQuery query);
 
     /**
      * 查询客户商品待分润金额
@@ -46,11 +46,12 @@ public interface EarningDomain {
     TotalEarningVO queryTotalEarning();
 
     /**
-     * app查询分润金额
+     * app查询分润记录分页
      *
-     * @return
+     * @param req 分润记录查询
+     * @return APP 分润记录分页
      */
-    List<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery req);
+    Page<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery req);
 
     /**
      * 修改分润记录

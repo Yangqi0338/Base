@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 现金流收款方配置仓储实现。
+ * 现金流收款方配置仓储实现
  *
  * <p>迁移自 new-scm {@code PayeeInfoRepositoryImpl}。旧实现依赖三条自定义 XML SQL,
  * 此处全部改为 MyBatis-Plus 原生 API, 因此不需要 {@code CashPayeeInfoDAO.xml}。</p>
@@ -26,12 +26,12 @@ import java.util.List;
 public class PayeeInfoRepositoryImpl extends RepositorySupport implements PayeeInfoRepository {
 
     /**
-     * 收款方配置 DAO。
+     * 收款方配置 DAO
      */
     private final CashPayeeInfoDAO cashPayeeInfoDAO;
 
     /**
-     * 更新收款方配置: 物理删除该消费类型的旧配置后整体重插。
+     * 更新收款方配置: 物理删除该消费类型的旧配置后整体重插
      *
      * @param req 更新请求
      */
@@ -48,7 +48,7 @@ public class PayeeInfoRepositoryImpl extends RepositorySupport implements PayeeI
     }
 
     /**
-     * 按消费类型查询收款方配置。
+     * 按消费类型查询收款方配置
      *
      * @param consumeType 消费类型
      * @return 收款方配置列表

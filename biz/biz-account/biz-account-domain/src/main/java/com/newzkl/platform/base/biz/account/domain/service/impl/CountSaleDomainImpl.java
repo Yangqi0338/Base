@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 销售统计领域服务实现。
+ * 销售统计领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.count.service.impl.CountSaleDomainImpl}:
  * 主键仍由领域层雪花生成后透传仓储 (故仓储走 {@code insert} 而非 upsert)。</p>

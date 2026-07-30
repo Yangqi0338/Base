@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.earnings.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.ConsumeEarningDataRepository;
 import com.newzkl.platform.base.biz.finance.domain.earnings.service.EarningDomain;
 import com.newzkl.platform.base.biz.finance.model.assembler.EarningRecordAssembler;
@@ -32,7 +33,7 @@ public class EarningDomainImpl implements EarningDomain {
     private final EarningRecordAssembler recordAssembler;
 
     @Override
-    public List<EarningRecordVO> queryEarningRecord(EarningRecordQuery query) {
+    public Page<EarningRecordVO> queryEarningRecord(EarningRecordQuery query) {
         // 若传入了角色或消费类型且没有传入分润类型，则进行特殊处理
         List<RoleEnum.CompanyRole> roleList = query.getRoleList();
         List<EarningsEnum.ConsumeType> consumeTypeList = query.getConsumeTypeList();
@@ -65,10 +66,10 @@ public class EarningDomainImpl implements EarningDomain {
     }
 
     @Override
-    public List<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery req) {
-        List<EarningRecordVO> pageList = consumeEarningDataRepository.queryEarningRecord(req);
-        // 转换为AppEarningInfoVO
-        return TransferUtils.transfers(pageList, (earningInfo -> {
+    public Page<AppEarningRecordRes> queryAppEarningRecord(EarningRecordQuery req) {
+        Page<EarningRecordVO> pageList = consumeEarningDataRepository.queryEarningRecord(req);
+        // 转换为AppEarningInfoVO, 分页壳原样保留
+        return TransferUtils.transferPage(pageList, (EarningRecordVO earningInfo) -> {
             // 基础信息覆盖
             AppEarningRecordRes appEarningInfoVO = recordAssembler.vo2AppVO(earningInfo);
             String goodsInfo = earningInfo.getGoodsInfo();
@@ -80,7 +81,7 @@ public class EarningDomainImpl implements EarningDomain {
                 appEarningInfoVO.setGoodsInfo(JSONUtil.toBean(goodsInfo, GoodsInfoVO.class));
             }
             return appEarningInfoVO;
-        }));
+        });
     }
 
     @Override

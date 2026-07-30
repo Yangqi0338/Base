@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 等级权限值对象 (DB 以 JSON 列存储)。
+ * 等级权限值对象 (DB 以 JSON 列存储)
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.level.model.vo.PermissionVO}。</p>
  *
@@ -22,7 +22,7 @@ public class PermissionVO implements Serializable {
     private DirectConfig directConfig;
 
     /**
-     * 直推奖配置。
+     * 直推奖配置
      *
      * @author KC
      */
@@ -55,7 +55,7 @@ public class PermissionVO implements Serializable {
         private double directSupplierOrder;
 
         /**
-         * 校验直推礼包配置是否有效。
+         * 校验直推礼包配置是否有效
          *
          * <p>固定比例需至少 1 档; 循环 3 推 1 需至少 3 档。</p>
          *

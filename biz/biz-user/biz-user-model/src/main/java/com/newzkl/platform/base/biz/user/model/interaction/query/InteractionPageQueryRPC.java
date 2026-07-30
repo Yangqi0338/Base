@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 互动记录分页查询参数。
+ * 互动记录分页查询参数
  *
  * @author sijiwang
  */

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 售后操作记录 (协商记录) 领域模型。
+ * 售后操作记录 (协商记录) 领域模型
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.domain.refund.model.entity.RefundOperationRecordEntity},
  * {@code spuOrderId} 改为业务单号 {@code spuOrderNo}, 状态收敛为枚举。</p>

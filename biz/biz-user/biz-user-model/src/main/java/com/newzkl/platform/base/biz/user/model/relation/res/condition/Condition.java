@@ -5,14 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 条件抽象。
+ * 条件抽象
  *
  * @author fang
  */
 public interface Condition {
 
     /**
-     * 是否满足。
+     * 是否满足
      *
      * @param conditionCommand 条件请求
      * @return 满足度
@@ -20,7 +20,7 @@ public interface Condition {
     double isMeet(ConditionReq conditionCommand);
 
     /**
-     * 条件满足类型。
+     * 条件满足类型
      */
     @Getter
     @AllArgsConstructor

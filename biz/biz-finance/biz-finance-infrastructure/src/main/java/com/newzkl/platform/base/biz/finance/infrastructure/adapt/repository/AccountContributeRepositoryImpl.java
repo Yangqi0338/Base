@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountContr
 import com.newzkl.platform.base.biz.finance.infrastructure.dao.EarningContributeDAO;
 import com.newzkl.platform.base.biz.finance.infrastructure.entity.EarningContributeDO;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.AccountContributeQuery;
+import com.newzkl.platform.base.biz.finance.model.earnings.req.AccountContributeRpcQuery;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContributeDataReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.AccountContributeVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -54,5 +55,18 @@ public class AccountContributeRepositoryImpl implements AccountContributeReposit
         LambdaQueryWrapper<EarningContributeDO> queryWrapper = earningContributeDAO.getLw(query);
         Page<EarningContributeDO> pageList = earningContributeDAO.selectPage(RepositorySupport.page(query), queryWrapper);
         return TransferUtils.transfers(pageList.getRecords(), AccountContributeVO.class);
+    }
+
+    /**
+     * 批量查询客户贡献值
+     *
+     * @param query 批量贡献值查询
+     * @return 客户贡献数据列表
+     */
+    @Override
+    public List<AccountContributeVO> batchQueryAccountContribute(AccountContributeRpcQuery query) {
+        LambdaQueryWrapper<EarningContributeDO> queryWrapper = earningContributeDAO.getBatchLw(query);
+        List<EarningContributeDO> contributeList = earningContributeDAO.selectList(queryWrapper);
+        return TransferUtils.transfers(contributeList, AccountContributeVO.class);
     }
 }

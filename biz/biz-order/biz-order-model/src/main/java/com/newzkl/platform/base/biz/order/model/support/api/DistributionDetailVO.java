@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 铺货详情VO（包含铺货、SPU、SKU信息）。
+ * 铺货详情VO（包含铺货、SPU、SKU信息）
  *
  * <p>迁移: 跨域 goods 结构 {@code com.zkl.scm.goods.rpc.model.distribution.DistributionDetailVO}
  * 降级为 order 本地 DTO, 去除跨域耦合。</p>

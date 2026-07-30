@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.infrastructure.adapt.repository;
 
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.LevelRepository;
-import com.newzkl.platform.base.biz.user.infrastructure.dao.LevelDAO;
+import com.newzkl.platform.base.biz.user.infrastructure.dao.UserLevelDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.LevelDO;
 import com.newzkl.platform.base.biz.user.model.relation.req.LevelQuery;
 import com.newzkl.platform.base.biz.user.model.relation.res.LevelDTO;
@@ -17,15 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 等级仓储实现。
+ * 等级仓储实现
  *
  * @author fang
  */
-@Repository
+@Repository("userLevelRepositoryImpl")
 @RequiredArgsConstructor
 public class LevelRepositoryImpl implements LevelRepository {
 
-    private final LevelDAO levelDAO;
+    private final UserLevelDAO levelDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -71,7 +71,7 @@ public class LevelRepositoryImpl implements LevelRepository {
     }
 
     /**
-     * 获取向上兼容的角色id, 方便升级。
+     * 获取向上兼容的角色id, 方便升级
      *
      * <p>TODO 源码依赖 BizUtil.getOperatorLevelUpEnumList(未迁移, 属运营商身份体系)，
      * 迁移期直接返回原列表, 待身份升级链路迁移后补齐向上合并逻辑。</p>

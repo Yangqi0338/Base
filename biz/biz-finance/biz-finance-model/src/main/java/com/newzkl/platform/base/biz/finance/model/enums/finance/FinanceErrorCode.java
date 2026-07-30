@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 财务域错误码。
+ * 财务域错误码
  *
  * <p>迁移合并: 原 scm-common 中 {@code FinanceErrorCode}、{@code ConfigErrorCode}、
  * {@code OrderErrorCode} 分散的三方账户/提现/订单错误码, 收敛为财务域自有错误码。</p>
@@ -35,11 +35,11 @@ public enum FinanceErrorCode implements ErrorCode {
     ;
 
     /**
-     * 状态码。
+     * 状态码
      */
     private final Integer code;
     /**
-     * 状态码对应说明文案。
+     * 状态码对应说明文案
      */
     private final String message;
 }

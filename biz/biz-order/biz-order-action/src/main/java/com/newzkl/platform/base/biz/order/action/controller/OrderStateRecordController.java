@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 订单-状态流转记录控制器。
+ * 订单-状态流转记录控制器
  *
  * <p>迁移自旧 {@code com.zkl.scm.sale.interfaces.controller.OrderStateRecordController},
  * 路径与 HTTP 方法保持不变。</p>
@@ -28,7 +28,7 @@ public class OrderStateRecordController {
     private final OrderStateRecordService orderStateRecordService;
 
     /**
-     * 分页查询订单状态记录 (按 ID 降序)。
+     * 分页查询订单状态记录 (按 ID 降序)
      *
      * @param req 分页查询入参
      * @return 订单状态记录分页

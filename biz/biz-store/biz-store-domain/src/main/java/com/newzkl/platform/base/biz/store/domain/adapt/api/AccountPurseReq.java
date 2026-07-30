@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 钱包查询入参 (跨域 finance AccountPurseReq 降级为 store 本地 DTO)。
+ * 钱包查询入参 (跨域 finance AccountPurseReq 降级为 store 本地 DTO)
  *
  * @author KC
  */

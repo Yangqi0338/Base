@@ -8,7 +8,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * 编程式事务工具类，简化事务操作，支持函数式编程。
+ * 编程式事务工具类，简化事务操作，支持函数式编程
  *
  * @author fang
  */
@@ -21,7 +21,7 @@ public class TransactionUtils {
     private TransactionTemplate transactionTemplate;
 
     /**
-     * 执行有返回值的事务操作。
+     * 执行有返回值的事务操作
      *
      * @param callback 事务回调函数
      * @param <T>      返回值类型
@@ -37,7 +37,7 @@ public class TransactionUtils {
     }
 
     /**
-     * 执行无返回值的事务操作。
+     * 执行无返回值的事务操作
      *
      * @param action 事务操作
      */
@@ -54,7 +54,7 @@ public class TransactionUtils {
     }
 
     /**
-     * 执行有返回值的事务操作，并处理异常。
+     * 执行有返回值的事务操作，并处理异常
      *
      * @param callback     事务回调函数
      * @param errorHandler 异常处理器
@@ -71,7 +71,7 @@ public class TransactionUtils {
     }
 
     /**
-     * 带超时设置的事务执行（有返回值）。
+     * 带超时设置的事务执行（有返回值）
      *
      * @param callback 事务回调函数
      * @param timeout  超时时间（秒）
@@ -89,7 +89,7 @@ public class TransactionUtils {
     }
 
     /**
-     * 事务异常处理器接口。
+     * 事务异常处理器接口
      *
      * @param <T> 返回值类型
      */

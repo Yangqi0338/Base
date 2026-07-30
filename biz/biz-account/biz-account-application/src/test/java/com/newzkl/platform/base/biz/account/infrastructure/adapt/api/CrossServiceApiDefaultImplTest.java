@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 跨域出站端口默认兜底实现的契约测试。
+ * 跨域出站端口默认兜底实现的契约测试
  *
  * <p>Task 0 把 7 个跨域调用点从直连 Dubbo facade 改为出站端口 + 兜底实现。
  * 兜底实现的契约是: <b>永不抛异常</b>, 且集合返回值 <b>恒非 null</b> (空集合而非 null),

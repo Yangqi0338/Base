@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * 用户互动操作持久化对象（存储点赞、转发记录）。
+ * 用户互动操作持久化对象（存储点赞、转发记录）
  *
  * @author sijiwang
  */

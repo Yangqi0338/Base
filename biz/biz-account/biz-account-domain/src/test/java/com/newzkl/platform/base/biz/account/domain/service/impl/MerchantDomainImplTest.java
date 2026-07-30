@@ -36,10 +36,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link MerchantDomainImpl} 行为测试。
+ * {@code MerchantDomainImpl} 行为测试
  *
  * <p>纯 JUnit 5 + Mockito, 不启动 Spring 容器, 不连数据库。登录态直接种入
- * {@link SecurityContextHolder}。</p>
+ * {@code SecurityContextHolder}。</p>
  *
  * @author KC
  */
@@ -58,7 +58,7 @@ class MerchantDomainImplTest {
     private MerchantDomainImpl merchantDomain;
 
     /**
-     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物。
+     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物
      */
     private final MerchantAssembler assembler = new MerchantAssembler() {
         @Override

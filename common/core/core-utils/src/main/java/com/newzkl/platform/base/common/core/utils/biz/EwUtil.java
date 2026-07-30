@@ -16,14 +16,14 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * MyBatis-Plus Lambda 条件构造辅助工具。
+ * MyBatis-Plus Lambda 条件构造辅助工具
  *
  * @author fang
  */
 public class EwUtil {
 
     /**
-     * 将DTO的SFunction转换为DO的SFunction（基于字段名匹配）。
+     * 将DTO的SFunction转换为DO的SFunction（基于字段名匹配）
      *
      * @param dtoFunction DTO的字段函数
      * @param doClass     DO的Class对象
@@ -134,7 +134,7 @@ public class EwUtil {
     }
 
     /**
-     * 构建自增SQL片段（如send_count = send_count + 1）。
+     * 构建自增SQL片段（如send_count = send_count + 1）
      *
      * @param column    Lambda表达式
      * @param increment 增量

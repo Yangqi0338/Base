@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.model.relation.res.PackGoodsInfo;
 import lombok.Data;
 
 /**
- * 礼包条件。
+ * 礼包条件
  *
  * @author fang
  */

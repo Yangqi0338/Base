@@ -51,10 +51,10 @@ public class ChannelAccountPolicy extends AbsAccountPolicy {
     }
 
     /**
-     * 渠道商端账号代理注册。
+     * 渠道商端账号代理注册
      *
      * <p>迁移说明: 旧实现为 {@code void proxyRegister(String)} 空方法体(静默无操作)。
-     * 新签名要求返回 {@link AccountRegisterRes}, 为与其他端账号策略保持一致的
+     * 新签名要求返回 {@code AccountRegisterRes}, 为与其他端账号策略保持一致的
      * "未实现即返回 null" 语义, 此处返回 null。</p>
      *
      * @param proxySaveReq 代理注册参数

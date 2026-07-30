@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 等级视图对象。
+ * 等级视图对象
  *
  * @author muc_fang
  */

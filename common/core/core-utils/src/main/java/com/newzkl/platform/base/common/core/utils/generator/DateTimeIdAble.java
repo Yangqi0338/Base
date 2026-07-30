@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Opt;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 基于日期时间前缀 + 自增序列的编码生成器。
+ * 基于日期时间前缀 + 自增序列的编码生成器
  *
  * @author fang
  */
@@ -32,14 +32,14 @@ public class DateTimeIdAble extends AtomicLong implements Generator {
     }
 
     /**
-     * 获取当前日期字符串。
+     * 获取当前日期字符串
      */
     private static String getCurrentDate() {
         return DateUtil.date().toString("yyyyMMdd");
     }
 
     /**
-     * 获取当前时间字符串。
+     * 获取当前时间字符串
      */
     private static String getCurrentTime() {
         return DateUtil.date().toString("HHmmss");
@@ -62,7 +62,7 @@ public class DateTimeIdAble extends AtomicLong implements Generator {
     }
 
     /**
-     * 生成带时间戳的UUID（格式：日期 + 时间 + 序列号）。
+     * 生成带时间戳的UUID（格式：日期 + 时间 + 序列号）
      * 不支持截断。
      */
     @Override

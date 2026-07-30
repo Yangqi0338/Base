@@ -5,11 +5,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商户领域视图对象。
+ * 商户领域视图对象
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.entity.Merchant}。
  * 旧领域实体与旧 {@code MerchantVO} 在 {@code wxMpConfig} 上类型不一致 (实体为
- * {@link WxMpConfigVO}, VO 为 String), 本仓统一为强类型值对象, 由 DO 的 JSON
+ * {@code WxMpConfigVO}, VO 为 String), 本仓统一为强类型值对象, 由 DO 的 JSON
  * 列 typeHandler 负责序列化。</p>
  *
  * @author KC

@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.entity.UserCollectionDO;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 用户收藏仓储实现。
+ * 用户收藏仓储实现
  *
  * <p>迁移说明：新 common BaseDO 使用 delFlag(@TableLogic)，源 isDeleted 字段不存在，
- * 逻辑删除交由 MP 处理；isValid 为 CommonEnum.YesOrNo 枚举；findPageByUserId 降级为 List(TODO[page-meta])。</p>
+ * 逻辑删除交由 MP 处理；isValid 为 CommonEnum.YesOrNo 枚举；findPageByUserId 保留 Page 分页壳直返。</p>
  *
  * @author sijiwang
  */
@@ -33,7 +34,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     private UserCollectionDAO userCollectionMapper;
 
     /**
-     * 领域实体转数据对象。
+     * 领域实体转数据对象
      *
      * @param collection 领域实体
      * @return 数据对象
@@ -61,7 +62,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     /**
-     * 数据对象转领域实体。
+     * 数据对象转领域实体
      *
      * @param doObj 数据对象
      * @return 领域实体
@@ -114,13 +115,15 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
 
     @Override
     public List<UserCollection> findByUserId(Long userId) {
-        List<UserCollectionDO> doList = userCollectionMapper.selectByUserId(userId);
+        UserCollectionQuery query = new UserCollectionQuery();
+        query.setUserId(userId);
+        List<UserCollectionDO> doList = userCollectionMapper.selectList(userCollectionMapper.getLw(query));
         return doList.stream().map(this::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public Optional<UserCollection> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId) {
-        UserCollectionDO doObj = userCollectionMapper.selectWithDeletedByUserIdAndSkuId(userId, storeDistributionId);
+        UserCollectionDO doObj = userCollectionMapper.selectWithDeletedByUserId(userId, storeDistributionId);
         return Optional.ofNullable(toDomain(doObj));
     }
 
@@ -131,11 +134,10 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     @Override
-    public List<UserCollection> findPageByUserId(UserCollectionQuery query) {
-        // TODO[page-meta] PageQuery 无 getPage()，infra 手动 new Page；领域层降级为 List。
-        Page<UserCollectionDO> page = new Page<>(query.getPageNo(), query.getPageSize());
-        Page<UserCollectionDO> doPage = userCollectionMapper.selectPageByUserId(page, query);
-        return TransferUtils.transfers(doPage.getRecords(), UserCollection::new);
+    public Page<UserCollection> findPageByUserId(UserCollectionQuery query) {
+        Page<UserCollectionDO> doPage = userCollectionMapper.selectPage(
+                RepositorySupport.page(query), userCollectionMapper.getLw(query));
+        return TransferUtils.transferPage(doPage, this::toDomain);
     }
 
     @Override

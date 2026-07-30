@@ -28,8 +28,8 @@ public class PurchaseUsageDetailsExportVO extends BaseRes {
     /**
      *
      * 变动类型 对应业务类型  1：直推
-     * {@link PurseEnum.PurseAlterType}
-     * {@link EarningsEnum.PurseAlterTypeEnum} 分润  1 进账 2 出账
+     * {@code PurseEnum.PurseAlterType}
+     * {@code EarningsEnum.PurseAlterTypeEnum} 分润  1 进账 2 出账
      *
      */
     @ExcelProperty("交易类型")

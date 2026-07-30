@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-user MemberDAO.xml
+     适配: Base member 表已无 merchant_id/nickname/head/count_deal_* 列;
+           源 selectMemberByAccountId/validByAccountId 是 where 1 = 0 死查询(旧侧刻意禁用),
+           Base member.id 即 account.id(selectMemberByAccountIdList 用 selectByIds 佐证), 按 id = accountId 复活, 见 findings;
+           orderMemberVO 源 join merchant 取 merchant_id, Base member 无 merchant_id 且一 channel 可多 merchant 无法单值 join,
+           仅取 id/channel_id, merchantId 落 null, 见 findings -->
+<mapper namespace="com.newzkl.platform.base.biz.account.infrastructure.dao.MemberDAO">
+
+    <select id="queryByWxId" resultType="java.lang.Long">
+        select
+        t.id
+        from member t
+        where t.wx_id = #{wxId,jdbcType=VARCHAR}
+        and t.del_flag = 0
+    </select>
+
+    <select id="orderMemberVO" resultType="com.newzkl.platform.base.biz.account.model.vo.OrderMemberVO">
+        select
+        t.id, t.channel_id
+        from member t
+        where t.id = #{memberId,jdbcType=BIGINT}
+        and t.del_flag = 0
+    </select>
+
+    <select id="selectMemberByAccountId" resultType="com.newzkl.platform.base.biz.account.infrastructure.entity.MemberDO">
+        select
+        t.*
+        from member t
+        where t.id = #{accountId,jdbcType=BIGINT}
+        and t.del_flag = 0
+    </select>
+
+    <select id="validByAccountId" resultType="com.newzkl.platform.base.biz.account.infrastructure.entity.MemberDO">
+        select
+        t.*
+        from member t
+        where t.id = #{accountId,jdbcType=BIGINT}
+        and t.del_flag = 0
+    </select>
+
+</mapper>

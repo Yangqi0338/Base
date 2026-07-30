@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * 基于字库随机取值的生成器基类。
+ * 基于字库随机取值的生成器基类
  *
  * @author sijiwang
  */
@@ -13,7 +13,7 @@ public abstract class PropertiesRandomGenerator implements Generator {
     protected static final Random RANDOM = new Random();
 
     /**
-     * 从列表中随机获取一个元素。
+     * 从列表中随机获取一个元素
      *
      * @param list 待取值列表
      * @param <T>  元素类型
@@ -27,7 +27,7 @@ public abstract class PropertiesRandomGenerator implements Generator {
     }
 
     /**
-     * 获取候选数据列表。
+     * 获取候选数据列表
      *
      * @return 候选列表
      */

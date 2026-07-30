@@ -4,7 +4,7 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
 
 /**
- * Excel 行数据映射实体。
+ * Excel 行数据映射实体
  *
  * <p>迁移: 原 easypoi {@code @Excel} 降级为 easyexcel {@code @ExcelProperty}(index 保序)。</p>
  */

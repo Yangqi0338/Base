@@ -56,6 +56,11 @@ public class AccountTripartitePurseDO extends BaseDO {
     private PurseEnum.TripartitePurchasePlatform accountType;
 
     /**
+     * 银行名称（源 account_tripartite_purse.bank_name 列）
+     */
+    private String bankName;
+
+    /**
      * 银行卡号
      */
     private String bankNo;

@@ -3,10 +3,13 @@ package com.newzkl.platform.base.biz.account.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
+import com.newzkl.platform.base.biz.account.domain.service.CdkDomain;
 import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
+import com.newzkl.platform.base.biz.account.model.cdk.req.RoleCmd;
 import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
 import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
+import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -22,18 +25,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
- * 用户-角色控制器 (角色申请 / 保证金 / 开通码)。
+ * 用户-角色
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.RoleController}, 路径与 HTTP 方法保持不变。
- * 旧控制器注入了 6 个同类型 {@code IUserQueryService} / {@code IRoleService} 别名字段, 本仓收敛为
- * {@link UserQueryService} + {@link IdentityService} 两个依赖。
- * 旧权限点 {@code @Limit(code = FuncCons.Admin.company_role)} 不在本层声明, 鉴权切面归入口 starter。
- * 旧 {@code SecurityUtils.getRole()} 在中台通用层已不存在, 改用 {@link SecurityUtils#getRoleId()}。</p>
+ * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.RoleController}。
+ * 类级路径与方法级路径逐字沿用旧契约, 含旧代码中同一控制器内混用前导斜杠的写法
+ * (如 {@code /applyRole} 与 {@code cdkList})。</p>
  *
- * <p>biz-auth 切分: 角色主体端点 (roleList / roleDetail / roleListSave) 已迁至
- * {@code com.newzkl.platform.base.biz.auth.action.controller.RoleQueryController};
- * 本类保留依赖账号注册编排 (IdentityService) 与开通码 (CDK) 的端点, 基址仍为 {@code /user/role}。</p>
+ * <p>归属未迁清单 (领域越界, 拒绝迁入本域):</p>
+ * <ul>
+ *   <li>{@code POST /user/role/roleList}</li>
+ *   <li>{@code GET /user/role/roleDetail}</li>
+ *   <li>{@code POST /user/role/roleListSave}</li>
+ * </ul>
+ * <p>上述三端点操作 {@code role} 表, 其 DO/DAO/Repository/Domain 已落 biz-auth,
+ * 按架构红线 (action 不得跨域 import 他域 domain 包) 应在 biz-auth 的 action 层承载。</p>
+ *
+ * <p>infra-gap 清单:</p>
+ * <ul>
+ *   <li>{@code POST /user/role/userRoleInfo}: 缺账号角色聚合查询 (旧
+ *       {@code AccountDAO.xml#accountRoleVO}, supplier / channel 两表 UNION),
+ *       中台仅迁了出参模型 {@code AccountRoleVO}, 无仓储与服务方法</li>
+ * </ul>
+ *
+ * <p>鉴权说明: 旧 {@code roleListSave} 带 {@code @Limit(code=company_role, level=set)},
+ * 该端点未迁入; 本仓 {@code StpInterface} 尚无实现, 方法级鉴权整体不生效, 见迁移报告「鉴权降级」。</p>
  *
  * @author KC
  */
@@ -43,14 +61,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RoleController {
 
-    private final UserQueryService userQueryService;
     private final IdentityService identityService;
+    private final UserQueryService userQueryService;
+    private final CdkDomain cdkDomain;
 
     /**
-     * 申请角色。
+     * 申请角色
      *
-     * @param roleApplyCommand 角色申请资料
-     * @return 审批流 ID (审批域未接线时为 null)
+     * @param roleApplyCommand 角色申请入参
+     * @return 申请单ID
      */
     @PostMapping("/applyRole")
     public PlatformResult<Long> applyRole(@RequestBody RoleApplyCommand roleApplyCommand) {
@@ -58,10 +77,10 @@ public class RoleController {
     }
 
     /**
-     * 保存申请资料。
+     * 保存申请资料
      *
-     * @param roleApplyCommand 角色申请资料
-     * @return 成功结果
+     * @param roleApplyCommand 角色申请入参
+     * @return 空结果
      */
     @PostMapping("/saveApplyCommand")
     public PlatformResult<Void> saveApplyCommand(@RequestBody RoleApplyCommand roleApplyCommand) {
@@ -70,12 +89,12 @@ public class RoleController {
     }
 
     /**
-     * 加载申请资料。
+     * 加载申请资料
      *
-     * <p>保留旧语义: 加载异常一律吞掉并降级返回 null, 仅打 warn 日志。</p>
+     * <p>保留旧语义: 读取异常只告警不抛出, 返回 null。</p>
      *
-     * @param roleId 角色 ID
-     * @return 角色申请资料, 无或异常时为 null
+     * @param roleId 角色ID
+     * @return 角色申请资料, 无或异常则 null
      */
     @GetMapping("/loadApplyCommand")
     public PlatformResult<RoleApplyCommand> loadApplyCommand(@RequestParam("roleId") Long roleId) {
@@ -83,16 +102,30 @@ public class RoleController {
         try {
             roleApplyCommand = identityService.loadApplyCommand(roleId);
         } catch (Exception e) {
-            log.warn("加载申请资料异常");
+            log.warn("加载申请资料异常", e);
         }
         return PlatformResult.success(roleApplyCommand);
     }
 
     /**
-     * 提交保证金缴纳信息。
+     * 账号角色信息
      *
-     * @param promiseFlowVO 保证金缴纳流水
-     * @return 审批流 ID (审批域未接线时为 null)
+     * @return 账号角色列表
+     * @deprecated 前端零引用, 已确认死端点 (2026-07-27 交叉比对); 仅为契约完整性迁入
+     */
+    @Deprecated
+    @PostMapping("/userRoleInfo")
+    public PlatformResult<List<AccountRoleVO>> userRoleInfo() {
+        throw new UnsupportedOperationException(
+                "TODO[infra-gap]: 账号角色聚合查询未迁 — 缺 supplier / channel 两表 UNION 的仓储方法 "
+                        + "(旧 AccountDAO.xml#accountRoleVO), 中台仅有出参模型 AccountRoleVO");
+    }
+
+    /**
+     * 提交保证金缴纳信息
+     *
+     * @param promiseFlowVO 保证金流水
+     * @return 流水ID
      */
     @PostMapping("/submitPromiseFlow")
     public PlatformResult<Long> submitPromiseFlow(@RequestBody @Valid PromiseFlowVO promiseFlowVO) {
@@ -100,41 +133,58 @@ public class RoleController {
     }
 
     /**
-     * 开通码列表。
+     * 开通码分页
      *
-     * <p>保留旧语义: 平台角色不加数据范围限制, 运营商 / 交易师 / 渠道商分别按登录账号
-     * 注入各自的归属条件。</p>
+     * <p>保留旧语义: 按当前登录角色注入归属ID —— 平台不限, 运营商 / 交易师 / 渠道商
+     * 分别限定自身。迁移差异: 旧出参为 PageHelper 的 {@code PageInfo<CdkVO>},
+     * 中台统一为 MyBatis-Plus {@code Page} 与出参对象 {@code CdkRes}。</p>
      *
      * @param cdkQuery 开通码查询
      * @return 开通码分页
      */
     @PostMapping("cdkList")
     public PlatformResult<Page<CdkRes>> cdkList(@RequestBody CdkQuery cdkQuery) {
-        RoleEnum.CompanyRole role = RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId());
-        Long accountId = SecurityUtils.getAccountId();
-        if (RoleEnum.CompanyRole.OPERATOR == role) {
-            cdkQuery.setOperatorId(accountId);
-        } else if (RoleEnum.CompanyRole.DEALER == role) {
-            cdkQuery.setDealerId(accountId);
-        } else if (RoleEnum.CompanyRole.CHANNEL == role) {
-            cdkQuery.setChannelId(accountId);
+        Long roleId = SecurityUtils.getRoleId();
+        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(roleId)) {
+            // 平台不限归属
+        } else if (RoleEnum.CompanyRole.OPERATOR.getCode().equals(roleId)) {
+            cdkQuery.setOperatorId(SecurityUtils.getAccountId());
+        } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(roleId)) {
+            cdkQuery.setDealerId(SecurityUtils.getAccountId());
+        } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+            cdkQuery.setChannelId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(userQueryService.cdkPage(cdkQuery));
     }
 
     /**
-     * 分配开通码。
+     * 分配开通码
      *
-     * <p>分配人角色与账号取自登录态。</p>
+     * <p>保留旧语义: 分配方角色与账号取当前登录态。迁移差异: 旧方法签名声明
+     * {@code ScmResult<PageInfo<CdkVO>>} 但实际返回空 body, 中台按实际语义收敛为空结果。</p>
      *
      * @param toCdkCommand 分配命令
-     * @return 成功结果
+     * @return 空结果
      */
     @PostMapping("toCdk")
     public PlatformResult<Void> toCdk(@Validated @RequestBody ToCdkCommand toCdkCommand) {
         toCdkCommand.setFromRole(SecurityUtils.getRoleId());
         toCdkCommand.setFromUserId(SecurityUtils.getAccountId());
         identityService.toCdk(toCdkCommand);
+        return PlatformResult.success();
+    }
+
+    /**
+     * 修改开通码状态
+     *
+     * @param stateEdit 状态修改入参
+     * @return 空结果
+     * @deprecated 前端零引用, 已确认死端点 (2026-07-27 交叉比对); 仅为契约完整性迁入
+     */
+    @Deprecated
+    @PostMapping("cdkStateEdit")
+    public PlatformResult<Void> cdkStateEdit(@Validated @RequestBody RoleCmd.StateEdit stateEdit) {
+        cdkDomain.cdkStateEdit(stateEdit.getId(), stateEdit.getUseState());
         return PlatformResult.success();
     }
 }

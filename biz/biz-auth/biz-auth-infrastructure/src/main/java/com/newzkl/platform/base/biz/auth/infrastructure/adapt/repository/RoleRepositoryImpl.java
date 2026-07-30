@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 角色仓储实现。
+ * 角色仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.infrastructure.repository.RoleRepositoryImpl}。
  * 旧 mapper xml 的 {@code insert} / {@code updateByPrimaryKeySelective} / {@code deleteByQuery} /

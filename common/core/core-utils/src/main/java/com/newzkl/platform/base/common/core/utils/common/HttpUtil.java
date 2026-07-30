@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * HTTP 连接工具。
+ * HTTP 连接工具
  *
  * @author niu
  */

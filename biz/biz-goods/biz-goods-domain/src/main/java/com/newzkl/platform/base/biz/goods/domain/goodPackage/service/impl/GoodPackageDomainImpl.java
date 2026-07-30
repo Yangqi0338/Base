@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 商品套餐领域服务实现。
+ * 商品套餐领域服务实现
  *
  * <p>迁移说明: new-scm 该链路为坏桩 (仓储 save/findAll/findByState 直接返回 null,
  * mapper 未注入), 本实现按 Base 范式重写, 并把旧 {@code RuntimeException} 换为
- * {@link PlatformException}。</p>
+ * {@code PlatformException}。</p>
  *
  * @author KC
  */
@@ -25,12 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class GoodPackageDomainImpl implements GoodPackageDomain {
 
     /**
-     * 状态: 启用。
+     * 状态: 启用
      */
     private static final Integer STATE_ENABLED = 1;
 
     /**
-     * 状态: 停用。
+     * 状态: 停用
      */
     private static final Integer STATE_DISABLED = 0;
 
@@ -84,7 +84,7 @@ public class GoodPackageDomainImpl implements GoodPackageDomain {
     }
 
     /**
-     * 校验套餐存在, 不存在抛业务异常。
+     * 校验套餐存在, 不存在抛业务异常
      *
      * @param id 套餐主键 ID
      */

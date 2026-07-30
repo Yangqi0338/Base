@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 团队条件。
+ * 团队条件
  *
  * @author fang
  */

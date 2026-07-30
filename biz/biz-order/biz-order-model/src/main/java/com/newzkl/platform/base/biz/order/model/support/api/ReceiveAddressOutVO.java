@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 收货信息。
+ * 收货信息
  *
  * <p>迁移: 跨域 user 结构 {@code com.zkl.scm.user.model.account.vo.ReceiveAddressOutVO}
  * 降级为 order 本地 DTO。</p>

@@ -22,7 +22,7 @@ public interface ReportDAO extends BaseMapper<ReportDO> {
 
     List<Long> idByQuery(@Param("query") ReportQuery query);
 
-    int updateByQuery(@Param("com/zkl/scm/goods/rpc/model") ReportDO reportDO, @Param("query") ReportQuery query);
+    int updateByQuery(@Param("model") ReportDO reportDO, @Param("query") ReportQuery query);
 
     List<ReportVO> listByQuery(@Param("query") ReportQuery query);
 

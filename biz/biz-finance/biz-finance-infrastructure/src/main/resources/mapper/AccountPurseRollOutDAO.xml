@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.AccountPurseRollOutDAO">
+
+    <!-- 转出申请列查询列 (迁移自 new-scm AccountPurseRollOutDAO.xml 的 Base_Column_List) -->
+    <sql id="Base_Column_List">
+        id, account_id, account_name, account_type, purse_type, apply_amount, audit_state, handling_fee,
+        tripartite_trade_state, tripartite_account_id, tripartite_trade_no, audit_remark, apply_time, audit_time
+    </sql>
+
+    <!-- 按主键加锁查询 (迁移自 new-scm AccountPurseRollOutDAO.xml 的 selectForUpdateById) -->
+    <!-- 源侧 resultMap 到实体, Base 改 resultType 到 DO, 由驼峰自动映射 -->
+    <select id="selectForUpdateById"
+            resultType="com.newzkl.platform.base.biz.finance.infrastructure.entity.AccountPurseRollOutDO">
+        select
+        <include refid="Base_Column_List"/>
+        from account_purse_roll_out
+        where id = #{id}
+        for update
+    </select>
+
+    <!-- 更新转出申请主键流水号 三方打款余额不足时使用 (迁移自 new-scm AccountPurseRollOutDAO.xml 的 alterRollOutApplyId) -->
+    <update id="alterRollOutApplyId">
+        update account_purse_roll_out
+        set id = #{newId},
+            tripartite_trade_state = 0
+        where id = #{id} and audit_state = 1 and tripartite_trade_state = 3
+    </update>
+
+    <!-- 查询转出申请 (迁移自 new-scm AccountPurseRollOutDAO.xml 的 queryWithdrawRecords) -->
+    <!-- 源侧 QueryResultMap 含 apply_time -> applyTime, Base RollOutApplyVO 继承 BaseRes 无 applyTime, 故改 resultType 自动映射 -->
+    <select id="queryWithdrawRecords"
+            resultType="com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO">
+        select
+        <include refid="Base_Column_List"/>
+        from account_purse_roll_out
+        <where>
+            <if test="accountId != null">
+                account_id = #{accountId}
+            </if>
+            <if test="accountType != null">
+                and account_type = #{accountType}
+            </if>
+            <if test="purseType != null">
+                and purse_type = #{purseType}
+            </if>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="auditState != null">
+                and audit_state = #{auditState}
+            </if>
+            <if test="applyTimeL != null and applyTimeR != null">
+                AND apply_time BETWEEN #{applyTimeL} AND #{applyTimeR}
+            </if>
+            <if test="auditStateList != null and auditStateList.size() > 0">
+                and `audit_state` in
+                <foreach collection="auditStateList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="idList != null and idList.size() > 0">
+                and `id` in
+                <foreach collection="idList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by apply_time desc
+    </select>
+
+    <!-- 更新转出申请三方到账结果 (迁移自 new-scm AccountPurseRollOutDAO.xml 的 alterRollOutTripartiteState) -->
+    <update id="alterRollOutTripartiteState">
+        update account_purse_roll_out
+        set tripartite_trade_state = #{tripartiteState}
+        <if test="tripartiteTradeNo != null">
+            ,tripartite_trade_no = #{tripartiteTradeNo}
+        </if>
+        where id = #{applyId} and tripartite_trade_state = 0
+    </update>
+
+    <!-- 转出申请审核 (迁移自 new-scm AccountPurseRollOutDAO.xml 的 rollOutApplyAudit) -->
+    <update id="rollOutApplyAudit">
+        update account_purse_roll_out
+        set audit_state = #{auditSate},
+            audit_remark = #{remark},
+            audit_time = now()
+        where id = #{rollOutApplyId}
+    </update>
+
+</mapper>

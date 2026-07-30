@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link RoleDomainImpl} 行为测试。
+ * {@code RoleDomainImpl} 行为测试
  *
  * <p>纯 JUnit 5 + Mockito, 不启动 Spring 容器, 不连数据库。</p>
  *
@@ -43,7 +43,7 @@ class RoleDomainImplTest {
     private RoleDomainImpl roleDomain;
 
     /**
-     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物。
+     * 以真实转换语义替代 MapStruct 生成实现, 避免测试依赖注解处理器产物
      */
     private final RoleAssembler assembler = new RoleAssembler() {
         @Override

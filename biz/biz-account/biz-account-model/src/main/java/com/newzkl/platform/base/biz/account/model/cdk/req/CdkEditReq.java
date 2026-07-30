@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 开通码分配更新入参。
+ * 开通码分配更新入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.req.CdkEditReq},
  * 仅承载分配 (toCdk) 场景需要更新的列。</p>

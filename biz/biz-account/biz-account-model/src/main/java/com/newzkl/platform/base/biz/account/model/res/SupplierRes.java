@@ -7,13 +7,21 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 供应商
+ * 供应商分页出参
  *
  * @author fang
  */
 @Data
 public class SupplierRes extends BaseRes {
 
+    /**
+     * 角色 ID（等值于 {@code RoleEnum.CompanyRole.SUPPLIER.getCode()}，供前端统一处理）
+     */
+    private Long roleId;
+    /**
+     * 角色名称
+     */
+    private String roleName;
     /**
      * 账号名称 (查询)
      */
@@ -148,4 +156,8 @@ public class SupplierRes extends BaseRes {
      * 总售后金额
      */
     private Integer totalRefundAmount;
+    /**
+     * 真实姓名（联表 account.real_name）
+     */
+    private String realName;
 }

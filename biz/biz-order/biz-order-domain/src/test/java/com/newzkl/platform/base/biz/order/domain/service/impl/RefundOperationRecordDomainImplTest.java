@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link RefundOperationRecordDomainImpl} 领域规则测试。
+ * {@code RefundOperationRecordDomainImpl} 领域规则测试
  *
  * @author KC
  */
@@ -42,7 +42,7 @@ class RefundOperationRecordDomainImplTest {
     private RefundOperationRecordDomainImpl refundOperationRecordDomain;
 
     /**
-     * 构造一条通过全部必填校验的记录。
+     * 构造一条通过全部必填校验的记录
      *
      * @return 合法记录
      */

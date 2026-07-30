@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 团队用户数量请求。
+ * 团队用户数量请求
  *
  * @author fang
  */

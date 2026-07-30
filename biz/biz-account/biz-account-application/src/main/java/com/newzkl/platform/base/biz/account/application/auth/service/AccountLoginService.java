@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.account.model.req.CodeUpdateUsernameReq;
+import com.newzkl.platform.base.biz.account.model.req.ResetMemberReq;
 import com.newzkl.platform.base.biz.account.model.res.AccountLoginLogRes;
 import com.newzkl.platform.base.biz.account.model.auth.req.*;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
@@ -103,4 +104,27 @@ public interface AccountLoginService {
      * @param codeUpdateUsernameReq 修改密码命令
      */
     void editPassword(CodeUpdatePasswordReq codeUpdateUsernameReq);
+
+    /**
+     * 重置会员密码 第一步 验证短信
+     *
+     * <p>迁自旧 {@code IAccountDomain.resetPasswordSmsCode(ResetMemberCommand)}:
+     * 解密 {@code sign} → 时间戳有效期 → 限流 → nonce 防重放 (分布式锁内) → 查有效账号 →
+     * 校验短信验证码 → 标记 nonce 已用 → 写「设备 + 手机号」验证通过标记。
+     * 安全链路逐环保留, 未做简化</p>
+     *
+     * @param req 找回密码请求 (只读 {@code sign}, 其余明文字段旧代码也不读)
+     */
+    void resetPasswordSmsCode(ResetMemberReq req);
+
+    /**
+     * 重置会员密码 第二步 执行修改密码
+     *
+     * <p>迁自旧 {@code IAccountDomain.resetMemberPasswordUpdate(ResetMemberCommand)}:
+     * 解密 {@code sign} → 时间戳有效期 → 校验第一步留下的验证通过标记 → 查有效账号 →
+     * 密码强度校验 (至少 8 位且含字母与数字) → 更新密码 → 删除验证标记</p>
+     *
+     * @param req 找回密码请求 (只读 {@code sign})
+     */
+    void resetMemberPasswordUpdate(ResetMemberReq req);
 }

@@ -51,4 +51,25 @@ public class SelectorCmd {
         @NotNull
         private Long inviteId;
     }
+
+    /**
+     * 甄选师等级改写入参
+     *
+     * <p>字段名逐字沿用旧 {@code SelectorCmd.SelectorLevelEdit}, 不改前端契约</p>
+     *
+     * @author KC
+     */
+    @Data
+    public static class SelectorLevelEdit {
+        /**
+         * 账户ID
+         */
+        @NotNull
+        private Long id;
+        /**
+         * 等级
+         */
+        @NotNull
+        private Integer level;
+    }
 }

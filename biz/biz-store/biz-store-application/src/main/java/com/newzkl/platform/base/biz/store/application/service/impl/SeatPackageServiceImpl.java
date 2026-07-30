@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 席位套餐查询服务实现。
+ * 席位套餐查询服务实现
  *
  * @author muc_fang
  */

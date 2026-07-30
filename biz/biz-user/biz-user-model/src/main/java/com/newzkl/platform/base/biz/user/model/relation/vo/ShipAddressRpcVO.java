@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 收货地址 RPC 视图对象。
+ * 收货地址 RPC 视图对象
  *
  * @author sijiwang
  */

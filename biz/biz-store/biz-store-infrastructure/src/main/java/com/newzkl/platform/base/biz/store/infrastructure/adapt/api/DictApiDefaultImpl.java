@@ -4,13 +4,13 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.DictApi;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link DictApi} 默认兜底实现。
+ * {@code DictApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 字典域(admin/user)跨域链延迟, 入口 starter 侧远程 consumer 覆盖。</p>
  *
  * @author KC
  */
-@Component
+@Component("storeDictApiDefaultImpl")
 public class DictApiDefaultImpl implements DictApi {
 
     @Override

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsSaveReq;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link PackGoodsApi} 默认兜底实现。
+ * {@code PackGoodsApi} 默认兜底实现
  *
  * <p>TODO[cross-service]: 入会礼包归 biz-benefit-order(slug 10), 端口待接线。
  * 未接线前写入返回 null、查询返回 null, 保证账户域可独立编排与测试;

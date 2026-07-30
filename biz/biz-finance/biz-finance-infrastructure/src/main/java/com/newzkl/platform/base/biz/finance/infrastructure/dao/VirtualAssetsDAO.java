@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 虚拟资产 (virtual_assets) 表数据库访问层。
+ * 虚拟资产 (virtual_assets) 表数据库访问层
  *
  * <p>纯 MyBatis-Plus 实现, 无自定义 SQL, 故无需 mapper xml。</p>
  *
@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface VirtualAssetsDAO extends BaseMapper<VirtualAssetsDO> {
 
     /**
-     * 组装查询条件。
+     * 组装查询条件
      *
      * @param query 查询条件
      * @return lambda 查询包装器

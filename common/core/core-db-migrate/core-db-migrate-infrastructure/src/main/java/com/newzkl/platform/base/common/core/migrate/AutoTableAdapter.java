@@ -215,11 +215,11 @@ public class AutoTableAdapter extends CustomAutoTableMetadataAdapter implements 
     }
 
     /**
-     * 判断字段是否为非空约束，依据 {@link NotNull} 注解
+     * 判断字段是否为非空约束，依据 {@code NotNull} 注解
      *
      * @param field 字段反射对象
      * @param clazz 所属实体类
-     * @return 有 {@link NotNull} 注解时返回 true
+     * @return 有 {@code NotNull} 注解时返回 true
      */
     @Override
     public Boolean isNotNull(Field field, Class<?> clazz) {

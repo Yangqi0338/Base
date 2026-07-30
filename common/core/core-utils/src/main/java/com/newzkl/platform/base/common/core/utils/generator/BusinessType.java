@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 业务类型枚举。
+ * 业务类型枚举
  *
  * @author fang
  */
@@ -24,6 +24,7 @@ public enum BusinessType {
     ORDER_DELIVERY("OD", "发货单"),
     COURSE_CATEGORY("KF", "课程分类"),
     COURSE("K", "课程"),
+    TASK_CODE("RW", "任务码"),
 
     DEFAULT_AVATAR("", "默认头像", new AvatarGenerator()),
     DEFAULT_USER_NAME("", "默认用户名", new UserNameGenerator()),

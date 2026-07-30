@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link CashPayServiceImpl#orderPay} 幂等与汇付入参映射测试。
+ * {@link CashPayServiceImpl#orderPay} 幂等与汇付入参映射测试
  *
  * <p>静态门面 {@code RedisUtil} / {@code HuiFuMethod} 用 {@code mockStatic} 隔离;
  * 分布式锁走 {@link RedissonLockUtil#setLocker} 注入 mock, 无需静态桩。</p>

@@ -30,26 +30,26 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 开通码领域服务实现。
+ * 开通码领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.ICdkDomainImpl}。
- * 旧 {@code ThrowsException.exception(...)} 一律换为 {@link PlatformException};
+ * 旧 {@code ThrowsException.exception(...)} 一律换为 {@code PlatformException};
  * 旧 {@code CommonEnum.Switch} 在中台通用层为 {@code CommonEnum.YesOrNo} (码值 0/1 一致)。</p>
  *
  * @author KC
  */
-@Service
+@Service("accountCdkDomainImpl")
 @Slf4j
 @RequiredArgsConstructor
 public class CdkDomainImpl implements CdkDomain {
 
     /**
-     * 单次随机生成开通码的数量上限 (旧实现硬编码 1000)。
+     * 单次随机生成开通码的数量上限 (旧实现硬编码 1000)
      */
     private static final int MAX_CREATE_COUNT = 1000;
 
     /**
-     * 开通码值长度 (旧实现硬编码 12)。
+     * 开通码值长度 (旧实现硬编码 12)
      */
     private static final int CDK_VALUE_LENGTH = 12;
 
@@ -199,7 +199,7 @@ public class CdkDomainImpl implements CdkDomain {
     }
 
     /**
-     * 递归补足指定数量的、库内不重复的开通码值。
+     * 递归补足指定数量的、库内不重复的开通码值
      *
      * <p>保留旧实现语义: 一次生成 (缺口数量) 个随机值, 剔除库内同系统类型已存在的值, 不足则递归再生成。</p>
      *

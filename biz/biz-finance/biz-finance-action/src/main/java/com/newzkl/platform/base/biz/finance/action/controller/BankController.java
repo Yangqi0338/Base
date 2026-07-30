@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.BankService;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BankQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.BankBranchVO;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 银行信息控制器。
+ * 银行信息控制器
  *
  * <p>提供银行详情查询、银行及支行分页列表查询能力。</p>
  *
@@ -32,7 +33,7 @@ public class BankController {
     private final BankService bankService;
 
     /**
-     * 银行详情。
+     * 银行详情
      *
      * @param id 银行主键
      * @return 银行详情
@@ -47,26 +48,62 @@ public class BankController {
     }
 
     /**
-     * 查询银行分页列表。
+     * 查询银行分页列表
+     *
+     * <p>⚠️ 出参契约: 旧接口返 PageHelper 的 {@code PageInfo}
+     * ({@code list}/{@code total}/{@code pageNum}/{@code pageSize}),
+     * 本仓按 {@code rules/Architecture.md} 改为 MyBatis-Plus {@code Page}
+     * ({@code records}/{@code total}/{@code current}/{@code size})。
+     * <b>前端需把 {@code res.data.list} 改成 {@code res.data.records}</b> ——
+     * 调用方: channel-admin / mmt-app / yys-admin</p>
      *
      * @param query 查询条件
-     * @return 银行列表
+     * @return 银行分页
      */
     @PostMapping("/queryPageList")
-    public PlatformResult<List<BankVO>> queryPageList(@RequestBody BankQuery query) {
+    public PlatformResult<Page<BankVO>> queryPageList(@RequestBody BankQuery query) {
         return PlatformResult.success(bankService.queryPageList(query));
     }
 
     /**
-     * 查询银行支行分页列表。
+     * 查询银行支行分页列表
+     *
+     * <p>⚠️ 出参契约: 旧接口返 PageHelper 的 {@code PageInfo}
+     * ({@code list}/{@code total}/{@code pageNum}/{@code pageSize}),
+     * 本仓按 {@code rules/Architecture.md} 改为 MyBatis-Plus {@code Page}
+     * ({@code records}/{@code total}/{@code current}/{@code size})。
+     * <b>前端需把 {@code res.data.list} 改成 {@code res.data.records}</b> ——
+     * 调用方: channel-admin / mmt-app / yys-admin</p>
+     *
+     * @param query 查询条件
+     * @return 银行支行分页
+     */
+    @PostMapping("/queryBranchPageList")
+    public PlatformResult<Page<BankBranchVO>> queryBranchPageList(@RequestBody BankQuery query) {
+        return PlatformResult.success(bankService.queryBranchPageList(query));
+    }
+
+    /**
+     * 查询银行列表
+     *
+     * @param query 查询条件
+     * @return 银行列表
+     */
+    @PostMapping("/queryList")
+    public PlatformResult<List<BankVO>> queryList(@RequestBody BankQuery query) {
+        return PlatformResult.success(bankService.queryList(query));
+    }
+
+    /**
+     * 查询银行支行列表
      *
      * @param query 查询条件
      * @return 银行支行列表
      */
-    @PostMapping("/queryBranchPageList")
-    public PlatformResult<List<BankBranchVO>> queryBranchPageList(@RequestBody BankQuery query) {
-        return PlatformResult.success(bankService.queryBranchPageList(query));
+    @PostMapping("/queryBranchList")
+    public PlatformResult<List<BankBranchVO>> queryBranchList(@RequestBody BankQuery query) {
+        return PlatformResult.success(bankService.queryBranchList(query));
     }
 
-    // TODO[service-gap]: 源 queryList / queryBranchList 未迁 (BankService 无对应方法), 待补 domain 方法后 wire。
+    // 源 /importBankAndBranch 带 @Deprecated, 按迁移规则不迁。
 }

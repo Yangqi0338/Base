@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 等级写入入参。
+ * 等级写入入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.level.model.command.LevelCommand}。
  * 旧入参无 {@code value} 字段, 等级值由领域层写死为 1, 此处保持一致。</p>

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 字典条目视图对象。
+ * 字典条目视图对象
  *
  * @author KC
  */
@@ -14,22 +14,22 @@ import lombok.EqualsAndHashCode;
 public class DictItemRes extends BaseRes {
 
     /**
-     * 父字典 id。
+     * 父字典 id
      */
     private Long dictId;
 
     /**
-     * 条目键。
+     * 条目键
      */
     private String itemKey;
 
     /**
-     * 条目值。
+     * 条目值
      */
     private String itemValue;
 
     /**
-     * 排序 (升序)。
+     * 排序 (升序)
      */
     private Integer sort;
 }

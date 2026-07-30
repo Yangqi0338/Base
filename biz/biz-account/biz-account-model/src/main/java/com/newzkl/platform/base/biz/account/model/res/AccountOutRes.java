@@ -5,12 +5,15 @@ import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
+import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * 用户账号
+ * 用户账号外部视图
+ *
  * @author fang
  */
 @Data
@@ -92,6 +95,14 @@ public class AccountOutRes extends BaseRes {
       * 账号角色ID集合
       */
      private String roleIdList;
+     /**
+      * 账号已开通角色申请信息列表
+      *
+      * <p>迁移自旧 {@code AccountOutVO#accountRoleVOList}。
+      * 中台仅迁移出参模型，角色查询仓储暂未接通，当前恒为 null，
+      * 待 {@code RoleController#userRoleInfo} 链路打通后回填。</p>
+      */
+     private List<AccountRoleVO> accountRoleVOList;
      /**
       * 邀请码 6位
       */

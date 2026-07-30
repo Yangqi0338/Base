@@ -31,7 +31,7 @@ public interface EarningRecordDAO extends BaseMapper<EarningRecordDO> {
      * @param state
      * @return
      */
-    Integer queryTotalEarning(Integer state);
+    Integer queryTotalEarning(@Param("state") Integer state);
 
     /**
      * 更新分润记录结算状态

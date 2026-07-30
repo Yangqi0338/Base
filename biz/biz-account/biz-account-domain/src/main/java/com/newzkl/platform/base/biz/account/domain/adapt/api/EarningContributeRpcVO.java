@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 收益贡献结果。
+ * 收益贡献结果
  *
  * <p>迁移: 跨域 finance 结构
  * {@code com.zkl.scm.finance.rpc.model.earnings.vo.EarningContributeRpcVO}

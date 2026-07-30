@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 商户分类编辑请求。
+ * 商户分类编辑请求
  *
  * <p>迁移自旧 {@code CategoryCmd.Edit} 内部类, 按新规范拆为独立 model。
- * 被编辑分类ID 由 {@link BaseReq} 的 {@code id} 承载。</p>
+ * 被编辑分类ID 由 {@code BaseReq} 的 {@code id} 承载。</p>
  *
  * @author KC
  */
@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 public class CategoryEditReq extends BaseReq {
 
     /**
-     * 分类内容。
+     * 分类内容
      */
     @NotNull
     @Valid

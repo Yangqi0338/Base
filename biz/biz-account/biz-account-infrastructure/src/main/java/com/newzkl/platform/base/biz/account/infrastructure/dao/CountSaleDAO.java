@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 销售统计 DAO。
+ * 销售统计 DAO
  *
  * @author KC
  */
@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CountSaleDAO extends BaseMapper<CountSaleDO> {
 
     /**
-     * 构建销售统计查询条件。
+     * 构建销售统计查询条件
      *
      * <p>对齐旧 mapper {@code CountSaleDAO.xml} 的 where 片段: {@code idList} /
      * {@code accountIdList} in 匹配, {@code role} 与 {@code date} 等值匹配,

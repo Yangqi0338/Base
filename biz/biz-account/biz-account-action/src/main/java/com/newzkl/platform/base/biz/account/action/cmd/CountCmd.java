@@ -1,12 +1,13 @@
 package com.newzkl.platform.base.biz.account.action.cmd;
 
+import com.newzkl.platform.base.biz.account.model.enums.BIEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * 统计/适配接口入参命令集。
+ * 统计/适配接口入参命令集
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.CountCmd}。字段名一律沿用旧命名
  * ({@code roleId} / {@code accountId} / {@code inviteId}), 以免改动前端契约。</p>
@@ -16,7 +17,7 @@ import java.io.Serializable;
 public class CountCmd {
 
     /**
-     * 角色详情入参。
+     * 角色详情入参
      *
      * @author KC
      */
@@ -37,7 +38,7 @@ public class CountCmd {
     }
 
     /**
-     * 账号 ID 入参。
+     * 账号 ID 入参
      *
      * @author KC
      */
@@ -52,7 +53,7 @@ public class CountCmd {
     }
 
     /**
-     * 供应商列表入参。
+     * 供应商列表入参
      *
      * @author KC
      */
@@ -66,7 +67,7 @@ public class CountCmd {
     }
 
     /**
-     * 渠道商列表入参。
+     * 渠道商列表入参
      *
      * @author KC
      */
@@ -80,7 +81,7 @@ public class CountCmd {
     }
 
     /**
-     * 甄选师列表入参。
+     * 甄选师列表入参
      *
      * @author KC
      */
@@ -94,7 +95,7 @@ public class CountCmd {
     }
 
     /**
-     * 交易师列表入参。
+     * 交易师列表入参
      *
      * @author KC
      */
@@ -105,5 +106,27 @@ public class CountCmd {
          * 所属运营商账号 ID
          */
         private Long inviteId;
+    }
+
+    /**
+     * 交易走势入参
+     *
+     * <p>迁自旧 {@code BIOperatorQuery}: 旧类是通用 BI 查询, 含分页 / 汇总维度 /
+     * 供应商 ID 列表等本端点用不到的字段, 且 {@code accountId} / {@code roleId} 的 getter
+     * 内部回落到当前登录态。本端点只用到 {@code dimension} 一个入参 (账号与角色在
+     * action 内按当前登录态钉死, 与旧行为一致), 故只收该字段</p>
+     *
+     * @author KC
+     */
+    @Data
+    public static class SaleTrend implements Serializable {
+
+        /**
+         * 查询维度
+         *
+         * <p>旧 {@code @NotNull(groups=CheckCommand.class)} 分组校验, 中台不分组, 直接必填</p>
+         */
+        @NotNull(message = "查询维度未指定")
+        private BIEnum.Dimension dimension;
     }
 }

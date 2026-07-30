@@ -7,7 +7,7 @@ import org.redisson.api.RedissonClient;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 分布式锁接口的 Redisson 实现。
+ * 分布式锁接口的 Redisson 实现
  *
  * @author yangzhilong
  */

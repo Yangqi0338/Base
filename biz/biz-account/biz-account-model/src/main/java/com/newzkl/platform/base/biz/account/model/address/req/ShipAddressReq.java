@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 收货地址写入入参。
+ * 收货地址写入入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.address.model.req.ShipAddressCommand}。
  * {@code accountId} / {@code roleId} 由领域层按当前登录态回填, 前端传值不生效。</p>

@@ -11,11 +11,11 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
 /**
- * 等级持久化对象。
+ * 等级持久化对象
  *
  * <p>对应旧表 {@code level} (旧 {@code com.zkl.scm.user.infrastructure.entity.LevelDO})。
  * 旧实现把 permission / condition 以 String 存 JSON 并靠 assembler 手工序列化,
- * 本仓改为 {@link JacksonTypeHandler} 自动映射 (与 biz-market 既有 JSON 列 DO 一致,
+ * 本仓改为 {@code JacksonTypeHandler} 自动映射 (与 biz-market 既有 JSON 列 DO 一致,
  * 需 {@code @TableName(autoResultMap = true)})。</p>
  *
  * @author KC

@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 用户-等级控制器。
+ * 用户-等级
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.LevelController}, 路径与 HTTP 方法保持不变。</p>
+ * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.LevelController}。
+ * 类级路径与方法级路径逐字沿用旧契约, 含旧代码中不带前导斜杠的写法 (如 {@code save} / {@code levelList})。</p>
  *
  * @author KC
  */
@@ -29,10 +30,10 @@ public class LevelController {
     private final LevelDomain levelDomain;
 
     /**
-     * 等级保存。
+     * 等级保存
      *
      * @param levelReq 等级入参
-     * @return 成功结果
+     * @return 空结果
      */
     @PostMapping("save")
     public PlatformResult<Void> save(@Validated @RequestBody LevelReq levelReq) {
@@ -41,7 +42,10 @@ public class LevelController {
     }
 
     /**
-     * 等级列表。
+     * 等级列表
+     *
+     * <p>迁移补充: 旧实现取 {@code PageInfo.getList()} 回列表, 中台 {@code pageList} 直接回列表,
+     * 出参记录类型改为 {@code LevelRes}。</p>
      *
      * @param levelQuery 等级查询
      * @return 等级列表

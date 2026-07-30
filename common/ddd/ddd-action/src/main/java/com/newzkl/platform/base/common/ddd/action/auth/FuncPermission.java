@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 功能权限标记。
+ * 功能权限标记
  * <p>类标 → 父节点；方法标 → 子节点。
  * 类无注解但方法有 → 自动建父节点，名取 javadoc，缺失则取 simpleName。
  * @ext pid=0

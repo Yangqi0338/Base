@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 收益贡献查询入参。
+ * 收益贡献查询入参
  *
  * <p>迁移: 跨域 finance 结构
  * {@code com.zkl.scm.finance.rpc.model.earnings.req.AccountContributeRpcQuery}

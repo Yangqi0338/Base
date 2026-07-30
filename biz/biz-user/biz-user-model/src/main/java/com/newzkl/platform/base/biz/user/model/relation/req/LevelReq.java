@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.model.relation.vo.PermissionVO;
 import lombok.Data;
 
 /**
- * 等级请求。
+ * 等级请求
  *
  * @author fang
  */

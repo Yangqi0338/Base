@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Task 0 迁移改写点的行为锁定测试。
+ * Task 0 迁移改写点的行为锁定测试
  *
  * <p>Task 0 中若干旧写法在新结构下无法编译, 被等价改写。本测试锁定这些改写的
  * <b>语义等价性</b>, 防止后续 Task 1-7 建控制器时被无意破坏。</p>
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MigrationRewireBehaviourTest {
 
     /**
-     * 旧: {@code AbsRolePolicy#doRegisterAccount(username, "147852")} (protected, 同对象内调用)。
+     * 旧: {@code AbsRolePolicy#doRegisterAccount(username, "147852")} (protected, 同对象内调用)
      * 新: 身份策略需跨对象调用账号策略, 故提取为静态工厂 {@code AccountCustomSaveReq#proxyRegister}。
      * 锁定点: 硬编码验证码 "147852" 必须原样保留, 否则代理注册会被验证码校验拦截。
      */

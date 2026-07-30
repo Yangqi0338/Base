@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * 席位购买记录编排实现。
+ * 席位购买记录编排实现
  *
  * @author niu
  */
@@ -41,7 +41,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
             query.setTradeNo(tradeNo);
             query.setType(PurseEnum.PurchaseRecordType.SEAT_PACKAGE);
             query.resetQuerySingle();
-            PurchaseRecordVO purchaseRecordVO = purchaseRecordService.queryPage(query)
+            PurchaseRecordVO purchaseRecordVO = purchaseRecordService.queryPage(query).getRecords()
                     .stream().findFirst().orElseThrow(() -> new PlatformException(FinanceErrorCode.NOT_EXISTS));
 
             TransferUtils.transfer(purchaseRecordVO, saveCommand, CopyOptions.create().setOverride(false));

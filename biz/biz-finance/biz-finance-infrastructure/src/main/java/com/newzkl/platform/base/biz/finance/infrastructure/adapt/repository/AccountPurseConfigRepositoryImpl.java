@@ -57,6 +57,20 @@ public class AccountPurseConfigRepositoryImpl implements AccountPurseConfigRepos
         return configSupplierVO;
     }
 
+    /**
+     * 保存供应商配置
+     *
+     * <p>源实现落 {@code config_supplier} 单行表, Base 侧供应商配置统一收敛到字典
+     * {@code DictEnum.Key.SUPPLIER_CONFIG}, 与 {@link AccountPurseConfigRepositoryImpl#querySupplierConfig} 同源。</p>
+     *
+     * @param configSupplierVO 供应商配置
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveSupplierConfig(ConfigSupplierVO configSupplierVO) {
+        dictFacade.set(DictEnum.Key.SUPPLIER_CONFIG.getCode(), JSONUtil.toJsonStr(configSupplierVO));
+    }
+
     @Override
     public ChannelConfigVO defaultChannelConfig() {
         String value = dictFacade.get(DictEnum.Key.CHANNEL_CONFIG.getCode());

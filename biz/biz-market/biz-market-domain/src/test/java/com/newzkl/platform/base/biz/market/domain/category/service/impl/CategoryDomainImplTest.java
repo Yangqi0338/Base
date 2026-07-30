@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * {@link CategoryDomainImpl} 单元测试 (仓储端口 / 出站端口全 mock, 不连库)。
+ * {@code CategoryDomainImpl} 单元测试 (仓储端口 / 出站端口全 mock, 不连库)
  *
  * <p>重点验证 {@code code/pcode -> pid} 两趟 remap: 子节点 pid 必须指向根节点的
  * 新雪花 id, 而非平台 pid。</p>

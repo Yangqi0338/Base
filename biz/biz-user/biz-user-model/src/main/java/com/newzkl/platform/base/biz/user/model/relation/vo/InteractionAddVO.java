@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * 互动操作新增参数视图对象。
+ * 互动操作新增参数视图对象
  *
  * @author sijiwang
  */

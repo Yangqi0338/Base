@@ -14,9 +14,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * app 版本仓储实现。
+ * app 版本仓储实现
  *
- * <p>分页在本层内部执行 (Page 不外泄), 对领域层降级为 List。</p>
+ * <p>⚠️ 2026-07-30 更正: 原注「分页在本层内部执行 (Page 不外泄), 对领域层降级为 List」
+ * 与 {@code rules/Architecture.md} 语义迁移条「{@code PageInfo}→{@code IPage/Page} 直返」矛盾。
+ * 降级成 List 的后果是 {@code total} 丢失 —— 本层已执行 {@code selectPage}, count 查询照样跑了,
+ * 只是结果被扔掉, 前端分页器拿不到总数(platform-admin 读 {@code res.data.list} 得 undefined)。
+ * 现按 Architecture.md 口径返 {@code Page}</p>
  *
  * @author fang
  */
@@ -27,9 +31,9 @@ public class AppVersionRepositoryImpl implements AppVersionRepository {
     private final AppVersionDAO appVersionDAO;
 
     @Override
-    public List<AppVersionVO> queryAppVersionList(AppVersionQuery query) {
+    public Page<AppVersionVO> queryAppVersionList(AppVersionQuery query) {
         Page<AppVersionDO> page = appVersionDAO.selectPage(RepositorySupport.page(query), appVersionDAO.getLw(query));
-        return TransferUtils.transfers(page.getRecords(), AppVersionVO::new);
+        return TransferUtils.transferPage(page, AppVersionVO::new);
     }
 
     @Override

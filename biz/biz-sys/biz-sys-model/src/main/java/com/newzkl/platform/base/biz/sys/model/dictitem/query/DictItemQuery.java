@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 字典条目分页查询。
+ * 字典条目分页查询
  *
  * @author KC
  */
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class DictItemQuery extends BizPageQuery {
 
     /**
-     * 父字典 id 过滤。
+     * 父字典 id 过滤
      */
     private Long dictId;
 }

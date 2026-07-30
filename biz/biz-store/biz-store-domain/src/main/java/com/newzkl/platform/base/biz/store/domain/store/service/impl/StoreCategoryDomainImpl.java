@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.store.domain.store.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -106,9 +105,8 @@ public class StoreCategoryDomainImpl implements StoreCategoryDomain {
      * @return 分页列表
      */
     @Override
-    public IPage<StoreCategoryRes> queryPage(StoreCategoryQuery query) {
-        IPage<StoreCategoryRes> page = repository.queryPage(query);
-        return page;
+    public Page<StoreCategoryRes> queryPage(StoreCategoryQuery query) {
+        return repository.queryPage(query);
     }
 }
 

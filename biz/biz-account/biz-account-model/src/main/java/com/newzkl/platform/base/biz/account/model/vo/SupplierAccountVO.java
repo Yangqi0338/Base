@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 供应商
+ * 供应商（含账号联表信息）视图
  *
  * @author fang
  */
@@ -31,6 +31,10 @@ public class SupplierAccountVO extends BaseRes {
      * 企业名称 (查询)
      */
     private String name;
+    /**
+     * 联表: 真实姓名 (account.real_name)
+     */
+    private String realName;
 
     /**
      * 状态 (查询)

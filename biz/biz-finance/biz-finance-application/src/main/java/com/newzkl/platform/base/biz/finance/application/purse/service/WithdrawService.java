@@ -8,21 +8,21 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyReq;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 
 /**
- * 提现业务编排接口。
+ * 提现业务编排接口
  *
  * @author niu
  */
 public interface WithdrawService {
 
     /**
-     * 转出申请。
+     * 转出申请
      *
      * @param req 转出申请
      */
     void rollOutApply(RollOutApplyReq req);
 
     /**
-     * 转出申请审核。
+     * 转出申请审核
      *
      * @param req 审核请求
      * @return 汇付转出结果
@@ -30,7 +30,7 @@ public interface WithdrawService {
     HuiFuRollOutRes rollOutApplyAudit(RollOutApplyAuditReq req);
 
     /**
-     * 客户三方账户提现。
+     * 客户三方账户提现
      *
      * @param req 提现请求
      * @return 处理结果

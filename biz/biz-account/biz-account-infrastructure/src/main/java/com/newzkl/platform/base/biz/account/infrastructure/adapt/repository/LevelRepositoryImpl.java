@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.repository.LevelRepository;
-import com.newzkl.platform.base.biz.account.infrastructure.dao.LevelDAO;
+import com.newzkl.platform.base.biz.account.infrastructure.dao.AccountLevelDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.LevelDO;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.vo.LevelVO;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 等级仓储实现。
+ * 等级仓储实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.infrastructure.repository.LevelRepositoryImpl}。
  * 旧实现手工判空后走 insert / updateByPrimaryKeySelective, 本仓统一用
@@ -24,11 +24,11 @@ import java.util.List;
  *
  * @author KC
  */
-@Repository
+@Repository("accountLevelRepositoryImpl")
 @RequiredArgsConstructor
 public class LevelRepositoryImpl implements LevelRepository {
 
-    private final LevelDAO levelDAO;
+    private final AccountLevelDAO levelDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

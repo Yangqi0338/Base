@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 渠道商配置 VO。
+ * 渠道商配置 VO
  *
  * <p>本地化自旧 {@code com.zkl.scm.rpc.user.ChannelConfigVO}, 从字典 JSON 反序列化。</p>
  *

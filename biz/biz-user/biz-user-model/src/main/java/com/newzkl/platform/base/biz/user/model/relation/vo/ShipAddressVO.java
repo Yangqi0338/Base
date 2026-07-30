@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 收货地址视图对象。
+ * 收货地址视图对象
  *
  * <p>对外展示的精简模型，隐藏敏感/内部字段。</p>
  *

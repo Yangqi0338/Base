@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 访问信息。
+ * 访问信息
  *
  * @author muc_fang
  */

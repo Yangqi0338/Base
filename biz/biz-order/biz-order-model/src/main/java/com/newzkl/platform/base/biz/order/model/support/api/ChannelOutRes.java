@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
- * 渠道商。
+ * 渠道商
  *
  * <p>迁移: 跨域 user 结构 {@code com.zkl.scm.user.model.account.res.ChannelOutRes}
  * 降级为 order 本地 DTO。</p>

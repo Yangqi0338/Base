@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * 角色枚举（共享内核）。
+ * 角色枚举（共享内核）
  *
  * <p>身份/账号域概念，原分散于各 biz-*-model 中的 7 份副本已在此统一。
  * 位于 common/ddd-model 共享内核，所有 biz-*-model 均可直接引用。</p>
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 public class RoleEnum {
 
     /**
-     * 公司角色枚举。
+     * 公司角色枚举
      */
     @Getter
     @AllArgsConstructor
@@ -67,7 +67,7 @@ public class RoleEnum {
         }
 
         /**
-         * 根据编码获取枚举。
+         * 根据编码获取枚举
          *
          * @param code 编码
          * @return 匹配的枚举，未匹配返回 null
@@ -83,7 +83,7 @@ public class RoleEnum {
         }
 
         /**
-         * 是否游客。
+         * 是否游客
          *
          * @param role 角色
          * @return 是否游客
@@ -93,7 +93,7 @@ public class RoleEnum {
         }
 
         /**
-         * 判断角色编码串是否包含指定角色。
+         * 判断角色编码串是否包含指定角色
          *
          * @param role      角色
          * @param roleIdStr 角色编码串
@@ -107,7 +107,7 @@ public class RoleEnum {
         }
 
         /**
-         * 从角色列表中找出被编码串包含的角色。
+         * 从角色列表中找出被编码串包含的角色
          *
          * @param roleList  角色列表
          * @param roleIdStr 角色编码串
@@ -118,7 +118,7 @@ public class RoleEnum {
         }
 
         /**
-         * 编码字符串。
+         * 编码字符串
          *
          * @return 编码字符串
          */
@@ -127,7 +127,7 @@ public class RoleEnum {
         }
 
         /**
-         * 将角色编码串转换为角色名称串。
+         * 将角色编码串转换为角色名称串
          *
          * @param roleIdStr 角色编码串
          * @return 角色名称串
@@ -143,7 +143,7 @@ public class RoleEnum {
     }
 
     /**
-     * 游客公司角色枚举。
+     * 游客公司角色枚举
      *
      * <p>各端未登录/游客态的占位角色，编码为负数。</p>
      */
@@ -167,7 +167,7 @@ public class RoleEnum {
         private final String value;
 
         /**
-         * 根据客户端类型查找游客角色。
+         * 根据客户端类型查找游客角色
          *
          * @param client 客户端类型
          * @return 匹配的游客角色，未匹配返回 null
@@ -177,7 +177,7 @@ public class RoleEnum {
         }
 
         /**
-         * 判断角色编码是否为游客。
+         * 判断角色编码是否为游客
          *
          * @param roleId 角色编码
          * @return 是否游客
@@ -188,7 +188,7 @@ public class RoleEnum {
     }
 
     /**
-     * 角色状态。
+     * 角色状态
      */
     @Getter
     @AllArgsConstructor
@@ -207,7 +207,7 @@ public class RoleEnum {
     }
 
     /**
-     * 可结算节点。
+     * 可结算节点
      */
     @Getter
     @AllArgsConstructor
@@ -222,7 +222,7 @@ public class RoleEnum {
     }
 
     /**
-     * 结算周期类型。
+     * 结算周期类型
      */
     @Getter
     @AllArgsConstructor
@@ -237,7 +237,7 @@ public class RoleEnum {
     }
 
     /**
-     * 开关。
+     * 开关
      */
     @Getter
     @AllArgsConstructor
@@ -251,7 +251,7 @@ public class RoleEnum {
         private String value;
 
         /**
-         * 根据编码获取枚举。
+         * 根据编码获取枚举
          *
          * @param code 编码
          * @return 匹配的枚举
@@ -264,7 +264,7 @@ public class RoleEnum {
         }
 
         /**
-         * 取反。
+         * 取反
          *
          * @param code 编码
          * @return 取反后的枚举

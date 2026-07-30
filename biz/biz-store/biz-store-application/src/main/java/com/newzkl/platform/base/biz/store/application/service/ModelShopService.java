@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.application.service;
 
 /**
- * 样板店应用服务。
+ * 样板店应用服务
  *
  * @author KC
  */

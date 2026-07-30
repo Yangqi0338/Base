@@ -250,7 +250,7 @@ public class PurseEnum implements Serializable {
         private final String desc;
 
         /**
-         * 按三方返回的状态串取枚举。
+         * 按三方返回的状态串取枚举
          *
          * <p>回调报文里状态是裸串 (如 {@code NORMAL}), 而 VO 侧已是枚举, 需要此转换。</p>
          *
@@ -266,7 +266,7 @@ public class PurseEnum implements Serializable {
     }
 
     /**
-     * 三方账号绑卡审核状态 (汇付 {@code audit_status})。
+     * 三方账号绑卡审核状态 (汇付 {@code audit_status})
      *
      * <p>迁移自 new-scm {@code FinanceEnum.TripartitePurchaseAuditStatus}。</p>
      */
@@ -287,7 +287,7 @@ public class PurseEnum implements Serializable {
         private final String desc;
 
         /**
-         * 按汇付返回的审核状态串取枚举。
+         * 按汇付返回的审核状态串取枚举
          *
          * @param value 审核状态串
          * @return 对应枚举; 无法识别返回 {@code null}

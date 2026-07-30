@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link SuggestRepository} 实现。
+ * {@code SuggestRepository} 实现
  *
  * <p>迁移自 {@code com.zkl.scm.market.infrastructure.repository.SuggestRepositoryImpl};
- * 原 {@code @DubboReference IAccountFacade} 直连改为 {@link AccountApi} 出站端口,
+ * 原 {@code @DubboReference IAccountFacade} 直连改为 {@code AccountApi} 出站端口,
  * 原手写 XML 改为 MyBatis-Plus 条件组装, 原 {@code JsonUtils} 改为 hutool {@code JSONUtil}。</p>
  *
  * @author KC
@@ -127,7 +127,7 @@ public class SuggestRepositoryImpl implements SuggestRepository {
     }
 
     /**
-     * DO 转提交视图。
+     * DO 转提交视图
      *
      * @param tagDO 提交记录
      * @return 提交视图
@@ -144,7 +144,7 @@ public class SuggestRepositoryImpl implements SuggestRepository {
     }
 
     /**
-     * 集合转 JSON 字符串。
+     * 集合转 JSON 字符串
      *
      * @param list 字符串集合
      * @return JSON 字符串, 入参为空时返回 null
@@ -157,7 +157,7 @@ public class SuggestRepositoryImpl implements SuggestRepository {
     }
 
     /**
-     * JSON 字符串转字符串集合。
+     * JSON 字符串转字符串集合
      *
      * @param json JSON 字符串
      * @return 字符串集合, 恒非 null

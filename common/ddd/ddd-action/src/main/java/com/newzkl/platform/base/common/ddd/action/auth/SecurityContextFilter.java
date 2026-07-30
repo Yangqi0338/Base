@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * 安全上下文过滤器。
+ * 安全上下文过滤器
  *
- * <p>从请求头解析 token 并经 sa-token 取出各透传字段, 填充至 {@link SecurityContextHolder}
+ * <p>从请求头解析 token 并经 sa-token 取出各透传字段, 填充至 {@code SecurityContextHolder}
  * 供后续鉴权切面与业务读取; 请求结束时清理线程上下文。</p>
  *
  * <p>迁移说明: 由 {@code javax.servlet} 迁至 {@code jakarta.servlet} (Spring Boot 3);
@@ -76,7 +76,7 @@ public class SecurityContextFilter implements Filter {
     }
 
     /**
-     * 从请求头获取 token, OPTIONS 预检请求直接放行。
+     * 从请求头获取 token, OPTIONS 预检请求直接放行
      *
      * @param servletRequest servlet 请求
      * @return 裁剪前缀后的 token, OPTIONS 请求返回 null
@@ -92,7 +92,7 @@ public class SecurityContextFilter implements Filter {
     }
 
     /**
-     * 裁剪 token 前缀。
+     * 裁剪 token 前缀
      *
      * @param token 原始 token
      * @return 去除前缀后的 token

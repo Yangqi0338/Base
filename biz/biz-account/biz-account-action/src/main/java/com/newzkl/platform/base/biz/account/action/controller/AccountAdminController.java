@@ -9,9 +9,9 @@ import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,22 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 中台-用户管理控制器。
+ * 中台-用户管理
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.AccountAdminController},
- * 路径 {@code /user/admin} 与 4 个端点的 HTTP 方法保持不变。</p>
- *
- * <p>迁移要点:</p>
- * <ul>
- *   <li>旧 {@code IAccountService.adminCreateAccount(AdminRegisterAccountReq)} 内部把角色硬编码为
- *       C 端会员; 中台把"平台侧建会员"收敛在 {@link UserClientDomain#adminCreateMember} (同样强制
- *       会员角色), 故本端点直接复用该领域能力, 不再另建一条注册链路。
- *       入参改用中台统一的 {@link AdminRegisterIdentityReq}, 字段 {@code phone} / {@code nickname} /
- *       {@code headImg} / {@code superiorAccount} / {@code state} 与旧入参一一对应。</li>
- *   <li>旧 {@code importAccount} 用 easypoi 自行解析并拼接文字版结果串; 中台已有
- *       {@link UserClientDomain#adminImportAccount} (easyexcel + 逐条复用建会员逻辑), 直接复用,
- *       出参改为结构化的 {@link EasyExcelErrorVO}。</li>
- * </ul>
+ * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.AccountAdminController}。
+ * 类级路径与方法级路径逐字沿用旧契约。</p>
  *
  * @author KC
  */
@@ -50,7 +38,7 @@ public class AccountAdminController {
     private final UserClientDomain userClientDomain;
 
     /**
-     * 会员账号分页。
+     * 分页查询
      *
      * @param query 账号查询
      * @return 会员账号分页
@@ -61,39 +49,43 @@ public class AccountAdminController {
     }
 
     /**
-     * 添加会员。
+     * 添加会员
      *
-     * <p>保留旧语义: 角色恒为 C 端会员, 请求体内即便带角色也被领域层覆盖。
-     * 旧入参仅校验手机号非空, 故此处不加 {@code @Validated} (中台入参的 {@code role} 非空校验
-     * 与 {@code certificateCheck} 断言面向平台侧通用建号场景, 套在本端点上会破坏旧前端契约)。</p>
+     * <p>迁移补充: 旧 {@code adminCreateAccount(AdminRegisterAccountReq)} 中台化后为
+     * {@code identityCreate(AdminRegisterIdentityReq)}, 入参字段为旧入参的超集 (多出角色与岗位),
+     * 旧字段全部保留。旧实现打印整个入参 (含手机号), 迁移后只打印角色, 避免日志落敏感信息。</p>
      *
-     * @param req 会员注册入参
-     * @return 成功结果 (与旧接口一致, 不回传主键)
+     * @param query 身份创建请求
+     * @return 空结果
      */
     @PostMapping("/add")
-    public PlatformResult<Void> add(@RequestBody AdminRegisterIdentityReq req) {
-        log.info("添加会员：{}", req);
-        userClientDomain.adminCreateMember(req);
+    public PlatformResult<Object> add(@RequestBody @Valid AdminRegisterIdentityReq query) {
+        log.info("添加会员, role:{}", query.getRole());
+        accountService.identityCreate(query);
         return PlatformResult.success();
     }
 
     /**
-     * 启用或禁用会员。
+     * 禁用或者启用
      *
-     * @param req 启用禁用入参
-     * @return 成功结果
+     * @param req 禁用/启用请求
+     * @return 空结果
      */
     @PostMapping("/disable")
-    public PlatformResult<Void> disableMember(@Validated @RequestBody AdminDisableAccountReq req) {
+    public PlatformResult<Object> disableMember(@RequestBody AdminDisableAccountReq req) {
         accountService.disableAccount(req);
         return PlatformResult.success();
     }
 
     /**
-     * 批量导入会员 (Excel)。
+     * 批量导入会员 (Excel)
+     *
+     * <p>迁移补充: 旧 {@code IAccountService.importAccount(file)} 回包装结果并按 {@code isSuccess} 分流,
+     * 中台化后由 {@link UserClientDomain#adminImportAccount} 承担, 直接回导入错误明细,
+     * 失败信息由出参承载而非结果包装的 message。</p>
      *
      * @param file 上传的 Excel 文件
-     * @return 导入结果 (总数 / 成功数 / 失败数 / 失败行明细)
+     * @return 导入错误明细
      */
     @PutMapping("/importMember")
     public PlatformResult<EasyExcelErrorVO> importMember(@RequestParam("file") MultipartFile file) {

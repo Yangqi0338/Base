@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 账户基础信息 (跨域 user AccountVO 降级为 finance 本地最小 DTO)。
+ * 账户基础信息 (跨域 user AccountVO 降级为 finance 本地最小 DTO)
  *
  * @author KC
  */

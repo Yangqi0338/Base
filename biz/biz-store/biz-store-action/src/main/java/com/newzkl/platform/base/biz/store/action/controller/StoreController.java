@@ -8,12 +8,13 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelContactReq;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelStoreVO;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,22 +23,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 门店控制器。
+ * 终端-门店控制器
  *
- * @author fang
+ * <p>迁移自旧 {@code com.zkl.scm.terminal.interfaces.controller.StoreController},
+ * 端点路径与 HTTP 方法逐字保留 (含无前导斜杠的 {@code storeEdit}/{@code store}/{@code storeSearchPage})。
+ * 旧 {@code storePage} 为 {@code @Deprecated} 死端点, 未迁入。</p>
+ *
+ * @author KC
  */
 @RestController
 @RequestMapping("/store")
 @RequiredArgsConstructor
+@Slf4j
 public class StoreController {
 
     private final StoreDomain storeDomain;
+
     private final StoreService storeService;
 
     /**
-     * 门店编辑, 含渠道联系人同步。
+     * 门店修改
      *
-     * @param edit 编辑命令
+     * @param edit 门店编辑命令
      * @return 成功结果
      */
     @PostMapping("storeEdit")
@@ -59,29 +66,29 @@ public class StoreController {
     }
 
     /**
-     * 门店详情, 含渠道联系人回填。
+     * 门店详情
      *
      * @param storeId 门店 ID 命令
-     * @return 门店 VO
+     * @return 门店详情
      */
     @PostMapping("store")
     public PlatformResult<StoreRes> store(@Validated @RequestBody StoreCmd.ID storeId) {
         if (storeId.getStoreId() == null) {
             storeId.setStoreId(SecurityUtils.getAccountId());
         }
-        StoreRes storeVO = storeService.store(storeId.getStoreId());
-        if (storeVO != null) {
-            ChannelStoreVO channelStoreVO = storeService.channelVO(storeVO.getChannelId());
-            storeVO.setContactName(channelStoreVO.getContactsName());
-            storeVO.setContactPhone(channelStoreVO.getContactsPhone());
+        StoreRes storeRes = storeService.store(storeId.getStoreId());
+        if (storeRes != null) {
+            ChannelStoreVO channelStoreVO = storeService.channelVO(storeRes.getChannelId());
+            storeRes.setContactName(channelStoreVO.getContactsName());
+            storeRes.setContactPhone(channelStoreVO.getContactsPhone());
         }
-        return PlatformResult.success(storeVO);
+        return PlatformResult.success(storeRes);
     }
 
     /**
-     * 获取样板店样式。
+     * 脉脉通商城页面获取门店样式
      *
-     * @return 门店样式 VO
+     * @return 门店样式
      */
     @GetMapping("/getModelShopStyle")
     public PlatformResult<StoreStyleRes> getModelShopStyle() {
@@ -89,10 +96,10 @@ public class StoreController {
     }
 
     /**
-     * 门店搜索分页。
+     * 脉脉通门店分页搜索
      *
-     * @param storeQueryReq 查询请求
-     * @return 搜索分页
+     * @param storeQueryReq 查询入参
+     * @return 门店搜索分页
      */
     @PostMapping("storeSearchPage")
     public PlatformResult<Page<StoreSearchRes>> storeSearchPage(@RequestBody StoreQuery storeQueryReq) {

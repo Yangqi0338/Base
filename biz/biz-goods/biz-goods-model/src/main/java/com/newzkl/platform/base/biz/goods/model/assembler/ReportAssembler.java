@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 报告装配器。
+ * 报告装配器
  *
  * <p>迁移调整: 原实现依赖 {@code BaseConvert.list2Str(List<String>)}, 但 {@code ReportReq}
  * 的 {@code categoryIdList/spuIdList} 为 {@code List<Long>}, 类型不匹配, 故改用接口内
@@ -32,7 +32,7 @@ public interface ReportAssembler extends BaseAssembler<ReportReq, ReportVO> {
     ReportVO req2VO(ReportReq entity);
 
     /**
-     * 将 {@code List<Long>} 以英文逗号拼接为字符串, 空集合返回 {@code null}。
+     * 将 {@code List<Long>} 以英文逗号拼接为字符串, 空集合返回 {@code null}
      *
      * @param list 待拼接的 ID 列表
      * @return 逗号拼接字符串, 入参为空返回 {@code null}

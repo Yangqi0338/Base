@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 账号升级请求。
+ * 账号升级请求
  *
  * @author fang
  */
@@ -19,7 +19,7 @@ public class AccountLevelUpReq extends ConditionReq implements Serializable {
     private Long accountId;
 
     /**
-     * 获取升级账号id。
+     * 获取升级账号id
      *
      * @return 升级账号id
      */

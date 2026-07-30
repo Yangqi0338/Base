@@ -11,10 +11,8 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
- * 虚拟资产变动记录仓储实现。
+ * 虚拟资产变动记录仓储实现
  *
  * <p>迁移自 new-scm {@code VirtualAssetsRecordRepositoryImpl}。旧实现走手写 XML SQL + PageHelper,
  * 新实现改为 MyBatis-Plus 原生 {@code selectPage}, 因此无需 {@code VirtualAssetsRecordDAO.xml}。
@@ -27,20 +25,20 @@ import java.util.List;
 public class VirtualAssetsRecordRepositoryImpl extends RepositorySupport implements VirtualAssetsRecordRepository {
 
     /**
-     * 虚拟资产变动记录 DAO。
+     * 虚拟资产变动记录 DAO
      */
     private final VirtualAssetsRecordDAO virtualAssetsRecordDAO;
 
     /**
-     * 分页查询虚拟资产变动记录。
+     * 分页查询虚拟资产变动记录
      *
      * @param query 查询条件
-     * @return 变动记录列表, 永不为 null
+     * @return 变动记录分页, 永不为 null
      */
     @Override
-    public List<VirtualAssetsRecordRes> queryPage(VirtualAssetsRecordQuery query) {
+    public Page<VirtualAssetsRecordRes> queryPage(VirtualAssetsRecordQuery query) {
         Page<VirtualAssetsRecordDO> page = virtualAssetsRecordDAO.selectPage(RepositorySupport.page(query),
                 virtualAssetsRecordDAO.getLw(query).orderByDesc(VirtualAssetsRecordDO::getCreateTime));
-        return TransferUtils.transfers(page.getRecords(), VirtualAssetsRecordRes::new);
+        return TransferUtils.transferPage(page, VirtualAssetsRecordRes.class);
     }
 }

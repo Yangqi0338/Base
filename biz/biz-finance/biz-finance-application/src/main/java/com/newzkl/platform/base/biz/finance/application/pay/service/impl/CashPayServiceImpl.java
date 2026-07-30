@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
-import com.newzkl.platform.base.common.core.mq.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.biz.finance.model.support.MQ;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PayEnum;
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 现金支付编排实现。
+ * 现金支付编排实现
  *
  * @author niu
  */
@@ -43,22 +43,22 @@ import java.util.concurrent.TimeUnit;
 public class CashPayServiceImpl implements CashPayService {
 
     /**
-     * 支付结果缓存 key 前缀 (拼订单号)。
+     * 支付结果缓存 key 前缀 (拼订单号)
      */
     private static final String ORDER_PAY_CACHE_PRE = "orderPayCache:";
 
     /**
-     * 支付幂等锁 key 前缀 (拼订单号)。
+     * 支付幂等锁 key 前缀 (拼订单号)
      */
     private static final String ORDER_PAY_LOCK_PRE = "orderPayLock:";
 
     /**
-     * 支付单待回调状态过期分钟数。
+     * 支付单待回调状态过期分钟数
      */
     private static final long PAY_STATE_EXPIRE_MINUTES = 15L;
 
     /**
-     * 支付结果缓存过期分钟数。
+     * 支付结果缓存过期分钟数
      */
     private static final long PAY_CACHE_EXPIRE_MINUTES = 60L;
 
@@ -142,7 +142,7 @@ public class CashPayServiceImpl implements CashPayService {
     }
 
     /**
-     * 组装汇付支付入参。
+     * 组装汇付支付入参
      *
      * <p>汇付侧的日期、金额换算、回调地址已由 {@code HuiFuMethod} 内部处理, 此处只做支付方式映射。</p>
      */

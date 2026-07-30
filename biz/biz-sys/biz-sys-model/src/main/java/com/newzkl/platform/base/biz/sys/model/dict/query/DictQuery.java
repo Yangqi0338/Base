@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 字典分页查询。
+ * 字典分页查询
  *
  * @author fang
  */

@@ -78,12 +78,12 @@ public class IdentityServiceImpl implements IdentityService {
     private final FinanceVirtualAssetsApi financeVirtualAssetsApi;
 
     /**
-     * 运营商分配给交易师时的单个开通码期权单价 (旧实现硬编码 200)。
+     * 运营商分配给交易师时的单个开通码期权单价 (旧实现硬编码 200)
      */
     private static final int OPTION_VALUE_TO_DEALER = 200;
 
     /**
-     * 分配给渠道商时的单个开通码期权单价 (旧实现硬编码 500)。
+     * 分配给渠道商时的单个开通码期权单价 (旧实现硬编码 500)
      */
     private static final int OPTION_VALUE_TO_CHANNEL = 500;
 
@@ -166,7 +166,7 @@ public class IdentityServiceImpl implements IdentityService {
     }
 
     /**
-     * 构建角色申请资料缓存键 (沿用旧 key 形态)。
+     * 构建角色申请资料缓存键 (沿用旧 key 形态)
      *
      * @param accountId 账号 ID
      * @param roleId    角色 ID
