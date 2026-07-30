@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz-user</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -20,6 +20,11 @@
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-user-domain</artifactId>
+        </dependency>
+        <!-- 任务进度事件投递: 本地消息表 (LocalMessageDomain) + MQ Tag 常量 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-domain</artifactId>
         </dependency>
     </dependencies>
 </project>

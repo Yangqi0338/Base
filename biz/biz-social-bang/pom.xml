@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>biz-social-bang</artifactId>
@@ -17,6 +17,7 @@
         <module>biz-social-bang-facade</module>
         <module>biz-social-bang-domain</module>
         <module>biz-social-bang-application</module>
+        <module>biz-social-bang-action</module>
         <module>biz-social-bang-infrastructure</module>
     </modules>
 </project>

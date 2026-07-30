@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz-order</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>biz-order-infrastructure</artifactId>
@@ -35,6 +35,11 @@
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>
             <artifactId>core-mq-infrastructure</artifactId>
+        </dependency>
+        <!-- 跨域出站: OperatorApi 经 OperatorFacade 调账户域运营商能力 (只依赖 facade 契约, 不碰 biz-account 内部) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
         </dependency>
     </dependencies>
 </project>

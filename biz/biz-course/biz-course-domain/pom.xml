@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz-course</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>biz-course-domain</artifactId>
@@ -24,6 +24,12 @@
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-domain</artifactId>
+        </dependency>
+        <!-- 迁移补充: 业务码生成(BusinessCodeUtil) / 业务异常(ThrowsException) / 对象转换(TransferUtils),
+             并经 mybatis-plus-extension 提供分页返回类型 Page. 与 biz-sys-domain 依赖构成一致 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
         </dependency>
     </dependencies>
 </project>

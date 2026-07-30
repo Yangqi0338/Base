@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>ddd</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,12 +30,13 @@
             <artifactId>core-mybatis-infrastructure</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.dromara.autotable</groupId>
             <artifactId>auto-table-strategy-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>

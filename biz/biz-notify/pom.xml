@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>biz-notify</artifactId>
@@ -18,5 +18,6 @@
         <module>biz-notify-domain</module>
         <module>biz-notify-application</module>
         <module>biz-notify-infrastructure</module>
+        <module>biz-notify-action</module>
     </modules>
 </project>

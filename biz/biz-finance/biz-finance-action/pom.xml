@@ -6,13 +6,17 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz-finance</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>biz-finance-action</artifactId>
     <packaging>jar</packaging>
     <name>biz-finance-action</name>
     <dependencies>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-finance-model</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-finance-application</artifactId>

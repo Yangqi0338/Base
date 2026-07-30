@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.newzkl.platform.Base</groupId>
         <artifactId>biz-sys</artifactId>
-        <version>${revision}</version>
+        <version>${base.revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>biz-sys-infrastructure</artifactId>
@@ -25,6 +25,11 @@
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
+        </dependency>
+        <!-- 迁移补充: 项目意向态(isInterest/interestNum)存 Redis, 需 RedisUtil (core-redis) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

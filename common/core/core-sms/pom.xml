@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.newzkl.platform.Base</groupId>
+        <artifactId>core</artifactId>
+        <version>${base.revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>core-sms</artifactId>
+    <packaging>jar</packaging>
+    <name>core-sms</name>
+    <description>短信技术封装: SmsSender 发送端口 + SmsMethod 静态门面 + 连连(LianLu)通道 + 模板枚举。各 biz 只依赖本模块, 凭证只在入口 starter 配一次</description>
+
+    <dependencies>
+        <!-- BaseErrorCode / ThrowsException -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-model</artifactId>
+        </dependency>
+        <!-- 通道适配用 HttpUtil / DigestUtil / JSONUtil -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+        <!-- 模板枚举持久化值 @EnumValue -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+        </dependency>
+        <!-- 模板枚举序列化值 @JsonValue -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <!-- @ConfigurationProperties -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+    </dependencies>
+</project>

@@ -6,13 +6,13 @@
 
     <groupId>com.newzkl.platform.Base</groupId>
     <artifactId>bom</artifactId>
-    <version>${revision}</version>
+    <version>${base.revision}</version>
     <packaging>pom</packaging>
     <name>bom</name>
     <description>Base - 模块版本统一管理</description>
 
     <properties>
-        <revision>1.0.1-SNAPSHOT</revision>
+        <base.revision>1.0.1-SNAPSHOT</base.revision>
     </properties>
 
     <dependencyManagement>
@@ -21,571 +21,596 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>core-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <!-- ===== common / ddd ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>ddd-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>ddd-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>ddd-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>ddd-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>ddd-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <!-- ===== common / core ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>core-utils</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>core-redis</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-sms</artifactId>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-job</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-job-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-job-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-job-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mq</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mq-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mq-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mq-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-db-migrate</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-db-migrate-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mybatis</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mybatis-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <!-- ===== biz / auth ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-auth-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-auth-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-auth-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-auth-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-auth-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-auth-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <!-- ===== biz / user ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-user-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <!-- ===== biz / account ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-account-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-account-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-account-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-account-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-account-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-account-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <!-- ===== biz / 其余服务域 (骨架, 逐个迁移填充) ===== -->
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-sys-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-finance-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-finance-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-finance-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-finance-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-finance-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-finance-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-order-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-goods-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-goods-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-goods-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-goods-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-goods-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-goods-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-market-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-inventory-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-inventory-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-inventory-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-inventory-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-inventory-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-media-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-media-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-media-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-media-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-media-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-content-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-content-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-content-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-content-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-content-action</artifactId>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-content-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-course-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-course-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-course-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-course-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-course-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-course-action</artifactId>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-store-action</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-activity-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-activity-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-activity-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-activity-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-activity-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-social-bang-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-social-bang-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-social-bang-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-social-bang-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-social-bang-action</artifactId>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-social-bang-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-notify-model</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-notify-facade</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-notify-domain</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-notify-application</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-notify-infrastructure</artifactId>
-                <version>${revision}</version>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>biz-notify-action</artifactId>
+                <version>${base.revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
