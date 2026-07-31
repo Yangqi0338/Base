@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Data
 public class SubProxySaveReq {
+    /** 主键ID */
     private Long id;
     /**
      * 昵称

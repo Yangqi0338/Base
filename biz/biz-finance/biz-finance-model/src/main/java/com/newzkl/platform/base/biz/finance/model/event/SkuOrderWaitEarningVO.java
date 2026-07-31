@@ -20,11 +20,15 @@ import java.util.List;
 @NoArgsConstructor
 public class SkuOrderWaitEarningVO implements Serializable {
 
+    /** 主键ID */
     private Long id;
 
+    /** 消费类型 */
     private EarningsEnum.ConsumeType consumeType;
 
+    /** 贡献数据请求列表 */
     private List<AlterAccountContributeDataReq> contributeDataReqs;
 
+    /** 收益信息列表 */
     private List<EarningRecordReq> earningInfos;
 }

@@ -51,6 +51,7 @@ public class AccountStructureTreeVO extends AccountStructureVO {
      */
     private Integer subAccountCount;
 
+    /** 子账号数量映射 */
     @JsonIgnore
     private Map<RoleEnum.CompanyRole, Integer> subAccountCountMap;
 

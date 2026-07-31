@@ -1,50 +1,43 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.order.model.enums.order.RefundEnum;
+import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.dromara.autotable.annotation.Index;
+
+import java.time.LocalDateTime;
 
 /**
  * 售后操作记录表 DO
  *
- * <p>迁移补充: 原 {@code spu_order_id} (Long) 收敛为业务单号 {@code spu_order_no} (String),
- * 与 {@code OrderStateRecordDO} / {@code SettleOrderWaitDO} / {@code RefundOperationRecordVO} 对齐。</p>
- *
  * @author sijiwang
  * @since 2026-01-23
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("refund_operation_record")
 public class RefundOperationRecordDO extends BaseDO {
 
     /**
-     * SPU 订单号
+     * spu订单id
      */
-    @Index
-    private String spuOrderNo;
+    private Long spuOrderId;
 
     /**
-     * 售后单 refund 表的主键
+     * 售后单refund表的主键
      */
-    @Index
     private Long refundId;
 
     /**
-     * 操作人 ID
+     * 操作人ID
      */
     private Long operatorId;
 
     /**
-     * 操作方角色编码 (对应 RoleEnum.CompanyRole 的 code: 1000=C端客户, 1001=供应商, 1002=渠道商, 0=平台等)
+     * 操作方角色编码（对应RoleEnum.CompanyRole的code：1000=C端客户，1001=供应商，1002=渠道商，0=平台等）
      */
     private Long operatorRoleCode;
 
     /**
-     * 操作方客户端类型 (对应 CommonEnum.Client 的 code: user=用户端, supplier=供应商端, channel=渠道商端, admin=平台端等)
+     * 操作方客户端类型（对应CommonEnum.Client的code：user=用户端，supplier=供应商端，channel=渠道商端，admin=平台端等）
      */
     private String operatorClient;
 
@@ -54,19 +47,18 @@ public class RefundOperationRecordDO extends BaseDO {
     private String operatorName;
 
     /**
-     * 操作前售后单状态 (对应 RefundEnum.State 的 code)
+     * 操作前售后单状态（对应RefundEnum.State的code）
      */
-    private RefundEnum.State beforeState;
+    private Integer beforeState;
 
     /**
-     * 操作后售后单状态 (对应 RefundEnum.State 的 code)
+     * 操作后售后单状态（对应RefundEnum.State的code）
      */
-    private RefundEnum.State afterState;
+    private Integer afterState;
 
     /**
-     * 操作类型 (0=发起退款申请, 1=审核通过, 2=审核拒绝, 3=提交物流信息, 4=确认收货, 5=退款完成, 6=关闭售后, 7=平台介入)
+     * 操作类型（0=发起退款申请，1=审核通过，2=审核拒绝，3=提交物流信息，4=确认收货，5=退款完成，6=关闭售后，7=平台介入）
      */
-    @Index
     private Integer operationType;
 
     /**
@@ -75,7 +67,7 @@ public class RefundOperationRecordDO extends BaseDO {
     private String operationContent;
 
     /**
-     * 本次操作涉及的退款金额 (单位: 分, 和 refund 表保持一致)
+     * 本次操作涉及的退款金额（单位：分，和refund表保持一致）
      */
     private Integer refundAmount;
 
@@ -87,7 +79,6 @@ public class RefundOperationRecordDO extends BaseDO {
     /**
      * 物流单号
      */
-    @Index
     private String freightNo;
 
     /**
@@ -96,7 +87,19 @@ public class RefundOperationRecordDO extends BaseDO {
     private String reason;
 
     /**
-     * 拓展字段 (JSON 格式存储额外信息)
+     * 操作时间
+     */
+    @TableField(fill = FieldFill.INSERT) // 插入时自动填充
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE) // 插入/更新时自动填充
+    private LocalDateTime updateTime;
+
+    /**
+     * 拓展字段（JSON格式存储额外信息）
      */
     private String ext;
 }

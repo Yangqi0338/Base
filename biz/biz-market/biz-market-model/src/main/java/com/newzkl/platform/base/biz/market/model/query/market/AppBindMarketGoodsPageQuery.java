@@ -43,13 +43,16 @@ public class AppBindMarketGoodsPageQuery extends PageQuery {
      */
     private Integer relationType;
 
+    /** 绑定类型 */
     private Integer bindType;
     /**
      * 商品上下架状态 :  0:仓库中 2:上架中 3:待上架
      */
     private String spuState;
 
+    /** 降序排序字段列表 */
     private List<String> descs;
+    /** 升序排序字段列表 */
     private List<String> ascs;
 
 }

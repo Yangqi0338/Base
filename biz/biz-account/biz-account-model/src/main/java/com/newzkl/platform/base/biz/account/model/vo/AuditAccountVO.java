@@ -12,8 +12,12 @@ import java.io.Serializable;
  */
 @Data
 public class AuditAccountVO implements Serializable {
+    /** 账户ID */
     private Long accountId;
+    /** 企业角色 */
     private RoleEnum.CompanyRole role;
+    /** 账号 */
     private String username;
+    /** 名称 */
     private String name;
 }

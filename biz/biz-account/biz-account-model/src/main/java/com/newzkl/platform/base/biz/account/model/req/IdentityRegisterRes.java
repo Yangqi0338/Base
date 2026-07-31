@@ -24,6 +24,7 @@ public class IdentityRegisterRes {
      * 开发者信息
      */
     private String appId;
+    /** 密钥 */
     private String secret;
 
     public IdentityRegisterRes(ErrorCode errorCode, Long accountId) {

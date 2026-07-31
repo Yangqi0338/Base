@@ -19,6 +19,7 @@ public class StoreCmd {
      */
     @Data
     public static class ID {
+        /** 门店ID */
         private Long storeId;
     }
 
@@ -27,6 +28,7 @@ public class StoreCmd {
      */
     @Data
     public static class IDList {
+        /** 门店ID列表 */
         @NotEmpty
         private List<Long> storeIdList;
     }
@@ -36,8 +38,10 @@ public class StoreCmd {
      */
     @Data
     public static class Edit {
+        /** 主键ID */
         @NotNull(message = "ID不能为空")
         private Long id;
+        /** 门店保存请求 */
         private StoreSaveReq storeSaveReq;
         /**
          * 联系人姓名

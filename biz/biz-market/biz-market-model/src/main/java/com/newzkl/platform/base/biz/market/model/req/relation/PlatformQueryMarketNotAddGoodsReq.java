@@ -29,6 +29,7 @@ public class PlatformQueryMarketNotAddGoodsReq extends PageQuery {
      */
     private Integer salePriceR;
 
+    /** 账户ID */
     private Long accountId;
     /**
      * 商品名称
@@ -69,6 +70,7 @@ public class PlatformQueryMarketNotAddGoodsReq extends PageQuery {
      * 销量右
      */
     private Integer sellNumR;
+    /** 是否选中 */
     private Integer choose;
 
     /**

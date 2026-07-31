@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class FitmentPageVO {
 
+    /** 主键ID */
     private Long id;
 
     /**

@@ -271,6 +271,7 @@ public class SpuVO extends BaseRes implements Serializable {
      */
     private Double minPricingNum;
 
+    /** 是否选中 */
     private Boolean choose = false;
     /**
      * 商品信息

@@ -14,19 +14,23 @@ import java.util.List;
 public class OperatorCmd {
     @Data
     public static class ID {
+        /** 运营商ID */
         @NotNull(message = "id?")
         private Long operatorId;
     }
 
     @Data
     public static class IDList {
+        /** 运营商ID列表 */
         @NotEmpty
         private List<Long> operatorIdList;
     }
 
     @Data
     public static class Edit {
+        /** 主键ID */
         private Long id;
+        /** 运营商编辑请求 */
         private OperatorReq operatorEditReq;
     }
 

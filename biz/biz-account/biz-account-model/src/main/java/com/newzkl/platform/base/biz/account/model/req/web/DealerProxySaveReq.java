@@ -12,8 +12,10 @@ import java.io.Serializable;
  */
 @Data
 public class DealerProxySaveReq implements Serializable {
+    /** 账号 */
     @NotEmpty(message = "username?")
     private String username;
+    /** 密码 */
     @NotEmpty(message = "password?")
     private String password;
     /**
@@ -29,7 +31,7 @@ public class DealerProxySaveReq implements Serializable {
     /**
      * 运营商邀请码
      */
-//    @NotEmpty(message = "yqm?")
+/** @NotEmpty(message = "yqm?") */
     private String yqm;
     /**
      * 分润比例

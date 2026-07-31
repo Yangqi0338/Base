@@ -17,5 +17,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-activity-domain</artifactId>
         </dependency>
+        <!-- 迁移补充: SecurityUtils.getAccountId (core-utils), 对齐 biz-goods/biz-store-application 既有先例 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
+        </dependency>
     </dependencies>
 </project>

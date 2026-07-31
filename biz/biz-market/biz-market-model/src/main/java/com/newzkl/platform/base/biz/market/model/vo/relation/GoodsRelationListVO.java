@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class GoodsRelationListVO {
 
+    /** 主键ID */
     private Long id;
 
     /**
@@ -122,5 +123,6 @@ public class GoodsRelationListVO {
      */
     private String goodsInfo;
 
+    /** 是否选中 */
     private Boolean choose= false;
 }

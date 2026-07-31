@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class MarketReq {
 
+    /** 主键ID */
     private Long id;
 
     /**

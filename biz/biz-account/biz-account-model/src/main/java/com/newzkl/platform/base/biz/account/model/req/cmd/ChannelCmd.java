@@ -16,19 +16,23 @@ public class ChannelCmd {
     @Data
     @AllArgsConstructor
     public static class ID {
+        /** 渠道商ID */
         @NotNull(message = "id?")
         private Long channelId;
     }
 
     @Data
     public static class IDList {
+        /** 渠道商ID列表 */
         @NotEmpty
         private List<Long> channelIdList;
     }
 
     @Data
     public static class Edit {
+        /** 主键 */
         private Long id;
+        /** 渠道商编辑入参 */
         private ChannelReq channelReq;
     }
 
@@ -48,6 +52,7 @@ public class ChannelCmd {
 
     @Data
     public static class ChannelPage {
+        /** 邀请人ID */
         @NotNull(message = "id不能为空")
         private Long inviteId;
     }

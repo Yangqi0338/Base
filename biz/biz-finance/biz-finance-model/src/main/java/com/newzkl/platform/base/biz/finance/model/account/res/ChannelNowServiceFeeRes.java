@@ -17,6 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ChannelNowServiceFeeRes implements Serializable {
 
+    /** 渠道商ID */
     private Long channelId;
 
     /**

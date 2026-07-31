@@ -64,16 +64,15 @@ import java.util.Set;
  *
  * <p>未实现方法 (gap) 一览:</p>
  * <ul>
- *   <li>{@code editColumn} — 依赖 {@code SpuDAO.editColumn}, 无 mapper XML,
- *       且为运行期动态列名增量更新, 无列白名单可依据</li>
- *   <li>{@code indexCount} — 依赖 {@code SpuDAO.spuCount} 按时间分组统计, 无 mapper XML</li>
- *   <li>{@code countByCondition} — 依赖 {@code SpuDAO.countByCondition}, 无 mapper XML</li>
- *   <li>{@code goodsCountVO} — 依赖 {@code SpuDAO.goodsCountVO}, 无 mapper XML;
- *       且"库存紧张/库存售完"判定阈值口径未在本仓定义</li>
- *   <li>{@code queryOrderGoodsInfoVOList} — 依赖 {@code SkuDAO.queryOrderGoodsInfoVOList},
- *       无 mapper XML, 需按渠道/门店铺货做多表关联</li>
- *   <li>{@code queryOrderSkuInfoVOList} — 依赖 {@code SkuDAO.queryOrderSkuInfoVOList},
- *       无 mapper XML</li>
+ *   <li>{@code editColumn} — 运行期动态列名增量更新, {@code SpuDAO.editColumn} 的 XML 用
+ *       {@code `${column.name}`} 拼列名, 存在 SQL 注入面且无列白名单可依据, 故不启用</li>
+ *   <li>{@code indexCount} — 依赖 {@code SpuDAO.spuCount} 分组结果补齐时间轴, 需
+ *       {@code SpuDAO.countByQuery} 与分组补全工具, 本仓尚未提供</li>
+ *   <li>{@code countByCondition} — {@code SpuDAO.countByCondition} 的 XML 用
+ *       {@code ${query.fieldSQL}} 等拼 SQL 片段, 存在注入面, 口径待定, 故不启用</li>
+ *   <li>{@code queryOrderSkuInfoVOList} — 接口签名 ({@code Long skuId} 单参) 与
+ *       {@code SkuDAO.queryOrderSkuInfoVOList} (入参 {@code List<Long> skuIdList}) 不匹配,
+ *       映射口径未定</li>
  *   <li>{@code resetSpuOrderCount} — 重置口径 (重置哪些计数列、作用范围) 未定义</li>
  *   <li>{@code spuDownAfter} / {@code spuUpAfter} — 上下架后置处理的跨模块副作用未定义</li>
  *   <li>{@code refreshSalePriceRate} / {@code refreshSalePrice} — 加价比例与销售价的计算公式
@@ -469,14 +468,12 @@ public class SpuRepositoryImpl implements SpuRepository {
 
     @Override
     public GoodsCountVO goodsCountVO(Long supplierId) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 缺 SpuDAO.goodsCountVO 的 mapper XML, 且库存紧张/售完的判定阈值口径未定义");
+        return spuDAO.goodsCountVO(supplierId);
     }
 
     @Override
     public List<OrderGoodsInfoVO> queryOrderGoodsInfoVOList(List<GoodsVO> goods, Long channelId, Long storeId) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 缺 SkuDAO.queryOrderGoodsInfoVOList 的 mapper XML (按渠道/门店铺货多表关联)");
+        return skuDAO.queryOrderGoodsInfoVOList(goods, channelId, storeId);
     }
 
     @Override

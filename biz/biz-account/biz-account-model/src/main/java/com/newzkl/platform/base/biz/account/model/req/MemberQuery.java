@@ -77,6 +77,8 @@ public class MemberQuery extends PageQuery {
      */
     private Long channelId;
 
+    /** ID列表 */
     private List<Long> idList;
+    /** 用户账号列表 */
     private List<String> userAccountList;
 }

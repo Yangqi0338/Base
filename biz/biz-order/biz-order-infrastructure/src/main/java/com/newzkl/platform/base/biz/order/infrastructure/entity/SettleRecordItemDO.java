@@ -1,29 +1,22 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.dromara.autotable.annotation.Index;
 
 /**
 * 结算记录明细表
 * @author fang
 */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
 public class SettleRecordItemDO extends BaseDO {
 	/**
 	 * 结算记录ID
 	 */
-    @Index
 	private Long settleRecordId;
 	/**
 	 * SPU_ID
 	 */
-    @Index
 	private Long spuId;
 	/**
 	 * spu名称

@@ -7,8 +7,10 @@ import java.io.Serializable;
 @Data
 public class BindCategoryReq implements Serializable {
 
+    /** 行业ID */
     private Long industryId;
 
+    /** 分类ID */
     private Long categoryId;
     /**
      * 绑定 true

@@ -14,8 +14,10 @@ import lombok.Data;
  */
 @Data
 public class OperatorProxySaveReq {
+    /** 账号 */
     @NotEmpty(message = "username?")
     private String username;
+    /** 密码 */
     @NotEmpty(message = "password?")
     private String password;
     /**

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class ModelShopHandleMessageVO {
 
+    /** 主键ID */
     private Long id;
 
     /**

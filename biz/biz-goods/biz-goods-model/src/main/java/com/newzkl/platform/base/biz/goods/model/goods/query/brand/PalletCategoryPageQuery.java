@@ -41,6 +41,7 @@ public class PalletCategoryPageQuery extends BizPageQuery {
      * 品牌名称
      */
     private String brandName;
+    /** 排除的ID */
     private Long notId;
     /**
      * 行业ID

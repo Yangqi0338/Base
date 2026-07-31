@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class AlterWithdrawStateReq {
 
+    /** 主键ID */
     private Long id;
 
     /**

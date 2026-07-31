@@ -1,60 +1,86 @@
 package com.newzkl.platform.base.biz.order.infrastructure.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.newzkl.platform.base.biz.order.facade.model.api.order.OrderSummaryReq;
+import com.newzkl.platform.base.biz.order.facade.model.count.OrderSummaryVO;
+import com.newzkl.platform.base.biz.order.facade.model.count.SaleCountVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.infrastructure.entity.SpuOrderDO;
+
+import com.newzkl.platform.base.biz.order.model.req.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.res.OrderStateCheckRes;
+import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
+import com.newzkl.platform.base.biz.order.model.vo.CountDto;
+import com.newzkl.platform.base.biz.order.model.vo.OrderStateCountVO;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
+import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.newzkl.platform.base.biz.order.infrastructure.entity.SpuOrderDO;
-import com.newzkl.platform.base.biz.order.model.order.res.OrderStateCheckRes;
-import com.newzkl.platform.base.biz.order.model.order.res.SpuRefundRes;
-import com.newzkl.platform.base.biz.order.model.order.vo.OrderStateCountVO;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 /**
- * SPU订单明细表 Mapper
- *
- * @author sijiwang
- */
+* SPU订单
+* @author fang
+*/
 @Mapper
+@Repository
 public interface SpuOrderDAO extends BaseMapper<SpuOrderDO> {
-    /**
-     * 根据订单号更新SPU订单状态
-     */
-    int updateSpuOrderStateByOrderNo(@Param("orderNo") String orderNo, @Param("sourceState") Integer sourceState, @Param("toState") Integer toState, @Param("closeReason") String closeReason);
+
+    List<Map<String, Object>> countMapByQuery(@Param("query") SpuOrderQuery query);
+
+    int batchUpdateOrderStateByOrderId(@Param("orderIdList") List<Long> orderIdList, @Param("sourceState")  OrderEnum.State sourceState, @Param("toState")  OrderEnum.State toState, @Param("spuOrderExt") String spuOrderExt);
+
+    List<SpuOrderDO> listDOByQuery(@Param("query") SpuOrderQuery spuOrderQuery);
+
+    void batchUpdateSpuOrderState(@Param("spuOrderIdList") List<Long> spuOrderIdList, @Param("sourceState")  OrderEnum.State sourceState, @Param("toState")  OrderEnum.State toState,  @Param("model") SpuOrderDO spuOrderDO);
+
+    List<SpuOrderStateVO> accountOrderState(@Param("accountId") Long accountId, @Param("spuOrderIdList") List<Long> spuOrderIdList);
+
+    SpuOrderRelationVO spuOrderRelation(@Param("orderId") Long orderId, @Param("spuId") Long spuId);
+
+    List<OrderStateCheckRes> checkSpuOrderState(@Param("orderId") List<Long> orderId);
+
+    List<SpuRefundRes> spuRefundResList(@Param("orderId") Long orderId, @Param("spuIds") List<Long> spuIds);
+
+    List<GroupCountRes> orderCount(@Param("query") TimeQuery timeQuery);
+
+    Integer sumAmountByQuery(@Param("query") SpuOrderQuery spuOrderQuery);
+
+    void updateSkuRefundingCount(@Param("spuOrderId") Long spuOrderId,  @Param("count") Integer count);
+
+    void cutSkuOrderRefundingNumber(@Param("spuOrderId") Long spuOrderId, @Param("skuOrderIdList") List<Long> skuOrderIdList);
+
+    Long spuOrderIdByorderIdSkuId(@Param("orderId") Long orderId, @Param("skuId") Long skuId);
+
+    List<OrderSummaryVO> channelCountVO(@Param("query") OrderSummaryReq query);
+
+    void updateOrderShip(@Param("orderId")Long orderId, @Param("shipVo")String shipVo);
 
     /**
-     * 统计指定渠道的订单状态数量
+     * 统计渠道商所有订单状态数量
+     * @param channelId 渠道商ID
+     * @return 订单状态统计列表
      */
     List<OrderStateCountVO> countOrderStateByChannel(@Param("channelId") Long channelId);
 
     /**
-     * 统计指定账户的订单状态数量
+     * 统计会员所有订单状态数量
+     * @param accountId 会员ID
+     * @return 订单状态统计列表
      */
     List<OrderStateCountVO> countOrderStateByAccount(@Param("accountId") Long accountId);
 
     /**
-     * 更新SPU订单售后数量
+     * 根据订单状态和最后修改时间（小于指定时间）查询订单数据
+     * @param orderState 订单状态（必填）
+     * @param updateTime 最后修改时间阈值（必填，查询 update_time < 该时间的数据）
+     * @return 符合条件的 SpuOrderDO 列表
      */
-    void updateSkuRefundingCount(@Param("spuOrderNo") String spuOrderNo,  @Param("refundQuantity") Integer refundQuantity);
-
-    List<SpuRefundRes> spuRefundResList(@Param("orderNo") String orderNo, @Param("spuIds") List<Long> spuIds);
-
-    void cutSkuOrderRefundingNumber(@Param("spuOrderNo") String spuOrderId, @Param("skuOrderNoList") List<String> skuOrderNoList);
-
-    List<OrderStateCheckRes> checkOrderState(@Param("orderNos") List<String> orderNos);
-
-    /**
-     * 按条件包装器分组统计各订单状态的 SPU 订单数
-     *
-     * <p>对等旧 {@code SpuOrderDAO.countMapByQuery} + {@code groupField=t.order_state}。
-     * 自定义 SQL 不走 MyBatis-Plus 逻辑删除注入, 逻辑删除条件由调用方在 wrapper 内显式给出。</p>
-     *
-     * @param wrapper 条件包装器 (不得含 order by)
-     * @return 每行含 {@code orderState} / {@code orderCount} 两列
-     */
-    List<Map<String, Object>> stateCountMap(@Param(Constants.WRAPPER) Wrapper<SpuOrderDO> wrapper);
+    List<SpuOrderDO> listDOByOrderStateAndUpdateTimeLessThan(@Param("orderState") OrderEnum.State orderState, @Param("updateTime") LocalDateTime updateTime);
 }

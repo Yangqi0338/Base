@@ -31,6 +31,8 @@ public class ChannelMarketPageQuery extends PageQuery {
      */
     private Integer bindType;
 
+    /** 降序排序字段列表 */
     private List<String> descs;
+    /** 升序排序字段列表 */
     private List<String> ascs;
 }

@@ -21,6 +21,18 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-finance-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-sys-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-goods-facade</artifactId>
+        </dependency>
         <!-- 迁移补充: 仓储实现使用 TransferUtils/BizUtil/generator (core-utils) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

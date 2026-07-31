@@ -30,6 +30,7 @@ public class DistributionGoodsInfoVO {
      */
     private Long marketId;
 
+    /** 分类ID */
     private Long categoryId;
 
     /**

@@ -393,7 +393,9 @@ public class OperatorClientDomainImpl implements OperatorClientDomain {
         SupplierQuery query = new SupplierQuery();
         switch (dataType) {
             case ORGANIZE:
-                // 机构: 看自己招募的所有供应商
+            case BRAND:
+                // Q3 越权收敛: 品牌(BRAND)并入机构(ORGANIZE)分支, 口径一致 = 看自己招募的所有供应商
+                // (Base 新增 BRAND 类型, new-scm DataType 无此枚举; 品牌运营商可见范围收敛为自招募, 不放大)
                 query.setInviteId(accountId);
                 break;
             case INDUSTRY:

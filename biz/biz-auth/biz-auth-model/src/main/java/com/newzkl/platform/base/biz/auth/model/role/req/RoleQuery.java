@@ -12,7 +12,9 @@ import java.util.List;
  */
 @Data
 public class RoleQuery extends PageQuery {
+    /** 主键ID */
     private Long id;
+    /** ID列表 */
     private List<Long> idList;
     /**
      * 角色名称 (查询)

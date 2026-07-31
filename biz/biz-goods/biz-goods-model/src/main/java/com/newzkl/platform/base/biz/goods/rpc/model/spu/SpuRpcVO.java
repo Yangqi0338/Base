@@ -192,5 +192,6 @@ public class SpuRpcVO extends BaseRes implements Serializable {
       */
      private Integer supplierPriceEnd;
 
+     /** 是否选中 */
      private Boolean choose;
 }

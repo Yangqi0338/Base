@@ -14,6 +14,7 @@ public class SupplierPurchaseGoodsSeatReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** 供应商ID */
     private Long supplierId;
 
     /**

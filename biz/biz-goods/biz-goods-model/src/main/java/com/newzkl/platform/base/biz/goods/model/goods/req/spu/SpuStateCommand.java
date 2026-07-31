@@ -11,5 +11,6 @@ public class SpuStateCommand {
      * 0 下架
      */
     private Integer enable;
+    /** SPU ID列表 */
     private List<Long> spuIdList;
 }

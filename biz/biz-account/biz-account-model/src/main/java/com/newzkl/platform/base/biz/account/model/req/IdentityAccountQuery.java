@@ -15,10 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IdentityAccountQuery extends BizPageQuery {
 
+    /** 账号 */
     private String username;
+    /** 昵称 */
     private String nickname;
+    /** 真实姓名 */
     private String realName;
+    /** 邀请人ID */
     private Long invitedId;
+    /** 搜索关键词 */
     private String search;
 
 }

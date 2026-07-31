@@ -17,7 +17,9 @@ public class CategoryLayerVO extends CategoryVO implements PlatformTreeNode<Cate
      * 父ID
      */
     private Long pid;
+    /** 父级ID列表 */
     private String pidList;
+    /** 级别 */
     private Integer level;
 
     /**

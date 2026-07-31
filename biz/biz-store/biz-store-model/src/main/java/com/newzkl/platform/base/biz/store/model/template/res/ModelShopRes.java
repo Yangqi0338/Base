@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class ModelShopRes {
+    /** 主键ID */
     private Long id;
 
     /**

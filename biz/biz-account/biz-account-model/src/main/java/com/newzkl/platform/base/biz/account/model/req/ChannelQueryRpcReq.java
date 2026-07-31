@@ -26,5 +26,6 @@ public class ChannelQueryRpcReq extends BizPageQuery {
     private String channelName;
 
 
+    /** 渠道商ID */
     private Long channelId;
 }

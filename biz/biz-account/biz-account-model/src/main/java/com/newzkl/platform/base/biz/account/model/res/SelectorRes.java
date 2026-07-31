@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 public class SelectorRes extends BaseRes {
 
+    /** 状态 */
     private Integer state;
     /**
      * 名称 (查询)

@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 public class SupplierSpuStatisticsQuery {
 
+    /** 账户ID */
     private Long accountId;
 }

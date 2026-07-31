@@ -23,6 +23,7 @@ public class QueryPictureResourceReq extends PageQuery {
      */
     private String pictureName;
 
+    /** 渠道商ID */
     private Long channelId;
 
 }

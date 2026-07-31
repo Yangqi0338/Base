@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api;
 
-import com.newzkl.platform.base.biz.order.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 
 import java.io.Serializable;

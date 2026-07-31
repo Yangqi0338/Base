@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Data
 public class SubEditReq {
+    /** 主键ID */
     private Long id;
     /**
      * 昵称

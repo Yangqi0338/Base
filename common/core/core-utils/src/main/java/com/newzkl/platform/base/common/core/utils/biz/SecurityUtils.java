@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.RequestInfo;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -109,6 +110,10 @@ public class SecurityUtils {
             return null;
         }
         return Long.parseLong(role);
+    }
+
+    public static RoleEnum.CompanyRole getRole() {
+        return RoleEnum.CompanyRole.getByCode(getRoleId());
     }
 
     public static RequestInfo getRequestInfo() {

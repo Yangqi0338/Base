@@ -44,6 +44,7 @@ public class AuditDataSpuQuery extends PageQuery implements Serializable {
      * @see AuditEnum.State
      */
     private String state;
+    /** 是否新增 */
     private Integer isNew;
     /**
      * 品牌名称

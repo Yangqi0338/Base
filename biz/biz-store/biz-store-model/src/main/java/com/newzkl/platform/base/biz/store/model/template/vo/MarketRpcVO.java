@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Data
 public class MarketRpcVO implements Serializable {
 
+    /** 主键ID */
     private Long id;
 
     /**

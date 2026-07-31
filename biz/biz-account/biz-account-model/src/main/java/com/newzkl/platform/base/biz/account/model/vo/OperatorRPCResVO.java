@@ -23,6 +23,7 @@ public class OperatorRPCResVO implements Serializable {
      */
     private String username;
 
+    /** 角色ID列表 */
     @JsonIgnore
     private String roleIdList;
     /**

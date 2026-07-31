@@ -23,15 +23,16 @@ public interface LecturerDAO extends BaseMapper<LecturerDO> {
      * @return 查询条件包装
      */
     default BaseLambdaQueryWrapper<LecturerDO> getLw(LecturerQuery query) {
-        return new BaseLambdaQueryWrapper<LecturerDO>()
+        BaseLambdaQueryWrapper<LecturerDO> wrapper = new BaseLambdaQueryWrapper<LecturerDO>()
                 .notEmptyIn(LecturerDO::getId, query.getIdList())
                 .notEmptyLike(LecturerDO::getLecturerName, query.getLecturerName())
                 .notEmptyLike(LecturerDO::getMainAccount, query.getMainAccount())
                 .notEmptyIn(LecturerDO::getMainAccountId, query.getMainAccountIds())
                 .notNullEq(LecturerDO::getLecturerCategoryId, query.getLecturerCategoryId())
                 .notNullEq(LecturerDO::getIsEnabled, query.getIsEnabled())
-                .between(LecturerDO::getCreateTime, query.getCreateTime())
-                .orderByDesc(LecturerDO::getId);
+                .between(LecturerDO::getCreateTime, query.getCreateTime());
+        wrapper.orderByDesc(LecturerDO::getId);
+        return wrapper;
     }
 
     /**

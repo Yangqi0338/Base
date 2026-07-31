@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class ConfigChannelVO {
 
+    /** 渠道商ID */
     private Long channelId;
 
     /**

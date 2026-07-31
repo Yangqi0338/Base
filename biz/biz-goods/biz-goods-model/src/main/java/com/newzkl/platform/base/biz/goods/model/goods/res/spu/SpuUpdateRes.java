@@ -12,8 +12,11 @@ import java.util.List;
  */
 @Data
 public class SpuUpdateRes {
+    /** 新增SKU ID列表 */
     private List<Long> addSkuIdList;
+    /** 删除SKU ID列表 */
     private List<Long> deleteSkuIdList;
+    /** 更新SKU ID列表 */
     private List<Long> updateSkuIdList;
 
     public SpuUpdateRes(){

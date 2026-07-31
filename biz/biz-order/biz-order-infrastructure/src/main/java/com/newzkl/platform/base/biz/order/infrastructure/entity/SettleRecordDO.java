@@ -1,10 +1,8 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -12,19 +10,15 @@ import java.time.LocalDateTime;
 * 结算记录表
 * @author fang
 */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
 public class SettleRecordDO extends BaseDO {
 	/**
 	 * 供应商ID
 	 */
-    @Index
 	private Long supplierId;
 	/**
 	 * 结算时间(版本号)
 	 */
-    @Index
 	private LocalDateTime settleTime;
 	/**
 	 * 结算金额

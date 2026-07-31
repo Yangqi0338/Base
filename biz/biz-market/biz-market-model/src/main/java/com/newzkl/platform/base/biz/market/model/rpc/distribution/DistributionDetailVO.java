@@ -13,49 +13,88 @@ import java.time.LocalDateTime;
  */
 @Data
 public class DistributionDetailVO implements Serializable {
-    // ========== 铺货表(store_distribution)字段 ==========
-    private Long distributionId;       // 铺货ID（避免与spuId/skuId冲突）
-    private Long goodsId;              // 商品ID（关联SPU）
-    private Long skuId;                // SKU ID（关联SKU）
-    private Long marketId;             // 来源
-    private Integer dataType;          // 数据类型 0：商品  1：sku
-    private Long sellPrice;         // 销售价 渠道商铺货价
-    private Integer sellNum;           // 销量
-    private Long storeId;              // 门店ID
-    private Integer goodsState;        // 商品状态
-    private Long channelId;            // 渠道商ID
-    private LocalDateTime createTime;  // 创建时间
-    private Integer unitPrice;         // 零售价
-    private Long supplierPrice;     // 平台供货价 渠道商进价
-    private String goodsInfo;          // 商品信息
-    private Integer needUpdate;        // 是否需要更新
-    private LocalDateTime upTime;      // 修改时间
-    private LocalDateTime recommendationTime; // 推荐时间
+    /** 铺货ID（避免与spuId/skuId冲突） */
+    private Long distributionId;
+    /** 商品ID（关联SPU） */
+    private Long goodsId;
+    /** SKU ID（关联SKU） */
+    private Long skuId;
+    /** 来源 */
+    private Long marketId;
+    /** 数据类型 0：商品  1：sku */
+    private Integer dataType;
+    /** 销售价 渠道商铺货价 */
+    private Long sellPrice;
+    /** 销量 */
+    private Integer sellNum;
+    /** 门店ID */
+    private Long storeId;
+    /** 商品状态 */
+    private Integer goodsState;
+    /** 渠道商ID */
+    private Long channelId;
+    /** 创建时间 */
+    private LocalDateTime createTime;
+    /** 零售价 */
+    private Integer unitPrice;
+    /** 平台供货价 渠道商进价 */
+    private Long supplierPrice;
+    /** 商品信息 */
+    private String goodsInfo;
+    /** 是否需要更新 */
+    private Integer needUpdate;
+    /** 修改时间 */
+    private LocalDateTime upTime;
+    /** 推荐时间 */
+    private LocalDateTime recommendationTime;
 
-    // ========== SPU表(spu)字段 ==========
-    private Long spuId;                // SPU ID
+    /** SPU ID */
+    private Long spuId;
+    /** 外部SPU ID */
     private Long outSpuId;
-    private String spuName;            // SPU名称
-    private String spuImg;             // SPU图片
-    private String spuTitle;           // SPU标题
-    private Integer spuState;          // SPU状态
-    private Integer virtualSaleNum;    // 虚拟销量
-    private Long categoryId;           // 分类ID
-    private String categoryName;       // 分类名称
-    private Long freightTemplateId;     // 运费模板ID
-    private Long supplierId;           // 供货商ID
-    private SpuEnum.ChannelType channelType;    // spu.channel_type
-    // ========== SKU表(sku)字段 ==========
-    private Long skuIdDetail;          // SKU ID（避免与铺货表skuId命名冲突）
+    /** SPU名称 */
+    private String spuName;
+    /** SPU图片 */
+    private String spuImg;
+    /** SPU标题 */
+    private String spuTitle;
+    /** SPU状态 */
+    private Integer spuState;
+    /** 虚拟销量 */
+    private Integer virtualSaleNum;
+    /** 分类ID */
+    private Long categoryId;
+    /** 分类名称 */
+    private String categoryName;
+    /** 运费模板ID */
+    private Long freightTemplateId;
+    /** 供货商ID */
+    private Long supplierId;
+    /** spu.channel_type */
+    private SpuEnum.ChannelType channelType;
+
+    /** SKU ID（避免与铺货表skuId命名冲突） */
+    private Long skuIdDetail;
+    /** 外部SKU ID */
     private Long outSkuId;
-    private String skuName;            // SKU名称
-    private String skuImg;             // SKU图片
-    private Double weight;             // 重量(千克)
-    private Double volume;             // 体积(m³)
-    private Integer skuInventory;      // SKU库存
-    private String saleAttribute;      // 销售属性(JSON)
-    private Integer skuSalePrice;      // SKU销售价
-    private Integer skuUnitPrice;      // SKU零售价
-    private Long skuSupplyPrice;      //sku供货价(平台进价)
+    /** SKU名称 */
+    private String skuName;
+    /** SKU图片 */
+    private String skuImg;
+    /** 重量(千克) */
+    private Double weight;
+    /** 体积(m³) */
+    private Double volume;
+    /** SKU库存 */
+    private Integer skuInventory;
+    /** 销售属性(JSON) */
+    private String saleAttribute;
+    /** SKU销售价 */
+    private Integer skuSalePrice;
+    /** SKU零售价 */
+    private Integer skuUnitPrice;
+    /** sku供货价(平台进价) */
+    private Long skuSupplyPrice;
+    /** 购买数量 */
     private Integer buyNum;
 }

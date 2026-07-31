@@ -1,10 +1,11 @@
 package com.newzkl.platform.base.biz.order.infrastructure.dao;
 
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.SettleGoodsDO;
-import com.newzkl.platform.base.biz.order.model.order.req.SettleGoodsPageReq;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 
@@ -14,13 +15,6 @@ import java.time.LocalDateTime;
 */
 @Mapper
 public interface SettleGoodsDAO extends BaseMapper<SettleGoodsDO> {
-    /**
-     * 根据查询条件统计记录数量
-     * @param query 查询条件
-     * @return 记录数量
-     */
-    Integer countByQuery(@Param("query") SettleGoodsPageReq query);
-
     /**
      * 结算商品表修改 for 执行结算
      * @param supplierId 供应商ID

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.activity.infrastructure.dao.BonusPoolPartakeDAO">
+
+    <insert id="addBonusPoolPartake"
+            parameterType="com.newzkl.platform.base.biz.activity.model.event.req.BonusPoolPartakeReq">
+        insert into bonus_pool_partake (id, channel_id, bonus_pool_id,
+        member_id, order_sn, sku_code,
+        buy_num, bonus, create_time)
+        values
+        <foreach collection="bonusPoolPartake" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, #{bonusPoolId,jdbcType=BIGINT},
+            #{item.memberId,jdbcType=BIGINT}, #{item.orderSn,jdbcType=CHAR}, #{item.skuCode,jdbcType=BIGINT},
+            #{item.buyNum,jdbcType=INTEGER}, #{item.bonus,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into `bonus_pool_partake` (
+        `id`,
+        `serial_id`,
+        `account_id`,
+        `channel_id`,
+        `activity_id`,
+        `activity_name`,
+        `settlement_id`,
+        `settlement_name`,
+        `nick_name`,
+        `account_name`,
+        `role_name`,
+        `role`,
+        `person_percent`,
+        `dividend_amount`,
+        `dividend_cycle`,
+        `bonus_pool_id`,
+        `member_id`,
+        `order_sn`,
+        `sku_code`,
+        `buy_num`,
+        `bonus`,
+        `create_time`
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id},
+            #{item.serialId},
+            #{item.accountId},
+            #{item.channelId},
+            #{item.activityId},
+            #{item.activityName},
+            #{item.settlementId},
+            #{item.settlementName},
+            #{item.nickName},
+            #{item.accountName},
+            #{item.roleName},
+            #{item.role},
+            #{item.personPercent},
+            #{item.dividendAmount},
+            #{item.dividendCycle},
+            #{item.bonusPoolId},
+            #{item.memberId},
+            #{item.orderSn},
+            #{item.skuCode},
+            #{item.buyNum},
+            #{item.bonus},
+            #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectListByQueryWrapper"
+            resultType="com.newzkl.platform.base.biz.activity.model.event.vo.SettleDetailDataListVO">
+        SELECT
+        *
+        from bonus_pool_partake
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

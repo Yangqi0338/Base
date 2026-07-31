@@ -23,14 +23,15 @@ public interface CourseDAO extends BaseMapper<CourseDO> {
      * @return 查询条件包装
      */
     default BaseLambdaQueryWrapper<CourseDO> getLw(CourseQuery query) {
-        return new BaseLambdaQueryWrapper<CourseDO>()
+        BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<CourseDO>()
                 .notEmptyIn(CourseDO::getId, query.getIdList())
                 .notEmptyLike(CourseDO::getTitle, query.getTitle())
                 .notNullEq(CourseDO::getCategoryId, query.getCategoryId())
                 .notNullEq(CourseDO::getLecturerId, query.getLecturerId())
                 .notNullEq(CourseDO::getIsEnabled, query.getIsEnabled())
-                .between(CourseDO::getCreateTime, query.getCreateTime())
-                .orderByDesc(CourseDO::getId);
+                .between(CourseDO::getCreateTime, query.getCreateTime());
+        wrapper.orderByDesc(CourseDO::getId);
+        return wrapper;
     }
 
     /**

@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class PictureMenuVO {
 
+    /** 主键ID */
     private Long id;
 
     /**

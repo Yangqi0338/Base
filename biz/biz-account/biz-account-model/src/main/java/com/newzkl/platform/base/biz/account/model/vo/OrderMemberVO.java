@@ -11,7 +11,10 @@ import java.io.Serializable;
  */
 @Data
 public class OrderMemberVO implements Serializable {
+    /** 主键ID */
     private Long id;
+    /** 商户ID */
     private Long merchantId;
+    /** 渠道商ID */
     private Long channelId;
 }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class ChannelServiceAmountRes implements Serializable {
 
+    /** 渠道商ID */
     private Long channelId;
 
     /**

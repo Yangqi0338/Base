@@ -12,6 +12,7 @@ import lombok.Data;
  */
 @Data
 public class SelectorVO extends BaseRes {
+    /** 状态 */
     private RoleEnum.State state;
     /**
      * 名称

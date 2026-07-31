@@ -23,7 +23,9 @@ public class InventoryExecuteReq implements Serializable {
 
     @Data
     public static class Sku implements Serializable {
+        /** 主键ID */
         private Long id;
+        /** 数量 */
         private Integer count;
     }
 }

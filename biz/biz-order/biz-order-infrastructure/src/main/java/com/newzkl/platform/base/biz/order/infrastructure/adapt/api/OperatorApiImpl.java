@@ -19,7 +19,7 @@ import java.util.List;
  * @author KC
  */
 @Slf4j
-@Component("orderOperatorApiImpl")
+@Component
 @RequiredArgsConstructor
 public class OperatorApiImpl implements OperatorApi {
 

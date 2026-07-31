@@ -12,12 +12,14 @@ import java.util.List;
 public class SupplierCmd {
     @Data
     public static class ID {
+        /** 供应商ID */
         @NotNull(message = "id?")
         private Long supplierId;
     }
 
     @Data
     public static class IDList {
+        /** 供应商ID列表 */
         @NotEmpty
         private List<Long> supplierIdList;
     }

@@ -46,6 +46,7 @@ public class GoodsListPageQuery extends PageQuery {
      */
     private Integer relationType;
 
+    /** 绑定类型 */
     private Integer bindType;
     /**
      * 商品上下架状态 : 2 上架 3 下架

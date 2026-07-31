@@ -18,7 +18,9 @@ public class SettleEarningReq implements Serializable {
      */
     private Long skuOrderId;
 
+    /** 修改账户贡献数据请求列表 */
     private List<AlterAccountContributeDataReq> alterAccountContributeDataReqs;
 
+    /** 收益信息列表 */
     private List<EarningRecordReq> earningInfos;
 }

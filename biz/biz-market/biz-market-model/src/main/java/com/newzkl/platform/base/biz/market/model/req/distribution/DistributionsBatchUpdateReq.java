@@ -10,8 +10,10 @@ import java.util.List;
 @Data
 public class DistributionsBatchUpdateReq {
 
+    /** 渠道商ID */
     private Long channelId;
 
+    /** 更新请求列表 */
     private List<DistributionsUpdateReq> updateReqs;
 
 }

@@ -2,25 +2,21 @@ package com.newzkl.platform.base.biz.order.action.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.action.cmd.OrderCmd;
-import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
-import com.newzkl.platform.base.biz.order.model.order.req.SettleRecordEditReq;
-import com.newzkl.platform.base.biz.order.model.order.req.SettleRecordItemPageReq;
-import com.newzkl.platform.base.biz.order.model.order.req.SettleRecordPageReq;
-import com.newzkl.platform.base.biz.order.model.order.req.SettleTypeListReq;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleFreightExcelVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleGoodsExcelVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleOrderWaitVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordItemVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleRecordVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.SettleRefundExcelVO;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
+import com.newzkl.platform.base.biz.order.model.req.SettleRecordItemQuery;
+import com.newzkl.platform.base.biz.order.model.req.SettleRecordQuery;
+import com.newzkl.platform.base.biz.order.model.req.SettleTypeListReq;
+import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
+import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,174 +25,116 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Function;
 
 /**
- * 交易-结算单控制器
- *
- * <p>迁移自旧 {@code com.zkl.scm.sale.interfaces.controller.SettleController},
- * 7 端点路径与 HTTP 方法保持不变。偏离说明:</p>
- * <ul>
- *   <li>旧 controller 直连 {@code ISettleRepository} (跨层), 新版改注入 {@code SettleDomain}。</li>
- *   <li>分页出参由 {@code PageInfo} 改为 MyBatis-Plus {@code Page} (前端分页壳字段变化)。</li>
- *   <li>{@code SecurityUtils.getRole()} 已不存在, 改用 {@code getRoleId()}。</li>
- *   <li>旧 {@code @Limit(FuncCons...)} 权限点不在本层声明, 鉴权切面归入口 starter。</li>
- * </ul>
- *
- * @author KC
+ * 交易-结算单
+ * @author fang
  */
 @RestController
 @RequestMapping("/sale/settle")
-@RequiredArgsConstructor
 public class SettleController {
 
-    /**
-     * 结算类型: 商品
-     */
-    private static final int TYPE_GOODS = 0;
+    @Autowired
+    private ISettleRepository settleRepository;
 
     /**
-     * 结算类型: 运费
-     */
-    private static final int TYPE_FREIGHT = 1;
-
-    /**
-     * 结算类型: 售后冲正
-     */
-    private static final int TYPE_REFUND = 2;
-
-    private final SettleDomain settleDomain;
-
-    /**
-     * 结算单分页 (供应商登录态自动收窄到自身)
-     *
-     * @param settleRecordQuery 结算单查询
-     * @return 结算单分页
+     * 结算单分页
+     * @param settleRecordQuery
+     * @return
      */
     @PostMapping("settleRecordPage")
-    public PlatformResult<Page<SettleRecordVO>> settlePage(@RequestBody SettleRecordPageReq settleRecordQuery) {
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(SecurityUtils.getRoleId())) {
+    public PlatformResult<Page<SettleRecordVO>> settlePage(@RequestBody SettleRecordQuery settleRecordQuery) {
+        if(RoleEnum.CompanyRole.SUPPLIER == SecurityUtils.getRole()){
             settleRecordQuery.setSupplierId(SecurityUtils.getAccountId());
         }
-        return PlatformResult.success(settleDomain.settleRecordVOList(settleRecordQuery));
+        Page<SettleRecordVO> settleRecordVOPageInfo = settleRepository.settleRecordVOList(settleRecordQuery);
+        return PlatformResult.success(settleRecordVOPageInfo);
     }
-
     /**
-     * 结算单明细分页
-     *
-     * @param settleRecordItemQuery 结算单明细查询
-     * @return 结算单明细分页
+     * 结算单详情列表
      */
     @PostMapping("settleRecordItemPage")
-    public PlatformResult<Page<SettleRecordItemVO>> settleRecordItemPage(
-            @Validated @RequestBody SettleRecordItemPageReq settleRecordItemQuery) {
-        return PlatformResult.success(settleDomain.settleRecordItemPage(settleRecordItemQuery));
+    public PlatformResult<Page<SettleRecordItemVO>> settleRecordItemPage(@Validated @RequestBody SettleRecordItemQuery settleRecordItemQuery) {
+        return PlatformResult.success(settleRepository.settleRecordItemPage(settleRecordItemQuery));
     }
-
     /**
-     * 修改结算单 (标签)
-     *
-     * @param settleRecordEditReq 结算单修改入参
-     * @return 成功结果
-     */
-    @PostMapping("editSettleRecord")
-    public PlatformResult<Void> editSettleRecord(@RequestBody SettleRecordEditReq settleRecordEditReq) {
-        settleDomain.editSettleRecord(settleRecordEditReq);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 结算类型明细 (商品 / 运费 / 售后冲正)
-     *
-     * @param settleTypeList 结算类型查询
-     * @return 待结算订单列表
+     * 结算类型明细
+     * @Param idObj 结算单ID
+     * @return
      */
     @PostMapping("settleTypeList")
     public PlatformResult<List<SettleOrderWaitVO>> settleTypeList(@Validated @RequestBody SettleTypeListReq settleTypeList) {
-        return PlatformResult.success(settleDomain.settleTypeList(settleTypeList));
+        return PlatformResult.success(settleRepository.settleTypeList(settleTypeList));
     }
-
     /**
-     * 结算单视图对象
-     *
-     * @param idObj 结算单 ID
-     * @return 结算单视图对象
+     * 结算单VO
+     * @param idObj
+     * @return
      */
     @PostMapping("settleRecordVO")
-    public PlatformResult<SettleRecordVO> settleRecordVO(@RequestBody OrderCmd.ID idObj) {
-        return PlatformResult.success(settleDomain.settleRecordVO(idObj.getId()));
+    public PlatformResult<SettleRecordVO> settleRecordVO(@RequestBody IdListCommand idObj) {
+        return PlatformResult.success(settleRepository.settleRecordVO(idObj.getId()));
     }
-
     /**
-     * 结算类型明细导出 (按 type 走 3 套模板)
-     *
-     * @param response       HTTP 响应 (直接写 xlsx 流)
-     * @param settleTypeList 结算类型查询
-     * @throws IOException 写出流失败
+     * 结算类型明细导出
      */
     @PostMapping("exportSettleTypeList")
-    public void exportSettleTypeList(HttpServletResponse response,
-                                     @Validated @RequestBody SettleTypeListReq settleTypeList) throws IOException {
+    public void exportSpuOrder(HttpServletResponse response, @Validated @RequestBody SettleTypeListReq settleTypeList) throws IOException {
+        // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
-        String fileName = URLEncoder.encode("结算类型明细", StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("结算类型明细", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        writeSettleTypeExcel(response, settleTypeList, settleDomain.settleTypeList(settleTypeList));
+        List<SettleOrderWaitVO> exportSettleTypeList = settleRepository.settleTypeList(settleTypeList);
+        exportSpuOrderVO(response, settleTypeList, exportSettleTypeList);
     }
 
-    /**
-     * 按结算类型写出对应模板的 Excel
-     *
-     * @param response HTTP 响应
-     * @param listReq  结算类型查询 (取 type 分支)
-     * @param voList   待结算订单列表
-     * @throws IOException 写出流失败
-     */
-    private void writeSettleTypeExcel(HttpServletResponse response, SettleTypeListReq listReq,
-                                      List<SettleOrderWaitVO> voList) throws IOException {
-        Integer type = listReq.getType();
-        if (type == null) {
-            return;
-        }
-        if (type == TYPE_GOODS) {
+    private  void exportSpuOrderVO(HttpServletResponse response, SettleTypeListReq listReq, List<SettleOrderWaitVO> voList) throws IOException {
+        if(listReq.getType() == 0){
             List<SettleGoodsExcelVO> goodsExcelVOList = TransferUtils.transfers(voList, c -> {
                 SettleGoodsExcelVO v = new SettleGoodsExcelVO();
-                v.setSpuOrderId(c.getSpuOrderNo());
-                v.setSpuName(c.getSpuName() + "( " + BizUtil.goodsSkuName(c.getSkuName())
-                        + " * " + c.getSkuCount() + " )");
+                v.setSpuOrderId(String.valueOf(c.getSpuOrderId()));
+                v.setSpuName(c.getSpuName() + "( " + BizUtil.goodsSkuName(c.getSkuName()) + " * " + c.getSkuCount() + " )");
                 v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
-                // 旧语义: 有售后且售后状态 1 记为异常, 结算总额置 0
-                if (c.getRefundId() != null && Integer.valueOf(1).equals(c.getRefundState())) {
+                if(c.getRefundId() != null && c.getRefundState() == RefundEnum.State.MERCHANT_WAIT){
                     v.setC4("异常");
                     v.setC5("0.00");
-                } else {
+                }else {
                     v.setC4("已结算");
                     v.setC5(BizUtil.excelMoney(c.getOrderMoney()));
                 }
                 return v;
             });
             EasyExcel.write(response.getOutputStream(), SettleGoodsExcelVO.class).sheet("模板").doWrite(goodsExcelVOList);
-        } else if (type == TYPE_FREIGHT) {
-            List<SettleFreightExcelVO> freightExcelVOList = TransferUtils.transfers(voList, c -> {
-                SettleFreightExcelVO v = new SettleFreightExcelVO();
-                v.setSpuOrderId(c.getSpuOrderNo());
-                v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
-                return v;
+        }else if(listReq.getType() == 1){
+            List<SettleFreightExcelVO> refundExcelVOList = TransferUtils.transfers(voList, new Function<SettleOrderWaitVO, SettleFreightExcelVO>() {
+                @Override
+                public SettleFreightExcelVO apply(SettleOrderWaitVO settleOrderWaitVO) {
+                    SettleFreightExcelVO settleFreightExcelVO = new SettleFreightExcelVO();
+                    settleFreightExcelVO.setSpuOrderId(String.valueOf(settleOrderWaitVO.getSpuOrderId()));
+                    settleFreightExcelVO.setOrderMoney(BizUtil.excelMoney(settleOrderWaitVO.getOrderMoney()));
+                    return settleFreightExcelVO;
+                }
             });
-            EasyExcel.write(response.getOutputStream(), SettleFreightExcelVO.class).sheet("模板")
-                    .doWrite(freightExcelVOList);
-        } else if (type == TYPE_REFUND) {
-            List<SettleRefundExcelVO> refundExcelVOList = TransferUtils.transfers(voList, c -> {
-                SettleRefundExcelVO v = new SettleRefundExcelVO();
-                v.setRefundId(String.valueOf(c.getRefundId()));
-                v.setSpuOrderId(c.getSpuOrderNo());
-                v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
-                v.setC4(BizUtil.excelMoney(0 - c.getOrderMoney()));
-                return v;
+            EasyExcel.write(response.getOutputStream(), SettleFreightExcelVO.class).sheet("模板").doWrite(refundExcelVOList);
+        }else if(listReq.getType() == 2){
+            List<SettleRefundExcelVO> freightExcelVOList = TransferUtils.transfers(voList, new Function<SettleOrderWaitVO, SettleRefundExcelVO>() {
+                @Override
+                public SettleRefundExcelVO apply(SettleOrderWaitVO settleOrderWaitVO) {
+                    SettleRefundExcelVO settleRefundExcelVO = new SettleRefundExcelVO();
+                    settleRefundExcelVO.setRefundId(String.valueOf(settleOrderWaitVO.getRefundId()));
+                    settleRefundExcelVO.setSpuOrderId(String.valueOf(settleOrderWaitVO.getSpuOrderId()));
+                    settleRefundExcelVO.setOrderMoney(BizUtil.excelMoney(settleOrderWaitVO.getOrderMoney()));
+                    settleRefundExcelVO.setC4(BizUtil.excelMoney(-settleOrderWaitVO.getOrderMoney()));
+                    return settleRefundExcelVO;
+                }
             });
-            EasyExcel.write(response.getOutputStream(), SettleRefundExcelVO.class).sheet("模板")
-                    .doWrite(refundExcelVOList);
+            EasyExcel.write(response.getOutputStream(), SettleRefundExcelVO.class).sheet("模板").doWrite(freightExcelVOList);
+        }else {
+
         }
     }
 }

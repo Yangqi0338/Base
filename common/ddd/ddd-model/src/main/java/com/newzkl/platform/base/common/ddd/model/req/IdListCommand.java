@@ -24,10 +24,12 @@ public class IdListCommand implements Serializable {
 
     /**
      * 设置单个 ID (置于列表首位)
-     *
-     * @param id ID
      */
     public void setId(Long id) {
         this.idList = CollUtil.setOrAppend(Opt.ofNullable(this.idList).orElse(CollUtil.newArrayList()), 0, id);
+    }
+
+    public Long getId() {
+        return CollUtil.getFirst(this.idList);
     }
 }

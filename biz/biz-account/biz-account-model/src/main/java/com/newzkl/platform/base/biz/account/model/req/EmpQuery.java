@@ -8,7 +8,9 @@ import lombok.EqualsAndHashCode;
 @Data
 public class EmpQuery extends BizPageQuery {
 
+    /** 账号 */
     private String username;
 
+    /** 账户ID */
     private Long accountId;
 }

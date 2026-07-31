@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 public class EarningsPackExecReq extends EarningsExecReq {
 
+    /** 订单编号 */
     private Long orderNo;
 
 }

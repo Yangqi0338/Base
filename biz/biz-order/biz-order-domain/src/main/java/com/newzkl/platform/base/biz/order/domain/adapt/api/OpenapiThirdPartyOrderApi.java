@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
-import com.newzkl.platform.base.biz.order.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.order.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 
 /**
  * 三方下单请求记录出站端口

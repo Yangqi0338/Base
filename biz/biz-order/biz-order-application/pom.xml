@@ -17,6 +17,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-order-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-infrastructure</artifactId>
+        </dependency>
         <!-- 迁移补充: 编排层发送 MQ (MQUtil) -->
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>

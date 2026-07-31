@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class FreightTemplateQuery extends PageQuery {
 
+    /** 主键ID */
     private Long id;
     /**
      * ID集合

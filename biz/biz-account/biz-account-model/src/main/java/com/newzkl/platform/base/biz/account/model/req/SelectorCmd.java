@@ -22,19 +22,23 @@ public class SelectorCmd {
 
     @Data
     public static class ID {
+        /** 甄选师ID */
         @NotNull(message = "id?")
         private Long selectorId;
     }
 
     @Data
     public static class IDList {
+        /** 甄选师ID列表 */
         @NotEmpty
         private List<Long> selectorIdList;
     }
 
     @Data
     public static class Edit {
+        /** 主键ID */
         private Long id;
+        /** 甄选师编辑请求 */
         private SelectorEditReq selectorEditReq;
     }
 

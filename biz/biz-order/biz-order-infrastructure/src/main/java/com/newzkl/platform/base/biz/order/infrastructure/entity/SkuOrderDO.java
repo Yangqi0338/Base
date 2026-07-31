@@ -1,1 +1,143 @@
-package com.newzkl.platform.base.biz.order.infrastructure.entity;import com.baomidou.mybatisplus.annotation.TableName;import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;import com.newzkl.platform.base.biz.order.model.enums.order.OrderEnum;import lombok.Data;import lombok.EqualsAndHashCode;import org.dromara.autotable.annotation.Index;import org.dromara.autotable.annotation.OldColumnName;import java.time.LocalDateTime;/** * SKU级订单明细表 DO * * @author sijiwang */@Data@EqualsAndHashCode(callSuper = true)@TableNamepublic class SkuOrderDO extends BaseDO {    /**     * sku单号     */    @Index    private String skuOrderNo;    /**     * spu单号     */    @OldColumnName("spu_order_id")    @Index    private String spuOrderNo;    /**     * 交易单号（关联交易订单主表）     */    @OldColumnName("order_id")    @Index    private String orderNo;    /**     * 订单状态     */    @Index    private OrderEnum.State orderState;    /**     * 订单状态流转日志（逗号隔开）     */    private String orderStateLog;    /**     * 结算节点     */    private Integer settleOrderType;    /**     * 结算配置（JSON格式）     */        @OldColumnName("settlement_config_v_o")    private String settlementConfig;    /**     * 运费结算发送状态     */    private Integer settleSendState;    /**     * 供应商ID     */    @Index    private Long supplierId;    /**     * 渠道商ID     */    private Long channelId;    /**     * 门店ID     */    @Index    private Long storeId;    /**     * 用户ID     */    @Index    @OldColumnName("member_id")    private Long userId;    /**     * SKU ID     */    @Index    private Long skuId;    /**     * 外部SKU ID     */    private Long outSkuId;    /**     * SPU ID     */    @Index    private Long spuId;    /**     * 铺货ID     */    @Index    private Long distributionId;    /**     * SKU商品快照（JSON格式：名称/图片/规格/重量/体积等）     */        private String skuSnapshot;    /**     * 购买数量     */    @OldColumnName("count")    private Integer buyNum;    /**     * 发货数量     */    @OldColumnName("deliver_count")    private Integer deliveryQuantity;    /**     * 售后中数量     */    @OldColumnName("refunding_count")    private Integer refundingQuantity;    /**     * 已售后数量     */    @OldColumnName("refunded_count")    private Integer refundedQuantity;    /**     * 平台进货总金额（单位：分）     */    private Long platformPurchaseAmount;    /**     * 平台铺货总金额（单位：分）     */    private Long platformDistributionAmount;    /**     * 渠道商进货总金额（单位：分）     */    private Long channelPurchaseAmount;    /**     * 渠道商铺货总金额（单位：分）     */    private Long channelDistributionAmount;    /**     * 门店销售总金额（单位：分）     */    private Long storeSalesAmount;    /**     * 订单应付总额（单位：分）     */    private Long orderPayableAmount;    /**     * 订单实付总额（单位：分）     */    private Long orderActualAmount;    /**     * 运费金额（单位：分）     */    private Long freightAmount;    /**     * 优惠金额（单位：分）     */    private Long discountAmount;    /**     * 平台服务费（单位：分）     */    private Long platformServiceFee;    /**     * 平台服务费率     */    private Double platformServiceRatio;    /**     * 运营商服务费（单位：分）     */    private Long operatorServiceFee;    /**     * 运营商服务费率     */    private Double operatorServiceRatio;    /**     * 总服务费（单位：分）     */    private Long totalServiceFee;    /**     * 总服务费率     */    private Double totalServiceRatio;    /**     * 用户支付金额（单位：分）     */    private Long userPayAmount;    /**     * 支付方式     */    private Integer payType;    /**     * 支付时间     */    @Index    private LocalDateTime payTime;    /**     * 支付流水号     */    private String payFlowNo;    /**     * 发货时间     */    @Index    private LocalDateTime deliveryTime;    /**     * 确认收货时间     */    private LocalDateTime receiveTime;    /**     * 订单关闭原因     */    private String closeReason;    /**     * 拓展字段（JSON格式）     */        private String extendInfo;    /**     * 订单备注     */    private String remark;}
+package com.newzkl.platform.base.biz.order.infrastructure.entity;
+
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+/**
+ * @author muc_fang
+ * @Description: 订单
+ * @date 2023/11/1014:50
+ */
+@Data
+public class SkuOrderDO extends BaseDO {
+
+    private Long orderId;
+    private Long spuOrderId;
+    private Integer goodsAmount;
+    /**
+     * 铺货金额
+     */
+    private Integer storeAmount;
+    private Integer freightAmount;
+    private Integer discountAmount;
+    private Integer totalAmount;
+    /**
+     * 货款金额 supplier_amount
+     */
+    private Integer supplierAmount;
+    private Integer orderState;
+    /**
+     * 交易师ID dealer_id
+     */
+    private Long dealerId;
+    /**
+     * 运营商ID operator_id
+     */
+    private Long operatorId;
+    /**
+     * 供应商ID
+     */
+    private Long supplierId;
+    /**
+     * 结算配置 settlement_config_v_o
+     */
+    private String settlementConfigVO;
+    /**
+     * skuID
+     */
+    private Long spuId;
+    /**
+     * skuID
+     */
+    private Long skuId;
+    /**
+     * 外部SkuId
+     */
+    private String outSkuId;
+    /**
+     * 购买数量
+     */
+    private Integer count;
+    /**
+     * spu名称
+     */
+    private String spuName;
+    /**
+     * sku图片
+     */
+    private String skuImg;
+    /**
+     * sku销售属性
+     */
+    private String skuSaleAttribute;
+    /**
+     * sku名称
+     */
+    private String skuName;
+    /**
+     * sku重量(千克)
+     */
+    private Double skuWeight;
+    /**
+     * sku体积(m3)
+     */
+    private Double skuVolume;
+    /**
+     * sku供货价 sku_supplier_price
+     */
+    private Integer skuSupplierPrice;
+    /**
+     * sku采购价
+     */
+    private Integer skuSalePrice;
+    /**
+     * sku铺货价
+     */
+    private Integer skuStorePrice;
+    /**
+     * 发货数量
+     */
+    private Integer deliverCount;
+    /**
+     * 售后中数量
+     */
+    private Integer refundingCount;
+    /**
+     * 已售后数量
+     */
+    private Integer refundedCount;
+    /**
+     * 订单状态流转日志,逗号隔开
+     */
+    private String orderStateLog;
+    /**
+     * 发货完成时间
+     */
+    private LocalDateTime deliveredTime;
+    /**
+     * 确认收货时间
+     */
+    private LocalDateTime receiveTime;
+    /**
+     * 结算节点
+     */
+    private Integer settleOrderType;
+    /**
+     * 结算发送状态
+     */
+    private Integer settleSendState;
+    /**
+     * 总服务费
+     */
+    private Integer totalServiceChange;
+    /**
+     * 运营商服务费
+     */
+    private Integer operatorServiceChange;
+    /**
+     * 运营商实际服务比例
+     */
+    private Double operatorRealRatio;
+}

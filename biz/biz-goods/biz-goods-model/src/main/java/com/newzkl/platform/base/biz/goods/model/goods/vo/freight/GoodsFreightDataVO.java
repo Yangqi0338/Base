@@ -16,18 +16,25 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class GoodsFreightDataVO {
 
+    /** 数量 */
     private Integer num;
 
+    /** 重量 */
     private BigDecimal weight;
 
+    /** 体积 */
     private BigDecimal volume;
 
+    /** 外部SPU ID */
     private String outSpuId;
 
+    /** 外部SKU ID */
     private String outSkuId;
 
+    /** 渠道类型 */
     private String channelType;
 
+    /** 外部商品编码 */
     private String outItemCode;
 
     /**

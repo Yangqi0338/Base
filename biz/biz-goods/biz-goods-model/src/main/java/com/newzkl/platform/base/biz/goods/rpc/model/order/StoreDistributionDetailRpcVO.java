@@ -11,44 +11,77 @@ import java.math.BigDecimal;
  */
 @Data
 public class StoreDistributionDetailRpcVO implements Serializable {
-    // ------------------- 铺货表字段 -------------------
-    private Long id;                // 铺货表ID
-    private Long goodsId;           // spu.id
-    private Long skuId;             // sku.id
-    private Long marketId;          // 市场id 0：自营 >0：市场id
-    private Integer dataType;       // 数据类型 0：商品  1：sku
-    private Integer sellPrice;      // 销售价
-    private Integer sellNum;        // 销量
-    private Long storeId;           // 门店id
-    private Integer goodsState;     // 商品状态 1:下架  0：上架  -1：平台下架
-    private Long channelId;         // 渠道商id
-    private Integer unitPrice;      // 零售价（铺货表）
-    private Integer supplierPrice;  // 供货价（铺货表）
-    private String source;          // 来源
-    private String expand;          // 拓展信息
-    // ------------------- SKU表字段（加别名避免冲突） -------------------
-    private String skuImg;          // sku.img
-    private String barCode;         // sku.bar_code
-    private String skuName;         // sku.name
-    private BigDecimal weight;      // sku.weight
-    private BigDecimal volume;      // sku.volume
-    private Integer skuSupplyPrice; // sku.supply_price
-    private Integer inventory;      // sku.inventory
-    private String outSkuId;        // sku.out_sku_id
-    private Float salePriceRate;    // sku.sale_price_rate
-    private Integer buyStartQty;    // sku.buy_start_qty
-    private Integer skuUnitPrice;   // sku.unit_price
-    private String saleAttribute;
-    // ------------------- SPU表字段（加别名避免冲突） -------------------
-    private Long supplierId;         // spu.account_id 供应商id
-    private Long freightTemplateId; // spu.freight_template_id
-    private Integer spuState;       // spu.state
-    private String spuImg;          // spu.img
-    private String spuName;         // spu.name
-    private String outSpuId;        // spu.out_spu_id
-    private Integer channelType;    // spu.channel_type
-    private Integer spuSupplyPrice; // spu.supply_price
+    /** 铺货表ID */
+    private Long id;
+    /** spu.id */
+    private Long goodsId;
+    /** sku.id */
+    private Long skuId;
+    /** 市场id 0：自营 >0：市场id */
+    private Long marketId;
+    /** 数据类型 0：商品  1：sku */
+    private Integer dataType;
+    /** 销售价 */
+    private Integer sellPrice;
+    /** 销量 */
+    private Integer sellNum;
+    /** 门店id */
+    private Long storeId;
+    /** 商品状态 1:下架  0：上架  -1：平台下架 */
+    private Integer goodsState;
+    /** 渠道商id */
+    private Long channelId;
+    /** 零售价（铺货表） */
+    private Integer unitPrice;
+    /** 供货价（铺货表） */
+    private Integer supplierPrice;
+    /** 来源 */
+    private String source;
+    /** 拓展信息 */
+    private String expand;
 
-    // ------------------- 业务计算字段（非数据库存储） -------------------
+    /** sku.img */
+    private String skuImg;
+    /** sku.bar_code */
+    private String barCode;
+    /** sku.name */
+    private String skuName;
+    /** sku.weight */
+    private BigDecimal weight;
+    /** sku.volume */
+    private BigDecimal volume;
+    /** sku.supply_price */
+    private Integer skuSupplyPrice;
+    /** sku.inventory */
+    private Integer inventory;
+    /** sku.out_sku_id */
+    private String outSkuId;
+    /** sku.sale_price_rate */
+    private Float salePriceRate;
+    /** sku.buy_start_qty */
+    private Integer buyStartQty;
+    /** sku.unit_price */
+    private Integer skuUnitPrice;
+    /** 销售属性 */
+    private String saleAttribute;
+
+    /** spu.account_id 供应商id */
+    private Long supplierId;
+    /** spu.freight_template_id */
+    private Long freightTemplateId;
+    /** spu.state */
+    private Integer spuState;
+    /** spu.img */
+    private String spuImg;
+    /** spu.name */
+    private String spuName;
+    /** spu.out_spu_id */
+    private String outSpuId;
+    /** spu.channel_type */
+    private Integer channelType;
+    /** spu.supply_price */
+    private Integer spuSupplyPrice;
+
+    /** 购买数量 */
     private Integer bugNum;
 }

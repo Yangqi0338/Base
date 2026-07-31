@@ -24,6 +24,7 @@ public class OperatorListQueryVO implements Serializable {
      */
     private List<Long> operatorList;
 
+    /** 访客列表 */
     private List<Long> guestList;
 
 }

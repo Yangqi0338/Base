@@ -17,6 +17,7 @@ public class ChannelPurchaseGoodsSeatReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** 渠道商ID */
     private Long channelId;
 
     /**

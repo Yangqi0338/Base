@@ -43,6 +43,7 @@ public class ApiChannelSpuRelationVO implements Serializable {
     private Integer salePriceEnd;
 
 
+    /** 创建时间 */
     private String createTime;
 
     /**

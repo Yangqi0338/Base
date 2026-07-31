@@ -5,6 +5,10 @@ import com.newzkl.platform.base.biz.course.infrastructure.entity.UserLecturerFol
 import com.newzkl.platform.base.biz.course.model.follow.query.UserFollowQuery;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 用户关注讲师 DAO
@@ -23,10 +27,29 @@ public interface UserLecturerFollowDAO extends BaseMapper<UserLecturerFollowDO> 
      * @return 查询条件包装
      */
     default BaseLambdaQueryWrapper<UserLecturerFollowDO> getLw(UserFollowQuery query) {
-        return new BaseLambdaQueryWrapper<UserLecturerFollowDO>()
+        BaseLambdaQueryWrapper<UserLecturerFollowDO> wrapper = new BaseLambdaQueryWrapper<UserLecturerFollowDO>()
                 .notEmptyIn(UserLecturerFollowDO::getId, query.getIdList())
                 .notNullEq(UserLecturerFollowDO::getUserId, query.getUserId())
-                .between(UserLecturerFollowDO::getCreateTime, query.getCreateTime())
-                .orderByDesc(UserLecturerFollowDO::getFollowTime);
+                .between(UserLecturerFollowDO::getCreateTime, query.getCreateTime());
+        wrapper.orderByDesc(UserLecturerFollowDO::getFollowTime);
+        return wrapper;
     }
+
+    /**
+     * 查用户已关注的讲师ID列表
+     *
+     * <p>只返回未删除({@code del_flag = 0}, 即仍在关注)的记录, 在给定讲师ID范围内取交集。</p>
+     *
+     * @param userId         用户ID
+     * @param lecturerIdList 待判定的讲师ID列表, 调用方保证非空
+     * @return 已关注的讲师ID列表
+     */
+    @Select("<script>"
+            + "SELECT lecturer_id FROM user_lecturer_follow "
+            + "WHERE del_flag = 0 AND user_id = #{userId} "
+            + "AND lecturer_id IN "
+            + "<foreach collection='lecturerIdList' item='lid' open='(' separator=',' close=')'>#{lid}</foreach>"
+            + "</script>")
+    List<Long> listFollowedLecturerIds(@Param("userId") Long userId,
+                                       @Param("lecturerIdList") List<Long> lecturerIdList);
 }

@@ -12,8 +12,10 @@ import lombok.Data;
  */
 @Data
 public class CodeLoginRegisterReq {
+    /** 账号 */
     @NotEmpty(message = "username")
     private String username;
+    /** 验证码 */
     @NotEmpty(message = "code?")
     private String code;
     /**

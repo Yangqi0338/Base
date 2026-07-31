@@ -1,111 +1,78 @@
 package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundOperationRecordRepository;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundOperationRecordRepository;
+import com.newzkl.platform.base.biz.order.infrastructure.assembler.RefundOperationRecordAssembler;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.RefundOperationRecordDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.RefundOperationRecordDO;
-import com.newzkl.platform.base.biz.order.model.order.dto.RefundOperationRecord;
-import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordPageReq;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import lombok.RequiredArgsConstructor;
+import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
+import jakarta.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 售后操作记录 仓储实现
+ * 售后操作记录 仓储实现类
  *
- * <p>迁移自旧 {@code com.zkl.scm.sale.infrastructure.repository.RefundOperationRecordRepositoryImpl}。
- * 旧 MapStruct assembler 改为 {@code TransferUtils}; 旧分页三参签名收敛为
- * {@code RefundOperationRecordPageReq} 单参, 检索条件与旧实现一致 (仅 refundId / operatorRoleCode 参与筛选)。</p>
- *
- * @author sijiwang
+ * @author 开发者名称
  * @since 2026-01-23
  */
 @Repository
-@RequiredArgsConstructor
-public class RefundOperationRecordRepositoryImpl implements RefundOperationRecordRepository {
+public class RefundOperationRecordRepositoryImpl implements IRefundOperationRecordRepository {
 
-    private final RefundOperationRecordDAO refundOperationRecordDAO;
+    @Autowired
+    private RefundOperationRecordDAO refundOperationRecordDAO;
+
+    @Resource
+    private RefundOperationRecordAssembler refundOperationRecordAssembler;
 
     @Override
-    public RefundOperationRecord save(RefundOperationRecord record) {
-        RefundOperationRecordDO recordDO = TransferUtils.transfer(record, RefundOperationRecordDO::new);
-        refundOperationRecordDAO.insert(recordDO);
-        record.setId(recordDO.getId());
-        return record;
+    public RefundOperationRecordEntity save(RefundOperationRecordEntity entity) {
+        RefundOperationRecordDO recordDO = refundOperationRecordAssembler.domainToDO(entity);
+        baseMapper.insert(recordDO);
+        return refundOperationRecordAssembler.doToDomain(recordDO);
     }
 
     @Override
-    public RefundOperationRecord updateById(RefundOperationRecord record) {
-        RefundOperationRecordDO recordDO = TransferUtils.transfer(record, RefundOperationRecordDO::new);
-        refundOperationRecordDAO.updateById(recordDO);
-        return record;
+    public List<RefundOperationRecordEntity> listByRefundId(Long refundId) {
+        LambdaQueryWrapper<RefundOperationRecordDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(RefundOperationRecordDO::getRefundId, refundId).orderByDesc(RefundOperationRecordDO::getCreateTime);
+        
+        List<RefundOperationRecordDO> doList = baseMapper.selectList(wrapper);
+        
+        return doList.stream().map(refundOperationRecordAssembler::doToDomain).collect(Collectors.toList());
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        return refundOperationRecordDAO.deleteById(id) > 0;
-    }
+    public IPage<RefundOperationRecordEntity> pageQuery(Page<RefundOperationRecordEntity> page, Long refundId, Long operatorRoleCode) {
+        // 构建DO分页对象
+        Page<RefundOperationRecordDO> doPage = new Page<>(page.getCurrent(), page.getSize());
 
-    @Override
-    public RefundOperationRecord findById(Long id) {
-        RefundOperationRecordDO recordDO = refundOperationRecordDAO.selectById(id);
-        if (recordDO == null) {
-            return null;
+        // 构造查询条件
+        LambdaQueryWrapper<RefundOperationRecordDO> wrapper = Wrappers.lambdaQuery();
+        if (refundId != null) {
+            wrapper.eq(RefundOperationRecordDO::getRefundId, refundId);
         }
-        return TransferUtils.transfer(recordDO, RefundOperationRecord::new);
-    }
-
-    @Override
-    public List<RefundOperationRecord> listByRefundId(Long refundId) {
-        LambdaQueryWrapper<RefundOperationRecordDO> wrapper = new LambdaQueryWrapper<RefundOperationRecordDO>()
-                .eq(RefundOperationRecordDO::getRefundId, refundId)
-                .orderByDesc(RefundOperationRecordDO::getCreateTime);
-        return transfers(refundOperationRecordDAO.selectList(wrapper));
-    }
-
-    @Override
-    public List<RefundOperationRecord> listBySpuOrderNo(String spuOrderNo) {
-        LambdaQueryWrapper<RefundOperationRecordDO> wrapper = new LambdaQueryWrapper<RefundOperationRecordDO>()
-                .eq(RefundOperationRecordDO::getSpuOrderNo, spuOrderNo)
-                .orderByDesc(RefundOperationRecordDO::getCreateTime);
-        return transfers(refundOperationRecordDAO.selectList(wrapper));
-    }
-
-    @Override
-    public Page<RefundOperationRecord> pageByQuery(RefundOperationRecordPageReq query) {
-        Page<RefundOperationRecordDO> doPage = new Page<>(query.getCurrent(), query.getSize());
-        LambdaQueryWrapper<RefundOperationRecordDO> wrapper = new LambdaQueryWrapper<>();
-        if (query.getRefundId() != null) {
-            wrapper.eq(RefundOperationRecordDO::getRefundId, query.getRefundId());
-        }
-        if (query.getOperatorRoleCode() != null) {
-            wrapper.eq(RefundOperationRecordDO::getOperatorRoleCode, query.getOperatorRoleCode());
+        if (operatorRoleCode != null) {
+            wrapper.eq(RefundOperationRecordDO::getOperatorRoleCode, operatorRoleCode);
         }
         wrapper.orderByDesc(RefundOperationRecordDO::getCreateTime);
-        return TransferUtils.transferPage(refundOperationRecordDAO.selectPage(doPage, wrapper),
-                RefundOperationRecord::new);
-    }
 
-    @Override
-    public boolean existsById(Long id) {
-        return refundOperationRecordDAO.exists(new LambdaQueryWrapper<RefundOperationRecordDO>()
-                .eq(RefundOperationRecordDO::getId, id));
-    }
+        // 执行分页查询
+        IPage<RefundOperationRecordDO> resultDoPage = baseMapper.selectPage(doPage, wrapper);
 
-    /**
-     * DO 列表转领域模型列表 (空集合安全)
-     *
-     * @param doList DO 列表
-     * @return 领域模型列表, 永不为 null
-     */
-    private List<RefundOperationRecord> transfers(List<RefundOperationRecordDO> doList) {
-        if (doList == null || doList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return TransferUtils.transfers(doList, RefundOperationRecord::new);
+        // 转换为领域模型分页对象
+        Page<RefundOperationRecordEntity> domainPage = new Page<>(page.getCurrent(), page.getSize());
+        domainPage.setTotal(resultDoPage.getTotal());
+        domainPage.setRecords(resultDoPage.getRecords().stream().map(refundOperationRecordAssembler::doToDomain).collect(Collectors.toList()));
+
+        return domainPage;
     }
 }

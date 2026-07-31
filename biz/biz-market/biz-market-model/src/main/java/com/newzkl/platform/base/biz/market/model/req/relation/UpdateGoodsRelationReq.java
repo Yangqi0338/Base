@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 public class UpdateGoodsRelationReq implements Serializable {
 
+    /** 主键ID */
     private Long id;
 
     /**

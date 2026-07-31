@@ -16,12 +16,15 @@ import java.time.LocalDateTime;
 @Data
 public class AccountPurseAlterRecordExportVO extends BaseRes {
 
+    /** 主键ID */
     @ExcelProperty("流水号")
     private Long id;
 
+    /** 关联记录ID */
     @ExcelProperty("关联单号")
     private Long joinRecordId;
 
+    /** 金额 */
     @ExcelProperty("交易金融（元）")
     private String amount;
 
@@ -35,9 +38,11 @@ public class AccountPurseAlterRecordExportVO extends BaseRes {
     @ExcelProperty("交易类型")
     private String alterType;
 
+    /** 时间 */
     @ExcelProperty("交易时间")
     private LocalDateTime time;
 
+    /** 备注 */
     @ExcelProperty("备注")
     private String remark;
 

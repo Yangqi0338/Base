@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 public class AdminDisableAccountCommand {
 
+    /** 主键ID */
     @NotNull(message = "id?")
     private Long id;
 

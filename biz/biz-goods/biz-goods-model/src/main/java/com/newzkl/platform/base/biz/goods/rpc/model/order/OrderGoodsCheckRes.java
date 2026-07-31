@@ -18,8 +18,10 @@ import java.util.Map;
 @NoArgsConstructor
 public class OrderGoodsCheckRes implements Serializable {
 
+    /** 商品信息 */
     private List<OrderGoodsInfoVO> goodsInfo;
 
+    /** 商品运费 */
     private Map<Long,Integer> goodsFreight;
 
     /**

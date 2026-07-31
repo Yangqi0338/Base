@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 public class DealerVO extends BaseRes {
 
+    /** 状态 */
     private Integer state;
     /**
      * 名称 (查询)

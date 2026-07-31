@@ -16,6 +16,7 @@ public class CdkQuery extends PageQuery {
      * 兑换码_Id
      */
     private Long id;
+    /** ID列表 */
     private List<Long> idList;
     /**
      * 归属人角色
@@ -37,6 +38,7 @@ public class CdkQuery extends PageQuery {
      * 密钥
      */
     private String value;
+    /** 值列表 */
     private List<String> valueList;
     /**
      * 兑换状态 0 未兑换 1 已兑换

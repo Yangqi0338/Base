@@ -11,5 +11,6 @@ import lombok.Data;
 @Data
 public class AccountJobQuery extends BizPageQuery {
 
+    /** 名称 */
     private String name;
 }

@@ -23,13 +23,13 @@ public interface CourseCategoryDAO extends BaseMapper<CourseCategoryDO> {
      * @return 查询条件包装
      */
     default BaseLambdaQueryWrapper<CourseCategoryDO> getLw(CourseCategoryQuery query) {
-        return new BaseLambdaQueryWrapper<CourseCategoryDO>()
+        BaseLambdaQueryWrapper<CourseCategoryDO> wrapper = new BaseLambdaQueryWrapper<CourseCategoryDO>()
                 .notEmptyIn(CourseCategoryDO::getId, query.getIdList())
                 .notEmptyLike(CourseCategoryDO::getCategoryName, query.getCategoryName())
                 .notNullEq(CourseCategoryDO::getIsEnabled, query.getIsEnabled())
-                .between(CourseCategoryDO::getCreateTime, query.getCreateTime())
-                .orderByAsc(CourseCategoryDO::getSort)
-                .orderByDesc(CourseCategoryDO::getId);
+                .between(CourseCategoryDO::getCreateTime, query.getCreateTime());
+        wrapper.orderByAsc(CourseCategoryDO::getSort).orderByDesc(CourseCategoryDO::getId);
+        return wrapper;
     }
 
     /**

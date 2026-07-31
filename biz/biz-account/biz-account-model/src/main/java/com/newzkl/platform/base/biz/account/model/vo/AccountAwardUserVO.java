@@ -11,15 +11,20 @@ import lombok.EqualsAndHashCode;
 @Data
 public class AccountAwardUserVO extends BaseRes {
 
+    /** 昵称 */
     private String nickname;
 
+    /** 真实姓名 */
     private String realName;
 
 
+    /** 账号 */
     private String username;
 
+    /** 角色名称 */
     private String roleName;
 
+    /** 角色ID列表 */
     @JsonIgnore
     private String roleIdList;
 

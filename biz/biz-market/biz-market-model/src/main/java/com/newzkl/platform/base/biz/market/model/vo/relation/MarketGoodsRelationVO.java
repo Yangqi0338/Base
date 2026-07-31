@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class MarketGoodsRelationVO implements Serializable {
+    /** 主键ID */
     private Long id;
 
     /**
@@ -60,6 +61,7 @@ public class MarketGoodsRelationVO implements Serializable {
      */
     private LocalDateTime createTime;
 
+    /** 营销类型 */
     private String marketType;
 
     /**

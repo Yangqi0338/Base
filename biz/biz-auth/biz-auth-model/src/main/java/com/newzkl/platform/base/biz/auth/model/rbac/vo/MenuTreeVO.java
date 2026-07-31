@@ -13,6 +13,7 @@ public class MenuTreeVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** 主键ID */
     private Long id;
 
     /**
@@ -43,6 +44,7 @@ public class MenuTreeVO implements Serializable {
     @Data
     public static class FunctionVO {
 
+        /** 主键ID */
         private Long id;
 
         /**

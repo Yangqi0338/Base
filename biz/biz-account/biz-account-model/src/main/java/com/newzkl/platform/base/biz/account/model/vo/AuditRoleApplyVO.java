@@ -52,7 +52,9 @@ public class AuditRoleApplyVO extends BaseRes {
      * 邀请人昵称
      */
     private String inviteNickName;
+    /** 公司信息 */
     private String companyInfo;
+    /** 实名认证信息 */
     private String nameAuthInfo;
 
     /**

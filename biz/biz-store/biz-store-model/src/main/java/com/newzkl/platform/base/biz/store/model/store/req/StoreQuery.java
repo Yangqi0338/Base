@@ -11,7 +11,9 @@ import java.util.List;
 */
 @Data
 public class StoreQuery extends BizPageQuery {
+    /** 主键ID */
     private Long id;
+    /** ID列表 */
     private List<Long> idList;
     /**
      * 渠道商ID

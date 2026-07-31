@@ -17,6 +17,7 @@ import java.util.List;
 @Data
 public class EarningsAwardExecListReq extends EarningsExecReq {
 
+    /** 列表 */
     private List<EarningsAwardExecReq> list;
 
 }

@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class StoreStyleUpdateReq implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /** 风格编码 */
     @NotNull(message = "样式Id不能为空")
     private String styleCode;
 

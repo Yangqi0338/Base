@@ -18,5 +18,6 @@
         <module>biz-activity-domain</module>
         <module>biz-activity-application</module>
         <module>biz-activity-infrastructure</module>
+        <module>biz-activity-action</module>
     </modules>
 </project>

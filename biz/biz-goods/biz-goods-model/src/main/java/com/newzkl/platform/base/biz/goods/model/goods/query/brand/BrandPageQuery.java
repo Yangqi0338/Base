@@ -11,6 +11,7 @@ import java.util.List;
 */
 @Data
 public class BrandPageQuery extends PageQuery {
+    /** 主键ID */
     private Long id;
     /**
      * ID集合

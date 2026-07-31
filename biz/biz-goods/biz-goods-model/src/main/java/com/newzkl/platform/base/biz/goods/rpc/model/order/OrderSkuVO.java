@@ -16,16 +16,19 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class OrderSkuVO implements Serializable {
 
+    /** 本地SPU ID */
     private Long localSpuId;
 
-    // 三方商品id
+    /** 三方商品id */
     private String outSpuId;
 
+    /** 本地ID */
     private Long localId;
 
+    /** 外部ID */
     private String outId;
 
-    // 购买数量
+    /** 购买数量 */
     private Integer count;
 
     /**

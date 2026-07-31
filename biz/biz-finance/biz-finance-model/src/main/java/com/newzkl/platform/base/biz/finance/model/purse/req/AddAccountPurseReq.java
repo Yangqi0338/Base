@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class AddAccountPurseReq {
+    /** 主键ID */
     private Long id;
 
     /**

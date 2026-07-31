@@ -15,6 +15,7 @@ public class DealerRes {
      * ID
      */
     private Long id;
+    /** 状态 */
     private Integer state;
     /**
      * 名称 (查询)

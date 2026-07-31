@@ -39,7 +39,7 @@ public class OperatorCustomSaveReq {
     /**
      * 采购金类型 0 自营 1 合作
      */
-    //@NotNull
+    /** @NotNull */
     private Integer balanceType;
 
     @NotNull

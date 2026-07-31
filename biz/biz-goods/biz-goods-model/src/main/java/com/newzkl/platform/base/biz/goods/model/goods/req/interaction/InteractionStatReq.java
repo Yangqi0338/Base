@@ -11,15 +11,19 @@ import lombok.Data;
 @Data
 public class InteractionStatReq {
 
+    /** 门店ID */
     @NotNull(message = "门店ID不能为空")
     private Long storeId;
 
+    /** 目标类型 */
     @NotEmpty(message = "目标类型不能为空（PRODUCT/VIDEO）")
     private String targetType;
 
+    /** 目标ID */
     @NotNull(message = "目标ID不能为空")
     private Long targetId;
 
+    /** 行为类型 */
     @NotEmpty(message = "互动类型不能为空（VIEW/LIKE/SHARE）")
     private String actionType;
 

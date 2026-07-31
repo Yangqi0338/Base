@@ -33,6 +33,7 @@ public class MarketUnbindUserReq {
      */
     private Integer pageSize = 0;
 
+    /** 渠道商ID */
     private List<Long> channelId;
 
 

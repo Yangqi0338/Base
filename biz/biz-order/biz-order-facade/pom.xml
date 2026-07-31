@@ -17,5 +17,9 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+        </dependency>
     </dependencies>
 </project>

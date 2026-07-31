@@ -38,6 +38,7 @@ public class MarketGoodsPageQuery extends PageQuery {
      */
     private Integer salePriceR;
 
+    /** SPU状态 */
     private String spuState;
 
 }

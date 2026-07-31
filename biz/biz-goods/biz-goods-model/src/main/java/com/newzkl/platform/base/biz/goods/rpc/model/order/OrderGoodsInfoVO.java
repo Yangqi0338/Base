@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 
 @Data
 public class OrderGoodsInfoVO implements Serializable {
+    /** 数量 */
     private Integer num;
     /**
      * 二级市场ID
@@ -92,8 +93,10 @@ public class OrderGoodsInfoVO implements Serializable {
      */
     private Integer freight;
 
+    /** 外部SPU ID */
     private String outSpuId;
 
+    /** 外部SKU ID */
     private String outSkuId;
     /**
      * 起购数量

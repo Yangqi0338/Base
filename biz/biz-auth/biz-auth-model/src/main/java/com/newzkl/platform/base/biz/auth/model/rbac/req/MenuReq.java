@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class MenuReq {
 
+    /** 主键ID */
     private Long id;
 
     /**

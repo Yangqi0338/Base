@@ -21,11 +21,12 @@ public interface LecturerCategoryDAO extends BaseMapper<LecturerCategoryDO> {
      * @return 查询条件包装
      */
     default BaseLambdaQueryWrapper<LecturerCategoryDO> getLw(LecturerCategoryQuery query) {
-        return new BaseLambdaQueryWrapper<LecturerCategoryDO>()
+        BaseLambdaQueryWrapper<LecturerCategoryDO> wrapper = new BaseLambdaQueryWrapper<LecturerCategoryDO>()
                 .notEmptyIn(LecturerCategoryDO::getId, query.getIdList())
                 .notEmptyLike(LecturerCategoryDO::getCategoryName, query.getCategoryName())
                 .notNullEq(LecturerCategoryDO::getIsEnabled, query.getIsEnabled())
-                .between(LecturerCategoryDO::getCreateTime, query.getCreateTime())
-                .orderByDesc(LecturerCategoryDO::getId);
+                .between(LecturerCategoryDO::getCreateTime, query.getCreateTime());
+        wrapper.orderByDesc(LecturerCategoryDO::getId);
+        return wrapper;
     }
 }

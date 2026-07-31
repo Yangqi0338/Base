@@ -47,6 +47,7 @@ public class InteractionStatRes {
      */
     private LocalDateTime updatedTime;
 
+    /** 扩展字段映射 */
     private Map<String, Object> extMap;
 
 }

@@ -1,96 +1,94 @@
 package com.newzkl.platform.base.biz.order.application.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.application.service.RefundOperationRecordService;
-import com.newzkl.platform.base.biz.order.domain.service.RefundOperationRecordDomain;
-import com.newzkl.platform.base.biz.order.model.enums.order.RefundEnum;
-import com.newzkl.platform.base.biz.order.model.order.dto.RefundOperationRecord;
-import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordCreateReq;
-import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordPageReq;
-import com.newzkl.platform.base.biz.order.model.order.req.RefundOperationRecordUpdateReq;
-import com.newzkl.platform.base.biz.order.model.order.vo.RefundOperationRecordVO;
+
+import com.newzkl.platform.base.biz.order.application.service.IRefundOperationRecordService;
+import com.newzkl.platform.base.biz.order.domain.service.IRefundOperationRecordDomainService;
+import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordEntity;
+import com.newzkl.platform.base.biz.order.model.req.RefundOperationRecordCreateReq;
+import com.newzkl.platform.base.biz.order.model.req.RefundOperationRecordPageReq;
+import com.newzkl.platform.base.biz.order.model.req.RefundOperationRecordUpdateReq;
+import com.newzkl.platform.base.biz.order.model.vo.RefundOperationRecordVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import lombok.RequiredArgsConstructor;
+import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 售后操作记录 (协商记录) 应用服务实现
- *
- * <p>迁移自旧 {@code com.zkl.scm.sale.application.service.impl.RefundOperationRecordServiceImpl}。
- * 偏离说明: 旧实现每个方法用 try/catch 把任意异常包成 {@code OPERATE_FAIL} 并 {@code return null},
- * 会掩盖领域校验语义, 本实现改为异常直抛 (由全局异常处理器统一包装);
- * 旧 {@code @GlobalTransactional} (seata) 改为本地 {@code @Transactional}, 本切片无跨域写。</p>
+ * 售后操作记录 应用层服务实现类
  *
  * @author sijiwang
  * @since 2026-01-23
  */
 @Service
 @Slf4j
-@RequiredArgsConstructor
-public class RefundOperationRecordServiceImpl implements RefundOperationRecordService {
+public class RefundOperationRecordServiceImpl implements IRefundOperationRecordService {
 
-    private final RefundOperationRecordDomain refundOperationRecordDomain;
+    @Autowired
+    private IRefundOperationRecordDomainService refundOperationRecordDomainService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public RefundOperationRecordVO create(RefundOperationRecordCreateReq req) {
-        RefundOperationRecord record = TransferUtils.transfer(req, RefundOperationRecord::new);
-        record.setBeforeState(RefundEnum.State.getByCode(req.getBeforeState()));
-        record.setAfterState(RefundEnum.State.getByCode(req.getAfterState()));
-        return toVO(refundOperationRecordDomain.create(record));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public RefundOperationRecordVO update(RefundOperationRecordUpdateReq req) {
-        RefundOperationRecord old = refundOperationRecordDomain.findById(req.getId());
-        if (old == null) {
-            throw new PlatformException(BaseErrorCode.NODATA, "售后操作");
-        }
-        // 旧实现: 仅描述性字段可改, 业务主数据从原记录回填
-        old.setOperationContent(req.getOperationContent());
-        old.setRefundAmount(req.getRefundAmount());
-        old.setFreightCompanyName(req.getFreightCompanyName());
-        old.setFreightNo(req.getFreightNo());
-        old.setReason(req.getReason());
-        old.setExt(req.getExt());
-        return toVO(refundOperationRecordDomain.update(old));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        refundOperationRecordDomain.delete(id);
-    }
-
+    /**
+     * 按售后单ID查询操作记录列表
+     */
     @Override
     public List<RefundOperationRecordVO> listByRefundId(Long refundId) {
-        return TransferUtils.transfers(refundOperationRecordDomain.listByRefundId(refundId),
-                RefundOperationRecordVO::new);
-    }
+        try {
+            log.info("查询售后操作记录列表，售后单ID：{}", refundId);
 
-    @Override
-    public Page<RefundOperationRecordVO> pageQuery(RefundOperationRecordPageReq req) {
-        return TransferUtils.transferPage(refundOperationRecordDomain.pageQuery(req),
-                RefundOperationRecordVO::new);
+            List<RefundOperationRecordEntity> entityList = refundOperationRecordDomainService.listByRefundId(refundId);
+            // Entity列表转换为VO列表
+            return entityList.stream().map(entity -> {
+                RefundOperationRecordVO vo = new RefundOperationRecordVO();
+                BeanUtils.copyProperties(entity, vo);
+                return vo;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("查询售后操作记录列表失败，售后单ID：{}，原因：{}", refundId, e.getMessage(), e);
+            ThrowsException.exception(BaseErrorCode.OPERATE_FAIL, "查询售后操作记录列表失败：" + e.getMessage());
+            return null;
+        }
     }
 
     /**
-     * 领域模型转视图对象 (null 安全)
-     *
-     * @param record 领域模型
-     * @return 视图对象, 入参为 null 时返回 null
+     * 分页查询售后操作记录
      */
-    private RefundOperationRecordVO toVO(RefundOperationRecord record) {
-        if (record == null) {
+    @Override
+    public IPage<RefundOperationRecordVO> pageQuery(RefundOperationRecordPageReq req) {
+        try {
+            log.info("分页查询售后操作记录，页码：{}，页大小：{}，售后单ID：{}，SPU订单ID：{}，操作人ID：{}，操作人角色编码：{}",
+                    req.getCurrent(), req.getSize(), req.getRefundId(), req.getSpuOrderId(), req.getOperatorId(), req.getOperatorRoleCode());
+
+            // 1. 构建分页参数
+            Page<RefundOperationRecordEntity> page = new Page<>(req.getCurrent(), req.getSize());
+
+            // 2. 调用领域服务分页查询
+            IPage<RefundOperationRecordEntity> entityPage = refundOperationRecordDomainService.pageQuery(
+                    page, req.getRefundId(), req.getOperatorRoleCode()
+            );
+
+            // 3. 转换为VO分页结果
+            IPage<RefundOperationRecordVO> voPage = new Page<>();
+            BeanUtils.copyProperties(entityPage, voPage);
+
+            // 4. 转换列表数据
+            List<RefundOperationRecordVO> voList = entityPage.getRecords().stream().map(entity -> {
+                RefundOperationRecordVO vo = new RefundOperationRecordVO();
+                BeanUtils.copyProperties(entity, vo);
+                return vo;
+            }).collect(Collectors.toList());
+            voPage.setRecords(voList);
+
+            return voPage;
+        } catch (Exception e) {
+            log.error("分页查询售后操作记录失败，原因：{}", e.getMessage(), e);
+            ThrowsException.exception(BaseErrorCode.OPERATE_FAIL, "分页查询售后操作记录失败：" + e.getMessage());
             return null;
         }
-        return TransferUtils.transfer(record, RefundOperationRecordVO::new);
     }
 }

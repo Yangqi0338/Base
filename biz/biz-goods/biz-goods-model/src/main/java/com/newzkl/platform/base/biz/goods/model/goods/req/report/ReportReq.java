@@ -17,6 +17,7 @@ import java.util.List;
 @Data
 public class ReportReq extends ReportQuery implements Serializable {
 
+    /** 主键ID */
     private Long id;
 
     /**

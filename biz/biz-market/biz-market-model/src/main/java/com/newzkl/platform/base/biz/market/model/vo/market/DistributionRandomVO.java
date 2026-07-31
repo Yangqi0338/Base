@@ -7,6 +7,7 @@ import lombok.Data;
  */
 @Data
 public class DistributionRandomVO {
+    /** 主键ID */
     private Long id;
 
     /**

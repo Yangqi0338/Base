@@ -13,18 +13,22 @@ import java.util.List;
 public class MemberCmd {
     @Data
     public static class ID {
+        /** 会员ID */
         private Long memberId;
     }
 
     @Data
     public static class IDList {
+        /** 会员ID列表 */
         @NotEmpty
         private List<Long> memberIdList;
     }
 
     @Data
     public static class Edit {
+        /** 主键ID */
         private Long id;
+        /** 会员命令 */
         private MemberReq memberCommand;
     }
 

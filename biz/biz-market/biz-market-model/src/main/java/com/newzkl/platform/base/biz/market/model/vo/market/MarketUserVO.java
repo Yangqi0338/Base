@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class MarketUserVO {
 
+    /** 主键ID */
     private Long id;
 
     /**
@@ -34,6 +35,6 @@ public class MarketUserVO {
      */
     private LocalDateTime bindTime;
 
-    // 设置默认时间
+    /** 设置默认时间 */
     private String headImg="https://zztp.zzxyg88.com/app/apptx.png";
 }

@@ -24,8 +24,10 @@ public class AccountRPCResVO implements Serializable {
      */
     private String username;
 
+    /** 昵称 */
     private String nickName;
 
+    /** 角色ID列表 */
     @JsonIgnoreProperties
     private String roleIdList;
     /**

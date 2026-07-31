@@ -26,10 +26,15 @@ public class CdkEditReq {
      * 归属人角色
      */
     private Long belowRole;
+    /** 运营商ID */
     private Long operatorId;
+    /** 经销商ID */
     private Long dealerId;
+    /** 渠道商ID */
     private Long channelId;
+    /** 转经销商时间 */
     private LocalDateTime toDealerTime;
+    /** 转渠道商时间 */
     private LocalDateTime toChannelTime;
 
 }

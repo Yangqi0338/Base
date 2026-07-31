@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
+
+
 import com.newzkl.platform.base.biz.order.model.support.api.AccountGroupVO;
 
 import java.util.List;
@@ -34,4 +36,14 @@ public interface AccountApi {
      * @return 账户信息, 无则 null
      */
     AccountGroupVO selectByUserAccount(String userAccount);
+
+    /**
+     * 按账户ID查询单个账户信息
+     *
+     * <p>迁移: 原跨域 {@code IAccountFacade.accountInfo(Long)} 返回 AccountInfo, 降级为本地 AccountGroupVO
+     *
+     * @param accountId 账户ID
+     * @return 账户信息, 无则 null
+     */
+    AccountGroupVO accountInfo(Long accountId);
 }

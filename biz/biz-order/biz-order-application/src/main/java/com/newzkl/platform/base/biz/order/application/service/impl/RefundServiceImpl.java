@@ -1,135 +1,305 @@
 package com.newzkl.platform.base.biz.order.application.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.application.service.RefundService;
-import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
-import com.newzkl.platform.base.biz.order.model.order.req.ApplyPlatformReq;
-import com.newzkl.platform.base.biz.order.model.order.req.RefundPageReq;
-import com.newzkl.platform.base.biz.order.model.order.req.RefundReq;
-import com.newzkl.platform.base.biz.order.model.order.vo.ApiRefundFreightAddressVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.RefundExcelVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.RefundFreightVO;
-import com.newzkl.platform.base.biz.order.model.order.vo.RefundVO;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
+import com.newzkl.platform.base.biz.order.application.service.IQueryService;
+import com.newzkl.platform.base.biz.order.application.service.IRefundService;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.domain.service.*;
+import com.newzkl.platform.base.biz.order.model.dto.Refund;
+import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
+import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
+import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
+import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
+import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
+import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
+import com.newzkl.platform.base.biz.order.model.vo.SpuOrderAggVO;
+import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
+import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import lombok.RequiredArgsConstructor;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- * 售后应用服务实现
- *
- * <p>职责为编排, 全部落库与状态流转委托 {@code RefundDomain}, 本层不写查询。</p>
- *
- * <p><b>当前实现范围</b>: 查询与导出类方法已完整实现 (透传领域层)。审核、收货、
- * 平台介入等<b>状态流转</b>类方法暂未实现, 调用即抛 {@code UnsupportedOperationException}
- * —— 根因在领域层: {@code RefundDomainImpl} 对应方法同样是缺口 (缺订单主聚合 / 退款打款端口 /
- * 本地消息表 MQ 端口)。本层不做绕过实现, 避免绕开领域校验改变业务语义。</p>
- *
- * <p><b>缺口清单 (TODO[domain-gap])</b></p>
- * <ul>
- *   <li>{@code refundCreateApi} / {@code refundCreate} —— 需订单主聚合取 SPU/SKU 订单实体后才能建单</li>
- *   <li>{@code supplierAudit} / {@code channelAudit} —— 需领域层 {@code agreeAudit}/{@code refuseAudit}</li>
- *   <li>{@code supplierConfirmRefundFreight} / {@code merchantConfirmRefundFreight} —— 需退款打款端口</li>
- *   <li>{@code applyPlatform} / {@code platformExecute} / {@code refuseRefundFreight}
- *       / {@code stopAudit} / {@code submitRefundFreight} / {@code outRefuseRefundFreight} —— 领域层同名方法均为缺口</li>
- * </ul>
- *
- * @author KC
+ * @author muc_fang
+ * @Description:
+ * @date 2023/12/811:16
  */
 @Service
-@RequiredArgsConstructor
-public class RefundServiceImpl implements RefundService {
+public class RefundServiceImpl implements IRefundService {
+
+    private final IOrderDomain orderDomain;
+    private final IRefundDomain refundDomain;
+    @DubboReference
+    private IBalancePayApi balancePayApi;
+    @DubboReference
+    private ILocalMessageFacade localMessageFacade;
+    @Autowired
+    private IQueryService queryService;
+    @Autowired
+    private ISettleDomain settleDomain;
+    @Autowired
+    private IRefundRepository refundRepository;
+
+    @Autowired
+    private RefundOperationRecordUtil refundOperationRecordUtil;
+
+    public RefundServiceImpl(IOrderDomain orderDomain, IRefundDomain refundDomain) {
+        this.orderDomain = orderDomain;
+        this.refundDomain = refundDomain;
+    }
+
+    @Override
+    public Long refundCreateApi(RefundCommand refundCommand) {
+        if (StrUtil.isNotBlank(refundCommand.getRemark())&& refundCommand.getRemark().length()>300){
+            ThrowsException.exception(BaseErrorCode.PARAM,"售后单备注不能超过300字！");
+        }
+        //查询订单
+        SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(refundCommand.getSpuOrderId());
+        //售后单创建
+        RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
+        Refund refund = refundCreateRes.getRefund();
+        // 发送协商记录
+        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND.getDesc(), RefundOperateTypeEnum.LAUNCH_REFUND);
+//        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
+        //如果是派发中订单, 售后自动通过
+        if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
+            supplierAudit(refundCreateRes.getRefundId(), CommonEnum.YesOrNo.YES, false);
+        }
+        return refundCreateRes.getRefundId();
+    }
+
+    @Override
+    public Long refundCreate(RefundCommand refundCommand) {
+        if (StrUtil.isNotBlank(refundCommand.getRemark())&& refundCommand.getRemark().length()>300){
+            ThrowsException.exception(BaseErrorCode.PARAM,"售后单备注不能超过300字！");
+        }
+        //查询订单
+        SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(refundCommand.getSpuOrderId());
+        SpuOrderVO spuOrderVO = spuOrderAggVO.getSpuOrderVO();
+        if (Objects.isNull(spuOrderVO)){
+            ThrowsException.exception(OrderErrorCode.NOT_EXISTS,"订单不存在！");
+        }
+        if (refundCommand.getRefundType() == RefundEnum.RefundType.MONEY){
+            Set<OrderEnum.State> moneyOrderStates = OrderEnum.State.getMoneyOrderStates();
+            if(!moneyOrderStates.contains(spuOrderVO.getOrderState())){
+                ThrowsException.exception(BaseErrorCode.CUSTOM, "当前状态不能发起仅退款！");
+            }
+        }else if (refundCommand.getRefundType() == RefundEnum.RefundType.MONEY_GOODS){
+            Set<OrderEnum.State> moneyGoodsOrderStates = OrderEnum.State.getMoneyGoodsOrderStates();
+            if(!moneyGoodsOrderStates.contains(spuOrderVO.getOrderState())){
+                ThrowsException.exception(BaseErrorCode.CUSTOM, "当前状态不能发起退货退款！");
+            }
+        }else {
+            ThrowsException.exception(OrderErrorCode.REFUND_FAIL,"售后单类型错误！");
+        }
+        //售后单创建
+        RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
+        Refund refund = refundCreateRes.getRefund();
+        // 发送协商记录
+        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND.getDesc(), RefundOperateTypeEnum.LAUNCH_REFUND);
+//        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
+        //如果是派发中订单, 售后自动通过
+        if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
+            supplierAudit(refundCreateRes.getRefundId(), CommonEnum.YesOrNo.YES, false);
+        }
+        return refundCreateRes.getRefundId();
+    }
+
+    @Override
+    public void supplierAudit(Long refundId, CommonEnum.YesOrNo execute, boolean isAudit) {
+        //审核
+        RefundAuditRes refundAuditRes = null;
+        if(CommonEnum.YesOrNo.YES == execute){
+            refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.SUPPLIER);
+
+            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE: RefundOperateTypeEnum.SUPPLIER_AGREE;
+            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(),refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+        }else {refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.SUPPLIER, "");
+            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(),RefundOperateTypeEnum.SUPPLIER_REFUSE.getDesc(), RefundOperateTypeEnum.SUPPLIER_REFUSE);
+        }
+
+        //售后通过处理
+        if(refundAuditRes.isRefundPass()){
+            doRefundPassForChannel(refundAuditRes);
+            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS:RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
+            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS, RefundOperateTypeEnum.REFUND_MONEY_SUCCESS.getDesc(), RefundOperateTypeEnum.REFUND_MONEY_SUCCESS);
+        }
+        Refund refund = refundAuditRes.getRefund();
+
+    }
+    @Override
+    public void channelAudit(Long refundId, Long spuOrderId, CommonEnum.YesOrNo execute, String reason, boolean isAudit) {
+        if (refundId == null && spuOrderId == null){
+            ThrowsException.exception(BaseErrorCode.PARAM,"售后单id和spu订单id不能都为空！");
+        }
+        RefundVO refund = null;
+        if (refundId == null){
+            refund = refundRepository.refundVoBySpuOrderId(spuOrderId);
+        }else {
+            refund =  refundRepository.refundVO(refundId);
+        }
+        if (Objects.isNull(refund)){
+            ThrowsException.exception(BaseErrorCode.PARAM,"售后单不存在！");
+        }
+        refundId = refund.getId();
+        //审核
+        RefundAuditRes refundAuditRes = null;
+        if(CommonEnum.YesOrNo.YES == execute){
+            refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.CHANNEL);
+            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE:RefundOperateTypeEnum.CHANNEL_AGREE;
+            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+        }else {
+            refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.CHANNEL, reason);
+            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), RefundOperateTypeEnum.CHANNEL_REFUSE.getDesc(), RefundOperateTypeEnum.CHANNEL_REFUSE);
+        }
+
+        //售后通过处理
+        if(refundAuditRes.isRefundPass()){
+            if(SpuEnum.ChannelType.SELECTION == refundAuditRes.getRefund().getSpuChannelType()){
+                //供货商品
+                doRefundPassForMemberAndSelection(refundAuditRes);
+            }else if(SpuEnum.ChannelType.CUSTOM == refundAuditRes.getRefund().getSpuChannelType()){
+                //自营商品
+                doRefundPassForMemberAndCustom(refundAuditRes);
+            }else {
+                ThrowsException.exception(BaseErrorCode.PARAM);
+            }
+            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS:RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
+            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS,  refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+        }
+    }
 
     /**
-     * 缺口说明统一前缀
+     * 售后通过: 渠道商订单-供货商品
+     * @param refundAuditRes
      */
-    private static final String GAP = "TODO[domain-gap]: ";
-
-    private final RefundDomain refundDomain;
-
-    @Override
-    public Long refundCreateApi(RefundReq refundCommand) {
-        throw new UnsupportedOperationException(GAP + "API 建售后单需订单主聚合取 SPU/SKU 订单实体, biz-order 暂无 OrderDomain/OrderAgg");
+    public void doRefundPassForChannel(RefundAuditRes refundAuditRes) {
+        //售后打款
+        SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
+        Refund refund = refundAuditRes.getRefund();
+        sellAfterRefundReq.setAccountId(refund.getChannelId());
+        sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
+        sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
+        sellAfterRefundReq.setSellAfterOrderNo(refund.getId());
+        sellAfterRefundReq.setOrderNo(refund.getOrderId());
+        MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
+        if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
+            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg(), true);
+        }
+        //售后已打款通知
+        refundDomain.sellAfterRefundNotify(refund.getId(), refund.getChannelId(), memberRefundRes.getThirdTradeNo());
+        //售后完成消息
+        RefundPassEvent refundPassEvent =  RefundUtil.refund2RefundPassEvent(refund);
+        localMessageFacade.sendMessage(MQ.Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
+        //SKU订单售后通过通知订单
+        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
+            orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
+        }
+        //处理待结算记录
+        Map<Long, List<RefundItemVO>> refundItemMap = refund.getItem().stream().collect(Collectors.groupingBy(RefundItemVO::getSkuOrderId));
+        for (Long skuOrderId : refundAuditRes.getSkuOrderIdList()) {
+            Integer result = settleDomain.closeSettleOrder(skuOrderId, refund.getId());
+            if(result == null){
+                //无需操作
+            }else if(result == 0){
+                Integer refundAmount = 0;
+                Long spuId = null;
+                List<RefundItemVO> refundItemVOS = refundItemMap.get(skuOrderId);
+                if(ObjectUtil.isNotEmpty(refundItemVOS)){
+                    for (RefundItemVO refundItemVO : refundItemVOS) {
+                        refundAmount = refundItemVO.getSupplierAmount();
+                        spuId = refundItemVO.getSpuId();
+                    }
+                }
+            }else if(result == 1){
+                //无需操作
+            }
+        }
     }
 
-    @Override
-    public Long refundCreate(RefundReq refundCommand) {
-        throw new UnsupportedOperationException(GAP + "建售后单需订单主聚合取 SPU/SKU 订单实体, biz-order 暂无 OrderDomain/OrderAgg");
+    /**
+     * 售后通过:C端订单-自营商品
+     * @param refundAuditRes
+     */
+    public void doRefundPassForMemberAndCustom(RefundAuditRes refundAuditRes) {
+        //C端打款
+        SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
+        Refund refund = refundAuditRes.getRefund();
+        sellAfterRefundReq.setAccountId(refund.getChannelId());
+        sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
+        sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
+        sellAfterRefundReq.setSellAfterOrderNo(refund.getId());
+        sellAfterRefundReq.setOrderNo(refund.getOrderId());
+        MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
+        if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
+            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg(), true);
+        }
+        //售后已打款通知
+        refundDomain.sellAfterRefundNotify(refundAuditRes.getRefund().getId(), null, memberRefundRes.getThirdTradeNo());
+        //售后完成消息
+        RefundPassEvent refundPassEvent =  RefundUtil.refund2RefundPassEvent(refundAuditRes.getRefund());
+        localMessageFacade.sendMessage(MQ.Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
+        //SKU订单售后通过通知订单
+        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
+            orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
+        }
     }
-
-    @Override
-    public void supplierAudit(Long refundId, Integer execute, boolean isAudit) {
-        throw new UnsupportedOperationException(GAP + "供应商审核依赖 RefundDomain.agreeAudit/refuseAudit, 领域层为缺口");
+    /**
+     * 售后通过:C端订单-供货商品
+     * @param refundAuditRes
+     */
+    public void doRefundPassForMemberAndSelection(RefundAuditRes refundAuditRes) {
+        //C端打款
+        SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
+        Refund refund = refundAuditRes.getRefund();
+        sellAfterRefundReq.setAccountId(refund.getChannelId());
+        sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
+        sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
+        sellAfterRefundReq.setSellAfterOrderNo(refund.getId());
+        sellAfterRefundReq.setOrderNo(refund.getOrderId());
+        MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
+        if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
+            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg(), true);
+        }
+        //售后已打款通知
+        refundDomain.sellAfterRefundNotify(refundAuditRes.getRefund().getId(), null, memberRefundRes.getThirdTradeNo());
+        //售后完成消息
+        // 供货商品需要供应商确认,这里就不发送消息 260129
+//        RefundPassEvent refundPassEvent =  RefundUtil.refund2RefundPassEvent(refundAuditRes.getRefund());
+//        localMessageFacade.sendMessage(Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
+        //SKU订单售后通过通知订单
+        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
+            orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
+        }
     }
-
     @Override
-    public void channelAudit(Long refundId, String spuOrderNo, Integer execute, String reason, boolean isAudit) {
-        throw new UnsupportedOperationException(GAP + "渠道审核依赖 RefundDomain.agreeAuditV2/refuseAudit, 领域层为缺口");
-    }
-
-    @Override
+    @GlobalTransactional(rollbackFor = Exception.class)
     public void supplierConfirmRefundFreight(Long refundId) {
-        throw new UnsupportedOperationException(GAP + "供应商确认收货会触发退款打款, 缺退款打款端口");
-    }
-
-    @Override
-    public void merchantConfirmRefundFreight(Long id) {
-        throw new UnsupportedOperationException(GAP + "商户确认收货会触发退款打款, 缺退款打款端口");
-    }
-
-    @Override
-    public void applyPlatform(ApplyPlatformReq applyPlatformCommand) {
-        throw new UnsupportedOperationException(GAP + "申请平台介入依赖 RefundDomain.applyPlatform, 领域层为缺口");
-    }
-
-    @Override
-    public void submitRefundFreight(RefundFreightVO refundFreightVO) {
-        throw new UnsupportedOperationException(GAP + "提交退货物流依赖 RefundDomain.submitRefundFreight, 领域层为缺口");
-    }
-
-    @Override
-    public void platformExecute(Long refundId, Integer execute) {
-        throw new UnsupportedOperationException(GAP + "平台介入处理依赖 RefundDomain.platformExecute, 领域层为缺口");
-    }
-
-    @Override
-    public void refuseRefundFreight(Long refundId) {
-        throw new UnsupportedOperationException(GAP + "拒绝收货依赖 RefundDomain.refuseRefundFreight, 领域层为缺口");
-    }
-
-    @Override
-    public void stopAudit(RoleEnum.CompanyRole roleId, Long accountId, Long refundId) {
-        throw new UnsupportedOperationException(GAP + "终止售后依赖 RefundDomain.stopAudit, 领域层为缺口");
-    }
-
-    @Override
-    public void outRefuseRefundFreight(Long refundId) {
-        throw new UnsupportedOperationException(GAP + "外部供应商拒绝收货依赖 RefundDomain.outRefuseRefundFreight, 领域层为缺口");
-    }
-
-    @Override
-    public ApiRefundFreightAddressVO getOutRefundAddress(String spuOrderNo, Long spuId) {
-        return refundDomain.getOutRefundAddress(spuOrderNo, spuId);
-    }
-
-    @Override
-    public RefundVO refundVO(Long refundId) {
-        return refundDomain.refundVO(refundId);
-    }
-
-    @Override
-    public RefundVO refundVoBySpuOrderId(String spuOrderNo) {
-        return refundDomain.refundVoBySpuOrderId(spuOrderNo);
-    }
-
-    @Override
-    public Page<RefundVO> refundVOList(RefundPageReq refundQuery) {
-        return refundDomain.refundVOList(refundQuery);
-    }
-
-    @Override
-    public List<RefundExcelVO> exportRefund(RefundPageReq refundQuery) {
-        return refundDomain.exportRefund(refundQuery);
+        //确认收货
+        RefundAuditRes refundAuditRes = refundDomain.confirmRefundFreight(refundId);
+        //售后通过处理
+        if(refundAuditRes.isRefundPass()){
+            doRefundPassForChannel(refundAuditRes);
+        }
+        Refund refund = refundAuditRes.getRefund();
+        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.RECEIVE_WAIT, refund.getRefundState(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT.getDesc(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
     }
 }

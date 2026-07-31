@@ -12,6 +12,7 @@ public class SpuRelevancyMarketVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** SPU ID */
     private Long spuId;
     /**
      * 关联的市场数量

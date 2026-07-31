@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class ChannelBindMarketVO {
 
+    /** 主键ID */
     private Long id;
 
     /**

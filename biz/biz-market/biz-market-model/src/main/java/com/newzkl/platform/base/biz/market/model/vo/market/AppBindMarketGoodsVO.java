@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class AppBindMarketGoodsVO {
 
+    /** 主键ID */
     private Long id;
 
     /**
@@ -107,5 +108,6 @@ public class AppBindMarketGoodsVO {
 
 
 
+    /** 是否选中 */
     private Boolean choose= false;
 }

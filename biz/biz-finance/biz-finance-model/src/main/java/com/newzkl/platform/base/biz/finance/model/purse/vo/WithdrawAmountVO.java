@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class WithdrawAmountVO {
 
+    /** 角色 */
     private RoleEnum.CompanyRole role;
 
     /**

@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 @Data
 public class SettlementConfigOutVO implements Serializable {
+    /** 主键ID */
     private Long id;
     /**
      * 可结算节点:

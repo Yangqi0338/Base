@@ -1,1 +1,0 @@
-package com.newzkl.platform.base.biz.order.model.order.res;import lombok.Data;/** * 运费计算结果VO * @author sijiwang */@Datapublic class FreightCalculateRes {    /** 商品ID（SPU） */    private Long goodsId;    /** 运费金额（单位：分） */    private Integer freightAmount;}
