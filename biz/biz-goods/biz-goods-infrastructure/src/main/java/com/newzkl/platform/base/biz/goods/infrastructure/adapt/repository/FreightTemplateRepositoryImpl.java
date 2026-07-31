@@ -43,17 +43,19 @@ public class FreightTemplateRepositoryImpl implements FreightTemplateRepository 
     @Override
     public void freightTemplateDelete(List<Long> idList) {
         freightTemplateDAO.deleteByIds(idList);
-        //刷新redis
-        List<String> redisFreightTemplateList = idList.stream().map(x -> RedisEnum.Key.FREIGHT_TEMPLATE.getCode(x.toString())).collect(Collectors.toList());
-        RedisUtil.batchDel(redisFreightTemplateList);
     }
 
     @Override
     public void freightTemplateEdit(FreightTemplate freightTemplate) {
         freightTemplateDAO.updateById(TransferUtils.transfer(freightTemplate, FreightTemplateDO::new));
-        //刷新redis
-        String redisFreightTemplate = RedisEnum.Key.FREIGHT_TEMPLATE.getCode(freightTemplate.getId().toString());
-        RedisUtil.del(redisFreightTemplate);
+    }
+
+    @Override
+    public void evictFreightTemplateCache(List<Long> idList) {
+        List<String> redisFreightTemplateList = idList.stream()
+                .map(x -> RedisEnum.Key.FREIGHT_TEMPLATE.getCode(x.toString()))
+                .collect(Collectors.toList());
+        RedisUtil.batchDel(redisFreightTemplateList);
     }
 
     @Override

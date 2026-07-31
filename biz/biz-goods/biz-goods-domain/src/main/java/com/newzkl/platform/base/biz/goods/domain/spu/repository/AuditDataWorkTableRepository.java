@@ -19,11 +19,23 @@ public interface AuditDataWorkTableRepository {
     */
     AuditDataWorkTable voToAuditDataWorkTable(AuditDataWorkTableVO auditDataWorkTableVO);
     /**
-     * 工单审核数据保存
-     * @param auditDataWorkTable
-     * @return
+     * 是否存在同商品同类型待审核工单
+     * @param spuId 商品 ID
+     * @param operateTarget 操作对象
+     * @return 存在返回 true
      */
-    Long auditDataWorkTableSave(AuditDataWorkTable auditDataWorkTable);
+    boolean existsAuditing(Long spuId, Integer operateTarget);
+    /**
+     * 插入工单审核数据, 回填并返回主键
+     * @param auditDataWorkTable 工单审核数据
+     * @return 工单审核数据 ID
+     */
+    Long auditDataWorkTableInsert(AuditDataWorkTable auditDataWorkTable);
+    /**
+     * 按 ID 更新工单审核数据
+     * @param auditDataWorkTable 工单审核数据 (id 必填)
+     */
+    void auditDataWorkTableEdit(AuditDataWorkTable auditDataWorkTable);
     /**
      * 工单审核数据删除
      * @param idList

@@ -87,7 +87,7 @@ public class SpuDomainImpl implements SpuDomain {
         }
 
         //刷新SPU
-        spuRepository.refreshSpu(Collections.singletonList(spuId));
+        refreshSpu(spuId);
         return spu.getId();
     }
 
@@ -117,8 +117,73 @@ public class SpuDomainImpl implements SpuDomain {
         }
 
         //刷新SPU
-        spuRepository.refreshSpu(Collections.singletonList(spuId));
+        refreshSpu(spuId);
         return spu.getId();
+    }
+
+    /**
+     * 刷新 SPU 冗余的 SKU 聚合统计列
+     *
+     * <p>查该 SPU 下 SKU 列表, 聚合价格区间/库存/最大利润后按 ID 更新。
+     * 只写 SKU 聚合列, 不触碰 minPricingNum 等与 SKU 聚合无关的列。</p>
+     *
+     * @param spuId SPU 主键
+     */
+    private void refreshSpu(Long spuId) {
+        SkuQuery skuQuery = new SkuQuery();
+        skuQuery.setSpuId(spuId);
+        List<SkuVO> skuList = spuRepository.skuVOList(skuQuery);
+        if (CollUtil.isEmpty(skuList)) {
+            return;
+        }
+        Integer minMarket = null;
+        Integer maxMarket = null;
+        Integer minSupply = null;
+        Integer maxSupply = null;
+        Integer minSale = null;
+        Integer maxSale = null;
+        Integer minUnit = null;
+        Integer maxProfit = null;
+        int inventory = 0;
+        for (SkuVO sku : skuList) {
+            if (sku.getMarketPrice() != null) {
+                minMarket = minMarket == null ? sku.getMarketPrice() : Math.min(minMarket, sku.getMarketPrice());
+                maxMarket = maxMarket == null ? sku.getMarketPrice() : Math.max(maxMarket, sku.getMarketPrice());
+            }
+            if (sku.getSupplyPrice() != null) {
+                minSupply = minSupply == null ? sku.getSupplyPrice() : Math.min(minSupply, sku.getSupplyPrice());
+                maxSupply = maxSupply == null ? sku.getSupplyPrice() : Math.max(maxSupply, sku.getSupplyPrice());
+            }
+            if (sku.getSalePrice() != null) {
+                minSale = minSale == null ? sku.getSalePrice() : Math.min(minSale, sku.getSalePrice());
+                maxSale = maxSale == null ? sku.getSalePrice() : Math.max(maxSale, sku.getSalePrice());
+            }
+            if (sku.getUnitPrice() != null) {
+                minUnit = minUnit == null ? sku.getUnitPrice() : Math.min(minUnit, sku.getUnitPrice());
+            }
+            if (sku.getMarketPrice() != null && sku.getSalePrice() != null) {
+                int profit = sku.getMarketPrice() - sku.getSalePrice();
+                maxProfit = maxProfit == null ? profit : Math.max(maxProfit, profit);
+            }
+            if (sku.getInventory() != null) {
+                inventory += sku.getInventory();
+            }
+        }
+        SpuDTO spu = new SpuDTO();
+        spu.setId(spuId);
+        spu.setMarketPrice(minMarket);
+        spu.setMarketPriceBegan(minMarket);
+        spu.setMarketPriceEnd(maxMarket);
+        spu.setSupplyPrice(minSupply);
+        spu.setSupplierPriceBegan(minSupply);
+        spu.setSupplierPriceEnd(maxSupply);
+        spu.setSalePrice(minSale);
+        spu.setSalePriceBegan(minSale);
+        spu.setSalePriceEnd(maxSale);
+        spu.setUnitPrice(minUnit);
+        spu.setMaxProfit(maxProfit);
+        spu.setInventory(inventory);
+        spuRepository.spuUpdate(spu);
     }
 
     @Transactional(rollbackFor = Exception.class)

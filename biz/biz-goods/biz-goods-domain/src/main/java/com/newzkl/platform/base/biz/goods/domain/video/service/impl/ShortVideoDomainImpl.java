@@ -29,28 +29,36 @@ public class ShortVideoDomainImpl implements ShortVideoDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long add(ShortVideoReq req) {
         mergeSpuIdList(req);
-        return shortVideoRepository.insert(req);
+        Long videoId = shortVideoRepository.insertShortVideo(req);
+        shortVideoRepository.saveRelation(videoId, req.getSpuIdList());
+        return videoId;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void edit(ShortVideoReq req) {
         mergeSpuIdList(req);
-        shortVideoRepository.edit(req);
+        shortVideoRepository.updateShortVideo(req);
+        shortVideoRepository.deleteRelationByVideo(req.getId());
+        shortVideoRepository.saveRelation(req.getId(), req.getSpuIdList());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
-        shortVideoRepository.del(id);
+        shortVideoRepository.deleteShortVideo(id);
+        shortVideoRepository.deleteRelationByVideo(id);
     }
 
     @Override
     public ShortVideoVO detail(Long id) {
-        ShortVideoVO vo = shortVideoRepository.detail(id);
+        ShortVideoVO vo = shortVideoRepository.shortVideo(id);
         if (vo == null) {
             throw new PlatformException(400, "短视频不存在");
         }
+        List<Long> spuIdList = shortVideoRepository.relationSpuIdList(id);
+        vo.setSpuIdList(spuIdList);
+        vo.setSpuId(CollUtil.getFirst(spuIdList));
         return vo;
     }
 

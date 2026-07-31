@@ -14,6 +14,7 @@ import com.newzkl.platform.base.biz.goods.model.exception.user.AuditErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +33,28 @@ public class WorkTableWorkflowDomainImpl implements WorkTableWorkflowDomain {
     private final AuditDataWorkTableRepository auditDataWorkTableRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void editBusinessData(Long flowId, String editCommand) {
         AuditDataWorkTableVO auditDataWorkTableVO = this.detail(flowId);
         AuditDataWorkTable auditDataWorkTable = new AuditDataWorkTable();
         auditDataWorkTable.setSkuSalePriceJson(editCommand);
-        auditDataWorkTableRepository.auditDataWorkTableSave(auditDataWorkTable);
+        this.persist(auditDataWorkTable);
+    }
+
+    /**
+     * 保存工单审核数据: 新增时同商品同类型待审核工单去重, 否则按 ID 更新
+     *
+     * @param auditDataWorkTable 工单审核数据
+     */
+    private void persist(AuditDataWorkTable auditDataWorkTable) {
+        if (auditDataWorkTable.getId() == null || auditDataWorkTable.getId() == 0) {
+            // 存在同商品同类型待审核工单则不重复提交
+            if (!auditDataWorkTableRepository.existsAuditing(auditDataWorkTable.getSpuId(), auditDataWorkTable.getOperateTarget())) {
+                auditDataWorkTableRepository.auditDataWorkTableInsert(auditDataWorkTable);
+            }
+        } else {
+            auditDataWorkTableRepository.auditDataWorkTableEdit(auditDataWorkTable);
+        }
     }
 
     @Override
@@ -73,8 +91,9 @@ public class WorkTableWorkflowDomainImpl implements WorkTableWorkflowDomain {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveData(AuditDataWorkTableVO dataVO) {
         AuditDataWorkTable auditDataWorkTable = auditDataWorkTableRepository.voToAuditDataWorkTable(dataVO);
-        auditDataWorkTableRepository.auditDataWorkTableSave(auditDataWorkTable);
+        this.persist(auditDataWorkTable);
     }
 }

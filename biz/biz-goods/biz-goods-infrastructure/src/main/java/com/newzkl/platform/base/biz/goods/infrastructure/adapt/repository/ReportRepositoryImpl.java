@@ -14,16 +14,12 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.report.ReportQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.res.report.ReportRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuSimpleVO;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 报告存储实现
@@ -39,26 +35,36 @@ public class ReportRepositoryImpl implements ReportRepository {
     private SpuDAO spuDAO;
 
     @Override
-    public ReportRes detail(Long id) {
+    public ReportRes report(Long id) {
         ReportDO reportDO = reportDAO.selectById(id);
         if (reportDO == null) {
-            throw new PlatformException(BaseErrorCode.NODATA, "报告");
+            return null;
         }
-        ReportRes report = TransferUtils.transfer(reportDO, ReportRes::new);
-        if (CollUtil.isNotEmpty(report.getSpuIdList())) {
-            report.setSpuList(
-                    TransferUtils.transfers(
-                            spuDAO.selectList(
-                                    new LambdaQueryWrapper<SpuDO>().in(
-                                            SpuDO::getId, report.getSpuIdList()
-                                    )
-                            ), SpuSimpleVO::new));
-        }
-        return report;
+        return TransferUtils.transfer(reportDO, ReportRes::new);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    public List<SpuSimpleVO> spuSimpleList(List<Long> spuIdList) {
+        if (CollUtil.isEmpty(spuIdList)) {
+            return List.of();
+        }
+        return TransferUtils.transfers(
+                spuDAO.selectList(new LambdaQueryWrapper<SpuDO>().in(SpuDO::getId, spuIdList)),
+                SpuSimpleVO::new);
+    }
+
+    @Override
+    public int countByQuery(ReportQuery query) {
+        return reportDAO.countByQuery(query);
+    }
+
+    @Override
+    public int updateByQuery(ReportVO req, ReportQuery query) {
+        ReportDO reportDO = TransferUtils.transfer(req, ReportDO::new);
+        return reportDAO.updateByQuery(reportDO, query);
+    }
+
+    @Override
     public Long insert(ReportVO req) {
         ReportDO reportDO = TransferUtils.transfer(req, ReportDO::new);
         reportDAO.insert(reportDO);
@@ -66,30 +72,6 @@ public class ReportRepositoryImpl implements ReportRepository {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void edit(ReportVO req, ReportQuery reportQuery) {
-        Long reportId = req.getId();
-
-        if (reportDAO.countByQuery(reportQuery) == 0) {
-            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
-        }
-
-        // 设置要更新的视频id列表
-        Set<Long> reportIdSet = CollUtil.newHashSet(reportId);
-        if (CollUtil.isEmpty(reportIdSet)) {
-            reportIdSet.addAll(reportDAO.idByQuery(reportQuery));
-        }
-
-        ReportDO reportDO = TransferUtils.transfer(req, ReportDO::new);
-        int i = reportDAO.updateByQuery(reportDO, reportQuery);
-
-        // 修改成功
-        if (i > 0) {
-        }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
         reportDAO.deleteById(id);
     }

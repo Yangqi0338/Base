@@ -20,10 +20,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /**
  * 短视频仓储实现单元测试 (DAO mock, 不连库)
+ *
+ * <p>每方法单一持久化动作, 跨表编排已上移 domain, 故本测试逐动作独立校验</p>
  *
  * @author KC
  */
@@ -40,7 +43,7 @@ class ShortVideoRepositoryImplTest {
     private ShortVideoRepositoryImpl shortVideoRepository;
 
     @Test
-    void insert_returnsGeneratedIdAndWritesRelations() {
+    void insertShortVideo_returnsGeneratedIdOnly() {
         doAnswer(invocation -> {
             ShortVideoDO arg = invocation.getArgument(0);
             arg.setId(88L);
@@ -50,11 +53,17 @@ class ShortVideoRepositoryImplTest {
         ShortVideoReq req = new ShortVideoReq();
         req.setPath("video/a.mp4");
         req.setCoverPath("img/a.jpg");
-        req.setSpuIdList(List.of(11L, 12L));
 
-        Long id = shortVideoRepository.insert(req);
+        Long id = shortVideoRepository.insertShortVideo(req);
 
         assertThat(id).isEqualTo(88L);
+        verifyNoInteractions(videoSpuRelationDAO);
+    }
+
+    @Test
+    void saveRelation_writesOneRowPerSpu() {
+        shortVideoRepository.saveRelation(88L, List.of(11L, 12L));
+
         ArgumentCaptor<VideoSpuRelationDO> captor = ArgumentCaptor.forClass(VideoSpuRelationDO.class);
         verify(videoSpuRelationDAO, times(2)).insert(captor.capture());
         assertThat(captor.getAllValues()).extracting(VideoSpuRelationDO::getSpuId)
@@ -66,52 +75,70 @@ class ShortVideoRepositoryImplTest {
     }
 
     @Test
-    void edit_updatesVideoAndRebuildsRelations() {
+    void saveRelation_skipsWhenSpuIdListEmpty() {
+        shortVideoRepository.saveRelation(88L, List.of());
+        verifyNoInteractions(videoSpuRelationDAO);
+    }
+
+    @Test
+    void updateShortVideo_updatesMainRecordOnly() {
         ShortVideoReq req = new ShortVideoReq();
         req.setId(88L);
         req.setPath("video/b.mp4");
-        req.setSpuIdList(List.of(21L));
 
-        shortVideoRepository.edit(req);
+        shortVideoRepository.updateShortVideo(req);
 
         verify(shortVideoDAO).updateById(any(ShortVideoDO.class));
-        verify(videoSpuRelationDAO).delete(any());
-        verify(videoSpuRelationDAO).insert(any(VideoSpuRelationDO.class));
+        verifyNoInteractions(videoSpuRelationDAO);
     }
 
     @Test
-    void del_removesVideoAndRelations() {
-        shortVideoRepository.del(88L);
+    void deleteShortVideo_removesMainRecordOnly() {
+        shortVideoRepository.deleteShortVideo(88L);
 
         verify(shortVideoDAO).deleteById(88L);
+        verifyNoInteractions(videoSpuRelationDAO);
+    }
+
+    @Test
+    void deleteRelationByVideo_removesRelations() {
+        shortVideoRepository.deleteRelationByVideo(88L);
         verify(videoSpuRelationDAO).delete(any());
     }
 
     @Test
-    void detail_mapsDoAndFillsSpuIdList() {
+    void shortVideo_mapsMainRecordWithoutRelations() {
         ShortVideoDO videoDO = new ShortVideoDO();
         videoDO.setId(88L);
         videoDO.setPath("video/a.mp4");
         videoDO.setCoverPath("img/a.jpg");
         when(shortVideoDAO.selectById(88L)).thenReturn(videoDO);
 
+        ShortVideoVO vo = shortVideoRepository.shortVideo(88L);
+
+        assertThat(vo).isNotNull();
+        assertThat(vo.getPath()).isEqualTo("video/a.mp4");
+        assertThat(vo.getSpuIdList()).isNull();
+        verifyNoInteractions(videoSpuRelationDAO);
+    }
+
+    @Test
+    void shortVideo_returnsNullWhenAbsent() {
+        when(shortVideoDAO.selectById(99L)).thenReturn(null);
+
+        assertThat(shortVideoRepository.shortVideo(99L)).isNull();
+    }
+
+    @Test
+    void relationSpuIdList_returnsSpuIds() {
         VideoSpuRelationDO relation = new VideoSpuRelationDO();
         relation.setVideoId(88L);
         relation.setSpuId(11L);
         relation.setType(1);
         when(videoSpuRelationDAO.selectList(any())).thenReturn(List.of(relation));
 
-        ShortVideoVO vo = shortVideoRepository.detail(88L);
+        List<Long> spuIdList = shortVideoRepository.relationSpuIdList(88L);
 
-        assertThat(vo).isNotNull();
-        assertThat(vo.getPath()).isEqualTo("video/a.mp4");
-        assertThat(vo.getSpuIdList()).containsExactly(11L);
-    }
-
-    @Test
-    void detail_returnsNullWhenAbsent() {
-        when(shortVideoDAO.selectById(99L)).thenReturn(null);
-
-        assertThat(shortVideoRepository.detail(99L)).isNull();
+        assertThat(spuIdList).containsExactly(11L);
     }
 }

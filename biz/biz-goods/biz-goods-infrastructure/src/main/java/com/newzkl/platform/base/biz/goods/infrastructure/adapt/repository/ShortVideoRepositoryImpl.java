@@ -14,12 +14,13 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * 商品-短视频仓储实现
+ *
+ * <p>每方法单一持久化动作 (一次 IO); 跨表写/读组装的事务与编排上移 {@code ShortVideoDomain}</p>
  *
  * @author KC
  */
@@ -37,63 +38,26 @@ public class ShortVideoRepositoryImpl implements ShortVideoRepository {
     private final VideoSpuRelationDAO videoSpuRelationDAO;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long insert(ShortVideoReq req) {
+    public Long insertShortVideo(ShortVideoReq req) {
         ShortVideoDO videoDO = TransferUtils.transfer(req, ShortVideoDO::new);
         shortVideoDAO.insert(videoDO);
-        saveRelation(videoDO.getId(), req.getSpuIdList(), false);
         return videoDO.getId();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void edit(ShortVideoReq req) {
+    public void updateShortVideo(ShortVideoReq req) {
         ShortVideoDO videoDO = TransferUtils.transfer(req, ShortVideoDO::new);
         shortVideoDAO.updateById(videoDO);
-        saveRelation(req.getId(), req.getSpuIdList(), true);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void del(Long id) {
+    public void deleteShortVideo(Long id) {
         shortVideoDAO.deleteById(id);
-        videoSpuRelationDAO.delete(videoSpuRelationDAO.getLwByVideo(List.of(id), TYPE_SHORT));
     }
 
     @Override
-    public ShortVideoVO detail(Long id) {
-        ShortVideoDO videoDO = shortVideoDAO.selectById(id);
-        if (videoDO == null) {
-            return null;
-        }
-        ShortVideoVO vo = TransferUtils.transfer(videoDO, ShortVideoVO::new);
-        List<VideoSpuRelationDO> relationList = videoSpuRelationDAO
-                .selectList(videoSpuRelationDAO.getLwByVideo(List.of(id), TYPE_SHORT));
-        vo.setSpuIdList(relationList.stream().map(VideoSpuRelationDO::getSpuId).toList());
-        vo.setSpuId(CollUtil.getFirst(vo.getSpuIdList()));
-        return vo;
-    }
-
-    @Override
-    public Page<ShortVideoVO> page(ShortVideoQuery query) {
-        return shortVideoDAO.queryPage(RepositorySupport.page(query), query);
-    }
-
-    /**
-     * 写入视频-SPU 关联关系
-     *
-     * @param videoId   视频 ID
-     * @param spuIdList 关联 SPU ID 列表
-     * @param doDelete  是否先清理旧关系 (编辑场景)
-     */
-    private void saveRelation(Long videoId, List<Long> spuIdList, boolean doDelete) {
-        if (videoId == null) {
-            return;
-        }
-        if (doDelete) {
-            videoSpuRelationDAO.delete(videoSpuRelationDAO.getLwByVideo(List.of(videoId), TYPE_SHORT));
-        }
-        if (CollUtil.isEmpty(spuIdList)) {
+    public void saveRelation(Long videoId, List<Long> spuIdList) {
+        if (videoId == null || CollUtil.isEmpty(spuIdList)) {
             return;
         }
         spuIdList.forEach(spuId -> {
@@ -103,5 +67,34 @@ public class ShortVideoRepositoryImpl implements ShortVideoRepository {
             relationDO.setType(TYPE_SHORT);
             videoSpuRelationDAO.insert(relationDO);
         });
+    }
+
+    @Override
+    public void deleteRelationByVideo(Long videoId) {
+        if (videoId == null) {
+            return;
+        }
+        videoSpuRelationDAO.delete(videoSpuRelationDAO.getLwByVideo(List.of(videoId), TYPE_SHORT));
+    }
+
+    @Override
+    public ShortVideoVO shortVideo(Long id) {
+        ShortVideoDO videoDO = shortVideoDAO.selectById(id);
+        if (videoDO == null) {
+            return null;
+        }
+        return TransferUtils.transfer(videoDO, ShortVideoVO::new);
+    }
+
+    @Override
+    public List<Long> relationSpuIdList(Long videoId) {
+        List<VideoSpuRelationDO> relationList = videoSpuRelationDAO
+                .selectList(videoSpuRelationDAO.getLwByVideo(List.of(videoId), TYPE_SHORT));
+        return relationList.stream().map(VideoSpuRelationDO::getSpuId).toList();
+    }
+
+    @Override
+    public Page<ShortVideoVO> page(ShortVideoQuery query) {
+        return shortVideoDAO.queryPage(RepositorySupport.page(query), query);
     }
 }

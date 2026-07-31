@@ -17,6 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,14 +40,15 @@ class ShortVideoDomainImplTest {
         ShortVideoReq req = new ShortVideoReq();
         req.setPath("video/a.mp4");
         req.setSpuId(9L);
-        when(shortVideoRepository.insert(any(ShortVideoReq.class))).thenReturn(66L);
+        when(shortVideoRepository.insertShortVideo(any(ShortVideoReq.class))).thenReturn(66L);
 
         Long id = shortVideoDomain.add(req);
 
         assertThat(id).isEqualTo(66L);
         ArgumentCaptor<ShortVideoReq> captor = ArgumentCaptor.forClass(ShortVideoReq.class);
-        verify(shortVideoRepository).insert(captor.capture());
+        verify(shortVideoRepository).insertShortVideo(captor.capture());
         assertThat(captor.getValue().getSpuIdList()).containsExactly(9L);
+        verify(shortVideoRepository).saveRelation(66L, List.of(9L));
     }
 
     @Test
@@ -81,35 +83,41 @@ class ShortVideoDomainImplTest {
         shortVideoDomain.edit(req);
 
         ArgumentCaptor<ShortVideoReq> captor = ArgumentCaptor.forClass(ShortVideoReq.class);
-        verify(shortVideoRepository).edit(captor.capture());
+        verify(shortVideoRepository).updateShortVideo(captor.capture());
         assertThat(captor.getValue().getSpuIdList()).containsExactlyInAnyOrder(3L, 4L);
+        verify(shortVideoRepository).deleteRelationByVideo(1L);
+        verify(shortVideoRepository).saveRelation(eq(1L), any());
     }
 
     @Test
-    void detail_returnsRepositoryResult() {
+    void detail_assemblesVoWithSpuIdListFromRepository() {
         ShortVideoVO vo = new ShortVideoVO();
         vo.setId(1L);
         vo.setPath("video/a.mp4");
-        when(shortVideoRepository.detail(1L)).thenReturn(vo);
+        when(shortVideoRepository.shortVideo(1L)).thenReturn(vo);
+        when(shortVideoRepository.relationSpuIdList(1L)).thenReturn(List.of(7L, 8L));
 
         ShortVideoVO actual = shortVideoDomain.detail(1L);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getPath()).isEqualTo("video/a.mp4");
+        assertThat(actual.getSpuIdList()).containsExactly(7L, 8L);
+        assertThat(actual.getSpuId()).isEqualTo(7L);
     }
 
     @Test
     void detail_throwsWhenNotFound() {
-        when(shortVideoRepository.detail(2L)).thenReturn(null);
+        when(shortVideoRepository.shortVideo(2L)).thenReturn(null);
 
         assertThatThrownBy(() -> shortVideoDomain.detail(2L))
                 .isInstanceOf(PlatformException.class);
     }
 
     @Test
-    void del_delegatesToRepository() {
+    void del_removesVideoAndRelations() {
         shortVideoDomain.del(5L);
-        verify(shortVideoRepository).del(5L);
+        verify(shortVideoRepository).deleteShortVideo(5L);
+        verify(shortVideoRepository).deleteRelationByVideo(5L);
     }
 
     @Test

@@ -145,12 +145,6 @@ public interface SpuRepository {
      */
     void spuAttributeDeleteBySpuId(Long spuId);
 
-    /**
-     * 刷新SPU信息, 如冗余的sku统计信息
-     * @param spuId
-     */
-    void refreshSpu(List<Long> spuId);
-
     List<SpuCategoryVO> countSpuByCategory(List<Long> categoryIdList);
 
     List<SpuStateVO> spuStateList(SpuQuery spuQuery);

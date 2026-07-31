@@ -15,7 +15,6 @@ import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,28 +36,28 @@ public class AuditDataWorkTableRepositoryImpl implements AuditDataWorkTableRepos
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long auditDataWorkTableSave(AuditDataWorkTable auditDataWorkTable) {
+    public boolean existsAuditing(Long spuId, Integer operateTarget) {
+        return auditDataWorkTableDAO.exists(new LambdaQueryWrapper<AuditDataWorkTableDO>()
+                .eq(AuditDataWorkTableDO::getState, AuditEnum.State.AUDITING)
+                .eq(AuditDataWorkTableDO::getForeignId, spuId)
+                .eq(AuditDataWorkTableDO::getOperateTarget, operateTarget)
+        );
+    }
+
+    @Override
+    public Long auditDataWorkTableInsert(AuditDataWorkTable auditDataWorkTable) {
         AuditDataWorkTableDO auditDataWorkTableDO = TransferUtils.transfer(auditDataWorkTable, AuditDataWorkTableDO::new);
-        if (auditDataWorkTableDO.getId() == null || auditDataWorkTableDO.getId() == 0) {
-            boolean exists = auditDataWorkTableDAO.exists(new LambdaQueryWrapper<AuditDataWorkTableDO>()
-                    .eq(AuditDataWorkTableDO::getState, AuditEnum.State.AUDITING)
-                    .eq(AuditDataWorkTableDO::getForeignId, auditDataWorkTable.getSpuId())
-                    .eq(AuditDataWorkTableDO::getOperateTarget, auditDataWorkTable.getOperateTarget())
-            );
-            //如果当前商品存在同类型且待审核状态的工单，不允许提交工单
-            if (!exists) {
-                auditDataWorkTableDO.setId(SnowflakeIdAble.getSnowflakeId());
-                auditDataWorkTableDAO.insert(Collections.singletonList(auditDataWorkTableDO));
-            }
-        } else {
-            auditDataWorkTableDAO.updateById(auditDataWorkTableDO);
-        }
+        auditDataWorkTableDO.setId(SnowflakeIdAble.getSnowflakeId());
+        auditDataWorkTableDAO.insert(Collections.singletonList(auditDataWorkTableDO));
         return auditDataWorkTableDO.getId();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    public void auditDataWorkTableEdit(AuditDataWorkTable auditDataWorkTable) {
+        auditDataWorkTableDAO.updateById(TransferUtils.transfer(auditDataWorkTable, AuditDataWorkTableDO::new));
+    }
+
+    @Override
     public void auditDataWorkTableDelete(List<Long> idList) {
         auditDataWorkTableDAO.deleteByIds(idList);
     }

@@ -5,42 +5,69 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuer
 import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
 
+import java.util.List;
+
 /**
  * 商品-短视频仓储端口
+ *
+ * <p>每方法单一持久化动作 (一次 IO), 跨表写/读组装由 {@code ShortVideoDomain} 编排</p>
  *
  * @author KC
  */
 public interface ShortVideoRepository {
 
     /**
-     * 新增短视频 (含 SPU 关联关系写入)
+     * 插入短视频主记录, 回填并返回主键
      *
      * @param req 短视频请求
      * @return 短视频 ID
      */
-    Long insert(ShortVideoReq req);
+    Long insertShortVideo(ShortVideoReq req);
 
     /**
-     * 编辑短视频 (含 SPU 关联关系先删后插)
+     * 按 ID 更新短视频主记录
      *
      * @param req 短视频请求 (id 必填)
      */
-    void edit(ShortVideoReq req);
+    void updateShortVideo(ShortVideoReq req);
 
     /**
-     * 删除短视频 (含 SPU 关联关系清理)
+     * 按 ID 删除短视频主记录
      *
      * @param id 短视频 ID
      */
-    void del(Long id);
+    void deleteShortVideo(Long id);
 
     /**
-     * 短视频详情 (含关联 SPU ID 列表)
+     * 批量写入视频-SPU 关联关系 (同表单一持久化动作)
+     *
+     * @param videoId   视频 ID
+     * @param spuIdList 关联 SPU ID 列表
+     */
+    void saveRelation(Long videoId, List<Long> spuIdList);
+
+    /**
+     * 按视频 ID 删除全部关联关系
+     *
+     * @param videoId 视频 ID
+     */
+    void deleteRelationByVideo(Long videoId);
+
+    /**
+     * 按 ID 查短视频主记录视图, 不含关联 SPU
      *
      * @param id 短视频 ID
      * @return 短视频视图对象, 不存在返回 null
      */
-    ShortVideoVO detail(Long id);
+    ShortVideoVO shortVideo(Long id);
+
+    /**
+     * 按视频 ID 查关联 SPU ID 列表
+     *
+     * @param videoId 视频 ID
+     * @return 关联 SPU ID 列表
+     */
+    List<Long> relationSpuIdList(Long videoId);
 
     /**
      * 短视频分页 (join SPU 取编码/名称/图片)

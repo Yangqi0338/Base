@@ -41,11 +41,13 @@ public class FreightDomainImpl implements FreightDomain {
         FreightTemplate freightTemplate = TransferUtils.transfer(req, FreightTemplate::new);
         freightTemplate.init();
         freightTemplateRepository.freightTemplateEdit(freightTemplate);
+        freightTemplateRepository.evictFreightTemplateCache(List.of(freightTemplate.getId()));
     }
 
     @Override
     public void freightTemplateDelete(List<Long> idList) {
         freightTemplateRepository.freightTemplateDelete(idList);
+        freightTemplateRepository.evictFreightTemplateCache(idList);
     }
 
     @Override
