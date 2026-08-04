@@ -161,10 +161,6 @@ public class SpuDTO {
      */
     private Integer supplierPriceEnd;
     /**
-     * 冗余: 库存
-     */
-    private Integer inventory;
-    /**
      * 冗余: 账号名称
      */
     private String accountName;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.DeliverDAO">
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.order.DeliverDAO">
     <select id="listByOutOrderNo" resultType="com.newzkl.platform.base.biz.order.model.vo.DeliverVO">
         SELECT
             t1.out_order_no, t.*, t1.channel_id

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.application.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.newzkl.platform.base.biz.order.model.req.OrderStateRecordPageReq;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.OrderStateRecordVO;
 
 import java.util.List;
@@ -31,5 +31,5 @@ public interface IOrderStateRecordService {
      * @param req 分页查询参数
      * @return 分页结果
      */
-    IPage<OrderStateRecordVO> pageQuery(OrderStateRecordPageReq req);
+    IPage<OrderStateRecordVO> pageQuery(OrderStateRecordQuery req);
 }

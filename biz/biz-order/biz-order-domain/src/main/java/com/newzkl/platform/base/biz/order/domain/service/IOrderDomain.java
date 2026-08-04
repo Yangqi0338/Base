@@ -2,14 +2,12 @@ package com.newzkl.platform.base.biz.order.domain.service;
 
 
 
-import com.newzkl.platform.base.biz.order.model.dto.IndexCountRes;
-import com.newzkl.platform.base.biz.order.model.dto.Order;
-import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrder;
+import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.*;
-import com.newzkl.platform.base.biz.order.model.support.api.SkuSaleInfo;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
+import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverVO;
 import com.newzkl.platform.base.biz.order.model.vo.OrderStateCountVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
@@ -86,27 +84,12 @@ public interface IOrderDomain {
 
     TripSpuOrderChangeRes tripSpuOrderChange(List<Long> orderId, List<Long> spuOrderId, List<Long> skuOrderId);
 
-    void freightSettleSuccessNotify(List<Long> spuIdList);
-
-    /**
-     * 保存预支付单
-     * @param order
-     * @param memberOrderCreateCommand
-     */
-    void savePrePayOrder(OrderCreateRes order,MemberOrderCreateCommand memberOrderCreateCommand);
-
     /**
      * 获取C端用户预支付单
      * @param memberOrderCreateCommand
      * @return
      */
     OrderCreateRes getPrePayOrder(MemberOrderCreateCommand memberOrderCreateCommand);
-
-    /**
-     * 删除预支付单
-     * @param memberOrderCreateCommand
-     */
-    void delPrePayOrder(MemberOrderCreateCommand memberOrderCreateCommand);
 
     void deliverEdit(DeliverCodeCommand deliverCommand);
 
@@ -124,7 +107,7 @@ public interface IOrderDomain {
      * @param spuOrderList SPU订单列表
      * @param goodsFreight 最新运费信息
      */
-    void validateFreightUnchanged(List<SpuOrder> spuOrderList, Map<Long, Integer> goodsFreight);
+    void validateFreightUnchanged(List<SpuOrderDTO> spuOrderList, Map<Long, Integer> goodsFreight);
 
     /**
      * 数据库层修改订单收货地址（最终执行更新）
@@ -146,7 +129,7 @@ public interface IOrderDomain {
      * @param orderId
      * @return
      */
-    Order order(Long orderId);
+    OrderDTO order(Long orderId);
 
     /**
      * 订单聚合
@@ -165,13 +148,10 @@ public interface IOrderDomain {
      */
     void batchUpdateOrderState(List<Long> orderIdList, OrderEnum.State sourceState, OrderEnum.State toState,String spuOrderExt);
 
-    List<SpuOrder> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
+    List<SpuOrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
 
-    void orderEdit(Order orderEdit);
+    void orderEdit(OrderDTO orderEdit);
 
-    List<OrderStateCountVO> countOrderStateByChannel(Long channelId);
-
-    List<OrderStateCountVO> countOrderStateByAccount(Long accountId);
     /**
      * 订单统计数据
      * @param timeQuery
@@ -188,4 +168,26 @@ public interface IOrderDomain {
     Long spuOrderId(Long orderId, Long skuId);
 
     List<SpuOrderItemExcelVO> querySpuOrderItemExcelVO(SpuOrderQuery spuOrderQuery);
+
+    /**
+     * 新增订单状态记录（含领域规则校验）
+     * @param entity 订单状态记录领域模型
+     * @return 新增后的领域模型
+     */
+    OrderStateRecordEntity createStateRecord(OrderStateRecordEntity entity);
+
+    /**
+     * 创建订单
+     * @param data
+     * @param orderCreateCommand
+     * @return
+     */
+    OrderCreateRes createOrder(OrderGoodsCheckV2Res data, OrderCreateCommand orderCreateCommand);
+
+    /**
+     * 保存预支付单
+     * @param order
+     * @param memberOrderCreateCommand
+     */
+    void savePrePayOrder(OrderCreateRes order, MemberOrderCreateCommand memberOrderCreateCommand);
 }

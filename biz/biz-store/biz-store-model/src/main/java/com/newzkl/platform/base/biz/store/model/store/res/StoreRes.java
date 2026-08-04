@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
 import com.newzkl.platform.base.biz.store.model.enums.StoreTypeEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -75,9 +76,9 @@ public class StoreRes extends BaseRes {
      */
      private Integer dealerNumber;
      /**
-     * 成交金额, 采购金余额
+     * 成交金额, 采购金余额 (Money, 落库 BIGINT 分)
      */
-     private Integer dealerAmount;
+     private Money dealerAmount;
 
     /**
      * 门店ID

@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDom
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
@@ -47,7 +48,7 @@ public class PurseServiceImpl implements PurseService {
                 PurseEnum.PurseType.PURCHASE
         );
         // 2、分配杠杆采购金
-        Integer leverAmount = req.getAmount() * lever;
+        Money leverAmount = req.getAmount().multiply(lever);
         AccountPurseAlterRecordReq recordReq1 = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.PLATFORM_TO_OPERATOR_LEVER,
                 PurseEnum.FinanceUser.OPERATOR, leverAmount, PurseEnum.PurseType.LEVERAGE_PURCHASE);
         accountPurseService.addAmount(recordReq, recordReq1);
@@ -82,14 +83,14 @@ public class PurseServiceImpl implements PurseService {
     @Transactional(rollbackFor = Exception.class)
     public PlatformResult<Object> channelBalanceSync(AmountDistributionReq req) {
         Long accountId = req.getAccountId();
-        Integer amount = req.getAmount();
+        Money amount = req.getAmount();
         try {
             // 增加收益账户余额
             AccountPurseAlterRecordReq channelRecordReq = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.CHANNEL_SYNC_DOWNSTREAM,
                     PurseEnum.FinanceUser.CHANNEL, amount, PurseEnum.PurseType.PURCHASE);
             accountPurseService.addAmount(channelRecordReq);
-            // 渠道商采购金充值后，更新服务费
-            accountPurseConfigDomain.alterChannelNowChargeConfig(accountId, amount);
+            // 渠道商采购金充值后，更新服务费 (阈值比较按分, Money → int 分)
+            accountPurseConfigDomain.alterChannelNowChargeConfig(accountId, (int) amount.getCent());
         } catch (Exception e) {
             return PlatformResult.fail(e.getMessage());
         }
@@ -99,7 +100,7 @@ public class PurseServiceImpl implements PurseService {
     private AccountPurseAlterRecordReq buildAccountPurseAlterRecord(AmountDistributionReq distributionReq,
                                                                     PurseEnum.PurseAlterType alterType,
                                                                     PurseEnum.FinanceUser accountType,
-                                                                    Integer amount,
+                                                                    Money amount,
                                                                     PurseEnum.PurseType purseType) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(distributionReq.getAccountId());

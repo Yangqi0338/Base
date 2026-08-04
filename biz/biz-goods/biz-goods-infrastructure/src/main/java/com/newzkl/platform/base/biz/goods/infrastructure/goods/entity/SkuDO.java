@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -39,29 +40,21 @@ public class SkuDO extends BaseDO {
     @Index
 	private Long spuId;
 	/**
-	 * 市场价
+	 * 市场价 (Money, 落库 BIGINT 分)
 	 */
-	private Integer marketPrice;
+	private Money marketPrice;
 	/**
-	 * 供货价
+	 * 供货价 (Money, 落库 BIGINT 分)
 	 */
-	private Integer supplyPrice;
+	private Money supplyPrice;
 	/**
-     * 销售价(to channel)
+     * 销售价(to channel) (Money, 落库 BIGINT 分)
      */
-    private Integer salePrice;
+    private Money salePrice;
     /**
-     * 销售价(to c)
+     * 销售价(to c) (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
-    /**
-	 * 库存
-	 */
-	private Integer inventory;
-	/**
-	 * 库存预警个数
-	 */
-	private Integer inventoryWarning;
+    private Money unitPrice;
 	/**
 	 * 商品销售属性，json格式
 	 */

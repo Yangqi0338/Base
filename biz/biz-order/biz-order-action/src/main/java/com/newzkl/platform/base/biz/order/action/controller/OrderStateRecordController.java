@@ -2,15 +2,16 @@ package com.newzkl.platform.base.biz.order.action.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.newzkl.platform.base.biz.order.application.service.IOrderStateRecordService;
-import com.newzkl.platform.base.biz.order.model.req.OrderStateRecordPageReq;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.OrderStateRecordVO;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class OrderStateRecordController {
      * @return 分页结果（视图对象）
      */
     @PostMapping("pageQuery")
-    public PlatformResult<IPage<OrderStateRecordVO>> pageQuery(@Validated @RequestBody OrderStateRecordPageReq req) {
+    public PlatformResult<IPage<OrderStateRecordVO>> pageQuery(@Validated @RequestBody OrderStateRecordQuery req) {
         IPage<OrderStateRecordVO> result = orderStateRecordService.pageQuery(req);
         return PlatformResult.success(result);
     }

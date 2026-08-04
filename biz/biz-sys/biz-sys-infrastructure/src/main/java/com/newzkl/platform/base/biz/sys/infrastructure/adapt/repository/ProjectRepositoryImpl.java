@@ -14,14 +14,11 @@ import com.newzkl.platform.base.biz.sys.model.project.req.ProjectSaveReq;
 import com.newzkl.platform.base.biz.sys.model.project.res.ProjectListRes;
 import com.newzkl.platform.base.biz.sys.model.project.res.ProjectRes;
 import com.newzkl.platform.base.biz.sys.model.project.res.ProjectVideoRes;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -82,49 +79,60 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long insert(ProjectSaveReq req) {
+    public Long insertProject(ProjectSaveReq req) {
         ProjectDO projectDO = TransferUtils.transfer(req, ProjectDO::new);
         projectDO.setFlags(list2Str(req.getFlags()));
         projectDAO.insert(projectDO);
-
-        List<ProjectVideoDO> videoList = buildVideoList(req, projectDO.getId());
-        if (CollUtil.isNotEmpty(videoList)) {
-            projectVideoDAO.insert(videoList);
-        }
         return projectDO.getId();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void edit(ProjectSaveReq req) {
-        Long id = req.getId();
-        if (projectDAO.selectById(id) == null) {
-            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
-        }
-
-        ProjectDO projectDO = TransferUtils.transfer(req, ProjectDO::new);
-        projectDO.setFlags(list2Str(req.getFlags()));
-        projectDAO.updateById(projectDO);
-
-        List<ProjectVideoDO> videoList = buildVideoList(req, id);
+    public void insertProjectVideos(ProjectSaveReq req, Long projectId) {
+        List<ProjectVideoDO> videoList = buildVideoList(req, projectId);
         if (CollUtil.isNotEmpty(videoList)) {
-            projectVideoDAO.insertOrUpdate(videoList);
-        }
-        List<Long> videoIdList = videoList.stream()
-                .map(ProjectVideoDO::getId).filter(Objects::nonNull).toList();
-        if (CollUtil.isEmpty(videoIdList)) {
-            projectVideoDAO.delete(projectVideoDAO.getLwByProjectId(id));
-        } else {
-            projectVideoDAO.delete(projectVideoDAO.getLwByProjectId(id)
-                    .notIn(ProjectVideoDO::getId, videoIdList));
+            projectVideoDAO.insert(videoList);
         }
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void del(Long id) {
+    public boolean existsProject(Long id) {
+        return projectDAO.selectById(id) != null;
+    }
+
+    @Override
+    public void updateProject(ProjectSaveReq req) {
+        ProjectDO projectDO = TransferUtils.transfer(req, ProjectDO::new);
+        projectDO.setFlags(list2Str(req.getFlags()));
+        projectDAO.updateById(projectDO);
+    }
+
+    @Override
+    public List<Long> saveProjectVideos(ProjectSaveReq req, Long projectId) {
+        List<ProjectVideoDO> videoList = buildVideoList(req, projectId);
+        if (CollUtil.isNotEmpty(videoList)) {
+            projectVideoDAO.insertOrUpdate(videoList);
+        }
+        return videoList.stream()
+                .map(ProjectVideoDO::getId).filter(Objects::nonNull).toList();
+    }
+
+    @Override
+    public void deleteStaleVideos(Long projectId, List<Long> keepVideoIds) {
+        if (CollUtil.isEmpty(keepVideoIds)) {
+            projectVideoDAO.delete(projectVideoDAO.getLwByProjectId(projectId));
+        } else {
+            projectVideoDAO.delete(projectVideoDAO.getLwByProjectId(projectId)
+                    .notIn(ProjectVideoDO::getId, keepVideoIds));
+        }
+    }
+
+    @Override
+    public void deleteProject(Long id) {
         projectDAO.deleteById(id);
+    }
+
+    @Override
+    public void deleteProjectVideos(Long id) {
         projectVideoDAO.delete(projectVideoDAO.getLwByProjectId(id));
     }
 

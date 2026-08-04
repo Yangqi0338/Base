@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.store.action.controller;
 
-import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreAccountDomain;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -77,7 +75,8 @@ public class StoreAccountController {
                 StoreAccountExportResponse::new,
                 (c, v) -> {
                     v.setRelationType(c.getRelationType() == 1 ? "已拉黑" : "正常");
-                    v.setCountPayAmount(NumberUtil.div(c.getCountPayAmount(), new BigDecimal("100"), 2).toString());
+                    // countPayAmount 已 Money, 直取元字符串 (Money.getAmount 元 BigDecimal)
+                    v.setCountPayAmount(c.getCountPayAmount() == null ? null : c.getCountPayAmount().getAmount().toPlainString());
                 });
         EasyExcelUtil.export(exportResponses, "客户列表");
     }

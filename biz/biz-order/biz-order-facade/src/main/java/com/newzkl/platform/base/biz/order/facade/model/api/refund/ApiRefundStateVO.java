@@ -16,10 +16,14 @@ public class ApiRefundStateVO  implements Serializable {
      * 售后单号
      */
     @NotNull
-    private Long refundId;
+    private Long id;
     /**
      * 售后单状态
      */
     @NotNull
     private RefundEnum.State refundState;
+
+    public Long getRefundId(){
+        return this.id;
+    }
 }

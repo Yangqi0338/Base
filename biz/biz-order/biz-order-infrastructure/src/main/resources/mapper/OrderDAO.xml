@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 迁移自 new-scm/scm-sale OrderDAO.xml; 适配: id -> order_no, 补 close_reason 条件赋值(Base 签名携带) -->
-<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.OrderDAO">
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.order.OrderDAO">
 
-    <!-- 源 updateOrderState(by id) 的 orderNo 适配版 -->
-    <update id="updateOrderStateByOrderNo">
-        update `order` t set t.order_state = #{toState,jdbcType=INTEGER},
-        <if test="closeReason != null">
-            t.close_reason = #{closeReason,jdbcType=VARCHAR},
-        </if>
-        t.order_state_log = CONCAT(t.order_state_log, ',', #{toState,jdbcType=INTEGER})
-        where t.order_no = #{orderNo,jdbcType=VARCHAR} and t.order_state = #{sourceState,jdbcType=INTEGER}
-    </update>
-
+    <!-- updateOrderStateByOrderNo(死码, 无 DAO 绑定+无调用方) 已删; 状态机走 batchUpdateOrderState -->
+    <select id="checkOrderState" parameterType="java.lang.Long" resultType="com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO">
+        SELECT
+        t1.id as id,
+        t1.order_state as current_state,
+        MIN(t.order_state) as to_state,
+        t1.channel_id,
+        t1.out_order_no,
+        t1.order_type
+        FROM
+        spu_order t left join `order` t1 on t.order_id = t1.id
+        WHERE
+        t1.id IN
+        <foreach collection="orderId" item="item" separator="," close=")" open="(">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+        GROUP BY t1.id
+    </select>
 </mapper>

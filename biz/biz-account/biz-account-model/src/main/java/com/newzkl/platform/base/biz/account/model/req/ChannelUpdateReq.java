@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 
-import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

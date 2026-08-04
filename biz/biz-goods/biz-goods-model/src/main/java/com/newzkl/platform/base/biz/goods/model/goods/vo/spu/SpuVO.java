@@ -213,10 +213,6 @@ public class SpuVO extends BaseRes implements Serializable {
      */
     private Integer profit;
     /**
-     * 冗余: 库存
-     */
-    private Integer inventory;
-    /**
      * 冗余:审批ID
      */
     private Long flowId;

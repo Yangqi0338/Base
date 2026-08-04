@@ -28,7 +28,8 @@ public interface ProjectDAO extends BaseMapper<ProjectDO> {
                 .notNullEq(ProjectDO::getProvince, query.getProvince())
                 .notNullEq(ProjectDO::getCity, query.getCity())
                 .notNullEq(ProjectDO::getArea, query.getArea())
-                .between(ProjectDO::getBasicAmount, query.getBasicStartAmount(), query.getBasicEndAmount())
+                // basicAmount 已 Money; betweenDate 仅收 Temporal, 改 doBetween 走 Money 边界比较
+                .doBetween(ProjectDO::getBasicAmount, query.getBasicStartAmount(), query.getBasicEndAmount())
                 .notEmptyLike(ProjectDO::getFlags, query.getFlags())
                 .notNullEq(ProjectDO::getInterestNum, query.getInterestNum())
                 .notEmptyLike(ProjectDO::getInterestPerson, query.getInterestPerson())

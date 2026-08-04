@@ -18,7 +18,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuAttributeDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuery;
-import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.IndexCountRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
@@ -27,7 +26,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuStateVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSkuStockVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
@@ -236,18 +234,6 @@ public class SpuRepositoryImpl implements SpuRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int cutInventory(Long skuId, Integer count) {
-        return skuDAO.update(null, skuDAO.cutInventory(skuId, count));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int addInventory(Long skuId, Integer count) {
-        return skuDAO.update(null, skuDAO.addInventory(skuId, count));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void skuDeleteByQuery(SkuQuery skuDelete) {
         skuDAO.delete(requireCondition(skuWrapper(skuDelete)));
     }
@@ -277,43 +263,12 @@ public class SpuRepositoryImpl implements SpuRepository {
     }
 
     @Override
-    public List<ApiSkuStockVO> skuStock(List<Long> skuIdList) {
-        if (CollUtil.isEmpty(skuIdList)) {
-            return List.of();
-        }
-        List<SkuDO> list = skuDAO.selectList(new BaseLambdaQueryWrapper<SkuDO>()
-                .select(SkuDO::getId, SkuDO::getInventory)
-                .in(SkuDO::getId, skuIdList));
-        return TransferUtils.transfers(list, ApiSkuStockVO::new);
-    }
-
-    @Override
     public float maxSalePriceRate(Long spuId) {
         List<SkuDO> list = skuDAO.selectList(new BaseLambdaQueryWrapper<SkuDO>()
                 .select(SkuDO::getSalePriceRate)
                 .eq(SkuDO::getSpuId, spuId));
         return (float) list.stream().map(SkuDO::getSalePriceRate).filter(Objects::nonNull)
                 .mapToDouble(Float::doubleValue).max().orElse(0D);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void stockExecute(List<StockExecuteReq> stockExecuteReq) {
-        if (CollUtil.isEmpty(stockExecuteReq)) {
-            return;
-        }
-        for (StockExecuteReq req : stockExecuteReq) {
-            if (req.getSkuId() == null || req.getCount() == null || req.getCount() == 0) {
-                continue;
-            }
-            // count 小于 0 减少库存, 大于 0 增加库存
-            int updated = req.getCount() < 0
-                    ? skuDAO.update(null, skuDAO.cutInventory(req.getSkuId(), -req.getCount()))
-                    : skuDAO.update(null, skuDAO.addInventory(req.getSkuId(), req.getCount()));
-            if (updated == 0) {
-                throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
-            }
-        }
     }
 
     @Override
@@ -492,9 +447,9 @@ public class SpuRepositoryImpl implements SpuRepository {
                 .notEmptyEq(SpuDO::getFreightTemplateId, query.getFreightTemplateId())
                 .notEmptyEq(SpuDO::getOutSpuId, query.getOutSpuId())
                 .notEmptyEq(SpuDO::getMinPricingNum, query.getMinPricingNum())
-                .between(SpuDO::getSupplyPrice, query.getSupplyPriceStart(), query.getSupplyPriceEnd())
-                .between(SpuDO::getSalePrice, query.getSalePriceStart(), query.getSalePriceEnd())
-                .between(SpuDO::getSaleNum, query.getSaleNumStart(), query.getSaleNumEnd())
+                .betweenDate(SpuDO::getSupplyPrice, query.getSupplyPriceStart(), query.getSupplyPriceEnd())
+                .betweenDate(SpuDO::getSalePrice, query.getSalePriceStart(), query.getSalePriceEnd())
+                .betweenDate(SpuDO::getSaleNum, query.getSaleNumStart(), query.getSaleNumEnd())
                 .between(SpuDO::getCreateTime, query.getCreateTime());
         return wrapper;
     }

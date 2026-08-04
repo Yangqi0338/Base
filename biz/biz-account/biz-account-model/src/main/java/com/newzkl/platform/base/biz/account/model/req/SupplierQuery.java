@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.account.model.req;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.SupplierEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;

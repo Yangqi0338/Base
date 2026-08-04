@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.common.ddd.infrastructure.support;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -12,10 +11,8 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.newzkl.platform.base.common.ddd.model.query.QuerySupport;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.temporal.Temporal;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -167,6 +164,15 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     public <R> BaseLambdaQueryWrapper<T> between(SFunction<T, R> column, R start, R end) {
+        return doBetween(column, start, end);
+    }
+
+    public <R> BaseLambdaQueryWrapper<T> between(SFunction<T, R> column, R[] range) {
+        List<R> rangeList = CollUtil.newArrayList(range);
+        return doBetween(column, CollUtil.getFirst(rangeList), CollUtil.getLast(rangeList));
+    }
+
+    public <R,V> BaseLambdaQueryWrapper<T> doBetween(SFunction<T, R> column, V start, V end) {
         boolean s = !ObjectUtil.isEmpty(start);
         boolean s1 = !ObjectUtil.isEmpty(end);
         if (s || s1) {
@@ -178,31 +184,9 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
         return this;
     }
 
-    public <R> BaseLambdaQueryWrapper<T> between(SFunction<T, R> column, String[] dates) {
-        String[] newDates = ArrayUtil.removeBlank(dates);
-        if (ArrayUtil.isNotEmpty(newDates)) {
-            this.and(i -> {
-                String date = dates[0];
-                i.ge(!ObjectUtil.isEmpty(date), column, date);
-                if (dates.length > 1) {
-                    i.le(!ObjectUtil.isEmpty(dates[1]), column, dates[1]);
-                }
-            });
-        }
-        return this;
-    }
-
-    public <R> BaseLambdaQueryWrapper<T> between(SFunction<T, R> column, Date[] dates) {
-        Date[] newDates = ArrayUtil.removeNull(dates);
-        if (ArrayUtil.isNotEmpty(newDates)) {
-            this.and(i -> {
-                i.ge(!ObjectUtil.isEmpty(dates[0]), column, dates[0]);
-                if (dates.length > 1) {
-                    i.lt(!ObjectUtil.isEmpty(dates[1]), column, dates[1]);
-                }
-            });
-        }
-        return this;
+    public BaseLambdaQueryWrapper<T> betweenDate(SFunction<T, Temporal> column, String[] dates) {
+        List<String> dateList = CollUtil.newArrayList(dates);
+        return doBetween(column, CollUtil.getFirst(dateList), CollUtil.getLast(dateList));
     }
 
     public BaseQueryWrapper<T> orderBy(QuerySupport querySupport) {
@@ -339,6 +323,11 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
 
     public BaseQueryWrapper<T> unwrap(String alias) {
         return new BaseQueryWrapper<>(null, getEntityClass(), alias, paramNameSeq, paramNameValuePairs,
+                expression, lastSql, sqlComment, sqlFirst);
+    }
+
+    public BaseQueryWrapper<T> unwrapAlias() {
+        return new BaseQueryWrapper<>(null, getEntityClass(), "t", paramNameSeq, paramNameValuePairs,
                 expression, lastSql, sqlComment, sqlFirst);
     }
 

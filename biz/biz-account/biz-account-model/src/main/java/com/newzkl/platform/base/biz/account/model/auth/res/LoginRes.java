@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.auth.res;
 
 import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.model.res.LoginAccountRes;
 import lombok.Data;

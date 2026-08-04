@@ -57,10 +57,6 @@ public class SkuSaleInfo implements Serializable {
      */
     private Integer storePrice;
     /**
-     * 库存
-     */
-    private Integer inventory;
-    /**
      * 运费模板id
      */
     private Long freightTemplateId;

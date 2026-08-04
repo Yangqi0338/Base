@@ -114,6 +114,9 @@ public class MQUtil {
         MQUtil.producer = producer;
     }
 
+    public static SendResult sendDelayed(String tag, Object messageContent, int delayTimeLevel) {
+        return sendDelayed(null, tag, SnowflakeIdAble.getSnowflakeId(), messageContent, delayTimeLevel);
+    }
     /**
      * 发送延迟消息（支持延迟级别 1-18）
      *

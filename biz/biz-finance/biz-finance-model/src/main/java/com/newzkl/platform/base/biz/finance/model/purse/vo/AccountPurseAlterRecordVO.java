@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
@@ -47,7 +48,7 @@ public class AccountPurseAlterRecordVO extends BaseRes {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 关联记录id

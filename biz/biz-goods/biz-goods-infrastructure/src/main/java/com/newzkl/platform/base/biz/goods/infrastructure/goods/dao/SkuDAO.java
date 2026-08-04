@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SkuDO;
@@ -33,19 +32,6 @@ public interface SkuDAO extends BaseMapper<SkuDO> {
     List<OrderGoodsInfoVO> queryOrderSkuInfoVOList(@Param("skuIdList") List<Long> skuIdList);
 
     SpuDO countSkuById(@Param("spuId") Long spuId);
-
-    default LambdaUpdateWrapper<SkuDO> cutInventory(Long skuId, Integer count) {
-        LambdaUpdateWrapper<SkuDO> wrapper = new LambdaUpdateWrapper<>();
-        return wrapper.setSql("inventory = inventory - " + count)
-                .eq(SkuDO::getId, skuId)
-                .ge(SkuDO::getInventory, count);
-    }
-
-    default LambdaUpdateWrapper<SkuDO> addInventory(Long skuId, Integer count) {
-        LambdaUpdateWrapper<SkuDO> wrapper = new LambdaUpdateWrapper<>();
-        return wrapper.setSql("inventory = inventory + " + count)
-                .eq(SkuDO::getId, skuId);
-    }
 
     default QueryWrapper<SkuDO> buildQueryWrapper(SkuQuery query) {
         QueryWrapper<SkuDO> wrapper = new QueryWrapper<>();

@@ -12,15 +12,12 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseAmountRes;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
-import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
-import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
-import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -37,7 +34,6 @@ import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.*;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -83,23 +79,7 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final FinancePurseApi financePurseApi;
     private final GoodsStoreApi goodsStoreApi;
 
-    private final CdkDomain cdkDomain;
     private final CountSaleDomain countSaleDomain;
-
-    /**
-     * 开通码分页
-     *
-     * <p>迁移补充: 旧 {@code cdkPage} 返回 PageHelper 的 {@code PageInfo}, 中台统一返回
-     * MyBatis-Plus 分页, 记录类型为出参对象。</p>
-     *
-     * @param cdkQuery 开通码查询
-     * @return 开通码分页
-     * @author KC
-     */
-    @Override
-    public Page<CdkRes> cdkPage(CdkQuery cdkQuery) {
-        return cdkDomain.pageList(cdkQuery);
-    }
 
     @Override
     public AccountOutRes accountOutVO(CommonEnum.Client client, Long id) {

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawConfig;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +28,7 @@ public class AccountWithdrawRecordDO extends BaseDO {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 提货积分

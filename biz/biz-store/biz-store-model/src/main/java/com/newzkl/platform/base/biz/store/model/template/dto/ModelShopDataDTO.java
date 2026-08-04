@@ -21,7 +21,7 @@ public class ModelShopDataDTO implements Serializable {
     private Long modelShopId;
 
     /**
-     * 本次金额
+     * 本次金额 (分, 入站 MQ/跨域契约保持 Integer; 落 ModelShopOrderRecord 时 Money.of 升 Money)
      */
     private Integer amount;
 

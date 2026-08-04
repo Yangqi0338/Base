@@ -13,7 +13,7 @@ public class SpuOrderStateVO implements Serializable {
     /**
      * 订单号
      */
-    private Long orderId;
+    private Long id;
     /**
      * 订单状态
      */

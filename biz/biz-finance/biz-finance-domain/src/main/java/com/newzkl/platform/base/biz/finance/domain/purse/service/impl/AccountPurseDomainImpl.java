@@ -157,6 +157,11 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     }
 
     @Override
+    public Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(AccountPurseAlterRecordQuery req) {
+        return accountPurseRepository.queryChannelRollOutRecords(req);
+    }
+
+    @Override
     public AccountPurseAlterRecordVO queryMaxAmount(AccountPurseAlterRecordQuery req) {
         req.addDescSortField("amount");
         req.resetQuerySingle();

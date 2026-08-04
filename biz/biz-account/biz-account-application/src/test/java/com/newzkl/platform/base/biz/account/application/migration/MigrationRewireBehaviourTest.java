@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.application.migration;
 
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.biz.account.model.req.web.DealerProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.web.OperatorProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.web.SelectorProxySaveReq;

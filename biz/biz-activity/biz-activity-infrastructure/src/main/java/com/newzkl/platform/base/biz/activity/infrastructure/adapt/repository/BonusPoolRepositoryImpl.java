@@ -18,6 +18,7 @@ import com.newzkl.platform.base.biz.activity.model.event.req.*;
 import com.newzkl.platform.base.biz.activity.model.event.res.HistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
@@ -103,11 +104,13 @@ public class BonusPoolRepositoryImpl implements BonusPoolRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void alterNowBonusPoolOrderBonus(Long channelId, Integer amount, boolean isCustomBonus) {
+    public void alterNowBonusPoolOrderBonus(Long channelId, Money amount, boolean isCustomBonus) {
+        // Money → 裸分 long 下传 DAO, 列 BIGINT 分 (SQL 累加/赋值走裸分整数)
+        long cent = amount.getCent();
         if (isCustomBonus) {
-            bonusPoolNowDAO.alterNowBonusPoolCustomBonus(channelId, amount);
+            bonusPoolNowDAO.alterNowBonusPoolCustomBonus(channelId, cent);
         } else {
-            bonusPoolNowDAO.alterNowBonusPoolOrderBonus(channelId, amount);
+            bonusPoolNowDAO.alterNowBonusPoolOrderBonus(channelId, cent);
         }
     }
 

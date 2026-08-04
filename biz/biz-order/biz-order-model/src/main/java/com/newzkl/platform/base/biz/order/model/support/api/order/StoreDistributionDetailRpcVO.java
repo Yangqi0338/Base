@@ -53,8 +53,6 @@ public class StoreDistributionDetailRpcVO implements Serializable {
     private BigDecimal volume;
     /** sku.supply_price */
     private Integer skuSupplyPrice;
-    /** sku.inventory */
-    private Integer inventory;
     /** sku.out_sku_id */
     private String outSkuId;
     /** sku.sale_price_rate */

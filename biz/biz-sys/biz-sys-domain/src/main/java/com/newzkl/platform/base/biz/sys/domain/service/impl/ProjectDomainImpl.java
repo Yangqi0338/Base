@@ -8,10 +8,12 @@ import com.newzkl.platform.base.biz.sys.model.project.req.ProjectSaveReq;
 import com.newzkl.platform.base.biz.sys.model.project.res.ProjectListRes;
 import com.newzkl.platform.base.biz.sys.model.project.res.ProjectRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,18 +49,30 @@ public class ProjectDomainImpl implements ProjectDomain {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long add(ProjectSaveReq req) {
-        return projectRepository.insert(req);
+        Long projectId = projectRepository.insertProject(req);
+        projectRepository.insertProjectVideos(req, projectId);
+        return projectId;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void edit(ProjectSaveReq req) {
-        projectRepository.edit(req);
+        Long id = req.getId();
+        if (!projectRepository.existsProject(id)) {
+            throw new PlatformException(BaseErrorCode.INVALID_UPDATE);
+        }
+        projectRepository.updateProject(req);
+        List<Long> keepVideoIds = projectRepository.saveProjectVideos(req, id);
+        projectRepository.deleteStaleVideos(id, keepVideoIds);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
-        projectRepository.del(id);
+        projectRepository.deleteProject(id);
+        projectRepository.deleteProjectVideos(id);
     }
 
     @Override

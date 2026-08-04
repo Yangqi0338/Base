@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -85,9 +86,9 @@ public class BonusPoolPartakeDO implements Serializable {
     private Integer personPercent;
 
     /**
-     * 个人分红金额
+     * 个人分红金额 (Money, 落库 BIGINT 分)
      */
-    private Integer dividendAmount;
+    private Money dividendAmount;
 
     /**
      * 分红周期
@@ -121,9 +122,9 @@ public class BonusPoolPartakeDO implements Serializable {
     private Integer buyNum;
 
     /**
-     * 录入奖金
+     * 录入奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer bonus;
+    private Money bonus;
 
     /**
      * 录入时间

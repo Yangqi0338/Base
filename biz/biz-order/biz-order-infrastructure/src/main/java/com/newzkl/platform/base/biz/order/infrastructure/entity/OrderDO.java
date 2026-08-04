@@ -1,7 +1,11 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
+import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +16,11 @@ import java.time.LocalDateTime;
  */
 @Data
 public class OrderDO extends BaseDO {
+
+    /**
+     * 交易单号
+     */
+    private String orderNo;
     
     /**
      * 订单类型 : 0 渠道商选品下单, 1 c端铺货下单
@@ -29,8 +38,9 @@ public class OrderDO extends BaseDO {
     private Long operatorId;
     
     private Long channelId;
-    
-    private String shipVO;
+
+    @JsonSerializable
+    private ShipVO shipVO;
     
     private String remark;
     
@@ -96,8 +106,9 @@ public class OrderDO extends BaseDO {
     private Integer payType;
     
     private String orderStateLog;
-    
-    private String orderSnapVO;
+
+    @JsonSerializable
+    private OrderSnapVO orderSnapVO;
     
     private Long storeId;
     

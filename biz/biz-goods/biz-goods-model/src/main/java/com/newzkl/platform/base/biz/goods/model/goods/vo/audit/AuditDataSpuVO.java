@@ -64,8 +64,6 @@ public class AuditDataSpuVO {
      * 建议零售价(to c)
      */
     private Integer unitPrice;
-    /** 库存 */
-    private Integer inventory;
     /**
      * 品牌名称
      */

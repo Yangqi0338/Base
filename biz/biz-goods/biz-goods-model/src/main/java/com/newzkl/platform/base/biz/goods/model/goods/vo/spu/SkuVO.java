@@ -69,14 +69,6 @@ public class SkuVO extends BaseRes {
      */
     private Integer unitPrice;
      /**
-     * 库存
-     */
-     private Integer inventory;
-     /**
-     * 库存预警个数
-     */
-     private Integer inventoryWarning;
-     /**
       * 追加: spu状态
       */
      private Integer spuState;

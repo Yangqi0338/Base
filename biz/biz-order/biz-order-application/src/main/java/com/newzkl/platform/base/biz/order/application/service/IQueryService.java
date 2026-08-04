@@ -5,15 +5,12 @@ package com.newzkl.platform.base.biz.order.application.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
-import com.newzkl.platform.base.biz.order.model.dto.IndexCountRes;
-import com.newzkl.platform.base.biz.order.model.req.OrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author muc_fang
@@ -33,12 +30,6 @@ public interface IQueryService {
      * @return
      */
     Page<SpuOrderAggVO> spuOrderAggVOList(SpuOrderQuery spuOrderQuery);
-    /**
-     * 订单聚合值对象
-     * @param orderId
-     * @return
-     */
-    OrderAggVO orderAggVO(Long orderId);
     /**
      * SPU订单用户关系信息
      *

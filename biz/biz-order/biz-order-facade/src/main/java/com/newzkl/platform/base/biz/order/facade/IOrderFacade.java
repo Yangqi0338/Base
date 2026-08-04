@@ -6,6 +6,7 @@ package com.newzkl.platform.base.biz.order.facade;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
 
@@ -92,4 +93,10 @@ public interface IOrderFacade {
      * 超时关闭订单
      */
     void closeOrder(Long orderId);
+
+    /**
+     * 保存订单状态记录
+     * @param orderStateRecordRPC 订单状态记录RPC传输模型
+     */
+    void save(OrderStateRecordRPC orderStateRecordRPC);
 }

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.res;
 
-import com.newzkl.platform.base.biz.order.model.dto.Refund;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class RefundAuditRes {
      * 通过的SkuOrderID集合
      */
     private List<Long> skuOrderIdList;
-    private Refund refund;
+    private RefundDTO refund;
 
     RefundEnum.State nextState;
 }

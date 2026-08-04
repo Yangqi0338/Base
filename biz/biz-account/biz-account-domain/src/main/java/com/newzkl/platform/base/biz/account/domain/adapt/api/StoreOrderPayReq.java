@@ -22,11 +22,6 @@ public class StoreOrderPayReq implements Serializable {
     private Integer payType;
 
     /**
-     * 兑换码, 支付方式为兑换码时必填
-     */
-    private String cdk;
-
-    /**
      * 下单账号ID
      */
     private Long accountId;

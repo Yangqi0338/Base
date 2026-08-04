@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -13,7 +14,7 @@ public class AmountDistributionReq {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 客户id

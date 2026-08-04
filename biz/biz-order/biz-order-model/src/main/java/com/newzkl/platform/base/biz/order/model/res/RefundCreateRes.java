@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.res;
 
-import com.newzkl.platform.base.biz.order.model.dto.Refund;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -18,5 +18,5 @@ public class RefundCreateRes {
      */
     private List<Long> skuOrderIdList;
 
-    private Refund refund;
+    private RefundDTO refund;
 }

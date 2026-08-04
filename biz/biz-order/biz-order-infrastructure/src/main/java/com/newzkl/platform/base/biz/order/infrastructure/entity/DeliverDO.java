@@ -7,9 +7,12 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 //import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.newzkl.platform.base.biz.order.model.vo.DeliverItemVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author muc_fang
@@ -31,5 +34,6 @@ public class DeliverDO extends BaseDO implements Serializable {
     private String expressNo;
     private String expressMobile;
 
-    private String item;
+    @JsonSerialize
+    private List<DeliverItemVO> item;
 }

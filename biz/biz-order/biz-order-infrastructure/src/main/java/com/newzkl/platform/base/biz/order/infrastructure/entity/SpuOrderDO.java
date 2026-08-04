@@ -1,7 +1,13 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.biz.order.model.vo.SpuOrderExt;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -79,7 +85,9 @@ public class SpuOrderDO extends BaseDO {
      */
     private Integer serviceAmount;
     private Integer orderState;
-    private String shipVO;
+
+    @JsonSerialize
+    private ShipVO shipVO;
     /**
      * 收货人手机号
      */
@@ -95,7 +103,7 @@ public class SpuOrderDO extends BaseDO {
     /**
      * 运费结算发送状态
      */
-    private Integer settleSendState;
+    private CommonEnum.YesOrNo settleSendState;
     private Long storeId;
     private Long memberId;
     /**
@@ -122,7 +130,8 @@ public class SpuOrderDO extends BaseDO {
     /**
      * 订单拓展信息
      */
-    private String spuOrderExt;
+    @JsonSerializable
+    private SpuOrderExt spuOrderExt;
 
     private Integer refund;
 }

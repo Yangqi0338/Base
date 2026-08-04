@@ -1,18 +1,27 @@
 package com.newzkl.platform.base.biz.sys.action.controller;
 
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
+import com.newzkl.platform.base.biz.sys.domain.service.DictItemDomain;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
 import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
+import com.newzkl.platform.base.biz.sys.model.dictitem.req.DictItemReq;
+import com.newzkl.platform.base.biz.sys.model.dictitem.res.DictItemRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 平台-字典控制器
@@ -30,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DictController {
 
     private final DictDomain dictDomain;
+    private final DictItemDomain dictItemDomain;
 
     /**
      * 字典保存
@@ -57,5 +67,39 @@ public class DictController {
     @GetMapping("dict")
     public PlatformResult<DictRes> dict(@RequestParam("id") Long id) {
         return PlatformResult.success(dictDomain.dictVO(id));
+    }
+
+    /**
+     * 字典条目保存
+     *
+     * @param req 条目请求 (id 传则更新, 否则新增)
+     * @return 条目 id
+     */
+    @PostMapping("dictItemSave")
+    public PlatformResult<Long> dictItemSave(@Validated({UpdateCommand.class, Default.class}) @RequestBody DictItemReq req) {
+        return PlatformResult.success(dictItemDomain.itemSave(req));
+    }
+
+    /**
+     * 字典条目列表 (按父字典 id)
+     *
+     * @param dictId 父字典 id
+     * @return 条目列表
+     */
+    @GetMapping("dictItemList")
+    public PlatformResult<List<DictItemRes>> dictItemList(@RequestParam("dictId") Long dictId) {
+        return PlatformResult.success(dictItemDomain.itemList(dictId));
+    }
+
+    /**
+     * 字典条目删除
+     *
+     * @param idList 条目 id 列表
+     * @return 空结果
+     */
+    @PostMapping("dictItemDelete")
+    public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdListCommand idList) {
+        dictItemDomain.itemDelete(idList.getIdList());
+        return PlatformResult.success();
     }
 }

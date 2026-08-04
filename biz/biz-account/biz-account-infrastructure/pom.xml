@@ -40,5 +40,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-redis</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-finance-facade</artifactId>
+        </dependency>
     </dependencies>
 </project>

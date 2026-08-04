@@ -4,10 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -15,19 +12,18 @@ import com.newzkl.platform.base.biz.order.application.service.IOrderService;
 import com.newzkl.platform.base.biz.order.application.service.IQueryService;
 import com.newzkl.platform.base.biz.order.application.service.IRefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.DictApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
-import com.newzkl.platform.base.biz.order.domain.service.RefundOperationRecordUtil;
-import com.newzkl.platform.base.biz.order.model.dto.Refund;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrder;
-import com.newzkl.platform.base.biz.order.model.req.OrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.RefundQuery;
-import com.newzkl.platform.base.biz.order.model.req.SkuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
-import com.newzkl.platform.base.common.core.utils.properties.HttpProxyProperties;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -35,10 +31,8 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEn
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -48,29 +42,25 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder.isDev;
+
 /**
  * @author fang
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class OrderTaskJobHandler {
 
     private final IOrderDomain orderDomain;
     private final IOrderService orderService;
-    @Autowired
-    private IQueryService queryService;
-    @Autowired
-    private HttpProxyProperties httpProxyProperties;
-    @Autowired
-    private DictApi dictApi;
-    @Autowired
-    private IRefundRepository refundRepository;
-    @Autowired
-    private IRefundService refundService;
-    @Autowired
-    private IRefundDomain refundDomain;
-    @Autowired
-    private RefundOperationRecordUtil refundOperationRecordUtil;
+    private final IQueryService queryService;
+    private final DictApi dictApi;
+    private final LocalMessageApi localMessageApi;
+    private final IRefundRepository refundRepository;
+    private final IRefundService refundService;
+    private final IRefundDomain refundDomain;
+
     private static final String SUCCESS = "SUCCESS";
 
     LoadingCache<DictEnum.Key, OrderConfigVO> orderConfig = CacheBuilder.newBuilder()
@@ -84,10 +74,6 @@ public class OrderTaskJobHandler {
                 }
             });
 
-    public OrderTaskJobHandler(IOrderDomain orderDomain, IOrderService orderService) {
-        this.orderDomain = orderDomain;
-        this.orderService = orderService;
-    }
     /**
      * 派发订单
      */
@@ -96,7 +82,7 @@ public class OrderTaskJobHandler {
     public ReturnT<String> orderSend(String param)  {
         Date date = new Date();
         DateTime offsetDate = null;
-        if(BooleanUtil.isTrue(httpProxyProperties.getIsTest())){
+        if(isDev()){
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -1);
         }else {
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -15);
@@ -105,7 +91,7 @@ public class OrderTaskJobHandler {
         //取出超过*分钟, 并且处于派发中的订单
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOrderState(OrderEnum.State.SENDING);
-        orderQuery.setLessCreateTime(offsetLocalDate);
+        orderQuery.setCreateStartTime(offsetLocalDate);
         List<Long> orderIdList = queryService.orderIdList(orderQuery);
         orderDomain.sendOrder(orderIdList);
         log.info("自动派发订单");
@@ -119,7 +105,7 @@ public class OrderTaskJobHandler {
     public ReturnT<String> orderReceive(String param) throws ExecutionException {
         Date date = new Date();
         DateTime offsetDate = null;
-        if(BooleanUtil.isTrue(httpProxyProperties.getIsTest())){
+        if(isDev()){
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -7);
         }else {
             Integer autoReceive = orderConfig.get(DictEnum.Key.ORDER_CONFIG).getAutoReceive();
@@ -150,7 +136,7 @@ public class OrderTaskJobHandler {
     public ReturnT<String> orderComplete(String param) throws ExecutionException {
         Date date = new Date();
         DateTime offsetDate = null;
-        if(BooleanUtil.isTrue(httpProxyProperties.getIsTest())){
+        if(isDev()){
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -7);
         }else {
             Integer notRefund = orderConfig.get(DictEnum.Key.ORDER_CONFIG).getNotRefund();
@@ -183,17 +169,17 @@ public class OrderTaskJobHandler {
     @XxlJob("channelCancelOrder")
     public ReturnT<String> channelCancelOrder(String param){
         LocalDateTime oneDayAgo;
-        if(BooleanUtil.isTrue(httpProxyProperties.getIsTest())){//测试环境7分钟
+        if(isDev()){//测试环境7分钟
             oneDayAgo = LocalDateTime.now().minusMinutes(7);
         }else {//生产环境5天
             oneDayAgo = LocalDateTime.now().minusDays(5);
         }
-        List<SpuOrder> spuOrders = orderDomain.listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State.CHANNEL_WAIT_PAY, oneDayAgo);
+        List<SpuOrderDTO> spuOrders = orderDomain.listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State.CHANNEL_WAIT_PAY, oneDayAgo);
         if (CollUtil.isEmpty(spuOrders)){
             log.info("渠道商没有待付款且超时的订单");
             return new ReturnT<>(SUCCESS);
         }
-        for (SpuOrder spuOrder : spuOrders) {
+        for (SpuOrderDTO spuOrder : spuOrders) {
             orderDomain.channelCancelOrder(spuOrder.getId(),"渠道商采购金不足，超时未支付订单关闭！");
         }
         return new ReturnT<>(SUCCESS);
@@ -207,7 +193,7 @@ public class OrderTaskJobHandler {
     public ReturnT<String> refundAgree(String param) throws ExecutionException {
         Date date = new Date();
         DateTime offsetDate = null;
-        if(BooleanUtil.isTrue(httpProxyProperties.getIsTest())){
+        if(isDev()){
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -7);
         }else {
             Integer notRefund = orderConfig.get(DictEnum.Key.ORDER_CONFIG).getNotRefund();
@@ -221,15 +207,15 @@ public class OrderTaskJobHandler {
                 RefundEnum.State.SUPPLIER_WAIT,
                 RefundEnum.State.RECEIVE_WAIT));
         refundQuery.setStateTimeLess(offsetLocalDate);
-        List<Refund> refundVOList = refundRepository.refundVOListForAutoAgree(refundQuery);
-        for (Refund refundVO : refundVOList) {
+        List<RefundDTO> refundVOList = refundRepository.page(refundQuery).getRecords();
+        for (RefundDTO refundVO : refundVOList) {
             if(RefundEnum.State.CHANNEL_WAIT == refundVO.getRefundState()){
                 refundService.channelAudit(refundVO.getId(),null , CommonEnum.YesOrNo.YES, "系统自动审核", true);
             }else if(RefundEnum.State.SUPPLIER_WAIT == refundVO.getRefundState()){
                 refundService.supplierAudit(refundVO.getId(), CommonEnum.YesOrNo.YES, true);
             }else if(RefundEnum.State.RECEIVE_WAIT == refundVO.getRefundState()){
                 refundDomain.confirmRefundFreight(refundVO.getId());
-                refundOperationRecordUtil.sendRefundOperationRecord(refundVO, RefundEnum.State.RECEIVE_WAIT, refundVO.getRefundState(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT.getDesc(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
+                localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.RECEIVE_WAIT, RefundEnum.State.RECEIVE_WAIT, RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
             }
         }
         log.info("自动售后同意");
@@ -246,7 +232,7 @@ public class OrderTaskJobHandler {
     public ReturnT<String> refundOrderClose(String param) throws ExecutionException {
         Date date = new Date();
         DateTime offsetDate = null;
-        if(BooleanUtil.isTrue(httpProxyProperties.getIsTest())){
+        if(isDev()){
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -7);
         }else {
             Integer notRefund = orderConfig.get(DictEnum.Key.ORDER_CONFIG).getAutoAgreeRefund();
@@ -257,9 +243,9 @@ public class OrderTaskJobHandler {
         RefundQuery refundQuery = new RefundQuery();
         refundQuery.setRefundStateList(Arrays.asList(RefundEnum.State.REFUSE,RefundEnum.State.FREIGHT_WAIT));
         refundQuery.setStateTimeLess(offsetLocalDate);
-        List<Refund> refundVOList = refundRepository.refundVOListForAutoAgree(refundQuery);
-        for (Refund refundVO : refundVOList) {
-            Refund refundEdit = new Refund();
+        List<RefundDTO> refundVOList = refundRepository.page(refundQuery).getRecords();
+        for (RefundDTO refundVO : refundVOList) {
+            RefundDTO refundEdit = new RefundDTO();
             FreightExt freightExt =refundVO.getFreightExt();
             if (Objects.isNull(freightExt)){
                 freightExt = new FreightExt();
@@ -267,8 +253,8 @@ public class OrderTaskJobHandler {
             freightExt.setCloseReason("超时系统自动关闭");
             refundEdit.setFreightExt(freightExt);
             refundRepository.updateState(refundEdit, refundVO.getId(), refundVO.getOrderType(), refundVO.getRefundState(), RefundEnum.State.CLOSE, refundVO.getChannelId());
-            refundRepository.skuOrderEditForRefundClose(refundVO.getSpuOrderId(), refundVO.getItem());
-            refundOperationRecordUtil.sendRefundOperationRecord(refundVO, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.BUYER_TIMEOUT_CLOSE.getDesc(), RefundOperateTypeEnum.BUYER_TIMEOUT_CLOSE);
+            refundDomain.skuOrderEditForRefundClose(refundVO.getSpuOrderId(), refundVO.getItem());
+            localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.BUYER_TIMEOUT_CLOSE);
             log.info("当前售后单（商家拒绝）超时自动关闭：{}",refundVO.getId());
         }
 

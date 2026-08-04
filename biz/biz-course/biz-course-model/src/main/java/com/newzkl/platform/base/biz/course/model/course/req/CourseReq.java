@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.course.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -52,14 +53,14 @@ public class CourseReq extends BaseReq {
     private Long categoryId;
 
     /**
-     * 原价, 单位元, 落库转为分
+     * 原价 (Money; JSON 入参数字/字符串按元反序列化)
      */
-    private Double originalPrice;
+    private Money originalPrice;
 
     /**
-     * 售价, 单位元, 落库转为分
+     * 售价 (Money; JSON 入参数字/字符串按元反序列化)
      */
-    private Double sellPrice;
+    private Money sellPrice;
 
     /**
      * 虚拟购买次数

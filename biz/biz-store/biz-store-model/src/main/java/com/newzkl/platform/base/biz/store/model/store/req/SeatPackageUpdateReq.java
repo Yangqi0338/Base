@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,9 +28,9 @@ public class SeatPackageUpdateReq implements Serializable {
     private Integer seatNum;
 
     /**
-     * 套餐价格
+     * 套餐价格 (Money, 落库 BIGINT 分)
      */
-    private Integer packagePrice;
+    private Money packagePrice;
 
     /**
      * 描述

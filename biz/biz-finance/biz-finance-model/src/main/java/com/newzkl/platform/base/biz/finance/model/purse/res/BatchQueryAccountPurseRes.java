@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -18,10 +19,10 @@ public class BatchQueryAccountPurseRes {
     /**
      * 累计收益
      */
-    private Integer totalEarnings;
+    private Money totalEarnings;
 
     /**
      * 可用收益
      */
-    private Integer earnings;
+    private Money earnings;
 }

@@ -2,11 +2,12 @@ package com.newzkl.platform.base.biz.order.action.task;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountSupplierApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.BalancePayApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
 import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
-import com.newzkl.platform.base.biz.order.model.req.SettleGoodsQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
+import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;
 import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 public class SettleTaskJobHandler {
 
 
-    private final AccountSupplierApi supplierFacade;
+    private final SupplierApi supplierApi;
     private final ISettleDomain settleDomain;
     private final SettleTaskJobHandlerInner inner;
     private final ISettleRepository settleRepository;
@@ -87,7 +88,7 @@ public class SettleTaskJobHandler {
         for (Long supplierId : settleGoodsVOMap.keySet()) {
             List<SettleGoodsVO> supplierSettleGoodsVOList = settleGoodsVOMap.get(supplierId);
             //查询结算配置
-            SupplierOutVO supplierVO = supplierFacade.getSupplierVO(supplierId);
+            SupplierOutVO supplierVO = supplierApi.getSupplierVO(supplierId);
             SettlementConfigOutVO settlementConfigRpcVO = null;
             try{
                 settlementConfigRpcVO = JSONObject.parseObject(supplierVO.getPeriodSetConfig(), SettlementConfigOutVO.class);
@@ -109,7 +110,7 @@ public class SettleTaskJobHandler {
     @Component
     public static class SettleTaskJobHandlerInner{
         @DubboReference
-        private IBalancePayApi balancePayApi;
+        private BalancePayApi balancePayApi;
         private final ISettleDomain settleDomain;
 
         public SettleTaskJobHandlerInner(ISettleDomain settleDomain) {
@@ -132,7 +133,6 @@ public class SettleTaskJobHandler {
             }
         }
 
-        @GlobalTransactional(rollbackFor = Exception.class)
         public void executeSettle2(Long supplierId, List<SettleOrderWaitVO> settleOrderWaitVOList, LocalDateTime settleTime) {
             //执行结算
             ExecuteSettleRes executeSettleRes = settleDomain.executeSettle2(supplierId, settleOrderWaitVOList, settleTime);

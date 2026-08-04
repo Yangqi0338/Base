@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -43,5 +44,5 @@ public class GoodsInfoVO {
     /**
      * 商品金额
      */
-    private Integer amount;
+    private Money amount;
 }

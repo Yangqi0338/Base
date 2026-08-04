@@ -57,6 +57,7 @@ public class BonusPoolDeployImpl implements BonusPoolDeploy {
         // 保存活动策略配置
         StrategyVO strategy = configRich.getStrategy();
         Long strategyId = activityRepository.addActivityStrategy(strategy);
+        activityRepository.saveStrategyDetails(strategy == null ? null : strategy.getStrategyDetails());
 
         ActivityOtherConfigVO activityOtherConfig = configRich.getActivityOtherConfig();
         Long otherConfigId = activityRepository.addActivityOtherConfig(activityOtherConfig);

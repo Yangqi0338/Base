@@ -219,6 +219,13 @@ public class RoleEnum {
         ;
         private Integer code;
         private String value;
+
+        public static OrderType getByCode(Integer code) {
+            return Stream.of(OrderType.values())
+                    .filter(it -> it.getCode().equals(code))
+                    .findFirst()
+                    .orElse(null);
+        }
     }
 
     /**

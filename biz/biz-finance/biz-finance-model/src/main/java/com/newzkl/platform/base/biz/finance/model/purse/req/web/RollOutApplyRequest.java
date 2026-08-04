@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req.web;
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
@@ -24,6 +25,6 @@ public class RollOutApplyRequest {
      */
     @NotNull(message = "转出金额不能为空")
     @Positive(message = "转出金额必须为正数")
-    private Integer amount;
+    private Money amount;
 
 }

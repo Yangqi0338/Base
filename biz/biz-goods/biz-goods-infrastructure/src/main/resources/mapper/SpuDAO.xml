@@ -2,18 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SpuDAO">
 
-    <!-- 扣减 SPU 冗余库存 (迁移自 new-scm SpuDAO.xml 的 cutInventory) -->
-    <update id="cutInventory">
-        update spu set inventory = inventory - #{count,jdbcType=INTEGER}
-        where id = (select spu_id from sku where id = #{skuId,jdbcType=BIGINT}) and inventory &gt;= #{count,jdbcType=INTEGER}
-    </update>
-
-    <!-- 回补 SPU 冗余库存 (迁移自 new-scm SpuDAO.xml 的 addInventory) -->
-    <update id="addInventory">
-        update spu set inventory = inventory + #{count,jdbcType=INTEGER}
-        where id = (select spu_id from sku where id = #{skuId,jdbcType=BIGINT})
-    </update>
-
     <!-- 按分类分组统计 SPU 数 (迁移自 new-scm SpuDAO.xml 的 countSpuByCategory) -->
     <select id="countSpuByCategory"
             resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO">

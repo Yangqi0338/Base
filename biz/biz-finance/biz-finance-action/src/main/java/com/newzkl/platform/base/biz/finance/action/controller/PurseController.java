@@ -4,13 +4,19 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
+import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
+import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BatchAccountPurseQuery;
+import com.newzkl.platform.base.biz.finance.model.purse.req.SupplierPurchaseGoodsSeatReq;
+import com.newzkl.platform.base.biz.finance.model.purse.req.ChannelPurchaseGoodsSeatReq;
+import com.newzkl.platform.base.biz.finance.application.pay.service.GoodsSeatChannelService;
+import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.PayBaseResult;
 import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPurseRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleDataRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordExportVO;
@@ -62,6 +68,8 @@ public class PurseController {
     private final AccountPurseDomain accountPurseDomain;
     private final TripartitePurseDomain tripartitePurseDomain;
     private final WithdrawDomain withdrawDomain;
+    private final GoodsSeatDomain goodsSeatDomain;
+    private final GoodsSeatChannelService goodsSeatChannelService;
 
     /**
      * 查询客户账户
@@ -186,7 +194,8 @@ public class PurseController {
                 (c, v) -> {
                     // 席位变动带符号: 进账为正, 其余为负
                     int sign = EarningsEnum.PurseAlterTypeEnum.IN == c.getEarningAlterType() ? 1 : -1;
-                    v.setAmount(String.valueOf(c.getAmount() * sign));
+                    // 席位数存于 Money 分位, getCent() 取回席位数, 带符号
+                    v.setAmount(String.valueOf(c.getAmount().getCent() * sign));
                     v.setAlterType(alterTypeInfo(c.getAlterType()));
                     v.setRemark(c.getRemark());
                 });
@@ -219,7 +228,8 @@ public class PurseController {
                 AccountPurseAlterRecordExportVO::new,
                 (c, v) -> {
                     v.setAlterType(alterTypeInfo(c.getAlterType()));
-                    v.setAmount(NumberUtil.div(BigDecimal.valueOf(c.getAmount()), HUNDRED, 2).toString());
+                    // amount 已 Money, getAmount()=元 BigDecimal, 取代 分/100
+                    v.setAmount(c.getAmount().getAmount().toPlainString());
                     v.setRemark(c.getRemark());
                 });
     }
@@ -246,9 +256,93 @@ public class PurseController {
         return Opt.ofNullable(alterType).map(PurseEnum.PurseAlterType::getInfo).orElse("");
     }
 
-    // TODO[service-gap]: 源 /queryChannelRollOutRecords 未迁 — AccountPurseDomain 无 queryChannelRollOutRecords, 待补 domain 方法后 wire。
-    // TODO[service-gap]: 源 /supplierPurchaseGoodsSeat /channelPurchaseGoodsSeat /platformGiftGoodsSeat 未迁 —
-    //   旧实现走 IBalancePayApi (余额支付), Base 无对应 port; 现有 PurchaseRecordService.seatPackageSaveOrUpdate
-    //   入参口径 (PurchaseRecordReq) 与源三方法 (SupplierPurchaseGoodsSeatReq/ChannelPurchaseGoodsSeatReq) 不等价,
-    //   涉及资金扣减, 不做推测性接线。
+    /**
+     * 查询三方账户分页列表
+     *
+     * <p>出参契约: 旧接口返 PageHelper 的 {@code PageInfo}, 本仓按
+     * {@code rules/Architecture.md} 改为直返 {@code List}, 前端需把 {@code res.data.list}
+     * 改成 {@code res.data} 取列表</p>
+     *
+     * @param query 三方账户查询
+     * @return 三方账户列表
+     */
+    @PostMapping("/queryTripartitePursePage")
+    public PlatformResult<List<AccountTripartitePurseVO>> queryTripartitePursePage(@RequestBody AccountTripartitePurseQuery query) {
+        return PlatformResult.success(tripartitePurseDomain.queryPageAccountTripartitePurse(query));
+    }
+
+    /**
+     * 查询动账明细
+     *
+     * <p>与 {@code /queryAccountPurseAlterRecords} 同源同实现, 差异仅在未传 accountId
+     * 时本端点额外按登录角色收敛 accountType (走 {@link #fillAccountScope})</p>
+     *
+     * @param req 变动记录查询
+     * @return 变动记录分页
+     */
+    @PostMapping("/accountMovementDetails")
+    public PlatformResult<Page<AccountPurseAlterRecordVO>> accountMovementDetails(@RequestBody AccountPurseAlterRecordQuery req) {
+        fillAccountScope(req);
+        return PlatformResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
+    }
+
+    /**
+     * 查询渠道商提现记录
+     *
+     * <p>变动记录与提现申请(审核中)的 union all 分页, 未传 accountId 时按登录角色收敛</p>
+     *
+     * @param req 变动记录查询
+     * @return 提现记录分页
+     */
+    @PostMapping("/queryChannelRollOutRecords")
+    public PlatformResult<Page<AccountPurseAlterRecordVO>> queryChannelRollOutRecords(@RequestBody AccountPurseAlterRecordQuery req) {
+        fillAccountScope(req);
+        return PlatformResult.success(accountPurseDomain.queryChannelRollOutRecords(req));
+    }
+
+    /**
+     * 供应商采购商品位
+     *
+     * <p>扣供应商营销金(数量×单席费), 扣减成功后增加同额商品位额度</p>
+     *
+     * @param req 采购入参
+     * @return 扣减成功返回 true, 余额不足返回 false
+     */
+    @PostMapping("/supplierPurchaseGoodsSeat")
+    public PlatformResult<Boolean> supplierPurchaseGoodsSeat(@RequestBody SupplierPurchaseGoodsSeatReq req) {
+        return PlatformResult.success(goodsSeatDomain.supplierPurchaseGoodsSeat(req));
+    }
+
+    /**
+     * 平台赠送商品位
+     *
+     * <p>直接增加供应商商品位额度, 不扣任何余额</p>
+     *
+     * @param req 赠送入参
+     * @return 空结果
+     */
+    @PostMapping("/platformGiftGoodsSeat")
+    public PlatformResult<Void> platformGiftGoodsSeat(@RequestBody SupplierPurchaseGoodsSeatReq req) {
+        goodsSeatDomain.platformGiftGoodsSeat(req);
+        return PlatformResult.success();
+    }
+
+    /**
+     * 渠道商购买商品位
+     *
+     * <p>选定套餐 (seatPackageId 非 0) 时按套餐数量与价格购买, 否则走自定义数量 (读渠道配置校验最小量与单价)。
+     * 采购金支付即时结算, 微信/支付宝返回汇付拉起结果并落待付款记录。channelId 取当前登录账号</p>
+     *
+     * <p>出参契约: 旧接口返 {@code PayBaseResult} 多态 —— 采购金分支为 {@code BalancePayResult}
+     * ({@code payState}/{@code operatorPayState}), 三方分支为 {@code HuiFuPayRes}
+     * ({@code tradeNo}/{@code qrCode} 等), 前端按支付方式取对应字段</p>
+     *
+     * @param req 购买入参
+     * @return 支付结果
+     */
+    @PostMapping("/channelPurchaseGoodsSeat")
+    public PlatformResult<PayBaseResult> channelPurchaseGoodsSeat(@RequestBody ChannelPurchaseGoodsSeatReq req) {
+        req.setChannelId(SecurityUtils.getAccountId());
+        return PlatformResult.success(goodsSeatChannelService.channelPurchaseGoodsSeat(req));
+    }
 }

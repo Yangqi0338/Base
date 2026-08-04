@@ -31,6 +31,7 @@ import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreRepository;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepository;
 import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDataDTO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -167,7 +168,7 @@ public class ModelShopDomainImpl implements ModelShopDomain {
             } else {
                 // 没有订单数据的门店设置为0
                 item.setTotalPayNum(0);
-                item.setTotalPayAmount(0);
+                item.setTotalPayAmount(Money.ZERO);
             }
         });
 
@@ -324,8 +325,9 @@ public class ModelShopDomainImpl implements ModelShopDomain {
             dto.setModelShopId(store.getModelShopId());
             //修改数据
             modelShopRepository.updateModelShopData(dto);
-            //生成记录
-            modelShopOrderRecordRepository.create(TransferUtils.transfer(dto, ModelShopOrderRecord::new));
+            //生成记录 (dto.amount 为分 Integer, 显式 Money.of 升 Money, 避免 TransferUtils 按元误换算)
+            modelShopOrderRecordRepository.create(TransferUtils.transfer(dto, ModelShopOrderRecord::new,
+                    (c, v) -> v.setAmount(Money.of(c.getAmount()))));
         }
     }
 

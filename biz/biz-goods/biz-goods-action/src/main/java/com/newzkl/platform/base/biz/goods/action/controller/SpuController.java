@@ -11,7 +11,6 @@ import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
-import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.GoldVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.MarketSimpleSpuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
@@ -242,18 +241,6 @@ public class SpuController {
     }
 
     /**
-     * SKU 库存操作
-     *
-     * @param stockExecuteReq 库存操作请求列表
-     * @return 空结果
-     */
-    @PostMapping("stockExecute")
-    public PlatformResult<Void> stockExecute(@RequestBody List<StockExecuteReq> stockExecuteReq) {
-        spuDomain.stockExecute(stockExecuteReq);
-        return PlatformResult.success();
-    }
-
-    /**
      * 获取黄金实时价格
      *
      * @return 黄金实时价格
@@ -353,6 +340,27 @@ public class SpuController {
         return spuDomain.querySpuPage(spuQuery);
     }
 
+    /**
+     * 查询供应商下所有商品 (供应商审核通过)
+     *
+     * <p>迁移自 new-scm {@code SpuController.querySupplierSpuPage}: 仅运营商角色可调, 否则抛
+     * {@code NOT_SERVICE}; 编排走 {@code SpuService#operatorSpuPage} (跨域取运营商可见供应商后分页)。</p>
+     *
+     * <p>⚠️ 出参契约: 旧接口返 PageHelper 的 {@code PageInfo}, 本仓按 {@code rules/Architecture.md}
+     * 改为 MyBatis-Plus {@code Page} ({@code records}/{@code total}/{@code current}/{@code size})。</p>
+     *
+     * @param spuQuery 商品查询 (type 为必填运营类型)
+     * @return 商品分页
+     */
+    @PostMapping("querySupplierSpuPage")
+    public PlatformResult<Page<SpuVO>> querySupplierSpuPage(@RequestBody SpuQuery spuQuery) {
+        Long role = SecurityUtils.getRoleId();
+        if (!RoleEnum.CompanyRole.OPERATOR.getCode().equals(role)) {
+            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
+        }
+        return PlatformResult.success(spuService.operatorSpuPage(spuQuery));
+    }
+
     // TODO[service-gap]: 以下源端点未迁, 依赖 Base 侧尚不存在的能力, 待补齐后按原契约恢复:
     // 1. spuSubmit (POST spuSubmit)            → SpuService#supplierSpuSubmit 当前抛 UnsupportedOperationException,
     //    缺商品位扣减与审批提交端口
@@ -361,7 +369,5 @@ public class SpuController {
     // 3. palletSpuPage (POST /palletSpuPage)   → 源走会订货外部接口 HuiDingHuoApiUtils#batchGetProducts, Base 无该外部链路
     // 4. palletSpu (POST /palletSpu)           → 源走会订货外部接口 HuiDingHuoApiUtils#getProductById, Base 无该外部链路
     // 5. spuPageVOListInMarket (POST spuPageVOListInMarket) → 依赖 biz-market 的 IMarketFacade 跨域调用, 无对等 port
-    // 6. querySupplierSpuPage (POST querySupplierSpuPage) → 需 biz-account 的 OperatorFacade#supplierIdListByType,
-    //    biz-goods 各模块 pom 未声明 biz-account-facade 依赖, 补依赖需改 pom
-    // 7. spuUpload (POST spuUpload)            → 依赖 SpuImportService/QiConfigProperties Excel 导入链路, 未迁
+    // 6. spuUpload (POST spuUpload)            → 依赖 SpuImportService/QiConfigProperties Excel 导入链路, 未迁
 }

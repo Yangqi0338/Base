@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.activity.model.event.req.*;
 import com.newzkl.platform.base.biz.activity.model.event.res.HistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 
 import java.util.List;
 
@@ -42,10 +43,10 @@ public interface BonusPoolRepository {
     /**
      * 更新当前奖金池奖金
      * @param channelId 渠道商id
-     * @param amount 更新金额
+     * @param amount 更新金额 (Money)
      * @param isCustomBonus 是否自定义金额
      */
-    void alterNowBonusPoolOrderBonus(Long channelId, Integer amount, boolean isCustomBonus);
+    void alterNowBonusPoolOrderBonus(Long channelId, Money amount, boolean isCustomBonus);
 
 
     /**

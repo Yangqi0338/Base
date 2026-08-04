@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.course.infrastructure.adapt.repository;
 
-import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
 import com.newzkl.platform.base.biz.course.infrastructure.convert.CourseUnitConverter;
@@ -32,20 +31,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseRepositoryImpl implements CourseRepository {
 
-    /**
-     * 价格字段名, 同名异型(元 Double / 分 Long), 排除 Hutool 自动拷贝
-     */
-    private static final String[] PRICE_PROPS = {"originalPrice", "sellPrice"};
-
     private final CourseDAO courseDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long saveBase(CourseReq req) {
-        CopyOptions opts = CopyOptions.create().setIgnoreProperties(PRICE_PROPS);
-        CourseDO courseDO = TransferUtils.transfer(req, CourseDO::new, opts);
-        courseDO.setOriginalPrice(CourseUnitConverter.yuanToFen(req.getOriginalPrice()));
-        courseDO.setSellPrice(CourseUnitConverter.yuanToFen(req.getSellPrice()));
+        // 价格已 Money↔Money 同名同型, TransferUtils 直拷, 无需排除+手工换算
+        CourseDO courseDO = TransferUtils.transfer(req, CourseDO::new);
         courseDAO.insertOrUpdate(courseDO);
         return courseDO.getId();
     }
@@ -157,10 +149,8 @@ public class CourseRepositoryImpl implements CourseRepository {
         if (courseDO == null) {
             return null;
         }
-        CopyOptions opts = CopyOptions.create().setIgnoreProperties(PRICE_PROPS);
-        CourseRes res = TransferUtils.transfer(courseDO, CourseRes::new, opts);
-        res.setOriginalPrice(CourseUnitConverter.fenToYuan(courseDO.getOriginalPrice()));
-        res.setSellPrice(CourseUnitConverter.fenToYuan(courseDO.getSellPrice()));
+        // 价格 Money→Money 直拷; 仅时长(百分秒→秒)仍需换算
+        CourseRes res = TransferUtils.transfer(courseDO, CourseRes::new);
         res.setTotalDurationSeconds(CourseUnitConverter.centisecondToSeconds(courseDO.getTotalDurationCentisecond()));
         res.setIsEnabledDesc(toEnabledDesc(courseDO.getIsEnabled()));
         return res;

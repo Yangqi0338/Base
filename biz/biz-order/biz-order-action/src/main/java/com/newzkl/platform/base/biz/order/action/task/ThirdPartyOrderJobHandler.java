@@ -3,23 +3,19 @@ package com.newzkl.platform.base.biz.order.action.task;
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ThirdPartyOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.service.CompensationStrategyFactory;
-import com.newzkl.platform.base.biz.order.domain.service.Compensator;
-import com.newzkl.platform.base.biz.order.domain.service.hdh.huidinghuo.HuiDingHuoApiUtils;
-import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRequest;
-import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
+import com.newzkl.platform.base.biz.order.domain.spi.ThirdPartyOrderProcessor;
+import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
+import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.common.core.utils.common.FeiShuMessageSendUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,19 +23,17 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author sijiwang 三方订单数据补偿任务
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ThirdPartyOrderJobHandler {
-    
-    @Autowired
-    private ThirdPartyOrderRepository thirdPartyOrderRepository;
-    private IOrderRepository orderRepository;
+
+    private final ThirdPartyOrderRepository thirdPartyOrderRepository;
+    private final IOrderRepository orderRepository;
 
     @Value("${feishu.bot.huiDingHuo.webhook:https://open.feishu.cn/open-apis/bot/v2/hook/f1cc7bc3-3f2f-48a0-8357-1e0b9b8d0a50}")
     private String webhook;
@@ -51,7 +45,7 @@ public class ThirdPartyOrderJobHandler {
         log.info("XXL Job任务[createOrder]开始执行，参数：{}", param);
         try {
             // 1. 查询需要补偿的失败订单
-            List<ThirdPartyOrderRequest> compensationList =
+            List<ThirdPartyOrderRecordDTO> compensationList =
                     thirdPartyOrderRepository.findByStatusAndNextRetryTimeBefore(PlatformTypeEnum.HUI_DING_HUO,
                     CommonEnum.RequestStatusEnum.FAILED,
                     HuiDingHuoApiUtils.ORDER_CREATE_URL);
@@ -63,29 +57,28 @@ public class ThirdPartyOrderJobHandler {
             }
             
             // 2. 遍历处理每个订单
-            for (ThirdPartyOrderRequest request : compensationList) {
+            for (ThirdPartyOrderRecordDTO request : compensationList) {
                 String bizOrderNo = request.getBizOrderNo();
                 log.info("开始处理订单补偿，业务订单号：{}", bizOrderNo);
                 
                 try {
                     // 查询订单状态
-                    OrderVO orderDO = orderRepository.(Long.valueOf(bizOrderNo));
-                    if (orderDO == null) {
+                    OrderDTO orderDTO = orderRepository.order(Long.valueOf(bizOrderNo));
+                    if (orderDTO == null) {
                         log.warn("订单不存在，跳过补偿，业务订单号：{}", bizOrderNo);
                         continue;
                     }
-                    
+
                     // 判断是否需要补偿
-                    if (orderDO.getOrderState() == OrderEnum.State.WAIT_DELIVERY) {
-                        log.info("订单状态为待发货，执行补偿逻辑，业务订单号：{}，订单状态：{}", bizOrderNo, orderDO.getOrderState());
-                        Compensator strategy = CompensationStrategyFactory.getStrategy(PlatformTypeEnum.HUI_DING_HUO);
-                        strategy.executeCompensation(request);
+                    if (orderDTO.getOrderState() == OrderEnum.State.WAIT_DELIVERY) {
+                        log.info("订单状态为待发货，执行补偿逻辑，业务订单号：{}，订单状态：{}", bizOrderNo, orderDTO.getOrderState());
+                        ThirdPartyOrderProcessor.find().compensation(request);
                         log.info("订单补偿逻辑执行完成，业务订单号：{}", bizOrderNo);
                     }
                     else {
-                        log.info("订单状态非待发货，标记为成功，业务订单号：{}，当前订单状态：{}", bizOrderNo, orderDO.getOrderState());
+                        log.info("订单状态非待发货，标记为成功，业务订单号：{}，当前订单状态：{}", bizOrderNo, orderDTO.getOrderState());
                         request.setRequestStatus(CommonEnum.RequestStatusEnum.SUCCESS);
-                        thirdPartyOrderRepository.save(request);
+                        thirdPartyOrderRepository.saveRecord(request);
                     }
                 }
                 catch (Exception e) {
@@ -129,7 +122,7 @@ public class ThirdPartyOrderJobHandler {
         
         try {
             // 1. 查询该平台的失败订单列表
-            List<ThirdPartyOrderRequest> failedOrders =
+            List<ThirdPartyOrderRecordDTO> failedOrders =
                     thirdPartyOrderRepository.findByStatusAndNextRetryTimeBefore(platformType, CommonEnum.RequestStatusEnum.FAILED, apiUrl);
             log.info("[{}]平台获取到失败订单总数：{}", platformName, failedOrders.size());
             
@@ -142,7 +135,7 @@ public class ThirdPartyOrderJobHandler {
             LocalDate yesterday = LocalDate.now().minusDays(1);
             LocalDateTime yesterdayStart = yesterday.atStartOfDay();
             LocalDateTime yesterdayEnd = yesterday.plusDays(1).atStartOfDay().minusNanos(1);
-            List<ThirdPartyOrderRequest> yesterdayFailedOrders = failedOrders.stream().filter(request -> {
+            List<ThirdPartyOrderRecordDTO> yesterdayFailedOrders = failedOrders.stream().filter(request -> {
                 LocalDateTime createdAt = request.getCreatedAt();
                 if (createdAt == null) {
                     log.warn("[{}]平台订单创建时间为空，跳过统计，业务订单号：{}", platformName, request.getBizOrderNo());

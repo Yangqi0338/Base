@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -35,6 +36,6 @@ public class OrderPayeeInfoVO {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
 }

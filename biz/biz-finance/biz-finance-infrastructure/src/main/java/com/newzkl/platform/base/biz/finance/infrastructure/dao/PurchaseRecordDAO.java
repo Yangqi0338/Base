@@ -1,9 +1,11 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.dao;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.finance.infrastructure.entity.PurchaseRecordDO;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 
 /**
  * 购买记录 (purchase_record)表数据库访问层
@@ -23,7 +25,15 @@ public interface PurchaseRecordDAO extends BaseMapper<PurchaseRecordDO> {
         ew.notNullEq(PurchaseRecordDO::getAccountId, query.getAccountId());
         ew.notEmptyLike(PurchaseRecordDO::getAccountName, query.getAccountName());
         ew.notNullEq(PurchaseRecordDO::getPayAmount, query.getPayAmount());
-        ew.between(PurchaseRecordDO::getGoodsAmount, query.getGoodsAmountRange());
+        // goodsAmount 已迁 Money, betweenDate 仅收 Temporal; range 为元字符串, 转 Money 边界走 doBetween
+        String[] goodsAmountRange = query.getGoodsAmountRange();
+        if (goodsAmountRange != null && goodsAmountRange.length > 0) {
+            String startStr = goodsAmountRange[0];
+            String endStr = goodsAmountRange[goodsAmountRange.length - 1];
+            Money start = StrUtil.isBlank(startStr) ? null : Money.of(startStr);
+            Money end = StrUtil.isBlank(endStr) ? null : Money.of(endStr);
+            ew.doBetween(PurchaseRecordDO::getGoodsAmount, start, end);
+        }
         ew.notNullEq(PurchaseRecordDO::getPayType, query.getPayMode());
         ew.notNullEq(PurchaseRecordDO::getPayState, query.getPayState());
         ew.notEmptyLike(PurchaseRecordDO::getTripartiteTradeNo, query.getTripartiteTradeNo());

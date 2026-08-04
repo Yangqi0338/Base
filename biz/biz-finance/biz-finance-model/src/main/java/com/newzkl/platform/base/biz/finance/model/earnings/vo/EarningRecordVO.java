@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class EarningRecordVO extends BaseRes {
     /**
      * 分润金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 客户id

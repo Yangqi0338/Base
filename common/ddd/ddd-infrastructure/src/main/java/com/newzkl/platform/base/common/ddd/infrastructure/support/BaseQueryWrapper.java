@@ -370,7 +370,7 @@ public class BaseQueryWrapper<T> extends QueryWrapper<T> {
 
     public BaseQueryWrapper<T> select(Class<?> clazz) {
         Class<T> entityClass = getEntityClass();
-        if (entityClass == null) return this;
+        if (entityClass == null || entityClass.isAssignableFrom(clazz)) return this;
         Map<String, ColumnCache> columnMap = LambdaUtils.getColumnMap(entityClass);
 
         List<String> fieldList = Arrays.stream(ReflectUtil.getFields(clazz))

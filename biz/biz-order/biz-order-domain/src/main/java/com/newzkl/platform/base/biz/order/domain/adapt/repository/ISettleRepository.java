@@ -5,9 +5,12 @@ package com.newzkl.platform.base.biz.order.domain.adapt.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.model.dto.SettleGoods;
 import com.newzkl.platform.base.biz.order.model.dto.SettleOrderWait;
-import com.newzkl.platform.base.biz.order.model.dto.SettleRecord;
 import com.newzkl.platform.base.biz.order.model.dto.SettleRecordAgg;
+import com.newzkl.platform.base.biz.order.model.dto.SettleRecordItemDTO;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 
 import java.time.LocalDateTime;
@@ -76,7 +79,7 @@ public interface ISettleRepository {
      * @param settleTime 结算时间
      * @param settleRecordId 结算记录ID
      */
-    void settleOrderWaitEditForExecuteSettle(List<Long> settleOrderWaitIdList, Integer settleState, LocalDateTime settleTime, Long settleRecordId);
+    int settleOrderWaitEditForExecuteSettle(List<Long> settleOrderWaitIdList, Integer settleState, LocalDateTime settleTime, Long settleRecordId);
     /**
      * 结算记录聚合保存
      * @param settleRecord
@@ -97,7 +100,7 @@ public interface ISettleRepository {
 
     SettleRecordDetailVO settleRecordDetailVO(Long id);
 
-    Page<SettleRecordItemVO> settleRecordItemPage(SettleRecordItemQuery settleRecordItemQuery);
+    Page<SettleRecordItemDTO> settleRecordItemPage(SettleRecordItemQuery settleRecordItemQuery);
 
     Integer closeSettleOrder(Long skuOrderId, Long refundId);
 

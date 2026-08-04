@@ -27,7 +27,6 @@
         <module>biz-order</module>
         <module>biz-goods</module>
         <module>biz-market</module>
-        <module>biz-inventory</module>
         <module>biz-media</module>
         <module>biz-content</module>
         <module>biz-course</module>

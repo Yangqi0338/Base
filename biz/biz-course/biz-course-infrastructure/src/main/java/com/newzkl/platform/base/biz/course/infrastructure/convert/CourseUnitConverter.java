@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.course.infrastructure.convert;
  * 课程域单位换算工具
  *
  * <p>迁移自 {@code com.zkl.scm.user.domain.course.model.convert.CourseChapterConvertUtil}
- * 的换算部分。对外契约(入参/出参)用元与秒, 库中用分与百分秒, 换算全部收敛于本类,
+ * 的换算部分。金额换算已收敛至 {@code Money} 值对象, 本类仅保留时长(秒↔百分秒)换算,
  * 只在仓储实现的读写边界调用。</p>
  *
  * @author KC
@@ -12,32 +12,6 @@ package com.newzkl.platform.base.biz.course.infrastructure.convert;
 public final class CourseUnitConverter {
 
     private CourseUnitConverter() {
-    }
-
-    /**
-     * 元转分
-     *
-     * @param yuan 金额, 单位元
-     * @return 金额, 单位分, 入参为空返回 null
-     */
-    public static Long yuanToFen(Double yuan) {
-        if (yuan == null) {
-            return null;
-        }
-        return Math.round(yuan * 100);
-    }
-
-    /**
-     * 分转元
-     *
-     * @param fen 金额, 单位分
-     * @return 金额, 单位元, 入参为空返回 null
-     */
-    public static Double fenToYuan(Long fen) {
-        if (fen == null) {
-            return null;
-        }
-        return fen / 100.0;
     }
 
     /**

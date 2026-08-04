@@ -1,12 +1,14 @@
 package com.newzkl.platform.base.biz.goods.application.goods.service.spu;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSkuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuStateVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuVO;
+import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
 
 import java.util.List;
@@ -43,6 +45,16 @@ public interface SpuService {
      * @return 供应商商品统计
      */
     SupplierSpuStatisticsVO supplierSpuStatistics(SupplierSpuStatisticsQuery query);
+
+    /**
+     * 运营商查其可见供应商的商品分页
+     *
+     * <p>按登录运营商的运营类型 (机构 / 行业 / 区域) 拿到可见供应商 ID 列表, 收敛查询范围后走商品分页。</p>
+     *
+     * @param spuQuery 商品查询 (type 为必填运营类型, accountId 由入口回填为登录运营商)
+     * @return 商品分页; 无可见供应商时返回空页
+     */
+    Page<SpuVO> operatorSpuPage(SpuQuery spuQuery);
 
     /**
      * 货盘选择商品

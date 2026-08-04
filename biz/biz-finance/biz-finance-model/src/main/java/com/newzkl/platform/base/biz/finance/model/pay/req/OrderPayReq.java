@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.model.pay.req;
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,12 +29,12 @@ public class OrderPayReq implements Serializable {
     /**
      * 订单金额
      */
-    private Integer orderAmount;
+    private Money orderAmount;
 
     /**
      * 支付金额
      */
-    private Integer payAmount;
+    private Money payAmount;
 
     /**
      * 订单信息(用于系统内部查看)

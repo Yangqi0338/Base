@@ -5,13 +5,11 @@ package com.newzkl.platform.base.biz.order.domain.adapt.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundFreightAddressVO;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundStateVO;
-import com.newzkl.platform.base.biz.order.model.dto.Refund;
-import com.newzkl.platform.base.biz.order.model.req.RefundQuery;
-import com.newzkl.platform.base.biz.order.model.res.SkuRefundRes;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
-import com.newzkl.platform.base.biz.order.model.vo.RefundExcelVO;
-import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
-import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 
@@ -27,47 +25,32 @@ public interface IRefundRepository {
      * @param refund
      * @return
      */
-    Long refundSave(Refund refund);
+    Long refundSave(RefundDTO refund);
     /**
      * 售后单-修改
      * @param refund
      */
-    void refundUpdate(Refund refund);
+    int refundUpdate(RefundDTO refund);
     /**
      * 售后单-实体
      * @param refundId
      * @return
      */
-    Refund refund(Long refundId);
+    RefundDTO refund(Long refundId);
 
     /**
      * 根据spuOrderId查询售后单详情
      * @param spuOrderId
      * @return
      */
-    Refund refundBySpuOrderId(Long spuOrderId);
-
-    /**
-     * 售后单-值对象
-     * @param refundId
-     * @return
-     */
-    RefundVO refundVO(Long refundId);
-
-    /**
-     * 根据spuOrderId查询售后单详情
-     * @param spuOrderId
-     * @return
-     */
-    RefundVO refundVoBySpuOrderId(Long spuOrderId);
+    RefundDTO refundBySpuOrderId(Long spuOrderId);
 
     /**
      * 售后单-值对象列表
      * @param refundQuery
      * @return
      */
-    Page<RefundVO> refundVOList(RefundQuery refundQuery);
-    List<SkuRefundRes> skuRefundResList(Long orderId, List<Long> skuIds);
+    Page<RefundDTO> refundPage(RefundQuery refundQuery);
     /**
      * 售后状态变更
      *
@@ -78,7 +61,7 @@ public interface IRefundRepository {
      * @param toState
      * @return
      */
-    void updateState(Refund refundEdit, Long refundId, OrderEnum.OrderType orderType, RefundEnum.State sourceState, RefundEnum.State toState, Long channelId);
+    void updateState(RefundDTO refundEdit, Long refundId, OrderEnum.OrderType orderType, RefundEnum.State sourceState, RefundEnum.State toState, Long channelId);
     /**
      * 售后状态修改 加改来源状态
      * @param orderType
@@ -94,6 +77,9 @@ public interface IRefundRepository {
      * @return
      */
     List<ApiRefundStateVO> accountRefundState(Long accountId, List<Long> refundIdList);
+
+    List<SkuRefundDTO> skuRefundResList(Long orderId, List<Long> skuIds);
+
     /**
      * SPU售后统计
      * @param orderId
@@ -101,20 +87,8 @@ public interface IRefundRepository {
      * @return
      */
     List<SpuRefundRes> spuRefundResList(Long orderId, List<Long> spuIds);
-    /**
-     * 售后关闭修改订单
-     * @param spuOrderId
-     * @param item
-     */
-    void skuOrderEditForRefundClose(Long spuOrderId, List<RefundItemVO> item);
-    /**
-     * 售后完成修改订单
-     * @param spuOrderId
-     * @param item
-     */
-    void skuOrderEditForRefundPass(Long spuOrderId, List<RefundItemVO> item);
 
-    List<Refund> refundVOListForAutoAgree(RefundQuery refundQuery);
+    Page<RefundDTO> page(RefundQuery refundQuery);
 
     ApiRefundFreightAddressVO getOutRefundAddress(Long spuOrderId, Long spuId);
 
@@ -123,12 +97,5 @@ public interface IRefundRepository {
      * @param memberId 会员ID
      * @return 售后中订单总数
      */
-    Integer countTotalRefundingByMemberId(Long memberId);
-
-    /**
-     * 根据渠道商ID统计售后中的订单总数
-     * @param storeId 会员ID
-     * @return 售后中订单总数
-     */
-    Integer countTotalRefundingByStoreId(Long storeId);
+    Integer countTotalRefunding(SpuOrderQuery spuOrderQuery);
 }

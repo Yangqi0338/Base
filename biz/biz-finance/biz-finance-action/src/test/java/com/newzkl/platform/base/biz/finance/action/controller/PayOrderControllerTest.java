@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
@@ -86,8 +87,9 @@ class PayOrderControllerTest {
         OrderPayReq req = captureOrderPayReq();
         assertNotNull(req.getOrderNo());
         assertEquals(EarningsEnum.ConsumeType.RECHARGE, req.getConsumeType());
-        assertEquals(10000, req.getOrderAmount());
-        assertEquals(10000, req.getPayAmount());
+        // orderAmount/payAmount 已 Money; 入参 10000 分, getCent() 取回分值
+        assertEquals(10000, req.getOrderAmount().getCent());
+        assertEquals(10000, req.getPayAmount().getCent());
         assertEquals(ACCOUNT_ID, req.getAccountId());
         assertEquals(ACCOUNT_NAME, req.getAccountName());
         assertEquals(OrderEnum.PayType.WX, req.getPayType());
@@ -130,7 +132,8 @@ class PayOrderControllerTest {
 
     private ChannelConfigVO channelConfig(Integer minimumWithdrawalAmount) {
         ChannelConfigVO config = new ChannelConfigVO();
-        config.setMinimumWithdrawalAmount(minimumWithdrawalAmount);
+        // 入参为分, Money.of(Integer)=分
+        config.setMinimumWithdrawalAmount(Money.of(minimumWithdrawalAmount));
         return config;
     }
 }

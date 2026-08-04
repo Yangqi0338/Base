@@ -25,11 +25,17 @@ public interface ActivityRepository {
     void saveNewActivity(ActivityVO activityVO);
 
     /**
-     * 添加活动策略
+     * 添加活动策略 (仅 strategy 表 upsert, 不含明细)
      * @param strategyVO 活动策略对象
      * @return 策略id
      */
     Long addActivityStrategy(StrategyVO strategyVO);
+
+    /**
+     * 保存活动策略明细 (strategy_detail 表, 按 detailId 有无 insert/update)
+     * @param strategyDetailList 策略明细列表
+     */
+    void saveStrategyDetails(List<StrategyDetailVO> strategyDetailList);
 
     Long saveActivityStrategy(ActivityConfigSaveReq strategy);
 

@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseConfigRepository;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import com.newzkl.platform.base.biz.finance.model.enums.RedisEnum;
@@ -78,9 +79,9 @@ public class AccountPurseConfigRepositoryImpl implements AccountPurseConfigRepos
         if (channelConfigVO == null) {
             // 字典未配置时给出 0 兜底: 调用方对金额阈值做拆箱比较, null 会直接 NPE
             channelConfigVO = new ChannelConfigVO();
-            channelConfigVO.setMinimumRechargeAmount(0);
-            channelConfigVO.setMinimumWithdrawalAmount(0);
-            channelConfigVO.setMaximumDailyWithdrawalAmount(0);
+            channelConfigVO.setMinimumRechargeAmount(Money.ZERO);
+            channelConfigVO.setMinimumWithdrawalAmount(Money.ZERO);
+            channelConfigVO.setMaximumDailyWithdrawalAmount(Money.ZERO);
             channelConfigVO.setWithdrawalFee(0);
         }
         return channelConfigVO;

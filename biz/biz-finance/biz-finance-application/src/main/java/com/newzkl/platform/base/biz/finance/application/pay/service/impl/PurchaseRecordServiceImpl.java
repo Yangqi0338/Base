@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -49,7 +50,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         }
 
         Long accountId = saveCommand.getAccountId();
-        Integer payAmount = saveCommand.getPayAmount();
+        Money payAmount = saveCommand.getPayAmount();
         SeatPackageOrderInfo orderInfo = JSONUtil.toBean(saveCommand.getOrderInfo(), SeatPackageOrderInfo.class);
         Integer purchaseNum = orderInfo.getPurchaseNum();
         OrderEnum.PayType payMode = saveCommand.getPayType();
@@ -82,7 +83,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
 
     }
 
-    private AccountPurseAlterRecordReq buildChannelOperatorPurseAlterRecord(Long accountId, Long tradeNo, Integer totalFee) {
+    private AccountPurseAlterRecordReq buildChannelOperatorPurseAlterRecord(Long accountId, Long tradeNo, Money totalFee) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(accountId);
         req.setPurseType(PurseEnum.PurseType.PURCHASE);
@@ -102,7 +103,8 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         req.setPurseType(PurseEnum.PurseType.GOODS_SEAT);
         req.setAccountType(PurseEnum.FinanceUser.CHANNEL);
         req.setAlterType(PurseEnum.PurseAlterType.GOODS_POSITION_BUY);
-        req.setAmount(num);
+        // num 为席位数量, 存入 Money 型 amount 字段 (按分数值等值存放)
+        req.setAmount(Money.of(num));
         req.setJoinRecordId(tradeNo);
         return req;
     }

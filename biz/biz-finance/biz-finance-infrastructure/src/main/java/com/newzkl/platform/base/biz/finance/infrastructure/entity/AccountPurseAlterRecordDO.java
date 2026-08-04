@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -49,7 +50,7 @@ public class AccountPurseAlterRecordDO extends BaseDO {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 关联记录id

@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.account.model.auth.req.CodeLoginRegisterReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.LoginReq;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
 import com.newzkl.platform.base.biz.account.model.auth.res.TokenAndExpireRes;
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.req.ResetMemberReq;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;

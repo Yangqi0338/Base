@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,8 +24,16 @@ public class BizCountMap extends ArrayList<Map<String, Object>> implements Seria
 
     public Long getCount(int row) {
         List<Long> numList = CollUtil.map(this, it ->
-                MapUtil.getLong(it, COUNT + row, 0L), true);
+                BizCountMap.getCount(it,row), true);
         return numList.stream().mapToLong(Long::longValue).sum();
+    }
+
+    public static Long getCount(Map<String, Object> map, int row) {
+        return MapUtil.getLong(map, COUNT + row, 0L);
+    }
+
+    public static Integer getIntCount(Map<String, Object> map, int row) {
+        return MapUtil.getInt(map, COUNT + row, 0);
     }
 
 }

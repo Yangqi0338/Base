@@ -6,7 +6,6 @@ import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.model.req.OperatorReq;
 import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
-import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 
 /**
  * @author muc_fang
@@ -46,17 +45,6 @@ public interface IdentityService {
      * @author KC
      */
     RoleApplyCommand loadApplyCommand(Long roleId);
-
-    /**
-     * 分配开通码
-     *
-     * <p>迁移补充: 旧 {@code IRoleService.toCdk}。领域层完成归属变更后校验影响行数,
-     * 再按 (分配人角色, 被分配人角色) 计算期权单价并经资金域出站端口发放期权。</p>
-     *
-     * @param toCdkCommand 分配命令
-     * @author KC
-     */
-    void toCdk(ToCdkCommand toCdkCommand);
 
     /**
      * 提交保证金缴纳流水

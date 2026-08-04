@@ -4,6 +4,7 @@ package com.newzkl.platform.base.biz.finance.model.earnings.req;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.GoodsInfoVO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -43,23 +44,23 @@ public class EarningsPaymentExecReq extends EarningsExecReq {
     /**
      * 渠道商总支付金额
      */
-    private Integer totalAmount;
+    private Money totalAmount;
     /**
      * 服务费
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货价格
      */
-    private Integer storeAmount;
+    private Money storeAmount;
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
 
     /**
      * 商品信息
@@ -75,11 +76,11 @@ public class EarningsPaymentExecReq extends EarningsExecReq {
      * 待分润金额
      */
     @Override
-    public Integer getAmount() {
+    public Money getAmount() {
         if (source == PurseEnum.FinanceUser.SUPPLIER) {
             return this.getSupplierAmount();
         } else {
-            return this.getStoreAmount() - this.getGoodsAmount();
+            return this.getStoreAmount().subtract(this.getGoodsAmount());
         }
     }
 

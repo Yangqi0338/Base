@@ -1,11 +1,9 @@
 package com.newzkl.platform.base.biz.account.model.merchant.req;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -64,39 +62,10 @@ public class MerchantCmd {
     }
 
     /**
-     * 门店开通码入参
-     */
-    @Data
-    public static class Cdk implements Serializable {
-
-        /**
-         * 兑换码
-         */
-        @NotNull(message = "兑换码Code?")
-        private String cdk;
-
-        /**
-         * 兑换应用
-         */
-        @NotNull(message = "兑换应用?")
-        private Integer serviceId;
-
-        /**
-         * 其他手机号
-         */
-        private Long openPhone;
-    }
-
-    /**
      * 门店订单支付入参
      */
     @Data
     public static class OrderPay implements Serializable {
-
-        /**
-         * 兑换码支付方式码值 (旧 {@code OrderEnum.PayType.CDK})
-         */
-        private static final Integer PAY_TYPE_CDK = 3;
 
         /**
          * 支付方式 (旧 {@code OrderEnum.PayType} 码值)
@@ -105,28 +74,11 @@ public class MerchantCmd {
         private Integer payType;
 
         /**
-         * 兑换码
-         */
-        private String cdk;
-
-        /**
          * 店铺信息
          */
         @NotNull(message = "店铺信息不能为空")
         @Valid
         private StoreInfo storeInfo;
-
-        /**
-         * 兑换码支付时兑换码必填校验
-         *
-         * <p>逐字沿用旧 {@code @AssertFalse} 校验语义: 返回 true 即校验失败。</p>
-         *
-         * @return 是否违反「兑换码支付必须带兑换码」
-         */
-        @AssertFalse(message = "兑换码不能为空")
-        public boolean isCheckCdk() {
-            return PAY_TYPE_CDK.equals(payType) && StrUtil.isBlank(cdk);
-        }
     }
 
     /**

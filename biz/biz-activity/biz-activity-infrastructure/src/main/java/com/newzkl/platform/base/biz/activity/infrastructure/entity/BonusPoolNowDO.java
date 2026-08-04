@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -45,19 +46,19 @@ public class BonusPoolNowDO implements Serializable {
     private Long otherConfig;
 
     /**
-     * 订单奖金
+     * 订单奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer orderBonus;
+    private Money orderBonus;
 
     /**
-     * 自定义奖金
+     * 自定义奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer customBonus;
+    private Money customBonus;
 
     /**
-     * 最终结算奖金
+     * 最终结算奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer settleBonus;
+    private Money settleBonus;
 
     /**
      * 状态 0：进行中  1：已结算  2：已作废

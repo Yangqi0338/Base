@@ -2,19 +2,15 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.domain.repository.CdkRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MerchantRepository;
 import com.newzkl.platform.base.biz.account.domain.service.MerchantDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.MerchantAssembler;
-import com.newzkl.platform.base.biz.account.model.cdk.vo.CdkVO;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantQuery;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantReq;
 import com.newzkl.platform.base.biz.account.model.merchant.res.MerchantRes;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.MerchantVO;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -22,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,7 +35,6 @@ import java.util.List;
 public class MerchantDomainImpl implements MerchantDomain {
 
     private final MerchantRepository merchantRepository;
-    private final CdkRepository cdkRepository;
     private final MerchantAssembler assembler;
 
     @Override
@@ -83,30 +77,6 @@ public class MerchantDomainImpl implements MerchantDomain {
             item.setName(item.getUsername());
         }
         merchantRepository.save(item);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void useStoreCdk(String cdkValue) {
-        Long accountId = SecurityUtils.getAccountId();
-        // 开通码校验与占用
-        CdkVO cdk = cdkRepository.detail(cdkRepository.idByValue(cdkValue));
-        if (cdk == null) {
-            throw new PlatformException(BaseErrorCode.NODATA, "开通码");
-        }
-        if (CommonEnum.YesOrNo.YES.getCode().equals(cdk.getUseState())) {
-            throw new PlatformException(BaseErrorCode.PARAM, "验证码已使用");
-        }
-        cdk.setUseState(CommonEnum.YesOrNo.YES.getCode());
-        cdk.setUseId(accountId);
-        cdk.setUseTime(LocalDateTime.now());
-        cdkRepository.edit(cdk);
-
-        // 开通数字门店权限
-        MerchantVO merchantEdit = new MerchantVO();
-        merchantEdit.setId(accountId);
-        merchantEdit.setStorePermission(CommonEnum.YesOrNo.YES.getCode());
-        merchantRepository.edit(merchantEdit);
     }
 
     @Override

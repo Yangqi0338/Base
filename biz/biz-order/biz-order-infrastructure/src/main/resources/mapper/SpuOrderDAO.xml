@@ -6,7 +6,53 @@
            sku_order.count -> buy_num, deliver_count -> delivery_quantity,
            refunding_count/refunded_count -> refunding_quantity/refunded_quantity
      已知偏差: checkOrderState 不再返回 spuOrderNo(源侧按交易单分组, 一单多 spu 无法取单值), 见 findings -->
-<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.SpuOrderDAO">
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.order.SpuOrderDAO">
+
+    <sql id="where">
+        ${ew.customSqlSegment}
+        <if test="query.buyMode != null">
+            and o.`buy_mode` = #{query.buyMode}
+        </if>
+        <if test="query.memberAmount != null and query.memberAmount.length >= 1">
+            and o.`member_amount` >= #{query.memberAmount[0]}
+        </if>
+        <if test="query.memberAmount != null and query.memberAmount.length >= 2">
+            and o.`member_amount` &lt;= #{query.memberAmount[1]}
+        </if>
+    </sql>
+
+    <select id="countMapWithOrderByQuery" resultType="com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap">
+        select
+        ${query.fieldSQL}
+        from spu_order t left join `order` o on t.order_id = o.id
+        <where>
+            <include refid="where"/>
+        </where>
+        ${query.groupSQL}
+    </select>
+
+    <select id="countMap" resultType="com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap">
+        SELECT
+            ${query.fieldSQL}
+        FROM spu_order
+        ${ew.customSqlSegment}
+        ${query.groupSQL}
+    </select>
+
+    <select id="checkSpuOrderState" resultType="com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO">
+        SELECT
+        t1.id as id,
+        t1.order_state as current_state,
+        MIN(t.order_state)  as to_state
+        FROM
+        sku_order t left join spu_order t1 on t.spu_order_id = t1.id
+        WHERE
+        t1.order_id IN
+        <foreach collection="orderId" item="item" separator="," close=")" open="(">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+        GROUP BY t.spu_order_id,t1.id
+    </select>
 
     <!-- 源 updateOrderStateByOrderId 的 orderNo 适配版 -->
     <update id="updateSpuOrderStateByOrderNo">
@@ -39,7 +85,7 @@
         ORDER BY order_state ASC
     </select>
 
-    <update id="updateSkuRefundingCount">
+    <update id="updateSpuRefundingCount">
         update spu_order
         <set>
             `refund_quantity` = `refund_quantity` + #{refundQuantity},
@@ -48,26 +94,43 @@
         where `spu_order_no` = #{spuOrderNo,jdbcType=VARCHAR}
     </update>
 
-    <select id="spuRefundResList" resultType="com.newzkl.platform.base.biz.order.model.order.res.SpuRefundRes">
+    <select id="spuRefundResList" resultType="com.newzkl.platform.base.biz.order.model.res.SpuRefundRes">
         select
             t.spu_id,
-            t.spu_order_no,
-            sum(t1.buy_num) as order_count,
-            sum(t1.refunding_quantity) as refunding_count,
-            sum(t1.refunded_quantity) as refunded_count,
-            sum(t1.delivery_quantity) as deliver_count,
-            t.goods_snapshot,
+            t.id as spu_order_id,
+            sum(t1.count) as order_count,
+            sum(t1.refunding_count) as refunding_count,
+            sum(t1.refunded_count) as refunded_count,
+            sum(t1.delivery_count) as deliver_count,
+            t.spu_name,
+            t.spu_img,
             t.freight_amount
-        from spu_order t left join sku_order t1 on t.spu_order_no = t1.spu_order_no
-        where t.order_no = #{orderNo,jdbcType=VARCHAR}
-        and t.del_flag = 0
+        from spu_order t left join sku_order t1 on t.id = t1.spu_order_id
+        ${ew.customSqlSegment}
         group by t.id
+    </select>
+
+    <select id="orderCount" resultType="com.newzkl.platform.base.common.ddd.model.res.GroupCountRes"
+            parameterType="com.zkl.scm.model.common.TimeQuery">
+        select
+        <if test="query.groupType == 0">
+            DATE_FORMAT(create_time, '%Y-%m-%d-%h') as transDay,
+        </if>
+        <if test="query.groupType == 1">
+            DATE_FORMAT(create_time, '%Y-%m-%d') as transDay,
+        </if>
+        count(*) as transNum,
+        sum(total_amount) as transAmount
+        from spu_order
+        where UNIX_TIMESTAMP(create_time) * 1000 between #{query.createBeginTime} and #{query.createEndTime}
+        group by transDay
+        order by transDay asc;
     </select>
 
     <update id="cutSkuOrderRefundingNumber">
         update spu_order t set t.refund_quantity = t.refund_quantity -
-        (select sum(t1.refunding_quantity) from sku_order t1 where t1.sku_order_no in
-            <foreach collection="skuOrderNoList" item="item" separator="," close=")" open="(">
+        (select sum(t1.refunding_count) from sku_order t1 where t1.id in
+            <foreach collection="skuOrderIdList" item="item" separator="," close=")" open="(">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         )
@@ -93,16 +156,4 @@
         and t.del_flag = 0
         GROUP BY t1.order_no
     </select>
-
-    <!-- 源 SpuOrderDAO.countMapByQuery + addGroupField("t.order_state") 的 wrapper 适配版;
-         条件由 SpuOrderRepositoryImpl 复用分页同一套条件构造, 含显式 del_flag = 0 -->
-    <select id="stateCountMap" resultType="java.util.Map">
-        SELECT
-            order_state AS orderState,
-            COUNT(*) AS orderCount
-        FROM spu_order
-        ${ew.customSqlSegment}
-        GROUP BY order_state
-    </select>
-
 </mapper>

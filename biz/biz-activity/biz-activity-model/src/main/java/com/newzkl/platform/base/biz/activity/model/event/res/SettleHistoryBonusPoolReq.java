@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.model.event.res;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,14 +43,14 @@ public class SettleHistoryBonusPoolReq extends BizPageQuery {
     private String dividendMethod;
 
     /**
-     * 起始开奖金额
+     * 起始开奖金额 (Money, 金额区间入参元, 比对 BIGINT 分列)
      */
-    private Integer startSettleBonus;
+    private Money startSettleBonus;
 
     /**
-     * 结束开奖金额
+     * 结束开奖金额 (Money, 金额区间入参元, 比对 BIGINT 分列)
      */
-    private Integer endSettleBonus;
+    private Money endSettleBonus;
 
     /**
      * 结算类型

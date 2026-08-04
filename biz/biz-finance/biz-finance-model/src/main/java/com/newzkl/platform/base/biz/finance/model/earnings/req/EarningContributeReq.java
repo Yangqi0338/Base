@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -30,13 +31,13 @@ public class EarningContributeReq extends BaseRes {
     /**
      * 总消费
      */
-    private Integer totalConsume;
+    private Money totalConsume;
     /**
      * 分润贡献
      */
-    private Integer earningContribute;
+    private Money earningContribute;
     /**
      * 服务费贡献
      */
-    private Integer serviceChangeContribute;
+    private Money serviceChangeContribute;
 }

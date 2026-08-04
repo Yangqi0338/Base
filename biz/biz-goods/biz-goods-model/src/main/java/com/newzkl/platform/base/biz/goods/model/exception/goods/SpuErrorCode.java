@@ -14,7 +14,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SpuErrorCode implements ErrorCode {
 
-    INVENTORY_EXECUTE_ERROR(1101, "库存操作错误"),
     BUY_START_QTY(1102, "起购数量不足"),
     EXISTS(1103, "商品已存在"),
     NOT_EXIST_OR_STATE_ERROR(1104, "商品不存在或状态错误"),

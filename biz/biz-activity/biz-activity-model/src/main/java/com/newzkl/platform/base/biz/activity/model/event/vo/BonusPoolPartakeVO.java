@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.activity.model.event.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.util.Date;
@@ -38,9 +39,9 @@ public class BonusPoolPartakeVO {
     private Integer buyNum;
 
     /**
-     * 奖金
+     * 奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer bonus;
+    private Money bonus;
 
     /**
      * 创建时间

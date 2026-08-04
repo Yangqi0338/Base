@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,14 +48,14 @@ public class CourseDO extends BaseDO {
     private Long categoryId;
 
     /**
-     * 原价, 单位分
+     * 原价 (Money, 落库 BIGINT 分)
      */
-    private Long originalPrice;
+    private Money originalPrice;
 
     /**
-     * 售价, 单位分
+     * 售价 (Money, 落库 BIGINT 分)
      */
-    private Long sellPrice;
+    private Money sellPrice;
 
     /**
      * 虚拟购买次数

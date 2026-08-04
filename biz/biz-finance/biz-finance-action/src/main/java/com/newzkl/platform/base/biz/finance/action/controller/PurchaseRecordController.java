@@ -1,12 +1,16 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
+import com.newzkl.platform.base.biz.finance.model.pay.vo.GoodsSeatPurchaseRecordExportVO;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -31,6 +37,11 @@ import java.util.List;
 @RequestMapping("/purchaseRecord")
 @RequiredArgsConstructor
 public class PurchaseRecordController {
+
+    /**
+     * 金额分转元的除数
+     */
+    private static final BigDecimal HUNDRED = new BigDecimal("100");
 
     private final PurchaseRecordDomain purchaseRecordDomain;
 
@@ -118,7 +129,37 @@ public class PurchaseRecordController {
         return PlatformResult.success(purchaseRecordDomain.queryPage(query));
     }
 
-    // TODO[service-gap]: 源 /goodsSeatPurchaseRecordExport 未迁 — 导出行模型
-    //   GoodsSeatPurchaseRecordExportVO 在 Base biz-finance-model 中不存在, Excel 表头本身也是对外契约,
-    //   不凭推测新建; 待该 VO 按源逐字补齐后再 wire。
+    /**
+     * 商品席位购买记录导出
+     *
+     * <p>迁移自 new-scm {@code PurchaseRecordController.goodsSeatPurchaseRecordExport} 逐行照搬。</p>
+     *
+     * <p>源逻辑保留: 先按登录角色收敛 accountId, 随即无条件置空 accountId (导全量, 不受登录范围限制);
+     * 金额分转元, 支付方式/状态取枚举描述, 购买数量取套餐订单信息。</p>
+     *
+     * <p>迁移调整: 源出参 {@code payState}/{@code payType} 存 code 需 {@code getByCode} 反查,
+     * Base {@code PurchaseRecordVO} 已是枚举类型, 直接 {@code getInfo} 取描述。</p>
+     *
+     * @param query 查询条件
+     * @throws IOException 写出 Excel 失败
+     */
+    @PostMapping("/goodsSeatPurchaseRecordExport")
+    public void goodsSeatPurchaseRecordExport(@RequestBody @Valid PurchaseRecordQuery query) throws IOException {
+        Long role = SecurityUtils.getRoleId();
+        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(role)) {
+            query.setAccountId(SecurityUtils.getAccountId());
+        }
+        query.setAccountId(null);
+        List<GoodsSeatPurchaseRecordExportVO> rows = TransferUtils.transfers(
+                purchaseRecordDomain.queryPage(query).getRecords(),
+                GoodsSeatPurchaseRecordExportVO::new,
+                (c, v) -> {
+                    v.setPayState(c.getPayState().getInfo());
+                    // payAmount 已 Money, getAmount()=元 BigDecimal, 直接取代 分/100 换算
+                    v.setPayAmount(c.getPayAmount().getAmount().toPlainString());
+                    v.setPayType(c.getPayType().getInfo());
+                    v.setPurchaseNum(c.getSeatPackageOrderInfo().getPurchaseNum());
+                });
+        EasyExcelUtil.export(rows, "商品席位购买记录");
+    }
 }

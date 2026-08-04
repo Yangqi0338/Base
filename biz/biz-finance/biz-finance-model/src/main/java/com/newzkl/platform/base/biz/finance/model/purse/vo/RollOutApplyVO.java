@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
@@ -38,7 +39,7 @@ public class RollOutApplyVO extends BaseRes {
     /**
      * 申请金额
      */
-    private Integer applyAmount;
+    private Money applyAmount;
 
     /**
      * 审核状态 0：待审核  1：审核通过  2：审核拒绝
@@ -73,6 +74,6 @@ public class RollOutApplyVO extends BaseRes {
     /**
      * 手续费
      */
-    private Integer handlingFee;
+    private Money handlingFee;
 
 }

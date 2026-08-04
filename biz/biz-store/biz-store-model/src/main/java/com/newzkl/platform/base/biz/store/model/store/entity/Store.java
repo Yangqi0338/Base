@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -69,9 +70,9 @@ public class Store{
      */
     private Integer dealerNumber;
     /**
-     * 成交金额
+     * 成交金额 (Money, 落库 BIGINT 分)
      */
-    private Integer dealerAmount;
+    private Money dealerAmount;
 
     /**
      * 总客户数

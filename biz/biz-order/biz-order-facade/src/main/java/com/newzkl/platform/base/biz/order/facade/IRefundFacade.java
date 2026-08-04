@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.order.facade;
 
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.*;
 import com.newzkl.platform.base.common.ddd.model.res.ApiPage;
 
@@ -28,7 +29,7 @@ public interface IRefundFacade {
 
     List<ApiRefundStateVO> apiRefundState(Long accountId, List<Long> refundIdList);
 
-    ApiPage<ApiRefundVO> apiList(Long accountId, ApiRefundReq apiRefundReq);
+    Page<ApiRefundVO> apiList(Long accountId, ApiRefundReq apiRefundReq);
 
     ApiRefundAggVO apiDetail(Long accountId, Long refundId);
 }

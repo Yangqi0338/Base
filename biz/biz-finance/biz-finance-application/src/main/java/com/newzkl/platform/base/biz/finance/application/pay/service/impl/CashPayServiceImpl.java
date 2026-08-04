@@ -87,7 +87,7 @@ public class CashPayServiceImpl implements CashPayService {
                             PurseEnum.PurseAlterType.RECHARGE);
                     accountPurseService.addAmount(recharge);
                     // 3、渠道商采购金充值后，更新服务费
-                    accountPurseConfigService.alterChannelNowChargeConfig(tradeOrder.getAccountId(), tradeOrder.getPayAmount());
+                    accountPurseConfigService.alterChannelNowChargeConfig(tradeOrder.getAccountId(), (int) tradeOrder.getPayAmount().getCent());
                     break;
                 case SUPPLIER_RECHARGE:
                     // 2、增加收益余额 + 变动记录修改
@@ -150,7 +150,8 @@ public class CashPayServiceImpl implements CashPayService {
         HuiFuPayReq huiFuPayReq = new HuiFuPayReq();
         huiFuPayReq.setTradeNo(tradeNo);
         huiFuPayReq.setGoodsInfo(req.getGoodsInfo());
-        huiFuPayReq.setPayAmount(req.getPayAmount());
+        // HuiFu 边界: Money → 分 Integer
+        huiFuPayReq.setPayAmount((int) req.getPayAmount().getCent());
         huiFuPayReq.setTradeType(switch (req.getPayType()) {
             case WX -> PayEnum.HuiFuTradeType.T_NATIVE;
             case ALIPAY -> PayEnum.HuiFuTradeType.A_NATIVE;

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.res;
 
 
+import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class CompleteSkuOrderRes {
     /**
      * 待结算SKU订单信息
      */
-    private List<SkuOrderVO> waitSettlementOrder;
+    private List<SkuOrderDTO> waitSettlementOrder;
 
     /**
      * 结算类型

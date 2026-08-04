@@ -6,13 +6,17 @@ import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.AlreadyDeliverRes;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
-import com.newzkl.platform.base.biz.order.model.res.OrderStateCheckRes;
+import com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
-import com.newzkl.platform.base.biz.order.model.support.api.SkuSaleInfo;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -30,49 +34,36 @@ import java.util.Map;
 */
 public interface IOrderRepository {
     /**
-     * 订单聚合
-     * @param orderId
-     * @return
-     */
-    OrderAgg orderAgg(Long orderId);
-    /**
      * 订单-实体
      * @param orderId
      * @return
      */
-    Order order(Long orderId);
-    /**
-     * 订单-值对象
-     * @param orderId
-     * @return
-     */
-    OrderVO orderVO(Long orderId);
+    OrderDTO order(Long orderId);
     /**
      * 订单-列表
      * @param orderQuery
      * @return
      */
-    Page<OrderVO> orderVOList(OrderQuery orderQuery);
+    Page<OrderDTO> orderList(OrderQuery orderQuery);
     /**
      * SPU订单-列表
      * @param spuOrderQuery
      * @return
      */
-    Page<SpuOrderVO> spuOrderVOList(SpuOrderQuery spuOrderQuery);
-
-    /**
-     * 订单聚合修改
-     *
-     * @param orderAgg
-     */
-    void orderAggUpdate(OrderAgg orderAgg);
+    Page<SpuOrderDTO> spuOrderList(SpuOrderQuery spuOrderQuery);
 
     /**
      * SKU订单列表
      * @param orderQuery
      * @return
      */
-    Page<SkuOrderVO> skuOrderVOList(SkuOrderQuery orderQuery);
+    Page<SkuOrderDTO> skuOrderList(SkuOrderQuery orderQuery);
+
+    int updateSkuRefundingCount(Long orderId, Long skuId, Integer count);
+
+    int updateSpuRefundingCount(Long spuOrderId, Integer count);
+
+    List<SkuRefundDTO> skuRefundResList(Long orderId, List<Long> skuIds);
 
     /**
      * spu订单状态数量count
@@ -80,13 +71,8 @@ public interface IOrderRepository {
      * @param spuOrderQuery
      * @return
      */
-    Map<Integer, Integer> stateCountMap(SpuOrderQuery spuOrderQuery);
+    Map<OrderEnum.State, Integer> stateCountMap(SpuOrderQuery spuOrderQuery);
 
-    /**
-     * 订单聚合保存
-     * @param orderAgg
-     */
-    void orderAggSave(OrderAgg orderAgg);
     /**
      * SPU订单值对象
      * @param spuOrderId
@@ -113,8 +99,8 @@ public interface IOrderRepository {
      * @param sourceState
      * @param toState
      */
-    void batchUpdateSpuOrderState(List<Long> spuOrderIdList,  OrderEnum.State sourceState,  OrderEnum.State toState);
-    void batchUpdateSpuOrderStateByOrderId(List<Long> orderIdList,  OrderEnum.State sourceState,  OrderEnum.State toState,String spuOrderExt);
+    int batchUpdateSpuOrderState(List<Long> spuOrderIdList,  OrderEnum.State sourceState,  OrderEnum.State toState);
+    int batchUpdateSpuOrderStateByOrderId(List<Long> orderIdList,  OrderEnum.State sourceState,  OrderEnum.State toState,String spuOrderExt);
     /**
      * 批量修改Sku订单状态
      * @param skuOrderIdList
@@ -123,7 +109,7 @@ public interface IOrderRepository {
      * @param skuOrderCommand
      */
     int batchUpdateSkuOrderState(List<Long> skuOrderIdList, OrderEnum.State sourceState, OrderEnum.State toState, SkuOrderCommand skuOrderCommand);
-    void batchUpdateSkuOrderStateByOrderId(List<Long> orderIdList, OrderEnum.State sourceState, OrderEnum.State toState);
+    int batchUpdateSkuOrderStateByOrderId(List<Long> orderIdList, OrderEnum.State sourceState, OrderEnum.State toState);
     /**
      * 订单ID-列表
      * @param orderQuery
@@ -135,41 +121,25 @@ public interface IOrderRepository {
 
     SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId);
 
-    List<OrderStateCheckRes> checkSpuOrderState(List<Long> orderId);
+    List<OrderStateCheckDTO> checkSpuOrderState(List<Long> orderId);
 
-    OrderAggVO orderAggVO(Long orderId);
-
-    List<OrderStateCheckRes> checkOrderState(List<Long> orderId);
+    List<OrderStateCheckDTO> checkOrderState(List<Long> orderId);
 
     List<Long> orderIdBySpuSkuOrderId(List<Long> spuOrderId, List<Long> skuOrderId);
 
-    void skuOrderEditForRefundPass(List<Long> skuIdList);
+    int skuOrderEditForRefundPass(List<Long> skuIdList);
 
     void orderStateNotify(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, OrderEnum.State currentState, OrderEnum.State toState);
 
-    void skuOrderEditForRefundClose(List<Long> skuIdList);
+    int skuOrderEditForRefundClose(List<Long> idList);
 
-    /**
-     * 查询渠道商当前服务费
-     * @param channelId
-     * @return
-     */
-    ChannelNowServiceFeeRes queryChannelNowServiceFee(Long channelId);
+    int cutSkuOrderRefundingNumber(Long spuOrderId, List<Long> skuIdList);
 
-    void skuOrderEditByQuery(SkuOrder sku, SkuOrderQuery skuQuery);
+    void skuOrderUpdate(SkuOrderDTO sku, SkuOrderQuery skuQuery);
 
-    void spuOrderEditByQuery(SpuOrder spu, SpuOrderQuery spuOrderQuery);
+    void spuOrderUpdate(SpuOrderDTO spu, SpuOrderQuery spuOrderQuery);
 
-    void wakeUpDelayMessage(String key);
-
-    /**
-     * 唤醒分润延迟消息
-     *
-     * <p>迁移: 原 domain 拼 core-mq 常量 Tag.EARNING + skuOrderId, tag 拼接下沉本方法(infra 实现)
-     *
-     * @param skuOrderId SKU订单ID
-     */
-    void wakeUpEarningMessage(Long skuOrderId);
+    void spuOrderUpdate(List<SpuOrderDTO> spuList);
 
     List<SettlementConfigOutVO> settlementConfigBatch(List<Long> supplierIdList);
 
@@ -177,13 +147,15 @@ public interface IOrderRepository {
 
     List<AlreadyDeliverRes> getAlreadyDeliverResList(Long spuOrderId, List<Long> skuIds);
 
-    void deliverSave(Deliver deliver);
+    int deliverSave(Deliver deliver);
+
+    int updateSkuDeliverCount(DeliverItemVO deliverItem);
 
     List<Long> querySkuOrderIdList(Long spuOrderId, List<Long> skuIdList);
 
-    SpuOrder spuOrder(Long spuOrderId);
+    SpuOrderDTO spuOrder(Long spuOrderId);
 
-    void orderEdit(Order orderEdit);
+    void orderEdit(OrderDTO orderEdit);
 
     /**
      * 保存预支付单
@@ -216,38 +188,18 @@ public interface IOrderRepository {
 
     void deliverDelete(Long l);
 
-    /**
-     * 统计渠道商所有订单状态数量
-     * @param channelId 渠道商ID
-     * @return 订单状态统计列表
-     */
-    List<OrderStateCountVO> countOrderStateByChannel(Long channelId);
-
-    /**
-     * 统计会员所有订单状态数量
-     * @param accountId 会员ID
-     * @return 订单状态统计列表
-     */
-    List<OrderStateCountVO> countOrderStateByAccount(Long accountId);
-
-    void outOrderSave(List<OutOrder> outOrderList);
+    // FIXME[outorder-removed]: 三方履约订单持久化(OutOrderDO/DAO)已删, 此声明待后期以新履约模型替换
+    // void outOrderSave(List<OutOrder> outOrderList);
 
     List<SkuOrderVO> querySkuOrderByOrderId(Long orderId, List<Long> skuIdList);
 
-    void deliverNotify(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId);
-
     RoleEnum.OrderType settleOrderType(Long supplierId);
 
-    void updateOrderShip(Long orderId, String shipVo);
+    void updateOrderShip(Long orderId, ShipVO shipVo);
 
-    List<SpuOrder> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
+    void updateSpuOrderShip(Long orderId, ShipVO shipVo);
 
-    /**
-     * 门店用户支付消息
-     */
-    void storeAccountPay(Long storeId, Long accountId, Integer memberAmount);
-
-    void sendOrderNewRecordEvent(List<SpuOrder> spuOrderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, RoleEnum.CompanyRole operatorRoleId);
+    List<SpuOrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
 
     /**
      * 订单交易额时间切片统计(已补全空白区间)
@@ -300,4 +252,11 @@ public interface IOrderRepository {
      * @return 导出明细列表
      */
     List<SpuOrderItemExcelVO> querySpuOrderItemExcelVO(SpuOrderQuery spuOrderQuery);
+
+    List<DeliverVO> deliverListByQuery(DeliverQuery deliverQuery);
+
+    /**
+     * 保存/更新订单状态记录
+     */
+    OrderStateRecordEntity createStateRecord(OrderStateRecordEntity record);
 }

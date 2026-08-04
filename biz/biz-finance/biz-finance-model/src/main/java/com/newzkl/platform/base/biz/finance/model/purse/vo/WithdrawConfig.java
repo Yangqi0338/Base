@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class WithdrawConfig implements Serializable {
     /**
      * 最小提现金额
      */
-    private Long minAmount;
+    private Money minAmount;
 
     /**
      * 提现比例
@@ -32,19 +33,19 @@ public class WithdrawConfig implements Serializable {
     /**
      * 提现手续费
      */
-    private Integer withdrawalFee;
+    private Money withdrawalFee;
 
     /**
      * 最大提现金额
      */
-    private Integer maxAmount;
+    private Money maxAmount;
 
     public WithdrawConfig init() {
-        this.minAmount = 0L;
+        this.minAmount = Money.ZERO;
         this.ratio = 0.0;
         this.scoreRatio = 0.0;
-        this.withdrawalFee = 0;
-        this.maxAmount = 0;
+        this.withdrawalFee = Money.ZERO;
+        this.maxAmount = Money.ZERO;
         return this;
     }
 

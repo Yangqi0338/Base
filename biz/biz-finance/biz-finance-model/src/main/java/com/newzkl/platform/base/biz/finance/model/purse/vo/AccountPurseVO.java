@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -45,17 +46,17 @@ public class AccountPurseVO {
     /**
      * 收益
      */
-    private Integer earnings;
+    private Money earnings;
 
     /**
      * 三方余额
      */
-    private Integer tripartiteAmount;
+    private Money tripartiteAmount;
 
     /**
      * 总收益
      */
-    private Integer totalEarnings;
+    private Money totalEarnings;
 
     /**
      * 开户时间

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -31,7 +32,7 @@ public class AddAccountPurseReq {
     /**
      * 初始账户金额
      */
-    private Integer initAmount = 0;
+    private Money initAmount = Money.ZERO;
 
     /**
      * 客户类型

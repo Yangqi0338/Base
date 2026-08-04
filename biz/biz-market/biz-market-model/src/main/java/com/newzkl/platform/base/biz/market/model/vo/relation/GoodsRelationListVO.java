@@ -94,10 +94,6 @@ public class GoodsRelationListVO {
      * 最大利润
      */
     private Integer maxProfit;
-    /**
-     * 库存
-     */
-    private Integer inventory;
 
     /**
      * 让利比例

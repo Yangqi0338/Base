@@ -1,10 +1,9 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 /**
  * 用户收藏创建请求
@@ -65,9 +64,9 @@ public class UserCollectionCreateReq {
     private String skuName;
 
     /**
-     * 商品价格 (快照)
+     * 商品价格快照 (Money, 入参 JSON 元 → Money, 落库 BIGINT 分)
      */
-    private BigDecimal price;
+    private Money price;
 
     /**
      * 商品主图URL (快照)

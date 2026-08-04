@@ -7,9 +7,9 @@
     <result column="bonus_desc" jdbcType="VARCHAR" property="desc" />
     <result column="strategy_id" jdbcType="BIGINT" property="strategyId" />
     <result column="other_config" jdbcType="BIGINT" property="otherConfig" />
-    <result column="order_bonus" jdbcType="INTEGER" property="orderBonus" />
-    <result column="custom_bonus" jdbcType="INTEGER" property="customBonus" />
-    <result column="settle_bonus" jdbcType="INTEGER" property="settleBonus" />
+    <result column="order_bonus" jdbcType="BIGINT" property="orderBonus" />
+    <result column="custom_bonus" jdbcType="BIGINT" property="customBonus" />
+    <result column="settle_bonus" jdbcType="BIGINT" property="settleBonus" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="start_time" jdbcType="BIGINT" property="startTime" />
     <result column="end_time" jdbcType="BIGINT" property="endTime" />
@@ -18,9 +18,9 @@
   <resultMap id="BonusPoolDataList" type="com.newzkl.platform.base.biz.activity.model.event.vo.HistoryBonusPoolDataVO">
     <id column="bonus_pool_id" jdbcType="BIGINT" property="bonusPoolId" />
     <result column="bonus_desc" jdbcType="VARCHAR" property="desc" />
-    <result column="order_bonus" jdbcType="INTEGER" property="orderBonus" />
-    <result column="custom_bonus" jdbcType="INTEGER" property="customBonus" />
-    <result column="settle_bonus" jdbcType="INTEGER" property="settleBonus" />
+    <result column="order_bonus" jdbcType="BIGINT" property="orderBonus" />
+    <result column="custom_bonus" jdbcType="BIGINT" property="customBonus" />
+    <result column="settle_bonus" jdbcType="BIGINT" property="settleBonus" />
     <result column="settle_type" jdbcType="INTEGER" property="settleType" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="start_time" jdbcType="BIGINT" property="startTime" />

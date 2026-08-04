@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.store.model.enums.StoreStyleEnum;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
@@ -16,9 +15,7 @@ import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreStylePageQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleResponse;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepository;
-import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreStyleDAO;
-import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreDO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreStyleDO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +33,9 @@ import java.util.stream.Collectors;
 public class StoreStyleRepositoryImpl extends ServiceImpl<StoreStyleDAO, StoreStyleDO> implements StoreStyleRepository {
 
     private final StoreStyleDAO storeStyleDAO;
-    private final StoreDAO storeDAO;
 
-    public StoreStyleRepositoryImpl(StoreStyleDAO storeStyleDAO, StoreDAO storeDAO) {
+    public StoreStyleRepositoryImpl(StoreStyleDAO storeStyleDAO) {
         this.storeStyleDAO = storeStyleDAO;
-        this.storeDAO = storeDAO;
     }
 
     @Override
@@ -65,19 +60,9 @@ public class StoreStyleRepositoryImpl extends ServiceImpl<StoreStyleDAO, StoreSt
         // 执行分页查询
         Page<StoreStyleDO> page = this.page(queryPage, wrapper);
 
-        // 转换为响应对象列表
+        // 转换为响应对象列表 (使用门店数由领域层聚合回填)
         List<StoreStyleResponse> responseList = page.getRecords().stream()
                 .map(x -> BeanUtil.toBean(x, StoreStyleResponse.class)).collect(Collectors.toList());
-
-        // 按styleCode分组统计使用门店数量
-        if (!responseList.isEmpty()) {
-            List<String> styleCodes = responseList.stream().map(StoreStyleResponse::getStyleCode).collect(Collectors.toList());
-            List<StoreDO> storeDOList = storeDAO.selectList(new LambdaQueryWrapper<StoreDO>().in(StoreDO::getStyleCode, styleCodes));
-            Map<String, Long> styleCountMap = storeDOList.stream()
-                    .collect(Collectors.groupingBy(StoreDO::getStyleCode, Collectors.counting()));
-            responseList.forEach(response -> response.setUseStoreNum(
-                    styleCountMap.getOrDefault(response.getStyleCode(), 0L).intValue()));
-        }
 
         // 构建新的 Page 对象
         Page<StoreStyleResponse> resultPage = new Page<>();

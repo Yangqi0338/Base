@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.biz.account.model.vo.OperatorClientBaseVO;
 import lombok.Data;
 

@@ -27,6 +27,10 @@
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-sys-facade</artifactId>
         </dependency>
         <dependency>

@@ -21,6 +21,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleD
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.RedisEnum;
@@ -136,7 +137,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int addAccountPurseAmount(AccountPurseQuery query, Integer amount, boolean isAddTotal, boolean isAddTotalPurse) {
+    public int addAccountPurseAmount(AccountPurseQuery query, Money amount, boolean isAddTotal, boolean isAddTotalPurse) {
         if (isAddTotalPurse) {
             // 非总账号且要增加总账户资金
             // QuerySupport#add 在 list 为 null 时是在**新 list** 上追加并返回, 不改原对象,
@@ -146,17 +147,17 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
                 .toUpdate()
-                // 增加余额
-                .setIncrBy(AccountPurseDO::getEarnings, amount)
+                // 增加余额 (Money → 分 long 落库累加)
+                .setIncrBy(AccountPurseDO::getEarnings, amount.getCent())
                 // 根据flag决定是否增加总消费
-                .setIncrBy(isAddTotal, AccountPurseDO::getTotalEarnings, amount);
+                .setIncrBy(isAddTotal, AccountPurseDO::getTotalEarnings, amount.getCent());
 
         return accountPurseDAO.update(uw);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int subAccountPurseAmount(AccountPurseQuery query, Integer amount, boolean isSubTotal, boolean isSubTotalPurse, boolean isNegative) {
+    public int subAccountPurseAmount(AccountPurseQuery query, Money amount, boolean isSubTotal, boolean isSubTotalPurse, boolean isNegative) {
         if (isSubTotalPurse) {
             // 非总账号且要增加总账户资金
             // 同 addAccountPurseAmount: QuerySupport#add 对 null list 返回新 list, 丢返回值即静默丢 TOTAL
@@ -167,10 +168,10 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
                 .toUpdate()
                 // 若是不允许负数, 则余额必须大于0
                 .gt(!isNegative, AccountPurseDO::getEarnings, 0)
-                // 增加余额
-                .setDecrBy(AccountPurseDO::getEarnings, amount)
+                // 扣减余额 (Money → 分 long 落库累减)
+                .setDecrBy(AccountPurseDO::getEarnings, amount.getCent())
                 // 根据flag决定是否减少总消费
-                .setDecrBy(isSubTotal, AccountPurseDO::getTotalEarnings, amount);
+                .setDecrBy(isSubTotal, AccountPurseDO::getTotalEarnings, amount.getCent());
 
         return accountPurseDAO.update(uw);
     }
@@ -186,6 +187,11 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
     public Page<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery query) {
         Page<AccountPurseAlterRecordDO> page = accountPurseAlterRecordDAO.selectPage(RepositorySupport.page(query), accountPurseAlterRecordDAO.getLw(query));
         return TransferUtils.transferPage(page, AccountPurseAlterRecordVO.class);
+    }
+
+    @Override
+    public Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(AccountPurseAlterRecordQuery query) {
+        return accountPurseAlterRecordDAO.queryChannelRollOutRecords(RepositorySupport.page(query), query);
     }
 
     @Override
@@ -208,8 +214,9 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
             return data;
         }
         data = new TotalSupplierSettleDataRes();
-        data.setTotalSettle(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.PurseAlterType.SUPPLIER_SETTLE.getType()));
-        data.setSellAfter(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.PurseAlterType.SELL_AFTER.getType()));
+        // DAO 返回分 Integer, 包成 Money
+        data.setTotalSettle(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.PurseAlterType.SUPPLIER_SETTLE.getType())));
+        data.setSellAfter(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.PurseAlterType.SELL_AFTER.getType())));
         RedisUtil.set(key, data, 5L, TimeUnit.MINUTES);
         return data;
     }

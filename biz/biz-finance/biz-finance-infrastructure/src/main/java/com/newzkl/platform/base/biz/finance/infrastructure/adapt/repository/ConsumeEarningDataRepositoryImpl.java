@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 
 
 import cn.hutool.core.util.StrUtil;
@@ -80,7 +81,7 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
             List<EarningRecordDO> earningInfos = earningRecordDAO.selectList(queryWrapper);
 
             // TODO 做个groupBy
-            amount = earningInfos.stream().mapToInt(EarningRecordDO::getAmount).sum();
+            amount = (int) earningInfos.stream().mapToLong(r -> r.getAmount().getCent()).sum();
 
             RedisUtil.set(key, amount, 5L, TimeUnit.MINUTES);
         }
@@ -95,8 +96,9 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
         }
         totalEarningVO = new TotalEarningVO();
 
-        totalEarningVO.setTotalEarning(earningRecordDAO.queryTotalEarning(1));
-        totalEarningVO.setWaitEarning(earningRecordDAO.queryTotalEarning(0));
+        // DAO 返回分 Integer, 包成 Money
+        totalEarningVO.setTotalEarning(Money.of(earningRecordDAO.queryTotalEarning(1)));
+        totalEarningVO.setWaitEarning(Money.of(earningRecordDAO.queryTotalEarning(0)));
         RedisUtil.set(RedisEnum.Key.TOTAL_EARNING_AMOUNT.getCode(), totalEarningVO, 5L, TimeUnit.HOURS);
         return totalEarningVO;
     }

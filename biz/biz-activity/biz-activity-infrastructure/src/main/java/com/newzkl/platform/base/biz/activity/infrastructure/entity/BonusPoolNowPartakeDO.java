@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -28,13 +29,19 @@ public class BonusPoolNowPartakeDO {
     private Long role;
     private String roleName;
     private Integer personPercent;
-    private Integer dividendAmount;
+    /**
+     * 个人分红金额 (Money, 落库 BIGINT 分)
+     */
+    private Money dividendAmount;
     private String dividendCycle;
     private Long bonusPoolId;
     private Long memberId;
     private String orderSn;
     private Long skuCode;
     private Integer buyNum;
-    private Integer bonus;
+    /**
+     * 录入奖金 (Money, 落库 BIGINT 分)
+     */
+    private Money bonus;
     private LocalDateTime createTime;
 }

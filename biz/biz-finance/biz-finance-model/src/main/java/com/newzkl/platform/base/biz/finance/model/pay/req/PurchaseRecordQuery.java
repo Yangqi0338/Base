@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import jakarta.validation.constraints.NotNull;
@@ -55,7 +56,7 @@ public class PurchaseRecordQuery extends BizPageQuery {
     /**
      * 支付金额
      */
-    private Integer payAmount;
+    private Money payAmount;
 
     /**
      * 支付方式

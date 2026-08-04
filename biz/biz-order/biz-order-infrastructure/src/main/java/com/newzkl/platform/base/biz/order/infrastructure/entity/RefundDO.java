@@ -1,13 +1,17 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
+import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author muc_fang
@@ -105,7 +109,8 @@ public class RefundDO extends BaseDO {
     /**
      * 售后明细 格式: List<RefundItemVO>
      */
-    private String item;
+    @JsonSerializable
+    private List<RefundItemVO> item;
     /**
      * 拒绝原因
      */
@@ -115,5 +120,6 @@ public class RefundDO extends BaseDO {
      */
     private String outRefundAddress;
 
-    private String freightExt;
+    @JsonSerializable
+    private FreightExt freightExt;
 }

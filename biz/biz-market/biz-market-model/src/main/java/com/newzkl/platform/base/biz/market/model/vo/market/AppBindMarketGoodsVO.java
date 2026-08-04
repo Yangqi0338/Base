@@ -83,10 +83,6 @@ public class AppBindMarketGoodsVO {
      * 最大利润
      */
     private Integer maxProfit;
-    /**
-     * 库存
-     */
-    private Integer inventory;
 
     /**
      * 冗余: 供货价起始

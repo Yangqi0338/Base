@@ -15,13 +15,13 @@ public class SettleRecordAgg {
     /**
      * 结算记录表
      */
-    private SettleRecord settleRecord;
+    private SettleRecordDTO settleRecord;
     /**
      * 结算记录明细表
      */
-    private List<SettleRecordItem> settleRecordItemList;
+    private List<SettleRecordItemDTO> settleRecordItemList;
 
-    public SettleRecordAgg(SettleRecord settleRecord, List<SettleRecordItem> settleRecordItemList) {
+    public SettleRecordAgg(SettleRecordDTO settleRecord, List<SettleRecordItemDTO> settleRecordItemList) {
         this.settleRecord = settleRecord;
         this.settleRecordItemList = settleRecordItemList;
     }

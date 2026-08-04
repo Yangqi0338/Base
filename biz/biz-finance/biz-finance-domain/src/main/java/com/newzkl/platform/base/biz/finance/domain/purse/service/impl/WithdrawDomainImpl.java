@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.assembler.AccountPurseRollOutA
 import com.newzkl.platform.base.biz.finance.model.assembler.AccountWithdrawRecordAssembler;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
@@ -87,7 +88,8 @@ public class WithdrawDomainImpl implements WithdrawDomain {
 
         AccountWithdrawRecordReq withdrawRecordReq = new AccountWithdrawRecordReq();
         withdrawRecordReq.setAccountId(accountId);
-        withdrawRecordReq.setAmount(realAmount);
+        // realAmount 为分 (percentFloor 结果), Money.of(Integer) 按分构造
+        withdrawRecordReq.setAmount(Money.of(realAmount));
         withdrawRecordReq.setGoodsPoints(goodsPoints);
         withdrawRecordReq.setConfig(JSON.toJSONString(withdraw));
         return withdrawRepository.saveAccountWithdraw(withdrawRecordAssembler.req2VO(withdrawRecordReq));
@@ -126,9 +128,9 @@ public class WithdrawDomainImpl implements WithdrawDomain {
         List<RollOutApplyExportVO> exportResponses = rollOutApplyList.stream().map(c -> {
             RollOutApplyExportVO v = TransferUtils.transfer(c, RollOutApplyExportVO::new);
             v.setAuditState(c.getAuditState().getValue());
-            v.setApplyAmount(BizUtil.toYuanStr(c.getApplyAmount()));
-            v.setHandlingFee(BizUtil.toYuanStr(c.getHandlingFee()));
-            v.setArrivalAmount(BizUtil.toYuanStr(c.getApplyAmount() - c.getHandlingFee()));
+            v.setApplyAmount(c.getApplyAmount().getAmount().toPlainString());
+            v.setHandlingFee(c.getHandlingFee().getAmount().toPlainString());
+            v.setArrivalAmount(c.getApplyAmount().subtract(c.getHandlingFee()).getAmount().toPlainString());
             return v;
         }).collect(Collectors.toList());
         return exportResponses;

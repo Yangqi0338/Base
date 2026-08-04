@@ -45,26 +45,66 @@ public interface ProjectRepository {
     Page<ProjectListRes> queryPage(ProjectQuery query);
 
     /**
-     * 新增项目 (含视频子表)
+     * 新增项目主记录 (project 表)
      *
      * @param req 保存请求
      * @return 新增项目主键
      */
-    Long insert(ProjectSaveReq req);
+    Long insertProject(ProjectSaveReq req);
 
     /**
-     * 编辑项目 (含视频子表全量覆盖)
+     * 批量新增项目视频 (project_video 表, 入参空时不落库)
+     *
+     * @param req       保存请求
+     * @param projectId 项目主键
+     */
+    void insertProjectVideos(ProjectSaveReq req, Long projectId);
+
+    /**
+     * 判断项目是否存在
+     *
+     * @param id 项目主键
+     * @return 存在返回 true
+     */
+    boolean existsProject(Long id);
+
+    /**
+     * 更新项目主记录 (project 表)
      *
      * @param req 保存请求, id 必填
      */
-    void edit(ProjectSaveReq req);
+    void updateProject(ProjectSaveReq req);
 
     /**
-     * 删除项目 (含视频子表)
+     * 批量新增或更新项目视频 (project_video 表, 入参空时不落库)
+     *
+     * @param req       保存请求
+     * @param projectId 项目主键
+     * @return 落库后保留的视频主键列表, 永不为 null
+     */
+    List<Long> saveProjectVideos(ProjectSaveReq req, Long projectId);
+
+    /**
+     * 删除项目下不在保留列表内的视频 (project_video 表, 保留列表空时删全部)
+     *
+     * @param projectId   项目主键
+     * @param keepVideoIds 保留的视频主键列表
+     */
+    void deleteStaleVideos(Long projectId, List<Long> keepVideoIds);
+
+    /**
+     * 删除项目主记录 (project 表)
      *
      * @param id 项目主键
      */
-    void del(Long id);
+    void deleteProject(Long id);
+
+    /**
+     * 删除项目下全部视频 (project_video 表)
+     *
+     * @param id 项目主键
+     */
+    void deleteProjectVideos(Long id);
 
     /**
      * 标记/取消意向

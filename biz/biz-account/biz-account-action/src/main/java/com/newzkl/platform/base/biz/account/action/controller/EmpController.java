@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.domain.service.AdminClientDomain;
 import com.newzkl.platform.base.biz.account.model.auth.req.EmpPasswordLoginReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.LoginReq;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.req.EmpCreateReq;
 import com.newzkl.platform.base.biz.account.model.req.EmpQuery;
 import com.newzkl.platform.base.biz.account.model.res.EmpRes;

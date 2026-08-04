@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,9 +25,9 @@ public class ModelShopDataRes implements Serializable {
     private Integer totalUseStoreNum;
 
     /**
-     * 累计下单金额
+     * 累计下单金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalOrderAmount;
+    private Money totalOrderAmount;
 
     /**
      * 累计下单数
@@ -34,9 +35,9 @@ public class ModelShopDataRes implements Serializable {
     private Integer totalOrderNum;
 
     /**
-     * 累计支付金额
+     * 累计支付金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalPayAmount;
+    private Money totalPayAmount;
 
     /**
      * 累计支付订单数

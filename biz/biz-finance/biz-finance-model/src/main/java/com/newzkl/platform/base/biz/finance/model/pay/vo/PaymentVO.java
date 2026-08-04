@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -31,12 +32,12 @@ public class PaymentVO extends BaseRes {
     /**
      * 支付金额
      */
-    private Integer payAmount;
+    private Money payAmount;
 
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
 
     /**
      * 消费类型

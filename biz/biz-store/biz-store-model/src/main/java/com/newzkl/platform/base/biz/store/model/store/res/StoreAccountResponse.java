@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -68,9 +69,9 @@ public class StoreAccountResponse implements Serializable {
     private Integer countPayNumber;
 
     /**
-     * 支付金额：分
+     * 支付金额 (Money, 落库 BIGINT 分)
      */
-    private Integer countPayAmount;
+    private Money countPayAmount;
 
     /**
      * 进店总数
@@ -88,9 +89,9 @@ public class StoreAccountResponse implements Serializable {
     private LocalDateTime lastPayTime;
 
     /**
-     * 最后支付金额：分
+     * 最后支付金额 (Money, 落库 BIGINT 分)
      */
-    private Integer lastPayAmount;
+    private Money lastPayAmount;
 
     /**
      * 0:未拉黑，1已拉黑

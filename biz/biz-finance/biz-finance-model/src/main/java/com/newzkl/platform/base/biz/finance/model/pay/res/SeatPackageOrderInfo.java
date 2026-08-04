@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -28,7 +29,7 @@ public class SeatPackageOrderInfo implements Serializable {
     /**
      * 席位价格
      */
-    private Integer purchasePrice;
+    private Money purchasePrice;
 
     /**
      * 购买数量

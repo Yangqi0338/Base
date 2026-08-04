@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.course.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,14 +53,14 @@ public class CourseRes extends BaseRes {
     private String categoryName;
 
     /**
-     * 原价, 单位元
+     * 原价 (Money; JSON 出参按元字符串序列化)
      */
-    private Double originalPrice;
+    private Money originalPrice;
 
     /**
-     * 售价, 单位元
+     * 售价 (Money; JSON 出参按元字符串序列化)
      */
-    private Double sellPrice;
+    private Money sellPrice;
 
     /**
      * 虚拟购买次数

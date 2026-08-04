@@ -1,10 +1,13 @@
 package com.newzkl.platform.base.common.ddd.infrastructure.support;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.SharedString;
 import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,6 +28,24 @@ public class BaseLambdaUpdateWrapper<T> extends LambdaUpdateWrapper<T> {
         this.lastSql = lastSql;
         this.sqlComment = sqlComment;
         this.sqlFirst = sqlFirst;
+    }
+
+    public <R> BaseLambdaUpdateWrapper<T> notEmptySet(SFunction<T, R> column, R value) {
+        this.set(!ObjectUtil.isNotEmpty(value), column, value);
+        return this;
+    }
+
+    public <R> BaseLambdaUpdateWrapper<T> append(SFunction<T, R> column, R value) {
+        return this.append(column, value,',');
+    }
+
+    public <R> BaseLambdaUpdateWrapper<T> append(SFunction<T, R> column, R value, Character separator) {
+        boolean condition = !ObjectUtil.isNotEmpty(value);
+        if (condition) {
+            String realColumn = columnToString(column);
+            this.setSql(String.format("CONCAT(%s, '%s', '%s'", realColumn, separator, value));
+        }
+        return this;
     }
 
 }

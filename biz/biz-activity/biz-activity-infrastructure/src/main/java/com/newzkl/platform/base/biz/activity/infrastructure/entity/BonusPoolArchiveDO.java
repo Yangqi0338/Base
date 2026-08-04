@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -139,19 +140,19 @@ public class BonusPoolArchiveDO implements Serializable {
     private Long otherConfig;
 
     /**
-     * 订单奖金
+     * 订单奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer orderBonus;
+    private Money orderBonus;
 
     /**
-     * 自定义奖金
+     * 自定义奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer customBonus;
+    private Money customBonus;
 
     /**
-     * 最终结算奖金
+     * 最终结算奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer settleBonus;
+    private Money settleBonus;
 
     /**
      * 结算方式 0：未结算 1：订单  2：自定义

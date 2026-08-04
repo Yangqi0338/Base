@@ -1,23 +1,14 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.service.CdkDomain;
-import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
-import com.newzkl.platform.base.biz.account.model.cdk.req.RoleCmd;
-import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
-import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
 import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +54,6 @@ public class RoleController {
 
     private final IdentityService identityService;
     private final UserQueryService userQueryService;
-    private final CdkDomain cdkDomain;
 
     /**
      * 申请角色
@@ -132,59 +122,4 @@ public class RoleController {
         return PlatformResult.success(identityService.submitPromiseFlow(promiseFlowVO));
     }
 
-    /**
-     * 开通码分页
-     *
-     * <p>保留旧语义: 按当前登录角色注入归属ID —— 平台不限, 运营商 / 交易师 / 渠道商
-     * 分别限定自身。迁移差异: 旧出参为 PageHelper 的 {@code PageInfo<CdkVO>},
-     * 中台统一为 MyBatis-Plus {@code Page} 与出参对象 {@code CdkRes}。</p>
-     *
-     * @param cdkQuery 开通码查询
-     * @return 开通码分页
-     */
-    @PostMapping("cdkList")
-    public PlatformResult<Page<CdkRes>> cdkList(@RequestBody CdkQuery cdkQuery) {
-        Long roleId = SecurityUtils.getRoleId();
-        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(roleId)) {
-            // 平台不限归属
-        } else if (RoleEnum.CompanyRole.OPERATOR.getCode().equals(roleId)) {
-            cdkQuery.setOperatorId(SecurityUtils.getAccountId());
-        } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(roleId)) {
-            cdkQuery.setDealerId(SecurityUtils.getAccountId());
-        } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
-            cdkQuery.setChannelId(SecurityUtils.getAccountId());
-        }
-        return PlatformResult.success(userQueryService.cdkPage(cdkQuery));
-    }
-
-    /**
-     * 分配开通码
-     *
-     * <p>保留旧语义: 分配方角色与账号取当前登录态。迁移差异: 旧方法签名声明
-     * {@code ScmResult<PageInfo<CdkVO>>} 但实际返回空 body, 中台按实际语义收敛为空结果。</p>
-     *
-     * @param toCdkCommand 分配命令
-     * @return 空结果
-     */
-    @PostMapping("toCdk")
-    public PlatformResult<Void> toCdk(@Validated @RequestBody ToCdkCommand toCdkCommand) {
-        toCdkCommand.setFromRole(SecurityUtils.getRoleId());
-        toCdkCommand.setFromUserId(SecurityUtils.getAccountId());
-        identityService.toCdk(toCdkCommand);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 修改开通码状态
-     *
-     * @param stateEdit 状态修改入参
-     * @return 空结果
-     * @deprecated 前端零引用, 已确认死端点 (2026-07-27 交叉比对); 仅为契约完整性迁入
-     */
-    @Deprecated
-    @PostMapping("cdkStateEdit")
-    public PlatformResult<Void> cdkStateEdit(@Validated @RequestBody RoleCmd.StateEdit stateEdit) {
-        cdkDomain.cdkStateEdit(stateEdit.getId(), stateEdit.getUseState());
-        return PlatformResult.success();
-    }
 }

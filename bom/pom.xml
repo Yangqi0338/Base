@@ -382,32 +382,6 @@
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-inventory-model</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-inventory-facade</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-inventory-domain</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-inventory-application</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-inventory-infrastructure</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-media-model</artifactId>
                 <version>${base.revision}</version>
             </dependency>

@@ -98,6 +98,16 @@ public interface AccountPurseDomain {
     Page<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req);
 
     /**
+     * 查询渠道商提现记录
+     *
+     * <p>变动记录与提现申请(审核中)的 union all 分页, 出参读 {@code records}/{@code total}</p>
+     *
+     * @param req 变动记录查询
+     * @return 提现记录分页
+     */
+    Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(AccountPurseAlterRecordQuery req);
+
+    /**
      * 查询客户账户变动记录
      *
      * @param req

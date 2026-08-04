@@ -130,7 +130,7 @@ public class COrderStateMachine {
 		if (state == null) {
 			return "null";
 		}
-		return state.getInfo() + "(" + state.getCode() + ")";
+		return state.getValue() + "(" + state.getCode() + ")";
 	}
 
 	/**

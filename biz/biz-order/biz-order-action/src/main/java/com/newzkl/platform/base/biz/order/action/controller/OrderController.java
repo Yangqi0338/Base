@@ -13,6 +13,8 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.support.api.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
@@ -220,14 +222,7 @@ public class OrderController {
      * 运营商: SPU订单状态分组
      */
     @PostMapping("operatorSpuOrderStateCount")
-    public PlatformResult<Map<Integer, Integer>> spuOrderStateCountMap(@RequestBody @Valid SpuOrderQuery spuOrderQuery) {
-        spuOrderQuery.setOrderStateList(CollUtil.map(CollUtil.newArrayList(
-                OrderEnum.State.WAIT_DELIVERY,
-                OrderEnum.State.WAIT_RECEIVE,
-                OrderEnum.State.DOWN_RECEIVE,
-                OrderEnum.State.SUCCESS,
-                OrderEnum.State.CLOSE
-        ), OrderEnum.State::getCode, true));
+    public PlatformResult<Map<OrderEnum.State, Integer>> spuOrderStateCountMap(@RequestBody @Valid SpuOrderQuery spuOrderQuery) {
         return PlatformResult.success(orderService.spuOrderStateCountMap(spuOrderQuery));
     }
     /**
@@ -261,11 +256,11 @@ public class OrderController {
         } else if (RoleEnum.CompanyRole.SUPPLIER == role) {
             spuOrderQuery.setSupplierId(accountId);
             spuOrderQuery.setOrderStateList(Arrays.asList(
-                    OrderEnum.State.WAIT_DELIVERY.getCode(),
-                    OrderEnum.State.WAIT_RECEIVE.getCode(),
-                    OrderEnum.State.DOWN_RECEIVE.getCode(),
-                    OrderEnum.State.SUCCESS.getCode(),
-                    OrderEnum.State.CLOSE.getCode()
+                    OrderEnum.State.WAIT_DELIVERY,
+                    OrderEnum.State.WAIT_RECEIVE,
+                    OrderEnum.State.DOWN_RECEIVE,
+                    OrderEnum.State.SUCCESS,
+                    OrderEnum.State.CLOSE
             ));
         } else if (RoleEnum.CompanyRole.MEMBER == role) {
             spuOrderQuery.setMemberId(accountId);
@@ -273,7 +268,7 @@ public class OrderController {
             Integer type = spuOrderQuery.getType();
             List<Long> supplierIdList = operatorApi.supplierIdListByType(accountId, type);
             List<Long> searchSupplierIdList = Opt.ofNullable(spuOrderQuery.getSupplierIdList()).orElse(new ArrayList<>());
-            Collection<Long> idList = CollUtil.addAll(searchSupplierIdList, spuOrderQuery.getSupplierId());
+            Collection<Long> idList = CollUtil.addAll(searchSupplierIdList, spuOrderQuery.getSupplierIdList());
             if (CollUtil.isNotEmpty(idList)) {
                 supplierIdList = supplierIdList.stream().filter(idList::contains).collect(Collectors.toList());
             }
@@ -282,11 +277,11 @@ public class OrderController {
             }
             spuOrderQuery.setSupplierIdList(supplierIdList);
             spuOrderQuery.setOrderStateList(Arrays.asList(
-                    OrderEnum.State.WAIT_DELIVERY.getCode(),
-                    OrderEnum.State.WAIT_RECEIVE.getCode(),
-                    OrderEnum.State.DOWN_RECEIVE.getCode(),
-                    OrderEnum.State.SUCCESS.getCode(),
-                    OrderEnum.State.CLOSE.getCode()
+                    OrderEnum.State.WAIT_DELIVERY,
+                    OrderEnum.State.WAIT_RECEIVE,
+                    OrderEnum.State.DOWN_RECEIVE,
+                    OrderEnum.State.SUCCESS,
+                    OrderEnum.State.CLOSE
             ));
         }
 
@@ -313,7 +308,7 @@ public class OrderController {
                 }
             }
             spuOrderExcelVO.setCount(String.valueOf(skuCount));
-            spuOrderExcelVO.setOrderState(spuOrderAggVO.getSpuOrderVO().getOrderState().getInfo());
+            spuOrderExcelVO.setOrderState(spuOrderAggVO.getSpuOrderVO().getOrderState().getValue());
             ShipVO shipVO = JSON.parseObject(spuOrderAggVO.getSpuOrderVO().getShipVO(), ShipVO.class);
             spuOrderExcelVO.setShipName(shipVO.getShipName());
             spuOrderExcelVO.setShipPhone(shipVO.getShipPhone());
@@ -333,8 +328,9 @@ public class OrderController {
     @GetMapping("/countOrderState")
     public PlatformResult<List<OrderStateCountVO>> countOrderState() {
         // 获取当前渠道商ID
-        Long channelId = SecurityUtils.getAccountId();
-        List<OrderStateCountVO> stateCountList = orderDomain.countOrderStateByChannel(channelId);
+        SpuOrderQuery orderQuery = new SpuOrderQuery();
+        orderQuery.setChannelId(SecurityUtils.getAccountId());
+        List<OrderStateCountVO> stateCountList = orderService.countOrderState(orderQuery);
         return PlatformResult.success(stateCountList);
     }
 
@@ -344,8 +340,9 @@ public class OrderController {
      */
     @GetMapping("/countState")
     public PlatformResult<List<OrderStateCountVO>> countState() {
-        Long accountId = SecurityUtils.getAccountId();
-        List<OrderStateCountVO> stateCountList = orderDomain.countOrderStateByAccount(accountId);
+        SpuOrderQuery orderQuery = new SpuOrderQuery();
+        orderQuery.setMemberId(SecurityUtils.getAccountId());
+        List<OrderStateCountVO> stateCountList = orderService.countOrderState(orderQuery);
         return PlatformResult.success(stateCountList);
     }
 }

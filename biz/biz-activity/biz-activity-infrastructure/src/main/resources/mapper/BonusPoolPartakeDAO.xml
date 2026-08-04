@@ -12,7 +12,7 @@
             (
             #{item.id,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, #{bonusPoolId,jdbcType=BIGINT},
             #{item.memberId,jdbcType=BIGINT}, #{item.orderSn,jdbcType=CHAR}, #{item.skuCode,jdbcType=BIGINT},
-            #{item.buyNum,jdbcType=INTEGER}, #{item.bonus,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}
+            #{item.buyNum,jdbcType=INTEGER}, #{item.bonus,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}
             )
         </foreach>
     </insert>

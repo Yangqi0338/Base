@@ -1,42 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 迁移自 new-scm/scm-sale SettleGoodsDAO.xml, 列名与 Base SettleGoodsDO 一致, 无需适配 -->
-<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.SettleGoodsDAO">
-
-    <select id="countByQuery" resultType="java.lang.Integer">
-        select
-            count(t.id)
-        from settle_goods t
-        <where>
-            t.del_flag = 0
-            <if test="query.id != null">
-                and t.`id` = #{query.id}
-            </if>
-            <if test="query.idList != null and query.idList.size() > 0">
-                and t.`id` in
-                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="query.lessSettleTime != null">
-                and t.`next_settle_time` &lt;= #{query.lessSettleTime}
-            </if>
-        </where>
-    </select>
-
-    <update id="settleGoodsEditForExecuteSettle">
-        update settle_goods t set
-            t.next_settle_time = #{nextSettlementTime,jdbcType=TIMESTAMP},
-            t.settle_num = t.settle_num + 1,
-            t.settle_money = t.settle_money + #{settleMoney},
-            t.settle_goods_num = t.settle_goods_num + #{settleSkuCount}
-        where t.supplier_id = #{supplierId,jdbcType=BIGINT} and t.spu_id = #{spuId,jdbcType=BIGINT}
-    </update>
-
-    <update id="settleGoodsEditForExecuteEmptySettle">
-        update settle_goods t set
-        t.next_settle_time = #{nextSettlementTime,jdbcType=TIMESTAMP}
-        where t.supplier_id = #{supplierId,jdbcType=BIGINT} and t.spu_id = #{spuId,jdbcType=BIGINT}
-    </update>
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleGoodsDAO">
 
 </mapper>

@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,7 +23,7 @@ public class SellAfterRefundReq implements Serializable {
     /**
      * 退款金额
      */
-    private Integer refundAmount;
+    private Money refundAmount;
 
     /**
      * 售后单号
@@ -32,7 +33,7 @@ public class SellAfterRefundReq implements Serializable {
     /**
      * 服务费
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
 
     /**
      * 订单单号

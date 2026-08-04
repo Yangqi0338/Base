@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,12 +13,12 @@ import java.util.List;
 public class SeatPackageChannelRes implements Serializable {
 
     /**
-     * 总席位
+     * 总席位 (数量)
      */
     private Integer totalSeatNum;
 
     /**
-     * 已用席位
+     * 已用席位 (数量)
      */
     private Integer usedSeatNum;
 
@@ -27,9 +28,9 @@ public class SeatPackageChannelRes implements Serializable {
     private List<SeatPackageResponse> seatPackageList;
 
     /**
-     * 席位原价
+     * 席位原价 (Money)
      */
-    private Integer seatOriginalPrice;
+    private Money seatOriginalPrice;
 
     /**
      * 购买最小数量

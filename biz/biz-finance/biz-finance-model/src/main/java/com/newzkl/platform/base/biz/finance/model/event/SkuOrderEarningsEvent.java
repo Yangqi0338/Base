@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.event;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -16,23 +17,23 @@ public class SkuOrderEarningsEvent {
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货价格
      */
-    private Integer storeAmount;
+    private Money storeAmount;
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     /**
      * 渠道商支付金额
      */
-    private Integer totalAmount;
+    private Money totalAmount;
     /**
      * 服务费
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 订单状态 (0, "新订单"),(2,"待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭")
      */
@@ -80,11 +81,11 @@ public class SkuOrderEarningsEvent {
     /**
      * 总服务费
      */
-    private Integer totalServiceChange;
+    private Money totalServiceChange;
     /**
      * 运营商服务费
      */
-    private Integer operatorServiceChange;
+    private Money operatorServiceChange;
     /**
      * 运营商实际服务比例
      */

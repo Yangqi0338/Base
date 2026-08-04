@@ -10,6 +10,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.RechargeOrderInfo;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
@@ -60,7 +61,7 @@ public class PayOrderController {
     public PlatformResult<HuiFuPayRes> channelRecharge(@PathVariable("amount") Integer amount,
                                                   @PathVariable("payMethod") Integer payMethod) {
         ChannelConfigVO channelConfig = accountPurseConfigDomain.defaultChannelConfig();
-        if (channelConfig.getMinimumWithdrawalAmount() > amount) {
+        if (channelConfig.getMinimumWithdrawalAmount().getCent() > amount) {
             throw new PlatformException(FinanceErrorCode.LESS_THAN_MINIMUM_RECHARGE_AMOUNT);
         }
 
@@ -101,8 +102,9 @@ public class PayOrderController {
         OrderPayReq req = new OrderPayReq();
         req.setOrderNo(SnowflakeIdAble.getSnowflakeId());
         req.setConsumeType(consumeType);
-        req.setOrderAmount(amount);
-        req.setPayAmount(amount);
+        // amount 为分 Integer, Money.of(Integer)=分, 与 orderAmount/payAmount(Money) 对齐
+        req.setOrderAmount(Money.of(amount));
+        req.setPayAmount(Money.of(amount));
         req.setAccountId(SecurityUtils.getAccountId());
         req.setAccountName(SecurityUtils.getUsername());
         req.setPayType(OrderEnum.PayType.getByCode(payType));

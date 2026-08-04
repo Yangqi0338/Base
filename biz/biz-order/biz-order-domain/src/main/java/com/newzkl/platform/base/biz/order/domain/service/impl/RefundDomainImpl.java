@@ -1,38 +1,39 @@
 package com.newzkl.platform.base.biz.order.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.DictApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsStoreApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundOperationRecordRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
-import com.newzkl.platform.base.biz.order.domain.service.RefundOperationRecordUtil;
-import com.newzkl.platform.base.biz.order.domain.service.RefundPolicyUtil;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundFreightAddressVO;
-import com.newzkl.platform.base.biz.order.model.dto.Refund;
-import com.newzkl.platform.base.biz.order.model.req.ApplyPlatformCommand;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
+import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundItemCommand;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
-import com.newzkl.platform.base.biz.order.model.res.SkuRefundRes;
 import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
 import com.newzkl.platform.base.biz.order.model.support.api.AccountGroupVO;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
+import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.properties.HttpProxyProperties;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.RefundErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -47,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -66,21 +68,16 @@ import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextH
 @RequiredArgsConstructor
 public class RefundDomainImpl implements IRefundDomain {
 
-    @Autowired
-    private IRefundRepository refundRepository;
+    private final IRefundRepository refundRepository;
+    private final IOrderRepository orderRepository;
+
+    private final AccountApi accountApi;
+    private final GoodsApi goodsApi;
+    private final SupplierApi supplierApi;
+    private final LocalMessageApi localMessageApi;
 
     @Autowired
-    private RefundOperationRecordUtil refundOperationRecordUtil;
-
-    private final AccountApi accountFacade;
-
-
-    private final GoodsStoreApi storeFacade;
-
-    @Autowired
-    private DictApi dictApi;
-
-    private static final String SUCCESS = "SUCCESS";
+    private final DictApi dictApi;
 
     LoadingCache<DictEnum.Key, OrderConfigVO> orderConfig = CacheBuilder.newBuilder()
             .maximumSize(20)
@@ -108,8 +105,8 @@ public class RefundDomainImpl implements IRefundDomain {
             ThrowsException.exception(RefundErrorCode.ORDER_STATE_CANNOT);
         }
         //SKU订单售后信息查询
-        List<SkuRefundRes> skuRefundResList = refundRepository.skuRefundResList(spuOrderVO.getOrderId(), null);
-        Map<Long, SkuRefundRes> skuRefundResMap = skuRefundResList.stream().collect(Collectors.toMap(SkuRefundRes::getSkuId, Function.identity()));
+        List<SkuRefundDTO> skuRefundResList = orderRepository.skuRefundResList(spuOrderVO.getOrderId(), null);
+        Map<Long, SkuRefundDTO> skuRefundResMap = skuRefundResList.stream().collect(Collectors.toMap(SkuRefundDTO::getSkuId, Function.identity()));
         //SPU订单售后信息查询
         List<SpuRefundRes> spuRefundResList = refundRepository.spuRefundResList(spuOrderVO.getOrderId(), null);
         Map<Long, SpuRefundRes> spuRefundResMap = spuRefundResList.stream().collect(Collectors.toMap(SpuRefundRes::getSpuId, Function.identity()));
@@ -117,7 +114,7 @@ public class RefundDomainImpl implements IRefundDomain {
         Integer freightAmount = 0;
         //商品检查
         for (RefundItemCommand refundItemCommand : refundCommand.getRefundItemCommandList()) {
-            SkuRefundRes skuRefundRes = skuRefundResMap.get(refundItemCommand.getSkuId());
+            SkuRefundDTO skuRefundRes = skuRefundResMap.get(refundItemCommand.getSkuId());
             Integer refundCount;
             if(skuRefundRes == null){
                 ThrowsException.exception(BaseErrorCode.PARAM, "SKU未购买过");
@@ -156,9 +153,9 @@ public class RefundDomainImpl implements IRefundDomain {
             skuOrderIdList.add(skuRefundRes.getSkuOrderId());
         }
         //初始化售后单 supplierDomain.supplier(edit.getId())
-        Refund refund = new Refund();
+        RefundDTO refund = new RefundDTO();
         refund.init(refundCommand, orderAggVO, skuRefundResMap, freightAmount);
-        refund.setRefundState(RefundPolicyUtil.getRefundInitState(refundCommand.getRole(), spuOrderVO.getSpuChannelType()));
+        refund.setRefundState(getRefundInitState(refundCommand.getRole(), spuOrderVO.getSpuChannelType()));
         refund.setFromOrderState(orderAggVO.getSpuOrderVO().getOrderState());
 
         // 补充拓展信息
@@ -171,16 +168,16 @@ public class RefundDomainImpl implements IRefundDomain {
             freightExt.setUserAccount(spuOrderExt.getUserAccount());
         }
         if (StrUtil.isBlank(freightExt.getUserAccount())) {
-            AccountGroupVO accountInfo = accountFacade.accountInfo(spuOrderVO.getMemberId());
+            AccountGroupVO accountInfo = accountApi.accountInfo(spuOrderVO.getMemberId());
             if (Objects.nonNull(accountInfo)) {
                 freightExt.setUserAccount(accountInfo.getUserAccount());
             }
         }
         if (StrUtil.isAllBlank(freightExt.getStoreAccount(),freightExt.getStoreName(),freightExt.getStoreHead())) {
-            List<StoreRPCVO> storeList = storeFacade.batchQueryStoreInfo(Collections.singletonList(spuOrderVO.getStoreId()));
+            List<StoreRPCVO> storeList = goodsApi.batchQueryStoreInfo(Collections.singletonList(spuOrderVO.getStoreId()));
             if (CollUtil.isNotEmpty(storeList)) {
                 StoreRPCVO store = storeList.get(0);
-                AccountGroupVO accountInfo1 = accountFacade.accountInfo(store.getId());
+                AccountGroupVO accountInfo1 = accountApi.accountInfo(store.getId());
                 freightExt.setStoreAccount(accountInfo1.getUserAccount());
                 freightExt.setStoreName(store.getName());
                 freightExt.setStoreHead(store.getLogo());
@@ -193,12 +190,53 @@ public class RefundDomainImpl implements IRefundDomain {
         refundCreateRes.setRefundId(refundId);
         refundCreateRes.setSkuOrderIdList(skuOrderIdList);
         refundCreateRes.setRefund(refund);
-        //待供应商审核状态发起外部售后
-//        if(RefundEnum.State.SUPPLIER_WAIT == refund.getRefundState()
-//            && SpuEnum.ChannelType.OUT == spuOrderVO.getSpuChannelType()){
-//            refundRepository.yytRefundCreate(refund);
-//        }
+
+        //修改订单售后中数量
+        int number = 0;
+        for (RefundItemVO refundItem : refund.getItem()) {
+            int count = orderRepository.updateSkuRefundingCount(refund.getOrderId(), refundItem.getSkuId(), refundItem.getCount());
+            if (count != 1){
+                ThrowsException.exception(RefundErrorCode.SKU_REFUNDING_COUNT);
+            }
+            number = number + refundItem.getCount();
+        }
+        orderRepository.updateSpuRefundingCount(refund.getSpuOrderId(), number);
         return refundCreateRes;
+    }
+
+    public static RefundEnum.State getRefundInitState(RoleEnum.CompanyRole createRole, SpuEnum.ChannelType spuBelowType) {
+        //客户申请
+        if(RoleEnum.CompanyRole.MEMBER == createRole){
+            //自营
+            if(SpuEnum.ChannelType.CUSTOM == spuBelowType){
+                return RefundEnum.State.CHANNEL_WAIT;
+                //选品
+            }else if(SpuEnum.ChannelType.SELECTION == spuBelowType){
+                return RefundEnum.State.CHANNEL_WAIT;
+            }
+            //选品
+            else if(SpuEnum.ChannelType.OUT == spuBelowType){
+                return RefundEnum.State.CHANNEL_WAIT;
+            }else {
+                ThrowsException.exception(BaseErrorCode.PARAM);
+            }
+            //渠道商申请
+        }else if(RoleEnum.CompanyRole.CHANNEL == createRole) {
+            //自营
+            if(SpuEnum.ChannelType.CUSTOM == spuBelowType){
+                ThrowsException.exception(BaseErrorCode.PARAM);
+                //选品
+            }else if(SpuEnum.ChannelType.SELECTION == spuBelowType){
+                return RefundEnum.State.SUPPLIER_WAIT;
+            }else if(SpuEnum.ChannelType.OUT == spuBelowType){
+                return RefundEnum.State.SUPPLIER_WAIT;
+            }else {
+                ThrowsException.exception(BaseErrorCode.PARAM);
+            }
+        }else {
+            ThrowsException.exception(BaseErrorCode.PARAM);
+        }
+        return null;
     }
 
     @Override
@@ -209,7 +247,7 @@ public class RefundDomainImpl implements IRefundDomain {
         boolean refundPass = false;
         List<Long> skuOrderIdList = new ArrayList<>();
         //查询售后单
-        Refund refund = refundRepository.refund(refundId);
+        RefundDTO refund = refundRepository.refund(refundId);
         log.info("成功查询到售后单，refund: {}", JSONUtil.toJsonStr(refund));
         //状态检查
         if(!Arrays.asList(RefundEnum.State.CHANNEL_WAIT,
@@ -320,7 +358,7 @@ public class RefundDomainImpl implements IRefundDomain {
         }
         refundRepository.updateState(null, refundId, refund.getOrderType(), refund.getRefundState(), nextState, refund.getChannelId());
         if(refundPass){
-            refundRepository.skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
+            skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
         }
         return new RefundAuditRes(refundPass, skuOrderIdList, refund,nextState);
     }
@@ -329,17 +367,19 @@ public class RefundDomainImpl implements IRefundDomain {
     @Transactional(rollbackFor = Exception.class)
     public RefundAuditRes refuseAudit(Long refundId, RoleEnum.CompanyRole role, String reason) {
         //查询售后单
-        Refund refund = refundRepository.refund(refundId);
+        RefundDTO refund = refundRepository.refund(refundId);
         //状态检查
         if(!Arrays.asList(RefundEnum.State.CHANNEL_WAIT,
                 RefundEnum.State.SUPPLIER_WAIT).contains(refund.getRefundState())){
             return null;
         }
-        Refund refundEdit = new Refund();
+        RefundDTO refundEdit = new RefundDTO();
         refundEdit.setReason(reason);
         refundEdit.setStoreAutoTime(calculateStoreAutoTime());
         refundRepository.updateState(refundEdit, refundId, refund.getOrderType(), refund.getRefundState(), RefundEnum.State.REFUSE, refund.getChannelId());
-        refundRepository.skuOrderEditForRefundClose(refund.getSpuOrderId(), refund.getItem());
+
+        skuOrderEditForRefundClose(refund.getSpuOrderId(), refund.getItem());
+
         return new RefundAuditRes(false, new ArrayList<>(), refund,RefundEnum.State.REFUSE);
     }
 
@@ -350,7 +390,7 @@ public class RefundDomainImpl implements IRefundDomain {
         boolean refundPass = false;
         List<Long> skuOrderIdList = new ArrayList<>();
         //查询售后单
-        Refund refund = refundRepository.refund(refundId);
+        RefundDTO refund = refundRepository.refund(refundId);
         log.info("成功查询到售后单，refund: {}", JSONUtil.toJsonStr(refund));
         //状态检查
         if(!Arrays.asList(RefundEnum.State.CHANNEL_WAIT,
@@ -433,7 +473,7 @@ public class RefundDomainImpl implements IRefundDomain {
         }
         refundRepository.updateState(null, refundId, refund.getOrderType(), refund.getRefundState(), nextState, refund.getChannelId());
         if(refundPass){
-            refundRepository.skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
+            skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
         }
         return new RefundAuditRes(refundPass, skuOrderIdList, refund,nextState);
     }
@@ -443,7 +483,7 @@ public class RefundDomainImpl implements IRefundDomain {
     public RefundAuditRes confirmRefundFreight(Long refundId) {
         List<Long> skuOrderIdList = new ArrayList<>();
         //查询售后单
-        Refund refund = refundRepository.refund(refundId);
+        RefundDTO refund = refundRepository.refund(refundId);
         //状态检查
         if(RefundEnum.State.RECEIVE_WAIT != refund.getRefundState()){
             ThrowsException.exception(BaseErrorCode.PARAM, "当前售后单状态, 无法确认收货");
@@ -453,7 +493,9 @@ public class RefundDomainImpl implements IRefundDomain {
             skuOrderIdList.add(refundItemVO.getSkuOrderId());
         }
         RefundAuditRes refundAuditRes = new RefundAuditRes(true, skuOrderIdList, refund,RefundEnum.State.MONEY_ING);
-        refundRepository.skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
+
+        skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
+
         refundAuditRes.setRefund(refund);
         return refundAuditRes;
     }
@@ -462,7 +504,7 @@ public class RefundDomainImpl implements IRefundDomain {
     @Transactional(rollbackFor = Exception.class)
     public void submitRefundFreight(RefundFreightVO refundFreightVO) {
         //查询售后单
-        Refund refund = refundRepository.refund(refundFreightVO.getRefundId());
+        RefundDTO refund = refundRepository.refund(refundFreightVO.getRefundId());
         //状态检查
         if(RefundEnum.State.FREIGHT_WAIT != refund.getRefundState()){
             ThrowsException.exception(BaseErrorCode.PARAM, "当前售后单状态,无法提交退货物流");
@@ -487,7 +529,7 @@ public class RefundDomainImpl implements IRefundDomain {
 //            refundRepository.yytSubmitRefundFreight(refund);
         }
 
-        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.FREIGHT_WAIT, RefundEnum.State.RECEIVE_WAIT, RefundOperateTypeEnum.BUYER_RETURN_GOODS.getDesc(), RefundOperateTypeEnum.BUYER_RETURN_GOODS);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.FREIGHT_WAIT, RefundEnum.State.RECEIVE_WAIT, RefundOperateTypeEnum.BUYER_RETURN_GOODS);
     }
 
     private LocalDateTime calculateStoreAutoTime() {
@@ -508,39 +550,197 @@ public class RefundDomainImpl implements IRefundDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void refuseRefundFreight(Long refundId) {
-        Refund refund = refundRepository.refund(refundId);
+        RefundDTO refund = refundRepository.refund(refundId);
         // todo 和 产品 确认 拒绝
         refundRepository.updateStateWithFrom(refund.getOrderType(), refundId, RefundEnum.State.RECEIVE_WAIT, RefundEnum.State.REFUSE, refund.getChannelId());
-        refundOperationRecordUtil.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.REFUSE, RefundOperateTypeEnum.SUPPLIER_REFUSE_RECEIPT.getDesc(),RefundOperateTypeEnum.SUPPLIER_REFUSE_RECEIPT);
+        localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.REFUSE, RefundOperateTypeEnum.SUPPLIER_REFUSE_RECEIPT);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void stopAudit(RoleEnum.CompanyRole role, Long accountId, Long refundId) {
-        Refund refund = refundRepository.refund(refundId);
+        RefundDTO refund = refundRepository.refund(refundId);
         if (Objects.isNull(refund)){
             refund = refundRepository.refundBySpuOrderId(refundId);
         }
         refundRepository.updateState(null, refundId, refund.getOrderType(), refund.getRefundState(), RefundEnum.State.CLOSE, refund.getChannelId());
-        refundRepository.skuOrderEditForRefundClose(refund.getSpuOrderId(), refund.getItem());
+
+        skuOrderEditForRefundClose(refund.getSpuOrderId(), refund.getItem());
+
         if(SpuEnum.ChannelType.OUT == refund.getSpuChannelType()){
 //            refundRepository.yytRefundCancel(refund);
         }
         RefundOperateTypeEnum refundOperateTypeEnum = SecurityUtils.getClient() == CommonEnum.Client.CHANNEL
                 ? RefundOperateTypeEnum.CHANNEL_CANCEL_REFUND : RefundOperateTypeEnum.MEMBER_CANCEL_REFUND;
-        refundOperationRecordUtil.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.CLOSE, refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+        localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.CLOSE, refundOperateTypeEnum);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void skuOrderEditForRefundClose(Long spuOrderId, List<RefundItemVO> item) {
+        List<Long> skuOrderIdList = item.stream().map(RefundItemVO::getSkuOrderId).toList();
+        orderRepository.cutSkuOrderRefundingNumber(spuOrderId, skuOrderIdList);
+        orderRepository.skuOrderEditForRefundClose(skuOrderIdList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void skuOrderEditForRefundPass(Long spuOrderId, List<RefundItemVO> item) {
+        List<Long> skuOrderIdList = item.stream().map(RefundItemVO::getSkuOrderId).toList();
+        orderRepository.cutSkuOrderRefundingNumber(spuOrderId, skuOrderIdList);
+        orderRepository.skuOrderEditForRefundPass(skuOrderIdList);
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sellAfterRefundNotify(Long refundId, Long channelId, String outRefundId) {
-        Refund refund = refundRepository.refund(refundId);
-        Refund refundEdit = new Refund();
+        RefundDTO refund = refundRepository.refund(refundId);
+        RefundDTO refundEdit = new RefundDTO();
         refundEdit.setOutRefundId(outRefundId);
         refundRepository.updateState(refundEdit, refundId, refund.getOrderType(), RefundEnum.State.MONEY_ING, RefundEnum.State.SUCCESS, channelId);
     }
 
     @Override
-    public ApiRefundFreightAddressVO getOutRefundAddress(Long spuOrderId, Long spuId) {
-        return refundRepository.getOutRefundAddress(spuOrderId, spuId);
+    public RefundVO refundVO(Long refundId) {
+        RefundDTO refund = refundRepository.refund(refundId);
+        if (refund == null){
+            ThrowsException.exception(BaseErrorCode.CUSTOM,"售后单id错误。当前数据不存在");
+        }
+        RefundVO refundVO = TransferUtils.transfer(refund, RefundVO.class);
+        if (refundVO.getRefundType() == RefundEnum.RefundType.MONEY_GOODS){
+            SupplierRefundVO supplierRefundVO = supplierApi.supplierRefundVO(refund.getSupplierId());
+            if(supplierRefundVO != null){
+                refundVO.setReceiveAddress(supplierRefundVO.getReceiveAddressVO());
+            }
+        }
+        FreightExt freightExt = new FreightExt();
+        String freightExtStr = refundVO.getFreightExt() == null ? null : refundVO.getFreightExt().trim();
+        if (StrUtil.isNotBlank(freightExtStr)&& !"null".equalsIgnoreCase(freightExtStr)){
+            freightExt = JSONObject.parseObject(freightExtStr, FreightExt.class);
+
+        }
+        List<Long> storeIds = new ArrayList<>();
+        storeIds.add(refundVO.getStoreId());
+        List<StoreRPCVO> storeRPCVOS = goodsApi.batchQueryStoreInfo(storeIds);
+        if (CollUtil.isNotEmpty(storeRPCVOS)){
+            StoreRPCVO storeRPCVO = storeRPCVOS.get(0);
+            freightExt.setStoreName(storeRPCVO.getName());
+            freightExt.setStoreHead(storeRPCVO.getLogo());
+        }
+
+        List<Long> memberIds = new ArrayList<>();
+        memberIds.add(refundVO.getStoreId());
+        memberIds.add(refundVO.getMemberId());
+        memberIds = memberIds.stream().distinct().collect(Collectors.toList());
+        List<AccountGroupVO> accounts = new ArrayList<>();
+        if (CollUtil.isNotEmpty(memberIds)){
+            accounts.addAll(TransferUtils.transfers(accountApi.listAccountByIds(memberIds), AccountGroupVO.class));
+        }
+        Map<Long, AccountGroupVO> accountGroupVOMap = accounts.stream().collect(Collectors.toMap(AccountGroupVO::getId, v -> v));
+        AccountGroupVO store = accountGroupVOMap.get(refundVO.getStoreId());
+        if (Objects.nonNull(store)){
+            freightExt.setStoreAccount(store.getUserAccount());
+        }
+
+        AccountGroupVO member = accountGroupVOMap.get(refundVO.getMemberId());
+        if (Objects.nonNull(member)){
+            freightExt.setUserAccount(member.getUserAccount());
+            refundVO.setNickname(member.getNickname());
+        }
+        refundVO.setFreightExtDto(JSONObject.parseObject(refundVO.getFreightExt(), FreightExt.class));
+        return refundVO;
+    }
+
+    @Override
+    public RefundVO refundVoBySpuOrderId(Long spuOrderId) {
+        RefundDTO refundDTO = refundRepository.refundBySpuOrderId(spuOrderId);
+        return TransferUtils.transfer(refundDTO, RefundVO.class);
+    }
+
+    @Override
+    public Page<RefundVO> refundPage(RefundQuery refundQuery) {
+        Page<RefundDTO> refundVO = refundRepository.refundPage(refundQuery);
+
+        List<Long> storeIds = refundVO.getRecords().stream().map(RefundDTO::getStoreId).distinct().collect(Collectors.toList());
+        List<StoreRPCVO> storeRPCVOS = new ArrayList<>();
+        if (CollUtil.isNotEmpty(storeIds)){
+            storeRPCVOS.addAll(goodsApi.batchQueryStoreInfo(storeIds));
+        }
+
+        List<Long> memberIds = refundVO.getRecords().stream().map(RefundDTO::getMemberId).distinct().collect(Collectors.toList());
+        memberIds.addAll(storeIds);
+        memberIds = memberIds.stream().distinct().collect(Collectors.toList());
+        List<AccountGroupVO> accounts = new ArrayList<>();
+        if (CollUtil.isNotEmpty(memberIds)){
+            accounts.addAll(accountApi.listAccountByIds(memberIds));
+        }
+        Page<RefundVO> refundVOPage = TransferUtils.transferPage(refundVO, RefundVO.class);
+        if (CollUtil.isNotEmpty(storeRPCVOS)){
+            Map<Long, StoreRPCVO> collect = storeRPCVOS.stream().collect(Collectors.toMap(StoreRPCVO::getId, v -> v));
+            Map<Long, AccountGroupVO> accountGroupVOMap = accounts.stream().collect(Collectors.toMap(AccountGroupVO::getId, v -> v));
+            refundVOPage.getRecords().forEach(v -> {
+                FreightExt freightExt = new FreightExt();
+                String freightExtStr = v.getFreightExt() == null ? null : v.getFreightExt().toString().trim();
+                if (StrUtil.isNotBlank(freightExtStr)&& !"null".equalsIgnoreCase(freightExtStr)){
+                    freightExt = JSONObject.parseObject(freightExtStr, FreightExt.class);
+                }
+                if (v.getStoreId() != null ){
+                    StoreRPCVO storeRPCVO = collect.get(v.getStoreId());
+                    AccountGroupVO store = accountGroupVOMap.get(v.getStoreId());
+                    if (Objects.nonNull(storeRPCVO)){
+                        freightExt.setStoreName(storeRPCVO.getName());
+                        freightExt.setStoreHead(storeRPCVO.getLogo());
+                    }
+                    if (Objects.nonNull(store)){
+                        freightExt.setStoreAccount(store.getUserAccount());
+                    }
+                }
+                if (v.getMemberId() != null){
+                    AccountGroupVO member = accountGroupVOMap.get(v.getMemberId());
+                    if (Objects.nonNull(member)){
+                        freightExt.setUserAccount(member.getUserAccount());
+                        v.setNickname(member.getNickname());
+                    }
+                }
+                v.setFreightExtDto(freightExt);
+            });
+        }
+        return refundVOPage;
+    }
+
+
+    private final IRefundOperationRecordRepository refundOperationRecordRepository;
+
+    @Override
+    public Long createRecord(RefundOperationRecordDTO entity) {
+        // 领域规则校验
+        Assert.notNull(entity, "售后操作记录不能为空");
+        Assert.notNull(entity.getRefundId(), "售后单ID不能为空");
+        Assert.notNull(entity.getOperatorRoleCode(), "操作方角色编码不能为空");
+        Assert.notNull(entity.getOperatorClient(), "操作方客户端类型不能为空");
+        Assert.notNull(entity.getAfterState(), "操作后状态不能为空");
+        Assert.hasText(entity.getOperationContent(), "操作内容描述不能为空");
+        Assert.isNull(entity.getId(), "新增时ID必须为空");
+
+        // 初始化默认值
+        entity.setCreateTime(LocalDateTime.now());
+        entity.setUpdateTime(LocalDateTime.now());
+
+        // 调用仓储层保存
+        return refundOperationRecordRepository.save(entity);
+    }
+
+    @Override
+    public List<RefundOperationRecordVO> listRecordByRefundId(Long refundId) {
+        Assert.notNull(refundId, "售后单ID不能为空");
+        List<RefundOperationRecordDTO> dtoList = refundOperationRecordRepository.listByRefundId(refundId);
+        return TransferUtils.transfers(dtoList,RefundOperationRecordVO.class);
+    }
+
+    @Override
+    public Page<RefundOperationRecordVO> recordPage(RefundOperationRecordQuery query) {
+        // 可选参数无需强制校验，空则不参与筛选
+        Page<RefundOperationRecordDTO> dtoPage = refundOperationRecordRepository.pageQuery(query);
+        return TransferUtils.transferPage(dtoPage, RefundOperationRecordVO.class);
     }
 }

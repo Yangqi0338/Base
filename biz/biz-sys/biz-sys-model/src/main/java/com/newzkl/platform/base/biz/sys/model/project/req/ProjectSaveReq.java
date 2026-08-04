@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.sys.model.project.req;
 
 import cn.hutool.core.util.StrUtil;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertFalse;
@@ -64,7 +65,7 @@ public class ProjectSaveReq {
      * 合作金额
      */
     @NotNull(message = "合作金额不能为空")
-    private Integer basicAmount;
+    private Money basicAmount;
 
     /**
      * 标签 (最多 5 个, 每个最多 4 字符)

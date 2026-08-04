@@ -6,7 +6,7 @@ package com.newzkl.platform.base.biz.order.domain.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.model.req.FreightSettleOrderWaitCommand;
 import com.newzkl.platform.base.biz.order.model.req.SettleGoodsCommand;
-import com.newzkl.platform.base.biz.order.model.req.SettleGoodsQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
 import com.newzkl.platform.base.biz.order.model.req.SettleOrderWaitCommand;
 import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;

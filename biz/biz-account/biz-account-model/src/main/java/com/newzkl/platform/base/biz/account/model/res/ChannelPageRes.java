@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

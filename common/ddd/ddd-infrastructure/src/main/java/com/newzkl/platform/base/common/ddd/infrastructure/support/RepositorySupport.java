@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.infrastructure.support;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -143,9 +144,15 @@ public abstract class RepositorySupport {
         ), clazz);
     }
 
+    public <T extends BaseIdDO, M extends BaseMapper<T>> T getOne(M mapper, BaseLambdaQueryWrapper<T> wrapper) {
+        return CollUtil.getFirst(mapper.selectList(
+                buildOne(wrapper.unwrap().setEntityClass(mapper))
+        ));
+    }
+
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> R getOne(M mapper, BaseLambdaQueryWrapper<T> wrapper, Class<R> clazz) {
-        return TransferUtils.transfer(mapper.selectOne(
-                wrapper.unwrap().setEntityClass(mapper).select(clazz)
+        return TransferUtils.transfer(mapper.selectList(
+                buildOne(wrapper.unwrap().setEntityClass(mapper).select(clazz))
         ), clazz);
     }
 

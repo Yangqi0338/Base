@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class EarningsExecReq implements Serializable {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     public Long getId() {
         return null;

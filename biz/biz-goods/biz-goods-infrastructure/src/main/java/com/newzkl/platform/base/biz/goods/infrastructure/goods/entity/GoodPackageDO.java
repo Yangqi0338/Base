@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,9 +35,9 @@ public class GoodPackageDO extends BaseDO {
     private Long goodsNum;
 
     /**
-     * 套餐价格 (分)
+     * 套餐价格 (Money, 落库 BIGINT 分)
      */
-    private Integer packagePrice;
+    private Money packagePrice;
 
     /**
      * 套餐描述

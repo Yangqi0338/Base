@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleD
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 
 import java.util.List;
 
@@ -96,7 +97,7 @@ public interface AccountPurseRepository {
      * @param isAddTotal  是否增加总消费
      * @param isAddTotalPurse  是否增加总金额
      */
-    int addAccountPurseAmount(AccountPurseQuery query, Integer amount, boolean isAddTotal, boolean isAddTotalPurse);
+    int addAccountPurseAmount(AccountPurseQuery query, Money amount, boolean isAddTotal, boolean isAddTotalPurse);
 
     /**
      * 增加客户账户金额
@@ -107,7 +108,7 @@ public interface AccountPurseRepository {
      * @param isNegative  是否可以扣到负数
      * @return
      */
-    int subAccountPurseAmount(AccountPurseQuery query, Integer amount, boolean isSubTotal, boolean isSubTotalPurse, boolean isNegative);
+    int subAccountPurseAmount(AccountPurseQuery query, Money amount, boolean isSubTotal, boolean isSubTotalPurse, boolean isNegative);
 
     /**
      * 保存客户账户变动记录
@@ -127,6 +128,16 @@ public interface AccountPurseRepository {
      * @return 变动记录分页
      */
     Page<AccountPurseAlterRecordVO> queryAccountPurseAlterRecords(AccountPurseAlterRecordQuery req);
+
+    /**
+     * 查询渠道商提现记录
+     *
+     * <p>变动记录与提现申请(审核中)的 union all 分页</p>
+     *
+     * @param req 变动记录查询
+     * @return 提现记录分页
+     */
+    Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(AccountPurseAlterRecordQuery req);
 
     /**
      * 增加客户三方账户余额

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -26,9 +27,9 @@ public class ModelShopStorePageRes extends BaseRes {
     private Long modelShopId;
 
     /**
-     * 总支付金额
+     * 总支付金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalPayAmount;
+    private Money totalPayAmount;
 
     /**
      * 总支付笔数

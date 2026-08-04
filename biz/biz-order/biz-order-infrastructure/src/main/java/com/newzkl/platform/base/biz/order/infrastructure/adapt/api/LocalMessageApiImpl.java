@@ -1,0 +1,182 @@
+package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
+
+import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.StoreAccountPayCommand;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
+import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationRecordRPC;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
+import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiDeliverEvent;
+import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
+import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
+import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
+import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
+import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
+import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
+import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
+import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
+import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * {@code LocalMessageApi} 的基础设施实现
+ *
+ * <p>发送类方法直接经 {@code MQUtil} 投递(内部落本地消息表 + MQ), 唤醒类方法经
+ * {@code LocalMessageRepository} 翻转 outKey 可消费标识。对等旧
+ * {@code @DubboReference ILocalMessageFacade}: 单体现态同上下文, 端口注入即可,
+ * 拆服务时改为远程 consumer, 上层零改动。</p>
+ *
+ * @author KC
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class LocalMessageApiImpl implements LocalMessageApi {
+
+    private final LocalMessageRepository localMessageRepository;
+
+    @Override
+    public void sendMessage(String tag, Object messageContent, String messageClass) {
+        MQUtil.send(tag, messageContent);
+    }
+
+    @Override
+    public void sendRefundPassMessage(RefundDTO refund) {
+        MQUtil.send(MQ.Tag.REFUND_PASS, TransferUtils.transfer(refund, RefundPassEvent.class));
+    }
+
+    @Override
+    public void sendDelayMessage(String tag, Object messageContent, String messageClass, int delayTimeLevel) {
+        MQUtil.sendDelayed(tag, messageContent, delayTimeLevel);
+    }
+
+    @Override
+    public void orderChannelNodeHandle(OrderSyncHandleVO orderSyncHandleVO) {
+        MQUtil.send(MQ.Tag.ORDER_SYNC_HANDLE, orderSyncHandleVO);
+    }
+
+    @Override
+    public void wakeUpEarningMessage(Long skuOrderId) {
+        String outKey = MQ.Tag.EARNING + skuOrderId;
+        localMessageRepository.localMessageCanConsumeEditByOutKey(CommonEnum.YesOrNo.YES, outKey);
+    }
+
+    @Override
+    public void sendOrderNewRecordEvent(List<SpuOrderDTO> spuOrderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, RoleEnum.CompanyRole operatorRoleId) {
+        spuOrderList.forEach(spuOrder -> {
+            OrderStateRecordRPC orderStateRecordRPC = new OrderStateRecordRPC();
+            orderStateRecordRPC.setOrderId(spuOrder.getOrderId());
+            orderStateRecordRPC.setSpuOrderId(spuOrder.getId());
+            orderStateRecordRPC.setBeforeOrderState(beforeOrderState);
+            orderStateRecordRPC.setBeforeStateDesc(beforeOrderState.getValue());
+            orderStateRecordRPC.setAfterOrderState(afterOrderState);
+            orderStateRecordRPC.setAfterStateDesc(afterOrderState.getValue());
+            orderStateRecordRPC.setOrdererId(spuOrder.getAccountId());
+            orderStateRecordRPC.setOperatorId(operatorId);
+            orderStateRecordRPC.setOperatorRoleId(operatorRoleId);
+            orderStateRecordRPC.setRoleDesc(operatorRoleId.getValue());
+            orderStateRecordRPC.setOperateTime(LocalDateTime.now());
+            orderStateRecordRPC.setCreateTime(LocalDateTime.now());
+            orderStateRecordRPC.setUpdateTime(LocalDateTime.now());
+            MQUtil.send(MQ.Tag.ORDER_STATE_RECORD_EVENT,orderStateRecordRPC);
+            log.info("订单状态记录消息发送成功，orderStateRecordRPC: {}", orderStateRecordRPC);
+        });
+    }
+
+    @Override
+    public void deliverNotify(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId) {
+        log.info("发货通知开发者: outOrderNo: " + outOrderNo + " : " + JSONObject.toJSONString(skuCountDTOList));
+        NotifyEventCommand notifyEventCommand = new NotifyEventCommand();
+        notifyEventCommand.setServiceType(NotifyEnums.ServiceType.ORDER.getCode());
+        notifyEventCommand.setBusinessType(NotifyEnums.OrderType.DELIVERY.getCode());
+        ApiDeliverEvent object = new ApiDeliverEvent(outOrderNo, skuCountDTOList, expressCompanyName, expressNo);
+        notifyEventCommand.setEventInfo(JSONObject.toJSONString(object));
+        NotifyUtil.batchSend(Collections.singletonList(channelId), notifyEventCommand);
+    }
+
+    @Override
+    public void sendRefundOperationRecord(RefundDTO refund, RefundEnum.State from, RefundEnum.State to, RefundOperateTypeEnum refundOperateTypeEnum) {
+        try {
+            String operationContent = refundOperateTypeEnum.getDesc();
+            // 1. 组装消息对象（封装所有重复的参数赋值逻辑）
+            RefundOperationRecordRPC recordRPC = buildRefundOperationRecordRPC(refund, from, to, operationContent, refundOperateTypeEnum);
+
+            // 2. 发送消息（统一异常处理，避免消息发送失败导致主流程异常）
+            MQUtil.send(MQ.Tag.REFUND_OPERATION_RECORD_EVENT, recordRPC);
+            log.info("售后操作记录消息发送成功，refundId: {}, operationContent: {}", refund.getId(), operationContent);
+        } catch (Exception e) {
+            log.error("售后操作记录消息发送失败，refundId: {}", refund.getId(), e);
+            // 消息发送失败不抛异常，避免影响主业务流程（可根据业务需求调整）
+        }
+    }
+
+    /**
+     * 构建售后操作记录消息对象（核心封装）
+     */
+    private RefundOperationRecordRPC buildRefundOperationRecordRPC(RefundDTO refund, RefundEnum.State beforeState,
+                                                                   RefundEnum.State afterState, String operationContent, RefundOperateTypeEnum operationType) {
+        RefundOperationRecordRPC recordRPC = new RefundOperationRecordRPC();
+        // 基础订单/售后单信息
+        recordRPC.setSpuOrderId(refund.getSpuOrderId());
+        recordRPC.setRefundId(refund.getId());
+        // 操作人信息（封装重复的SecurityUtils调用）
+        fillOperatorInfo(recordRPC);
+        // 状态信息
+        recordRPC.setBeforeState(beforeState);
+        recordRPC.setAfterState(afterState);
+        recordRPC.setOperationType(operationType);
+        // 操作内容
+        recordRPC.setOperationContent(operationContent);
+        recordRPC.setRefundAmount(refund.getRefundAmount());
+        recordRPC.setReason(buildReason(refund));
+        return recordRPC;
+    }
+
+    /**
+     * 填充操作人公共信息（抽离重复逻辑）
+     */
+    private void fillOperatorInfo(RefundOperationRecordRPC recordRPC) {
+        if (ObjectUtil.isNull(SecurityUtils.getAccountId())){
+            recordRPC.setOperatorId(0L);
+            recordRPC.setOperatorRoleCode(RoleEnum.CompanyRole.PLATFORM);
+            recordRPC.setOperatorClient(CommonEnum.Client.ADMIN.getCode());
+            recordRPC.setOperatorName("系统");
+        }else {
+            recordRPC.setOperatorId(SecurityUtils.getAccountId());
+            recordRPC.setOperatorRoleCode(SecurityUtils.getRole());
+            recordRPC.setOperatorClient(SecurityUtils.getClient().name());
+            recordRPC.setOperatorName(SecurityUtils.getUsername());
+        }
+    }
+
+    /**
+     * 构建操作原因（统一格式）
+     */
+    private String buildReason(RefundDTO refund) {
+        return refund.getReason() + " : " + refund.getRemark();
+    }
+
+    @Override
+    public void storeAccountPay(Long storeId, Long accountId, Integer payAmount) {
+        StoreAccountPayCommand command = new StoreAccountPayCommand();
+        command.setStoreId(storeId);
+        command.setAccountId(accountId);
+        command.setPayAmount(payAmount);
+        MQUtil.send(MQ.Tag.STORE_ACCOUNT_PAY_EVENT, command);
+    }
+}

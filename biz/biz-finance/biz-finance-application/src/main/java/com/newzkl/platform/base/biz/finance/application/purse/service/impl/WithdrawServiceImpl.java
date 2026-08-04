@@ -17,6 +17,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
@@ -52,7 +53,8 @@ public class WithdrawServiceImpl implements WithdrawService {
 
     private static HuiFuRollOutReq buildRollOutReq(RollOutApplyVO rollOutApplyVO) {
         HuiFuRollOutReq rollOutReq = new HuiFuRollOutReq();
-        rollOutReq.setApplyAmount(rollOutApplyVO.getApplyAmount());
+        // HuiFu 边界: Money → 分 Integer
+        rollOutReq.setApplyAmount((int) rollOutApplyVO.getApplyAmount().getCent());
         rollOutReq.setHuifuId(rollOutApplyVO.getTripartiteAccountId());
         rollOutReq.setRollOutId(rollOutApplyVO.getId());
         return rollOutReq;
@@ -91,14 +93,15 @@ public class WithdrawServiceImpl implements WithdrawService {
         if (accountTripartitePurseVO == null || PurseEnum.TripartitePurchaseStatus.NORMAL != accountTripartitePurseVO.getUserStatus()) {
             throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
         }
-        if (req.getAmount() < 1) {
+        if (!req.getAmount().greaterThanZero()) {
             throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
         }
         // 根据角色code获取客户类型
         PurseEnum.FinanceUser accountType = req.getAccountType();
         if (accountType == PurseEnum.FinanceUser.SUPPLIER) {
+            // limitAmount 为分 Integer 门槛
             Integer restrict = supplierFacade.limitAmount(SecurityUtils.getAccountId());
-            if (restrict > 0 && req.getAmount() < restrict) {
+            if (restrict > 0 && req.getAmount().smallerThan(Money.of(restrict))) {
                 return;
             }
         }
@@ -106,8 +109,8 @@ public class WithdrawServiceImpl implements WithdrawService {
         if (accountType == PurseEnum.FinanceUser.PICK || accountType == PurseEnum.FinanceUser.TRADERS) {
             ConfigWithdrawVO configWithdrawVO = withdrawDomain.defaultWithdrawConfig();
             if (configWithdrawVO.getWithdraw() != null) {
-                Long restrict = configWithdrawVO.getWithdraw().getMinAmount();
-                if (restrict > 0 && req.getAmount() < restrict) {
+                Money restrict = configWithdrawVO.getWithdraw().getMinAmount();
+                if (restrict.greaterThanZero() && req.getAmount().smallerThan(restrict)) {
                     return;
                 }
             }
@@ -154,7 +157,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         if (req.getAccountType() == PurseEnum.FinanceUser.CHANNEL &&
                 req.getPurseType() == PurseEnum.PurseType.GOODS_INCOME) {
             //校验最小提现金额
-            if (channelConfigVO.getMinimumWithdrawalAmount() > req.getAmount()) {
+            if (channelConfigVO.getMinimumWithdrawalAmount().greaterThan(req.getAmount())) {
                 throw new PlatformException(FinanceErrorCode.LESS_THAN_MINIMUM_WITHDRAWAL_AMOUNT);
             }
 
@@ -165,17 +168,17 @@ public class WithdrawServiceImpl implements WithdrawService {
             rollOutApplyReq.setApplyTimeR(DateUtil.endOfDay(DateUtil.date()).toLocalDateTime());
             rollOutApplyReq.setAuditStateList(Arrays.asList(AuditEnum.WithdrawSate.AUDITING, AuditEnum.WithdrawSate.SUCCESS));
             List<RollOutApplyVO> rollOutApplyVOS = withdrawDomain.queryWithdrawRecords(rollOutApplyReq);
-            //单日申请提现总金额
-            int countApplyAmount = rollOutApplyVOS.stream()
-                    .mapToInt(RollOutApplyVO::getApplyAmount)
+            //单日申请提现总金额 (分累加)
+            long countApplyAmount = rollOutApplyVOS.stream()
+                    .mapToLong(v -> v.getApplyAmount().getCent())
                     .sum();
             //校验单日提现最高金额
-            if (channelConfigVO.getMaximumDailyWithdrawalAmount() < countApplyAmount) {
+            if (channelConfigVO.getMaximumDailyWithdrawalAmount().getCent() < countApplyAmount) {
                 throw new PlatformException(FinanceErrorCode.GREATER_THAN_MAXIMUM_DAILY_WITHDRAWAL_AMOUNT);
             }
 
             //填充手续费,提现手续费比例单位为千分制整数，所以需要除以10得出单位为分的手续费
-            req.setHandlingFee(channelConfigVO.getWithdrawalFee() * req.getAmount() / 10);
+            req.setHandlingFee(req.getAmount().multiply(channelConfigVO.getWithdrawalFee()).divide(10L));
         }
     }
 

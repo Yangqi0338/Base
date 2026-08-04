@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class AccountPurseAlterRecordReq implements Serializable {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 账号修改类型  1 进账 2 出账

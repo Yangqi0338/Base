@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.goods.facade.model;
 
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuSaleAttributeRpcVO;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -65,14 +64,6 @@ public class SkuRpcVO extends BaseRes {
       * 销售价
       */
      private Integer salePrice;
-     /**
-     * 库存
-     */
-     private Integer inventory;
-     /**
-     * 库存预警个数
-     */
-     private Integer inventoryWarning;
      /**
       * 追加: spu状态
       */

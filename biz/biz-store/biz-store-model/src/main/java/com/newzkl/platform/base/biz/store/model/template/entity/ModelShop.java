@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.template.entity;
 
 import com.newzkl.platform.base.biz.store.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -42,14 +43,14 @@ public class ModelShop implements Serializable {
     private String earningConfig;
 
     /**
-     * 渠道商收益
+     * 渠道商收益 (Money, 落库 BIGINT 分)
      */
-    private Integer channelEarning;
+    private Money channelEarning;
 
     /**
-     * 总收益
+     * 总收益 (Money, 落库 BIGINT 分)
      */
-    private Integer totalEarning;
+    private Money totalEarning;
 
     /**
      * 审核状态
@@ -94,9 +95,9 @@ public class ModelShop implements Serializable {
     private Integer totalUseStoreNum;
 
     /**
-     * 累计下单金额
+     * 累计下单金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalOrderAmount;
+    private Money totalOrderAmount;
 
     /**
      * 累计下单数
@@ -104,9 +105,9 @@ public class ModelShop implements Serializable {
     private Integer totalOrderNum;
 
     /**
-     * 累计支付金额
+     * 累计支付金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalPayAmount;
+    private Money totalPayAmount;
 
     /**
      * 累计支付订单数

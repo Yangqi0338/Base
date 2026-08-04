@@ -14,6 +14,7 @@ import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityVO;
 import com.newzkl.platform.base.biz.activity.model.event.vo.BonusPoolDataVO;
 import com.newzkl.platform.base.biz.activity.model.strategy.req.DrawReq;
 import com.newzkl.platform.base.biz.activity.model.strategy.res.DrawMethodRes;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +74,9 @@ public class BonusInterfaceImpl implements BonusInterface {
             // 无符合条件的用户
             return;
         }
-        // 最终结算奖金确定  自定义奖金不为0的话，则使用自定义奖金发奖
-        Integer totalBonus = bonusPoolData.getCustomBonus() > 0 ? bonusPoolData.getCustomBonus() : bonusPoolData.getOrderBonus();
+        // 最终结算奖金确定  自定义奖金不为0的话，则使用自定义奖金发奖 (Money 比较)
+        boolean useCustomBonus = bonusPoolData.getCustomBonus().greaterThanZero();
+        Money totalBonus = useCustomBonus ? bonusPoolData.getCustomBonus() : bonusPoolData.getOrderBonus();
         // 结果落库
         List<RecordAwardOrderReq> awardOrderReq = new ArrayList<>(res.size());
 
@@ -83,7 +85,7 @@ public class BonusInterfaceImpl implements BonusInterface {
 
         // 归档
         bonusPoolData.setSettleBonus(totalBonus);
-        bonusPoolPartake.bonusArchive(bonusPoolData, channelId, bonusPoolData.getCustomBonus() > 0 ? 2 : 1);
+        bonusPoolPartake.bonusArchive(bonusPoolData, channelId, useCustomBonus ? 2 : 1);
         // 活动周期性处理
         ActivityQueryReq activityQueryReq = new ActivityQueryReq();
         activityQueryReq.setActivityId(1);

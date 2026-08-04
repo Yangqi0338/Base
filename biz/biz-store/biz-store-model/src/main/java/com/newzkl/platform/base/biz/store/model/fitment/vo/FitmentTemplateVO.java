@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.fitment.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -31,9 +32,9 @@ public class FitmentTemplateVO {
     private Integer defaultTemplate;
 
     /**
-     * 价格
+     * 价格 (Money, 落库 BIGINT 分)
      */
-    private Integer price;
+    private Money price;
 
     /**
      * 运营商id

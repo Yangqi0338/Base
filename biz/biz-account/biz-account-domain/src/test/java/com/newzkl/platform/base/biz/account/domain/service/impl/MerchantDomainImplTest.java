@@ -1,17 +1,13 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
-import com.newzkl.platform.base.biz.account.domain.repository.CdkRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MerchantRepository;
 import com.newzkl.platform.base.biz.account.model.assembler.MerchantAssembler;
-import com.newzkl.platform.base.biz.account.model.cdk.vo.CdkVO;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantReq;
 import com.newzkl.platform.base.biz.account.model.merchant.res.MerchantRes;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.MerchantVO;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import org.junit.jupiter.api.AfterEach;
@@ -27,10 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,9 +44,6 @@ class MerchantDomainImplTest {
 
     @Mock
     private MerchantRepository merchantRepository;
-
-    @Mock
-    private CdkRepository cdkRepository;
 
     private MerchantDomainImpl merchantDomain;
 
@@ -79,7 +69,7 @@ class MerchantDomainImplTest {
 
     @BeforeEach
     void setUp() {
-        merchantDomain = new MerchantDomainImpl(merchantRepository, cdkRepository, assembler);
+        merchantDomain = new MerchantDomainImpl(merchantRepository, assembler);
         SecurityContextHolder.set(TokenConstants.DETAILS_ACCOUNT_ID, ACCOUNT_ID.toString());
         SecurityContextHolder.set(TokenConstants.DETAILS_USERNAME, "13000000000");
     }
@@ -157,58 +147,6 @@ class MerchantDomainImplTest {
         ArgumentCaptor<MerchantVO> captor = ArgumentCaptor.forClass(MerchantVO.class);
         verify(merchantRepository).save(captor.capture());
         assertEquals("门店A", captor.getValue().getName());
-    }
-
-    @Test
-    @DisplayName("使用开通码: 占用开通码并开通登录商户的门店权限")
-    void useStoreCdkShouldConsumeCdkAndGrantPermission() {
-        CdkVO cdk = new CdkVO();
-        cdk.setId(8801L);
-        cdk.setValue("abc123");
-        cdk.setUseState(0);
-        when(cdkRepository.idByValue("abc123")).thenReturn(8801L);
-        when(cdkRepository.detail(8801L)).thenReturn(cdk);
-
-        merchantDomain.useStoreCdk("abc123");
-
-        ArgumentCaptor<CdkVO> cdkCaptor = ArgumentCaptor.forClass(CdkVO.class);
-        verify(cdkRepository).edit(cdkCaptor.capture());
-        assertEquals(1, cdkCaptor.getValue().getUseState());
-        assertEquals(ACCOUNT_ID, cdkCaptor.getValue().getUseId());
-        assertTrue(cdkCaptor.getValue().getUseTime() != null, "兑换时间应被写入");
-
-        ArgumentCaptor<MerchantVO> merchantCaptor = ArgumentCaptor.forClass(MerchantVO.class);
-        verify(merchantRepository).edit(merchantCaptor.capture());
-        assertEquals(ACCOUNT_ID, merchantCaptor.getValue().getId());
-        assertEquals(1, merchantCaptor.getValue().getStorePermission());
-    }
-
-    @Test
-    @DisplayName("使用开通码: 已使用则抛参数异常且不改商户")
-    void useStoreCdkShouldRejectUsedCdk() {
-        CdkVO cdk = new CdkVO();
-        cdk.setId(8801L);
-        cdk.setUseState(1);
-        when(cdkRepository.idByValue("abc123")).thenReturn(8801L);
-        when(cdkRepository.detail(8801L)).thenReturn(cdk);
-
-        PlatformException ex = assertThrows(PlatformException.class, () -> merchantDomain.useStoreCdk("abc123"));
-
-        assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
-        verify(cdkRepository, never()).edit(any());
-        verify(merchantRepository, never()).edit(any());
-    }
-
-    @Test
-    @DisplayName("使用开通码: 开通码不存在时抛记录不存在")
-    void useStoreCdkShouldRejectAbsentCdk() {
-        when(cdkRepository.idByValue("nope")).thenReturn(null);
-        when(cdkRepository.detail(null)).thenReturn(null);
-
-        PlatformException ex = assertThrows(PlatformException.class, () -> merchantDomain.useStoreCdk("nope"));
-
-        assertTrue(ex.equalsCode(BaseErrorCode.NODATA));
-        verify(merchantRepository, never()).edit(any());
     }
 
     @Test

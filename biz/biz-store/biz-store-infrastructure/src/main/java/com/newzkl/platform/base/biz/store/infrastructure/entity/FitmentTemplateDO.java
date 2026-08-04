@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,9 +33,9 @@ public class FitmentTemplateDO implements Serializable {
     private Integer defaultTemplate;
 
     /**
-     * 价格
+     * 价格 (Money, 落库 BIGINT 分)
      */
-    private Integer price;
+    private Money price;
 
     /**
      * 运营商id

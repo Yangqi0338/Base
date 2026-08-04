@@ -54,7 +54,7 @@ public class SpuOrderItemExcelVO {
     @ColumnWidth(value = 20)
     private String remark;
     @ExcelIgnore
-    private String shipVO;
+    private ShipVO shipVO;
     @ExcelIgnore
     private Integer refundingCount;
 }

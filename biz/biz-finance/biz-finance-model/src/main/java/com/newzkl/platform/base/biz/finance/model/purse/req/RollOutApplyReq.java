@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -24,12 +25,12 @@ public class RollOutApplyReq {
     /**
      * 转出金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 手续费
      */
-    private Integer handlingFee;
+    private Money handlingFee;
 
     /**
      * 三方用户id

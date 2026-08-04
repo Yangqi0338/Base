@@ -20,6 +20,14 @@ public interface SeatPackageDomain {
     Page<SeatPackageResponse> seatPackagePage(SeatPackagePageReq req);
 
     /**
+     * 按 id 查席位套餐详情
+     *
+     * @param id 席位套餐 id
+     * @return 套餐详情; 不存在时返回 null
+     */
+    SeatPackageResponse detail(Long id);
+
+    /**
      * 新增席位个数
      */
     void increaseSeatNum(String seatPackageCode, Integer increaseNum);

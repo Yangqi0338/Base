@@ -42,7 +42,7 @@ public class StoreCategoryRepositoryImpl implements StoreCategoryRepository {
         BaseLambdaQueryWrapper<StoreCategoryDO> ew = new BaseLambdaQueryWrapper<>();
         ew.notEmptyIn(StoreCategoryDO::getId, query.getIdList());
         ew.notEmptyLike(StoreCategoryDO::getName, query.getName());
-        ew.between(StoreCategoryDO::getCreateTime, query.getCreateStartTime(), query.getCreateEndTime());
+        ew.betweenDate(StoreCategoryDO::getCreateTime, query.getCreateStartTime(), query.getCreateEndTime());
         return ew.orderBy(query);
     }
 

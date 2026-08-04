@@ -7,7 +7,6 @@ import com.google.common.net.InternetDomainName;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
-import com.newzkl.platform.base.biz.account.domain.service.CdkDomain;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.OperatorCmd;
 import com.newzkl.platform.base.biz.account.model.req.OperatorQuery;
@@ -19,7 +18,6 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +50,6 @@ public class OperatorController {
 
     private final UserQueryService userQueryService;
     private final IdentityService identityService;
-    private final CdkDomain cdkDomain;
 
     /**
      * 运营商修改
@@ -205,19 +201,6 @@ public class OperatorController {
     public PlatformResult<Void> serviceFeeConfigEdit(@RequestBody OperatorCmd.ServiceFeeConfigEdit serviceFeeConfigEdit) {
         identityService.serviceFeeConfigEdit(serviceFeeConfigEdit.getAccountId(), null);
         return PlatformResult.success();
-    }
-
-    /**
-     * 生成兑换码
-     *
-     * @param createCDK 兑换码生成入参
-     * @return 兑换码值列表
-     */
-    @PostMapping("createCdk")
-    public PlatformResult<List<String>> createCdk(@Validated @RequestBody OperatorCmd.CreateCDK createCDK) {
-        createCDK.setSystemType(CommonEnum.SystemType.STORE.getCode());
-        return PlatformResult.success(cdkDomain.randomCreateCdk(createCDK.getOperatorId(), createCDK.getNumber(),
-                createCDK.getSystemType()));
     }
 
     /**

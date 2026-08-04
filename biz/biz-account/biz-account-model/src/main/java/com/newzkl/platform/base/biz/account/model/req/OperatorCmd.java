@@ -48,21 +48,4 @@ public class OperatorCmd {
         // TODO[cross-domain finance]: private ServiceFeeConfigVO serviceFeeConfigVO;
     }
 
-    @Data
-    public static class CreateCDK {
-        /**
-         * 运营商ID
-         */
-        @NotNull
-        private Long operatorId;
-        /**
-         * 数量
-         */
-        @NotNull
-        private Integer number;
-        /**
-         * 系统类型
-         */
-        private Integer systemType;
-    }
 }

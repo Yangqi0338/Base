@@ -5,9 +5,13 @@ import cn.hutool.core.util.StrUtil;
 
 import com.newzkl.platform.base.biz.order.application.service.IQueryService;
 import com.newzkl.platform.base.biz.order.application.service.IRefundService;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.BalancePayApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.MemberRefundRes;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.SellAfterRefundReq;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.*;
-import com.newzkl.platform.base.biz.order.model.dto.Refund;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
@@ -27,9 +31,9 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
-import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -43,28 +47,16 @@ import java.util.stream.Collectors;
  * @date 2023/12/811:16
  */
 @Service
+@RequiredArgsConstructor
 public class RefundServiceImpl implements IRefundService {
 
     private final IOrderDomain orderDomain;
     private final IRefundDomain refundDomain;
-    @DubboReference
-    private IBalancePayApi balancePayApi;
-    @DubboReference
-    private ILocalMessageFacade localMessageFacade;
-    @Autowired
-    private IQueryService queryService;
-    @Autowired
-    private ISettleDomain settleDomain;
-    @Autowired
-    private IRefundRepository refundRepository;
-
-    @Autowired
-    private RefundOperationRecordUtil refundOperationRecordUtil;
-
-    public RefundServiceImpl(IOrderDomain orderDomain, IRefundDomain refundDomain) {
-        this.orderDomain = orderDomain;
-        this.refundDomain = refundDomain;
-    }
+    private final BalancePayApi balancePayApi;
+    private final LocalMessageApi localMessageApi;
+    private final IQueryService queryService;
+    private final ISettleDomain settleDomain;
+    private final IRefundRepository refundRepository;
 
     @Override
     public Long refundCreateApi(RefundCommand refundCommand) {
@@ -75,9 +67,9 @@ public class RefundServiceImpl implements IRefundService {
         SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(refundCommand.getSpuOrderId());
         //售后单创建
         RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
-        Refund refund = refundCreateRes.getRefund();
+        RefundDTO refund = refundCreateRes.getRefund();
         // 发送协商记录
-        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND.getDesc(), RefundOperateTypeEnum.LAUNCH_REFUND);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND);
 //        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
         //如果是派发中订单, 售后自动通过
         if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
@@ -112,9 +104,9 @@ public class RefundServiceImpl implements IRefundService {
         }
         //售后单创建
         RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
-        Refund refund = refundCreateRes.getRefund();
+        RefundDTO refund = refundCreateRes.getRefund();
         // 发送协商记录
-        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND.getDesc(), RefundOperateTypeEnum.LAUNCH_REFUND);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND);
 //        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
         //如果是派发中订单, 售后自动通过
         if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
@@ -131,18 +123,18 @@ public class RefundServiceImpl implements IRefundService {
             refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.SUPPLIER);
 
             RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE: RefundOperateTypeEnum.SUPPLIER_AGREE;
-            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(),refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), refundOperateTypeEnum);
         }else {refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.SUPPLIER, "");
-            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(),RefundOperateTypeEnum.SUPPLIER_REFUSE.getDesc(), RefundOperateTypeEnum.SUPPLIER_REFUSE);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), RefundOperateTypeEnum.SUPPLIER_REFUSE);
         }
 
         //售后通过处理
         if(refundAuditRes.isRefundPass()){
             doRefundPassForChannel(refundAuditRes);
             RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS:RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
-            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS, RefundOperateTypeEnum.REFUND_MONEY_SUCCESS.getDesc(), RefundOperateTypeEnum.REFUND_MONEY_SUCCESS);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS, RefundOperateTypeEnum.REFUND_MONEY_SUCCESS);
         }
-        Refund refund = refundAuditRes.getRefund();
+        RefundDTO refund = refundAuditRes.getRefund();
 
     }
     @Override
@@ -150,11 +142,11 @@ public class RefundServiceImpl implements IRefundService {
         if (refundId == null && spuOrderId == null){
             ThrowsException.exception(BaseErrorCode.PARAM,"售后单id和spu订单id不能都为空！");
         }
-        RefundVO refund = null;
+        RefundDTO refund = null;
         if (refundId == null){
-            refund = refundRepository.refundVoBySpuOrderId(spuOrderId);
+            refund = refundRepository.refundBySpuOrderId(spuOrderId);
         }else {
-            refund =  refundRepository.refundVO(refundId);
+            refund =  refundRepository.refund(refundId);
         }
         if (Objects.isNull(refund)){
             ThrowsException.exception(BaseErrorCode.PARAM,"售后单不存在！");
@@ -165,10 +157,10 @@ public class RefundServiceImpl implements IRefundService {
         if(CommonEnum.YesOrNo.YES == execute){
             refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.CHANNEL);
             RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE:RefundOperateTypeEnum.CHANNEL_AGREE;
-            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refundOperateTypeEnum);
         }else {
             refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.CHANNEL, reason);
-            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), RefundOperateTypeEnum.CHANNEL_REFUSE.getDesc(), RefundOperateTypeEnum.CHANNEL_REFUSE);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), RefundOperateTypeEnum.CHANNEL_REFUSE);
         }
 
         //售后通过处理
@@ -183,7 +175,7 @@ public class RefundServiceImpl implements IRefundService {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
             RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS:RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
-            refundOperationRecordUtil.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS,  refundOperateTypeEnum.getDesc(), refundOperateTypeEnum);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS,  refundOperateTypeEnum);
         }
     }
 
@@ -194,7 +186,7 @@ public class RefundServiceImpl implements IRefundService {
     public void doRefundPassForChannel(RefundAuditRes refundAuditRes) {
         //售后打款
         SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
-        Refund refund = refundAuditRes.getRefund();
+        RefundDTO refund = refundAuditRes.getRefund();
         sellAfterRefundReq.setAccountId(refund.getChannelId());
         sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
         sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
@@ -207,8 +199,7 @@ public class RefundServiceImpl implements IRefundService {
         //售后已打款通知
         refundDomain.sellAfterRefundNotify(refund.getId(), refund.getChannelId(), memberRefundRes.getThirdTradeNo());
         //售后完成消息
-        RefundPassEvent refundPassEvent =  RefundUtil.refund2RefundPassEvent(refund);
-        localMessageFacade.sendMessage(MQ.Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
+        localMessageApi.sendRefundPassMessage(refund);
         //SKU订单售后通过通知订单
         if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
             orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
@@ -242,7 +233,7 @@ public class RefundServiceImpl implements IRefundService {
     public void doRefundPassForMemberAndCustom(RefundAuditRes refundAuditRes) {
         //C端打款
         SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
-        Refund refund = refundAuditRes.getRefund();
+        RefundDTO refund = refundAuditRes.getRefund();
         sellAfterRefundReq.setAccountId(refund.getChannelId());
         sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
         sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
@@ -250,13 +241,13 @@ public class RefundServiceImpl implements IRefundService {
         sellAfterRefundReq.setOrderNo(refund.getOrderId());
         MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
         if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
-            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg(), true);
+            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg());
         }
         //售后已打款通知
         refundDomain.sellAfterRefundNotify(refundAuditRes.getRefund().getId(), null, memberRefundRes.getThirdTradeNo());
         //售后完成消息
-        RefundPassEvent refundPassEvent =  RefundUtil.refund2RefundPassEvent(refundAuditRes.getRefund());
-        localMessageFacade.sendMessage(MQ.Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
+        RefundPassEvent refundPassEvent = RefundUtil.refund2RefundPassEvent(refundAuditRes.getRefund());
+        localMessageApi.sendMessage(MQ.Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
         //SKU订单售后通过通知订单
         if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
             orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
@@ -269,7 +260,7 @@ public class RefundServiceImpl implements IRefundService {
     public void doRefundPassForMemberAndSelection(RefundAuditRes refundAuditRes) {
         //C端打款
         SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
-        Refund refund = refundAuditRes.getRefund();
+        RefundDTO refund = refundAuditRes.getRefund();
         sellAfterRefundReq.setAccountId(refund.getChannelId());
         sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
         sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
@@ -291,7 +282,8 @@ public class RefundServiceImpl implements IRefundService {
         }
     }
     @Override
-    @GlobalTransactional(rollbackFor = Exception.class)
+    // TODO[#171-seata] 原 Seata @GlobalTransactional 降级为本地事务(Base 未接 Seata); 供应商确认退货运费编排走单体本地事务, 待 Seata 装配后恢复分布式全局事务
+    @Transactional(rollbackFor = Exception.class)
     public void supplierConfirmRefundFreight(Long refundId) {
         //确认收货
         RefundAuditRes refundAuditRes = refundDomain.confirmRefundFreight(refundId);
@@ -299,7 +291,7 @@ public class RefundServiceImpl implements IRefundService {
         if(refundAuditRes.isRefundPass()){
             doRefundPassForChannel(refundAuditRes);
         }
-        Refund refund = refundAuditRes.getRefund();
-        refundOperationRecordUtil.sendRefundOperationRecord(refund, RefundEnum.State.RECEIVE_WAIT, refund.getRefundState(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT.getDesc(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
+        RefundDTO refund = refundAuditRes.getRefund();
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.RECEIVE_WAIT, refund.getRefundState(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
     }
 }

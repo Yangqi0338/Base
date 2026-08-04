@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.sys.model.project.query;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,14 +38,14 @@ public class ProjectQuery extends BizPageQuery {
     private Integer area;
 
     /**
-     * 合作金额区间起点 (含)
+     * 合作金额区间起点 (含, Money)
      */
-    private Integer basicStartAmount;
+    private Money basicStartAmount;
 
     /**
-     * 合作金额区间终点 (含)
+     * 合作金额区间终点 (含, Money)
      */
-    private Integer basicEndAmount;
+    private Money basicEndAmount;
 
     /**
      * 标签 (模糊匹配逗号分隔串)

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
@@ -24,7 +25,7 @@ public class SkuOrderMessageVO implements Serializable {
     /**
      * 渠道类型 0 供货商品 1 自营商品 2 外部商品
      */
-    private Integer spuChannelType;
+    private SpuEnum.ChannelType spuChannelType;
 
     /**
      * 商品金额

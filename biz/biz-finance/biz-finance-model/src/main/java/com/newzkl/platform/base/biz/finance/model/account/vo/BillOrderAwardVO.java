@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.account.vo;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -49,7 +50,7 @@ public class BillOrderAwardVO extends BaseRes {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 订单数

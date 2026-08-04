@@ -15,6 +15,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.AccountBindSyn
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
@@ -183,7 +184,7 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         tripartitePurseVO.setOidUserNo(oidUserNo);
         // 绑卡异步，所以这里是绑卡同步中. 有可能直接成功,就直接修改为正常状态
         tripartitePurseVO.setUserStatus(isAllDone ? PurseEnum.TripartitePurchaseStatus.NORMAL : PurseEnum.TripartitePurchaseStatus.BIND_SYNC);
-        tripartitePurseVO.setAmount(0);
+        tripartitePurseVO.setAmount(Money.ZERO);
         tripartitePurseVO.setAccountType(PurseEnum.TripartitePurchasePlatform.HUI_FU);
         tripartitePurseVO.setBankNo(bankNo);
         return tripartitePurseVO;

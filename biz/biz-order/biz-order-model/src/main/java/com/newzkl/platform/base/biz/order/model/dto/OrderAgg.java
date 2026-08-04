@@ -21,18 +21,13 @@ public class OrderAgg implements Serializable {
     /**
      * 交易单
      */
-    private Order order;
+    private OrderDTO order;
     /**
      * spu订单
      */
-    private List<SpuOrder> spuOrderList;
+    private List<SpuOrderDTO> spuOrderList;
     /**
      * sku订单
      */
-    private List<SkuOrder> skuOrderList;
-
-    // 迁移说明: OrderAgg 退化为纯数据聚合(贫血模型), 原聚合根支付/建单业务方法
-    // (channelPaySuccess/memberPaySuccess/directPaySuccess/allPaySuccess/buildCreateOrder 等)已按本团队方言
-    // 平展到 application/domain service(去聚合根)。channelPaySuccess/allPaySuccess 现落 OrderServiceImpl;
-    // directPaySuccess/buildCreateOrder 全仓无调用方, 剥离(登 deferred, 用时在 application/domain 平展重建)。
+    private List<SkuOrderDTO> skuOrderList;
 }

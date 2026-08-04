@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.order.domain.service.impl;
 
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 
@@ -12,11 +13,14 @@ import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
 import com.newzkl.platform.base.biz.order.domain.service.SettleRpcUtil;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleOrderWaitQuery;
 import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;
 import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
@@ -94,7 +98,7 @@ public class SettleDomainImpl implements ISettleDomain {
                 .collect(Collectors.groupingBy(SettleOrderWaitVO::getSpuId));
         //售后冲正待结算记录
         List<SettleOrderWaitVO> refundSettleOrderWaitList = settleOrderWaitVOList.stream().filter(item -> item.getType() == 2).collect(Collectors.toList());
-        List<SettleRecordItem> settleRecordItems = new ArrayList<>();
+        List<SettleRecordItemDTO> settleRecordItems = new ArrayList<>();
         //处理商品结算
         for (Long spuId : spuSettleOrderWaitVOMap.keySet()) {
             // 准备结算信息
@@ -133,7 +137,7 @@ public class SettleDomainImpl implements ISettleDomain {
             }
             //聚合
             SettleOrderWaitVO settleOrderWaitVO1 = spuSettleOrderWaitVOList.get(0);
-            SettleRecordItem settleRecordItem = new SettleRecordItem();
+            SettleRecordItemDTO settleRecordItem = new SettleRecordItemDTO();
             settleRecordItem.setId(SnowflakeIdAble.getSnowflakeId());
             settleRecordItem.setSettleRecordId(settleRecordId);
             settleRecordItem.setSpuId(spuId);
@@ -168,7 +172,7 @@ public class SettleDomainImpl implements ISettleDomain {
         // 更新待结算订单表
         settleRepository.settleOrderWaitEditForExecuteSettle(settleOrderWaitIdList, CommonEnum.YesOrNo.YES.getCode(), settleTime, settleRecordId);
         // 追加结算记录
-        SettleRecord settleRecord = new SettleRecord();
+        SettleRecordDTO settleRecord = new SettleRecordDTO();
         settleRecord.setId(settleRecordId);
         settleRecord.setSupplierId(supplierId);
         settleRecord.setSettleTime(settleTime);
@@ -199,7 +203,7 @@ public class SettleDomainImpl implements ISettleDomain {
                 .filter(item->item.getType() == 0 || item.getType() == 1)
                 .collect(Collectors.groupingBy(SettleOrderWaitVO::getSpuId));
         // 结算详情
-        List<SettleRecordItem> settleRecordItems = new ArrayList<>();
+        List<SettleRecordItemDTO> settleRecordItems = new ArrayList<>();
         //处理商品结算
         for (Long spuId : spuSettleOrderWaitVOMap.keySet()) {
             // 准备结算信息
@@ -238,7 +242,7 @@ public class SettleDomainImpl implements ISettleDomain {
             }
             //聚合
             SettleOrderWaitVO settleOrderWaitVO1 = spuSettleOrderWaitVOList.get(0);
-            SettleRecordItem settleRecordItem = new SettleRecordItem();
+            SettleRecordItemDTO settleRecordItem = new SettleRecordItemDTO();
             settleRecordItem.setId(SnowflakeIdAble.getSnowflakeId());
             settleRecordItem.setSettleRecordId(settleRecordId);
             settleRecordItem.setSpuId(spuId);
@@ -258,7 +262,7 @@ public class SettleDomainImpl implements ISettleDomain {
         // 更新待结算订单表
         settleRepository.settleOrderWaitEditForExecuteSettle(settleOrderWaitIdList, CommonEnum.YesOrNo.YES.getCode(), settleTime, settleRecordId);
         // 追加结算记录
-        SettleRecord settleRecord = new SettleRecord();
+        SettleRecordDTO settleRecord = new SettleRecordDTO();
         settleRecord.setId(settleRecordId);
         settleRecord.setSupplierId(supplierId);
         settleRecord.setSettleTime(settleTime);
@@ -273,8 +277,8 @@ public class SettleDomainImpl implements ISettleDomain {
 
     private LocalDateTime getNextSettleTime(SettleGoodsVO settleGoodsVO, SettlementConfigOutVO settlementConfigRpcVO) {
         Integer dataType = settlementConfigRpcVO.getDataType();
-        Integer dataNumber = SettleRpcUtil.getDataNumber(settlementConfigRpcVO.getDataType(), settlementConfigRpcVO.getDataOne(), settlementConfigRpcVO.getDataTow());
-        LocalDateTime nextSettleTime = SettleRpcUtil.getNextSettleTime(DateUtil.date(settleGoodsVO.getNextSettleTime()),dataType, dataNumber);
+        Integer dataNumber = getDataNumber(settlementConfigRpcVO.getDataType(), settlementConfigRpcVO.getDataOne(), settlementConfigRpcVO.getDataTow());
+        LocalDateTime nextSettleTime = getNextSettleTime(DateUtil.date(settleGoodsVO.getNextSettleTime()),dataType, dataNumber);
         return nextSettleTime;
     }
 
@@ -341,5 +345,68 @@ public class SettleDomainImpl implements ISettleDomain {
     @Override
     public Integer closeSettleOrder(Long skuOrderId, Long refundId) {
         return settleRepository.closeSettleOrder(skuOrderId, refundId);
+    }
+
+    /**
+     * 获取下次结算时间
+     *
+     * @param currentSettleTime  当前结算时间
+     * @param settlementTimeType
+     * @param settlementTimeDay
+     * @return
+     */
+    public static LocalDateTime getNextSettleTime(DateTime currentSettleTime, Integer settlementTimeType, Integer settlementTimeDay) {
+        if (RoleEnum.DataType.MONTH_ONLY.getCode().equals(settlementTimeType)) { // 按月结算 (MONTH_ONLY) ，得到下个月的第 settlementTimeDay 天的 0 点。
+            Date nextMonthDayStartTimeStamp = getNextMonthDayStartTimeStamp(settlementTimeDay);
+            return DateUtil.toLocalDateTime(nextMonthDayStartTimeStamp);
+        } else if (RoleEnum.DataType.GOODS_AUDIT.getCode().equals(settlementTimeType)) {
+            Date date = startDayNumForStamp(currentSettleTime, settlementTimeDay); //以当前结算时间为基准，向后推 settlementTimeDay 天（通常是 N 天后的开始时间）。返回该日期的 LocalDateTime。
+            return DateUtil.toLocalDateTime(date); // 典型场景：审核通过后“X 天后结算”，比如配置 settlementTimeDay = 7，表示审核 7 天后进入结算。
+        } else {
+            throw new PlatformException(BaseErrorCode.PARAM);
+        }
+    }
+
+    public static Integer getDataNumber(Integer dataType, String dataOne, String dataTow) {
+        if (RoleEnum.DataType.MONTH_ONLY.getCode().equals(dataType)) {
+            return Integer.parseInt(dataOne);
+        } else if (RoleEnum.DataType.GOODS_AUDIT.getCode().equals(dataType)) {
+            return Integer.parseInt(dataTow);
+        } else {
+            throw new PlatformException(BaseErrorCode.PARAM, "供应商的结算配置错误");
+        }
+    }
+
+    /**
+     * 获取 N天之后0点的时间戳
+     *
+     * @param date
+     * @param num
+     * @return
+     */
+    public static Date startDayNumForStamp(DateTime date, Integer num) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, num);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取下个月指定日期的开始时间
+     **/
+    public static Date getNextMonthDayStartTimeStamp(Integer day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 }

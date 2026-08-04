@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -61,8 +62,8 @@ public class StoreSearchRes extends BaseRes {
          */
         private String img;
         /**
-         * 销售价
+         * 销售价 (Money, 落库 BIGINT 分)
          */
-        private Integer sellPrice;
+        private Money sellPrice;
     }
 }

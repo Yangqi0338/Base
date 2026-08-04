@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req.cmd;
 
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

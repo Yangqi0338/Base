@@ -32,17 +32,17 @@ public interface BonusPoolNowDAO extends BaseMapper<BonusPoolNowDO> {
      * 更新当前奖金池订单奖金
      *
      * @param channelId 渠道商id
-     * @param amount    更新金额
+     * @param amount    更新金额 (裸分, 列 BIGINT 分, SQL 直接累加)
      */
-    void alterNowBonusPoolOrderBonus(@Param("channelId") Long channelId, @Param("amount") Integer amount);
+    void alterNowBonusPoolOrderBonus(@Param("channelId") Long channelId, @Param("amount") long amount);
 
     /**
      * 更新当前奖金池自定义奖金
      *
      * @param channelId 渠道商id
-     * @param amount    更新金额
+     * @param amount    更新金额 (裸分, 列 BIGINT 分, SQL 直接赋值)
      */
-    void alterNowBonusPoolCustomBonus(@Param("channelId") Long channelId, @Param("amount") Integer amount);
+    void alterNowBonusPoolCustomBonus(@Param("channelId") Long channelId, @Param("amount") long amount);
 
     /**
      * 删除当前奖金池

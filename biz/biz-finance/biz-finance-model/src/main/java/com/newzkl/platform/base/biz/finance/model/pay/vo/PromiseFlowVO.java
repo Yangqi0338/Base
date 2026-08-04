@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -31,7 +32,7 @@ public class PromiseFlowVO extends BaseRes {
      * 金额
      */
     @Positive(message = "金额必须大于0")
-    private Integer amount;
+    private Money amount;
     /**
      * 支付方式
      */

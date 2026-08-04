@@ -239,10 +239,6 @@ public class DistributionGoodsDetailRes implements Serializable {
          */
         private Long spuId;
         /**
-         * 库存
-         */
-        private Integer inventory;
-        /**
          * 市场价
          */
         private Integer marketPrice;

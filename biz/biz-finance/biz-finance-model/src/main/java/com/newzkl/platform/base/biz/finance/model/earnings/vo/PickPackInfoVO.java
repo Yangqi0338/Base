@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class PickPackInfoVO {
     /**
      * 订单金额
      */
-    private Integer amount;
+    private Money amount;
     /**
      * 礼包类型
      */

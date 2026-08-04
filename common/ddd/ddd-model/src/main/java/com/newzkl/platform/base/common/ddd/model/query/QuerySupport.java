@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.ddd.model.query;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.*;
@@ -9,9 +10,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author god
@@ -96,37 +99,52 @@ public class QuerySupport {
     }
 
     public void addSortField(String field, boolean isDesc) {
-        if (StrUtil.isBlank(field)) return;
-        if (this.sortField == null) {
-            this.sortField = CollUtil.newArrayList();
-        }
-        doAddSortField(field);
-        if (sortMode == null) {
-            sortMode = CollUtil.newArrayList();
-        }
-        sortMode.add(isDesc ? "DESC" : "ASC");
+        this.sortField = add(this.sortField, field);
+        this.sortMode = add(this.sortMode, isDesc ? "DESC" : "ASC");
     }
 
-    public void addGroupField(String field) {
-        if (StrUtil.isBlank(field)) return;
-        if (groupField == null) {
-            groupField = CollUtil.newArrayList();
+    public void addGroupField(String... fields) {
+        this.groupField = add(this.groupField, fields);
+    }
+
+    @SafeVarargs
+    public final <T> void addGroupField(Function<T, ?>... functions) {
+        this.groupField = addFunc(this.groupField, functions);
+    }
+
+    private static List<String> add(List<String> field, String... functions) {
+        if (ArrayUtil.isEmpty(functions)) return field;
+        List<String> list = field;
+        if (CollUtil.isEmpty(field)) {
+            list = new ArrayList<>();
         }
-        groupField.add(field);
+        list.addAll(Arrays.asList(functions));
+        return list;
+    }
+
+    @SafeVarargs
+    private static <T> List<String> addFunc(List<String> field, Function<T, ?>... functions) {
+        if (ArrayUtil.isEmpty(functions)) return field;
+        List<String> list = field;
+        if (CollUtil.isEmpty(field)) {
+            list = new ArrayList<>();
+        }
+        for (Function<T, ?> function : functions) {
+            String fieldName = StrUtil.toUnderlineCase(LambdaUtil.getFieldName((it) -> function.apply(null)));
+            list.add(fieldName);
+        }
+        return list;
     }
 
     public void addField(String... fields) {
-        if (ArrayUtil.isEmpty(fields)) return;
-        if (this.field == null) {
-            this.field = CollUtil.newArrayList();
-        }
-        CollUtil.addAll(this.field, fields);
+        this.field = add(this.field, fields);
     }
 
     public void addField(String field, String key) {
         addField(field + " as " + key);
     }
 
+    @SafeVarargs
     public final <T> void addField(Function<T, ?>... functions) {
         if (ArrayUtil.isEmpty(functions)) return;
         if (this.field == null) {

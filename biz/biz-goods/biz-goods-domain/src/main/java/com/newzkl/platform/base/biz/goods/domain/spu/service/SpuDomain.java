@@ -6,14 +6,12 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuer
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
-import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuUpdateRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.InventoryExecuteReq;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
@@ -87,12 +85,6 @@ public interface SpuDomain {
      */
     void spuSubmit(Long spuId, Long flowId);
     /**
-     * 库存操作
-     * @param inventoryExecuteReq
-     * @return
-     */
-    void inventoryExecute(InventoryExecuteReq inventoryExecuteReq);
-    /**
      * 商品上传终止
      * @param spuVO
      */
@@ -115,12 +107,6 @@ public interface SpuDomain {
      * @param outSpuEditCommand
      */
     void outSpuEdit(OutSpuEditCommand outSpuEditCommand);
-
-    /**
-     * SKU库存操作
-     * @param stockExecuteReq
-     */
-    void stockExecute(List<StockExecuteReq> stockExecuteReq);
 
     //OrderGoodsInfoVO queryOrderSkuInfoVOList(Long skuId);
 

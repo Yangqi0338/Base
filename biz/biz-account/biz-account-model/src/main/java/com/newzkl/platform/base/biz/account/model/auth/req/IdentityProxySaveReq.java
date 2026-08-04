@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.auth.req;
 
-import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.Data;
 
 /**

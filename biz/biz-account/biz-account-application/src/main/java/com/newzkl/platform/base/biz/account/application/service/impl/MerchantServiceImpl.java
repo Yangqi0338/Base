@@ -52,7 +52,6 @@ public class MerchantServiceImpl implements MerchantService {
         }
         StoreOrderPayReq req = new StoreOrderPayReq();
         req.setPayType(orderPay.getPayType());
-        req.setCdk(orderPay.getCdk());
         req.setAccountId(accountId);
         req.setStoreInfo(TransferUtils.transfer(orderPay.getStoreInfo(), StoreOrderPayReq.StoreOrderPayInfo::new));
         return storeOrderPayApi.orderPay(req);

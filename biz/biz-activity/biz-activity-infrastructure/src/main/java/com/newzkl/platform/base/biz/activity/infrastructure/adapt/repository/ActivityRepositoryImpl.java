@@ -148,7 +148,6 @@ public class ActivityRepositoryImpl implements ActivityRepository {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Long addActivityStrategy(StrategyVO strategyVO) {
         if (strategyVO == null) {
             return null;
@@ -169,19 +168,23 @@ public class ActivityRepositoryImpl implements ActivityRepository {
             strategy.setStrategyId(strategyVO.getStrategyId());
             strategyDAO.updateById(strategy);
         }
-        List<StrategyDetailVO> strategyDetails = strategyVO.getStrategyDetails();
-        if (CollectionUtil.isNotEmpty(strategyDetails)) {
-            List<StrategyDetailDO> details = addActivityStrategyDetail(strategyVO.getStrategyDetails());
-            details.forEach(x -> {
-                if (x.getId() == null) {
-                    x.setId(SnowflakeIdAble.getSnowflakeId());
-                    strategyDetailDAO.insert(x);
-                } else {
-                    strategyDetailDAO.updateById(x);
-                }
-            });
-        }
         return strategy.getStrategyId();
+    }
+
+    @Override
+    public void saveStrategyDetails(List<StrategyDetailVO> strategyDetailList) {
+        if (CollectionUtil.isEmpty(strategyDetailList)) {
+            return;
+        }
+        List<StrategyDetailDO> details = addActivityStrategyDetail(strategyDetailList);
+        details.forEach(x -> {
+            if (x.getId() == null) {
+                x.setId(SnowflakeIdAble.getSnowflakeId());
+                strategyDetailDAO.insert(x);
+            } else {
+                strategyDetailDAO.updateById(x);
+            }
+        });
     }
 
     @Override

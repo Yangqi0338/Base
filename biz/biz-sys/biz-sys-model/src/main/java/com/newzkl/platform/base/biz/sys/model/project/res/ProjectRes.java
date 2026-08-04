@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.sys.model.project.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -59,9 +60,9 @@ public class ProjectRes extends BaseRes {
     private String areaName;
 
     /**
-     * 合作金额
+     * 合作金额 (Money, 落库 BIGINT 分)
      */
-    private Integer basicAmount;
+    private Money basicAmount;
 
     /**
      * 标签列表 (落库为逗号分隔串)

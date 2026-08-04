@@ -9,15 +9,12 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionRandomInf
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaUpdateWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
-import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreRepository;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreDAO;
-import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreStyleDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreDO;
-import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreStyleDO;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.UserFollowApi;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +34,6 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     private final StoreDAO storeDAO;
     private final DistributionApi distributionApi;
-    private final StoreStyleDAO storeStyleDAO;
     private final UserFollowApi userFollowApi;
     @Override
     public Long storeSave(Store store) {
@@ -62,17 +58,18 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     @Override
     public Store store(Long storeId) {
-        Store store = TransferUtils.transfer(storeDAO.selectById(storeId), Store::new);
-        if (store != null) {
-            StoreStyle storeStyle = TransferUtils.transfer(storeStyleDAO.selectOne(new BaseLambdaQueryWrapper<StoreStyleDO>().eq(StoreStyleDO::getStyleCode, store.getStyleCode())), StoreStyle::new);
-            if (storeStyle != null) {
-                store.setStyleContent(storeStyle.getStyleContent());
-                store.setGoodsIdListStr(storeStyle.getGoodsIdListStr());
-                store.setPreviewImage(storeStyle.getPreviewImage());
-                store.setStyleName(storeStyle.getStyleName());
-            }
+        return TransferUtils.transfer(storeDAO.selectById(storeId), Store::new);
+    }
+
+    @Override
+    public Map<String, Integer> countStoreByStyleCodes(List<String> styleCodes) {
+        if (CollUtil.isEmpty(styleCodes)) {
+            return Map.of();
         }
-        return store;
+        List<StoreDO> storeDOList = storeDAO.selectList(
+                new LambdaQueryWrapper<StoreDO>().in(StoreDO::getStyleCode, styleCodes));
+        return storeDOList.stream().collect(Collectors.groupingBy(
+                StoreDO::getStyleCode, Collectors.summingInt(x -> 1)));
     }
 
     @Override

@@ -5,8 +5,6 @@ import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.biz.account.model.cdk.req.CdkQuery;
-import com.newzkl.platform.base.biz.account.model.cdk.res.CdkRes;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.*;
 import com.newzkl.platform.base.biz.account.model.vo.*;
@@ -125,18 +123,6 @@ public interface UserQueryService {
     Page<ChannelVO> channelPage(ChannelQuery channelQuery);
 
     int countByQuery(ChannelQuery channelQuery);
-
-    /**
-     * 开通码分页
-     *
-     * <p>迁移补充: 旧 {@code IUserQueryService.cdkPage} 返回 PageHelper 的 {@code PageInfo},
-     * 中台统一返回 MyBatis-Plus {@code Page}, 记录类型为出参对象 {@code CdkRes}。</p>
-     *
-     * @param cdkQuery 开通码查询
-     * @return 开通码分页
-     * @author KC
-     */
-    Page<CdkRes> cdkPage(CdkQuery cdkQuery);
 
     SupplierVO supplierVO(Long supplierId);
 

@@ -9,23 +9,18 @@ import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.ChannelServiceAmountRes;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceVirtualAssetsApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRegisterReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.VirtualAssetsAlterReq;
-import com.newzkl.platform.base.biz.account.domain.service.CdkDomain;
-import com.newzkl.platform.base.biz.account.model.cdk.req.ToCdkCommand;
 import com.newzkl.platform.base.biz.account.model.enums.RedisEnum;
-import com.newzkl.platform.base.biz.account.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.account.model.vo.AmountRateDTO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
-import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
@@ -33,7 +28,6 @@ import com.newzkl.platform.base.biz.auth.model.exception.RoleErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
-import com.newzkl.platform.base.biz.account.domain.repository.OperatorRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
@@ -41,7 +35,6 @@ import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.OperatorReq;
 import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 import com.newzkl.platform.base.biz.account.model.vo.*;
-import com.newzkl.platform.base.biz.account.model.assembler.identity.OperatorAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentitySaveReq;
@@ -52,7 +45,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -70,22 +62,8 @@ public class IdentityServiceImpl implements IdentityService {
     private final UserQueryService userQueryService;
     private final AccountDomain accountDomain;
     private final GoodsStoreApi goodsStoreApi;
-    private final OperatorRepository operatorRepository;
     private final FinanceConfigApi financeConfigApi;
     private final OperatorClientDomain operatorDomain;
-    private final OperatorAssembler operatorAssembler;
-    private final CdkDomain cdkDomain;
-    private final FinanceVirtualAssetsApi financeVirtualAssetsApi;
-
-    /**
-     * 运营商分配给交易师时的单个开通码期权单价 (旧实现硬编码 200)
-     */
-    private static final int OPTION_VALUE_TO_DEALER = 200;
-
-    /**
-     * 分配给渠道商时的单个开通码期权单价 (旧实现硬编码 500)
-     */
-    private static final int OPTION_VALUE_TO_CHANNEL = 500;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -174,81 +152,6 @@ public class IdentityServiceImpl implements IdentityService {
      */
     private String applyCommandKey(Long accountId, Long roleId) {
         return RedisEnum.Key.ROLE_APPLY_COMMAND.getCode(accountId, roleId);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void toCdk(ToCdkCommand toCdkCommand) {
-        // 分配开通码
-        int toCount = cdkDomain.toCdk(toCdkCommand);
-        if (toCdkCommand.getCdkIdList().size() != toCount) {
-            throw new PlatformException(BaseErrorCode.PARAM, "开通码分配数量");
-        }
-        Integer value;
-        PurseEnum.FinanceUser financeUserType;
-        RoleEnum.CompanyRole from;
-        RoleEnum.CompanyRole to;
-        Long fromRole = toCdkCommand.getFromRole();
-        Long toRole = toCdkCommand.getToRole();
-        if (RoleEnum.CompanyRole.OPERATOR.getCode().equals(fromRole)) {
-            if (RoleEnum.CompanyRole.DEALER.getCode().equals(toRole)) {
-                value = OPTION_VALUE_TO_DEALER;
-                financeUserType = PurseEnum.FinanceUser.TRADERS;
-                from = RoleEnum.CompanyRole.OPERATOR;
-                to = RoleEnum.CompanyRole.DEALER;
-            } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(toRole)) {
-                value = OPTION_VALUE_TO_CHANNEL;
-                financeUserType = PurseEnum.FinanceUser.CHANNEL;
-                from = RoleEnum.CompanyRole.OPERATOR;
-                to = RoleEnum.CompanyRole.CHANNEL;
-            } else {
-                throw new PlatformException(BaseErrorCode.PARAM, "被分配人角色");
-            }
-        } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(fromRole)) {
-            if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(toRole)) {
-                value = OPTION_VALUE_TO_CHANNEL;
-                financeUserType = PurseEnum.FinanceUser.CHANNEL;
-                from = RoleEnum.CompanyRole.DEALER;
-                to = RoleEnum.CompanyRole.CHANNEL;
-            } else {
-                throw new PlatformException(BaseErrorCode.PARAM, "被分配人角色");
-            }
-        } else {
-            throw new PlatformException(BaseErrorCode.PARAM, "分配人角色");
-        }
-        // 分配期权
-        AccountVO toAccount = accountDomain.account(null, toCdkCommand.getToUserId());
-        VirtualAssetsAlterReq item = new VirtualAssetsAlterReq();
-        item.setAccountId(toCdkCommand.getToUserId());
-        item.setAccountName(toAccount == null ? null : toAccount.getUsername());
-        item.setAccountType(financeUserType);
-        item.setAssetsType(1);
-        item.setAlterType(1);
-        item.setAlterValue(toCount * value);
-        item.setBusinessType(1);
-        item.setAlterInfo(optionMapJson(toCount, value, from, to));
-        List<VirtualAssetsAlterReq> reqList = new ArrayList<>();
-        reqList.add(item);
-        financeVirtualAssetsApi.alterVirtualAssets(reqList);
-    }
-
-    /**
-     * 构建期权变更明细 JSON (对齐旧 {@code BizUtil.getOptionMapJson})。
-     *
-     * @param size  开通码数量
-     * @param price 单价
-     * @param from  分配人角色
-     * @param to    被分配人角色
-     * @return 明细 JSON
-     */
-    private String optionMapJson(int size, int price, RoleEnum.CompanyRole from, RoleEnum.CompanyRole to) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("system", CommonEnum.SystemType.STORE.getCode());
-        map.put("size", size);
-        map.put("price", price);
-        map.put("from", from == null ? null : from.getCode());
-        map.put("to", to == null ? null : to.getCode());
-        return JSON.toJSONString(map);
     }
 
     @Override
@@ -360,7 +263,7 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     public ServiceFeeConfigVO queryServiceFeeConfig(Long channelId) {
-        ChannelServiceAmountRes channelConfigVO = financeConfigApi.queryChannelNowServiceFee(channelId);
+        ChannelServiceAmountRes channelConfigVO = financeConfigApi.queryChannelConfig(channelId);
         ServiceFeeConfigVO serviceFeeConfigVO = new ServiceFeeConfigVO();
         serviceFeeConfigVO.setItemList(new ArrayList<>());
         if (channelConfigVO == null) {

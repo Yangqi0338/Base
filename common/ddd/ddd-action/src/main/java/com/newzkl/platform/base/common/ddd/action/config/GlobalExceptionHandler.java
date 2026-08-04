@@ -3,6 +3,7 @@ package com.newzkl.platform.base.common.ddd.action.config;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -72,7 +73,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public PlatformResult<?> handleException(Exception e) {
+    public PlatformResult<?> handleException(Exception e, HttpServletRequest request) {
         return PlatformResult.fail(BaseErrorCode.SERVER.getCode(), "网络繁忙，请重试或联系客服");
     }
 }

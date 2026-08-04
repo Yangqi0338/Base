@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.activity.model.event.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -16,19 +17,19 @@ public class HistoryBonusPoolDataVO {
     private Long bonusPoolId;
 
     /**
-     * 订单奖金
+     * 订单奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer orderBonus;
+    private Money orderBonus;
 
     /**
-     * 自定义奖金
+     * 自定义奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer customBonus;
+    private Money customBonus;
 
     /**
-     * 最终结算奖金
+     * 最终结算奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer settleBonus;
+    private Money settleBonus;
 
     /**
      * 开始时间

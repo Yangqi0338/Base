@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.newzkl.platform.base.common.core.mybatis.handler.MoneyTypeHandler;
 import org.dromara.mpe.autotable.IgnoreExt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -76,5 +77,15 @@ public class MybatisPlusConfig {
     @Bean
     public SqlPrintInterceptor sqlPrintInterceptor() {
         return new SqlPrintInterceptor();
+    }
+
+    /**
+     * 注册 Money 类型处理器
+     * @ext Money ↔ DB BIGINT(分)
+     * @return ConfigurationCustomizer 实例
+     */
+    @Bean
+    public ConfigurationCustomizer moneyTypeHandlerCustomizer() {
+        return configuration -> configuration.getTypeHandlerRegistry().register(MoneyTypeHandler.class);
     }
 }

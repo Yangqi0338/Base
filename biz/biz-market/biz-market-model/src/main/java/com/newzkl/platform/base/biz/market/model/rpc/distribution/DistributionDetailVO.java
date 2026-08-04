@@ -85,8 +85,6 @@ public class DistributionDetailVO implements Serializable {
     private Double weight;
     /** 体积(m³) */
     private Double volume;
-    /** SKU库存 */
-    private Integer skuInventory;
     /** 销售属性(JSON) */
     private String saleAttribute;
     /** SKU销售价 */

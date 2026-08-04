@@ -61,10 +61,6 @@ public class AuditDataSpu {
 	 * 建议零售价
 	 */
 	private Integer unitPrice;
-	/**
-	 * 库存
-	 */
-	private Integer inventory;
     /**
      * 审批状态
      *

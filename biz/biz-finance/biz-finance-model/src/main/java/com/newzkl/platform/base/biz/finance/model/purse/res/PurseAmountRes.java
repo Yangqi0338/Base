@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,12 +28,12 @@ public class PurseAmountRes implements Serializable {
     /**
      * 收益
      */
-    private Integer earnings;
+    private Money earnings;
 
     /**
      * 总收益
      */
-    private Integer totalEarnings;
+    private Money totalEarnings;
 
     /**
      * 开户时间

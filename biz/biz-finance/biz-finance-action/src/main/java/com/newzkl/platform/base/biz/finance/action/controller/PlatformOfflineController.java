@@ -29,9 +29,10 @@ public class PlatformOfflineController {
      * @param req 分配请求
      * @return 处理结果
      */
+
     @PostMapping("/platformToOperator")
     public PlatformResult<Boolean> platformToOperator(@RequestBody AmountDistributionReq req) {
-        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
+        if (RoleEnum.CompanyRole.PLATFORM != SecurityUtils.getRole()) {
             return PlatformResult.fail();
         }
         return purseService.platformToOperator(req);
@@ -45,7 +46,7 @@ public class PlatformOfflineController {
      */
     @PostMapping("/operatorToChannel")
     public PlatformResult<Boolean> operatorToChannel(@RequestBody AmountDistributionReq req) {
-        if (!RoleEnum.CompanyRole.OPERATOR.getCode().equals(SecurityUtils.getRoleId())) {
+        if (RoleEnum.CompanyRole.OPERATOR != SecurityUtils.getRole()) {
             return PlatformResult.fail();
         }
         return purseService.operatorToChannel(req);

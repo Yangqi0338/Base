@@ -32,7 +32,7 @@ import java.util.List;
  * <p>迁移说明: 源 {@code ProjectController} 用 {@code ICommonService#getBusinessRegion}
  * 回填省/市/区名称, 但调用点只设 {@code parentCode}/{@code flatten} 两参 (不传
  * operatorFilter/matchStrList/flagRemove), 即未触发跨域运营商打标分支, 语义等价于
- * {@link RegionDomain#getRegionList}, 故此处改走 sys 域内区域能力,
+ * 故此处改走 sys 域内区域能力,
  * 无跨域 RPC 依赖。</p>
  *
  * <p>响应壳变更: {@code queryPage} 旧返回 PageHelper {@code PageInfo<ProjectVO>}

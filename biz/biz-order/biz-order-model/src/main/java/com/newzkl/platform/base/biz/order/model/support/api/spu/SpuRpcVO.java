@@ -156,10 +156,6 @@ public class SpuRpcVO extends BaseRes implements Serializable {
       */
      private Integer profit;
      /**
-      * 冗余: 库存
-      */
-     private Integer inventory;
-     /**
       * 追加:审批ID
       */
      private Long flowId;

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api;
 
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class SettlementConfigOutVO implements Serializable {
     private Long id;
 
     /** 可结算节点 */
-    private Integer orderType;
+    private RoleEnum.OrderType orderType;
 
     /** 结算周期类型 */
     private Integer dataType;

@@ -16,7 +16,7 @@ public class AlreadyDeliverRes {
     /**
      * 购买数量
      */
-    private Integer orderCount;
+    private Integer count;
     /**
      * 发货数量
      */

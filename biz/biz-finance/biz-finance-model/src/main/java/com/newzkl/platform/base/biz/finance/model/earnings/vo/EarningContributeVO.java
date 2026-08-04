@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -40,16 +41,16 @@ public class EarningContributeVO implements Serializable {
     /**
      * 总消费
      */
-    private Integer totalConsume;
+    private Money totalConsume;
 
     /**
      * 分润贡献
      */
-    private Integer earningContribute;
+    private Money earningContribute;
 
 
     /**
      * 服务费贡献
      */
-    private Integer serviceChangeContribute;
+    private Money serviceChangeContribute;
 }

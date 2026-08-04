@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -13,10 +14,10 @@ public class TotalEarningVO {
     /**
      * 累计已分润金额
      */
-    private Integer totalEarning;
+    private Money totalEarning;
 
     /**
      * 带分润金额
      */
-    private Integer waitEarning;
+    private Money waitEarning;
 }

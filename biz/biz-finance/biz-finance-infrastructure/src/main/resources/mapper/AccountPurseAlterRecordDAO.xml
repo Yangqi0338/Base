@@ -63,4 +63,73 @@
         and remark = #{remark}
     </select>
 
+    <!-- 查询渠道商提现记录 (迁移自 new-scm AccountPurseAlterRecordDAO.xml 的 queryChannelRollOutRecords) -->
+    <!-- 源侧用 PageHelper startPage + buildInSQL/buildBetweenSQL 动态拼接; Base 用 MyBatis-Plus Page 分页参数 + <if> 逐字段判空 -->
+    <!-- 源侧 remarkList/auditStateList 过滤在 Base Query 无对应字段, 已删; roll_out 侧固定 audit_state=0(审核中), 语义等价 -->
+    <select id="queryChannelRollOutRecords"
+            resultType="com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO">
+        SELECT * FROM (
+        select
+        id, account_id, account_type, purse_type, alter_type, amount, join_record_id, remark,
+        create_time
+        from account_purse_alter_record
+        <where>
+            and account_type = #{query.accountType}
+            <if test="query.accountId != null and query.accountId > 0">
+                and account_id = #{query.accountId}
+            </if>
+            <if test="query.purseType != null">
+                and purse_type = #{query.purseType}
+            </if>
+            <if test="query.alterTypeList != null and query.alterTypeList.size() > 0">
+                and alter_type in
+                <foreach collection="query.alterTypeList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query.idList != null and query.idList.size() > 0">
+                and `id` in
+                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query.createStartTime != null">
+                and create_time >= #{query.createStartTime}
+            </if>
+            <if test="query.createEndTime != null">
+                and create_time &lt; #{query.createEndTime}
+            </if>
+        </where>
+        union all
+        select
+        id, account_id, account_type, purse_type, 2 as alter_type, apply_amount as amount,
+        tripartite_trade_no as join_record_id, -1 as remark,
+        apply_time as create_time
+        from account_purse_roll_out
+        <where>
+            audit_state = 0
+            and account_type = #{query.accountType}
+            <if test="query.accountId != null and query.accountId > 0">
+                and account_id = #{query.accountId}
+            </if>
+            <if test="query.purseType != null">
+                and purse_type = #{query.purseType}
+            </if>
+            <if test="query.idList != null and query.idList.size() > 0">
+                and `id` in
+                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query.createStartTime != null">
+                and apply_time >= #{query.createStartTime}
+            </if>
+            <if test="query.createEndTime != null">
+                and apply_time &lt; #{query.createEndTime}
+            </if>
+        </where>
+        ) as t
+        ORDER BY create_time DESC
+    </select>
+
 </mapper>

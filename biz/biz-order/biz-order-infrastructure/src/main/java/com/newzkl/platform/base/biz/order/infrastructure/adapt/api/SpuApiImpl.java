@@ -2,8 +2,9 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
 
 import com.newzkl.platform.base.biz.goods.facade.ISpuFacade;
 import com.newzkl.platform.base.biz.goods.facade.model.SkuQuery;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsSpuApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSkuVO;
+import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSpuVO;
 
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SpuApiImpl implements GoodsSpuApi {
+public class SpuApiImpl implements GoodsApi {
 
     @Autowired
     private ISpuFacade spuFacade;
@@ -39,6 +40,14 @@ public class SpuApiImpl implements GoodsSpuApi {
                 .map(Long::valueOf)
                 .collect(Collectors.toList()));
         return TransferUtils.transfers(spuFacade.skuVOList(skuQuery), ApiSkuVO::new);
+    }
+
+    @Override
+    public List<ApiSpuVO> apiSpuVOList(Long accountId, List<Long> spuIdList) {
+        // provider 缺口: biz-goods ISpuFacade 仅迁 SKU 级 skuVOList, 未迁 SPU 级 apiSpuVOList
+        // 见 rebuild/docs/planning/deferred-issues.md; biz-goods 补齐后接回真实调用
+        throw new UnsupportedOperationException(
+                "GoodsSpuApi.apiSpuVOList 待 biz-goods 域补齐 ISpuFacade SPU 级查询后实现");
     }
 
 }

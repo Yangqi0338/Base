@@ -6,9 +6,8 @@ import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.MerchantDomain;
-import com.newzkl.platform.base.biz.account.model.enums.identity.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
-import com.newzkl.platform.base.biz.account.model.req.ChannelCdkUseReq;
 import com.newzkl.platform.base.biz.account.action.cmd.ChannelCmd;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
@@ -177,22 +176,6 @@ public class ChannelController {
     @PostMapping("wxMpConfigSet")
     public PlatformResult<Void> wxMpConfigSet(@RequestBody WxMpConfigVO wxMpConfigVO) {
         merchantDomain.wxMpConfigSet(wxMpConfigVO);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 使用兑换码
-     *
-     * <p>迁移补充: 旧 {@code IRoleService.channelUseStoreCdk(cdk, serviceId, accountId, openPhone)}
-     * 中台化后由 {@link MerchantDomain#useStoreCdk} 承担, 仅接收兑换码值,
-     * {@code serviceId} 与 {@code openPhone} 两个旧入参已无对应能力, 见迁移报告「能力缺失」。</p>
-     *
-     * @param req 兑换码入参
-     * @return 空结果
-     */
-    @PostMapping("useStoreCdk")
-    public PlatformResult<Void> useStoreCdk(@RequestBody @Validated ChannelCdkUseReq req) {
-        merchantDomain.useStoreCdk(req.getCdk());
         return PlatformResult.success();
     }
 

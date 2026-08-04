@@ -16,7 +16,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuer
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
-import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuAttributeDiffRes;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuUpdateRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
@@ -25,7 +24,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.InventoryExecuteReq;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
@@ -144,7 +142,6 @@ public class SpuDomainImpl implements SpuDomain {
         Integer maxSale = null;
         Integer minUnit = null;
         Integer maxProfit = null;
-        int inventory = 0;
         for (SkuVO sku : skuList) {
             if (sku.getMarketPrice() != null) {
                 minMarket = minMarket == null ? sku.getMarketPrice() : Math.min(minMarket, sku.getMarketPrice());
@@ -165,9 +162,6 @@ public class SpuDomainImpl implements SpuDomain {
                 int profit = sku.getMarketPrice() - sku.getSalePrice();
                 maxProfit = maxProfit == null ? profit : Math.max(maxProfit, profit);
             }
-            if (sku.getInventory() != null) {
-                inventory += sku.getInventory();
-            }
         }
         SpuDTO spu = new SpuDTO();
         spu.setId(spuId);
@@ -182,7 +176,6 @@ public class SpuDomainImpl implements SpuDomain {
         spu.setSalePriceEnd(maxSale);
         spu.setUnitPrice(minUnit);
         spu.setMaxProfit(maxProfit);
-        spu.setInventory(inventory);
         spuRepository.spuUpdate(spu);
     }
 
@@ -300,23 +293,6 @@ public class SpuDomainImpl implements SpuDomain {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void inventoryExecute(InventoryExecuteReq inventoryExecuteReq) {
-        Integer type = inventoryExecuteReq.getType();
-        List<InventoryExecuteReq.Sku> skuList = inventoryExecuteReq.getSkuList();
-        
-        if (CommonEnum.YesOrNo.YES.getCode().equals(type)) {
-            // 扣减库存
-            executeInventoryOperation(skuList, true);
-        } else if (CommonEnum.YesOrNo.NO.getCode().equals(type)) {
-            // 增加库存
-            executeInventoryOperation(skuList, false);
-        } else {
-            throw new PlatformException(BaseErrorCode.PARAM);
-        }
-    }
-
-    @Override
     public void spuAuditStop(SpuVO spuVO) {
         // 状态修改
         SpuDTO spuUpdate = new SpuDTO();
@@ -372,11 +348,6 @@ public class SpuDomainImpl implements SpuDomain {
         
         // 刷新加价比例
         spuRepository.refreshSalePriceRate(outSpuEditCommand.getSkuSalePrice().keySet());
-    }
-
-    @Override
-    public void stockExecute(List<StockExecuteReq> stockExecuteReq) {
-        spuRepository.stockExecute(stockExecuteReq);
     }
 
     /*@Override
@@ -512,24 +483,6 @@ public class SpuDomainImpl implements SpuDomain {
         }
         
         return result;
-    }
-
-    /**
-     * 执行库存操作
-     *
-     * @param skuList SKU列表
-     * @param isCut   true-扣减库存, false-增加库存
-     */
-    private void executeInventoryOperation(List<InventoryExecuteReq.Sku> skuList, boolean isCut) {
-        for (InventoryExecuteReq.Sku sku : skuList) {
-            int result = isCut 
-                    ? spuRepository.cutInventory(sku.getId(), sku.getCount())
-                    : spuRepository.addInventory(sku.getId(), sku.getCount());
-            
-            if (result == 0) {
-                throw new PlatformException(SpuErrorCode.INVENTORY_EXECUTE_ERROR);
-            }
-        }
     }
 
     /**
@@ -672,7 +625,6 @@ public class SpuDomainImpl implements SpuDomain {
         Integer minUnitPrice = null;
         Integer maxProfit = null;
         Double minWeight = null;
-        int totalInventory = 0;
 
         // 单次遍历收集所有统计数据
         for (SkuDTO skuDTO : skuDTOList) {
@@ -709,11 +661,6 @@ public class SpuDomainImpl implements SpuDomain {
             if (skuDTO.getWeight() != null) {
                 minWeight = (minWeight == null) ? skuDTO.getWeight() : Math.min(minWeight, skuDTO.getWeight());
             }
-
-            // 总库存累加
-            if (skuDTO.getInventory() != null) {
-                totalInventory += skuDTO.getInventory();
-            }
         }
 
         // 设置SPU统计信息
@@ -732,7 +679,6 @@ public class SpuDomainImpl implements SpuDomain {
         spu.setUnitPrice(minUnitPrice);
         spu.setMaxProfit(maxProfit);
         spu.setMinPricingNum(minWeight);
-        spu.setInventory(totalInventory);
     }
 
     /**

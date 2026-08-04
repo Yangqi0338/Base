@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.account.model.req;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -52,7 +53,7 @@ public class AdminRegisterIdentityReq {
     /**
      * 账号状态 (迁移补: 批量导入会员指定启用/禁用, 源 building-old 遗漏该字段导致编译不过)
      */
-    private com.newzkl.platform.base.biz.account.model.enums.AccountEnum.State state;
+    private AccountEnum.State state;
 
     @AssertTrue(message = "账号或手机号不能为空")
     public boolean certificateCheck() {

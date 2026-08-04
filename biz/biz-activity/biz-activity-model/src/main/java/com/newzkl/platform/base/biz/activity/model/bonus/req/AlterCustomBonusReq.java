@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.activity.model.bonus.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -11,7 +12,7 @@ import lombok.Data;
 public class AlterCustomBonusReq  {
 
     /**
-     * 自定义奖金
+     * 自定义奖金 (Money, 入参元, 落库 BIGINT 分)
      */
-    private Integer customBonus;
+    private Money customBonus;
 }

@@ -11,6 +11,7 @@ import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.lock.DistributedLocker;
@@ -174,8 +175,9 @@ class CashPayServiceImplTest {
         OrderPayReq req = new OrderPayReq();
         req.setOrderNo(ORDER_NO);
         req.setConsumeType(EarningsEnum.ConsumeType.RECHARGE);
-        req.setOrderAmount(10000);
-        req.setPayAmount(10000);
+        // 10000 分, Money.of(Integer)=分; 服务内 getCent() 降回 HuiFu Integer 分
+        req.setOrderAmount(Money.of(10000));
+        req.setPayAmount(Money.of(10000));
         req.setPayType(payType);
         req.setGoodsInfo("采购金");
         return req;

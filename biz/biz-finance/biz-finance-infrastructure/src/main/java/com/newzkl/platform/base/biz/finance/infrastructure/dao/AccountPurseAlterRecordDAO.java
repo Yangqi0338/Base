@@ -3,6 +3,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.infrastructure.entity.AccountPurseAlterRecordDO;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
@@ -50,4 +51,15 @@ public interface AccountPurseAlterRecordDAO extends BaseMapper<AccountPurseAlter
      * @return
      */
     Integer querySupplierSettleData(@Param("remark") Integer remark);
+
+    /**
+     * 查询渠道商提现记录
+     *
+     * <p>变动记录表 与 提现申请表(审核中) 的 union all, 按创建时间倒序</p>
+     *
+     * @param page 分页参数
+     * @param query 查询条件
+     * @return 提现记录分页
+     */
+    Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(Page<?> page, @Param("query") AccountPurseAlterRecordQuery query);
 }

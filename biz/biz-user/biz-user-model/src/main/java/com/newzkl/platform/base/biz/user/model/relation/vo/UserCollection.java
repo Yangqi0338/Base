@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -68,9 +68,9 @@ public class UserCollection {
     private String skuName;
 
     /**
-     * 商品价格 (快照)
+     * 商品价格快照 (Money, 落库 BIGINT 分)
      */
-    private BigDecimal price;
+    private Money price;
 
     /**
      * 商品主图URL (快照)

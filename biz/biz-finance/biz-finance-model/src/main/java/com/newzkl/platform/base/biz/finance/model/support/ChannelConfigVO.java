@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.support;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,12 +15,12 @@ public class ChannelConfigVO implements Serializable {
     /**
      * 系统售价
      */
-    private Integer systemPrice;
+    private Money systemPrice;
 
     /**
      * 系统原价
      */
-    private Integer systemOriginalPrice;
+    private Money systemOriginalPrice;
 
     /**
      * 折扣力度：折
@@ -31,14 +32,14 @@ public class ChannelConfigVO implements Serializable {
     /**
      * 充值最低金额
      */
-    private Integer minimumRechargeAmount;
+    private Money minimumRechargeAmount;
 
 
     //商品席位购买
     /**
      * 席位原价
      */
-    private Integer seatOriginalPrice;
+    private Money seatOriginalPrice;
 
     /**
      * 购买最小数量
@@ -50,17 +51,17 @@ public class ChannelConfigVO implements Serializable {
     /**
      * 最小提现金额
      */
-    private Integer minimumWithdrawalAmount;
+    private Money minimumWithdrawalAmount;
 
     /**
      * 提现手续费
-     * 千分制：15 = 0.015
+     * 千分制：15 = 0.015 (比率, 非金额)
      */
     private Integer withdrawalFee;
 
     /**
      * 单日提现最高金额
      */
-    private Integer maximumDailyWithdrawalAmount;
+    private Money maximumDailyWithdrawalAmount;
 
 }

@@ -1,13 +1,12 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
-
-import java.math.BigDecimal;
 
 /**
  * 用户商品收藏持久化对象
@@ -70,9 +69,9 @@ public class UserCollectionDO extends BaseDO {
     private String skuName;
 
     /**
-     * 商品价格 (快照)
+     * 商品价格快照 (Money, 落库 BIGINT 分)
      */
-    private BigDecimal price;
+    private Money price;
 
     /**
      * 商品主图URL (快照)

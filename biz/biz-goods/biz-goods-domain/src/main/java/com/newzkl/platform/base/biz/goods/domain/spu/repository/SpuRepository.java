@@ -5,7 +5,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuAttributeDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuery;
-import com.newzkl.platform.base.biz.goods.model.goods.req.spu.StockExecuteReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.IndexCountRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
@@ -13,7 +12,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuStateVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSkuStockVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
@@ -96,16 +94,6 @@ public interface SpuRepository {
     List<SkuVO> skuVOList(SkuQuery skuQuery);
 
     /**
-     * sku减少库存
-     */
-    int cutInventory(Long skuId, Integer count);
-
-    /**
-     * sku增加库存
-     */
-    int addInventory(Long skuId, Integer count);
-
-    /**
      * sku批量删除
      */
     void skuDeleteByQuery(SkuQuery skuDelete);
@@ -164,11 +152,7 @@ public interface SpuRepository {
 
     void resetSpuOrderCount();
 
-    void stockExecute(List<StockExecuteReq> stockExecuteReq);
-
     int editStateById(Integer state, List<Long> spuIdList);
-
-    List<ApiSkuStockVO> skuStock(List<Long> skuIdList);
 
     OrderGoodsInfoVO queryOrderSkuInfoVOList(Long skuId);
 

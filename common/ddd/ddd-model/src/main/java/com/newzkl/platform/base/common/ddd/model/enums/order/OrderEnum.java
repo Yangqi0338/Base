@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.common.ddd.model.enums.order;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * @Description: 运费相关枚举
+ * @Description: 订单相关枚举
  * @Author: niu
  * @Date: 2023/4/27 17:01
  */
@@ -19,7 +22,8 @@ public class OrderEnum {
      * 状态
      */
     @Getter
-    public enum State{
+    @AllArgsConstructor
+    public enum State implements IEnum<Integer> {
 
         NEW(0, "新订单"),
         MEMBER_WAIT_PAY(1,"C端待付款"),
@@ -34,13 +38,11 @@ public class OrderEnum {
         CLOSE(99,"已关闭"),
         ;
 
+        @EnumValue
+        @JsonValue
         private final Integer code;
-        private final String info;
+        private final String value;
 
-        State(Integer code, String info) {
-            this.code = code;
-            this.info = info;
-        }
         public static State getByCode(Integer code) {
             return Stream.of(State.values())
                     .filter(extension -> extension.getCode().equals(code))
@@ -110,16 +112,20 @@ public class OrderEnum {
             return Collections.unmodifiableSet(allowStates);
         }
     }
+
     @Getter
     @AllArgsConstructor
-    public enum OrderType{
+    public enum OrderType implements IEnum<Integer> {
 
-        Channel(0, "渠道商选品下单"),
+        CHANNEL(0, "渠道商选品下单"),
         MEMBER(1, "c端铺货下单"),
         OPERATOR_PACK(2, "运营商礼包下单")
         ;
+
+        @EnumValue
+        @JsonValue
         private final Integer code;
-        private final String info;
+        private final String value;
 
         public static OrderType getByCode(Integer code) {
             return Stream.of(OrderType.values())
@@ -130,7 +136,8 @@ public class OrderEnum {
     }
 
     @Getter
-    public enum PayType{
+    @AllArgsConstructor
+    public enum PayType implements IEnum<Integer> {
 
         Direct(0, "直接"),
         WX(1, "微信"),
@@ -138,13 +145,12 @@ public class OrderEnum {
         PURCHASE(3, "采购金"),
         CDK(4, "兑换码"),
         ;
-        private final Integer code;
-        private final String info;
 
-        PayType(Integer code, String info) {
-            this.code = code;
-            this.info = info;
-        }
+        @EnumValue
+        @JsonValue
+        private final Integer code;
+        private final String value;
+
         public static PayType getByCode(Integer code) {
             return Stream.of(PayType.values())
                     .filter(extension -> extension.getCode().equals(code))
@@ -157,16 +163,16 @@ public class OrderEnum {
      * 购买方式
      */
     @Getter
-    public enum BuyMode{
+    @AllArgsConstructor
+    public enum BuyMode implements IEnum<Integer> {
         ACTIVATE(0, "激活"),
         SELF_BUYING(1, "自购"),
         ;
-        private final Integer code;
-        private final String info;
 
-        BuyMode(Integer code, String info) {
-            this.code = code;
-            this.info = info;
-        }
+        @EnumValue
+        @JsonValue
+        private final Integer code;
+        private final String value;
+
     }
 }

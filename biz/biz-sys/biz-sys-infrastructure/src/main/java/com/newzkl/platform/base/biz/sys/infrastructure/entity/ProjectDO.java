@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.sys.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -45,9 +46,9 @@ public class ProjectDO extends BaseDO {
     private Integer area;
 
     /**
-     * 合作金额
+     * 合作金额 (Money, 落库 BIGINT 分)
      */
-    private Integer basicAmount;
+    private Money basicAmount;
 
     /**
      * 标签 (逗号分隔串)

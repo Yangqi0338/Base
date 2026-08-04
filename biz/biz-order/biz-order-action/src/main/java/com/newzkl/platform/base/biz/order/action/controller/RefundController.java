@@ -1,14 +1,17 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.action.cmd.RefundCmd;
 import com.newzkl.platform.base.biz.order.application.service.IRefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
-import com.newzkl.platform.base.biz.order.model.req.RefundQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.vo.RefundFreightVO;
+import com.newzkl.platform.base.biz.order.model.vo.RefundOperationRecordVO;
 import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -23,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 交易-售后
@@ -37,8 +39,6 @@ public class RefundController {
     private IRefundService refundService;
     @Autowired
     private IRefundDomain refundDomain;
-    @Autowired
-    private IRefundRepository refundRepository;
 
     /**
      * C端创建售后
@@ -119,7 +119,7 @@ public class RefundController {
      */
     @GetMapping("refund")
     public PlatformResult<RefundVO> refund(@RequestParam("id") Long refundId) {
-        RefundVO refund = refundRepository.refundVO(refundId);
+        RefundVO refund = refundDomain.refundVO(refundId);
         return PlatformResult.success(refund);
     }
 
@@ -130,7 +130,7 @@ public class RefundController {
      */
     @GetMapping("refundBySpuOrderId")
     public PlatformResult<RefundVO> refundVoBySpuOrderId(@RequestParam("spuOrderId") Long spuOrderId) {
-        RefundVO refund = refundRepository.refundVoBySpuOrderId(spuOrderId);
+        RefundVO refund = refundDomain.refundVoBySpuOrderId(spuOrderId);
         return PlatformResult.success(refund);
     }
 
@@ -157,7 +157,27 @@ public class RefundController {
     @PostMapping("refundPage")
     public PlatformResult<Page<RefundVO>> refundPage(@RequestBody RefundQuery refundQuery) {
         appendRefundQuery(refundQuery);
-        Page<RefundVO> listRefund = refundRepository.refundVOList(refundQuery);
+        Page<RefundVO> listRefund = refundDomain.refundPage(refundQuery);
         return PlatformResult.success(listRefund);
+    }
+
+    /**
+     * 按售后单ID查询操作记录列表
+     * @param refundId 售后单ID
+     * @return 视图对象列表
+     */
+    @GetMapping("operationRecord/listByRefundId")
+    public PlatformResult<List<RefundOperationRecordVO>> listRecordByRefundId(@RequestParam("refundId") Long refundId) {
+        return PlatformResult.success(refundDomain.listRecordByRefundId(refundId));
+    }
+
+    /**
+     * 分页查询售后操作记录
+     * @param query 分页查询请求对象
+     * @return 分页结果（视图对象）
+     */
+    @PostMapping("operationRecord/pageQuery")
+    public PlatformResult<Page<RefundOperationRecordVO>> recordPage(@Validated @RequestBody RefundOperationRecordQuery query) {
+        return PlatformResult.success(refundDomain.recordPage(query));
     }
 }

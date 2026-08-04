@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class HuiFuPayRes extends TradeBaseRes {
+public class HuiFuPayRes extends TradeBaseRes implements PayBaseResult {
 
     /**
      * 支付类型

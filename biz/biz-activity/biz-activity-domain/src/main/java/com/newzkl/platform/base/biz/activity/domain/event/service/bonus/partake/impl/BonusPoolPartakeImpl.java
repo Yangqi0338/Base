@@ -10,6 +10,7 @@ import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusP
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
 import com.newzkl.platform.base.biz.activity.domain.adapt.repository.BonusPoolRepository;
 import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.partake.BonusPoolPartake;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class BonusPoolPartakeImpl implements BonusPoolPartake {
     }
 
     @Override
-    public void alterNowBonusPoolOrderBonus(Long channelId, Integer amount, boolean isCustomBonus) {
+    public void alterNowBonusPoolOrderBonus(Long channelId, Money amount, boolean isCustomBonus) {
         // 1、更新本期奖金池金额，自定义金额为0的话，结算时使用订单金额
         bonusPoolRepository.alterNowBonusPoolOrderBonus(channelId, amount, isCustomBonus);
     }

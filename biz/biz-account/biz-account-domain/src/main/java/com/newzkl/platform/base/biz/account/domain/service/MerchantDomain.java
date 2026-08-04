@@ -12,9 +12,7 @@ import java.util.List;
 /**
  * 商户领域服务
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.IMerchantDomain}。
- * 旧 {@code IRoleService.useStoreCdk} 仅是对本领域同名方法的薄转发, 中台化后不再保留应用层转发,
- * 由 {@link MerchantDomain#useStoreCdk} 直接承担。</p>
+ * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.IMerchantDomain}。</p>
  *
  * @author KC
  */
@@ -68,16 +66,6 @@ public interface MerchantDomain {
      * @param req 注册入参
      */
     void customSave(MerchantCustomSaveReq req);
-
-    /**
-     * 使用门店开通码
-     *
-     * <p>保留旧语义: 按开通码值定位开通码, 已使用则抛业务异常; 否则置为已使用并记录使用者与时间,
-     * 随后把当前登录商户的数字门店权限置为 1。</p>
-     *
-     * @param cdkValue 开通码值
-     */
-    void useStoreCdk(String cdkValue);
 
     /**
      * 查询商户的微信公众号配置

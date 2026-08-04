@@ -49,7 +49,7 @@ class CrossServiceApiDefaultImplTest {
     @Test
     @DisplayName("FinanceConfigApi 兜底: 写操作空实现, 查服务费返回 null")
     void financeConfigApiIsNeutral() {
-        FinanceConfigApi api = new FinanceConfigApiDefaultImpl();
+        FinanceConfigApi api = new FinanceConfigApiImpl();
         assertDoesNotThrow(() -> api.saveChannelChargeConfig(new ChargeConfigChannelReq()));
         assertDoesNotThrow(() -> api.saveChannelChargeConfig(null));
         assertDoesNotThrow(() -> api.saveOperatorLeverConfig(5501L, 3));

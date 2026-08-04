@@ -50,11 +50,6 @@ public class ApiSkuVO implements Serializable {
     @NotNull
     private Long spuId;
     /**
-     * 库存
-     */
-    @NotNull
-    private Integer inventory;
-    /**
      * 市场价
      */
     private Integer marketPrice;

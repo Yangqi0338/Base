@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.account.application.service.UserQueryService
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.req.DealerCmd;
 import com.newzkl.platform.base.biz.account.model.req.DealerEditReq;
 import com.newzkl.platform.base.biz.account.model.req.DealerQuery;

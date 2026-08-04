@@ -92,24 +92,4 @@ public class NotifyEnums {
         }
     }
 
-    /**
-     * 业务类型 BOSS
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum BossType {
-        /** 兑换码使用通知 */
-        CDK(1, "兑换码使用通知"),
-        ;
-
-        private final Integer code;
-        private final String value;
-
-        public static NotifyEnums.BossType getByCode(Integer code) {
-            return Stream.of(NotifyEnums.BossType.values())
-                    .filter(extension -> extension.getCode().equals(code))
-                    .findFirst()
-                    .orElse(null);
-        }
-    }
 }

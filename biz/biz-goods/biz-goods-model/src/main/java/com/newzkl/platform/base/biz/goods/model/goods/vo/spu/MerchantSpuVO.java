@@ -72,10 +72,6 @@ public class MerchantSpuVO extends BaseRes implements Serializable {
      */
     private Integer salePrice;
     /**
-     * 冗余: 库存
-     */
-    private Integer inventory;
-    /**
      * 冗余: 是否上传了视频
      */
     private Integer uploadVideoFlag;

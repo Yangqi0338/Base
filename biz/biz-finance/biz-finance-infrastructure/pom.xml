@@ -21,6 +21,11 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+        <!-- 迁移补充: 渠道商购买席位跨域取套餐 (StorePackageApi 适配器经 biz-store-facade) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-store-facade</artifactId>
+        </dependency>
         <!-- 迁移补充: 仓储实现使用 TransferUtils/BizUtil/generator (core-utils) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.req.web;
 
 
 // TODO[cross-domain finance]: import com.zkl.scm.finance...ServiceFeeConfigVO;
-import com.newzkl.platform.base.biz.account.model.enums.identity.OperatorEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

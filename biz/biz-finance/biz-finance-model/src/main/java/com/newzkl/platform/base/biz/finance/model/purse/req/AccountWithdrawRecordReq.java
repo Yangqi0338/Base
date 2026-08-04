@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ public class AccountWithdrawRecordReq extends BaseRes {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 提货积分

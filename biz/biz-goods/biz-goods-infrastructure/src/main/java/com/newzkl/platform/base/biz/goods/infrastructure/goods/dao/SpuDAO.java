@@ -31,10 +31,6 @@ import java.util.Map;
 @Repository
 public interface SpuDAO extends BaseMapper<SpuDO> {
 
-    int cutInventory(@Param("skuId") Long skuId, @Param("count") Integer count);
-
-    int addInventory(@Param("skuId") Long skuId, @Param("count") Integer count);
-
     List<SpuCategoryVO> countSpuByCategory(@Param("categoryIdList") List<Long> categoryIdList);
 
     void editColumn(@Param("id") Long id, @Param("columnList") List<EditColumnVO> editColumnDTOS);

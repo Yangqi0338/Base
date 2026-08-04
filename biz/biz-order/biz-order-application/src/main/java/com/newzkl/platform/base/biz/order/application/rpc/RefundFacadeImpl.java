@@ -1,34 +1,33 @@
 package com.newzkl.platform.base.biz.order.application.rpc;
 
 import cn.hutool.core.util.ObjectUtil;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.application.service.IQueryService;
 import com.newzkl.platform.base.biz.order.application.service.IRefundService;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
-import com.newzkl.platform.base.biz.order.domain.service.RefundUtil;
 import com.newzkl.platform.base.biz.order.facade.IOrderFacade;
 import com.newzkl.platform.base.biz.order.facade.IRefundFacade;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.*;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.model.req.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundItemCommand;
-import com.newzkl.platform.base.biz.order.model.req.RefundQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
+import com.newzkl.platform.base.biz.order.model.support.api.ReceiveAddressOutVO;
+import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
 import com.newzkl.platform.base.biz.order.model.vo.RefundFreightVO;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
-import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.RefundErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.res.ApiPage;
-import org.apache.dubbo.config.annotation.DubboReference;
+import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,29 +38,17 @@ import java.util.function.Function;
  */
 @DubboService
 @Component
+@RequiredArgsConstructor
 public class RefundFacadeImpl implements IRefundFacade {
 
-    private static final Integer INITIAL_CAPACITY = 16;
 
     private final IRefundDomain refundDomain;
     private final IRefundService refundService;
-    private final IOrderDomain orderDomain;
-    @DubboReference
-    private ISpuFacade spuFacade;
-    @DubboReference
-    private IOrderFacade orderFacade;
-    @DubboReference
-    private ISupplierFacade supplierFacade;
-    @Autowired
-    private IQueryService queryService;
-    @Autowired
-    private IRefundRepository refundRepository;
-
-    public RefundFacadeImpl(IRefundDomain refundDomain, IRefundService refundService, IOrderDomain orderDomain) {
-        this.refundDomain = refundDomain;
-        this.refundService = refundService;
-        this.orderDomain = orderDomain;
-    }
+    private final GoodsApi spuFacade;
+    private final IOrderFacade orderFacade;
+    private final SupplierApi supplierApi;
+    private final IQueryService queryService;
+    private final IRefundRepository refundRepository;
 
     @Override
     public Long apiSubmit(Long accountId, ApiRefundSubmitReq refundSubmitReq) {
@@ -144,13 +131,13 @@ public class RefundFacadeImpl implements IRefundFacade {
             ThrowsException.exception(BaseErrorCode.PARAM, "SPU_ID错误");
         }
         if(spuOrderRelationVO.getSupplierId().intValue() == 1){
-            ApiRefundFreightAddressVO outRefundAddress = refundDomain.getOutRefundAddress(spuOrderRelationVO.getId(), refundAddressInfoReq.getSpuId());
+            ApiRefundFreightAddressVO outRefundAddress = refundRepository.getOutRefundAddress(spuOrderRelationVO.getId(), refundAddressInfoReq.getSpuId());
             if(outRefundAddress == null){
                 ThrowsException.exception(RefundErrorCode.OUT_ADDRESS_NOT_REFUND);
             }
             return outRefundAddress;
         }else {
-            SupplierRefundVO supplierRefundVO = supplierFacade.supplierRefundVO(spuOrderRelationVO.getSupplierId());
+            SupplierRefundVO supplierRefundVO = supplierApi.supplierRefundVO(spuOrderRelationVO.getSupplierId());
             return TransferUtils.transfer(supplierRefundVO.getReceiveAddressVO(), new Function<ReceiveAddressOutVO, ApiRefundFreightAddressVO>() {
                 @Override
                 public ApiRefundFreightAddressVO apply(ReceiveAddressOutVO receiveAddressVO) {
@@ -171,7 +158,7 @@ public class RefundFacadeImpl implements IRefundFacade {
     }
 
     @Override
-    public ApiPage<ApiRefundVO> apiList(Long accountId, ApiRefundReq apiRefundReq) {
+    public Page<ApiRefundVO> apiList(Long accountId, ApiRefundReq apiRefundReq) {
         RefundQuery refundQuery = TransferUtils.transfer(apiRefundReq, new Function<ApiRefundReq, RefundQuery>() {
             @Override
             public RefundQuery apply(ApiRefundReq apiRefundReq) {
@@ -181,41 +168,27 @@ public class RefundFacadeImpl implements IRefundFacade {
                 refundQuery.setChannelId(accountId);
                 refundQuery.setRefundState(apiRefundReq.getRefundState());
                 refundQuery.setRefundType(apiRefundReq.getRefundType());
-                refundQuery.setCreateBeginTime(apiRefundReq.getCreateBeginTime());
+                refundQuery.setCreateStartTime(apiRefundReq.getCreateBeginTime());
                 refundQuery.setCreateEndTime(apiRefundReq.getCreateEndTime());
                 refundQuery.setPageNo(apiRefundReq.getPageNo());
                 refundQuery.setPageSize(apiRefundReq.getPageSize());
                 return refundQuery;
             }
         });
-        Page<RefundVO> refundVOPageInfo = refundRepository.refundVOList(refundQuery);
-        ApiPage<ApiRefundVO> apiPage = new ApiPage<>();
-        apiPage.of(refundVOPageInfo.getRecords(), new Function<RefundVO, ApiRefundVO>() {
-                    @Override
-                    public ApiRefundVO apply(RefundVO refundVO) {
-                        return RefundUtil.refundVO2ApiRefundVO(refundVO);
-                    }
-                },
-                refundVOPageInfo.getPageNum(), refundVOPageInfo.getPageSize(),
-                refundVOPageInfo.getPages(), refundVOPageInfo.getTotal());
-        return apiPage;
+        Page<RefundDTO> refundPageInfo = refundRepository.refundPage(refundQuery);
+        return TransferUtils.transferPage(refundPageInfo,ApiRefundVO.class);
     }
 
     @Override
     public ApiRefundAggVO apiDetail(Long accountId, Long refundId) {
-        RefundVO refundVO = refundRepository.refundVO(refundId);
-        if(refundVO == null){
+        RefundDTO refundDTO = refundRepository.refund(refundId);
+        if(refundDTO == null){
             ThrowsException.exception(BaseErrorCode.PARAM, "refundId");
         }
         ApiRefundAggVO apiRefundAggVO = new ApiRefundAggVO();
-        apiRefundAggVO.setRefund(RefundUtil.refundVO2ApiRefundVO(refundVO));
-        List<RefundItemVO> refundItemVOList = refundVO.getItem();
-        apiRefundAggVO.setRefundItem(TransferUtils.transfers(refundItemVOList, new Function<RefundItemVO, ApiRefundItemVO>() {
-            @Override
-            public ApiRefundItemVO apply(RefundItemVO refundItemVO) {
-                return RefundUtil.refundItemVO2ApiRefundItemVO(refundItemVO);
-            }
-        }));
+        apiRefundAggVO.setRefund(TransferUtils.transfer(refundDTO, ApiRefundVO.class));
+        List<RefundItemVO> refundItemVOList = refundDTO.getItem();
+        apiRefundAggVO.setRefundItem(TransferUtils.transfers(refundItemVOList, ApiRefundItemVO.class));
         return apiRefundAggVO;
     }
 }

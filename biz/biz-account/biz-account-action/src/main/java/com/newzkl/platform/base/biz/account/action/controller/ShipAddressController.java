@@ -94,4 +94,17 @@ public class ShipAddressController {
         shipAddressQuery.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(shipAddressDomain.pageList(shipAddressQuery));
     }
+
+    /**
+     * 查询默认收货地址
+     *
+     * <p>保留旧语义: 按当前登录态 (账号 + 角色) 取 isDefault 开启的收货地址, 登录态过滤下沉
+     * 领域服务内部。旧 {@code @Limit(code=address)} 未迁移, 见迁移报告「鉴权降级」。</p>
+     *
+     * @return 默认收货地址出参, 无则 null
+     */
+    @GetMapping("defaultShipAddress")
+    public PlatformResult<ShipAddressRes> defaultShipAddress() {
+        return PlatformResult.success(shipAddressDomain.defaultShipAddress());
+    }
 }

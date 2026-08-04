@@ -101,23 +101,6 @@ public class MerchantController {
     }
 
     /**
-     * 使用数智门店兑换码
-     *
-     * <p>迁移差异: 旧应用层 {@code IRoleService.useStoreCdk} 仅是对领域同名方法的薄转发,
-     * 中台化后直连领域, 当前登录账号在领域内取。</p>
-     *
-     * @param cdk 兑换码入参
-     * @return 空结果
-     * @deprecated 前端零引用, 已确认死端点 (2026-07-27 交叉比对); 仅为契约完整性迁入
-     */
-    @Deprecated
-    @PostMapping("useStoreCdk")
-    public PlatformResult<Void> useStoreCdk(@RequestBody MerchantCmd.Cdk cdk) {
-        merchantDomain.useStoreCdk(cdk.getCdk());
-        return PlatformResult.success();
-    }
-
-    /**
      * 数智门店订单支付
      *
      * <p>迁移差异: 旧出参为 {@code PayBaseResult} 接口 (仅暴露 tradeNo / thirdTradeNo),

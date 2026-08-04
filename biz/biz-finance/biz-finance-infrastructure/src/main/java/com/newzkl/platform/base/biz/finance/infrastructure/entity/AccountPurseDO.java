@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,15 +42,15 @@ public class AccountPurseDO extends BaseDO {
     /**
      * 收益
      */
-    private Integer earnings;
+    private Money earnings;
 
     /**
      * 总收益
      */
-    private Integer totalEarnings;
+    private Money totalEarnings;
 
     /**
      * 三方余额
      */
-    private Integer tripartiteAmount;
+    private Money tripartiteAmount;
 }

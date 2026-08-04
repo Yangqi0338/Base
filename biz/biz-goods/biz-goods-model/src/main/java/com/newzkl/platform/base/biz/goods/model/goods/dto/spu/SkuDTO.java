@@ -68,14 +68,6 @@ public class SkuDTO {
      */
     private Integer unitPrice;
      /**
-     * 库存
-     */
-     private Integer inventory;
-     /**
-     * 库存预警个数
-     */
-     private Integer inventoryWarning;
-     /**
       * 外部SkuId
       */
      private String outSkuId;

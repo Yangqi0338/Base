@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -13,10 +14,10 @@ public class TotalSupplierSettleDataRes {
     /**
      * 累计结算
      */
-    private Integer totalSettle;
+    private Money totalSettle;
 
     /**
      * 售后结算
      */
-    private Integer sellAfter;
+    private Money sellAfter;
 }

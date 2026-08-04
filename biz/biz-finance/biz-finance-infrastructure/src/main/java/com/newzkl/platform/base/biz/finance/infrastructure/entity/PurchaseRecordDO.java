@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
 import lombok.Data;
@@ -56,12 +57,12 @@ public class PurchaseRecordDO extends BaseDO {
     /**
      * 支付金额
      */
-    private Integer payAmount;
+    private Money payAmount;
 
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
 
     /**
      * 支付方式

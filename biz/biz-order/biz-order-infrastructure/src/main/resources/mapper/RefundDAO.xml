@@ -4,189 +4,19 @@
      适配: order_id -> order_no, spu_order_id -> spu_order_no;
            toState/sourceState 为 RefundEnum.State 枚举(@EnumValue code), CONCAT 里的 ${toState} 改 #{toState}
            (枚举 toString 落库会写成枚举名而非数字, 原样照抄必错) -->
-<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.RefundDAO">
-
-    <update id="updateState">
-        update refund t
-        set
-        <if test="model != null and model.refuseReason != null">
-            t.refuse_reason = #{model.refuseReason},
-        </if>
-        <if test="model != null and model.stateTime != null">
-            t.state_time = #{model.stateTime},
-        </if>
-        <if test="model != null and model.outRefundId != null">
-            t.out_refund_id = #{model.outRefundId},
-        </if>
-        <if test="model != null and model.storeAutoTime != null">
-            t.store_auto_time = #{model.storeAutoTime},
-        </if>
-        <if test="model != null and model.freightExt != null">
-            t.freight_ext = #{model.freightExt},
-        </if>
-        t.refund_state = #{toState,jdbcType=INTEGER},
-        t.refund_state_log = CONCAT(t.refund_state_log, ',', #{toState,jdbcType=INTEGER})
-        where t.id = #{id,jdbcType=BIGINT} and t.refund_state = #{sourceState,jdbcType=INTEGER}
-    </update>
-
-    <update id="updateStateWithFrom">
-        update refund t set t.refund_state = #{toState,jdbcType=INTEGER},
-                            t.from_state = #{sourceState,jdbcType=INTEGER},
-                            t.refund_state_log = CONCAT(t.refund_state_log, ',', #{toState,jdbcType=INTEGER})
-        where t.id = #{id,jdbcType=BIGINT} and t.refund_state = #{sourceState,jdbcType=INTEGER}
-    </update>
-
-    <select id="accountRefundState" resultType="com.newzkl.platform.base.biz.order.model.order.vo.ApiRefundStateVO">
-        select
-        t.id as refund_id, t.refund_state
-        from refund t
-        <where>
-            t.channel_id = #{accountId,jdbcType=BIGINT}
-            and t.del_flag = 0
-            <if test="refundIdList != null and refundIdList.size() > 0">
-                and t.`id` in
-                <foreach collection="refundIdList" item="item" separator="," close=")" open="(">
-                    #{item,jdbcType=BIGINT}
-                </foreach>
-            </if>
-        </where>
-    </select>
-
-    <select id="supplierRefundCountVO" resultType="com.newzkl.platform.base.biz.order.model.order.vo.SaleCountVO">
-        SELECT
-            count(t.id) as 'refundPage'
-        FROM
-            refund t
-        WHERE
-            t.supplier_id = #{accountId,jdbcType=BIGINT}
-          and (t.refund_state &gt;= 0 and t.refund_state &lt; 10)
-          and t.del_flag = 0
-    </select>
-
-    <select id="channelRefundCountVO" resultType="com.newzkl.platform.base.biz.order.model.order.vo.SaleCountVO">
-        SELECT
-            count(t.id) as 'refundPage'
-        FROM
-            refund t
-        WHERE
-            t.channel_id = #{accountId,jdbcType=BIGINT} and t.refund_state &lt; 9
-          and t.del_flag = 0
-    </select>
-
-    <select id="refundIdByOutRefundId" resultType="java.lang.Long">
-        select id from refund where out_refund_id = #{returnSn,jdbcType=VARCHAR} and del_flag = 0
-    </select>
-
-    <!-- where 条件按 Base RefundPageReq 实有字段展开; query.id 的 like 写法为源侧原样语义, 刻意保留 -->
-    <select id="refundVOListForAutoAgree" resultType="com.newzkl.platform.base.biz.order.infrastructure.entity.RefundDO">
-        select
-        t.*
-        from refund t
-        <where>
-            t.del_flag = 0
-            <if test="query.id != null">
-                and t.`id` like CONCAT('%',#{query.id},'%')
-            </if>
-            <if test="query.channelId != null">
-                and t.`channel_id` = #{query.channelId}
-            </if>
-            <if test="query.supplierId != null">
-                and t.`supplier_id` = #{query.supplierId}
-            </if>
-            <if test="query.idList != null and query.idList.size() > 0">
-                and t.`id` in
-                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="query.spuOrderNo != null">
-                and t.`spu_order_no` = #{query.spuOrderNo}
-            </if>
-            <if test="query.fromOrderStateNot != null">
-                and t.`from_order_state` not in
-                <foreach collection="query.fromOrderStateNot" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="query.orderType != null">
-                and t.`order_type` = #{query.orderType}
-            </if>
-            <if test="query.memberId != null">
-                and t.`member_id` = #{query.memberId}
-            </if>
-            <if test="query.refundType != null">
-                and t.`refund_type` = #{query.refundType}
-            </if>
-            <if test="query.refundState != null">
-                and t.`refund_state` = #{query.refundState}
-            </if>
-            <if test="query.refundStateList != null and query.refundStateList.size() > 0">
-                and t.`refund_state` in
-                <foreach collection="query.refundStateList" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="query.createBeginTime != null">
-                and UNIX_TIMESTAMP(t.create_time) * 1000  &gt;=  #{query.createBeginTime}
-            </if>
-            <if test="query.createEndTime != null">
-                and UNIX_TIMESTAMP(t.create_time) * 1000  &lt;=  #{query.createEndTime}
-            </if>
-            <if test="query.stateTimeLess != null">
-                and t.`state_time` &lt; #{query.stateTimeLess}
-            </if>
-            <if test="query.spuName != null and query.spuName != ''">
-                and JSON_EXTRACT(t.item, '$[*].spuName') LIKE CONCAT('%',#{query.spuName},'%')
-            </if>
-        </where>
-    </select>
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.refund.RefundDAO">
 
     <select id="getOutRefundAddress" resultType="java.lang.String">
-        select t.out_refund_address from refund t left join spu_order t1 on t.spu_order_no = t1.spu_order_no
-        where t.`spu_order_no` = #{spuOrderNo,jdbcType=VARCHAR} and t1.spu_id = #{spuId} and t.refund_state in (0,1,2,4)
-        and t.del_flag = 0
-    </select>
-
-    <select id="refundVoBySpuOrderId" resultType="com.newzkl.platform.base.biz.order.model.order.vo.RefundVO">
-        select
-        t.*
-        from refund
-        where spu_order_no = #{spuOrderNo,jdbcType=VARCHAR}
-        and del_flag = 0
-        order by create_time desc
-        limit 1
-    </select>
-
-    <select id="countTotalRefundingByMemberId" resultType="java.lang.Integer">
-        SELECT
-            COUNT(t.id)
-        FROM
-            refund t
-        WHERE
-            t.member_id = #{memberId,jdbcType=BIGINT}
-          AND t.refund_state IN (0,1,2,4,6,7,8,9)
-          AND t.del_flag = 0
-    </select>
-
-    <select id="countTotalRefundingByStoreId" resultType="java.lang.Integer">
-        SELECT
-            COUNT(t.id)
-        FROM
-            refund t
-        WHERE
-            t.store_id = #{storeId,jdbcType=BIGINT}
-          AND t.refund_state IN (0,1,2,4,6,7,8,9)
-          AND t.del_flag = 0
-    </select>
-
-    <select id="refundBySpuOrderId" resultType="com.newzkl.platform.base.biz.order.infrastructure.entity.RefundDO">
-        select
-        t.*
+        select t.out_refund_address
         from refund t
-        where t.spu_order_no = #{spuOrderNo,jdbcType=VARCHAR}
-        and t.del_flag = 0
-        order by t.create_time desc
-        limit 1
+        left join spu_order t1 on t.spu_order_no = t1.spu_order_no
+        where
+          t.`spu_order_no` = #{spuOrderNo,jdbcType=VARCHAR}
+          and t1.spu_id = #{spuId}
+          and t.refund_state in (0,1,2,4)
+          and t.del_flag = 0
     </select>
+
+
 
 </mapper>

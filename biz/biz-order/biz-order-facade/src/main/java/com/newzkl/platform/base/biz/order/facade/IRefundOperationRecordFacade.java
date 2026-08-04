@@ -8,5 +8,5 @@ import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationReco
  */
 public interface IRefundOperationRecordFacade {
 
-    void save(RefundOperationRecordRPC refundOperationRecordRPC);
+    Long save(RefundOperationRecordRPC refundOperationRecordRPC);
 }

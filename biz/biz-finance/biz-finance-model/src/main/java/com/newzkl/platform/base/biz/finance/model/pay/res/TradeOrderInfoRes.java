@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.res;
 
 import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -37,7 +38,7 @@ public class TradeOrderInfoRes implements Serializable {
     /**
      * 支付金额
      */
-    private Integer payAmount;
+    private Money payAmount;
 
     /**
      * 消费类型

@@ -3,13 +3,20 @@ package com.newzkl.platform.base.biz.order.action.task;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.BalancePayApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
-import com.newzkl.platform.base.biz.order.model.dto.SkuOrder;
+import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.support.api.count.SaleCountDTO;
 import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleRecordVO;
@@ -22,9 +29,11 @@ import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,24 +52,17 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class OrderRepairJobHandler {
 
-    @DubboReference
-    private IGoodsCountFacade goodsCountFacade;
-    @DubboReference
-    private IRoleFacade userCountFacade;
-    @Autowired
-    private IOrderRepository orderRepository;
-    @Autowired
-    private IRefundRepository refundRepository;
-    @Autowired
-    private ISettleDomain settleDomain;
-    @Autowired
-    private IOrderDomain orderDomain;
-    @Autowired
-    private ISettleRepository settleRepository;
-    @DubboReference
-    private IBalancePayApi balancePayApi;
+    private final IGoodsCountFacade goodsCountFacade;
+    private final IRoleFacade userCountFacade;
+    private final IOrderRepository orderRepository;
+    private final IRefundRepository refundRepository;
+    private final ISettleDomain settleDomain;
+    private final IOrderDomain orderDomain;
+    private final ISettleRepository settleRepository;
+    private final BalancePayApi balancePayApi;
 
     /**
      * 初始化待结算订单
@@ -69,59 +71,61 @@ public class OrderRepairJobHandler {
     public void initSettleOrderWait()  {
         // 询SPU订单: 生成运费待结算单
         SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        spuOrderQuery.setOrderStateList(Arrays.asList(8,10,12));
-        List<SpuOrderVO> orderVOS = orderRepository.spuOrderVOList(spuOrderQuery).getRecords();
-        for (SpuOrderVO orderVO : orderVOS) {
-            if(CommonEnum.YesOrNo.NO == orderVO.getSettleSendState()) {
-                FreightSettleOrderWaitCommand freightSettleOrderWaitCommand = new FreightSettleOrderWaitCommand();
-                freightSettleOrderWaitCommand.setSpuOrderId(orderVO.getId());
-                freightSettleOrderWaitCommand.setSpuId(orderVO.getSpuId());
-                freightSettleOrderWaitCommand.setSupplierId(orderVO.getSupplierId());
-                freightSettleOrderWaitCommand.setAmount(orderVO.getFreightAmount());
-                if(!freightSettleOrderWaitCommand.getAmount().equals(0)){
-                    settleDomain.freightSettleOrderWaitSave(Collections.singletonList(freightSettleOrderWaitCommand),
-                            orderRepository.settleOrderType(orderVO.getSupplierId()));
-                }
-                orderDomain.freightSettleSuccessNotify(Collections.singletonList(orderVO.getId()));
+        spuOrderQuery.setOrderStateList(Arrays.asList(OrderEnum.State.WAIT_RECEIVE,OrderEnum.State.DOWN_RECEIVE,OrderEnum.State.SUCCESS));
+        spuOrderQuery.setSettleSendStatus(CommonEnum.YesOrNo.NO);
+        List<SpuOrderDTO> orderList = orderRepository.spuOrderList(spuOrderQuery).getRecords();
+
+        for (SpuOrderDTO order : orderList) {
+            FreightSettleOrderWaitCommand freightSettleOrderWaitCommand = new FreightSettleOrderWaitCommand();
+            freightSettleOrderWaitCommand.setSpuOrderId(order.getId());
+            freightSettleOrderWaitCommand.setSpuId(order.getSpuId());
+            freightSettleOrderWaitCommand.setSupplierId(order.getSupplierId());
+            freightSettleOrderWaitCommand.setAmount(order.getFreightAmount());
+            if(!freightSettleOrderWaitCommand.getAmount().equals(0)){
+                settleDomain.freightSettleOrderWaitSave(Collections.singletonList(freightSettleOrderWaitCommand),
+                        orderRepository.settleOrderType(order.getSupplierId()));
             }
+
+            order.setSettleSendState(CommonEnum.YesOrNo.YES);
         }
+        orderRepository.spuOrderUpdate(orderList);
         // 查询SKU订单: 生成待结算单
         List<Long> waitSettlementOrderId = new ArrayList<>();
-        List<SkuOrderVO> waitSettlementOrder = new ArrayList<>();
+        List<SkuOrderDTO> waitSettlementOrder = new ArrayList<>();
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setSettleSendState(0);
-        skuOrderQuery.setOrderStateList(Arrays.asList(10,12));
-        List<SkuOrderVO> skuOrderVOList = orderRepository.skuOrderVOList(skuOrderQuery).getRecords();
-        List<Long> supplierIdList = skuOrderVOList.stream().map(item -> item.getSupplierId()).distinct().collect(Collectors.toList());
+        skuOrderQuery.setSettleSendState(CommonEnum.YesOrNo.NO);
+        skuOrderQuery.setOrderStateList(Arrays.asList(OrderEnum.State.DOWN_RECEIVE,OrderEnum.State.SUCCESS));
+        List<SkuOrderDTO> skuOrderVOList = orderRepository.skuOrderList(skuOrderQuery).getRecords();
+        List<Long> supplierIdList = skuOrderVOList.stream().map(SkuOrderDTO::getSupplierId).distinct().collect(Collectors.toList());
         List<SettlementConfigOutVO> settleList = orderRepository.settlementConfigBatch(supplierIdList);
         Map<Long, SettlementConfigOutVO> settleMap = settleList.stream().collect(Collectors.toMap(SettlementConfigOutVO::getId, Function.identity()));
-        for (SkuOrderVO skuOrderVO : skuOrderVOList) {
-            if(skuOrderVO.getSupplierId() < 1000000
-                ||CommonEnum.YesOrNo.YES == skuOrderVO.getSettleSendState()){
+        for (SkuOrderDTO skuOrder : skuOrderVOList) {
+            if(skuOrder.getSupplierId() < 1000000
+                ||CommonEnum.YesOrNo.YES == skuOrder.getSettleSendState()){
                 continue;
             }
-            SettlementConfigOutVO settlementConfigRpcVO = settleMap.get(skuOrderVO.getSupplierId());
+            SettlementConfigOutVO settlementConfigRpcVO = settleMap.get(skuOrder.getSupplierId());
             if(settlementConfigRpcVO == null){
                 ThrowsException.exception(BaseErrorCode.PARAM, "供应商结算配置异常");
             }
             if(RoleEnum.OrderType.ORDER_SUCCESS == settlementConfigRpcVO.getOrderType()){
-                if(Collections.singletonList(12).contains(skuOrderVO.getOrderState())){
-                    waitSettlementOrder.add(skuOrderVO);
-                    waitSettlementOrderId.add(skuOrderVO.getId());
+                if(Collections.singletonList(OrderEnum.State.SUCCESS).contains(skuOrder.getOrderState())){
+                    waitSettlementOrder.add(skuOrder);
+                    waitSettlementOrderId.add(skuOrder.getId());
                 }
             }else if(RoleEnum.OrderType.RECEIVE == settlementConfigRpcVO.getOrderType()){
-                if(Arrays.asList(10, 12).contains(skuOrderVO.getOrderState())){
-                    waitSettlementOrder.add(skuOrderVO);
-                    waitSettlementOrderId.add(skuOrderVO.getId());
+                if(Arrays.asList(OrderEnum.State.DOWN_RECEIVE, OrderEnum.State.SUCCESS).contains(skuOrder.getOrderState())){
+                    waitSettlementOrder.add(skuOrder);
+                    waitSettlementOrderId.add(skuOrder.getId());
                 }
             }
         }
         if(ObjectUtil.isNotEmpty(waitSettlementOrderId)){
             SkuOrderQuery skuQuery = new SkuOrderQuery();
             skuQuery.setIdList(waitSettlementOrderId);
-            SkuOrder sku = new SkuOrder();
+            SkuOrderDTO sku = new SkuOrderDTO();
             sku.setSettleSendState(CommonEnum.YesOrNo.YES);
-            orderRepository.skuOrderEditByQuery(sku, skuQuery);
+            orderRepository.skuOrderUpdate(sku, skuQuery);
         }
         if (ObjectUtil.isNotEmpty(waitSettlementOrder)) {
             List<SettleOrderWaitCommand> commandList = TransferUtils.transfers(waitSettlementOrder, SettleOrderWaitCommand::new, (c, v)->{
@@ -149,7 +153,7 @@ public class OrderRepairJobHandler {
             Map<String, OrderPayCountReq> orderPayCountReqs = new HashMap<>();
             SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
             spuOrderQuery.setOrderStateList(Arrays.asList(4,6,8,10,12));
-            List<SpuOrderVO> orderVOS = orderRepository.spuOrderVOList(spuOrderQuery).getRecords();
+            List<SpuOrderVO> orderVOS = orderRepository.spuOrderList(spuOrderQuery).getRecords();
             for (SpuOrderVO orderVO : orderVOS) {
                 //商品
                 SaleCountDTO saleCountDTO = saleCountDTOS.get(orderVO.getSpuId());
@@ -225,7 +229,7 @@ public class OrderRepairJobHandler {
         }catch (Exception e){
             log.warn("订单刷新统计异常", e);
         }
-        return new ReturnT<>(SUCCESS);
+        return new ReturnT<>();
     }
 
     public void finance(List<Long> idList) {
@@ -250,16 +254,16 @@ public class OrderRepairJobHandler {
         //取出已收货,未结算,收货时间小于7月20号的sku订单
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
         LocalDateTime offsetLocalDate = DateUtil.parseLocalDateTime("2024-07-23 19:00:00", DatePattern.NORM_DATETIME_PATTERN);
-        skuOrderQuery.setSettleSendState(0);
+        skuOrderQuery.setSettleSendState(CommonEnum.YesOrNo.NO);
         skuOrderQuery.setLessReceiveTime(offsetLocalDate);
-        List<SkuOrderVO> skuOrderVOList = orderRepository.skuOrderVOList(skuOrderQuery).getRecords();
+        List<SkuOrderDTO> skuOrderVOList = orderRepository.skuOrderList(skuOrderQuery).getRecords();
         //判断供应商结算节点并写入待结算记录
         List<Long> waitSettlementOrderId = new ArrayList<>();
-        List<SkuOrderVO> waitSettlementOrder = new ArrayList<>();
-        List<Long> supplierIdList = skuOrderVOList.stream().map(item -> item.getSupplierId()).distinct().collect(Collectors.toList());
+        List<SkuOrderDTO> waitSettlementOrder = new ArrayList<>();
+        List<Long> supplierIdList = skuOrderVOList.stream().map(SkuOrderDTO::getSupplierId).distinct().collect(Collectors.toList());
         List<SettlementConfigOutVO> settlementConfigList = orderRepository.settlementConfigBatch(supplierIdList);
         Map<Long, SettlementConfigOutVO> settlementConfigMap = settlementConfigList.stream().collect(Collectors.toMap(SettlementConfigOutVO::getId, Function.identity()));
-        for (SkuOrderVO skuOrderVO : skuOrderVOList) {
+        for (SkuOrderDTO skuOrderVO : skuOrderVOList) {
             SettlementConfigOutVO settlementConfigVO = settlementConfigMap.get(skuOrderVO.getSupplierId());
             if(settlementConfigVO == null) {
                 //ThrowsException.exception(BaseErrorCode.PARAM, "供应商结算配置异常");
@@ -286,9 +290,9 @@ public class OrderRepairJobHandler {
         if(ObjectUtil.isNotEmpty(waitSettlementOrderId)){
             SkuOrderQuery skuQuery = new SkuOrderQuery();
             skuQuery.setIdList(waitSettlementOrderId);
-            SkuOrder sku = new SkuOrder();
+            SkuOrderDTO sku = new SkuOrderDTO();
             sku.setSettleSendState(CommonEnum.YesOrNo.YES);
-            orderRepository.skuOrderEditByQuery(sku, skuQuery);
+            orderRepository.skuOrderUpdate(sku, skuQuery);
         }
         //执行结算, 写入结算记录, 修改结算商品的信息
         SecurityContextHolder.set("waitSettlementOrderId", waitSettlementOrderId);

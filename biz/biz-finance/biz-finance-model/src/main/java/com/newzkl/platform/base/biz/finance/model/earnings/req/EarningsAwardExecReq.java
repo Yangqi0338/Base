@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 
 import com.newzkl.platform.base.biz.finance.model.enums.activity.ActivityEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -79,7 +80,7 @@ public class EarningsAwardExecReq extends EarningsExecReq {
     /**
      * 金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 分红比例

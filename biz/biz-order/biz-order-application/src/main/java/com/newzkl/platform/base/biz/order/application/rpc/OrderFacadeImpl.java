@@ -1,23 +1,26 @@
 package com.newzkl.platform.base.biz.order.application.rpc;
 
 import cn.hutool.core.util.ObjectUtil;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.application.service.ICommitOrder;
 import com.newzkl.platform.base.biz.order.application.service.IOrderService;
 import com.newzkl.platform.base.biz.order.application.service.IQueryService;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.OrderUtil;
 import com.newzkl.platform.base.biz.order.facade.IOrderFacade;
 import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrder;
+import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
+import com.newzkl.platform.base.biz.order.model.dto.OrderStateRecordEntity;
+import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
-import com.newzkl.platform.base.biz.order.model.vo.OrderAggVO;
 import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
@@ -29,8 +32,10 @@ import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -47,17 +52,16 @@ public class OrderFacadeImpl implements IOrderFacade {
 
     private final IOrderService orderService;
     private final IOrderDomain orderDomain;
-    private final IOrderRepository orderRepository;
-    @Autowired
-    private IQueryService queryService;
-    @Autowired
-    private ICommitOrder commitOrder;
+    private final LocalMessageApi localMessageApi;
+    private final IQueryService queryService;
+    private final ICommitOrder commitOrder;
+    private final HdhEvent hdhEvent;
 
     @Override
     public ApiOrderRes apiSubmitOrder(Long accountId, ApiOrderSubmitReq orderReq) {
         OrderCreateCommand orderCreateCommand = new OrderCreateCommand();
         orderCreateCommand.setChannelId(accountId);
-        orderCreateCommand.setOrderType(OrderEnum.OrderType.Channel);
+        orderCreateCommand.setOrderType(OrderEnum.OrderType.CHANNEL);
         orderCreateCommand.setShipVO(TransferUtils.transfer(orderReq, apiShipVO -> {
             ShipVO shipVO = new ShipVO();
             shipVO.setShipName(apiShipVO.getShipName());
@@ -94,7 +98,7 @@ public class OrderFacadeImpl implements IOrderFacade {
             public OrderQuery apply(ApiOrderReq apiSpuOrderReq) {
                 OrderQuery spuOrderQuery = new OrderQuery();
                 spuOrderQuery.setOutOrderNo(apiSpuOrderReq.getOutOrderNo());
-                spuOrderQuery.setCreateBeginTime(apiSpuOrderReq.getCreateBeginTime());
+                spuOrderQuery.setCreateStartTime(apiSpuOrderReq.getCreateBeginTime());
                 spuOrderQuery.setCreateEndTime(apiSpuOrderReq.getCreateEndTime());
                 spuOrderQuery.setPageNo(apiSpuOrderReq.getPageNo());
                 spuOrderQuery.setPageSize(apiSpuOrderReq.getPageSize());
@@ -103,7 +107,7 @@ public class OrderFacadeImpl implements IOrderFacade {
         });
         //分页查询
         Page<OrderVO> apiSpuOrderPageVOPage = queryService.orderVOList(spuOrderQuery);
-        return TransferUtils.transferPage(apiSpuOrderPageVOPage,OrderUtil::orderVO2ApiOrderVO);
+        return TransferUtils.transferPage(apiSpuOrderPageVOPage,ApiOrderVO.class);
     }
 
     @Override
@@ -114,15 +118,10 @@ public class OrderFacadeImpl implements IOrderFacade {
         if(ObjectUtil.isEmpty(orderIdList)){
             ThrowsException.exception(BaseErrorCode.PARAM, "外部订单号错误");
         }
-        OrderAggVO orderAggVO = queryService.orderAggVO(orderIdList.get(0));
+        OrderAgg orderAgg = orderDomain.orderAgg(orderIdList.get(0));
         ApiOrderAggVO apiOrderAggVO = new ApiOrderAggVO();
-        apiOrderAggVO.setOrder(OrderUtil.orderVO2ApiOrderVO(orderAggVO.getOrderVO()));
-        apiOrderAggVO.setOrderItem(TransferUtils.transfers(orderAggVO.getSkuOrderList(), new Function<SkuOrderVO, ApiSkuOrderVO>() {
-            @Override
-            public ApiSkuOrderVO apply(SkuOrderVO skuOrderVO) {
-                return OrderUtil.skuOrderVO2ApiSkuOrderVO(skuOrderVO);
-            }
-        }));
+        apiOrderAggVO.setOrder(TransferUtils.transfer(orderAgg.getOrder(), ApiOrderVO.class));
+        apiOrderAggVO.setOrderItem(TransferUtils.transfers(orderAgg.getSkuOrderList(), ApiSkuOrderVO.class));
         return apiOrderAggVO;
     }
 
@@ -192,7 +191,8 @@ public class OrderFacadeImpl implements IOrderFacade {
     }
 
     @Override
-    @GlobalTransactional(rollbackFor = Exception.class)
+    // TODO[#171-seata] 原 Seata @GlobalTransactional 降级为本地事务(Base 未接 Seata); 会员支付成功编排走单体本地事务, 待 Seata 装配后恢复分布式全局事务
+    @Transactional(rollbackFor = Exception.class)
     public void memberPaySuccess(Long orderId) {
         orderService.memberPaySuccess(orderId);
     }
@@ -211,13 +211,23 @@ public class OrderFacadeImpl implements IOrderFacade {
     public void orderMemberPay(List<Long> orderIdList) {
         orderDomain.batchUpdateOrderState(orderIdList, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, null);
         orderIdList.forEach(orderId -> {
-            List<SpuOrder> spuOrders = orderDomain.selectSpuOrderList(orderId);
-            orderRepository.sendOrderNewRecordEvent(spuOrders, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            List<SpuOrderDTO> spuOrders = orderDomain.selectSpuOrderList(orderId);
+            localMessageApi.sendOrderNewRecordEvent(spuOrders, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
         });
     }
 
     @Override
     public void closeOrder(Long orderId) {
         orderService.closeOrder(orderId);
+    }
+
+    @Override
+    public void save(OrderStateRecordRPC orderStateRecordRPC) {
+        // 将RPC传输模型转换为领域实体
+        OrderStateRecordEntity entity = new OrderStateRecordEntity();
+        BeanUtils.copyProperties(orderStateRecordRPC, entity);
+
+        // 调用领域服务完成保存
+        orderDomain.createStateRecord(entity);
     }
 }

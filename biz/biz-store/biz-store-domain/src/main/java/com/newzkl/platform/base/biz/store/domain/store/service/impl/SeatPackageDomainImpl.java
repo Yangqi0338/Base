@@ -44,6 +44,11 @@ public class SeatPackageDomainImpl implements SeatPackageDomain {
         return seatPackageRepository.seatPackagePage(req);
     }
 
+    @Override
+    public SeatPackageResponse detail(Long id) {
+        return seatPackageRepository.detail(id);
+    }
+
     /**
      * 新增席位个数
      */

@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.core.redis;
 
 
 import com.alibaba.fastjson2.support.spring6.data.redis.GenericFastJsonRedisSerializer;
+import com.newzkl.platform.base.common.core.redis.fastjson.MoneyFastjson2;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufOutputStream;
@@ -26,6 +27,11 @@ import java.nio.charset.StandardCharsets;
  */
 @Configuration
 public class RedisConfig {
+
+    static {
+        // 注册 Money 在 Fastjson2 中按分读写，保证 Redis 缓存跨进程还原
+        MoneyFastjson2.register();
+    }
 
     @Bean
     public static BeanPostProcessor redisTemplateCustomizer() {

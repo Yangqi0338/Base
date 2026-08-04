@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class SupplierSettleReq implements Serializable {
     /**
      * 结算金额
      */
-    private Integer settleAmount;
+    private Money settleAmount;
 
     /**
      * 关联结算单号

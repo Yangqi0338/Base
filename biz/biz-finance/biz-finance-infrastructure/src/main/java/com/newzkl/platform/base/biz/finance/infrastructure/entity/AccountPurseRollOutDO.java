@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -44,7 +45,7 @@ public class AccountPurseRollOutDO extends BaseDO {
     /**
      * 申请金额
      */
-    private Integer applyAmount;
+    private Money applyAmount;
 
     /**
      * 审核状态
@@ -80,7 +81,7 @@ public class AccountPurseRollOutDO extends BaseDO {
     /**
      * 手续费
      */
-    private Integer handlingFee;
+    private Money handlingFee;
 
     /**
      * 申请时间

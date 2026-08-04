@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 
-import com.newzkl.platform.base.biz.account.model.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import lombok.Data;

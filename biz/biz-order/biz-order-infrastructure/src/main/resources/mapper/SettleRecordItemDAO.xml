@@ -1,30 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 迁移自 new-scm/scm-sale SettleRecordItemDAO.xml, where 字段与 Base SettleRecordItemPageReq 一一对应 -->
-<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.SettleRecordItemDAO">
+<mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleRecordItemDAO">
 
-    <select id="countByQuery" resultType="java.lang.Integer">
-        select
-            count(t.id)
-        from settle_record_item t
-        <where>
-            t.del_flag = 0
-            <if test="query.id != null">
-                and t.`id` = #{query.id}
-            </if>
-            <if test="query.settleRecordId != null">
-                and t.`settle_record_id` = #{query.settleRecordId}
-            </if>
-            <if test="query.idList != null and query.idList.size() > 0">
-                and t.`id` in
-                <foreach collection="query.idList" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="query.spuName != null">
-                and t.`spu_name` like CONCAT('%',#{query.spuName},'%')
-            </if>
-        </where>
-    </select>
+    <!-- 查询条件已迁移至 SettleRecordItemDAO.getLw(SettleRecordItemQuery); 计数走 MP selectCount(getLw) -->
 
 </mapper>
