@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.market.model.vo.market;
 
 
 import com.newzkl.platform.base.biz.market.model.enums.MarketTypeEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -60,9 +61,9 @@ public class MarketVO {
     private Integer sellNum;
 
     /**
-     * 销售额
+     * 销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer sellAmount;
+    private Money sellAmount;
 
     /**
      * 创建人

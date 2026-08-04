@@ -52,7 +52,7 @@ public interface IOrderFacade {
       * @param orderReq
       * @return
       */
-     Integer apiFreight(Long accountId, ApiOrderFreightReq orderReq);
+     Long apiFreight(Long accountId, ApiOrderFreightReq orderReq);
      /**
       * API-订单状态
       * @param accountId
@@ -79,8 +79,6 @@ public interface IOrderFacade {
       * @param orderId
       */
      void orderChannelPay(Long orderId);
-
-    boolean handleStatusCallback(OrderCallbackRequest callbackRequest);
 
     /**
      * 批量修改订单状态

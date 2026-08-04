@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,9 +30,9 @@ public class GoodPackageVO extends BaseRes {
     private Long goodsNum;
 
     /**
-     * 套餐价格 (分)
+     * 套餐价格 (Money, 落库 BIGINT 分)
      */
-    private Integer packagePrice;
+    private Money packagePrice;
 
     /**
      * 套餐描述

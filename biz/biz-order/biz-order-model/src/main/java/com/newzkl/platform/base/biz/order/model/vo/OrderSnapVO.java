@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
 import lombok.Data;
@@ -17,11 +19,11 @@ public class OrderSnapVO {
     /**
      * 平台服务费
      */
-    private Integer platformServiceChange;
+    private Money platformServiceChange;
     /**
      * 运营商服务费
      */
-    private Integer operatorServiceChange;
+    private Money operatorServiceChange;
 
     /**
      * 本地商品

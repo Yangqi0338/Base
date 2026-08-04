@@ -3,20 +3,21 @@ package com.newzkl.platform.base.biz.order.action.task;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.BalancePayApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.PayApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
 import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
-import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;
 import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
+import com.newzkl.platform.base.common.ddd.facade.SupplierOutVO;
+import com.newzkl.platform.base.common.ddd.facade.SupplierSettleReq;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -109,11 +110,11 @@ public class SettleTaskJobHandler {
 
     @Component
     public static class SettleTaskJobHandlerInner{
-        @DubboReference
-        private BalancePayApi balancePayApi;
+        private final PayApi balancePayApi;
         private final ISettleDomain settleDomain;
 
-        public SettleTaskJobHandlerInner(ISettleDomain settleDomain) {
+        public SettleTaskJobHandlerInner(PayApi balancePayApi, ISettleDomain settleDomain) {
+            this.balancePayApi = balancePayApi;
             this.settleDomain = settleDomain;
         }
 
@@ -122,7 +123,7 @@ public class SettleTaskJobHandler {
             ExecuteSettleRes executeSettleRes = settleDomain.executeSettle(supplierId, settlementConfigRpcVO, supplierSettleGoodsVOList, settleTime);
             if(executeSettleRes != null
                     && executeSettleRes.getSettleMoneyTotal() != null
-                    && executeSettleRes.getSettleMoneyTotal() != 0){
+                    && executeSettleRes.getSettleMoneyTotal().getCent() != 0){
                 //财务金额划分
                 log.info("开始打款:supplierId:"+supplierId+":settleMoney"+executeSettleRes.getSettleMoneyTotal());
                 SupplierSettleReq supplierSettleReq = new SupplierSettleReq();
@@ -138,7 +139,7 @@ public class SettleTaskJobHandler {
             ExecuteSettleRes executeSettleRes = settleDomain.executeSettle2(supplierId, settleOrderWaitVOList, settleTime);
             if(executeSettleRes != null
                     && executeSettleRes.getSettleMoneyTotal() != null
-                    && executeSettleRes.getSettleMoneyTotal() != 0){
+                    && executeSettleRes.getSettleMoneyTotal().getCent() != 0){
                 //财务金额划分
                 log.info("开始打款:supplierId:"+supplierId+":settleMoney"+executeSettleRes.getSettleMoneyTotal());
                 SupplierSettleReq supplierSettleReq = new SupplierSettleReq();

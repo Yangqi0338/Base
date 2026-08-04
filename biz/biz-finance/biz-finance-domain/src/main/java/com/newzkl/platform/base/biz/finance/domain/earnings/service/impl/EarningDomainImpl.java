@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.finance.model.assembler.EarningRecordAssembl
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.earnings.res.AppEarningRecordRes;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.*;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
@@ -172,7 +173,8 @@ public class SupplierController {
     @PostMapping("/shouldPromisePayAmountInfo")
     public PlatformResult<Integer> shouldPromisePayAmountInfo(@RequestBody IdListCommand idListCommand) {
         Long id = CollUtil.getFirst(idListCommand.getIdList());
-        return PlatformResult.success(userQueryService.supplierVO(id).getShouldPromisePayAmount());
+        Money amount = userQueryService.supplierVO(id).getShouldPromisePayAmount();
+        return PlatformResult.success(amount == null ? null : (int) amount.getCent());
     }
 
     /**

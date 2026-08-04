@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.level.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,9 +18,9 @@ import java.io.Serializable;
 public class PackCondition implements Serializable {
 
     /**
-     * 礼包价格
+     * 礼包价格 (Money, 落库 BIGINT 分)
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 礼包商品 ID

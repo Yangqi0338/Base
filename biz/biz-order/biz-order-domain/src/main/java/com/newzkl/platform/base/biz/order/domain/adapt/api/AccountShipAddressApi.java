@@ -11,8 +11,7 @@ public interface AccountShipAddressApi {
      * 查询账户名下的收货地址
      *
      * @param shipAddressId 收货地址ID
-     * @param accountId     账户ID
      * @return 收货地址, 无则 null
      */
-    ShipAddressDTO getAddressDetail(Long shipAddressId, Long accountId);
+    ShipAddressDTO getAddressDetail(Long shipAddressId);
 }

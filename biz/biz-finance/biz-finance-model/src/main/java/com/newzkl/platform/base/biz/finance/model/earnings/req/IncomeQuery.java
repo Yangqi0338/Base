@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 import com.newzkl.platform.base.common.ddd.model.query.QuerySupport;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 

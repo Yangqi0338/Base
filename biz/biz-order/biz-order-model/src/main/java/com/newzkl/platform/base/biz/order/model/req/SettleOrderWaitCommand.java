@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 /**
@@ -27,7 +29,7 @@ public class SettleOrderWaitCommand {
     /**
      * 订单结算金额
      */
-    private Integer orderMoney;
+    private Money orderMoney;
     /**
      * SPU_ID
      */

@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
-import com.newzkl.platform.base.biz.order.application.service.ICommitOrder;
+import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
 import com.newzkl.platform.base.biz.order.model.req.PayMemberOrderCommand;
-import com.newzkl.platform.base.biz.order.model.support.api.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberOrderController {
 
     @Autowired
-    private ICommitOrder commitOrder;
+    private CommitOrder commitOrder;
 
 
     /**

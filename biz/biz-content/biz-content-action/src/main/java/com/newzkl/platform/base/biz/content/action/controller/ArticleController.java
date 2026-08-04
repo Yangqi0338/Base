@@ -24,7 +24,7 @@ import java.util.List;
  *
  * <p>迁移自旧 {@code com.zkl.scm.admin.interfaces.controller.ArticleController},
  * 端点路径与 HTTP 方法逐字保留。{@code ScmResult} 换为 {@code PlatformResult},
- * {@code javax.validation} 换为 {@code jakarta.validation}。</p>
+ * {@code jakarta.validation} 换为 {@code jakarta.validation}。</p>
  *
  * @author KC
  */

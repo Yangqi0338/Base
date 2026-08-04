@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.store.model.enums.ModeShopOrderType;
+import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.template.entity.ModelShop;
 import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;

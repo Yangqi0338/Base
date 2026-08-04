@@ -1,10 +1,12 @@
 package com.newzkl.platform.base.biz.order.domain.spi;
 
 
-import com.newzkl.platform.base.biz.order.domain.service.ThirdPartyOrderResult;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
 import com.newzkl.platform.base.common.ddd.domain.StrategyNullableProcessor;
+import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderDTO;
+import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public interface ThirdPartyOrderStrategy extends StrategyNullableProcessor {
      */
     ThirdPartyOrderResult create(List<OrderSkuVO> outGoods, OrderDTO order);
 
-    ThirdPartyOrderResult delivery(List<OrderSkuVO> outGoods, OrderDTO order);
+    ThirdPartyOrderResult delivery(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId);
 
     void compensation(ThirdPartyOrderDTO request);
 }

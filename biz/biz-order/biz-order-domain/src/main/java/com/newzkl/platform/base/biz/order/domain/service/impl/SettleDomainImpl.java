@@ -4,28 +4,31 @@ package com.newzkl.platform.base.biz.order.domain.service.impl;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
-
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
 import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
-import com.newzkl.platform.base.biz.order.domain.service.SettleRpcUtil;
 import com.newzkl.platform.base.biz.order.model.dto.*;
-import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.FreightSettleOrderWaitCommand;
+import com.newzkl.platform.base.biz.order.model.req.SettleGoodsCommand;
+import com.newzkl.platform.base.biz.order.model.req.SettleOrderWaitCommand;
+import com.newzkl.platform.base.biz.order.model.req.SettleTypeListReq;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleOrderWaitQuery;
-import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
-import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;
-import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
-import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
+import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,16 +60,16 @@ public class SettleDomainImpl implements ISettleDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ExecuteSettleRes executeSettle(Long supplierId, SettlementConfigOutVO settlementConfigRpcVO, List<SettleGoodsVO> settleGoodsVOList, LocalDateTime settleTime) {
-        if (settlementConfigRpcVO.getOrderType() > 1){
+        if (settlementConfigRpcVO.getOrderType().getCode() > 1){
             return null;
         }
         Long settleRecordId = SnowflakeIdAble.getSnowflakeId();
         // 准备数据
-        Integer settleMoneyTotal = 0;
-        Integer settleGoodsTotal = 0;
-        Integer settleFreightTotal = 0;
+        Money settleMoneyTotal = Money.ZERO;
+        Money settleGoodsTotal = Money.ZERO;
+        Money settleFreightTotal = Money.ZERO;
         //上期的售后冲正金额
-        Integer settleRefundTotal = 0;
+        Money settleRefundTotal = Money.ZERO;
         Integer settleSkuCountTotal = 0;
         // 查询待结算订单
         List<Long> spuIdList = settleGoodsVOList.stream().map(SettleGoodsVO::getSpuId).collect(Collectors.toList());
@@ -89,7 +92,7 @@ public class SettleDomainImpl implements ISettleDomain {
             return null;
         }
         // 组装待结算商品信息
-        Map<Long, Integer> spuMoney = new HashMap<>();
+        Map<Long, Money> spuMoney = new HashMap<>();
         Map<Long, Integer> spuSkuCount = new HashMap<>();
         List<Long> settleOrderWaitIdList = settleOrderWaitVOList.stream().map(SettleOrderWaitVO::getId).collect(Collectors.toList());
         //商品待结算记录
@@ -103,7 +106,7 @@ public class SettleDomainImpl implements ISettleDomain {
         for (Long spuId : spuSettleOrderWaitVOMap.keySet()) {
             // 准备结算信息
             int spuSettleSkuCount = 0;
-            int spuSettleMoney = 0;
+            Money spuSettleMoney = Money.ZERO;
             List<SettleOrderWaitVO> spuSettleOrderWaitVOList = spuSettleOrderWaitVOMap.get(spuId);
             Map<Integer, List<SettleOrderWaitVO>> collect = spuSettleOrderWaitVOList.stream().collect(Collectors.groupingBy(SettleOrderWaitVO::getType));
             List<SettleOrderWaitVO> skuOrder = collect.get(0);
@@ -118,22 +121,22 @@ public class SettleDomainImpl implements ISettleDomain {
                         List<SettleOrderWaitVO> skuOrders = skuOrderMap.get(skuId);
                         Map<String,Object> skuSettleInfo = new HashMap<>();
                         int skuNum = skuOrders.stream().mapToInt(SettleOrderWaitVO::getSkuCount).sum();
-                        int skuAmount = skuOrders.stream().mapToInt(SettleOrderWaitVO::getOrderMoney).sum();
+                        Money skuAmount = skuOrders.stream().map(SettleOrderWaitVO::getOrderMoney).reduce(Money.ZERO,Money::add);
                         String skuName = skuOrders.get(0).getSkuName();
                         skuSettleInfo.put("skuName",skuName);
                         skuSettleInfo.put("skuNum",skuNum);
                         skuSettleInfo.put("skuAmount",skuAmount);
                         skuSettleInfos.add(skuSettleInfo);
                         spuSettleSkuCount = spuSettleSkuCount + skuNum;
-                        spuSettleMoney = spuSettleMoney + skuAmount ;
-                        settleGoodsTotal = settleGoodsTotal + skuAmount ;
+                        spuSettleMoney = spuSettleMoney.add(skuAmount);
+                        settleGoodsTotal = settleGoodsTotal.add(skuAmount);
                     }
                 }
             }
             //处理 freight
-            Integer spuFreightAmount = 0;
+            Money spuFreightAmount = Money.ZERO;
             if (freight != null && freight.size() > 0){
-                spuFreightAmount = freight.stream().mapToInt(SettleOrderWaitVO::getOrderMoney).sum();
+                spuFreightAmount = freight.stream().map(SettleOrderWaitVO::getOrderMoney).reduce(Money.ZERO,Money::add);
             }
             //聚合
             SettleOrderWaitVO settleOrderWaitVO1 = spuSettleOrderWaitVOList.get(0);
@@ -150,20 +153,20 @@ public class SettleDomainImpl implements ISettleDomain {
             settleRecordItems.add(settleRecordItem);
             spuMoney.put(spuId, spuSettleMoney);
             spuSkuCount.put(spuId, spuSettleSkuCount);
-            settleMoneyTotal = settleMoneyTotal + spuSettleMoney + settleRecordItem.getSpuFreight();
-            settleFreightTotal = settleFreightTotal + settleRecordItem.getSpuFreight();
+            settleMoneyTotal = settleMoneyTotal.add(spuSettleMoney).add(settleRecordItem.getSpuFreight());
+            settleFreightTotal = settleFreightTotal.add(settleRecordItem.getSpuFreight());
             settleSkuCountTotal = settleSkuCountTotal + spuSettleSkuCount;
         }
         //处理售后冲正
         if(ObjectUtils.isNotEmpty(refundSettleOrderWaitList)){
-            settleRefundTotal = refundSettleOrderWaitList.stream().mapToInt(SettleOrderWaitVO::getOrderMoney).sum();
-            settleMoneyTotal = settleMoneyTotal - settleRefundTotal;
+            settleRefundTotal = refundSettleOrderWaitList.stream().map(SettleOrderWaitVO::getOrderMoney).reduce(Money.ZERO,Money::add);
+            settleMoneyTotal = settleMoneyTotal.subtract(settleRefundTotal);
         }
         // 更新结算商品信息表
         for (Long spuId : spuIdList) {
             SettleGoodsVO settleGoodsVO = settleGoodsVOMap.get(spuId);
             LocalDateTime nextSettleTime = getNextSettleTime(settleGoodsVO, settlementConfigRpcVO);
-            int editSpuSettleMoney = spuMoney.get(spuId) == null?0: spuMoney.get(spuId);
+            Money editSpuSettleMoney = spuMoney.get(spuId);
             boolean result = settleRepository.settleGoodsEditForExecuteSettle(supplierId, spuId, editSpuSettleMoney, spuSkuCount.get(spuId) == null?0:spuSkuCount.get(spuId), nextSettleTime);
             if(!result){
                 ThrowsException.exception(BaseErrorCode.PARAM, "供应商商品结算配置错误:supplierId:"+supplierId+":spuId:"+spuId);
@@ -190,12 +193,12 @@ public class SettleDomainImpl implements ISettleDomain {
     public ExecuteSettleRes executeSettle2(Long supplierId, List<SettleOrderWaitVO> settleOrderWaitVOList, LocalDateTime settleTime) {
         Long settleRecordId = SnowflakeIdAble.getSnowflakeId();
         // 准备数据
-        Integer settleMoneyTotal = 0;
-        Integer settleGoodsTotal = 0;
-        Integer settleFreightTotal = 0;
+        Money settleMoneyTotal = Money.ZERO;
+        Money settleGoodsTotal = Money.ZERO;
+        Money settleFreightTotal = Money.ZERO;
         Integer settleSkuCountTotal = 0;
         // 组装待结算商品信息
-        Map<Long, Integer> spuMoney = new HashMap<>();
+        Map<Long, Money> spuMoney = new HashMap<>();
         Map<Long, Integer> spuSkuCount = new HashMap<>();
         List<Long> settleOrderWaitIdList = settleOrderWaitVOList.stream().map(SettleOrderWaitVO::getId).collect(Collectors.toList());
         //商品待结算记录
@@ -208,7 +211,7 @@ public class SettleDomainImpl implements ISettleDomain {
         for (Long spuId : spuSettleOrderWaitVOMap.keySet()) {
             // 准备结算信息
             int spuSettleSkuCount = 0;
-            int spuSettleMoney = 0;
+            Money spuSettleMoney = Money.ZERO;
             List<SettleOrderWaitVO> spuSettleOrderWaitVOList = spuSettleOrderWaitVOMap.get(spuId);
             Map<Integer, List<SettleOrderWaitVO>> collect = spuSettleOrderWaitVOList.stream().collect(Collectors.groupingBy(SettleOrderWaitVO::getType));
             List<SettleOrderWaitVO> skuOrder = collect.get(0);
@@ -223,22 +226,22 @@ public class SettleDomainImpl implements ISettleDomain {
                         List<SettleOrderWaitVO> skuOrders = skuOrderMap.get(skuId);
                         Map<String,Object> skuSettleInfo = new HashMap<>();
                         int skuNum = skuOrders.stream().mapToInt(SettleOrderWaitVO::getSkuCount).sum();
-                        int skuAmount = skuOrders.stream().mapToInt(SettleOrderWaitVO::getOrderMoney).sum();
+                        Money skuAmount = skuOrders.stream().map(SettleOrderWaitVO::getOrderMoney).reduce(Money.ZERO,Money::add);
                         String skuName = skuOrders.get(0).getSkuName();
                         skuSettleInfo.put("skuName",skuName);
                         skuSettleInfo.put("skuNum",skuNum);
                         skuSettleInfo.put("skuAmount",skuAmount);
                         skuSettleInfos.add(skuSettleInfo);
                         spuSettleSkuCount = spuSettleSkuCount + skuNum;
-                        spuSettleMoney = spuSettleMoney + skuAmount ;
-                        settleGoodsTotal = settleGoodsTotal + skuAmount ;
+                        spuSettleMoney = spuSettleMoney.add(skuAmount);
+                        settleGoodsTotal = settleGoodsTotal.add(skuAmount);
                     }
                 }
             }
             //处理 freight
-            Integer spuFreightAmount = 0;
+            Money spuFreightAmount = Money.ZERO;
             if (freight != null && freight.size() > 0){
-                spuFreightAmount = freight.stream().mapToInt(SettleOrderWaitVO::getOrderMoney).sum();
+                spuFreightAmount = freight.stream().map(SettleOrderWaitVO::getOrderMoney).reduce(Money.ZERO,Money::add);
             }
             //聚合
             SettleOrderWaitVO settleOrderWaitVO1 = spuSettleOrderWaitVOList.get(0);
@@ -255,8 +258,8 @@ public class SettleDomainImpl implements ISettleDomain {
             settleRecordItems.add(settleRecordItem);
             spuMoney.put(spuId, spuSettleMoney);
             spuSkuCount.put(spuId, spuSettleSkuCount);
-            settleMoneyTotal = settleMoneyTotal + spuSettleMoney + settleRecordItem.getSpuFreight();
-            settleFreightTotal = settleFreightTotal + settleRecordItem.getSpuFreight();
+            settleMoneyTotal = settleMoneyTotal.add(spuSettleMoney).add(settleRecordItem.getSpuFreight());
+            settleFreightTotal = settleFreightTotal.add(settleRecordItem.getSpuFreight());
             settleSkuCountTotal = settleSkuCountTotal + spuSettleSkuCount;
         }
         // 更新待结算订单表
@@ -284,7 +287,7 @@ public class SettleDomainImpl implements ISettleDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void settleOrderWaitSave(List<SettleOrderWaitCommand> settleOrderWaitCommandList, Integer settleType) {
+    public void settleOrderWaitSave(List<SettleOrderWaitCommand> settleOrderWaitCommandList, SettleType settleType) {
         List<SettleOrderWait> settleOrderWaitList = new ArrayList<>();
         for (SettleOrderWaitCommand skuOrderVO : settleOrderWaitCommandList) {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
@@ -299,7 +302,8 @@ public class SettleDomainImpl implements ISettleDomain {
             settleOrderWait.setSkuId(skuOrderVO.getSkuId());
             settleOrderWait.setSkuCount(skuOrderVO.getSkuCount());
             settleOrderWait.setRefundId(skuOrderVO.getRefundId());
-            if(settleType > 1){
+            // settleType == COMPLETE_DELAY(2): 订单完成后 N 天结算, N 取供应商 orderTypeDay
+            if(SettleType.COMPLETE_DELAY == settleType){
                 // 迁移: 原 domain 直连 new-scm ScmDateUtil.dayNumForStamp(违跨服务域), 内联结算时间戳(当前毫秒 + N 天)
                 Integer settleDayNum = settleRepository.querySupplierSettleConfig(skuOrderVO.getSupplierId());
                 Long time = System.currentTimeMillis() + settleDayNum * 86400000L;
@@ -319,7 +323,7 @@ public class SettleDomainImpl implements ISettleDomain {
     }
 
     @Override
-    public void freightSettleOrderWaitSave(List<FreightSettleOrderWaitCommand> freightSettleOrderWaitCommands, RoleEnum.OrderType settleOrderType) {
+    public void freightSettleOrderWaitSave(List<FreightSettleOrderWaitCommand> freightSettleOrderWaitCommands, SettleType settleOrderType) {
         List<SettleOrderWait> settleOrderWaitList = new ArrayList<>();
         for (FreightSettleOrderWaitCommand item : freightSettleOrderWaitCommands) {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
@@ -332,7 +336,7 @@ public class SettleDomainImpl implements ISettleDomain {
             settleOrderWait.setSpuId(item.getSpuId());
             settleOrderWait.setOrderMoney(item.getAmount());
             settleOrderWait.setSkuCount(1);
-            if (settleOrderType.getCode() > 1){
+            if (SettleType.COMPLETE_DELAY == settleOrderType){
                 settleOrderWait.setSettleTimeNode(-1L);
             }else {
                 settleOrderWait.setSettleTimeNode(0L);
@@ -345,6 +349,27 @@ public class SettleDomainImpl implements ISettleDomain {
     @Override
     public Integer closeSettleOrder(Long skuOrderId, Long refundId) {
         return settleRepository.closeSettleOrder(skuOrderId, refundId);
+    }
+
+    @Override
+    public Page<SettleRecordVO> settleRecordVOList(SettleRecordQuery settleRecordQuery) {
+        return settleRepository.settleRecordVOList(settleRecordQuery);
+    }
+
+    @Override
+    public Page<SettleRecordItemVO> settleRecordItemPage(SettleRecordItemQuery settleRecordItemQuery) {
+        Page<SettleRecordItemDTO> itemPage = settleRepository.settleRecordItemPage(settleRecordItemQuery);
+        return TransferUtils.transferPage(itemPage, SettleRecordItemVO::new);
+    }
+
+    @Override
+    public List<SettleOrderWaitVO> settleTypeList(SettleTypeListReq settleTypeList) {
+        return settleRepository.settleTypeList(settleTypeList);
+    }
+
+    @Override
+    public SettleRecordVO settleRecordVO(Long settleRecordId) {
+        return settleRepository.settleRecordVO(settleRecordId);
     }
 
     /**

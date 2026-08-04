@@ -1,11 +1,9 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.action.cmd.RefundCmd;
-import com.newzkl.platform.base.biz.order.application.service.IRefundService;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
@@ -36,7 +34,7 @@ import java.util.List;
 public class RefundController {
 
     @Autowired
-    private IRefundService refundService;
+    private RefundService refundService;
     @Autowired
     private IRefundDomain refundDomain;
 

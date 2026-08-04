@@ -12,7 +12,7 @@ import java.util.List;
  * 商户端入参集合
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.MerchantCmd}, 内部类逐一对应。
- * 旧 {@code javax.validation} 已按 Jakarta EE 9 迁为 {@code jakarta.validation};
+ * 旧 {@code jakarta.validation} 已按 Jakarta EE 9 迁为 {@code jakarta.validation};
  * 旧 {@code MerchantCmd.ID} 无端点使用, 未迁入。</p>
  *
  * @author KC

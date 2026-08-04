@@ -6,17 +6,16 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.action.cmd.OrderCmd;
-import com.newzkl.platform.base.biz.order.application.service.ICommitOrder;
-import com.newzkl.platform.base.biz.order.application.service.IOrderService;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
+import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
+import com.newzkl.platform.base.biz.order.application.service.OrderService;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.req.*;
-import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
-import com.newzkl.platform.base.biz.order.model.support.api.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
@@ -47,15 +46,15 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     @Autowired
-    private IOrderService orderService;
+    private OrderService orderService;
     @Autowired
     private IOrderDomain orderDomain;
 
     @Autowired
-    private IQueryService queryService;
+    private QueryService queryService;
 
     @Autowired
-    private ICommitOrder commitOrder;
+    private CommitOrder commitOrder;
 
     @Autowired
     private OperatorApi operatorApi;
@@ -297,9 +296,9 @@ public class OrderController {
             SpuOrderExcelVO spuOrderExcelVO = new SpuOrderExcelVO();
             spuOrderExcelVO.setId(spuOrderAggVO.getSpuOrderVO().getId().toString());
             spuOrderExcelVO.setOutOrderNo(spuOrderAggVO.getSpuOrderVO().getOutOrderNo());
-            BigDecimal supplierAmount = new BigDecimal(spuOrderAggVO.getSpuOrderVO().getSupplierAmount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.DOWN);
+            BigDecimal supplierAmount = spuOrderAggVO.getSpuOrderVO().getSupplierAmount().getAmount().setScale(2, RoundingMode.DOWN);
             spuOrderExcelVO.setSupplierAmount(supplierAmount.toPlainString());
-            BigDecimal freightAmount = new BigDecimal(spuOrderAggVO.getSpuOrderVO().getFreightAmount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.DOWN);
+            BigDecimal freightAmount = spuOrderAggVO.getSpuOrderVO().getFreightAmount().getAmount().setScale(2, RoundingMode.DOWN);
             spuOrderExcelVO.setFreightAmount(freightAmount.toPlainString());
             Integer skuCount = 0;
             if(spuOrderAggVO.getSkuOrderList() != null){

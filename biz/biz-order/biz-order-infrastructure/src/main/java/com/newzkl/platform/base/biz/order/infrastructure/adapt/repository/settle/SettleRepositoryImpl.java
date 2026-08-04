@@ -1,15 +1,11 @@
 package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.settle;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
-import com.newzkl.platform.base.biz.order.infrastructure.assembler.settle.SettleGoodsAssembler;
-import com.newzkl.platform.base.biz.order.infrastructure.assembler.settle.SettleOrderWaitAssembler;
-import com.newzkl.platform.base.biz.order.infrastructure.assembler.settle.SettleRecordAssembler;
-import com.newzkl.platform.base.biz.order.infrastructure.assembler.settle.SettleRecordItemAssembler;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleGoodsDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleOrderWaitDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleRecordDAO;
@@ -22,15 +18,18 @@ import com.newzkl.platform.base.biz.order.model.dto.SettleGoods;
 import com.newzkl.platform.base.biz.order.model.dto.SettleOrderWait;
 import com.newzkl.platform.base.biz.order.model.dto.SettleRecordAgg;
 import com.newzkl.platform.base.biz.order.model.dto.SettleRecordItemDTO;
-import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.SettleRecordEditReq;
+import com.newzkl.platform.base.biz.order.model.req.SettleTypeListReq;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleOrderWaitQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +58,7 @@ public class SettleRepositoryImpl implements ISettleRepository {
     @Override
     public SettleRecordVO settleRecordVO(Long settleRecordId) {
         SettleRecordDO settleRecordDO = settleRecordDAO.selectById(settleRecordId);
-        return settleRecordAssembler.doToVO(settleRecordDO);
+        return TransferUtils.transfer(settleRecordDO, SettleRecordVO.class);
     }
     @Override
     public Page<SettleRecordVO> settleRecordVOList(SettleRecordQuery settleRecordQuery) {
@@ -89,7 +88,7 @@ public class SettleRepositoryImpl implements ISettleRepository {
 
     @Override
     public Long settleGoodsSave(SettleGoods settleGoods) {
-        SettleGoodsDO settleGoodsDO = settleGoodsAssembler.domainToDO(settleGoods);
+        SettleGoodsDO settleGoodsDO = TransferUtils.transfer(settleGoods, SettleGoodsDO.class);
         if(settleGoodsDO.getId() == null || settleGoodsDO.getId() == 0){
             settleGoodsDO.setId(SnowflakeIdAble.getSnowflakeId());
             settleGoodsDAO.insert(settleGoodsDO);
@@ -109,14 +108,14 @@ public class SettleRepositoryImpl implements ISettleRepository {
     }
 
     @Override
-    public boolean settleGoodsEditForExecuteSettle(Long supplierId, Long spuId, Integer settleMoney, Integer settleSkuCount, LocalDateTime nextSettlementTime) {
+    public boolean settleGoodsEditForExecuteSettle(Long supplierId, Long spuId, Money settleMoney, Integer settleSkuCount, LocalDateTime nextSettlementTime) {
         SettleGoodsQuery settleGoodsQuery = new SettleGoodsQuery();
         settleGoodsQuery.setSupplierId(supplierId);
         settleGoodsQuery.setSpuId(spuId);
         return settleGoodsDAO.update(settleGoodsDAO.getLw(settleGoodsQuery).toUpdate()
+                .setIncrBy(SettleGoodsDO::getSettleMoney, settleMoney)
                 .set(SettleGoodsDO::getNextSettleTime, nextSettlementTime)
                 .setIncrBy(SettleGoodsDO::getSettleNum, 1)
-                .setIncrBy(SettleGoodsDO::getSettleMoney, settleMoney)
                 .setIncrBy(SettleGoodsDO::getSettleGoodsNum, settleSkuCount)
             ) > 0;
     }
@@ -143,11 +142,12 @@ public class SettleRepositoryImpl implements ISettleRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void settleRecordAggCreate(SettleRecordAgg settleRecord) {
-        SettleRecordDO settleRecordDO = settleRecordAssembler.domainToDO(settleRecord.getSettleRecord());
+        SettleRecordDO settleRecordDO = TransferUtils.transfer(settleRecord.getSettleRecord(), SettleRecordDO.class);
         settleRecordDAO.insert(settleRecordDO);
-        List<SettleRecordItemDO> settleRecordItemDOList = TransferUtils.transfers(settleRecord.getSettleRecordItemList(), item -> settleRecordItemAssembler.domainToDO(item), (c, v) -> {
-            v.setId(SnowflakeIdAble.getSnowflakeId());
-            v.setSettleRecordId(settleRecordDO.getId());
+
+        List<SettleRecordItemDO> settleRecordItemDOList = TransferUtils.transfers(settleRecord.getSettleRecordItemList(), SettleRecordItemDO.class);
+        settleRecordItemDOList.forEach(settleRecordItemDO -> {
+            settleRecordItemDO.setSettleRecordId(settleRecordDO.getId());
         });
         if(ObjectUtil.isNotEmpty(settleRecordItemDOList)){
             settleRecordItemDAO.insert(settleRecordItemDOList);
@@ -156,7 +156,7 @@ public class SettleRepositoryImpl implements ISettleRepository {
 
     @Override
     public void settleOrderWaitSaveBatch(List<SettleOrderWait> settleOrderWaitList) {
-        List<SettleOrderWaitDO> settleOrderWaitDOList = TransferUtils.transfers(settleOrderWaitList, item -> settleOrderWaitAssembler.domainToDO(item));
+        List<SettleOrderWaitDO> settleOrderWaitDOList = TransferUtils.transfers(settleOrderWaitList, SettleOrderWaitDO.class);
         settleOrderWaitDAO.insert(settleOrderWaitDOList);
     }
 
@@ -175,7 +175,7 @@ public class SettleRepositoryImpl implements ISettleRepository {
         settleRecordItemQuery.setSettleRecordId(id);
         List<SettleRecordItemDO> settleRecordItemDOS = settleRecordItemDAO.selectList(settleRecordItemDAO.getLw(settleRecordItemQuery));
         List<SettleRecordItemVO> settleRecordItemVOS = TransferUtils.transfers(settleRecordItemDOS, SettleRecordItemVO.class);
-        settleRecordDetailVO.setSettleRecordVO(settleRecordVO);
+        settleRecordDetailVO.setSettleRecordVO(TransferUtils.transfer(settleRecordDO, SettleRecordVO.class));
         settleRecordDetailVO.setSettleRecordItemVOList(settleRecordItemVOS);
         return settleRecordDetailVO;
     }
@@ -208,6 +208,7 @@ public class SettleRepositoryImpl implements ISettleRepository {
 
     @Override
     public Integer querySupplierSettleConfig(Long supplierId) {
-        return supplierFacade.settleOrderType(supplierId);
+        SettlementConfigOutVO config = CollUtil.getFirst(supplierFacade.settlementConfigBatch(CollUtil.newArrayList(supplierId)));
+        return config == null ? null : config.getOrderTypeDay();
     }
 }

@@ -58,6 +58,7 @@
         <druid.version>1.2.22</druid.version>
 
         <qiniu.version>7.5.0</qiniu.version>
+        <huaweicloud.version>3.1.60</huaweicloud.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <forest.version>1.7.6</forest.version>
         <jsoup.version>1.15.3</jsoup.version>
@@ -261,6 +262,16 @@
                 <groupId>com.thoughtworks.qdox</groupId>
                 <artifactId>qdox</artifactId>
                 <version>${qdox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huaweicloud.sdk</groupId>
+                <artifactId>huaweicloud-sdk-core</artifactId>
+                <version>${huaweicloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huaweicloud.sdk</groupId>
+                <artifactId>huaweicloud-sdk-ocr</artifactId>
+                <version>${huaweicloud.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

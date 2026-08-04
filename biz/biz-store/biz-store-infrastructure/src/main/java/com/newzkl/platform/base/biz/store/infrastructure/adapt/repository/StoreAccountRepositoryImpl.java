@@ -62,12 +62,12 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
                 .notEmptyEq(StoreAccountDO::getChannelId, req.getChannelId())
                 .notEmptyIn(StoreAccountDO::getAccountId, req.getAccountIdList())
                 .notEmptyEq(StoreAccountDO::getRelationType, req.getRelationType())
-                .betweenDate(StoreAccountDO::getCreateTime, req.getBandTimeL(), req.getBandTimeR())
+                .doBetween(StoreAccountDO::getCreateTime, req.getBandTimeL(), req.getBandTimeR())
                 // countPayAmount 已 Money; 入参分 Integer 边界经 Money.of 升 Money 走 doBetween
                 .doBetween(StoreAccountDO::getCountPayAmount,
                         req.getPayAmountL() == null ? null : Money.of(req.getPayAmountL()),
                         req.getPayAmountR() == null ? null : Money.of(req.getPayAmountR()))
-                .betweenDate(StoreAccountDO::getLastViewTime, req.getViewTimeL(), req.getViewTimeR())
+                .doBetween(StoreAccountDO::getLastViewTime, req.getViewTimeL(), req.getViewTimeR())
                 .orderBy(req);
 
         // 执行分页查询

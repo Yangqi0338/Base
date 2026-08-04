@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.Data;
 
@@ -28,7 +30,7 @@ public class RefundItem{
 	/**
 	 * 售后金额
 	 */
-	private Integer refundAmount;
+	private Money refundAmount;
 
 	public void init() {
 		this.id = SnowflakeIdAble.getSnowflakeId();

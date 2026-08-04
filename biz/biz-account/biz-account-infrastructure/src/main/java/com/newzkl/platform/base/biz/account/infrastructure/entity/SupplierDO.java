@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -39,9 +40,9 @@ public class SupplierDO extends BaseDO {
      */
     private CommonEnum.YesOrNo promisePayState;
     /**
-     * 保证金金额
+     * 保证金金额 (Money, 落库 BIGINT 分)
      */
-    private Integer promisePayAmount;
+    private Money promisePayAmount;
     /**
      * 保证金审批状态
      */
@@ -60,9 +61,9 @@ public class SupplierDO extends BaseDO {
      */
     private String periodSetConfig;
     /**
-     * 应付保证金金额
+     * 应付保证金金额 (Money, 落库 BIGINT 分)
      */
-    private Integer shouldPromisePayAmount;
+    private Money shouldPromisePayAmount;
     /**
      * 主体类型
      */

@@ -30,6 +30,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
@@ -111,7 +112,7 @@ public class RefundDomainImpl implements IRefundDomain {
         List<SpuRefundRes> spuRefundResList = refundRepository.spuRefundResList(spuOrderVO.getOrderId(), null);
         Map<Long, SpuRefundRes> spuRefundResMap = spuRefundResList.stream().collect(Collectors.toMap(SpuRefundRes::getSpuId, Function.identity()));
         //运费金额
-        Integer freightAmount = 0;
+        Money freightAmount = Money.ZERO;
         //商品检查
         for (RefundItemCommand refundItemCommand : refundCommand.getRefundItemCommandList()) {
             SkuRefundDTO skuRefundRes = skuRefundResMap.get(refundItemCommand.getSkuId());
@@ -142,7 +143,7 @@ public class RefundDomainImpl implements IRefundDomain {
             spuRefundRes.setRefundingCount(spuRefundRes.getRefundingCount() + refundCount);
             if(spuRefundRes.getDeliverCount() == 0 &&
                     (spuRefundRes.getRefundingCount() + spuRefundRes.getRefundedCount() == spuRefundRes.getOrderCount())){
-                freightAmount = freightAmount + spuRefundRes.getFreightAmount();
+                freightAmount = freightAmount.add(spuRefundRes.getFreightAmount());
             }
             //售后类型检查
             if(RefundEnum.RefundType.MONEY_GOODS == refundCommand.getRefundType()
@@ -160,8 +161,8 @@ public class RefundDomainImpl implements IRefundDomain {
 
         // 补充拓展信息
         FreightExt freightExt = new FreightExt();
-        if (StrUtil.isNotBlank(spuOrderVO.getSpuOrderExt())){
-            SpuOrderExt spuOrderExt = JSONObject.parseObject(spuOrderVO.getSpuOrderExt(), SpuOrderExt.class);
+        if (spuOrderVO.getSpuOrderExt() != null){
+            SpuOrderExt spuOrderExt =spuOrderVO.getSpuOrderExt();
             freightExt.setStoreAccount(spuOrderExt.getStoreAccount());
             freightExt.setStoreName(spuOrderExt.getStoreName());
             freightExt.setStoreHead(spuOrderExt.getStoreHead());

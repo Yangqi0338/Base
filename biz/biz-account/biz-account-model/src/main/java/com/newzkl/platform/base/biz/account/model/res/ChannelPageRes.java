@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.Data;
@@ -69,9 +70,9 @@ public class ChannelPageRes extends BaseRes {
     private Integer customCount;
 
     /**
-     * 采购金余额 (分)
+     * 采购金余额 (Money, 落库 BIGINT 分)
      */
-    private Integer earnings;
+    private Money earnings;
 
     /**
      * 商品位总数

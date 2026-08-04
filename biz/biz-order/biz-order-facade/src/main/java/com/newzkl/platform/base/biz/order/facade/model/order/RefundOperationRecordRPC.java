@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.facade.model.order;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
@@ -74,7 +75,7 @@ public class RefundOperationRecordRPC implements Serializable {
     /**
      * 本次操作涉及的退款金额
      */
-    private Integer refundAmount;
+    private Money refundAmount;
 
     /**
      * 物流公司名称

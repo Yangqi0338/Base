@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.model.vo;
 
 
 import cn.hutool.core.lang.Opt;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -66,13 +67,13 @@ public class OperatorVO extends BaseRes {
      */
     private Integer supplierGoodsCount;
     /**
-     * 自身的订单流水
+     * 自身的订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderAmount;
+    private Money orderAmount;
     /**
-     * 总订单流水
+     * 总订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderTotalAmount;
+    private Money orderTotalAmount;
     /**
      * 提货积分
      */
@@ -86,9 +87,9 @@ public class OperatorVO extends BaseRes {
      */
     private String serviceFeeConfigVO;
     /**
-     * 服务费
+     * 服务费 (Money, 落库 BIGINT 分)
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 运营类型 0 机构 1 行业 2 区域
      */
@@ -148,8 +149,8 @@ public class OperatorVO extends BaseRes {
         this.twoMarketNumber = 0;
         this.inviteChannelNumber = 0;
         this.supplierGoodsCount = 0;
-        this.serviceAmount = 0;
-        this.orderAmount = 0;
+        this.serviceAmount = Money.ZERO;
+        this.orderAmount = Money.ZERO;
         this.goodsPoints = 0;
         this.levelUpProgress = 0.0;
         // TODO[cross-domain finance]: this.serviceFeeConfigVO = JSONObject.toJSONString(operatorProxySaveReq.getServiceFeeConfigVO()); (ServiceFeeConfigVO 属 finance 域, 已解耦)

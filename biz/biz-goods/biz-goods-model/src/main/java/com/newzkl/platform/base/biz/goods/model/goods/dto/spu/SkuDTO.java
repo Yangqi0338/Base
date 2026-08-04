@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.dto.spu;
 
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -51,22 +52,21 @@ public class SkuDTO {
      */
      private Long spuId;
      /**
-     * 市场价
+     * 市场价 (Money, 落库 BIGINT 分)
      */
-     @NotEmpty
-     private Integer marketPrice;
+     private Money marketPrice;
      /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-     private Integer supplyPrice;
+     private Money supplyPrice;
      /**
-      * 销售价(to channel)
+      * 销售价(to channel) (Money, 落库 BIGINT 分)
       */
-     private Integer salePrice;
+     private Money salePrice;
     /**
-     * 建议零售价(to c)
+     * 建议零售价(to c) (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
      /**
       * 外部SkuId
       */

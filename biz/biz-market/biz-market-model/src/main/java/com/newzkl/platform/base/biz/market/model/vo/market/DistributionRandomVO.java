@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.vo.market;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -21,9 +22,9 @@ public class DistributionRandomVO {
     private Long goodsId;
 
     /**
-     * 销售价
+     * 销售价 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
 
     /**
      * 销量

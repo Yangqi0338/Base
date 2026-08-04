@@ -1,8 +1,10 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
 import lombok.Data;
@@ -31,23 +33,23 @@ public class SkuOrderVO extends BaseVO {
      /**
      * 商品金额
      */
-     private Integer goodsAmount;
+     private Money goodsAmount;
      /**
       * 铺货金额
       */
-     private Integer storeAmount;
+     private Money storeAmount;
      /**
      * 运费金额
      */
-     private Integer freightAmount;
+     private Money freightAmount;
      /**
      * 优惠金额
      */
-     private Integer discountAmount;
+     private Money discountAmount;
      /**
       * 货款金额
       */
-     private Integer supplierAmount;
+     private Money supplierAmount;
      /**
      * 订单状态 (0, "新订单"),(1,"C端待付款"),(2,"渠道商待付款"),(3,"运营商待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭"),
      */
@@ -111,15 +113,15 @@ public class SkuOrderVO extends BaseVO {
      /**
       * sku供货价
       */
-     private Integer skuSupplierPrice;
+     private Money skuSupplierPrice;
      /**
       * sku采购价
       */
-     private Integer skuSalePrice;
+     private Money skuSalePrice;
      /**
       * sku铺货价
       */
-     private Integer skuStorePrice;
+     private Money skuStorePrice;
      /**
       * 发货数量
       */
@@ -147,11 +149,11 @@ public class SkuOrderVO extends BaseVO {
      /**
       * 结算节点
       */
-     private RoleEnum.OrderType settleOrderType;
+     private SettleType settleOrderType;
      /**
       * 总服务费
       */
-     private Integer totalServiceChange;
+     private Money totalServiceChange;
      /**
       * 运营商服务费
       */

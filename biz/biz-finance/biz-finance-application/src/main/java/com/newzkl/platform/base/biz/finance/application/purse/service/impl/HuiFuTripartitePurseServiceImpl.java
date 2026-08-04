@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.UserApplyAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.AccountBindSyncRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;

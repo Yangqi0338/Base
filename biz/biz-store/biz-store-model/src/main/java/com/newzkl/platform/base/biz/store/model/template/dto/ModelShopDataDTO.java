@@ -27,7 +27,7 @@ public class ModelShopDataDTO implements Serializable {
 
     /**
      * 类型
-     * @see com.newzkl.platform.base.biz.store.model.enums.ModeShopOrderType
+     * @see com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType
      */
     private String type;
 

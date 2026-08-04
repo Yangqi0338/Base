@@ -4,6 +4,8 @@ import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -30,6 +32,7 @@ public interface LocalMessageApi {
      * @param messageClass   消息内容类全限定名
      */
     void sendMessage(String tag, Object messageContent, String messageClass);
+    void sendModelShopMessage(ModelShopOutVO modelShopOutVO);
 
     void sendRefundPassMessage(RefundDTO refund);
 
@@ -41,7 +44,7 @@ public interface LocalMessageApi {
      * @param messageClass   消息内容类全限定名
      * @param delayTimeLevel 延迟级别 (1-18)
      */
-    void sendDelayMessage(String tag, Object messageContent, String messageClass, int delayTimeLevel);
+    void sendDelayMessage(String tag, Object messageContent, int delayTimeLevel);
 
     /**
      * 渠道订单支付后同步处理 (投递 {@code scm_order/orderSyncHandle})
@@ -65,5 +68,5 @@ public interface LocalMessageApi {
     /**
      * 门店用户支付消息
      */
-    void storeAccountPay(Long storeId, Long accountId, Integer memberAmount);
+    void storeAccountPay(Long storeId, Long accountId, Money memberAmount);
 }

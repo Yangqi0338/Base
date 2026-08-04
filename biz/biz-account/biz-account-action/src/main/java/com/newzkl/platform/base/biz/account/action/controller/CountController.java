@@ -124,7 +124,7 @@ public class CountController {
             numList.add(num);
 
             SummaryRes amount = new SummaryRes();
-            amount.setAmount(countSaleVO.getTotalOrderAmount());
+            amount.setAmount(countSaleVO.getTotalOrderAmount() == null ? 0 : (int) countSaleVO.getTotalOrderAmount().getCent());
             amount.setDimensionValue(dimensionValue);
             amountList.add(amount);
         });

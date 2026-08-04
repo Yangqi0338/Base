@@ -22,6 +22,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryV
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -226,24 +227,26 @@ public class DistributionRepositoryImpl implements DistributionRepository {
     }
 
     @Override
-    public void alterChannelGoodsSellPrice(Long goodsId, Long channelId, Long storeId, Integer sellPrice) {
+    public void alterChannelGoodsSellPrice(Long goodsId, Long channelId, Long storeId, Money sellPrice) {
         storeDistributionDAO.update(
                 new LambdaUpdateWrapper<StoreDistributionDO>()
                         .eq(StoreDistributionDO::getGoodsId, goodsId)
                         .eq(channelId != null, StoreDistributionDO::getChannelId, channelId)
                         .eq(storeId != null, StoreDistributionDO::getStoreId, storeId)
-                        .set(StoreDistributionDO::getSellPrice, sellPrice)
+                        // sell_price 列 BIGINT 分, MyBatis-Plus set 走裸值, 传分整数
+                        .set(StoreDistributionDO::getSellPrice, sellPrice == null ? null : sellPrice.getCent())
         );
     }
 
     @Override
-    public void alterChannelSkuSellPrice(Long skuId, Long channelId, Long storeId, Integer sellPrice) {
+    public void alterChannelSkuSellPrice(Long skuId, Long channelId, Long storeId, Money sellPrice) {
         storeDistributionDAO.update(
                 new LambdaUpdateWrapper<StoreDistributionDO>()
                         .eq(StoreDistributionDO::getSkuId, skuId)
                         .eq(channelId != null, StoreDistributionDO::getChannelId, channelId)
                         .eq(storeId != null, StoreDistributionDO::getStoreId, storeId)
-                        .set(StoreDistributionDO::getSellPrice, sellPrice)
+                        // sell_price 列 BIGINT 分, MyBatis-Plus set 走裸值, 传分整数
+                        .set(StoreDistributionDO::getSellPrice, sellPrice == null ? null : sellPrice.getCent())
         );
     }
 

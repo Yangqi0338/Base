@@ -6,8 +6,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.newzkl.platform.base.biz.order.application.service.ICommitOrder;
-import com.newzkl.platform.base.biz.order.application.service.IOrderService;
+import com.newzkl.platform.base.biz.order.application.service.OrderService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
@@ -20,19 +19,25 @@ import com.newzkl.platform.base.biz.order.model.res.CompleteSkuOrderRes;
 import com.newzkl.platform.base.biz.order.model.res.DeliverRes;
 import com.newzkl.platform.base.biz.order.model.res.ReceiveSkuOrderRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.GoodsVO;
+import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckReq;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
+import com.newzkl.platform.base.common.ddd.facade.BalancePayResult;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
-import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
+import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +59,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OrderServiceImpl implements IOrderService {
+public class OrderServiceImpl implements OrderService {
 
     private final OperatorApi operatorFacade;
 
@@ -64,11 +69,10 @@ public class OrderServiceImpl implements IOrderService {
     private final IRefundRepository refundRepository;
     private final ChannelApi channelApi;
 
-    private final BalancePayApi balancePayApi;
+    private final PayApi payApi;
 
     private final ISettleDomain settleDomain;
 
-    private final ICommitOrder commitOrder;
     private final LocalMessageApi localMessageApi;
 
     private final GoodsApi goodsApi;
@@ -85,7 +89,7 @@ public class OrderServiceImpl implements IOrderService {
                 v.setSkuCount(c.getCount());
                 v.setType(0);
             });
-            settleDomain.settleOrderWaitSave(commandList,0);
+            settleDomain.settleOrderWaitSave(commandList,SettleType.ORDER_SUCCESS);
         }
     }
     @Override
@@ -104,20 +108,42 @@ public class OrderServiceImpl implements IOrderService {
         }
     }
     @Override
-    public Integer channelRealOrderFreight(OrderCreateCommand orderCreateCommand){
+    public Long channelRealOrderFreight(OrderCreateCommand orderCreateCommand){
         // 1、获取用户信息 包含渠道商id、运营商id
         // 2、获取商品信息、校验商品状态、库存并返回运费
         List<OrderItemCommand> orderGoodsList = orderCreateCommand.getOrderGoodsList();
-        List<GoodsVO> goodsList = commitOrder.buildGoodsVO(orderGoodsList);
-        PlatformResult<OrderGoodsCheckRes> result = goodsApi.orderCheck(commitOrder.buildOrderGoodsCheckReq(orderCreateCommand, new MemberOrderCreateCommand()), goodsList);
-        Map<Long, Integer> goodsFreight = result.getData().getGoodsFreight();
-        Integer amount = goodsFreight.values().stream().mapToInt(Integer::intValue).sum();
-        return amount;
+        List<GoodsVO> goodsList = buildGoodsVO(orderGoodsList);
+        PlatformResult<OrderGoodsCheckRes> result = goodsApi.orderCheck(buildOrderGoodsCheckReq(orderCreateCommand, new MemberOrderCreateCommand()), goodsList);
+        Map<Long, Money> goodsFreight = result.getData().getGoodsFreight();
+        return goodsFreight.values().stream().mapToLong(Money::getCent).sum();
+    }
+
+    public List<GoodsVO> buildGoodsVO(List<OrderItemCommand> orderGoodsList){
+        List<GoodsVO> goodsList = new ArrayList<>();
+        orderGoodsList.forEach(x->{
+            GoodsVO goodsVO = new GoodsVO();
+            goodsVO.setSkuId(x.getSkuId());
+            goodsVO.setNum(x.getCount());
+            goodsList.add(goodsVO);
+        });
+        return goodsList;
+    }
+
+    public OrderGoodsCheckReq buildOrderGoodsCheckReq(OrderCreateCommand orderCreateCommand, MemberOrderCreateCommand memberOrderCreateCommand) {
+        OrderGoodsCheckReq req = new OrderGoodsCheckReq();
+        req.setChannelId(orderCreateCommand.getChannelId());
+        req.setStoreId(memberOrderCreateCommand.getStoreId());
+        ShipVO shipVO = orderCreateCommand.getShipVO();
+        req.setShipAreaCode(shipVO.getShipAreaCode());
+        req.setShipCityCode(shipVO.getShipCityCode());
+        req.setShipProvinceCode(shipVO.getShipProvinceCode());
+        req.setShipArea(shipVO.getShipArea());
+        return req;
     }
 
     @Override
     public void memberPaySuccess(Long orderId) {
-        OrderAgg orderAgg = orderRepository.orderAgg(orderId);
+        OrderAgg orderAgg = orderDomain.orderAgg(orderId);
         doMemberPaySuccess(orderAgg);
     }
 
@@ -129,7 +155,7 @@ public class OrderServiceImpl implements IOrderService {
         SpuOrderVO spuOrderVO = deliverRes.getSpuOrderVO();
         //发货开发者通知
         List<SkuCountDTO> skuCountDTOList = TransferUtils.transfers(deliverCommand.getDeliverItemCommandList(), SkuCountDTO.class);
-        ThirdPartyOrderProcessor.find().delivery();
+        ThirdPartyOrderProcessor.find().delivery(spuOrderVO.getOutOrderNo(), skuCountDTOList, deliverCommand.getExpressCompanyName(), deliverCommand.getExpressNo(), spuOrderVO.getChannelId());
 //        orderRepository.deliverNotify(spuOrderVO.getOutOrderNo(), skuCountDTOList, deliverCommand.getExpressCompanyName(), deliverCommand.getExpressNo(), spuOrderVO.getChannelId());
         //结算运费
         if(CommonEnum.YesOrNo.NO == spuOrderVO.getSettleSendState() && spuOrderVO.getSupplierId() > 100L){
@@ -143,11 +169,10 @@ public class OrderServiceImpl implements IOrderService {
                         orderRepository.settleOrderType(spuOrderVO.getSupplierId()));
             }
             SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-            spuOrderQuery.setIdList(spuIdList);
+            spuOrderQuery.setIdList(Collections.singletonList(spuOrderVO.getId()));
             SpuOrderDTO spu = new SpuOrderDTO();
             spu.setSettleSendState(CommonEnum.YesOrNo.YES);
-            orderRepository.spuOrderUpdate(spu, spuOrderQuery);
-            orderDomain.freightSettleSuccessNotify(Collections.singletonList(spuOrderVO.getId()));
+            orderRepository.spuOrderSave(spu, spuOrderQuery);
         }
         SpuOrderDTO spuOrder = new SpuOrderDTO();
         BeanUtils.copyProperties(spuOrderVO, spuOrder);
@@ -275,15 +300,15 @@ public class OrderServiceImpl implements IOrderService {
         spuOrderExt.setCancelReason("超时未支付关闭");
         spuOrderExt.setCloseReason("买家超时未支付订单关闭");
         orderDomain.batchUpdateOrderState(Collections.singletonList(order.getId()), order.getOrderState(), OrderEnum.State.CLOSE, JSONObject.toJSONString(spuOrderExt));
-        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), order.getOrderState(), OrderEnum.State.CLOSE, RoleEnum.CompanyRole.PLATFORM,RoleEnum.CompanyRole.PLATFORM);
+        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), order.getOrderState(), OrderEnum.State.CLOSE, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
     }
 
     public void doMemberPaySuccess(OrderAgg orderAgg) {
-        if(orderAgg.getOrder().getGoodsAmount() > 0){
+        if(orderAgg.getOrder().getGoodsAmount().greaterThanZero()){
             //如果选品金额大于0则进行渠道商支付
             OrderDTO order = orderAgg.getOrder();
             BalancePayReq balancePayReq = getBalancePayReq(order);
-            BalancePayResult balancePayResult = balancePayApi.balancePay(balancePayReq);
+            BalancePayResult balancePayResult = payApi.balancePay(balancePayReq);
             if(BooleanUtil.isTrue(balancePayResult.isOperatorPayState())){
                 //orderAgg.allPaySuccess(localMessageFacade, orderRepository);
             }else {
@@ -303,18 +328,18 @@ public class OrderServiceImpl implements IOrderService {
 
     public void orderBalancePay(Long... idList) {
         for (Long id : idList) {
-            OrderAgg orderAgg = orderRepository.orderAgg(id);
-            //检查状态
-            ScmUtil.checkInState(Collections.singletonList(OrderEnum.State.CHANNEL_WAIT_PAY), orderAgg.getOrder().getOrderState(), OrderErrorCode.STATE_ERROR);
+            OrderAgg orderAgg = orderDomain.orderAgg(id);
+            //检查状态 TODO
+//            ScmUtil.checkInState(Collections.singletonList(OrderEnum.State.CHANNEL_WAIT_PAY), orderAgg.getOrder().getOrderState(), OrderErrorCode.STATE_ERROR);
             //可能会发生服务费变化 MQ TODO
             recalculateServiceAmount(orderAgg);
             //扣减余额
             BalancePayReq balancePayReq = getBalancePayReq(orderAgg.getOrder());
-            BalancePayResult balancePayResult = balancePayApi.balancePay(balancePayReq);
+            BalancePayResult balancePayResult = payApi.balancePay(balancePayReq);
             if (BooleanUtil.isTrue(balancePayResult.isOperatorPayState())) {
                 allPaySuccess(orderAgg);
                 if (Objects.isNull(SecurityUtils.getAccountId())){
-                    localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.CHANNEL_WAIT_PAY,OrderEnum.State.SENDING,RoleEnum.CompanyRole.PLATFORM,RoleEnum.CompanyRole.PLATFORM);
+                    localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.CHANNEL_WAIT_PAY,OrderEnum.State.SENDING,RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
                 }else {
                     localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.CHANNEL_WAIT_PAY,OrderEnum.State.SENDING,SecurityUtils.getAccountId(),SecurityUtils.getRole());
                 }
@@ -343,15 +368,15 @@ public class OrderServiceImpl implements IOrderService {
         spuOrderList.forEach(spuOrder ->
                 spuOrder.setServiceAmount(skuOrderList.stream()
                         .filter(it -> it.getSpuOrderId().equals(spuOrder.getId()))
-                        .mapToInt(SkuOrderDTO::getTotalServiceChange).sum())
+                        .map(SkuOrderDTO::getTotalServiceChange).reduce(Money.ZERO,Money::add))
         );
 
-        int newServiceAmount = spuOrderList.stream().mapToInt(SpuOrderDTO::getServiceAmount).sum();
-        int diffAmount = order.getServiceAmount() - newServiceAmount;
+        Money newServiceAmount = spuOrderList.stream().map(SpuOrderDTO::getServiceAmount).reduce(Money.ZERO,Money::add);
+        Money diffAmount = order.getServiceAmount().subtract(newServiceAmount);
         order.setServiceAmount(newServiceAmount);
-        order.setTotalAmount(Math.max(0, order.getTotalAmount() - diffAmount));
+        order.setTotalAmount(Money.of(Math.max(0, order.getTotalAmount().subtract(diffAmount).getCent())));
 
-        orderRepository.orderAggUpdate(orderAgg);
+        orderDomain.orderAggSave(orderAgg);
     }
 
     /**
@@ -379,7 +404,7 @@ public class OrderServiceImpl implements IOrderService {
             OrderDTO orderEdit = new OrderDTO();
             orderEdit.setId(order.getId());
             orderEdit.setPayTime(LocalDateTime.now());
-            orderRepository.orderEdit(orderEdit);
+            orderRepository.orderSave(orderEdit);
             int count = orderRepository.batchUpdateOrderState(Arrays.asList(order.getId()), OrderEnum.State.CHANNEL_WAIT_PAY, OrderEnum.State.SENDING);
             if (count < 1){
                 ThrowsException.exception(BaseErrorCode.REPEAT);
@@ -447,26 +472,26 @@ public class OrderServiceImpl implements IOrderService {
      * 1. 仅通知选品的sku订单
      */
     private void paySuccessNotify(OrderAgg orderAgg) {
-        GoodsPaySuccessEvent goodsPaySuccessEvent = new GoodsPaySuccessEvent();
-        goodsPaySuccessEvent.setOrderId(orderAgg.getOrder().getId());
-        List<SkuOrderMessageVO> skuOrderMessageVOList = new ArrayList<>();
-        Map<Long, SpuOrderDTO> spuOrderMap = orderAgg.getSpuOrderList().stream().collect(Collectors.toMap(SpuOrderDTO::getSpuId, Function.identity()));
-        for (SkuOrderDTO skuOrder : orderAgg.getSkuOrderList()) {
-            SkuOrderMessageVO skuOrderMessageVO = TransferUtils.transfer(skuOrder,SkuOrderMessageVO.class);
-            skuOrderMessageVO.setChannelId(orderAgg.getOrder().getChannelId());
-            SpuOrderDTO spuOrder = spuOrderMap.get(skuOrder.getSpuId());
-            skuOrderMessageVO.setSpuChannelType(spuOrder.getSpuChannelType());
-            skuOrderMessageVOList.add(skuOrderMessageVO);
-        }
-        List<SpuOrderMessageVO> spuOrderMessageVOList = new ArrayList<>();
-        for (SpuOrderDTO spuOrder : orderAgg.getSpuOrderList()) {
-            SpuOrderMessageVO spuOrderMessageVO = TransferUtils.transfer(spuOrder,SpuOrderMessageVO.class);
-            spuOrderMessageVOList.add(spuOrderMessageVO);
-        }
-        goodsPaySuccessEvent.setSkuOrderList(skuOrderMessageVOList);
-        goodsPaySuccessEvent.setSpuOrderList(spuOrderMessageVOList);
-        //支付成功通知
-        orderRepository.goodsOrderPaySuccess(goodsPaySuccessEvent);
+//        GoodsPaySuccessEvent goodsPaySuccessEvent = new GoodsPaySuccessEvent();
+//        goodsPaySuccessEvent.setOrderId(orderAgg.getOrder().getId());
+//        List<SkuOrderMessageVO> skuOrderMessageVOList = new ArrayList<>();
+//        Map<Long, SpuOrderDTO> spuOrderMap = orderAgg.getSpuOrderList().stream().collect(Collectors.toMap(SpuOrderDTO::getSpuId, Function.identity()));
+//        for (SkuOrderDTO skuOrder : orderAgg.getSkuOrderList()) {
+//            SkuOrderMessageVO skuOrderMessageVO = TransferUtils.transfer(skuOrder,SkuOrderMessageVO.class);
+//            skuOrderMessageVO.setChannelId(orderAgg.getOrder().getChannelId());
+//            SpuOrderDTO spuOrder = spuOrderMap.get(skuOrder.getSpuId());
+//            skuOrderMessageVO.setSpuChannelType(spuOrder.getSpuChannelType());
+//            skuOrderMessageVOList.add(skuOrderMessageVO);
+//        }
+//        List<SpuOrderMessageVO> spuOrderMessageVOList = new ArrayList<>();
+//        for (SpuOrderDTO spuOrder : orderAgg.getSpuOrderList()) {
+//            SpuOrderMessageVO spuOrderMessageVO = TransferUtils.transfer(spuOrder,SpuOrderMessageVO.class);
+//            spuOrderMessageVOList.add(spuOrderMessageVO);
+//        }
+//        goodsPaySuccessEvent.setSkuOrderList(skuOrderMessageVOList);
+//        goodsPaySuccessEvent.setSpuOrderList(spuOrderMessageVOList);
+//        //支付成功通知
+//        orderRepository.goodsOrderPaySuccess(goodsPaySuccessEvent);
     }
 
     private BalancePayReq getBalancePayReq(OrderDTO order) {

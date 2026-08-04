@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.event;
 
 import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContributeDataReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordReq;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 
@@ -70,9 +71,9 @@ public class SelectorSupplierVO extends BaseRes {
       */
      private Integer goodsOnSaleCount;
      /**
-      *总金额
+      *总金额 (Money, 落库 BIGINT 分)
       */
-     private Integer goodsSaleAmount;
+     private Money goodsSaleAmount;
      /**
       *总销量
       */

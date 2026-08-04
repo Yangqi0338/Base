@@ -4,6 +4,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.GoodPackageDA
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.GoodPackageDO;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -41,7 +42,7 @@ class GoodPackageRepositoryImplTest {
         req.setPackageId("PKG001");
         req.setPackageName("基础套餐");
         req.setGoodsNum(10L);
-        req.setPackagePrice(9900);
+        req.setPackagePrice(Money.of(9900));
         req.setState(1);
         return req;
     }

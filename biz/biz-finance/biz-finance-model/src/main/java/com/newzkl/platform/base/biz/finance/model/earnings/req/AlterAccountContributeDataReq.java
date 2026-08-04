@@ -1,8 +1,9 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,7 +43,7 @@ public class AlterAccountContributeDataReq implements Serializable {
     /**
      * 更新值
      */
-    private Integer alterValue;
+    private Money alterValue;
 
     /**
      * 1：个人消费  2：分润  3：服务费
@@ -52,7 +53,7 @@ public class AlterAccountContributeDataReq implements Serializable {
     /*
      * 构建消费请求
      * */
-    public static AlterAccountContributeDataReq buildAmount(Long accountId, PurseEnum.FinanceUser accountType, Integer alterValue) {
+    public static AlterAccountContributeDataReq buildAmount(Long accountId, PurseEnum.FinanceUser accountType, Money alterValue) {
         return new AlterAccountContributeDataReq(accountId, accountType, null, accountId,
                 alterValue, EarningsEnum.ContributeType.AMOUNT);
     }
@@ -60,7 +61,7 @@ public class AlterAccountContributeDataReq implements Serializable {
     /*
      * 构建分润请求
      * */
-    public static AlterAccountContributeDataReq buildEarning(Long accountId, Long parentId, PurseEnum.FinanceUser accountType, Long contributeId, Integer alterValue) {
+    public static AlterAccountContributeDataReq buildEarning(Long accountId, Long parentId, PurseEnum.FinanceUser accountType, Long contributeId, Money alterValue) {
         return new AlterAccountContributeDataReq(accountId, accountType, parentId, contributeId,
                 alterValue, EarningsEnum.ContributeType.EARNING);
     }
@@ -68,7 +69,7 @@ public class AlterAccountContributeDataReq implements Serializable {
     /*
      * 构建服务费请求
      * */
-    public static AlterAccountContributeDataReq buildPlatformServiceAmount(Long accountId, PurseEnum.FinanceUser accountType, Integer alterValue) {
+    public static AlterAccountContributeDataReq buildPlatformServiceAmount(Long accountId, PurseEnum.FinanceUser accountType, Money alterValue) {
         return new AlterAccountContributeDataReq(null, accountType, null, accountId,
                 alterValue, EarningsEnum.ContributeType.SERVICE_AMOUNT);
     }

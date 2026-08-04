@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -33,7 +35,7 @@ public class SettleGoods{
 	/**
 	 * 结算金额
 	 */
-	private Integer settleMoney;
+	private Money settleMoney;
 	/**
 	 * 结算商品数量
 	 */
@@ -45,7 +47,7 @@ public class SettleGoods{
 
 	public void init() {
 		this.settleNum = 0;
-		this.settleMoney = 0;
+		this.settleMoney = Money.ZERO;
 		this.settleGoodsNum = 0;
 		this.upNum = 0;
 	}

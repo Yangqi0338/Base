@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.enums.order;
 
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+
 import java.util.stream.Stream;
 
 /**

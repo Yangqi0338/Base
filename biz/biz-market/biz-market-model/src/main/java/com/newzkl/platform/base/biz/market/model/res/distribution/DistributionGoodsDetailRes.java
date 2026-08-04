@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.res.distribution;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -66,9 +67,9 @@ public class DistributionGoodsDetailRes implements Serializable {
     private Integer dataType;
 
     /**
-     * 销售价
+     * 销售价 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
 
     /**
      * 销量
@@ -96,14 +97,14 @@ public class DistributionGoodsDetailRes implements Serializable {
     private LocalDateTime createTime;
 
     /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
 
     /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierPrice;
+    private Money supplierPrice;
 
     /**
      * 商品信息
@@ -239,27 +240,27 @@ public class DistributionGoodsDetailRes implements Serializable {
          */
         private Long spuId;
         /**
-         * 市场价
+         * 市场价 (Money, 落库 BIGINT 分)
          */
-        private Integer marketPrice;
+        private Money marketPrice;
         /**
-         * 采购价
+         * 采购价 (Money, 落库 BIGINT 分)
          */
-        private Integer salePrice;
+        private Money salePrice;
         /**
          * 起购数量
          */
         private Integer buyStartQty;
 
         /**
-         * 供货价
+         * 供货价 (Money, 落库 BIGINT 分)
          */
-        private Integer supplyPrice;
+        private Money supplyPrice;
 
         /**
-         * 冗余: 建议零售价(to c)
+         * 冗余: 建议零售价(to c) (Money, 落库 BIGINT 分)
          */
-        private Integer unitPrice;
+        private Money unitPrice;
 
     }
 

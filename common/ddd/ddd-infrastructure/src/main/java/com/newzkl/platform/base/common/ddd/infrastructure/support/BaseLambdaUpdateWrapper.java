@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.SharedString;
 import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -48,4 +49,8 @@ public class BaseLambdaUpdateWrapper<T> extends LambdaUpdateWrapper<T> {
         return this;
     }
 
+    public BaseLambdaUpdateWrapper<T> setIncrBy(SFunction<T, ?> column, Money money) {
+        super.setIncrBy(money.greaterThanZero(), column, money.getCent());
+        return this;
+    }
 }

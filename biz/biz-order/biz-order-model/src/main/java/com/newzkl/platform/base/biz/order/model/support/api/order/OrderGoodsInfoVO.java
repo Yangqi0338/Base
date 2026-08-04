@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api.order;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 
@@ -51,15 +52,15 @@ public class OrderGoodsInfoVO implements Serializable {
     /**
      * 供货价
      */
-    private Integer supplyPrice;
+    private Money supplyPrice;
     /**
      * 销售价
      */
-    private Integer salePrice;
+    private Money salePrice;
     /**
      * 铺货价
      */
-    private Integer storePrice;
+    private Money storePrice;
     /**
      * 运费模板id
      */

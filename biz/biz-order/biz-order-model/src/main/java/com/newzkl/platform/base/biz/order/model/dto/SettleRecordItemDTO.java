@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 /**
@@ -37,12 +39,12 @@ public class SettleRecordItemDTO {
 	/**
 	 * 结算金额
 	 */
-	private Integer settleMoney;
+	private Money settleMoney;
 
 	/**
 	 * 结算运费
 	 */
-	private Integer spuFreight;
+	private Money spuFreight;
 	/**
 	 * 结算商品数量
 	 */

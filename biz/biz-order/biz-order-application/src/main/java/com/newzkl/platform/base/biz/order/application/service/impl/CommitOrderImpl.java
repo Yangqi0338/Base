@@ -3,19 +3,25 @@ package com.newzkl.platform.base.biz.order.application.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.newzkl.platform.base.biz.order.application.service.ICommitOrder;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
+import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.service.CreateMemberPrePayOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomainNew;
-import com.newzkl.platform.base.biz.order.model.dto.*;
+import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
+import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
+import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.*;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
-import com.newzkl.platform.base.biz.order.model.support.api.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.support.api.order.*;
-import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
+import com.newzkl.platform.base.biz.order.model.vo.SpuOrderAggVO;
+import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -24,6 +30,10 @@ import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
+import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
+import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
@@ -45,13 +55,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommitOrderImpl implements ICommitOrder {
+public class CommitOrderImpl implements CommitOrder {
 
 
     private final IOrderDomain orderDomain;
     private final GoodsApi goodsApi;
-    private final BalancePayApi orderPayApi;
-    private final IQueryService queryService;
+    private final PayApi orderPayApi;
+    private final QueryService queryService;
     private final PurseApi accountPurseApi;
     private final IOrderRepository orderRepository;
     private final AccountShipAddressApi shipAddressApi;
@@ -64,7 +74,7 @@ public class CommitOrderImpl implements ICommitOrder {
         // 2、获取商品信息、校验商品状态、库存并返回运费
         List<OrderItemCommand> orderGoodsList = orderCreateCommand.getOrderGoodsList();
         List<GoodsVO> goodsList = buildGoodsVO(orderGoodsList);
-        PlatformResult<OrderGoodsCheckRes> result = goodsApi.orderGoodsCheck(buildOrderGoodsCheckReq(orderCreateCommand, memberOrderCreateCommand), goodsList);
+        PlatformResult<OrderGoodsCheckRes> result = goodsApi.orderCheck(buildOrderGoodsCheckReq(orderCreateCommand, memberOrderCreateCommand), goodsList);
         if (!result.isSuccess()) {
             throw new RuntimeException(result.getMessage());
         }
@@ -114,20 +124,19 @@ public class CommitOrderImpl implements ICommitOrder {
         // 金额计算：简化条件判断，语义化常量
         SpuEnum.ChannelType channelType = goodsInfo.getSpuChannelType();
         if (SpuEnum.ChannelType.CUSTOM == channelType) {
-            skuOrder.setStoreAmount(goodsInfo.getStorePrice() * goodsInfo.getNum());
+            skuOrder.setStoreAmount(goodsInfo.getStorePrice().multiply(goodsInfo.getNum()));
         } else if (SpuEnum.ChannelType.SELECTION == channelType
                 || SpuEnum.ChannelType.OUT == channelType) {
-            skuOrder.setGoodsAmount(goodsInfo.getSalePrice() * goodsInfo.getNum());
-            skuOrder.setSupplierAmount(goodsInfo.getSupplyPrice() * goodsInfo.getNum());
-            Integer storePrice = Optional.ofNullable(goodsInfo.getStorePrice()).orElse(0);
-            skuOrder.setStoreAmount(storePrice * goodsInfo.getNum());
+            skuOrder.setGoodsAmount(goodsInfo.getSalePrice().multiply(goodsInfo.getNum()));
+            skuOrder.setSupplierAmount(goodsInfo.getSupplyPrice().multiply(goodsInfo.getNum()));
+            skuOrder.setStoreAmount(goodsInfo.getStorePrice().multiply(goodsInfo.getNum()));
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
 
         // 固定值字段集中赋值
-        skuOrder.setFreightAmount(0);
-        skuOrder.setDiscountAmount(0);
+        skuOrder.setFreightAmount(Money.ZERO);
+        skuOrder.setDiscountAmount(Money.ZERO);
         skuOrder.setOrderState(OrderEnum.State.NEW);
         skuOrder.setOrderStateLog(OrderEnum.State.NEW.toString());
         skuOrder.setSupplierId(goodsInfo.getSupplierId());
@@ -146,7 +155,7 @@ public class CommitOrderImpl implements ICommitOrder {
         skuOrder.setSkuVolume(goodsInfo.getVolume().doubleValue());
         skuOrder.setSkuSalePrice(goodsInfo.getSalePrice());
         skuOrder.setSkuSupplierPrice(goodsInfo.getSupplyPrice());
-        skuOrder.setSkuStorePrice(Optional.ofNullable(goodsInfo.getStorePrice()).orElse(0));
+        skuOrder.setSkuStorePrice(goodsInfo.getStorePrice());
         return skuOrder;
     }
 
@@ -172,7 +181,7 @@ public class CommitOrderImpl implements ICommitOrder {
             orderCreateCommand.setChannelId(spuOrderVO.getChannelId());
             List<OrderItemCommand> orderGoodsList = new ArrayList<>();
             skuOrderList.forEach(skuOrder -> {
-                StoreDistributionRpcVO storeDistributionRpcVO = goodsApi.selectBySkuId(spuOrderVO.getChannelId(), spuOrderVO.getStoreId(), skuOrder.getSkuId());
+                StoreDistributionDetailOutVO storeDistributionRpcVO = goodsApi.selectBySkuId(spuOrderVO.getChannelId(), spuOrderVO.getStoreId(), skuOrder.getSkuId());
                 orderGoodsList.add(new OrderItemCommand(storeDistributionRpcVO.getId(), skuOrder.getSkuId(), skuOrder.getCount()));
             });
             orderCreateCommand.setOrderGoodsList(orderGoodsList);
@@ -212,7 +221,7 @@ public class CommitOrderImpl implements ICommitOrder {
         ShipVO shipVO = orderCreateCommand.getShipVO();
         if (shipVO.getId() != null){
             // 迁移: 原 shipAddressFacade.shipAddress(id)->ShipAddressOutVO 对齐既有出站端口 getAddressDetail(id, accountId)->ShipAddressDTO
-            ShipAddressDTO shipAddressDTO = shipAddressApi.getAddressDetail(shipVO.getId(), SecurityUtils.getAccountId());
+            ShipAddressDTO shipAddressDTO = shipAddressApi.getAddressDetail(shipVO.getId());
             if (Objects.isNull(shipAddressDTO)){
                 ThrowsException.exception(BaseErrorCode.PARAM, "收货地址不存在");
             }
@@ -229,7 +238,7 @@ public class CommitOrderImpl implements ICommitOrder {
                 .setShipAreaCode(shipVO.getShipAreaCode())
                 .setShipArea(shipVO.getShipArea());
 
-        PlatformResult<OrderGoodsCheckV2Res> checkResult = goodsApi.orderCheck(checkReq, goodsList);
+        PlatformResult<OrderGoodsCheckV2Res> checkResult = goodsApi.orderCheckV2(checkReq, goodsList);
         if (!checkResult.isSuccess()) {
             ThrowsException.exception(BaseErrorCode.PARAM, checkResult.getMessage());
         }
@@ -265,11 +274,11 @@ public class CommitOrderImpl implements ICommitOrder {
         orderRepository.delPrePayOrder(
                 new MemberOrderCreateCommand(consumerPaymentCommand.getStoreId(), consumerPaymentCommand.getAccountId()));
         // 落库发下单消息
-        ModelShopDataDTO modelShopDataDTO = new ModelShopDataDTO();
+        ModelShopOutVO modelShopDataDTO = new ModelShopOutVO();
         modelShopDataDTO.setStoreId(consumerPaymentCommand.getStoreId());
         modelShopDataDTO.setAmount(order.getOrderAgg().getOrder().getGoodsAmount());
-        modelShopDataDTO.setType(ModeShopOrderType.ORDER.name());
-        localMessageApi.sendMessage(MQ.Tag.COUNT_MODEL_SHOP_AMOUNT_EVENT, modelShopDataDTO);
+        modelShopDataDTO.setType(ModeShopOrderType.ORDER);
+        localMessageApi.sendModelShopMessage(modelShopDataDTO);
         localMessageApi.sendDelayMessage(MQ.Tag.TIME_OUT_CLOSE_ORDER_EVENT, order.getOrderAgg().getOrder().getId(), MQEnum.DelayTimeLevel.MINUTE_30.getLevel());
 //            orderOperationRecordUtil.sendOrderNewRecordEvent(order.getOrderAgg().getSpuOrderList(), OrderEnum.State.NEW,OrderEnum.State.NEW,SecurityUtils.getAccountId(),SecurityUtils.getRole());
         return order.getOrderAgg();
@@ -286,11 +295,11 @@ public class CommitOrderImpl implements ICommitOrder {
         // 组装支付对象
         OrderPayReq orderPayReq = buildOrderPayReq(order, command.getPaymentType());
         //拉起支付，发支付消息
-        ModelShopDataDTO modelShopDataDTO = new ModelShopDataDTO();
+        ModelShopOutVO modelShopDataDTO = new ModelShopOutVO();
         modelShopDataDTO.setStoreId(order.getStoreId());
         modelShopDataDTO.setAmount(order.getGoodsAmount());
-        modelShopDataDTO.setType(ModeShopOrderType.PAY.name());
-        localMessageApi.sendMessage(MQ.Tag.COUNT_MODEL_SHOP_AMOUNT_EVENT,modelShopDataDTO);
+        modelShopDataDTO.setType(ModeShopOrderType.PAY);
+        localMessageApi.sendModelShopMessage(modelShopDataDTO);
         // 调用支付API
         PayBaseResult payBaseResult = orderPayApi.orderPay(orderPayReq);
         orderDomain.batchUpdateOrderState(Collections.singletonList(order.getId()), OrderEnum.State.NEW, OrderEnum.State.MEMBER_WAIT_PAY, null);
@@ -309,7 +318,7 @@ public class CommitOrderImpl implements ICommitOrder {
         MemberOrderCreateCommand cacheCommand = new MemberOrderCreateCommand(command.getStoreId(), command.getAccountId());
         ShipVO shipVO = command.getShipVO();
         if (shipVO.getId() != null){
-            ShipAddressOutVO shipAddressOutVO = shipAddressApi.shipAddress(shipVO.getId());
+            ShipAddressDTO shipAddressOutVO = shipAddressApi.getAddressDetail(shipVO.getId());
             if (Objects.isNull(shipAddressOutVO)){
                 ThrowsException.exception(BaseErrorCode.PARAM, "收货地址不存在");
             }
@@ -323,7 +332,7 @@ public class CommitOrderImpl implements ICommitOrder {
             if (Objects.nonNull(orderCreateRes) && Objects.nonNull(orderCreateRes.getOrderAgg())) {
                 // 缓存逻辑：复用领域层核心校验
                 OrderAgg orderAgg = orderCreateRes.getOrderAgg();
-                Map<Long, Integer> goodsFreight = orderDomain.validateOrderShipChange(orderAgg, shipVO);
+                Map<Long, Money> goodsFreight = orderDomain.validateOrderShipChange(orderAgg, shipVO);
                 orderDomain.validateFreightUnchanged(orderAgg.getSpuOrderList(), goodsFreight);
 
                 // 线程安全更新缓存地址
@@ -345,7 +354,7 @@ public class CommitOrderImpl implements ICommitOrder {
     }
 
     // 订单支付请求构建方法
-    private OrderPayReq buildOrderPayReq(OrderDTO order, Integer payType) {
+    private OrderPayReq buildOrderPayReq(OrderDTO order, OrderEnum.PayType payType) {
         OrderPayReq orderPayReq = new OrderPayReq();
         orderPayReq.setOrderNo(order.getId());
         orderPayReq.setConsumeType(EarningsEnum.ConsumeType.GOODS);

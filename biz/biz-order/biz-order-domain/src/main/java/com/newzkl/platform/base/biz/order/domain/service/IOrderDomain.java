@@ -2,16 +2,16 @@ package com.newzkl.platform.base.biz.order.domain.service;
 
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.*;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
-import com.newzkl.platform.base.biz.order.model.vo.DeliverVO;
-import com.newzkl.platform.base.biz.order.model.vo.OrderStateCountVO;
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderItemExcelVO;
+import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 
@@ -100,21 +100,21 @@ public interface IOrderDomain {
      * @param shipVO
      * @return 各SPU对应的最新运费（用于对比是否变动）
      */
-    Map<Long, Integer> validateOrderShipChange(OrderAgg orderAgg, ShipVO shipVO);
+    Map<Long, Money> validateOrderShipChange(OrderAgg orderAgg, ShipVO shipVO);
 
     /**
      * 校验运费是否变动（独立封装，便于两处调用）
      * @param spuOrderList SPU订单列表
      * @param goodsFreight 最新运费信息
      */
-    void validateFreightUnchanged(List<SpuOrderDTO> spuOrderList, Map<Long, Integer> goodsFreight);
+    void validateFreightUnchanged(List<SpuOrderDTO> spuOrderList, Map<Long, Money> goodsFreight);
 
     /**
      * 数据库层修改订单收货地址（最终执行更新）
      * @param orderId 订单ID
      * @param shipVOJson 收货地址JSON串
      */
-    void updateOrderShipDb(Long orderId, String shipVOJson);
+    void updateOrderShipDb(Long orderId, ShipVO shipVOJson);
 
 
     /**
@@ -137,6 +137,13 @@ public interface IOrderDomain {
      * @return
      */
     OrderAgg orderAgg(Long orderId);
+
+    /**
+     * SPU订单-列表
+     * @param spuOrderQuery
+     * @return
+     */
+    Page<SpuOrderVO> spuOrderPage(SpuOrderQuery spuOrderQuery);
 
     /**
      * 批量修改订单状态
@@ -175,6 +182,16 @@ public interface IOrderDomain {
      * @return 新增后的领域模型
      */
     OrderStateRecordEntity createStateRecord(OrderStateRecordEntity entity);
+
+    Page<OrderStateRecordVO> recordPage(OrderStateRecordQuery query);
+
+    /**
+     * 按 spuOrderId 查询订单状态记录列表(按操作时间倒序)
+     *
+     * @param spuOrderId 商品订单 ID
+     * @return 订单状态记录列表
+     */
+    List<OrderStateRecordVO> recordListBySpuOrderId(Long spuOrderId);
 
     /**
      * 创建订单

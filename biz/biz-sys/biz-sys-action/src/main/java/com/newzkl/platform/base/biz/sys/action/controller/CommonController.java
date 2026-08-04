@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.sys.action.cmd.SysCmd;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.LogisticsApi;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.LogisticsQueryReq;
+import com.newzkl.platform.base.biz.sys.domain.adapt.api.OcrApi;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OssTokenApi;
 import com.newzkl.platform.base.biz.sys.domain.service.AppVersionDomain;
 import com.newzkl.platform.base.biz.sys.domain.service.RegionDomain;
@@ -30,14 +31,18 @@ import java.util.List;
 /**
  * 平台-公共控制器
  *
- * <p>迁移说明: 源 {@code CommonController} 共 12 个端点, 已迁入 9 个。仍未迁部分及原因:</p>
+ * <p>迁移说明: 源 {@code CommonController} 共 12 个端点, 已迁入 10 个。仍未迁部分及原因:</p>
  * <ul>
  *   <li>{@code /generateQrCode} — 依赖 zxing (hutool QrCodeUtil 的可选依赖), Base 未引入。</li>
  *   <li>{@code /getRegionByCode} — 源已标 {@code @Deprecated} (前端零引用), 按规则不迁。</li>
- *   <li>{@code /ocrIdentify} {@code /businessIdentify} — 依赖华为云 OCR SDK
- *       ({@code com.huaweicloud.sdk:huaweicloud-sdk-ocr}), Base 根 pom 未声明,
- *       补依赖需用户批准, 故本轮不落端点 (不造裸桩)。</li>
+ *   <li>{@code /businessIdentify} — 依赖华为云 OCR SDK 之外还需 {@code RecognizeBusinessLicenseRes}
+ *       出参 VO + "按营业执照地址反查区域编码"逻辑, 待后续单端点补迁。</li>
  * </ul>
+ *
+ * <p>2026-08-04 补迁 {@code /ocrIdentify} (华为云 OCR 身份证识别, 用户授权引入
+ * {@code com.huaweicloud.sdk:huaweicloud-sdk-ocr:3.1.60}): SDK 调用下沉
+ * {@code infrastructure/gateway} 的 {@code HuaweiOcrGateway}, controller 经
+ * {@code OcrApi} 出站端口调用; AK/SK 由源硬编码改 {@code huawei.ocr} 配置下发。</p>
  *
  * <p>本轮补迁 3 个端点, 均未改动任何 pom:</p>
  * <ul>
@@ -69,6 +74,7 @@ public class CommonController {
     private final AppVersionDomain appVersionDomain;
     private final OssTokenApi ossTokenApi;
     private final LogisticsApi logisticsApi;
+    private final OcrApi ocrApi;
 
     /**
      * 枚举消息
@@ -144,6 +150,29 @@ public class CommonController {
                 .mobile(req.getMobile())
                 .build();
         return PlatformResult.success(logisticsApi.queryLogistics(queryReq));
+    }
+
+    /**
+     * 身份证识别
+     *
+     * <p>gys-admin 3 处在用。经华为云 OCR SDK 识别身份证图片, SDK 调用下沉至
+     * {@code infrastructure/gateway} 的 {@code HuaweiOcrGateway}, controller 只经
+     * {@code OcrApi} 出站端口调用。</p>
+     *
+     * <p>契约对齐: 入参沿用旧 {@code StringObj#string} (身份证图片 URL);
+     * 出参为三方识别结果 (源直返 SDK {@code RecognizeIdCardResponse},
+     * 序列化后为 {@code {result:{...}}}, 本实现经 gateway 转通用结构后形状一致)。
+     * 识别失败时返回 {@code data} 为 {@code null} (与源逐字一致)。</p>
+     *
+     * <p>安全提示: 华为云 AK/SK 已由源硬编码改为 {@code huawei.ocr} 配置项下发,
+     * 旧硬编码凭证已泄漏在 git 历史, 上线前应轮换。</p>
+     *
+     * @param stringObj 身份证图片 URL 载体
+     * @return 三方识别结果
+     */
+    @PostMapping("/ocrIdentify")
+    public PlatformResult<Object> ocrIdentify(@RequestBody SysCmd.StringObj stringObj) {
+        return PlatformResult.success(ocrApi.recognizeIdCard(stringObj.getString()));
     }
 
     /**

@@ -16,9 +16,10 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.MarketDistributionA
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.UserSocialApi;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
@@ -91,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
         AppHomePageDataVO resVO = new AppHomePageDataVO();
         // 查收益
         Map<EarningsEnum.ConsumeType, Integer> incomeMap = financeEarningApi.queryIncome(incomeReq);
-        resVO.setPackIncome(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.PICK_PACK, Integer.class, 0));
+        resVO.setPackIncome(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.PICK_PACK, Integer.class, 0)));
         // 查询直推用户
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setInviteAccountId(accountId);
@@ -158,11 +159,11 @@ public class AccountServiceImpl implements AccountService {
         // 根据消费类型分组
         Map<EarningsEnum.ConsumeType, Integer> incomeMap = financeEarningApi.queryIncome(incomeReq);
         // 收益
-        resVO.setPackIncome(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.PICK_PACK, Integer.class, 0));
+        resVO.setPackIncome(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.PICK_PACK, Integer.class, 0)));
         // 分红
-        resVO.setDividendBonus(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.DIVIDEND_BONUS, Integer.class, 0));
+        resVO.setDividendBonus(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.DIVIDEND_BONUS, Integer.class, 0)));
         // 商品消费
-        resVO.setGoodsIncome(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.GOODS, Integer.class, 0));
+        resVO.setGoodsIncome(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.GOODS, Integer.class, 0)));
 
         // 查待结算的收益
         IncomeQuery settleIncomeReq = new IncomeQuery();
@@ -172,10 +173,10 @@ public class AccountServiceImpl implements AccountService {
         settleIncomeReq.setConsumeType(EarningsEnum.ConsumeType.GOODS);
         Map<EarningsEnum.ConsumeType, Integer> settleIncomeMap = financeEarningApi.queryIncome(settleIncomeReq);
         Integer goodSettleIncome = MapUtil.get(settleIncomeMap, EarningsEnum.ConsumeType.GOODS, Integer.class, 0);
-        resVO.setGoodsSettleIncome(goodSettleIncome);
+        resVO.setGoodsSettleIncome(Money.of(goodSettleIncome));
 
         // 计算总收益
-        resVO.setTotalIncome(resVO.getGoodsIncome() + resVO.getPackIncome() + resVO.getDividendBonus());
+        resVO.setTotalIncome(resVO.getGoodsIncome().add(resVO.getPackIncome()).add(resVO.getDividendBonus()));
         resVO.setId(accountId);
 
         return resVO;
@@ -376,7 +377,7 @@ public class AccountServiceImpl implements AccountService {
                     goodsInfo.setGoodsId(item.getGoodsId());
                     goodsInfo.setName(item.getName());
                     goodsInfo.setImg(item.getImg());
-                    goodsInfo.setSellPrice(item.getSellPrice());
+                    goodsInfo.setSellPrice(Money.of(item.getSellPrice()));
                     return goodsInfo;
                 }).collect(Collectors.toList()));
             }

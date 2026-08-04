@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.dto.relation;
 
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -34,9 +35,9 @@ public class MarketGoodsRelationDTO implements Serializable {
      */
     private Integer sellNum;
     /**
-     * 销售额
+     * 销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer sellAmount;
+    private Money sellAmount;
     /**
      * 状态  1：正常  0：删除
      */

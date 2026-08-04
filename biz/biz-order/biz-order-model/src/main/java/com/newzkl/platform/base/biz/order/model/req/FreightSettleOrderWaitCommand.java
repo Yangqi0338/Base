@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 /**
@@ -15,5 +17,5 @@ public class FreightSettleOrderWaitCommand {
      * 供应商ID
      */
     private Long supplierId;
-    private Integer amount;
+    private Money amount;
 }

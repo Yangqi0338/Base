@@ -25,6 +25,7 @@ import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRa
 import com.newzkl.platform.base.biz.market.model.rpc.spu.GoodsSellNumVO;
 import com.newzkl.platform.base.biz.market.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.market.model.enums.MarketErrorCode;
@@ -85,14 +86,18 @@ public class DistributionDomainImpl implements DistributionDomain {
             Integer goodsState = spuDistribution.getGoodsState();
 
             if (DistributionEnum.State.LISTED.getCode().equals(goodsState)) {
-                Integer sellPrice = spuDistribution.getSellPrice();
-                // 若spu的sellPrice为空或者0,则找最大的sellPrice,没有报错
-                if (sellPrice == null || sellPrice <= 0) {
-                    OptionalInt maxSellPrice = distributions.stream().filter(it -> it.getSellPrice() != null).mapToInt(StoreDistributionDTO::getSellPrice).max();
-                    if (!maxSellPrice.isPresent() || maxSellPrice.getAsInt() <= 0) {
+                // 售价 (Money 分); spu 售价为空或非正时, 取子项中最大售价兜底
+                Money sellPrice = spuDistribution.getSellPrice();
+                if (sellPrice == null || !sellPrice.greaterThanZero()) {
+                    Money maxSellPrice = distributions.stream()
+                            .map(StoreDistributionDTO::getSellPrice)
+                            .filter(Objects::nonNull)
+                            .max(Comparator.comparingLong(Money::getCent))
+                            .orElse(null);
+                    if (maxSellPrice == null || !maxSellPrice.greaterThanZero()) {
                         throw new PlatformException(BaseErrorCode.PARAM, "销售价为空或小于0");
                     } else {
-                        spuDistribution.setSellPrice(maxSellPrice.getAsInt());
+                        spuDistribution.setSellPrice(maxSellPrice);
                     }
                 }
                 spuDistribution.setUpTime(LocalDateTime.now());

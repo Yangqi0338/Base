@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
@@ -13,9 +13,7 @@ import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderReposito
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
-import com.newzkl.platform.base.biz.order.model.dto.ChannelDTO;
-import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
-import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
+import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
@@ -43,7 +41,7 @@ import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextH
  */
 @Service
 @RequiredArgsConstructor
-public class QueryServiceImpl implements IQueryService {
+public class QueryServiceImpl implements QueryService {
 
     private final IOrderRepository orderRepository;
     private final ChannelApi channelApi;
@@ -59,7 +57,8 @@ public class QueryServiceImpl implements IQueryService {
 
     @Override
     public Page<SkuOrderVO> skuOrderVOList(SkuOrderQuery orderQuery) {
-        return orderRepository.skuOrderList(orderQuery);
+        Page<SkuOrderDTO> skuOrderDTOPage = orderRepository.skuOrderList(orderQuery);
+        return TransferUtils.transferPage(skuOrderDTOPage, SkuOrderVO.class);
     }
     @Override
     public SpuOrderAggVO spuOrderAggVO(Long spuOrderId) {
@@ -69,13 +68,7 @@ public class QueryServiceImpl implements IQueryService {
         Map<Long, List<DeliverVO>> deliverMap = this.orderDeliverInfo(spuOrderId);
         this.buildDeliver(deliverMap, spuOrderAggVO);
         SpuOrderVO spuOrderVO = spuOrderAggVO.getSpuOrderVO();
-        String spuOrderExtStr = spuOrderVO.getSpuOrderExt();
-        SpuOrderExt spuOrderExt;
-        if (StrUtil.isNotBlank(spuOrderExtStr)) {
-            spuOrderExt = JSONObject.parseObject(spuOrderExtStr, SpuOrderExt.class);
-        }else {
-            spuOrderExt = new SpuOrderExt();
-        }
+        SpuOrderExt spuOrderExt = spuOrderVO.getSpuOrderExt();
         Long memberId = spuOrderVO.getMemberId();
         Long channelId = spuOrderVO.getChannelId();
 
@@ -113,7 +106,7 @@ public class QueryServiceImpl implements IQueryService {
             }
         }
 
-        spuOrderVO.setSpuOrderExt(JSONObject.toJSONString(spuOrderExt));
+        spuOrderVO.setSpuOrderExt(spuOrderExt);
         if (spuOrderVO.getRefundingCount() > 0) {
             RefundDTO refundDTO = refundRepository.refundBySpuOrderId(spuOrderId);
             spuOrderVO.setRefundState(refundDTO.getRefundState());
@@ -193,8 +186,8 @@ public class QueryServiceImpl implements IQueryService {
         }
         
         // ========== 3. 查询SPU订单分页数据 ==========
-        Page<SpuOrderVO> spuOrderPage = orderRepository.spuOrderList(spuOrderQuery);
-        List<Long> spuOrderIds = spuOrderPage.getRecords().stream().map(SpuOrderVO::getId).collect(Collectors.toList());
+        Page<SpuOrderDTO> spuOrderPage = orderRepository.spuOrderList(spuOrderQuery);
+        List<Long> spuOrderIds = spuOrderPage.getRecords().stream().map(SpuOrderDTO::getId).collect(Collectors.toList());
         
         // SPU订单为空则返回空分页
         if (CollUtil.isEmpty(spuOrderIds)) {
@@ -205,13 +198,13 @@ public class QueryServiceImpl implements IQueryService {
         // 4.1 查询SKU订单并按SPU订单ID分组
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
         skuOrderQuery.setSpuOrderIdList(spuOrderIds);
-        List<SkuOrderVO> skuOrderList = orderRepository.skuOrderList(skuOrderQuery).getRecords();
+        List<SkuOrderVO> skuOrderList = TransferUtils.transfers(orderRepository.skuOrderList(skuOrderQuery).getRecords(), SkuOrderVO.class);
         Map<Long, List<SkuOrderVO>> skuOrderMapBySpuId =
             skuOrderList.stream().collect(Collectors.groupingBy(SkuOrderVO::getSpuOrderId));
         
         // 4.2 查询物流信息并构建映射
         Map<Long, Map<Long, List<DeliverVO>>> deliverMap = this.orderDeliverInfo(spuOrderIds);
-        List<SpuOrderVO> spuOrderVOList = spuOrderPage.getRecords();
+        List<SpuOrderVO> spuOrderVOList = TransferUtils.transfers(spuOrderPage.getRecords(), SpuOrderVO.class);
         List<Long> memberIds = spuOrderVOList.stream().map(SpuOrderVO::getAccountId).collect(Collectors.toList());
         List<Long> storeIds = spuOrderVOList.stream().map(SpuOrderVO::getChannelId).distinct().collect(Collectors.toList());
         memberIds.addAll(storeIds);
@@ -222,22 +215,16 @@ public class QueryServiceImpl implements IQueryService {
         Map<Long, StoreRPCVO> storeMap = storeRPCVOS.stream().collect(Collectors.toMap(StoreRPCVO::getId, v -> v));
         // ========== 5. 组装SPU订单聚合VO列表 ==========
         List<SpuOrderAggVO> aggVOList = new ArrayList<>();
-        for (SpuOrderVO spuOrderVO : spuOrderPage.getRecords()) {
+        for (SpuOrderVO spuOrderVO : spuOrderVOList) {
             Long spuOrderId = spuOrderVO.getId();
             SpuOrderAggVO aggVO = new SpuOrderAggVO();
             
             // 5.1 基础信息填充
-            aggVO.setSpuOrderVO(spuOrderVO);
-            aggVO.setSkuOrderList(skuOrderMapBySpuId.getOrDefault(spuOrderId, new ArrayList<>()));
+            aggVO.setSpuOrderVO(TransferUtils.transfer(spuOrderVO, SpuOrderVO.class));
+            aggVO.setSkuOrderList(TransferUtils.transfers(skuOrderMapBySpuId.getOrDefault(spuOrderId, new ArrayList<>()), SkuOrderVO.class));
             
             // 5.2 处理SPU订单扩展信息
-            String spuOrderExtStr = spuOrderVO.getSpuOrderExt();
-            SpuOrderExt spuOrderExt;
-            if (StrUtil.isNotBlank(spuOrderExtStr)) {
-                 spuOrderExt = JSONObject.parseObject(spuOrderExtStr, SpuOrderExt.class);
-            }else {
-                spuOrderExt = new SpuOrderExt();
-            }
+            SpuOrderExt spuOrderExt = spuOrderVO.getSpuOrderExt();
             StoreRPCVO storeRPCVO = storeMap.get(spuOrderVO.getChannelId());
             if (storeRPCVO != null){
                 spuOrderVO.setStoreName(storeRPCVO.getName());
@@ -258,7 +245,7 @@ public class QueryServiceImpl implements IQueryService {
                 spuOrderVO.setUsername(memberAccount.getPhone());
                 spuOrderVO.setNickname(memberAccount.getNickname());
             }
-            spuOrderVO.setSpuOrderExt(JSONObject.toJSONString(spuOrderExt));
+            spuOrderVO.setSpuOrderExt(spuOrderExt);
             // 5.3 处理退款状态
             if (spuOrderVO.getRefundingCount() > 0) {
                 RefundDTO refundDTO = refundRepository.refundBySpuOrderId(spuOrderId);
@@ -304,6 +291,27 @@ public class QueryServiceImpl implements IQueryService {
         return orderRepository.spuOrderRelation(orderId, spuId);
     }
 
+    @Override
+    public Map<Long, List<DeliverVO>> orderDeliverInfo(Long spuOrderId) {
+        DeliverQuery deliverQuery = new DeliverQuery();
+        deliverQuery.setSpuOrderId(spuOrderId);
+        List<DeliverVO> deliverVOS = orderRepository.deliverListByQuery(deliverQuery);
+        //组装数据
+        Map<Long, List<DeliverVO>> deliverVOList = new HashMap<>();
+        for (DeliverVO deliverVO : deliverVOS) {
+            List<DeliverItemVO> deliverItemVOS = JSONObject.parseArray(deliverVO.getItem(), DeliverItemVO.class);
+            for (DeliverItemVO deliverItemVO : deliverItemVOS) {
+                if(!deliverVOList.containsKey(deliverItemVO.getSkuId())) {
+                    deliverVOList.put(deliverItemVO.getSkuId(), new ArrayList<>());
+                    deliverVOList.get(deliverItemVO.getSkuId()).add(deliverVO);
+                } else {
+                    deliverVOList.get(deliverItemVO.getSkuId()).add(deliverVO);
+                }
+            }
+        }
+        return deliverVOList;
+    }
+
     /**
      * 批量查询物流信息
      *
@@ -337,6 +345,8 @@ public class QueryServiceImpl implements IQueryService {
         }
         return result;
     }
+
+
 
     /**
      * 填充物流信息

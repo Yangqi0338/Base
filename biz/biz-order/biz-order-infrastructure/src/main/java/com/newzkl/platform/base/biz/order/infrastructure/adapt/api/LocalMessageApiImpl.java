@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiDeliverEvent;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
@@ -20,6 +21,7 @@ import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
@@ -56,12 +58,17 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
+    public void sendModelShopMessage(ModelShopOutVO modelShopOutVO) {
+        MQUtil.send(MQ.Tag.COUNT_MODEL_SHOP_AMOUNT_EVENT, modelShopOutVO);
+    }
+
+    @Override
     public void sendRefundPassMessage(RefundDTO refund) {
         MQUtil.send(MQ.Tag.REFUND_PASS, TransferUtils.transfer(refund, RefundPassEvent.class));
     }
 
     @Override
-    public void sendDelayMessage(String tag, Object messageContent, String messageClass, int delayTimeLevel) {
+    public void sendDelayMessage(String tag, Object messageContent, int delayTimeLevel) {
         MQUtil.sendDelayed(tag, messageContent, delayTimeLevel);
     }
 
@@ -172,7 +179,7 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
-    public void storeAccountPay(Long storeId, Long accountId, Integer payAmount) {
+    public void storeAccountPay(Long storeId, Long accountId, Money payAmount) {
         StoreAccountPayCommand command = new StoreAccountPayCommand();
         command.setStoreId(storeId);
         command.setAccountId(accountId);

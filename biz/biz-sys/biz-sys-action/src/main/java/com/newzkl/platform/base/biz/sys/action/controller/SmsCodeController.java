@@ -28,7 +28,7 @@ import java.util.List;
  *
  * <p>迁移调整:</p>
  * <ul>
- *   <li>{@code ScmResult} → {@code PlatformResult}; {@code javax.validation} → {@code jakarta.validation};</li>
+ *   <li>{@code ScmResult} → {@code PlatformResult}; {@code jakarta.validation} → {@code jakarta.validation};</li>
  *   <li>{@code RedisClient} 实例注入 → Base 静态门面 {@code RedisUtil} (hSet/hGet/expire 语义等价);</li>
  *   <li>{@code ICodeService} → {@code CodeService}; 旧签名上的
  *       {@code UnsupportedEncodingException}/{@code NoSuchAlgorithmException} 随 MD5 实现下沉一并去掉

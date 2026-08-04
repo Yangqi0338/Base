@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.Data;
@@ -68,16 +69,16 @@ public class MemberVO extends BaseRes {
      */
     private Integer countDealNumber;
     /**
-     * 统计：成交金额
+     * 统计：成交金额 (Money, 落库 BIGINT 分)
      */
-    private Integer countDealAmount;
+    private Money countDealAmount;
     /**
      * 商户ID
      */
     private Long channelId;
 
     public void init() {
-        this.countDealAmount = 0;
+        this.countDealAmount = Money.ZERO;
         this.countDealNumber = 0;
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();

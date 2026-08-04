@@ -1,12 +1,13 @@
 package com.newzkl.platform.base.biz.market.model.dto.market;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @author 
+ * @author
  * 市场
  */
 @Data
@@ -46,9 +47,9 @@ public class MarketDTO implements Serializable {
      */
     private Integer sellNum;
     /**
-     * 总销售额
+     * 总销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer sellAmount;
+    private Money sellAmount;
     /**
      * 客户id  0：平台  >0：客户
      */

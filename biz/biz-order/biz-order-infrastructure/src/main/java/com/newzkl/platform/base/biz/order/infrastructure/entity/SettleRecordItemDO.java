@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
@@ -33,7 +35,7 @@ public class SettleRecordItemDO extends BaseDO {
 	/**
 	 * 结算金额
 	 */
-	private Integer settleMoney;
+	private Money settleMoney;
 	/**
 	 * 结算商品数量
 	 */
@@ -41,5 +43,5 @@ public class SettleRecordItemDO extends BaseDO {
 	/**
 	 * 结算运费
 	 */
-	private Integer spuFreight;
+	private Money spuFreight;
 }

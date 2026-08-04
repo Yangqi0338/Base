@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -25,7 +27,7 @@ public class SettleRecordCommand {
     /**
      * 结算金额
      */
-    private Integer settleMoney;
+    private Money settleMoney;
     /**
      * 结算商品数量
      */

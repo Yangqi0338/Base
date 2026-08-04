@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -11,23 +12,23 @@ import lombok.Data;
 @Data
 public class AccountFinanceVO extends BaseRes {
     /**
-     * 礼包收益
+     * 礼包收益 (Money, 落库 BIGINT 分)
      */
-    private Integer packIncome;
+    private Money packIncome;
     /**
-     * 商品消费分润
+     * 商品消费分润 (Money, 落库 BIGINT 分)
      */
-    private Integer goodsIncome;
+    private Money goodsIncome;
     /**
-     * 商品待结算消费分润
+     * 商品待结算消费分润 (Money, 落库 BIGINT 分)
      */
-    private Integer goodsSettleIncome;
+    private Money goodsSettleIncome;
     /**
-     * 分红奖金
+     * 分红奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer dividendBonus;
+    private Money dividendBonus;
     /**
-     * 总收益
+     * 总收益 (Money, 落库 BIGINT 分)
      */
-    private Integer totalIncome;
+    private Money totalIncome;
 }

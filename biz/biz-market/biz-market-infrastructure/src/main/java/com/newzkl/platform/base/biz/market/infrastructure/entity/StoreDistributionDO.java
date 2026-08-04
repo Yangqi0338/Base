@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.market.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
 import lombok.Data;
@@ -37,9 +38,9 @@ public class StoreDistributionDO extends BaseDO {
      */
     private Integer dataType;
     /**
-     * 销售价
+     * 销售价 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
     /**
      * 销量
      */
@@ -60,13 +61,13 @@ public class StoreDistributionDO extends BaseDO {
     @Index
     private Long channelId;
     /**
-     * 零售价
+     * 零售价 (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
     /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierPrice;
+    private Money supplierPrice;
     /**
      * 商品信息
      */

@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.order.GoodsVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckReq;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
+import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 
 import java.util.List;
@@ -41,6 +42,8 @@ public interface GoodsApi {
      */
     List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> distributionIds);
 
+    StoreDistributionDetailOutVO selectBySkuId(Long channelId, Long storeId, Long skuId);
+
     /**
      * 校验下单商品(V2)
      *
@@ -48,7 +51,18 @@ public interface GoodsApi {
      * @param goodsList 下单商品列表
      * @return 校验结果, 含拆单后的商品分布信息
      */
-    PlatformResult<OrderGoodsCheckV2Res> orderCheck(OrderGoodsCheckReq checkReq, List<GoodsVO> goodsList);
+    PlatformResult<OrderGoodsCheckRes> orderCheck(OrderGoodsCheckReq checkReq, List<GoodsVO> goodsList);
+
+    /**
+     * 校验下单商品(V2)
+     *
+     * PS: 这个应该是用户下门店商品，和v1版本不同
+     *
+     * @param checkReq  校验请求(渠道/门店/收货地址)
+     * @param goodsList 下单商品列表
+     * @return 校验结果, 含拆单后的商品分布信息
+     */
+    PlatformResult<OrderGoodsCheckV2Res> orderCheckV2(OrderGoodsCheckReq checkReq, List<GoodsVO> goodsList);
 
     /**
      * 校验下单商品并返回运费(改地址复用)

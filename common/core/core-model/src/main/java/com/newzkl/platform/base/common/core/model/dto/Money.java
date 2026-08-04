@@ -7,6 +7,7 @@ import cn.hutool.json.JSONString;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.Currency;
 
 /**
@@ -97,6 +98,36 @@ public class Money extends cn.hutool.core.math.Money implements JSONString {
      */
     private static Money wrap(cn.hutool.core.math.Money m) {
         return of(m.getCent());
+    }
+
+    // ===== 静态累加 — 替代 stream().reduce(Money.ZERO, Money::add) =====
+
+    /**
+     * 集合累加 , null 元素跳过 , 空集返回 ZERO
+     * @ext 替代 col.stream().reduce(Money.ZERO, Money::add)
+     */
+    public static Money sum(Collection<Money> monies) {
+        if (monies == null || monies.isEmpty()) return ZERO;
+        Money total = ZERO;
+        for (Money m : monies) {
+            if (m != null) total = total.add(m);
+        }
+        return total;
+    }
+
+    /**
+     * 提取字段后累加 , null 元素 / null 字段跳过 , 空集返回 ZERO
+     * @ext 替代 col.stream().map(getter).reduce(Money.ZERO, Money::add)
+     */
+    public static <T> Money sumBy(Collection<T> list, java.util.function.Function<T, Money> getter) {
+        if (list == null || list.isEmpty()) return ZERO;
+        Money total = ZERO;
+        for (T t : list) {
+            if (t == null) continue;
+            Money m = getter.apply(t);
+            if (m != null) total = total.add(m);
+        }
+        return total;
     }
 
     // ===== 静态业务运算 — 委派 hutool 父类 (immutable) =====
@@ -214,5 +245,16 @@ public class Money extends cn.hutool.core.math.Money implements JSONString {
 
     private Money(BigDecimal amount) {
         super(amount);
+    }
+
+    /**
+     * 除以另一金额的元值(标量), NULL/null 除数视为返回 ZERO
+     * @ext a / divisor.amount, HALF_UP 保留 2 位
+     */
+    public Money divide(Money divisor) {
+        if (divisor == null || divisor.isNull()) {
+            return ZERO;
+        }
+        return wrap(super.divide(divisor.getAmount(), RoundingMode.HALF_UP));
     }
 }

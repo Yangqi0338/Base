@@ -1,12 +1,13 @@
 package com.newzkl.platform.base.biz.market.model.dto.distribution;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @author 
+ * @author
  * 铺货列表
  */
 @Data
@@ -31,9 +32,9 @@ public class StoreDistributionDTO implements Serializable {
      */
     private Integer dataType;
     /**
-     * 销售价
+     * 销售价 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
     /**
      * 销量
      */
@@ -55,13 +56,13 @@ public class StoreDistributionDTO implements Serializable {
      */
     private LocalDateTime createTime;
     /**
-     * 建议零售价
+     * 建议零售价 (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
     /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierPrice;
+    private Money supplierPrice;
     /**
      * 商品信息
      */

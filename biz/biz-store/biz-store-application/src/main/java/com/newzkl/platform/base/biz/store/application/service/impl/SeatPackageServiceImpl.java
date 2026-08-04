@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseAmountRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.SeatPackageRepository;
 import com.newzkl.platform.base.biz.store.model.enums.DictEnum;
-import com.newzkl.platform.base.biz.store.model.enums.FinanceEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;

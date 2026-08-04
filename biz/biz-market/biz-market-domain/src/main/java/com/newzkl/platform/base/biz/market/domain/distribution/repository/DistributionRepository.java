@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.market.domain.distribution.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
@@ -137,13 +138,17 @@ public interface DistributionRepository {
 
     /**
      * 更新渠道商商品售价
+     *
+     * @param sellPrice 售价 (Money, 落库 BIGINT 分)
      */
-    void alterChannelGoodsSellPrice(Long goodsId, Long channelId, Long storeId, Integer sellPrice);
+    void alterChannelGoodsSellPrice(Long goodsId, Long channelId, Long storeId, Money sellPrice);
 
     /**
      * 更新渠道商sku售价
+     *
+     * @param sellPrice 售价 (Money, 落库 BIGINT 分)
      */
-    void alterChannelSkuSellPrice(Long skuId, Long channelId, Long storeId, Integer sellPrice);
+    void alterChannelSkuSellPrice(Long skuId, Long channelId, Long storeId, Money sellPrice);
 
     void increaseSellNum(Long id, Integer num);
 

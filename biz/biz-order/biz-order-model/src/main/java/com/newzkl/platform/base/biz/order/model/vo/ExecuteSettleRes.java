@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,5 +14,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class ExecuteSettleRes {
     private Long settleRecordId;
-    private Integer settleMoneyTotal;
+    private Money settleMoneyTotal;
 }

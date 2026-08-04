@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 

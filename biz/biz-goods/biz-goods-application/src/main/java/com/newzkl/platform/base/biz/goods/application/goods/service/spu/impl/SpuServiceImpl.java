@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.application.goods.service.spu.impl;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
@@ -25,6 +26,7 @@ import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
@@ -268,7 +270,11 @@ public class SpuServiceImpl implements SpuService {
      * @return 对外 SPU 视图对象
      */
     private ApiSpuVO toApiSpuVO(SpuVO spuVO) {
-        ApiSpuVO apiSpuVO = TransferUtils.transfer(spuVO, ApiSpuVO::new);
+        // 对外 RPC 契约保持分 Integer, Money 字段显式降为分 (Hutool 不做 Money↔Integer 转换)
+        ApiSpuVO apiSpuVO = TransferUtils.transfer(spuVO, ApiSpuVO::new, (s, v) -> {
+            v.setUnitPrice(toCent(s.getUnitPrice()));
+            v.setSupplierPriceBegan(toCent(s.getSupplierPriceBegan()));
+        }, ignoreMoney("unitPrice", "supplierPriceBegan"));
         apiSpuVO.setSaleAttributeList(toApiAttributeList(spuVO.getSpuSaleAttributeList()));
         apiSpuVO.setParamAttributeList(toApiAttributeList(spuVO.getSpuParamAttributeList()));
         apiSpuVO.setSaleState(toSaleState(spuVO.getState()));
@@ -295,11 +301,37 @@ public class SpuServiceImpl implements SpuService {
      * @return 对外 SKU 视图对象
      */
     private ApiSkuVO toApiSkuVO(SkuVO skuVO) {
-        ApiSkuVO apiSkuVO = TransferUtils.transfer(skuVO, ApiSkuVO::new);
+        // 对外 RPC 契约保持分 Integer, Money 字段显式降为分 (Hutool 不做 Money↔Integer 转换)
+        ApiSkuVO apiSkuVO = TransferUtils.transfer(skuVO, ApiSkuVO::new, (s, v) -> {
+            v.setMarketPrice(toCent(s.getMarketPrice()));
+            v.setSalePrice(toCent(s.getSalePrice()));
+            v.setSupplyPrice(toCent(s.getSupplyPrice()));
+            v.setUnitPrice(toCent(s.getUnitPrice()));
+        }, ignoreMoney("marketPrice", "salePrice", "supplyPrice", "unitPrice"));
         List<SkuSaleAttributeVO> saleAttribute = skuVO.getSaleAttribute();
         apiSkuVO.setSaleAttribute(CollUtil.isEmpty(saleAttribute)
                 ? null
                 : TransferUtils.transfers(saleAttribute, ApiSkuSaleAttributeVO.class));
         return apiSkuVO;
+    }
+
+    /**
+     * Money 显式降为分 (对外 RPC 契约边界), null 或 Money NULL 语义返回 null
+     *
+     * @param money 金额值对象
+     * @return 分, 无值返回 null
+     */
+    private static Integer toCent(Money money) {
+        return (money == null || money.isNull()) ? null : (int) money.getCent();
+    }
+
+    /**
+     * 构建排除 Money 属性的拷贝选项 (交由自定义器显式转分)
+     *
+     * @param props 需排除的 Money 属性名
+     * @return 拷贝选项
+     */
+    private static CopyOptions ignoreMoney(String... props) {
+        return CopyOptions.create().setIgnoreProperties(props);
     }
 }

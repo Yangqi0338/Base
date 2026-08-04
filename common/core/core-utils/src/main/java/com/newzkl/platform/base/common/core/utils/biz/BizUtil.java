@@ -15,6 +15,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -411,6 +412,19 @@ public class BizUtil {
     public static String excelMoney(Integer orderMoney) {
         double result = (double) orderMoney / 100;
         return String.format("%.2f", result);
+    }
+
+    /**
+     * Money 金额转 Excel 展示字符串, 保留两位小数(向下取整)
+     *
+     * @param orderMoney 金额, 为 null 时返回 "0.00"
+     * @return 元单位的两位小数字符串
+     */
+    public static String excelMoney(Money orderMoney) {
+        if (orderMoney == null) {
+            return "0.00";
+        }
+        return orderMoney.getAmount().setScale(2, RoundingMode.DOWN).toPlainString();
     }
 
     public static String goodsSkuName(String skuAttribute) {

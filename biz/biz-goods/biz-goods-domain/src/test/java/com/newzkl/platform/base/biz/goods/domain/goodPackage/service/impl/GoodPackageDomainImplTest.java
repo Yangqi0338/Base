@@ -4,6 +4,7 @@ import com.newzkl.platform.base.biz.goods.domain.goodPackage.adapt.repository.Go
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +39,7 @@ class GoodPackageDomainImplTest {
         req.setPackageId(packageId);
         req.setPackageName("基础套餐");
         req.setGoodsNum(10L);
-        req.setPackagePrice(9900);
+        req.setPackagePrice(Money.of(9900));
         return req;
     }
 

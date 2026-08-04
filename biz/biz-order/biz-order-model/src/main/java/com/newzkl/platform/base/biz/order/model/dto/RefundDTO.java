@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundItemCommand;
 import com.newzkl.platform.base.biz.order.model.vo.*;
@@ -8,8 +10,8 @@ import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -75,27 +77,27 @@ public class RefundDTO extends BaseDTO {
 	/**
 	 * 售后运费金额
 	 */
-	private Integer freightAmount;
+	private Money freightAmount;
 	/**
      * 售后总金额
 	 */
-	private Integer refundAmount;
+	private Money refundAmount;
     /**
      * 渠道商服务费
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
 	/**
 	 * 货款金额
 	 */
-	private Integer supplierAmount;
+	private Money supplierAmount;
 	/**
 	 * 选品金额
 	 */
-	private Integer goodsAmount;
+	private Money goodsAmount;
 	/**
 	 * 铺货金额
 	 */
-	private Integer storeAmount;
+	private Money storeAmount;
 	/**
 	 * 售后原因
 	 */
@@ -172,15 +174,15 @@ public class RefundDTO extends BaseDTO {
 
     private FreightExt freightExt;
 
-	public void init(RefundCommand refundCommand, SpuOrderAggVO spuOrderAggVO, Map<Long, SkuRefundDTO> skuRefundResMap, Integer freightAmount) {
-		BeanUtils.copyProperties(refundCommand, this);
+	public void init(RefundCommand refundCommand, SpuOrderAggVO spuOrderAggVO, Map<Long, SkuRefundDTO> skuRefundResMap, Money freightAmount) {
+		TransferUtils.transfer(refundCommand, this);
 		this.setId(SnowflakeIdAble.getSnowflakeId());
 		SpuOrderVO orderVO = spuOrderAggVO.getSpuOrderVO();
 		Map<Long, SkuOrderVO> orderItemVOMap = spuOrderAggVO.getSkuOrderList().stream().collect(Collectors.toMap(SkuOrderVO::getSkuId, Function.identity()));
-		Integer refundAmount = 0;
-		Integer supplierAmount = 0;
-		Integer goodsAmount = 0;
-		Integer storeAmount = 0;
+		Money refundAmount = Money.ZERO;
+		Money supplierAmount = Money.ZERO;
+		Money goodsAmount = Money.ZERO;
+		Money storeAmount = Money.ZERO;
 		List<RefundItemVO> refundItemList = new ArrayList<>();
 		for (RefundItemCommand refundItemCommand : refundCommand.getRefundItemCommandList()) {
 			SkuRefundDTO skuRefundRes = skuRefundResMap.get(refundItemCommand.getSkuId());
@@ -197,17 +199,17 @@ public class RefundDTO extends BaseDTO {
 			refundItem.setSpuName(orderVO.getSpuName());
 			refundItem.setSpuImg(orderVO.getSpuImg());
 			refundItem.setSkuSaleAttribute(orderItemVO.getSkuSaleAttribute());
-            refundItem.setRefundAmount(orderItemVO.getStoreAmount() + orderItemVO.getFreightAmount() - orderItemVO.getDiscountAmount());
+            // 售后金额 = 铺货金额 + 运费 - 优惠
+            refundItem.setRefundAmount(orderItemVO.getStoreAmount().add(orderItemVO.getFreightAmount()).subtract(orderItemVO.getDiscountAmount()));
             refundItem.setSkuStorePrice(orderItemVO.getSkuStorePrice());
 			refundItem.setSupplierAmount(orderItemVO.getSupplierAmount());
 			refundItem.setSkuOrderId(skuRefundRes.getSkuOrderId());
 			refundItem.setRefundedCount(skuRefundRes.getRefundedCount());
 			refundItem.setOrderCount(skuRefundRes.getOrderCount());
-			refundAmount = refundAmount + refundItem.getRefundAmount();
-			supplierAmount = supplierAmount + orderItemVO.getSupplierAmount();
-			goodsAmount = goodsAmount + orderItemVO.getGoodsAmount();
-			Integer storeAmountItem = orderItemVO.getStoreAmount() == null?0:orderItemVO.getStoreAmount();
-			storeAmount = storeAmount + storeAmountItem;
+			refundAmount = refundAmount.add(refundItem.getRefundAmount());
+			supplierAmount = supplierAmount.add(orderItemVO.getSupplierAmount());
+			goodsAmount = goodsAmount.add(orderItemVO.getGoodsAmount());
+			storeAmount = storeAmount.add(orderItemVO.getStoreAmount());
 			refundItemList.add(refundItem);
 		}
 		this.orderType = orderVO.getOrderType();
@@ -221,7 +223,8 @@ public class RefundDTO extends BaseDTO {
 		this.setSupplierAmount(supplierAmount);
 		this.setGoodsAmount(goodsAmount);
 		this.setStoreAmount(storeAmount);
-        this.setRefundAmount(refundAmount + freightAmount);
+        // 售后总额 = 各明细售后金额 + 运费 (freightAmount 为 Integer 分入参)
+        this.setRefundAmount(refundAmount.add(freightAmount));
         this.setServiceAmount(orderVO.getServiceAmount());
 		this.setFreightAmount(freightAmount);
 		this.setRefundState(RefundEnum.State.CHANNEL_WAIT);

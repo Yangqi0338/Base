@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.biz.account.model.vo.OperatorClientBaseVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -19,7 +20,7 @@ public class DealerOutRes extends OperatorClientBaseVO {
      */
     private Integer marketCount;
     /**
-     * 分润收益
+     * 分润收益 (Money, 落库 BIGINT 分)
      */
-    private Integer serviceFee;
+    private Money serviceFee;
 }

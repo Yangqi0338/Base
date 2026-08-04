@@ -30,6 +30,7 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
@@ -134,33 +135,33 @@ public class SpuDomainImpl implements SpuDomain {
         if (CollUtil.isEmpty(skuList)) {
             return;
         }
-        Integer minMarket = null;
-        Integer maxMarket = null;
-        Integer minSupply = null;
-        Integer maxSupply = null;
-        Integer minSale = null;
-        Integer maxSale = null;
-        Integer minUnit = null;
-        Integer maxProfit = null;
+        Money minMarket = null;
+        Money maxMarket = null;
+        Money minSupply = null;
+        Money maxSupply = null;
+        Money minSale = null;
+        Money maxSale = null;
+        Money minUnit = null;
+        Money maxProfit = null;
         for (SkuVO sku : skuList) {
-            if (sku.getMarketPrice() != null) {
-                minMarket = minMarket == null ? sku.getMarketPrice() : Math.min(minMarket, sku.getMarketPrice());
-                maxMarket = maxMarket == null ? sku.getMarketPrice() : Math.max(maxMarket, sku.getMarketPrice());
+            if (isPresent(sku.getMarketPrice())) {
+                minMarket = minMoney(minMarket, sku.getMarketPrice());
+                maxMarket = maxMoney(maxMarket, sku.getMarketPrice());
             }
-            if (sku.getSupplyPrice() != null) {
-                minSupply = minSupply == null ? sku.getSupplyPrice() : Math.min(minSupply, sku.getSupplyPrice());
-                maxSupply = maxSupply == null ? sku.getSupplyPrice() : Math.max(maxSupply, sku.getSupplyPrice());
+            if (isPresent(sku.getSupplyPrice())) {
+                minSupply = minMoney(minSupply, sku.getSupplyPrice());
+                maxSupply = maxMoney(maxSupply, sku.getSupplyPrice());
             }
-            if (sku.getSalePrice() != null) {
-                minSale = minSale == null ? sku.getSalePrice() : Math.min(minSale, sku.getSalePrice());
-                maxSale = maxSale == null ? sku.getSalePrice() : Math.max(maxSale, sku.getSalePrice());
+            if (isPresent(sku.getSalePrice())) {
+                minSale = minMoney(minSale, sku.getSalePrice());
+                maxSale = maxMoney(maxSale, sku.getSalePrice());
             }
-            if (sku.getUnitPrice() != null) {
-                minUnit = minUnit == null ? sku.getUnitPrice() : Math.min(minUnit, sku.getUnitPrice());
+            if (isPresent(sku.getUnitPrice())) {
+                minUnit = minMoney(minUnit, sku.getUnitPrice());
             }
-            if (sku.getMarketPrice() != null && sku.getSalePrice() != null) {
-                int profit = sku.getMarketPrice() - sku.getSalePrice();
-                maxProfit = maxProfit == null ? profit : Math.max(maxProfit, profit);
+            if (isPresent(sku.getMarketPrice()) && isPresent(sku.getSalePrice())) {
+                Money profit = sku.getMarketPrice().subtract(sku.getSalePrice());
+                maxProfit = maxMoney(maxProfit, profit);
             }
         }
         SpuDTO spu = new SpuDTO();
@@ -177,6 +178,38 @@ public class SpuDomainImpl implements SpuDomain {
         spu.setUnitPrice(minUnit);
         spu.setMaxProfit(maxProfit);
         spuRepository.spuUpdate(spu);
+    }
+
+    /**
+     * 判断金额是否有值 (非 java null 且非 Money NULL 语义)
+     *
+     * @param money 待判断金额
+     * @return 有值 true
+     */
+    private boolean isPresent(Money money) {
+        return money != null && !money.isNull();
+    }
+
+    /**
+     * 取两金额较小者, 累积方为 null 时直接取当前值
+     *
+     * @param acc 累积较小值, 可为 null
+     * @param cur 当前金额
+     * @return 较小金额
+     */
+    private Money minMoney(Money acc, Money cur) {
+        return acc == null ? cur : (cur.smallerThan(acc) ? cur : acc);
+    }
+
+    /**
+     * 取两金额较大者, 累积方为 null 时直接取当前值
+     *
+     * @param acc 累积较大值, 可为 null
+     * @param cur 当前金额
+     * @return 较大金额
+     */
+    private Money maxMoney(Money acc, Money cur) {
+        return acc == null ? cur : (cur.greaterThan(acc) ? cur : acc);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -236,8 +269,8 @@ public class SpuDomainImpl implements SpuDomain {
     public void spuAuditSuccess(SpuVO spuCommand, String skuSalePriceJson) {
         // 解析并更新SKU销售价
         List<SkuDTO> skuUpdateList = new ArrayList<>();
-        List<Integer> salePriceList = new ArrayList<>();
-        List<Integer> supplyPriceList = new ArrayList<>();
+        List<Money> salePriceList = new ArrayList<>();
+        List<Money> supplyPriceList = new ArrayList<>();
         
         parseAndCollectSkuPrices(spuCommand.getSkuList(), skuSalePriceJson, 
                 skuUpdateList, salePriceList, supplyPriceList);
@@ -410,26 +443,26 @@ public class SpuDomainImpl implements SpuDomain {
      */
     private void parseAndCollectSkuPrices(List<SkuVO> skuList, String skuSalePriceJson,
                                           List<SkuDTO> skuUpdateList,
-                                         List<Integer> salePriceList,
-                                         List<Integer> supplyPriceList) {
+                                         List<Money> salePriceList,
+                                         List<Money> supplyPriceList) {
         if (CollUtil.isEmpty(skuList) || ObjectUtil.isEmpty(skuSalePriceJson)) {
             return;
         }
-        
+
         JSONObject jsonObject = JSONObject.parseObject(skuSalePriceJson);
         for (SkuVO skuVO : skuList) {
             Object priceObj = jsonObject.get(skuVO.getId().toString());
             if (priceObj != null) {
+                // JSON 内嵌金额为分 (Integer 语义), 显式 Money.of(分) 升为值对象
+                Money salePrice = Money.of(Integer.valueOf(String.valueOf(priceObj)));
                 SkuDTO sku = new SkuDTO();
                 sku.setId(skuVO.getId());
-                sku.setSalePrice(Integer.valueOf(String.valueOf(priceObj)));
+                sku.setSalePrice(salePrice);
                 skuUpdateList.add(sku);
-                
+
                 // 统计价格
-                if (sku.getSalePrice() != null) {
-                    salePriceList.add(sku.getSalePrice());
-                }
-                if (skuVO.getSupplyPrice() != null) {
+                salePriceList.add(salePrice);
+                if (isPresent(skuVO.getSupplyPrice())) {
                     supplyPriceList.add(skuVO.getSupplyPrice());
                 }
             }
@@ -440,29 +473,55 @@ public class SpuDomainImpl implements SpuDomain {
      * 构建审核通过时的SPU更新对象
      */
     private SpuDTO buildSpuForAuditSuccess(Long spuId, List<SkuDTO> skuList,
-                                           List<Integer> salePriceList,
-                                           List<Integer> supplyPriceList) {
+                                           List<Money> salePriceList,
+                                           List<Money> supplyPriceList) {
         SpuDTO spu = new SpuDTO();
         spu.setId(spuId);
         spu.setState(SpuEnum.State.SALE.getCode());
         spu.setAuditState(AuditEnum.State.SUCCESS.getCode());
         spu.setSkuList(skuList);
-        
-        // 设置销售价格区间
+
+        // 设置销售价格区间 (Money 无 Comparable, 遍历取极值)
         if (ObjectUtil.isNotEmpty(salePriceList)) {
-            Collections.sort(salePriceList);
-            spu.setSalePriceBegan(salePriceList.get(0));
-            spu.setSalePriceEnd(salePriceList.get(salePriceList.size() - 1));
+            spu.setSalePriceBegan(minOfList(salePriceList));
+            spu.setSalePriceEnd(maxOfList(salePriceList));
         }
-        
+
         // 设置供货价格区间
         if (ObjectUtil.isNotEmpty(supplyPriceList)) {
-            Collections.sort(supplyPriceList);
-            spu.setSupplierPriceBegan(supplyPriceList.get(0));
-            spu.setSupplierPriceEnd(supplyPriceList.get(supplyPriceList.size() - 1));
+            spu.setSupplierPriceBegan(minOfList(supplyPriceList));
+            spu.setSupplierPriceEnd(maxOfList(supplyPriceList));
         }
-        
+
         return spu;
+    }
+
+    /**
+     * 取金额列表最小值
+     *
+     * @param list 金额列表, 非空
+     * @return 最小金额
+     */
+    private Money minOfList(List<Money> list) {
+        Money min = null;
+        for (Money m : list) {
+            min = minMoney(min, m);
+        }
+        return min;
+    }
+
+    /**
+     * 取金额列表最大值
+     *
+     * @param list 金额列表, 非空
+     * @return 最大金额
+     */
+    private Money maxOfList(List<Money> list) {
+        Money max = null;
+        for (Money m : list) {
+            max = maxMoney(max, m);
+        }
+        return max;
     }
 
     /**
@@ -506,26 +565,26 @@ public class SpuDomainImpl implements SpuDomain {
     private Map<Long, SkuDTO> buildSkuUpdateMap(OutSpuEditCommand outSpuEditCommand) {
         Map<Long, SkuDTO> skuUpdateMap = new HashMap<>();
         
-        // 处理销售价
+        // 处理销售价 (Command 入参为分 Integer, 显式 Money.of(分) 升为值对象)
         Map<Long, Integer> skuSalePrice = outSpuEditCommand.getSkuSalePrice();
         if (skuSalePrice != null) {
             skuSalePrice.forEach((skuId, salePrice) -> {
                 if (salePrice != null) {
                     SkuDTO skuDTO = skuUpdateMap.computeIfAbsent(skuId, k -> new SkuDTO());
                     skuDTO.setId(skuId);
-                    skuDTO.setSalePrice(salePrice);
+                    skuDTO.setSalePrice(Money.of(salePrice));
                 }
             });
         }
-        
-        // 处理零售价
+
+        // 处理零售价 (Command 入参为分 Integer, 显式 Money.of(分) 升为值对象)
         Map<Long, Integer> skuUnitPrice = outSpuEditCommand.getSkuUnitPrice();
         if (skuUnitPrice != null) {
             skuUnitPrice.forEach((skuId, unitPrice) -> {
                 if (unitPrice != null) {
                     SkuDTO skuDTO = skuUpdateMap.computeIfAbsent(skuId, k -> new SkuDTO());
                     skuDTO.setId(skuId);
-                    skuDTO.setUnitPrice(unitPrice);
+                    skuDTO.setUnitPrice(Money.of(unitPrice));
                 }
             });
         }
@@ -616,45 +675,45 @@ public class SpuDomainImpl implements SpuDomain {
         }
 
         // 初始化统计变量
-        Integer minMarketPrice = null;
-        Integer maxMarketPrice = null;
-        Integer minSupplyPrice = null;
-        Integer maxSupplyPrice = null;
-        Integer minSalePrice = null;
-        Integer maxSalePrice = null;
-        Integer minUnitPrice = null;
-        Integer maxProfit = null;
+        Money minMarketPrice = null;
+        Money maxMarketPrice = null;
+        Money minSupplyPrice = null;
+        Money maxSupplyPrice = null;
+        Money minSalePrice = null;
+        Money maxSalePrice = null;
+        Money minUnitPrice = null;
+        Money maxProfit = null;
         Double minWeight = null;
 
         // 单次遍历收集所有统计数据
         for (SkuDTO skuDTO : skuDTOList) {
             // 市场价统计
-            if (skuDTO.getMarketPrice() != null) {
-                minMarketPrice = (minMarketPrice == null) ? skuDTO.getMarketPrice() : Math.min(minMarketPrice, skuDTO.getMarketPrice());
-                maxMarketPrice = (maxMarketPrice == null) ? skuDTO.getMarketPrice() : Math.max(maxMarketPrice, skuDTO.getMarketPrice());
+            if (isPresent(skuDTO.getMarketPrice())) {
+                minMarketPrice = minMoney(minMarketPrice, skuDTO.getMarketPrice());
+                maxMarketPrice = maxMoney(maxMarketPrice, skuDTO.getMarketPrice());
             }
 
             // 供应价统计
-            if (skuDTO.getSupplyPrice() != null) {
-                minSupplyPrice = (minSupplyPrice == null) ? skuDTO.getSupplyPrice() : Math.min(minSupplyPrice, skuDTO.getSupplyPrice());
-                maxSupplyPrice = (maxSupplyPrice == null) ? skuDTO.getSupplyPrice() : Math.max(maxSupplyPrice, skuDTO.getSupplyPrice());
+            if (isPresent(skuDTO.getSupplyPrice())) {
+                minSupplyPrice = minMoney(minSupplyPrice, skuDTO.getSupplyPrice());
+                maxSupplyPrice = maxMoney(maxSupplyPrice, skuDTO.getSupplyPrice());
             }
 
             // 销售价统计
-            if (skuDTO.getSalePrice() != null) {
-                minSalePrice = (minSalePrice == null) ? skuDTO.getSalePrice() : Math.min(minSalePrice, skuDTO.getSalePrice());
-                maxSalePrice = (maxSalePrice == null) ? skuDTO.getSalePrice() : Math.max(maxSalePrice, skuDTO.getSalePrice());
+            if (isPresent(skuDTO.getSalePrice())) {
+                minSalePrice = minMoney(minSalePrice, skuDTO.getSalePrice());
+                maxSalePrice = maxMoney(maxSalePrice, skuDTO.getSalePrice());
             }
 
             // 单价统计
-            if (skuDTO.getUnitPrice() != null) {
-                minUnitPrice = (minUnitPrice == null) ? skuDTO.getUnitPrice() : Math.min(minUnitPrice, skuDTO.getUnitPrice());
+            if (isPresent(skuDTO.getUnitPrice())) {
+                minUnitPrice = minMoney(minUnitPrice, skuDTO.getUnitPrice());
             }
 
             // 计算最大利润（市场价 - 销售价）
-            if (skuDTO.getMarketPrice() != null && skuDTO.getSalePrice() != null) {
-                int profit = skuDTO.getMarketPrice() - skuDTO.getSalePrice();
-                maxProfit = (maxProfit == null) ? profit : Math.max(maxProfit, profit);
+            if (isPresent(skuDTO.getMarketPrice()) && isPresent(skuDTO.getSalePrice())) {
+                Money profit = skuDTO.getMarketPrice().subtract(skuDTO.getSalePrice());
+                maxProfit = maxMoney(maxProfit, profit);
             }
 
             // 最小重量统计

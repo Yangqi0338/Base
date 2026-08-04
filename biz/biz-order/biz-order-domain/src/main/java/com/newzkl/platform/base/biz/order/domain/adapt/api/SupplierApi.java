@@ -1,7 +1,9 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
-import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
+import com.newzkl.platform.base.common.ddd.facade.SupplierOutVO;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 
 import java.util.List;
 
@@ -18,7 +20,9 @@ public interface SupplierApi {
      * @param supplierId 供应商账户ID
      * @return 结算单据类型, 未接入外部实现时为 0
      */
-    Integer settleOrderType(Long supplierId);
+    SettleType settleOrderType(Long supplierId);
+
+    SupplierOutVO getSupplierVO(Long accountId);
 
     /**
      * 批量查询供应商结算配置

@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
@@ -15,18 +17,18 @@ public class SkuOrderDO extends BaseDO {
 
     private Long orderId;
     private Long spuOrderId;
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货金额
      */
-    private Integer storeAmount;
-    private Integer freightAmount;
-    private Integer discountAmount;
-    private Integer totalAmount;
+    private Money storeAmount;
+    private Money freightAmount;
+    private Money discountAmount;
+    private Money totalAmount;
     /**
      * 货款金额 supplier_amount
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     private Integer orderState;
     /**
      * 交易师ID dealer_id
@@ -87,15 +89,15 @@ public class SkuOrderDO extends BaseDO {
     /**
      * sku供货价 sku_supplier_price
      */
-    private Integer skuSupplierPrice;
+    private Money skuSupplierPrice;
     /**
      * sku采购价
      */
-    private Integer skuSalePrice;
+    private Money skuSalePrice;
     /**
      * sku铺货价
      */
-    private Integer skuStorePrice;
+    private Money skuStorePrice;
     /**
      * 发货数量
      */
@@ -131,11 +133,11 @@ public class SkuOrderDO extends BaseDO {
     /**
      * 总服务费
      */
-    private Integer totalServiceChange;
+    private Money totalServiceChange;
     /**
      * 运营商服务费
      */
-    private Integer operatorServiceChange;
+    private Money operatorServiceChange;
     /**
      * 运营商实际服务比例
      */

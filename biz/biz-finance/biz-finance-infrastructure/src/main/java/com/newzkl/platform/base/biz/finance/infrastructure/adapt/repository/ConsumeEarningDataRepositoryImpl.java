@@ -18,7 +18,7 @@ import com.newzkl.platform.base.biz.finance.model.event.SkuOrderWaitEarningVO;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.RedisEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

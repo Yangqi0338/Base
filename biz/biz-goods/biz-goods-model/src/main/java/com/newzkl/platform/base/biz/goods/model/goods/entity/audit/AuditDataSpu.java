@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.entity.audit;
 
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -50,17 +51,17 @@ public class AuditDataSpu {
 	 */
 	private String brandName;
 	/**
-	 * 供货价
+	 * 供货价 (Money, 落库 BIGINT 分)
 	 */
-	private Integer supplyPrice;
+	private Money supplyPrice;
 	/**
-	 * 市场价
+	 * 市场价 (Money, 落库 BIGINT 分)
 	 */
-	private Integer marketPrice;
+	private Money marketPrice;
 	/**
-	 * 建议零售价
+	 * 建议零售价 (Money, 落库 BIGINT 分)
 	 */
-	private Integer unitPrice;
+	private Money unitPrice;
     /**
      * 审批状态
      *

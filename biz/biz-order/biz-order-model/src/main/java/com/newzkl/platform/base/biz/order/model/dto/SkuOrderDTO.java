@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import cn.hutool.core.util.NumberUtil;
 import com.newzkl.platform.base.biz.order.model.req.OrderItemCommand;
 
@@ -11,7 +13,7 @@ import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -43,23 +45,23 @@ public class SkuOrderDTO extends BaseDTO {
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货金额
      */
-    private Integer storeAmount;
+    private Money storeAmount;
     /**
      * 运费金额
      */
-    private Integer freightAmount;
+    private Money freightAmount;
     /**
      * 优惠金额
      */
-    private Integer discountAmount;
+    private Money discountAmount;
     /**
      * 订单状态 (0, "新订单"),(1,"C端待付款"),(2,"渠道商待付款"),(3,"运营商待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭"),
      */
@@ -123,15 +125,15 @@ public class SkuOrderDTO extends BaseDTO {
     /**
      * sku供货价
      */
-    private Integer skuSupplierPrice;
+    private Money skuSupplierPrice;
     /**
      * sku采购价
      */
-    private Integer skuSalePrice;
+    private Money skuSalePrice;
     /**
      * sku铺货价
      */
-    private Integer skuStorePrice;
+    private Money skuStorePrice;
     /**
      * sku重量(千克)
      */
@@ -167,15 +169,15 @@ public class SkuOrderDTO extends BaseDTO {
     /**
      * 结算节点
      */
-    private RoleEnum.OrderType settleOrderType;
+    private SettleType settleOrderType;
     /**
      * 总服务费 : 渠道商应付
      */
-    private Integer totalServiceChange;
+    private Money totalServiceChange;
     /**
      * 运营商服务费: 渠道商应付的部分
      */
-    private Integer operatorServiceChange;
+    private Money operatorServiceChange;
     /**
      * 运营商实际服务比例
      */
@@ -202,8 +204,15 @@ public class SkuOrderDTO extends BaseDTO {
 
     private LocalDateTime createTime;
 
-    public static Integer percent(Integer value, Double ratio){
-        return NumberUtil.div(NumberUtil.mul(ratio, value), BIG_100).intValue();
+    /**
+     * 按比例(百分数)计算金额 , ratio 为百分数 (如 5 表示 5%)
+     * @ext value(分) * ratio / 100, 分制运算后包回 Money
+     */
+    public static Money percent(Money value, Double ratio){
+        if (value == null || value.isNull() || ratio == null) {
+            return Money.ZERO;
+        }
+        return Money.of(NumberUtil.div(NumberUtil.mul(BigDecimal.valueOf(ratio), BigDecimal.valueOf(value.getCent())), BIG_100).longValue());
     }
 
     /**
@@ -221,22 +230,22 @@ public class SkuOrderDTO extends BaseDTO {
         this.spuId = skuVO.getSpuId();
         this.skuImg = skuVO.getImg();
         this.spuOrderId = spuOrderId;
-        //计算订单金额
-        this.supplierAmount = 0;
-        this.goodsAmount = 0;
-        this.storeAmount = 0;
+        //计算订单金额 (skuVO 价格为 Integer 分, 乘数量后包 Money)
+        this.supplierAmount = Money.ZERO;
+        this.goodsAmount = Money.ZERO;
+        this.storeAmount = Money.ZERO;
         if(SpuEnum.ChannelType.CUSTOM == skuVO.getSpuChannelType()){
-            this.storeAmount = skuVO.getStorePrice() * orderItemCommand.getCount();
+            this.storeAmount = Money.of(skuVO.getStorePrice()).multiply(orderItemCommand.getCount());
         }else if(SpuEnum.ChannelType.SELECTION == skuVO.getSpuChannelType()){
-            this.supplierAmount = skuVO.getSupplyPrice() * orderItemCommand.getCount();
-            this.goodsAmount = skuVO.getSalePrice() * orderItemCommand.getCount();
-            Integer storePrice = skuVO.getStorePrice() == null ? 0 : skuVO.getStorePrice();
-            this.storeAmount = storePrice * orderItemCommand.getCount();
+            this.supplierAmount = Money.of(skuVO.getSupplyPrice()).multiply(orderItemCommand.getCount());
+            this.goodsAmount = Money.of(skuVO.getSalePrice()).multiply(orderItemCommand.getCount());
+            Money storePrice = Money.of(skuVO.getStorePrice());
+            this.storeAmount = storePrice.multiply(orderItemCommand.getCount());
         }else {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        this.freightAmount = 0;
-        this.discountAmount = 0;
+        this.freightAmount = Money.ZERO;
+        this.discountAmount = Money.ZERO;
 
         buildServiceChange(channelNowServiceFee);
 
@@ -258,9 +267,9 @@ public class SkuOrderDTO extends BaseDTO {
         this.spuName = skuVO.getSpuName();
         this.skuWeight = skuVO.getWeight();
         this.skuVolume = skuVO.getVolume();
-        this.skuSalePrice = skuVO.getSalePrice();
-        this.skuSupplierPrice = skuVO.getSupplyPrice();
-        this.skuStorePrice = skuVO.getStorePrice() == null ? 0 : skuVO.getStorePrice();
+        this.skuSalePrice = Money.of(skuVO.getSalePrice());
+        this.skuSupplierPrice = Money.of(skuVO.getSupplyPrice());
+        this.skuStorePrice = Money.of(skuVO.getStorePrice());
         this.deliverCount = 0;
         this.refundingCount = 0;
         this.refundedCount = 0;
@@ -276,15 +285,16 @@ public class SkuOrderDTO extends BaseDTO {
         Double platformNowValue = channelNowServiceFee.getPlatformNowValue();
 
         // 运营商服务费
-        int operatorServiceChange = percent(this.goodsAmount, channelNowServiceFee.getOperatorNowValue());
+        Money operatorServiceChange = percent(this.goodsAmount, channelNowServiceFee.getOperatorNowValue());
         // 平台服务费
-        int platformServiceChange = percent(this.goodsAmount, channelNowServiceFee.getPlatformNowValue());
+        Money platformServiceChange = percent(this.goodsAmount, channelNowServiceFee.getPlatformNowValue());
 
         // 总服务费 (若有运营商服务费,则等于运营商服务费)
-        this.totalServiceChange = operatorServiceChange > 0 ? operatorServiceChange : platformServiceChange;
+        this.totalServiceChange = operatorServiceChange.greaterThanZero() ? operatorServiceChange : platformServiceChange;
 
-        // 运营商服务费(总服务费-平台服务费)
-        this.operatorServiceChange = Math.max(this.totalServiceChange - platformServiceChange, 0);
+        // 运营商服务费(总服务费-平台服务费), 不小于 0
+        Money operatorDiff = this.totalServiceChange.subtract(platformServiceChange);
+        this.operatorServiceChange = operatorDiff.smallerThanZero() ? Money.ZERO : operatorDiff;
 
         // 运营商真实服务费比例
         this.operatorRealRatio = NumberUtil.sub(operatorNowValue, platformNowValue);

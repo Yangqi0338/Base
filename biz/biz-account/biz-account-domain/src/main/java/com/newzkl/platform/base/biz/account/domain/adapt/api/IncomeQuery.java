@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.adapt.api;
 
-import com.newzkl.platform.base.biz.account.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 

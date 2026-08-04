@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.account.domain.repository.CountSaleRepositor
 import com.newzkl.platform.base.biz.account.model.req.CountSaleQuery;
 import com.newzkl.platform.base.biz.account.model.req.CountSaleReq;
 import com.newzkl.platform.base.biz.account.model.res.CountSaleVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,7 +66,7 @@ class CountSaleDomainImplTest {
     void editShouldUseGivenId() {
         when(countSaleRepository.edit(any())).thenReturn(1);
         CountSaleReq req = new CountSaleReq();
-        req.setTotalOrderAmount(5000);
+        req.setTotalOrderAmount(Money.of(5000));
 
         int rows = countSaleDomain.edit(777L, req);
 
@@ -73,7 +74,7 @@ class CountSaleDomainImplTest {
         ArgumentCaptor<CountSaleVO> captor = ArgumentCaptor.forClass(CountSaleVO.class);
         verify(countSaleRepository).edit(captor.capture());
         assertEquals(777L, captor.getValue().getId());
-        assertEquals(5000, captor.getValue().getTotalOrderAmount());
+        assertEquals(Money.of(5000), captor.getValue().getTotalOrderAmount());
     }
 
     @Test

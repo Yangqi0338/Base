@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 
@@ -32,9 +33,9 @@ public class SubAccountVO extends BaseRes {
      */
     private String headImg;
     /**
-     * 订单供货价金额
+     * 订单供货价金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalSupplierAmount;
+    private Money totalSupplierAmount;
     /**
      * 角色
      */

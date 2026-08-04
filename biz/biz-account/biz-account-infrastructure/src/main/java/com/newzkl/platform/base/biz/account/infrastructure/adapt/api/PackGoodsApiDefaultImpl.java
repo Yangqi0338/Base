@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * {@code PackGoodsApi} 默认兜底实现
  *
- * <p>TODO[cross-service]: 入会礼包归 biz-benefit-order(slug 10), 端口待接线。
+ * <p>TODO[cross-service]: 入会礼包归 biz-user(PackGoodsFacade), 端口待接线。
  * 未接线前写入返回 null、查询返回 null, 保证账户域可独立编排与测试;
  * 入口 starter 侧应以远程 consumer 覆盖此默认实现。</p>
  *

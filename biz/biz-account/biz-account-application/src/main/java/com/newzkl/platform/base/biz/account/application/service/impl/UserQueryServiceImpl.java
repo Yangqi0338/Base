@@ -15,10 +15,10 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
@@ -72,7 +72,6 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final DealerAssembler dealerAssembler;
     private final EmpAssembler empAssembler;
     private final OperatorAssembler operatorAssembler;
-    private final SupplierAssembler supplierAssembler;
     private final SelectorAssembler selectorAssembler;
 
     private final FinanceEarningApi financeEarningApi;
@@ -164,32 +163,6 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public Long accountIdByUsername(String username) {
-        AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setMainAccountId(AccountEnum.MAIN_ACCOUNT_PID);
-        accountQuery.setUsername(username);
-        accountQuery.setState(AccountEnum.State.ENABLE);
-        List<AccountVO> idList = accountRepository.accountList(accountQuery);
-        if (ObjectUtil.isEmpty(idList)) {
-            return null;
-        } else {
-            return idList.get(0).getId();
-        }
-    }
-
-    @Override
-    public Long selectorIdByUsername(String username) {
-//        return operatorDomain.selectorIdByUsername(username);
-        return null;
-    }
-
-    @Override
-    public Long selectorPid(Long accountId) {
-//        return operatorDomain.inviteIdByQuery(accountId);
-        return null;
-    }
-
-    @Override
     public MemberVO memberVO(Long memberId) {
         MemberQuery query = new MemberQuery();
         query.setId(memberId);
@@ -222,21 +195,6 @@ public class UserQueryServiceImpl implements UserQueryService {
     @Override
     public Page<CountSaleVO> countSalePage(CountSaleQuery countSaleQuery) {
         return countSaleDomain.pageList(countSaleQuery);
-    }
-
-    /**
-     * 按条件取单条销售统计
-     *
-     * <p>迁移补充: 旧实现直连 {@code CountSaleDAO.voByQuery}, 中台改由
-     * {@code CountSaleDomain} 承接; 多条命中时取第一条 (与旧 SQL 无 limit 的宽松语义对齐)。</p>
-     *
-     * @param todayCountSaleQuery 销售统计查询
-     * @return 销售统计视图, 无则 null
-     * @author KC
-     */
-    @Override
-    public CountSaleVO countSaleByQuery(CountSaleQuery todayCountSaleQuery) {
-        return countSaleDomain.findByQuery(todayCountSaleQuery);
     }
 
     @Override
@@ -279,7 +237,7 @@ public class UserQueryServiceImpl implements UserQueryService {
 
         for (ChannelVO vo : channelVO) {
             EarningContributeRpcVO earningContributeRpcVO = contributeRpcMap.getOrDefault(vo.getId(), new EarningContributeRpcVO());
-            vo.setEarningContribute(Optional.ofNullable(earningContributeRpcVO.getEarningContribute()).orElse(0));
+            vo.setEarningContribute(Money.of(Optional.ofNullable(earningContributeRpcVO.getEarningContribute()).orElse(0)));
         }
         //
         // List<EarningContributeRpcVO> list = .queryEarningContributeByAccountId(req);
@@ -317,7 +275,7 @@ public class UserQueryServiceImpl implements UserQueryService {
         for (ChannelPageRes vo : channelPageVOList) {
             //填充采购金额
             PurseAmountRes purseAmountRes = purseAmountMap.getOrDefault(vo.getId(), new PurseAmountRes());
-            vo.setEarnings(Optional.ofNullable(purseAmountRes.getEarnings()).orElse(0));
+            vo.setEarnings(Money.of(Optional.ofNullable(purseAmountRes.getEarnings()).orElse(0)));
             //填充商品位
             PurseAmountRes goodsSeat = goodsSeatMap.getOrDefault(vo.getId(), new PurseAmountRes());
             vo.setProductSeatCount(Optional.ofNullable(goodsSeat.getTotalEarnings()).orElse(0));
@@ -583,6 +541,21 @@ public class UserQueryServiceImpl implements UserQueryService {
 //            }
 //        });
         return null;
+    }
+
+    @Override
+    public Page<SupplierRes> supplierPage(SupplierQuery supplierQuery) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (role == RoleEnum.CompanyRole.OPERATOR || role == RoleEnum.CompanyRole.OPERATOR_GUEST) {
+            // 运营商查询自己分享出去注册的供应商
+            Long accountId = SecurityUtils.getAccountId();
+            supplierQuery.setInviteId(accountId);
+        }
+
+        Page<SupplierRes> page = supplierClientDomain.supplierPage(supplierQuery);
+
+
+        return page;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.vo.market;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -21,9 +22,9 @@ public class DistributionGoodsInfoVO {
     private Long spuId;
 
     /**
-     * 销售价格
+     * 销售价格 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
 
     /**
      * 市场id
@@ -34,9 +35,9 @@ public class DistributionGoodsInfoVO {
     private Long categoryId;
 
     /**
-     * 零售价(渠道商的供货价)
+     * 零售价(渠道商的供货价) (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
 
     /**
      * 来源

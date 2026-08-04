@@ -1,8 +1,11 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
@@ -31,7 +34,12 @@ public class OrderDO extends BaseDO {
      * 外部订单号
      */
     private String outOrderNo;
-    
+
+    /**
+     * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部单为 null
+     */
+    private PlatformTypeEnum platformType;
+
     /**
      * 运营商ID
      */
@@ -47,47 +55,47 @@ public class OrderDO extends BaseDO {
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     
     /**
      * 选品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     
     /**
      * 铺货金额
      */
-    private Integer storeAmount;
+    private Money storeAmount;
     
     /**
      * 选品运费
      */
-    private Integer freightAmount;
+    private Money freightAmount;
     
     /**
      * 自营运费
      */
-    private Integer customFreightAmount;
+    private Money customFreightAmount;
     
     /**
      * 优惠金额
      */
-    private Integer discountAmount;
+    private Money discountAmount;
     
     /**
      * 服务费: 渠道商应付
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     
     /**
      * 渠道商待支付金额
      */
-    private Integer totalAmount;
+    private Money totalAmount;
     
     /**
      * C端待支付金额
      */
-    private Integer memberAmount;
+    private Money memberAmount;
     
     private Integer orderState;
     

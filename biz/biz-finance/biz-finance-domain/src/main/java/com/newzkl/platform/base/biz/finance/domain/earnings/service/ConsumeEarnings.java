@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.finance.domain.earnings.service;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContributeDataReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningsExecReq;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.earnings.service;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountContributeRepository;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.ConsumeEarningDataRepository;
 import com.newzkl.platform.base.biz.finance.model.assembler.EarningRecordAssembler;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 

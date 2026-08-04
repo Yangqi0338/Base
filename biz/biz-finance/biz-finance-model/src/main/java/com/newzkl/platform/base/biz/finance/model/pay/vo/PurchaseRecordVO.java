@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.SeatPackageOrderInfo;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;

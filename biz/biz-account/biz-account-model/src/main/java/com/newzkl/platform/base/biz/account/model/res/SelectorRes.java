@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 import cn.hutool.core.util.StrUtil;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
@@ -73,13 +74,13 @@ public class SelectorRes extends BaseRes {
      */
     private Integer toMonthInvite;
     /**
-     * 自身的订单流水
+     * 自身的订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderAmount;
+    private Money orderAmount;
     /**
-     * 总订单流水
+     * 总订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderTotalAmount;
+    private Money orderTotalAmount;
     /**
      * 提货积分
      */
@@ -97,8 +98,8 @@ public class SelectorRes extends BaseRes {
 
         this.goodsPoints = 0;
         this.levelUpProgress = 0.0;
-        this.orderTotalAmount = 0;
-        this.orderAmount = 0;
+        this.orderTotalAmount = Money.ZERO;
+        this.orderAmount = Money.ZERO;
         this.teamCount = 0;
         this.yesterdayInvite = 0;
         this.teamSupplierCount = 0;

@@ -2,12 +2,11 @@ package com.newzkl.platform.base.biz.order.application.rpc;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.application.service.ICommitOrder;
-import com.newzkl.platform.base.biz.order.application.service.IOrderService;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
+import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
+import com.newzkl.platform.base.biz.order.application.service.OrderService;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
-import com.newzkl.platform.base.biz.order.domain.service.OrderUtil;
 import com.newzkl.platform.base.biz.order.facade.IOrderFacade;
 import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
@@ -17,13 +16,17 @@ import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderStateRecordEntity;
 import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
-import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.MemberOrderCreateCommand;
+import com.newzkl.platform.base.biz.order.model.req.OrderCreateCommand;
+import com.newzkl.platform.base.biz.order.model.req.OrderItemCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
+import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -33,7 +36,6 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +52,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderFacadeImpl implements IOrderFacade {
 
-    private final IOrderService orderService;
+    private final OrderService orderService;
     private final IOrderDomain orderDomain;
     private final LocalMessageApi localMessageApi;
-    private final IQueryService queryService;
-    private final ICommitOrder commitOrder;
-    private final HdhEvent hdhEvent;
+    private final QueryService queryService;
+    private final CommitOrder commitOrder;
 
     @Override
     public ApiOrderRes apiSubmitOrder(Long accountId, ApiOrderSubmitReq orderReq) {
@@ -148,7 +149,7 @@ public class OrderFacadeImpl implements IOrderFacade {
     }
 
     @Override
-    public Integer apiFreight(Long accountId, ApiOrderFreightReq orderReq) {
+    public Long apiFreight(Long accountId, ApiOrderFreightReq orderReq) {
         ShipVO shipVO = new ShipVO();
         shipVO.setShipName(orderReq.getShipName());
         shipVO.setShipPhone(orderReq.getShipPhone());
@@ -203,16 +204,13 @@ public class OrderFacadeImpl implements IOrderFacade {
     }
 
     @Override
-    public boolean handleStatusCallback(OrderCallbackRequest callbackRequest) {
-        return hdhEvent.handleStatusCallback(callbackRequest);
-    }
-
-    @Override
     public void orderMemberPay(List<Long> orderIdList) {
         orderDomain.batchUpdateOrderState(orderIdList, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, null);
         orderIdList.forEach(orderId -> {
-            List<SpuOrderDTO> spuOrders = orderDomain.selectSpuOrderList(orderId);
-            localMessageApi.sendOrderNewRecordEvent(spuOrders, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
+            spuOrderQuery.setOrderId(orderId);
+            List<SpuOrderVO> spuOrders = orderDomain.spuOrderPage(spuOrderQuery).getRecords();
+            localMessageApi.sendOrderNewRecordEvent(TransferUtils.transfers(spuOrders, SpuOrderDTO.class), OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
         });
     }
 

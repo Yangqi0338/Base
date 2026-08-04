@@ -1,41 +1,42 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 @Data
 public class AppHomePageDataVO {
 
     /**
-     * 总收益
+     * 总收益 (Money, 落库 BIGINT 分)
      */
-    private Integer totalIncome;
+    private Money totalIncome;
 
     /**
-     * 礼包收益(直推奖)
+     * 礼包收益(直推奖) (Money, 落库 BIGINT 分)
      */
-    private Integer packIncome;
+    private Money packIncome;
 
     /**
-     * 分红奖金
+     * 分红奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer dividendBonus;
+    private Money dividendBonus;
 
 
     /**
-     * 今日总收益
+     * 今日总收益 (Money, 落库 BIGINT 分)
      */
-    private Integer todayTotalIncome;
+    private Money todayTotalIncome;
 
     /**
-     * 今日礼包收益(直推奖)
+     * 今日礼包收益(直推奖) (Money, 落库 BIGINT 分)
      */
-    private Integer todayPackIncome;
+    private Money todayPackIncome;
 
     /**
-     * 今日分红奖金
+     * 今日分红奖金 (Money, 落库 BIGINT 分)
      */
-    private Integer todayDividendBonus;
+    private Money todayDividendBonus;
 
 
     /**

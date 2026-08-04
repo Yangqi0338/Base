@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,9 +47,9 @@ public class CountSaleDO extends BaseDO {
     private Integer totalOrderNumber;
 
     /**
-     * 累计订单金额 (分)
+     * 累计订单金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalOrderAmount;
+    private Money totalOrderAmount;
 
     /**
      * 累计退款数
@@ -56,12 +57,12 @@ public class CountSaleDO extends BaseDO {
     private Integer totalRefundNumber;
 
     /**
-     * 累计退款金额 (分)
+     * 累计退款金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalRefundAmount;
+    private Money totalRefundAmount;
 
     /**
-     * 贡献金额 (分)
+     * 贡献金额 (Money, 落库 BIGINT 分)
      */
-    private Integer contributeAmount;
+    private Money contributeAmount;
 }

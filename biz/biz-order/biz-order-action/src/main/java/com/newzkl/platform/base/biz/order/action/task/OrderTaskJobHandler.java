@@ -8,9 +8,9 @@ import cn.hutool.core.util.ObjectUtil;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.newzkl.platform.base.biz.order.application.service.IOrderService;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
-import com.newzkl.platform.base.biz.order.application.service.IRefundService;
+import com.newzkl.platform.base.biz.order.application.service.OrderService;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
+import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
@@ -53,12 +53,12 @@ import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextH
 public class OrderTaskJobHandler {
 
     private final IOrderDomain orderDomain;
-    private final IOrderService orderService;
-    private final IQueryService queryService;
+    private final OrderService orderService;
+    private final QueryService queryService;
     private final DictApi dictApi;
     private final LocalMessageApi localMessageApi;
     private final IRefundRepository refundRepository;
-    private final IRefundService refundService;
+    private final RefundService refundService;
     private final IRefundDomain refundDomain;
 
     private static final String SUCCESS = "SUCCESS";

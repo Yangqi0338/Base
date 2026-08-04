@@ -89,14 +89,14 @@ public class SpuController {
         Long roleId = SecurityUtils.getRoleId();
         if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
             for (SkuDTO skuDTO : spuDTO.getSkuList()) {
-                if (skuDTO.getSupplyPrice() == null) {
+                if (skuDTO.getSupplyPrice() == null || skuDTO.getSupplyPrice().isNull()) {
                     ThrowsException.exception(BaseErrorCode.PARAM, "缺少供货价");
                 }
             }
             spuDTO.setChannelType(SpuEnum.ChannelType.SELECTION);
         } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
             for (SkuDTO skuDTO : spuDTO.getSkuList()) {
-                if (skuDTO.getSalePrice() == null) {
+                if (skuDTO.getSalePrice() == null || skuDTO.getSalePrice().isNull()) {
                     ThrowsException.exception(BaseErrorCode.PARAM, "缺少销售价");
                 }
             }

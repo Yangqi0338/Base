@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 
 import com.newzkl.platform.base.biz.order.model.req.OrderCreateCommand;
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
@@ -9,6 +11,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -37,6 +40,10 @@ public class OrderDTO extends BaseDTO {
 	 */
 	private String outOrderNo;
 	/**
+	 * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部单为 null
+	 */
+	private PlatformTypeEnum platformType;
+	/**
 	 * 收货信息值对象
 	 */
 	private ShipVO shipVO;
@@ -47,39 +54,39 @@ public class OrderDTO extends BaseDTO {
 	/**
 	 * 货款金额
 	 */
-	private Integer supplierAmount;
+	private Money supplierAmount;
 	/**
 	 * 选品金额
 	 */
-	private Integer goodsAmount;
+	private Money goodsAmount;
 	/**
 	 * 铺货金额
 	 */
-	private Integer storeAmount;
+	private Money storeAmount;
 	/**
 	 * 服务费: 渠道商应付
 	 */
-	private Integer serviceAmount;
+	private Money serviceAmount;
 	/**
 	 * 选品运费
 	 */
-	private Integer freightAmount;
+	private Money freightAmount;
 	/**
 	 * 自营运费
 	 */
-	private Integer customFreightAmount;
+	private Money customFreightAmount;
 	/**
 	 * 优惠金额
 	 */
-	private Integer discountAmount;
+	private Money discountAmount;
 	/**
 	 * 渠道商待支付金额
 	 */
-	private Integer totalAmount;
+	private Money totalAmount;
 	/**
 	 * C端待支付金额
 	 */
-	private Integer memberAmount;
+	private Money memberAmount;
 	/**
 	 * 订单状态  (0, "新订单"),(1,"C端待付款"),(2,"渠道商待付款"),(3,"运营商待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭"),
 	 */
@@ -88,7 +95,7 @@ public class OrderDTO extends BaseDTO {
 	 * 支付时间
 	 */
 	private LocalDateTime payTime;
-	private Integer payType;
+	private OrderEnum.PayType payType;
 	/**
 	 * 订单状态流转日志,逗号隔开
 	 */
@@ -138,33 +145,34 @@ public class OrderDTO extends BaseDTO {
 		this.channelId = orderCreateCommand.getChannelId();
 		this.remark = orderCreateCommand.getRemark();
 		this.orderType = orderCreateCommand.getOrderType();
-		//订单金额
-		this.goodsAmount = 0;
-		this.supplierAmount = 0;
-		this.storeAmount = 0;
-		this.freightAmount = 0;
-		this.customFreightAmount = 0;
-		this.discountAmount = 0;
-		this.serviceAmount = 0;
+		//订单金额 (Money 累加; discountAmount 仍为 Integer 分, 参与 Money 运算时转 Money)
+		this.goodsAmount = Money.ZERO;
+		this.supplierAmount = Money.ZERO;
+		this.storeAmount = Money.ZERO;
+		this.freightAmount = Money.ZERO;
+		this.customFreightAmount = Money.ZERO;
+		this.discountAmount = Money.ZERO;
+		this.serviceAmount = Money.ZERO;
 		for (SpuOrderDTO spuOrder : spuOrderAmount) {
-			this.discountAmount = this.discountAmount + spuOrder.getDiscountAmount();
+			this.discountAmount = this.discountAmount.add(spuOrder.getDiscountAmount());
             this.benefitTripartiteId = String.format("%s,%s", this.benefitTripartiteId, spuOrder.getBenefitTripartiteId());
 			if(SpuEnum.ChannelType.CUSTOM == spuOrder.getSpuChannelType()){
-				this.storeAmount = this.storeAmount + spuOrder.getStoreAmount();
-				this.customFreightAmount = this.customFreightAmount + spuOrder.getFreightAmount();
+				this.storeAmount = this.storeAmount.add(spuOrder.getStoreAmount());
+				this.customFreightAmount = this.customFreightAmount.add(spuOrder.getFreightAmount());
 			}else if(SpuEnum.ChannelType.SELECTION == spuOrder.getSpuChannelType() ||
 					SpuEnum.ChannelType.OUT == spuOrder.getSpuChannelType()){
-				this.supplierAmount = this.supplierAmount + spuOrder.getSupplierAmount();
-				this.goodsAmount = this.goodsAmount + spuOrder.getGoodsAmount();
-				this.storeAmount = this.storeAmount + spuOrder.getStoreAmount();
-				this.freightAmount = this.freightAmount + spuOrder.getFreightAmount();
-				this.serviceAmount = this.serviceAmount + spuOrder.getServiceAmount();
+				this.supplierAmount = this.supplierAmount.add(spuOrder.getSupplierAmount());
+				this.goodsAmount = this.goodsAmount.add(spuOrder.getGoodsAmount());
+				this.storeAmount = this.storeAmount.add(spuOrder.getStoreAmount());
+				this.freightAmount = this.freightAmount.add(spuOrder.getFreightAmount());
+				this.serviceAmount = this.serviceAmount.add(spuOrder.getServiceAmount());
 			}else {
 				ThrowsException.exception(BaseErrorCode.PARAM);
 			}
 		}
-		this.totalAmount = this.goodsAmount + this.freightAmount + this.serviceAmount - this.discountAmount;
-		this.memberAmount = this.storeAmount + this.freightAmount - this.discountAmount;
+		// 渠道商待付 = 选品 + 运费 + 服务费 - 优惠; C端待付 = 铺货 + 运费 - 优惠
+		this.totalAmount = this.goodsAmount.add(this.freightAmount).add(this.serviceAmount).subtract(this.discountAmount);
+		this.memberAmount = this.storeAmount.add(this.freightAmount).subtract(this.discountAmount);
 		this.orderState = OrderEnum.State.NEW;
 	}
 }

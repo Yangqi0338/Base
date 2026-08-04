@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 /**
@@ -44,5 +46,5 @@ public class SpuRefundRes {
     /**
      * 运费金额
      */
-    private Integer freightAmount;
+    private Money freightAmount;
 }

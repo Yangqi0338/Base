@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPur
 import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleDataRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
+import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawAmountVO;
 
 import java.util.List;
 

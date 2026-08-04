@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api.order;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 
@@ -23,7 +24,7 @@ public class StoreDistributionDetailRpcVO implements Serializable {
     /** 数据类型 0：商品  1：sku */
     private Integer dataType;
     /** 销售价 */
-    private Integer sellPrice;
+    private Money sellPrice;
     /** 销量 */
     private Integer sellNum;
     /** 门店id */
@@ -33,9 +34,9 @@ public class StoreDistributionDetailRpcVO implements Serializable {
     /** 渠道商id */
     private Long channelId;
     /** 零售价（铺货表） */
-    private Integer unitPrice;
+    private Money unitPrice;
     /** 供货价（铺货表） */
-    private Integer supplierPrice;
+    private Money supplierPrice;
     /** 来源 */
     private String source;
     /** 拓展信息 */
@@ -52,7 +53,7 @@ public class StoreDistributionDetailRpcVO implements Serializable {
     /** sku.volume */
     private BigDecimal volume;
     /** sku.supply_price */
-    private Integer skuSupplyPrice;
+    private Money skuSupplyPrice;
     /** sku.out_sku_id */
     private String outSkuId;
     /** sku.sale_price_rate */
@@ -79,7 +80,7 @@ public class StoreDistributionDetailRpcVO implements Serializable {
     /** spu.channel_type */
     private SpuEnum.ChannelType channelType;
     /** spu.supply_price */
-    private Integer spuSupplyPrice;
+    private Money spuSupplyPrice;
 
     /** 购买数量 */
     private Integer bugNum;

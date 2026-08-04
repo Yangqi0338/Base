@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.pay.req;
 
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

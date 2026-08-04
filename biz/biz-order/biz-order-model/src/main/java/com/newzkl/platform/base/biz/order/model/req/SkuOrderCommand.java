@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,19 +19,19 @@ public class SkuOrderCommand {
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 运费金额
      */
-    private Integer freightAmount;
+    private Money freightAmount;
     /**
      * 优惠金额
      */
-    private Integer discountAmount;
+    private Money discountAmount;
     /**
      * 订单金额
      */
-    private Integer totalAmount;
+    private Money totalAmount;
     /**
      * 订单状态 (0, "新订单"),(2,"待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭")
      */

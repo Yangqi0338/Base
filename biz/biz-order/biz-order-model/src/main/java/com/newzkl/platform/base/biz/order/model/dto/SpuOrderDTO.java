@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -79,32 +81,32 @@ public class SpuOrderDTO extends BaseDTO {
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     /**
      * 选品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货金额
      */
-    private Integer storeAmount;
+    private Money storeAmount;
     /**
      * 运费金额
      */
-    private Integer freightAmount;
+    private Money freightAmount;
     /**
      * 优惠金额
      */
-    private Integer discountAmount;
+    private Money discountAmount;
 
     /**
      * C端支付金额
      */
-    private Integer memberAmount;
+    private Money memberAmount;
     /**
      * 服务费: 渠道商应付
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 订单状态 (0, "新订单"),(1,"C端待付款"),(2,"渠道商待付款"),(3,"运营商待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭"),
      */
@@ -202,24 +204,24 @@ public class SpuOrderDTO extends BaseDTO {
         this.merchantId = memberOrderCreateCommand == null ? null: memberOrderCreateCommand.getMerchantId();
         this.accountId = memberOrderCreateCommand == null ? null: memberOrderCreateCommand.getAccountId();
 
-        //订单金额
-        this.goodsAmount = 0;
-        this.freightAmount = freightAmount;
-        this.discountAmount = 0;
-        this.supplierAmount = 0;
-        this.storeAmount = 0;
-        this.serviceAmount = 0;
+        //订单金额 (Money 累加, freightAmount 为 Integer 分入参)
+        this.goodsAmount = Money.ZERO;
+        this.freightAmount = Money.of(freightAmount);
+        this.discountAmount = Money.ZERO;
+        this.supplierAmount = Money.ZERO;
+        this.storeAmount = Money.ZERO;
+        this.serviceAmount = Money.ZERO;
         this.setShipPhone(shipVO.getShipPhone());
         for (SkuOrderDTO skuOrder : orderAmountVO) {
             //只加属于该SPU订单的SKU
             if(skuOrder.getSpuId().equals(spuVO.getSpuId())){
                 if(SpuEnum.ChannelType.CUSTOM == this.getSpuChannelType()){
-                    this.storeAmount = this.storeAmount + skuOrder.getStoreAmount();
+                    this.storeAmount = this.storeAmount.add(skuOrder.getStoreAmount());
                 }else if(SpuEnum.ChannelType.SELECTION == this.getSpuChannelType()){
-                    this.supplierAmount = this.supplierAmount + skuOrder.getSupplierAmount();
-                    this.goodsAmount = this.goodsAmount + skuOrder.getGoodsAmount();
-                    this.storeAmount = this.storeAmount + skuOrder.getStoreAmount();
-                    this.serviceAmount = this.serviceAmount + skuOrder.getTotalServiceChange();
+                    this.supplierAmount = this.supplierAmount.add(skuOrder.getSupplierAmount());
+                    this.goodsAmount = this.goodsAmount.add(skuOrder.getGoodsAmount());
+                    this.storeAmount = this.storeAmount.add(skuOrder.getStoreAmount());
+                    this.serviceAmount = this.serviceAmount.add(skuOrder.getTotalServiceChange());
                 }else {
                     ThrowsException.exception(BaseErrorCode.PARAM);
                 }

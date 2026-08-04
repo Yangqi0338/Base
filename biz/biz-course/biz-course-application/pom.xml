@@ -17,5 +17,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-course-domain</artifactId>
         </dependency>
+        <!-- facade provider @DubboService 依赖 dubbo-spring-boot-starter, 经 ddd-infrastructure 传递引入 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-infrastructure</artifactId>
+        </dependency>
     </dependencies>
 </project>

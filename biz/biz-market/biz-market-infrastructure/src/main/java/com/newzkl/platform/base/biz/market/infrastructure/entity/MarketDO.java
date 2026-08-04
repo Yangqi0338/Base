@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.market.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.biz.market.model.enums.MarketTypeEnum;
 import lombok.Data;
@@ -49,9 +50,9 @@ public class MarketDO extends BaseDO {
      */
     private Integer sellNum;
     /**
-     * 总销售额
+     * 总销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer sellAmount;
+    private Money sellAmount;
     /**
      * 客户id  0：平台  >0：客户
      */

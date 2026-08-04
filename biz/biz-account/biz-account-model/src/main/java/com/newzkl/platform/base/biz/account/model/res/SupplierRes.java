@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
@@ -52,9 +53,9 @@ public class SupplierRes extends BaseRes {
      */
     private CommonEnum.YesOrNo promisePayState;
     /**
-     * 保证金金额
+     * 保证金金额 (Money, 落库 BIGINT 分)
      */
-    private Integer promisePayAmount;
+    private Money promisePayAmount;
     /**
      * 保证金审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
      */
@@ -77,9 +78,9 @@ public class SupplierRes extends BaseRes {
      */
     private String periodSetConfig;
     /**
-     * 应付保证金金额
+     * 应付保证金金额 (Money, 落库 BIGINT 分)
      */
-    private Integer shouldPromisePayAmount;
+    private Money shouldPromisePayAmount;
     /**
      * 主体类型 (查询)
      */
@@ -105,13 +106,13 @@ public class SupplierRes extends BaseRes {
      */
     private Integer goodsOnSaleCount;
     /**
-     * 总金额
+     * 总金额 (Money, 落库 BIGINT 分)
      */
-    private Integer goodsSaleAmount;
+    private Money goodsSaleAmount;
     /**
-     * 月金额
+     * 月金额 (Money, 落库 BIGINT 分)
      */
-    private Integer monthGoodsSaleAmount;
+    private Money monthGoodsSaleAmount;
     /**
      * 总销量
      */
@@ -149,13 +150,13 @@ public class SupplierRes extends BaseRes {
      */
     private Integer totalRefundNumber;
     /**
-     * 总订单金额
+     * 总订单金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalOrderAmount;
+    private Money totalOrderAmount;
     /**
-     * 总售后金额
+     * 总售后金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalRefundAmount;
+    private Money totalRefundAmount;
     /**
      * 真实姓名（联表 account.real_name）
      */

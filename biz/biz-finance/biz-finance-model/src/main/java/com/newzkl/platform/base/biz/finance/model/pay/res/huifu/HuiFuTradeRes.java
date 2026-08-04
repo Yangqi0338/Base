@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.res.huifu;
 
 import cn.hutool.core.util.NumberUtil;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import lombok.Data;
 
 /**

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -51,23 +52,21 @@ public class SkuVO extends BaseRes {
      */
      private Long spuId;
      /**
-     * 市场价
+     * 市场价 (Money, 落库 BIGINT 分)
      */
-     @NotEmpty
-     private Integer marketPrice;
+     private Money marketPrice;
      /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-     @NotEmpty
-     private Integer supplyPrice;
+     private Money supplyPrice;
     /**
-     * 销售价(to channel)
+     * 销售价(to channel) (Money, 落库 BIGINT 分)
      */
-    private Integer salePrice;
+    private Money salePrice;
     /**
-     * 销售价(to c)
+     * 销售价(to c) (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
      /**
       * 追加: spu状态
       */

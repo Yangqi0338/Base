@@ -1,14 +1,13 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
@@ -16,7 +15,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.BatchAccountPurseQue
 import com.newzkl.platform.base.biz.finance.model.purse.req.SupplierPurchaseGoodsSeatReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.ChannelPurchaseGoodsSeatReq;
 import com.newzkl.platform.base.biz.finance.application.pay.service.GoodsSeatChannelService;
-import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPurseRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleDataRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordExportVO;

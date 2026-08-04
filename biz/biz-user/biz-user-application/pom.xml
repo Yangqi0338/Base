@@ -26,5 +26,15 @@
             <groupId>com.newzkl.platform.Base.core</groupId>
             <artifactId>core-mq-domain</artifactId>
         </dependency>
+        <!-- 礼包预单缓存: RedisUtil (30 分钟预单 TTL) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-redis</artifactId>
+        </dependency>
+        <!-- 礼包 Facade provider: @DubboService (dubbo-spring-boot-starter 经 ddd-infrastructure 传递) -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-infrastructure</artifactId>
+        </dependency>
     </dependencies>
 </project>

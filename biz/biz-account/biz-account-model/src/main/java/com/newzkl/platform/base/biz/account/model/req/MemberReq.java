@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.biz.account.model.enums.PersonalEnum;
 import lombok.Data;
@@ -46,9 +47,9 @@ public class MemberReq extends BaseReq {
      */
     private Integer countDealNumber;
     /**
-     * 统计：成交金额
+     * 统计：成交金额 (Money, 落库 BIGINT 分)
      */
-    private Integer countDealAmount;
+    private Money countDealAmount;
     /**
      * 渠道商ID
      */

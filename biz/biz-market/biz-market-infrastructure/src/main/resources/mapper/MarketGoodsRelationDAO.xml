@@ -18,11 +18,12 @@
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="selection_num" jdbcType="INTEGER" property="selectionNum"/>
         <result column="max_profit" jdbcType="INTEGER" property="maxProfit"/>
-        <result column="market_price" jdbcType="INTEGER" property="marketPrice"/>
+        <!-- market_price/unit_price 列 BIGINT 分, 属性 Money, 去 jdbcType 让全局 MoneyTypeHandler 按 javaType 接管 -->
+        <result column="market_price" property="marketPrice"/>
         <result column="market_name" jdbcType="VARCHAR" property="marketName"/>
         <result column="market_id" jdbcType="BIGINT" property="marketId"/>
         <result column="discount_rate" jdbcType="INTEGER" property="discountRate"/>
-        <result column="unit_price" jdbcType="INTEGER" property="unitPrice"/>
+        <result column="unit_price" property="unitPrice"/>
         <result column="goods_info" jdbcType="LONGVARCHAR" property="goodsInfo"/>
     </resultMap>
 

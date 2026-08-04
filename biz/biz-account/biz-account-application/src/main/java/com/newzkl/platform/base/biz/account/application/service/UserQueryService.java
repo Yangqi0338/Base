@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.application.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.facade.model.SupplierRpcQuery;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -68,24 +69,6 @@ public interface UserQueryService {
     List<GroupCountRes> groupCount(TimeQuery timeQuery);
 
     /**
-     * 获取账号ID
-     *
-     * @param username
-     * @return
-     */
-    Long accountIdByUsername(String username);
-
-    /**
-     * 获取甄选师账号ID
-     *
-     * @param username
-     * @return
-     */
-    Long selectorIdByUsername(String username);
-
-    Long selectorPid(Long accountId);
-
-    /**
      * member详情
      *
      * @param memberId
@@ -109,16 +92,6 @@ public interface UserQueryService {
      * @return
      */
     Page<CountSaleVO> countSalePage(CountSaleQuery countSaleQuery);
-
-    /**
-     * countSale
-     *
-     * @param todayCountSaleQuery
-     * @return
-     */
-    CountSaleVO countSaleByQuery(CountSaleQuery todayCountSaleQuery);
-
-
 
     Page<ChannelVO> channelPage(ChannelQuery channelQuery);
 
@@ -178,4 +151,6 @@ public interface UserQueryService {
      * 运营商供应商分页
      */
     Page<SupplierVO> operatorSupplierPage(SupplierQuery supplierQuery);
+
+    Page<SupplierRes> supplierPage(SupplierQuery query);
 }

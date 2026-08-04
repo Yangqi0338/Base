@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,7 +65,7 @@ public interface ISettleRepository {
      * @param settleSkuCount 结算商品数量
      * @param nextSettlementTime 下次结算时间
      */
-    boolean settleGoodsEditForExecuteSettle(Long supplierId, Long spuId, Integer settleMoney, Integer settleSkuCount, LocalDateTime nextSettlementTime);
+    boolean settleGoodsEditForExecuteSettle(Long supplierId, Long spuId, Money settleMoney, Integer settleSkuCount, LocalDateTime nextSettlementTime);
     /**
      * 结算商品表修改 for 执行空结算
      * @param supplierId 供应商ID
@@ -108,5 +109,11 @@ public interface ISettleRepository {
 
     List<SettleOrderWaitVO> settleTypeList(SettleTypeListReq settleTypeList);
 
+    /**
+     * 查询供应商结算延迟天数(periodSetConfig.orderTypeDay), 用于结算类型2的N天后结算
+     *
+     * @param supplierId 供应商ID
+     * @return 延迟天数
+     */
     Integer querySupplierSettleConfig(Long supplierId);
 }

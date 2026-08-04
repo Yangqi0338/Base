@@ -6,19 +6,17 @@ import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
-import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.*;
 import com.newzkl.platform.base.biz.order.model.res.AlreadyDeliverRes;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
-import com.newzkl.platform.base.biz.order.model.support.api.ChannelNowServiceFeeRes;
+
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
-import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
@@ -135,11 +133,13 @@ public interface IOrderRepository {
 
     int cutSkuOrderRefundingNumber(Long spuOrderId, List<Long> skuIdList);
 
-    void skuOrderUpdate(SkuOrderDTO sku, SkuOrderQuery skuQuery);
+    int skuOrderSave(SkuOrderDTO sku, SkuOrderQuery skuQuery);
 
-    void spuOrderUpdate(SpuOrderDTO spu, SpuOrderQuery spuOrderQuery);
+    int skuOrderSave(List<SkuOrderDTO> spuList);
 
-    void spuOrderUpdate(List<SpuOrderDTO> spuList);
+    int spuOrderSave(SpuOrderDTO spu, SpuOrderQuery spuOrderQuery);
+
+    int spuOrderSave(List<SpuOrderDTO> spuList);
 
     List<SettlementConfigOutVO> settlementConfigBatch(List<Long> supplierIdList);
 
@@ -147,7 +147,7 @@ public interface IOrderRepository {
 
     List<AlreadyDeliverRes> getAlreadyDeliverResList(Long spuOrderId, List<Long> skuIds);
 
-    int deliverSave(Deliver deliver);
+    boolean deliverSave(Deliver deliver);
 
     int updateSkuDeliverCount(DeliverItemVO deliverItem);
 
@@ -155,7 +155,7 @@ public interface IOrderRepository {
 
     SpuOrderDTO spuOrder(Long spuOrderId);
 
-    void orderEdit(OrderDTO orderEdit);
+    boolean orderSave(OrderDTO orderEdit);
 
     /**
      * 保存预支付单
@@ -184,8 +184,6 @@ public interface IOrderRepository {
      */
     Long getPrePayOrderExpire(MemberOrderCreateCommand memberOrderCreateCommand);
 
-    void deliverEdit(Deliver deliver);
-
     void deliverDelete(Long l);
 
     // FIXME[outorder-removed]: 三方履约订单持久化(OutOrderDO/DAO)已删, 此声明待后期以新履约模型替换
@@ -193,7 +191,7 @@ public interface IOrderRepository {
 
     List<SkuOrderVO> querySkuOrderByOrderId(Long orderId, List<Long> skuIdList);
 
-    RoleEnum.OrderType settleOrderType(Long supplierId);
+    SettleType settleOrderType(Long supplierId);
 
     void updateOrderShip(Long orderId, ShipVO shipVo);
 
@@ -226,7 +224,7 @@ public interface IOrderRepository {
      * @param spuOrderQuery 查询条件
      * @return 订单金额合计
      */
-    Integer spuOrderSumAmount(SpuOrderQuery spuOrderQuery);
+    Money spuOrderSumAmount(SpuOrderQuery spuOrderQuery);
 
     /**
      * 按SPU订单ID查物流列表
@@ -259,4 +257,6 @@ public interface IOrderRepository {
      * 保存/更新订单状态记录
      */
     OrderStateRecordEntity createStateRecord(OrderStateRecordEntity record);
+
+    Page<OrderStateRecordEntity> recordPage(OrderStateRecordQuery query);
 }

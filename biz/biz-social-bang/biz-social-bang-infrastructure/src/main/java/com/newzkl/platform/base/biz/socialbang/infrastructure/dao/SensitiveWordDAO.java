@@ -31,7 +31,7 @@ public interface SensitiveWordDAO extends BaseMapper<SensitiveWordDO> {
         BaseLambdaQueryWrapper<SensitiveWordDO> lw = new BaseLambdaQueryWrapper<>();
         lw.notEmptyLike(SensitiveWordDO::getSensitiveWord, query.getSensitiveWord())
                 .notEmptyEq(SensitiveWordDO::getSourceType, query.getSourceType())
-                .betweenDate(SensitiveWordDO::getAddTime, query.getStartTime(), query.getEndTime());
+                .doBetween(SensitiveWordDO::getAddTime, query.getStartTime(), query.getEndTime());
         return lw;
     }
 }

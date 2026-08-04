@@ -31,6 +31,7 @@ import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuCountQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -447,9 +448,11 @@ public class SpuRepositoryImpl implements SpuRepository {
                 .notEmptyEq(SpuDO::getFreightTemplateId, query.getFreightTemplateId())
                 .notEmptyEq(SpuDO::getOutSpuId, query.getOutSpuId())
                 .notEmptyEq(SpuDO::getMinPricingNum, query.getMinPricingNum())
-                .betweenDate(SpuDO::getSupplyPrice, query.getSupplyPriceStart(), query.getSupplyPriceEnd())
-                .betweenDate(SpuDO::getSalePrice, query.getSalePriceStart(), query.getSalePriceEnd())
-                .betweenDate(SpuDO::getSaleNum, query.getSaleNumStart(), query.getSaleNumEnd())
+                // 价格列已 Money 化, 区间入参 (SpuQuery 分 Integer) 显式 Money.of(分) 后 doBetween
+                .doBetween(SpuDO::getSupplyPrice, moneyBound(query.getSupplyPriceStart()), moneyBound(query.getSupplyPriceEnd()))
+                .doBetween(SpuDO::getSalePrice, moneyBound(query.getSalePriceStart()), moneyBound(query.getSalePriceEnd()))
+                // saleNum 为数量列 (Integer), 保持 Integer 区间
+                .doBetween(SpuDO::getSaleNum, query.getSaleNumStart(), query.getSaleNumEnd())
                 .between(SpuDO::getCreateTime, query.getCreateTime());
         return wrapper;
     }
@@ -600,6 +603,16 @@ public class SpuRepositoryImpl implements SpuRepository {
      */
     private static CopyOptions ignoring(String... props) {
         return CopyOptions.create().setIgnoreProperties(props);
+    }
+
+    /**
+     * 分区间边界 (Integer 分) 显式升 Money, null 保持 null 以便 doBetween 跳过该侧条件
+     *
+     * @param cent 分, 可为 null
+     * @return Money 或 null
+     */
+    private static Money moneyBound(Integer cent) {
+        return cent == null ? null : Money.of(cent);
     }
 
     /**

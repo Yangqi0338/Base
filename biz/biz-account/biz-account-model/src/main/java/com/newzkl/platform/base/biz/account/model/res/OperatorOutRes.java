@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.biz.account.model.vo.OperatorClientBaseVO;
 import lombok.Data;
@@ -28,9 +29,9 @@ public class OperatorOutRes extends OperatorClientBaseVO {
      */
     private String serviceFeeConfigVO;
     /**
-     * 服务费
+     * 服务费 (Money, 落库 BIGINT 分)
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 运营类型 0 机构 1 行业 2 区域
      */

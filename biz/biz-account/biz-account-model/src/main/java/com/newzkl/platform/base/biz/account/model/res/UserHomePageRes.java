@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -120,8 +121,8 @@ public class UserHomePageRes implements Serializable {
         private String img;
 
         /**
-         * 销售价
+         * 销售价 (Money, 落库 BIGINT 分)
          */
-        private Integer sellPrice;
+        private Money sellPrice;
     }
 }

@@ -3,27 +3,25 @@ package com.newzkl.platform.base.biz.order.application.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
-import com.newzkl.platform.base.biz.order.application.service.IRefundService;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.BalancePayApi;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
+import com.newzkl.platform.base.biz.order.application.service.RefundService;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.PayApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.MemberRefundRes;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.SellAfterRefundReq;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.*;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
-import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
-import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderAggVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
+import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
+import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -48,13 +46,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class RefundServiceImpl implements IRefundService {
+public class RefundServiceImpl implements RefundService {
 
     private final IOrderDomain orderDomain;
     private final IRefundDomain refundDomain;
-    private final BalancePayApi balancePayApi;
+    private final PayApi balancePayApi;
     private final LocalMessageApi localMessageApi;
-    private final IQueryService queryService;
+    private final QueryService queryService;
     private final ISettleDomain settleDomain;
     private final IRefundRepository refundRepository;
 
@@ -194,7 +192,7 @@ public class RefundServiceImpl implements IRefundService {
         sellAfterRefundReq.setOrderNo(refund.getOrderId());
         MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
         if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
-            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg(), true);
+            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg());
         }
         //售后已打款通知
         refundDomain.sellAfterRefundNotify(refund.getId(), refund.getChannelId(), memberRefundRes.getThirdTradeNo());
@@ -211,7 +209,7 @@ public class RefundServiceImpl implements IRefundService {
             if(result == null){
                 //无需操作
             }else if(result == 0){
-                Integer refundAmount = 0;
+                Money refundAmount = Money.ZERO;
                 Long spuId = null;
                 List<RefundItemVO> refundItemVOS = refundItemMap.get(skuOrderId);
                 if(ObjectUtil.isNotEmpty(refundItemVOS)){
@@ -246,8 +244,7 @@ public class RefundServiceImpl implements IRefundService {
         //售后已打款通知
         refundDomain.sellAfterRefundNotify(refundAuditRes.getRefund().getId(), null, memberRefundRes.getThirdTradeNo());
         //售后完成消息
-        RefundPassEvent refundPassEvent = RefundUtil.refund2RefundPassEvent(refundAuditRes.getRefund());
-        localMessageApi.sendMessage(MQ.Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
+        localMessageApi.sendRefundPassMessage(refund);
         //SKU订单售后通过通知订单
         if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
             orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
@@ -268,7 +265,7 @@ public class RefundServiceImpl implements IRefundService {
         sellAfterRefundReq.setOrderNo(refund.getOrderId());
         MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
         if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
-            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg(), true);
+            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg());
         }
         //售后已打款通知
         refundDomain.sellAfterRefundNotify(refundAuditRes.getRefund().getId(), null, memberRefundRes.getThirdTradeNo());

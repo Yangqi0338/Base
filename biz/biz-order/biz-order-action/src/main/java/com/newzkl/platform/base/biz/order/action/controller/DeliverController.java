@@ -2,8 +2,7 @@ package com.newzkl.platform.base.biz.order.action.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.newzkl.platform.base.biz.order.action.cmd.DeliverCmd;
-import com.newzkl.platform.base.biz.order.application.service.IOrderService;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
+import com.newzkl.platform.base.biz.order.application.service.OrderService;
 import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.ExcelErrorVO;
 import com.newzkl.platform.base.biz.order.model.req.DeliverCodeCommand;
@@ -37,7 +36,7 @@ public class DeliverController {
     @Autowired
     private IOrderDomain orderDomain;
     @Autowired
-    private IOrderService orderService;
+    private OrderService orderService;
 
     /**
      * 发货创建

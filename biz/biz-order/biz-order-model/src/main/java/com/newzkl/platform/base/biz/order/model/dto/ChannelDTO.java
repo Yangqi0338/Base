@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.biz.order.model.support.api.enums.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
@@ -48,7 +50,7 @@ public class ChannelDTO implements Serializable {
     /** 服务费配置。 */
     private String serviceFeeConfigVO;
     /** 交易师收益。 */
-    private Integer dealerEarnings;
+    private Money dealerEarnings;
     /** 市场数量。 */
     private Integer marketCount;
     /** 营业执照。 */
@@ -68,13 +70,13 @@ public class ChannelDTO implements Serializable {
     /** 总订单笔数。 */
     private Integer totalOrderNumber;
     /** 总订单金额。 */
-    private Integer totalOrderAmount;
+    private Money totalOrderAmount;
     /** 总售后笔数。 */
     private Integer totalRefundNumber;
     /** 总售后金额。 */
-    private Integer totalRefundAmount;
+    private Money totalRefundAmount;
     /** 贡献金额。 */
-    private Integer contributeAmount;
+    private Money contributeAmount;
     /** 层级贡献金额。 */
     private String contributeAmountStr;
     /** 客户总数。 */

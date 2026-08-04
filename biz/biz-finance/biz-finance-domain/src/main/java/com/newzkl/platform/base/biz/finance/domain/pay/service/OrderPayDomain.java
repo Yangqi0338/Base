@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.domain.pay.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
+import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PaymentQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.OrderPayeeInfoVO;

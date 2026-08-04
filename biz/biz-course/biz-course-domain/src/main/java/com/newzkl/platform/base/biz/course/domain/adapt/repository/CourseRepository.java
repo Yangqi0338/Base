@@ -123,4 +123,15 @@ public interface CourseRepository {
      * @return 是否恢复成功
      */
     boolean recover(Long id);
+
+    /**
+     * 按标题模糊 + 分类精确解析课程ID集合
+     *
+     * <p>供已购课程列表按课程属性收窄使用; 两条件皆空返回空集合(调用方据此判定不收窄)。</p>
+     *
+     * @param title      课程标题, 模糊; 可空
+     * @param categoryId 课程分类ID, 精确; 可空
+     * @return 命中课程ID集合, 永远非 null
+     */
+    List<Long> listIdsByTitleAndCategory(String title, Long categoryId);
 }

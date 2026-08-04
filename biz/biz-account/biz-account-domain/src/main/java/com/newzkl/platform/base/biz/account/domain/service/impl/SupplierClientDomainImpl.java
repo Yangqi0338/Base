@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
@@ -67,7 +68,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
             v.setGoodsDealCount(0);
             v.setGoodsNotSaleCount(0);
             v.setGoodsOnSaleCount(0);
-            v.setGoodsSaleAmount(0);
+            v.setGoodsSaleAmount(Money.ZERO);
             v.setGoodsSaleCount(0);
             v.setGoodsTotalCount(0);
         });
@@ -224,7 +225,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     public void shouldPromisePayAmountSet(Long id, Integer shouldPromisePayAmount, Integer promisePayConfig) {
         SupplierVO item = new SupplierVO();
         item.setId(id);
-        item.setShouldPromisePayAmount(shouldPromisePayAmount);
+        item.setShouldPromisePayAmount(Money.of(shouldPromisePayAmount));
         item.setPromisePayConfig(promisePayConfig);
         supplierRepository.supplierEdit(item);
         tripInState(id);

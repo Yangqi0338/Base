@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.vo.relation;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -36,9 +37,9 @@ public class GoodsRelationListVO {
     private String sellPrice;
 
     /**
-     * 销售价
+     * 销售价 (Money, 落库 BIGINT 分)
      */
-    private Integer salePrice;
+    private Money salePrice;
 
 
     /**
@@ -87,9 +88,9 @@ public class GoodsRelationListVO {
     private String marketName;
 
     /**
-     * 市场价
+     * 市场价 (Money, 落库 BIGINT 分)
      */
-    private Integer marketPrice;
+    private Money marketPrice;
     /**
      * 最大利润
      */
@@ -111,9 +112,9 @@ public class GoodsRelationListVO {
     private int supplierPriceEnd;
 
     /**
-     * 零售价
+     * 零售价 (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
     /**
      * 商品信息
      */

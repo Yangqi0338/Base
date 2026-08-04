@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -81,19 +83,19 @@ public class RefundVO extends BaseVO {
      /**
      * 售后运费金额
      */
-     private Integer freightAmount;
+     private Money freightAmount;
      /**
      * 渠道商售后总金额
      */
-     private Integer refundAmount;
+     private Money refundAmount;
      /**
       * 货款金额
       */
-     private Integer supplierAmount;
+     private Money supplierAmount;
     /**
      * 服务费
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
      /**
      * 售后原因
      */

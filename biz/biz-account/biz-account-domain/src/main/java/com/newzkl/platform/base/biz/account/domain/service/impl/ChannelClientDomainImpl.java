@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
@@ -40,7 +41,7 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
             throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
         ChannelVO item = TransferUtils.transfer(customSaveReq, ChannelVO::new, (c, v) -> {
-            v.setDealerEarnings(0);
+            v.setDealerEarnings(Money.ZERO);
             v.setMarketCount(0);
         });
         item.setRole(RoleEnum.CompanyRole.CHANNEL);

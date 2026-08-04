@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import lombok.Data;
 
 import java.io.Serializable;
@@ -41,14 +43,14 @@ public class RefundItemVO implements Serializable {
      /**
      * 售后金额
      */
-     private Integer refundAmount;
+     private Money refundAmount;
      /**
       * 货款金额
       */
-     private Integer supplierAmount;
+     private Money supplierAmount;
 
      /**
       * 铺货金额 门店销售单价
       */
-     private Integer skuStorePrice;
+     private Money skuStorePrice;
 }

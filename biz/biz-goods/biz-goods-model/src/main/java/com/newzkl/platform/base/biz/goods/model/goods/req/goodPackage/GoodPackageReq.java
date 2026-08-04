@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,10 +41,10 @@ public class GoodPackageReq {
     private Long goodsNum;
 
     /**
-     * 套餐价格 (分)
+     * 套餐价格 (Money, 落库 BIGINT 分)
      */
     @NotNull(message = "套餐价格不能为空")
-    private Integer packagePrice;
+    private Money packagePrice;
 
     /**
      * 套餐描述

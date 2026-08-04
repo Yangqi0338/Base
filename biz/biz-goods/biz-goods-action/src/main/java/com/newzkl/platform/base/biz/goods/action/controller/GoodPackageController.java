@@ -4,6 +4,7 @@ import com.newzkl.platform.base.biz.goods.domain.goodPackage.service.GoodPackage
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,8 @@ public class GoodPackageController {
         req.setId(id);
         req.setPackageName(packageName);
         req.setGoodsNum(goodsNum);
-        req.setPackagePrice(packagePrice);
+        // 入参为分 Integer, 显式 Money.of(分) 升为值对象
+        req.setPackagePrice(packagePrice == null ? null : Money.of(packagePrice));
         req.setPackageDesc(packageDesc);
         goodPackageDomain.update(req);
         return PlatformResult.success();

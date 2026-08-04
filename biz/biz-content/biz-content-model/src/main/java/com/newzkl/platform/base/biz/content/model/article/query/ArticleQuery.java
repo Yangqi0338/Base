@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 文章列表查询入参
  *
  * <p>迁移自旧 {@code com.zkl.scm.admin.domain.contentManage.model.query.ArticleQuery},
- * {@code javax.validation} 换为 {@code jakarta.validation}。</p>
+ * {@code jakarta.validation} 换为 {@code jakarta.validation}。</p>
  *
  * @author KC
  */

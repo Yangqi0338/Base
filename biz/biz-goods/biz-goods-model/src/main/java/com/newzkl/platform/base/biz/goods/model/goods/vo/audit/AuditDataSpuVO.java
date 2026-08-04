@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.audit;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -46,24 +47,21 @@ public class AuditDataSpuVO {
      */
     private String adminUserName;
     /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer supplyPrice;
+    private Money supplyPrice;
     /**
-     * 市场价
+     * 市场价 (Money, 落库 BIGINT 分)
      */
-    private Integer marketPrice;
+    private Money marketPrice;
     /**
-     * 库存
+     * 销售价(to channel) (Money, 落库 BIGINT 分)
      */
+    private Money salePrice;
     /**
-     * 销售价(to channel)
+     * 建议零售价(to c) (Money, 落库 BIGINT 分)
      */
-    private Integer salePrice;
-    /**
-     * 建议零售价(to c)
-     */
-    private Integer unitPrice;
+    private Money unitPrice;
     /**
      * 品牌名称
      */

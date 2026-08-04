@@ -31,5 +31,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
         </dependency>
+        <!-- 课程购买下单用户+课程维度分布式锁(RedissonLockUtil), 源用 RedisUtil.tryLock, Base 锁在 core-redis -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-redis</artifactId>
+        </dependency>
     </dependencies>
 </project>

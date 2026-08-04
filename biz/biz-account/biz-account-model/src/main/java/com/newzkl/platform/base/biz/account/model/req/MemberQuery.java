@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 
@@ -65,9 +66,9 @@ public class MemberQuery extends PageQuery {
      */
     private Integer countDealNumber;
     /**
-     * 统计：成交金额
+     * 统计：成交金额 (Money, 落库 BIGINT 分)
      */
-    private Integer countDealAmount;
+    private Money countDealAmount;
     /**
      * 商户ID
      */

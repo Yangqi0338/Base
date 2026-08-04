@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api.order;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class OrderGoodsCheckV2Res implements Serializable {
     private List<StoreDistributionDetailRpcVO> goodsInfo;
 
     /** 商品运费 */
-    private Map<Long,Integer> goodsFreight;
+    private Map<Long, Money> goodsFreight;
 
     /**
      * 本地商品

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import lombok.Data;
@@ -30,9 +31,9 @@ public class OperatorReq extends BaseReq {
      */
     private String serviceFeeConfigVO;
     /**
-     * 服务费
+     * 服务费 (Money, 落库 BIGINT 分)
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 杠杆比例
      */

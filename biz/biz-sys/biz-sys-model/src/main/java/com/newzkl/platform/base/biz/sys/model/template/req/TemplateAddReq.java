@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 新增模板请求对象
  *
  * <p>迁移说明: 源 {@code TemplateAddCommand}, 按 Base 约定改名为 Req 落 model 层。
- * 校验注解由 {@code javax.validation} 换为 {@code jakarta.validation} (Spring Boot 3),
+ * 校验注解由 {@code jakarta.validation} 换为 {@code jakarta.validation} (Spring Boot 3),
  * 提示文案逐字保留。</p>
  *
  * @author KC

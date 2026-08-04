@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
@@ -28,9 +29,9 @@ public class SupplierOutRes extends BaseRes {
      */
      private CommonEnum.YesOrNo promisePayState;
      /**
-     * 保证金金额
+     * 保证金金额 (Money, 落库 BIGINT 分)
      */
-     private Integer promisePayAmount;
+     private Money promisePayAmount;
      /**
      * 保证金审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
      */
@@ -44,9 +45,9 @@ public class SupplierOutRes extends BaseRes {
      */
      private String periodSetConfig;
      /**
-     * 应付保证金金额
+     * 应付保证金金额 (Money, 落库 BIGINT 分)
      */
-     private Integer shouldPromisePayAmount;
+     private Money shouldPromisePayAmount;
      /**
       * 保证金缴纳配置 promise_pay_config
       * 0 即时 1 延迟
@@ -73,9 +74,9 @@ public class SupplierOutRes extends BaseRes {
      */
      private Integer goodsOnSaleCount;
      /**
-     * 总金额
+     * 总金额 (Money, 落库 BIGINT 分)
      */
-     private Integer goodsSaleAmount;
+     private Money goodsSaleAmount;
      /**
      * 总销量
      */

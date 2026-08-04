@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
@@ -30,7 +32,7 @@ public class SettleOrderWaitDO extends BaseDO {
 	/**
 	 * 订单结算金额
 	 */
-	private Integer orderMoney;
+	private Money orderMoney;
 	/**
 	 * SPU_ID
 	 */
@@ -62,7 +64,7 @@ public class SettleOrderWaitDO extends BaseDO {
 	/**
 	 * 售后金额 默认0
 	 */
-	private Integer refundAmount;
+	private Money refundAmount;
 
 	/**
 	 * 结算时间节点(时间戳)

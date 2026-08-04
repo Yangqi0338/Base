@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
@@ -24,14 +25,14 @@ public class AccountAddAmountReq implements Serializable {
     private RoleEnum.CompanyRole role;
 
     /**
-     * 商品金额
+     * 商品金额 (Money, 落库 BIGINT 分)
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
 
     /**
-     * 货款金额
+     * 货款金额 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
 
     /**
      * 自身

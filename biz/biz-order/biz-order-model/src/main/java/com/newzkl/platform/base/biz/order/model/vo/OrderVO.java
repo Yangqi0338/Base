@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
 import lombok.Data;
@@ -47,39 +49,39 @@ public class OrderVO extends BaseVO {
      /**
       * 货款金额
       */
-     private Integer supplierAmount;
+     private Money supplierAmount;
      /**
       * 选品金额
       */
-     private Integer goodsAmount;
+     private Money goodsAmount;
      /**
       * 铺货金额
       */
-     private Integer storeAmount;
+     private Money storeAmount;
      /**
       * 选品运费
       */
-     private Integer freightAmount;
+     private Money freightAmount;
      /**
       * 自营运费
       */
-     private Integer customFreightAmount;
+     private Money customFreightAmount;
      /**
       * 优惠金额
       */
-     private Integer discountAmount;
+     private Money discountAmount;
      /**
       * 服务费: 渠道商应付
       */
-     private Integer serviceAmount;
+     private Money serviceAmount;
      /**
       * 渠道商待支付金额
       */
-     private Integer totalAmount;
+     private Money totalAmount;
      /**
       * C端待支付金额
       */
-     private Integer memberAmount;
+     private Money memberAmount;
      /**
      * 支付时间
      */

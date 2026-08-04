@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.market.model.req.distribution;
 
 
 import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 /**
@@ -27,8 +28,8 @@ public class DistributionsUpdateReq {
     private String goodsInfo;
 
     /**
-     * 零售价
+     * 零售价 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
 
 }

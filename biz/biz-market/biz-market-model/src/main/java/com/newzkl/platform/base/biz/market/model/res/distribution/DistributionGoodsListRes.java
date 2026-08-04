@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.res.distribution;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -38,14 +39,14 @@ public class DistributionGoodsListRes {
     private String goodsPicture;
 
     /**
-     * 售价
+     * 售价 (Money, 落库 BIGINT 分)
      */
-    private Integer sellPrice;
+    private Money sellPrice;
 
     /**
-     * 市场价
+     * 市场价 (Money, 落库 BIGINT 分)
      */
-    private Integer marketPrice;
+    private Money marketPrice;
 
     /**
      * 销量
@@ -83,9 +84,9 @@ public class DistributionGoodsListRes {
     private String goodsInfo;
 
     /**
-     * 零售价
+     * 零售价 (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
 
     /**
      * 创建时间
@@ -102,9 +103,9 @@ public class DistributionGoodsListRes {
      */
     private Integer maxDeliverDay;
     /**
-     * 供货价
+     * 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierPrice;
+    private Money supplierPrice;
 
     /**
      * 是否需要更新：0不需要，1需要
@@ -132,9 +133,9 @@ public class DistributionGoodsListRes {
     private String storeId;
 
     /**
-     * 成交金额
+     * 成交金额 (Money, 落库 BIGINT 分)
      */
-    private Integer transactionAmount;
+    private Money transactionAmount;
 
     /**
      * 最小利润

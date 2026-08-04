@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
 import lombok.Data;
@@ -35,7 +37,7 @@ public class SettleOrderWaitVO extends BaseVO {
      /**
      * 订单结算金额
      */
-     private Integer orderMoney;
+     private Money orderMoney;
      /**
      * SPU_ID
      */

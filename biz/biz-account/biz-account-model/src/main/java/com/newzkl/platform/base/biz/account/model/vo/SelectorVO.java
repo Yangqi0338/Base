@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
@@ -103,13 +104,13 @@ public class SelectorVO extends BaseRes {
      */
     private String inviteUsername;
     /**
-     * 自身的订单流水
+     * 自身的订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderAmount;
+    private Money orderAmount;
     /**
-     * 总订单流水
+     * 总订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderTotalAmount;
+    private Money orderTotalAmount;
     /**
      * 提货积分
      */

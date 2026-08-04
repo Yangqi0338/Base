@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.finance.model.pay.req;
 
 
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,6 +22,10 @@ public class PaymentQuery extends PageQuery {
      * 交易单号
      */
     private List<Long> orderNoList;
+
+    public void setOrderNo(Long orderNo) {
+        this.orderNoList = doWrapperList(this.orderNoList, orderNo);
+    }
 
     /**
      * {@code EarningsEnum}

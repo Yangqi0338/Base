@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -58,9 +59,9 @@ public class MemberOutRes extends BaseRes {
      */
     private Integer countDealNumber;
     /**
-     * 统计：成交金额
+     * 统计：成交金额 (Money, 落库 BIGINT 分)
      */
-    private Integer countDealAmount;
+    private Money countDealAmount;
     /**
      * 商户ID
      */

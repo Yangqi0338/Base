@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContr
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningRecordReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningsExecReq;
 import com.newzkl.platform.base.biz.finance.model.event.SkuOrderWaitEarningVO;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

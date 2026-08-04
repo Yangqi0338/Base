@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountContributeRp
 import com.newzkl.platform.base.biz.account.domain.adapt.api.EarningContributeRpcVO;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceEarningApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
-import com.newzkl.platform.base.biz.account.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

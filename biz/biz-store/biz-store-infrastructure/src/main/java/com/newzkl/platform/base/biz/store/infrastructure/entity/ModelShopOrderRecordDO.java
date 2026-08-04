@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.store.model.enums.ModeShopOrderType;
+import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 

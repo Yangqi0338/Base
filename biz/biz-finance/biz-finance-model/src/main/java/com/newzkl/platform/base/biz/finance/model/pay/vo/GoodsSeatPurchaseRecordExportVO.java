@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

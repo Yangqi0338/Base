@@ -2,13 +2,14 @@ package com.newzkl.platform.base.biz.market.model.vo.relation;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @author 
+ * @author
  * 市场商品关系
  */
 @Data
@@ -42,9 +43,9 @@ public class MarketGoodsRelationVO implements Serializable {
     private Integer sellNum;
 
     /**
-     * 销售额
+     * 销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer sellAmount;
+    private Money sellAmount;
 
     /**
      * 状态  1：正常  0：删除

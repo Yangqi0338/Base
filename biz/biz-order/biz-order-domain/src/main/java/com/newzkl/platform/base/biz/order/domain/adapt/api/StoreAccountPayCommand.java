@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,5 +33,5 @@ public class StoreAccountPayCommand implements Serializable {
      *
      * @ext 单位分
      */
-    private Integer payAmount;
+    private Money payAmount;
 }

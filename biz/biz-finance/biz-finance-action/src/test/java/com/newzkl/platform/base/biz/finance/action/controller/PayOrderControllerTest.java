@@ -2,10 +2,10 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayService;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
-import com.newzkl.platform.base.biz.finance.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.biz.finance.model.pay.req.OrderPayReq;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
 import com.newzkl.platform.base.common.core.model.dto.Money;

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.GoodsInfoVO;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 

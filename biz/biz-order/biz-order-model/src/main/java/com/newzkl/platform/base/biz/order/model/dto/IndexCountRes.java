@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import lombok.Data;
 import java.util.List;
@@ -23,5 +24,5 @@ public class IndexCountRes {
     /**
      * 订单金额
      */
-    private Integer orderAmount;
+    private Money orderAmount;
 }

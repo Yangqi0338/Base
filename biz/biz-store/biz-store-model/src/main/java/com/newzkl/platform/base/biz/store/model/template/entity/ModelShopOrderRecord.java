@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.entity;
 
-import com.newzkl.platform.base.biz.store.model.enums.ModeShopOrderType;
+import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 

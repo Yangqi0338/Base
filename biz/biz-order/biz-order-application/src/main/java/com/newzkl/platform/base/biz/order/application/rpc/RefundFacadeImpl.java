@@ -2,11 +2,13 @@ package com.newzkl.platform.base.biz.order.application.rpc;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.application.service.IQueryService;
-import com.newzkl.platform.base.biz.order.application.service.IRefundService;
+import com.newzkl.platform.base.biz.order.application.service.QueryService;
+import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
 import com.newzkl.platform.base.biz.order.facade.IOrderFacade;
 import com.newzkl.platform.base.biz.order.facade.IRefundFacade;
@@ -43,11 +45,12 @@ public class RefundFacadeImpl implements IRefundFacade {
 
 
     private final IRefundDomain refundDomain;
-    private final IRefundService refundService;
-    private final GoodsApi spuFacade;
+    private final RefundService refundService;
+    private final GoodsApi goodsApi;
     private final IOrderFacade orderFacade;
     private final SupplierApi supplierApi;
-    private final IQueryService queryService;
+    private final QueryService queryService;
+    private final IOrderDomain orderDomain;
     private final IRefundRepository refundRepository;
 
     @Override
@@ -61,7 +64,7 @@ public class RefundFacadeImpl implements IRefundFacade {
         if(refundSubmitReq.getSkuList().size() > 1){
             ThrowsException.exception(BaseErrorCode.PARAM, "退款SkuID集合, 目前仅能提交一个SKU");
         }
-        Long spuOrderId = queryService.spuOrderId(orderIdList.get(0), refundSubmitReq.getSkuList().get(0).getSkuId());
+        Long spuOrderId = orderDomain.spuOrderId(orderIdList.get(0), refundSubmitReq.getSkuList().get(0).getSkuId());
         RefundCommand refundCommand = TransferUtils.transfer(refundSubmitReq, new Function<ApiRefundSubmitReq, RefundCommand>() {
             @Override
             public RefundCommand apply(ApiRefundSubmitReq refundSubmitReq) {

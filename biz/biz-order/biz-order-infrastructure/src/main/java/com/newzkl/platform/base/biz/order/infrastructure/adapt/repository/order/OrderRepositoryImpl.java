@@ -17,16 +17,14 @@ import com.newzkl.platform.base.biz.order.infrastructure.entity.*;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.MemberOrderCreateCommand;
 import com.newzkl.platform.base.biz.order.model.req.SkuOrderCommand;
-import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.*;
 import com.newzkl.platform.base.biz.order.model.res.AlreadyDeliverRes;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
-import com.newzkl.platform.base.biz.order.model.support.api.SettlementConfigOutVO;
+
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiOrderStateEvent;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -35,15 +33,17 @@ import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.executor.BatchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
@@ -99,47 +99,13 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
     public Map<OrderEnum.State, Integer> stateCountMap(SpuOrderQuery spuOrderQuery) {
         spuOrderQuery.addGroupField(SpuOrderDO::getOrderState);
         BizCountMap countMap = spuOrderDAO.countMapWithOrderByQuery(spuOrderDAO.getLw(spuOrderQuery).unwrapAlias(), spuOrderQuery);
-        Map<Integer, Integer> resultMap = new HashMap<>();
+        Map<OrderEnum.State, Integer> resultMap = new HashMap<>();
         countMap.forEach(map -> {
             Integer count = BizCountMap.getIntCount(map,0);
             Integer state = BizCountMap.getIntCount(map,1);
             resultMap.put(OrderEnum.State.getByCode(state), count);
         });
         return resultMap;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void orderSave(OrderAgg orderAgg) {
-        try {
-            OrderDTO order = orderAgg.getOrder();
-            OrderDO orderDO = orderAssembler.domainToDO(order);
-            orderDAO.insert(Collections.singletonList(orderDO));
-            List<SpuOrderDO> spuOrderDOList = TransferUtils.transfers(orderAgg.getSpuOrderList(), item -> spuOrderAssembler.domainToDO(item));
-            spuOrderDOList.forEach(item -> item.setShipVO(orderDO.getShipVO()));
-            spuOrderDAO.insert(spuOrderDOList);
-            List<SkuOrderDO> skuOrderDOList = TransferUtils.transfers(orderAgg.getSkuOrderList(), item -> skuOrderAssembler.domainToDO(item));
-            skuOrderDAO.insert(skuOrderDOList);
-        } catch (DuplicateKeyException e) {
-            log.error("订单持久化异常:", e);
-            ThrowsException.exception(BaseErrorCode.EXIST_DATA);
-        }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void orderAggUpdate(OrderAgg orderAgg) {
-        OrderDTO order = orderAgg.getOrder();
-        OrderDO orderDO = orderAssembler.domainToDO(order);
-        orderDAO.updateById(orderDO);
-        List<SpuOrderDO> spuOrderDOList = TransferUtils.transfers(orderAgg.getSpuOrderList(), item -> spuOrderAssembler.domainToDO(item));
-        spuOrderDOList.forEach(spuOrder -> {
-            spuOrderDAO.updateById(spuOrder);
-        });
-        List<SkuOrderDO> skuOrderDOList = TransferUtils.transfers(orderAgg.getSkuOrderList(), item -> skuOrderAssembler.domainToDO(item));
-        skuOrderDOList.forEach(skuOrder -> {
-            skuOrderDAO.updateById(skuOrder);
-        });
     }
 
     @Override
@@ -343,21 +309,37 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
     }
 
     @Override
-    public void skuOrderUpdate(SkuOrderDTO skuOrderDTO, SkuOrderQuery skuQuery) {
+    public int skuOrderSave(SkuOrderDTO skuOrderDTO, SkuOrderQuery skuOrderQuery) {
         SkuOrderDO skuOrderDO = TransferUtils.transfer(skuOrderDTO, SkuOrderDO.class);
-        skuOrderDAO.update(skuOrderDO, skuOrderDAO.getLw(skuQuery));
+        if (skuOrderQuery != null) {
+            return skuOrderDAO.update(skuOrderDO, skuOrderDAO.getLw(skuOrderQuery));
+        }else {
+            return skuOrderDAO.insert(skuOrderDO);
+        }
     }
 
     @Override
-    public void spuOrderUpdate(SpuOrderDTO spuOrderDTO, SpuOrderQuery spuOrderQuery) {
+    public int skuOrderSave(List<SkuOrderDTO> skuList) {
+        List<SkuOrderDO> skuOrderList = TransferUtils.transfers(skuList, SkuOrderDO.class);
+        List<BatchResult> result = skuOrderDAO.insertOrUpdate(skuOrderList);
+        return 1;
+    }
+
+    @Override
+    public int spuOrderSave(SpuOrderDTO spuOrderDTO, SpuOrderQuery spuOrderQuery) {
         SpuOrderDO spuOrderDO = TransferUtils.transfer(spuOrderDTO, SpuOrderDO.class);
-        spuOrderDAO.update(spuOrderDO, spuOrderDAO.getLw(spuOrderQuery));
+        if (spuOrderQuery != null) {
+            return spuOrderDAO.update(spuOrderDO, spuOrderDAO.getLw(spuOrderQuery));
+        }else {
+            return spuOrderDAO.insert(spuOrderDO);
+        }
     }
 
     @Override
-    public void spuOrderUpdate(List<SpuOrderDTO> spuList) {
+    public int spuOrderSave(List<SpuOrderDTO> spuList) {
         List<SpuOrderDO> spuOrderList = TransferUtils.transfers(spuList, SpuOrderDO.class);
-        spuOrderDAO.updateById(spuOrderList);
+        List<BatchResult> result = spuOrderDAO.insertOrUpdate(spuOrderList);
+        return 1;
     }
 
     @Override
@@ -380,9 +362,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int deliverSave(Deliver deliver) {
+    public boolean deliverSave(Deliver deliver) {
         DeliverDO model = TransferUtils.transfer(deliver, DeliverDO.class);
-        return deliverDAO.insert(model);
+        return deliverDAO.insertOrUpdate(model);
     }
 
     @Override
@@ -415,15 +397,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
     }
 
     @Override
-    public void orderEdit(OrderDTO orderEdit) {
+    public boolean orderSave(OrderDTO orderEdit) {
         OrderDO orderDO = TransferUtils.transfer(orderEdit, OrderDO.class);
-        orderDAO.updateById(orderDO);
-    }
-
-    @Override
-    public void deliverEdit(Deliver deliver) {
-        DeliverDO deliverDO = TransferUtils.transfer(deliver, DeliverDO.class);
-        deliverDAO.updateById(deliverDO);
+        return orderDAO.insertOrUpdate(orderDO);
     }
 
     @Override
@@ -475,8 +451,8 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
     }
 
     @Override
-    public RoleEnum.OrderType settleOrderType(Long supplierId) {
-        return RoleEnum.OrderType.getByCode(supplierApi.settleOrderType(supplierId));
+    public SettleType settleOrderType(Long supplierId) {
+        return supplierApi.settleOrderType(supplierId);
     }
 
     @Override
@@ -485,9 +461,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
     }
 
     @Override
-    public Integer spuOrderSumAmount(SpuOrderQuery spuOrderQuery) {
+    public Money spuOrderSumAmount(SpuOrderQuery spuOrderQuery) {
         return listOneField(spuOrderDAO, spuOrderDAO.getLw(spuOrderQuery), SpuOrderDO::getTotalAmount).stream()
-                .mapToInt(it-> Opt.ofNullable(it).orElse(0)).sum();
+                .reduce(Money.ZERO, Money::add);
     }
 
     @Override
@@ -605,5 +581,11 @@ public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepo
             orderStateRecordDAO.updateById(orderStateRecordDO);
         }
         return record;
+    }
+
+    @Override
+    public Page<OrderStateRecordEntity> recordPage(OrderStateRecordQuery query) {
+        Page<OrderStateRecordDO> page = orderStateRecordDAO.selectPage(RepositorySupport.page(query),orderStateRecordDAO.getLw(query));
+        return TransferUtils.transferPage(page,OrderStateRecordEntity.class);
     }
 }

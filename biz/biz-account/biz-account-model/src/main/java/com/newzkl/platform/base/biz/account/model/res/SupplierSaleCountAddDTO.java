@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,6 +15,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class SupplierSaleCountAddDTO implements Serializable {
     private Long supplierId;
-    private Integer addAmount;
+    private Money addAmount;
     private Integer addCount;
 }

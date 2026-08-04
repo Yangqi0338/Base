@@ -21,6 +21,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-account-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
+        </dependency>
         <!-- biz-auth 切分: AccountLoginServiceImpl 需 AuthRepository, IdentityServiceImpl 需
              RoleErrorCode. 显式声明而非依赖传递, 依赖方向 biz-account -> biz-auth 单向 -->
         <dependency>

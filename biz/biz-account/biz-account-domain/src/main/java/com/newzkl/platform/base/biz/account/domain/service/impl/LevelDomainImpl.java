@@ -67,7 +67,7 @@ public class LevelDomainImpl implements LevelDomain {
         packGoodsSaveReq.setType(level.getType());
         packGoodsSaveReq.setLevel(level.getValue());
         packGoodsSaveReq.setImg(pack.getPackImg());
-        packGoodsSaveReq.setAmount(pack.getAmount());
+        packGoodsSaveReq.setAmount((int) pack.getAmount().getCent());
         packGoodsSaveReq.setName(pack.getPackName());
         pack.setPackGoodsId(packGoodsApi.save(packGoodsSaveReq));
 

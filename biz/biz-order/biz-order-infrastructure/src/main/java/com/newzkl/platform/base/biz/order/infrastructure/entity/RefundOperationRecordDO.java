@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
@@ -69,7 +71,7 @@ public class RefundOperationRecordDO extends BaseDO {
     /**
      * 本次操作涉及的退款金额（单位：分，和refund表保持一致）
      */
-    private Integer refundAmount;
+    private Money refundAmount;
 
     /**
      * 物流公司名称

@@ -84,4 +84,21 @@ public class SysCmd {
          */
         private String mobile;
     }
+
+    /**
+     * 单字符串入参 (旧 {@code com.zkl.scm.model.web.StringObj})
+     *
+     * <p>字段名 {@code string} 逐字沿用旧命名, 前端契约不变。用于 {@code /ocrIdentify}
+     * 传身份证图片 URL。</p>
+     *
+     * @author KC
+     */
+    @Data
+    public static class StringObj implements Serializable {
+
+        /**
+         * 字符串值 (身份证图片 URL)
+         */
+        private String string;
+    }
 }

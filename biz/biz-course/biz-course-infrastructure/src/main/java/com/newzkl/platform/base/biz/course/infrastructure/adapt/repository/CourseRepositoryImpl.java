@@ -114,6 +114,19 @@ public class CourseRepositoryImpl implements CourseRepository {
     }
 
     @Override
+    public List<Long> listIdsByTitleAndCategory(String title, Long categoryId) {
+        boolean hasTitle = title != null && !title.isBlank();
+        if (!hasTitle && categoryId == null) {
+            return java.util.Collections.emptyList();
+        }
+        BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<>();
+        wrapper.notEmptyLike(CourseDO::getTitle, title)
+                .notNullEq(CourseDO::getCategoryId, categoryId);
+        wrapper.select(CourseDO::getId);
+        return courseDAO.selectList(wrapper).stream().map(CourseDO::getId).toList();
+    }
+
+    @Override
     public long countByCategoryId(Long categoryId) {
         BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<CourseDO>()
                 .notNullEq(CourseDO::getCategoryId, categoryId);

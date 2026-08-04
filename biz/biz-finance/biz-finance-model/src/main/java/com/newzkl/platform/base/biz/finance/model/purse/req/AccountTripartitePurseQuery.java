@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

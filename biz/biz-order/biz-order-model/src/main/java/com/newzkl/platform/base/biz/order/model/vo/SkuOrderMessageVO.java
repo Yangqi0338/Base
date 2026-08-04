@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
@@ -30,17 +32,17 @@ public class SkuOrderMessageVO implements Serializable {
     /**
      * 商品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
 
     /**
      * 铺货价格
      */
-    private Integer storeAmount;
+    private Money storeAmount;
 
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
 
     /**
      * 订单状态
@@ -110,7 +112,7 @@ public class SkuOrderMessageVO implements Serializable {
     /**
      * 总服务费
      */
-    private Integer totalServiceChange;
+    private Money totalServiceChange;
 
     /**
      * 运营商服务费

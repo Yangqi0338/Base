@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
@@ -61,24 +63,24 @@ public class RefundDO extends BaseDO {
     private Long supplierId;
     private RefundEnum.State refundState;
      private RefundEnum.RefundType refundType;
-    private Integer freightAmount;
-    private Integer refundAmount;
+    private Money freightAmount;
+    private Money refundAmount;
     /**
      * 货款金额
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     /**
      * 选品金额
      */
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货金额
      */
-    private Integer storeAmount;
+    private Money storeAmount;
     /**
      * 服务费
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     private String reason;
     private String remark;
     private String images;

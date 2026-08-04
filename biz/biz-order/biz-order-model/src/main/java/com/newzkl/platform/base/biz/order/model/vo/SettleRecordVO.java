@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
 import lombok.Data;
 
@@ -26,7 +28,7 @@ public class SettleRecordVO extends BaseVO {
      /**
      * 结算金额
      */
-     private Integer settleMoney;
+     private Money settleMoney;
      /**
      * 结算商品数量
      */
@@ -34,15 +36,15 @@ public class SettleRecordVO extends BaseVO {
      /**
       * 货款金额
       */
-     private Integer goodsAmount;
+     private Money goodsAmount;
      /**
       * 运费金额
       */
-     private Integer freightAmount;
+     private Money freightAmount;
      /**
       * 售后金额
       */
-     private Integer refundAmount;
+     private Money refundAmount;
      /**
       * 标签
       */

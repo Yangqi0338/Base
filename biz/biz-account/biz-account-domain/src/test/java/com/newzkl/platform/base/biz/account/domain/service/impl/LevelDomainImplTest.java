@@ -13,6 +13,7 @@ import com.newzkl.platform.base.biz.account.model.level.vo.ConditionVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.LevelVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.PackCondition;
 import com.newzkl.platform.base.biz.account.model.level.vo.PermissionVO;
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -90,7 +91,7 @@ class LevelDomainImplTest {
      */
     private LevelReq validReq() {
         PackCondition pack = new PackCondition();
-        pack.setAmount(199);
+        pack.setAmount(Money.of(199));
         pack.setPackName("入门礼包");
         pack.setPackImg("pack.png");
 

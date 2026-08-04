@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderExt;
@@ -64,26 +66,26 @@ public class SpuOrderDO extends BaseDO {
      */
     private String spuImg;
     private Integer skuCount;
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 铺货金额
      */
-    private Integer storeAmount;
-    private Integer freightAmount;
-    private Integer discountAmount;
-    private Integer totalAmount;
+    private Money storeAmount;
+    private Money freightAmount;
+    private Money discountAmount;
+    private Money totalAmount;
     /**
      * 货款金额 supplier_amount
      */
-    private Integer supplierAmount;
+    private Money supplierAmount;
     /**
      * C端支付金额
      */
-    private Integer memberAmount;
+    private Money memberAmount;
     /**
      * 服务费: 渠道商应付
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     private Integer orderState;
 
     @JsonSerialize

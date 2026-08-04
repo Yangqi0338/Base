@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.application.pay.service;
 
-import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.finance.model.purse.req.ChannelPurchaseGoodsSeatReq;
 
 /**

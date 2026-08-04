@@ -49,8 +49,6 @@ public class RefundEnum {
     public enum State {
         /** 待渠道商审核 */
         CHANNEL_WAIT(0, "待渠道商审核"),
-        /** 待商户审核 */
-        MERCHANT_WAIT(1, "待商户审核"),
         /** 待供应商审核 */
         SUPPLIER_WAIT(2, "待供应商审核"),
         /** 待提交物流 */

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -76,9 +77,9 @@ public class ChannelRes implements Serializable {
      */
     private String serviceFeeConfigVO;
     /**
-     * 交易师收益
+     * 交易师收益 (Money, 落库 BIGINT 分)
      */
-    private Integer dealerEarnings;
+    private Money dealerEarnings;
     /**
      * 市场数量
      */
@@ -116,21 +117,21 @@ public class ChannelRes implements Serializable {
      */
     private Integer totalOrderNumber;
     /**
-     * 总订单金额
+     * 总订单金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalOrderAmount;
+    private Money totalOrderAmount;
     /**
      * 总售后笔数
      */
     private Integer totalRefundNumber;
     /**
-     * 总售后金额
+     * 总售后金额 (Money, 落库 BIGINT 分)
      */
-    private Integer totalRefundAmount;
+    private Money totalRefundAmount;
     /**
-     * 贡献金额
+     * 贡献金额 (Money, 落库 BIGINT 分)
      */
-    private Integer contributeAmount;
+    private Money contributeAmount;
     /**
      * 层级贡献金额
      */

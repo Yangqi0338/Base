@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import lombok.Data;
@@ -45,13 +46,13 @@ public class OperatorRes extends BaseRes {
      */
     private Integer supplierGoodsCount;
     /**
-     * 自身的订单流水
+     * 自身的订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderAmount;
+    private Money orderAmount;
     /**
-     * 总订单流水
+     * 总订单流水 (Money, 落库 BIGINT 分)
      */
-    private Integer orderTotalAmount;
+    private Money orderTotalAmount;
     /**
      * 提货积分
      */
@@ -65,9 +66,9 @@ public class OperatorRes extends BaseRes {
      */
     private String serviceFeeConfigVO;
     /**
-     * 服务费
+     * 服务费 (Money, 落库 BIGINT 分)
      */
-    private Integer serviceAmount;
+    private Money serviceAmount;
     /**
      * 运营类型 0 机构 1 行业 2 区域
      */

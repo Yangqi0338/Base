@@ -1,16 +1,14 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.newzkl.platform.base.biz.order.application.service.IOrderStateRecordService;
+import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.OrderStateRecordVO;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
-
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -26,7 +24,7 @@ import java.util.List;
 public class OrderStateRecordController {
 
     @Autowired
-    private IOrderStateRecordService orderStateRecordService;
+    private IOrderDomain orderDomain;
 
     /**
      * 按spuOrderId查询订单状态记录列表（按操作时间倒序）
@@ -36,7 +34,7 @@ public class OrderStateRecordController {
      */
     @GetMapping("listBySpuOrderId")
     public PlatformResult<List<OrderStateRecordVO>> listBySpuOrderId(@RequestParam("spuOrderId") @NotNull(message = "spuOrderId不能为空") Long spuOrderId) {
-        List<OrderStateRecordVO> result = orderStateRecordService.listBySpuOrderId(spuOrderId);
+        List<OrderStateRecordVO> result = orderDomain.recordListBySpuOrderId(spuOrderId);
         return PlatformResult.success(result);
     }
 
@@ -48,7 +46,7 @@ public class OrderStateRecordController {
      */
     @PostMapping("pageQuery")
     public PlatformResult<IPage<OrderStateRecordVO>> pageQuery(@Validated @RequestBody OrderStateRecordQuery req) {
-        IPage<OrderStateRecordVO> result = orderStateRecordService.pageQuery(req);
+        IPage<OrderStateRecordVO> result = orderDomain.recordPage(req);
         return PlatformResult.success(result);
     }
 }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
+import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -131,17 +132,17 @@ public class SpuVO extends BaseRes implements Serializable {
      */
     private Integer selectionNum;
     /**
-     * 平台销售额
+     * 平台销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer adminSaleAmount;
+    private Money adminSaleAmount;
     /**
-     * 渠道商销售额
+     * 渠道商销售额 (Money, 落库 BIGINT 分)
      */
-    private Integer channelSaleAmount;
+    private Money channelSaleAmount;
     /**
-     * 销售金额
+     * 销售金额 (Money, 落库 BIGINT 分)
      */
-    private Integer saleAmount;
+    private Money saleAmount;
     /**
      * 售后数量
      */
@@ -165,49 +166,49 @@ public class SpuVO extends BaseRes implements Serializable {
      */
     private RoleEnum.CompanyRole role;
     /**
-     * 供应商销售金额
+     * 供应商销售金额 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierSaleAmount;
+    private Money supplierSaleAmount;
     /**
-     * 最大利润
+     * 最大利润 (Money, 落库 BIGINT 分)
      */
-    private Integer maxProfit;
+    private Money maxProfit;
     /**
-     * 市场价起始
+     * 市场价起始 (Money, 落库 BIGINT 分)
      */
-    private Integer marketPriceBegan;
+    private Money marketPriceBegan;
     /**
-     * 市场价结束
+     * 市场价结束 (Money, 落库 BIGINT 分)
      */
-    private Integer marketPriceEnd;
+    private Money marketPriceEnd;
     /**
      * 冗余: 账号名称
      */
     private String accountName;
     /**
-     * 冗余: 市场价
+     * 冗余: 市场价 (Money, 落库 BIGINT 分)
      */
-    private Integer marketPrice;
+    private Money marketPrice;
     /**
-     * 冗余: 供货价
+     * 冗余: 供货价 (Money, 落库 BIGINT 分)
      */
-    private Integer supplyPrice;
+    private Money supplyPrice;
     /**
-     * 冗余: 供货价起始
+     * 冗余: 供货价起始 (Money, 落库 BIGINT 分)
      */
-    private Integer supplyPriceBegan;
+    private Money supplyPriceBegan;
     /**
-     * 冗余: 供货价结束
+     * 冗余: 供货价结束 (Money, 落库 BIGINT 分)
      */
-    private Integer supplyPriceEnd;
+    private Money supplyPriceEnd;
     /**
-     * 冗余: 销售价
+     * 冗余: 销售价 (Money, 落库 BIGINT 分)
      */
-    private Integer salePrice;
+    private Money salePrice;
     /**
-     * 冗余: 建议零售价
+     * 冗余: 建议零售价 (Money, 落库 BIGINT 分)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
     /**
      * 冗余: 毛利率
      */
@@ -225,21 +226,21 @@ public class SpuVO extends BaseRes implements Serializable {
      */
     private String lastRefuseReason;
     /**
-     * 冗余: 销售价起始
+     * 冗余: 销售价起始 (Money, 落库 BIGINT 分)
      */
-    private Integer salePriceBegan;
+    private Money salePriceBegan;
     /**
-     * 冗余: 销售价结束
+     * 冗余: 销售价结束 (Money, 落库 BIGINT 分)
      */
-    private Integer salePriceEnd;
+    private Money salePriceEnd;
     /**
-     * 冗余: 供货价起始
+     * 冗余: 供货价起始 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierPriceBegan;
+    private Money supplierPriceBegan;
     /**
-     * 冗余: 供货价结束
+     * 冗余: 供货价结束 (Money, 落库 BIGINT 分)
      */
-    private Integer supplierPriceEnd;
+    private Money supplierPriceEnd;
     /**
      * 冗余: 是否是包邮模板
      */

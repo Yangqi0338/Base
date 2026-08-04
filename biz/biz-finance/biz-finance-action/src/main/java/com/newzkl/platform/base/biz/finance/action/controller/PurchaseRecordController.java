@@ -154,10 +154,10 @@ public class PurchaseRecordController {
                 purchaseRecordDomain.queryPage(query).getRecords(),
                 GoodsSeatPurchaseRecordExportVO::new,
                 (c, v) -> {
-                    v.setPayState(c.getPayState().getInfo());
+                    v.setPayState(c.getPayState().getValue());
                     // payAmount 已 Money, getAmount()=元 BigDecimal, 直接取代 分/100 换算
                     v.setPayAmount(c.getPayAmount().getAmount().toPlainString());
-                    v.setPayType(c.getPayType().getInfo());
+                    v.setPayType(c.getPayType().getValue());
                     v.setPurchaseNum(c.getSeatPackageOrderInfo().getPurchaseNum());
                 });
         EasyExcelUtil.export(rows, "商品席位购买记录");
