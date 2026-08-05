@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.query.audit;
 
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import lombok.Data;
 
 import java.util.List;

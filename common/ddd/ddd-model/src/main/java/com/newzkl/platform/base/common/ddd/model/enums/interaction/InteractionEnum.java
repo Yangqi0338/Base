@@ -1,12 +1,15 @@
-package com.newzkl.platform.base.biz.account.model.enums;
+package com.newzkl.platform.base.common.ddd.model.enums.interaction;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 互动枚举
+ * 互动枚举（共享内核）
+ *
+ * @author sijiwang
  */
 public class InteractionEnum {
 
@@ -15,7 +18,7 @@ public class InteractionEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum TargetTypeEnum {
+    public enum TargetTypeEnum implements IEnum<String> {
         /**
          * 用户视频
          */
@@ -39,8 +42,16 @@ public class InteractionEnum {
         private final String code;
         private final String desc;
 
+        @Override
+        public String getValue() {
+            return desc;
+        }
+
         /**
          * 根据编码获取枚举
+         *
+         * @param code 编码
+         * @return 匹配的枚举
          */
         public static TargetTypeEnum getByCode(String code) {
             for (TargetTypeEnum type : values()) {
@@ -57,7 +68,7 @@ public class InteractionEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum ActionTypeEnum {
+    public enum ActionTypeEnum implements IEnum<String> {
         /** 浏览 */
         VIEW("VIEW", "浏览"),
         /** 点赞 */
@@ -71,8 +82,16 @@ public class InteractionEnum {
         private final String code;
         private final String desc;
 
+        @Override
+        public String getValue() {
+            return desc;
+        }
+
         /**
          * 根据编码获取枚举
+         *
+         * @param code 编码
+         * @return 匹配的枚举
          */
         public static ActionTypeEnum getByCode(String code) {
             for (ActionTypeEnum type : values()) {

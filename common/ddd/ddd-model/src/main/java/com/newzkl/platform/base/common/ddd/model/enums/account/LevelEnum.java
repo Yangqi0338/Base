@@ -1,18 +1,16 @@
-package com.newzkl.platform.base.biz.user.model.enums;
+package com.newzkl.platform.base.common.ddd.model.enums.account;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 等级相关枚举
- *
  * @author fang
  */
 public class LevelEnum {
 
-    /**
-     * 用户默认密码
-     */
     public static final String USER_DEFAULT_PASSWORD = "123456";
 
     /**
@@ -20,7 +18,7 @@ public class LevelEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum AmountConditionScope {
+    public enum AmountConditionScope implements IEnum<Integer> {
         /**
          * 直属下级
          */
@@ -28,6 +26,8 @@ public class LevelEnum {
         /** 非直属下级 */
         NOT_DIRECT(1, "非直属下级"),
         ;
+        @EnumValue
+        @JsonValue
         private Integer code;
         private String value;
     }
@@ -37,12 +37,14 @@ public class LevelEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum ConditionJudgeType {
+    public enum ConditionJudgeType implements IEnum<Integer> {
         /** 满足任意一项 */
         OR(0, "满足任意一项"),
         /** 全部满足 */
         AND(1, "全部满足"),
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
     }

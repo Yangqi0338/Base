@@ -9,7 +9,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.biz.account.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;

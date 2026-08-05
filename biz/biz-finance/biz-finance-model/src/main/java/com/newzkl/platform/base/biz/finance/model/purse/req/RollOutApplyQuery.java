@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
-import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

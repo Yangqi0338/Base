@@ -27,7 +27,7 @@ import com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;

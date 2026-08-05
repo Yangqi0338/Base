@@ -1,5 +1,8 @@
-package com.newzkl.platform.base.biz.goods.model.enums.goods;
+package com.newzkl.platform.base.common.ddd.model.enums.goods;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,7 +16,7 @@ import java.util.stream.Stream;
 public class GoodsRelationEnum {
 
 
-    public enum GoodsRelation {
+    public enum GoodsRelation implements IEnum<Integer> {
         /**
          * 一级市场-商品
          */
@@ -25,6 +28,8 @@ public class GoodsRelationEnum {
         /** 市场选品-商品 */
         SELECT_GOODS(3, "市场选品-商品");
 
+        @EnumValue
+        @JsonValue
         private Integer relationType;
         private String info;
 
@@ -48,15 +53,28 @@ public class GoodsRelationEnum {
         public void setInfo(String info) {
             this.info = info;
         }
+
+        @Override
+        public Integer getCode() {
+            return relationType;
+        }
+
+        @Override
+        public String getValue() {
+            return info;
+        }
     }
 
     @Getter
     @AllArgsConstructor
-    public enum Field {
+    public enum Field implements IEnum<Integer> {
         /** 销量 */
         SALE_NUMBER(0, "mgr.sell_num"),
         /** 金额 */
         MONEY(1, "sp.sale_price_began");
+
+        @EnumValue
+        @JsonValue
         private Integer code;
         private String value;
 

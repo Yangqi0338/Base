@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.user.model.enums.InteractionEnum.ActionTypeEnum;
-import com.newzkl.platform.base.biz.user.model.enums.InteractionEnum.TargetTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum.ActionTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum.TargetTypeEnum;
 import com.newzkl.platform.base.biz.user.model.interaction.query.BatchInteractionQuery;
 import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionPageQueryRPC;
 import com.newzkl.platform.base.biz.user.model.interaction.res.BatchInteractionResult;

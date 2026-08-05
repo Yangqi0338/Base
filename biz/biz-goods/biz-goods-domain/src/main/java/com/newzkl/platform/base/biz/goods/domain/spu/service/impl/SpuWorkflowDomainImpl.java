@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQu
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.goods.model.exception.user.AuditErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.AuditErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

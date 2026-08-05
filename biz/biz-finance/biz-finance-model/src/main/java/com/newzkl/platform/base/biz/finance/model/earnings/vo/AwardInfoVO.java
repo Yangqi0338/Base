@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
 
-import com.newzkl.platform.base.biz.finance.model.enums.activity.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import lombok.Data;
 
 /**

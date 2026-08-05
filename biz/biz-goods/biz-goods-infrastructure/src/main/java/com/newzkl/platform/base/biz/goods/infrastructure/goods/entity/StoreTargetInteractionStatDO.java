@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.biz.goods.model.enums.user.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

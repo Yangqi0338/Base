@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.req.market;
 
-import com.newzkl.platform.base.biz.market.model.enums.MarketEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import lombok.Data;
 
 /**

@@ -20,7 +20,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
-import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.market.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.biz.market.model.enums.MarketTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

@@ -35,7 +35,7 @@ public class MarketReq {
 
     /**
      * 市场类型
-     * @see com.newzkl.platform.base.biz.market.model.enums.MarketTypeEnum
+     * @see com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum
      */
     private String marketType;
 

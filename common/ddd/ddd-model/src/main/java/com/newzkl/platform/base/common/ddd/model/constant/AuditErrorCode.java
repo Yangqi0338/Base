@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.account.model.exception;
+package com.newzkl.platform.base.common.ddd.model.constant;
 
 import com.newzkl.platform.base.common.core.model.exception.ErrorCode;
 import lombok.AllArgsConstructor;

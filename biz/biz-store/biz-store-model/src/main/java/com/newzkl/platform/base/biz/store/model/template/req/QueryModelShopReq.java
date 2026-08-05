@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.req;
 
-import com.newzkl.platform.base.biz.store.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

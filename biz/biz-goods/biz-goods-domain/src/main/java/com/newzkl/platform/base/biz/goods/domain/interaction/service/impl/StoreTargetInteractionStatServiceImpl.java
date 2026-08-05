@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.interaction.repository.StoreTargetInteractionStatRepository;
 import com.newzkl.platform.base.biz.goods.domain.interaction.service.StoreTargetInteractionStatService;
 import com.newzkl.platform.base.biz.goods.model.constant.StoreInteractionStatRedisConstant;
-import com.newzkl.platform.base.biz.goods.model.enums.user.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.interaction.StoreTargetInteractionStat;
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.BatchSyncStatReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.InteractionStatReq;

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.brand;
 
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum.ApprovalStatus;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum.ApprovalStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

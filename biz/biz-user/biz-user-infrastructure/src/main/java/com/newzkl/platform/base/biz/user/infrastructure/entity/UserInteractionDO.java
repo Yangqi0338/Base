@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.user.model.enums.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.entity.interaction.StoreTa
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatBatchReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatPageReq;
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
-import com.newzkl.platform.base.biz.goods.model.enums.user.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

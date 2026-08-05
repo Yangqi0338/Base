@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import lombok.Data;
 
 import java.io.Serializable;

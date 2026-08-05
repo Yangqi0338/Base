@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.account.model.enums.LevelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.LevelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 // TODO[cross-domain relation]: import com.zkl.scm.user.domain.relation.service.ILevelDomain; (relation biz, 迁 biz-user)

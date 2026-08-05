@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.brand;
 
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum.ApprovalStatus;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum.ApprovalStatus;
 import lombok.Data;
 
 /**

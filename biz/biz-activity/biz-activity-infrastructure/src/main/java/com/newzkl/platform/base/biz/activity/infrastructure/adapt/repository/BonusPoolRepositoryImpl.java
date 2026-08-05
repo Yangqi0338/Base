@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.activity.infrastructure.entity.BonusPoolArch
 import com.newzkl.platform.base.biz.activity.infrastructure.entity.BonusPoolNowDO;
 import com.newzkl.platform.base.biz.activity.infrastructure.entity.BonusPoolPartakeDO;
 import com.newzkl.platform.base.biz.activity.infrastructure.utils.ActivityDateUtil;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.event.req.*;
 import com.newzkl.platform.base.biz.activity.model.event.res.HistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusPoolReq;

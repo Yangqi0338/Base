@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.query;
 
-import com.newzkl.platform.base.biz.store.model.enums.BIEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.BIEnum;
 import lombok.Data;
 
 @Data

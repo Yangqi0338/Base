@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.activity.domain.strategy.service.method.impl;
 
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.strategy.aggregates.StrategyRich;
 import com.newzkl.platform.base.biz.activity.model.strategy.res.DrawMethodRes;
 import com.newzkl.platform.base.biz.activity.domain.strategy.service.method.DrawMethod;

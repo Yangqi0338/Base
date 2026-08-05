@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.activity.application.bonus.draw.BonusPoolAction;
 import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.deploy.BonusPoolDeploy;
 import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.partake.BonusPoolPartake;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.event.req.*;
 import com.newzkl.platform.base.biz.activity.model.event.res.BonusDetailsRes;
 import com.newzkl.platform.base.biz.activity.model.event.res.HistoryBonusPoolReq;

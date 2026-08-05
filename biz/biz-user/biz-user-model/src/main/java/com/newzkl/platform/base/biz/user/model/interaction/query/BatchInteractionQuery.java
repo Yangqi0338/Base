@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.interaction.query;
 
-import com.newzkl.platform.base.biz.user.model.enums.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

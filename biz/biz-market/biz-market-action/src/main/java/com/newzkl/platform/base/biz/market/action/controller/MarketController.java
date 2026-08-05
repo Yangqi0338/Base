@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.domain.market.service.MarketDomain;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketCategoryPageQuery;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
-import com.newzkl.platform.base.biz.market.model.enums.MarketEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.biz.market.model.query.market.AppBindMarketGoodsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.market.ChannelMarketPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.market.MarketPageQuery;

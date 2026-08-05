@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.entity.audit;
 
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import lombok.Data;
 
 /**

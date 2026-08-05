@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.rpc.model.spu;
 
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;

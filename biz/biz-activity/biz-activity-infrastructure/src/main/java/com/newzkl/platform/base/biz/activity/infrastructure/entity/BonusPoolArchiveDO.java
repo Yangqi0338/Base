@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 

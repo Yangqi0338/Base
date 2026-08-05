@@ -8,7 +8,7 @@ import cn.hutool.core.lang.Opt;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.action.cmd.CountCmd;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.model.enums.BIEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.BIEnum;
 import com.newzkl.platform.base.biz.account.model.req.CountSaleQuery;
 import com.newzkl.platform.base.biz.account.model.res.CountSaleVO;
 import com.newzkl.platform.base.biz.account.model.res.SaleNumAmountSummary;

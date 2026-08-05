@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.activity.model.event.req;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.validator.ActivityIdValid;
 import com.newzkl.platform.base.common.ddd.model.check.AddCommand;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;

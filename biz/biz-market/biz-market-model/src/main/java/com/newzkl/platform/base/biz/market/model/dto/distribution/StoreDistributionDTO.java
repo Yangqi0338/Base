@@ -24,7 +24,7 @@ public class StoreDistributionDTO implements Serializable {
     private Long skuId;
     /**
      * 来源
-     * @see com.newzkl.platform.base.biz.market.model.enums.DistributionEnum.Source
+     * @see com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum.Source
      */
     private Long marketId;
     /**

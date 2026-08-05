@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawConfig;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
-import com.newzkl.platform.base.biz.finance.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.DictEnum;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;

@@ -1,5 +1,8 @@
-package com.newzkl.platform.base.biz.finance.model.enums.goods;
+package com.newzkl.platform.base.common.ddd.model.enums.store;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -13,12 +16,11 @@ public class StoreGoodsEnum {
     //来源
     @Getter
     @AllArgsConstructor
-    public enum Source {
-        /**
-         * 市场
-         */
+    public enum Source implements IEnum<Integer> {
         MARKET(0, "市场"),
         ;
+        @EnumValue
+        @JsonValue
         private Integer code;
         private String value;
     }
@@ -26,12 +28,12 @@ public class StoreGoodsEnum {
     //物流方式
     @Getter
     @AllArgsConstructor
-    public enum LogisticsType {
-        /** 快递 */
+    public enum LogisticsType implements IEnum<Integer> {
         EXPRESSAGE(0, "快递"),
-        /** 自提 */
         PICK_UP(1, "自提"),
         ;
+        @EnumValue
+        @JsonValue
         private Integer code;
         private String value;
     }
@@ -39,12 +41,12 @@ public class StoreGoodsEnum {
     //发货时限
     @Getter
     @AllArgsConstructor
-    public enum DeliveryTimeType {
-        /** 2日内 */
+    public enum DeliveryTimeType implements IEnum<Integer> {
         WITHIN_2_DAYS(0, "2日内"),
-        /** 大于2日 */
         MORE_2_DAYS(1, "大于2日"),
         ;
+        @EnumValue
+        @JsonValue
         private Integer code;
         private String value;
     }
@@ -52,12 +54,12 @@ public class StoreGoodsEnum {
     //状态
     @Getter
     @AllArgsConstructor
-    public enum status {
-        /** 上架 */
+    public enum status implements IEnum<Integer> {
         LISTED(0, "上架"),
-        /** 下架 */
         UNLISTED(1, "下架"),
         ;
+        @EnumValue
+        @JsonValue
         private Integer code;
         private String value;
     }

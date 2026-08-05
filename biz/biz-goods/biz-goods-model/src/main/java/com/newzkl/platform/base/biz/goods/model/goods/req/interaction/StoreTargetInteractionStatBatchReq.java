@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.interaction;
 
 
-import com.newzkl.platform.base.biz.goods.model.enums.user.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import lombok.Data;
 
 import java.util.List;

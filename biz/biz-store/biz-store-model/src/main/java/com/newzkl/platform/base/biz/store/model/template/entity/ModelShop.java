@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.entity;
 
-import com.newzkl.platform.base.biz.store.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import lombok.Data;
 

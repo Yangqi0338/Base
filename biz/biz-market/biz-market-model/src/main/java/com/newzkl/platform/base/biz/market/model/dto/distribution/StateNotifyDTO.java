@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.dto.distribution;
 
-import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
 import lombok.Data;
 
 @Data

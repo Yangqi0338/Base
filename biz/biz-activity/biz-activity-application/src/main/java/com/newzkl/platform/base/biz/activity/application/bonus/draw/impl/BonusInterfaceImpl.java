@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.partake.
 import com.newzkl.platform.base.biz.activity.domain.strategy.service.draw.DrawExec;
 import com.newzkl.platform.base.biz.activity.model.award.req.RecordAwardOrderReq;
 import com.newzkl.platform.base.biz.activity.model.bonus.req.AlterCustomBonusReq;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityVO;
 import com.newzkl.platform.base.biz.activity.model.event.vo.BonusPoolDataVO;

@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.activity.application.bonus.deploy.BonusDeplo
 import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.deploy.BonusPoolDeploy;
 import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.partake.BonusPoolPartake;
 import com.newzkl.platform.base.biz.activity.model.bonus.res.ActivityQueryRes;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivateActivityReq;
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivityConfigSaveReq;
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryPageReq;

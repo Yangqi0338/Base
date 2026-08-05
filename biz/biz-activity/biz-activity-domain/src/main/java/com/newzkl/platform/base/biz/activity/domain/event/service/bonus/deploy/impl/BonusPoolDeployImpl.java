@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.activity.domain.event.service.bonus.deploy.
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.activity.model.event.aggregates.ActivityConfigRich;
 import com.newzkl.platform.base.biz.activity.domain.adapt.repository.BonusPoolRepository;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.biz.activity.model.event.req.*;
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
 import com.newzkl.platform.base.biz.activity.domain.adapt.repository.ActivityRepository;

@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
 import com.newzkl.platform.base.biz.market.model.req.market.UpdateMarketDataReq;
 import com.newzkl.platform.base.biz.market.model.vo.market.*;
 import com.newzkl.platform.base.biz.market.model.biz.req.CategoryReq;
-import com.newzkl.platform.base.biz.market.model.enums.MarketEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

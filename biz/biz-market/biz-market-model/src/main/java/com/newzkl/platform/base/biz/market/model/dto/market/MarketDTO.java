@@ -63,7 +63,7 @@ public class MarketDTO implements Serializable {
      */
     private LocalDateTime createTime;
     /**
-     * 市场类型  {@code com.newzkl.platform.base.biz.market.model.enums.MarketTypeEnum}
+     * 市场类型  {@code com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum}
      * GENERAL-普通市场，SPECIAL-专区市场
      */
     private String marketType;

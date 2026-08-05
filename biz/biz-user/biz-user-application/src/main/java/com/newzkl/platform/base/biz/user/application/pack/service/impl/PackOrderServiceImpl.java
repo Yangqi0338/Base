@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.user.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.user.domain.service.PackOrderDomain;
 import com.newzkl.platform.base.biz.user.model.enums.EarningsEnum;
 import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
-import com.newzkl.platform.base.biz.user.model.pack.exception.PackOrderErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.biz.user.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderPayReq;

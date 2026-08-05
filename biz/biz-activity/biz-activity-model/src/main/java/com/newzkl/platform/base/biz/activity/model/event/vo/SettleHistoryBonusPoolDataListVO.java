@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.activity.model.event.vo;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.fastjson2.JSONObject;
-import com.newzkl.platform.base.biz.activity.model.enums.ActivityEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

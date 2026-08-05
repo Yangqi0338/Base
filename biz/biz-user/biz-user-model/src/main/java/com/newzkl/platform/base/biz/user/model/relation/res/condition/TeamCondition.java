@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.model.relation.res.condition;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
-import com.newzkl.platform.base.biz.user.model.enums.LevelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.LevelEnum;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.TeamUserCountReq;
 import lombok.Data;

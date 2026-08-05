@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
-import com.newzkl.platform.base.biz.user.model.enums.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

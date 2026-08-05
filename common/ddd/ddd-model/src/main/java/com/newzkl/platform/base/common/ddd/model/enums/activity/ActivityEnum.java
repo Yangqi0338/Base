@@ -1,5 +1,8 @@
-package com.newzkl.platform.base.biz.activity.model.enums;
+package com.newzkl.platform.base.common.ddd.model.enums.activity;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.Getter;
 
 /**
@@ -11,7 +14,7 @@ public class ActivityEnum {
 
 
     @Getter
-    public enum ActivityState{
+    public enum ActivityState implements IEnum<Integer> {
         /**
          * 关闭
          */
@@ -22,6 +25,8 @@ public class ActivityEnum {
          */
         OPEN(1, "立即开启");
 
+        @EnumValue
+        @JsonValue
         private Integer state;
         private String info;
 
@@ -37,11 +42,21 @@ public class ActivityEnum {
         public void setInfo(String info) {
             this.info = info;
         }
+
+        @Override
+        public Integer getCode() {
+            return state;
+        }
+
+        @Override
+        public String getValue() {
+            return info;
+        }
     }
 
 
     @Getter
-    public enum ExecuteState{
+    public enum ExecuteState implements IEnum<String> {
         /**
          * 关闭
          */
@@ -56,6 +71,8 @@ public class ActivityEnum {
          */
         CANCELLED("CANCELLED", "已作废");
 
+        @EnumValue
+        @JsonValue
         private final String code;
 
         private final String desc;
@@ -63,6 +80,11 @@ public class ActivityEnum {
         ExecuteState(String code, String desc) {
             this.code = code;
             this.desc = desc;
+        }
+
+        @Override
+        public String getValue() {
+            return desc;
         }
 
         public static String getDescByCode(String code) {
@@ -78,7 +100,7 @@ public class ActivityEnum {
 
 
     @Getter
-    public enum SettleState{
+    public enum SettleState implements IEnum<String> {
         /**
          * 待确认
          */
@@ -93,6 +115,8 @@ public class ActivityEnum {
          */
         DELETED("DELETED", "已删除");
 
+        @EnumValue
+        @JsonValue
         private final String code;
 
         private final String desc;
@@ -100,6 +124,11 @@ public class ActivityEnum {
         SettleState(String code, String desc) {
             this.code = code;
             this.desc = desc;
+        }
+
+        @Override
+        public String getValue() {
+            return desc;
         }
 
         public static String getDescByCode(String code) {
@@ -114,7 +143,7 @@ public class ActivityEnum {
     }
 
     @Getter
-    public enum DividendStatus {
+    public enum DividendStatus implements IEnum<String> {
         /**
          * 未分红
          */
@@ -125,6 +154,8 @@ public class ActivityEnum {
          */
         DIVIDEND_PAID("DIVIDEND_PAID", "已分红");
 
+        @EnumValue
+        @JsonValue
         private final String code;
 
         private final String desc;
@@ -132,6 +163,11 @@ public class ActivityEnum {
         DividendStatus(String code, String desc) {
             this.code = code;
             this.desc = desc;
+        }
+
+        @Override
+        public String getValue() {
+            return desc;
         }
 
         public static String getDescByCode(String code) {
@@ -146,7 +182,7 @@ public class ActivityEnum {
     }
 
     @Getter
-    public enum StrategyMode{
+    public enum StrategyMode implements IEnum<Integer> {
         /**
          * 贡献值分配
          */
@@ -157,6 +193,8 @@ public class ActivityEnum {
          */
         SELECTOR_LEVEL(1, "甄选师等级分配");
 
+        @EnumValue
+        @JsonValue
         private Integer mode;
         private String info;
 
@@ -172,16 +210,28 @@ public class ActivityEnum {
         public void setInfo(String info) {
             this.info = info;
         }
+
+        @Override
+        public Integer getCode() {
+            return mode;
+        }
+
+        @Override
+        public String getValue() {
+            return info;
+        }
     }
 
     @Getter
-    public enum DividendCycle{
+    public enum DividendCycle implements IEnum<String> {
 
         WEEKLY("WEEKLY", "周结算"),
 
-        MONTHLY("MONTHLY","月结算");
+        MONTHLY("MONTHLY", "月结算");
 
 
+        @EnumValue
+        @JsonValue
         private final String code;
 
         private final String desc;
@@ -189,6 +239,11 @@ public class ActivityEnum {
         DividendCycle(String code, String desc) {
             this.code = code;
             this.desc = desc;
+        }
+
+        @Override
+        public String getValue() {
+            return desc;
         }
 
         public static String getDescByCode(String code) {
@@ -202,13 +257,15 @@ public class ActivityEnum {
     }
 
     @Getter
-    public enum SettlementStrategy{
+    public enum SettlementStrategy implements IEnum<String> {
 
         CYCLE("CYCLE", "周期循环"),
 
-        ONCE("ONCE","单次结算后关闭");
+        ONCE("ONCE", "单次结算后关闭");
 
 
+        @EnumValue
+        @JsonValue
         private final String code;
 
         private final String desc;
@@ -216,6 +273,11 @@ public class ActivityEnum {
         SettlementStrategy(String code, String desc) {
             this.code = code;
             this.desc = desc;
+        }
+
+        @Override
+        public String getValue() {
+            return desc;
         }
 
         public static String getDescByCode(String code) {
@@ -229,13 +291,15 @@ public class ActivityEnum {
     }
 
     @Getter
-    public enum DividendMethod {
+    public enum DividendMethod implements IEnum<String> {
 
         AVERAGE("AVERAGE", "平均分红"),
 
-        WEIGHT("WEIGHT","加权分红");
+        WEIGHT("WEIGHT", "加权分红");
 
 
+        @EnumValue
+        @JsonValue
         private final String code;
 
         private final String desc;
@@ -243,6 +307,11 @@ public class ActivityEnum {
         DividendMethod(String code, String desc) {
             this.code = code;
             this.desc = desc;
+        }
+
+        @Override
+        public String getValue() {
+            return desc;
         }
 
         public static String getDescByCode(String code) {

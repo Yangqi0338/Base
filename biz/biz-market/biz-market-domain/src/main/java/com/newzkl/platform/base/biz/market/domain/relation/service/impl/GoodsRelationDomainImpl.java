@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.market.model.req.relation.UpdateGoodsRelatio
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO;
 import com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO;
-import com.newzkl.platform.base.biz.market.model.enums.GoodsRelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

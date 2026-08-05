@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.action.cmd;
 
-import com.newzkl.platform.base.biz.account.model.enums.BIEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.BIEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

@@ -1,7 +1,8 @@
-package com.newzkl.platform.base.biz.market.model.enums;
+package com.newzkl.platform.base.common.ddd.model.enums.market;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +10,9 @@ import lombok.Getter;
 import java.util.Arrays;
 
 /**
+ * 市场枚举（共享内核）
+ *
  * @author niu
- * @description: 市场枚举
- * @date 2023/12/5 16:16
  */
 public class MarketEnum {
 
@@ -20,7 +21,7 @@ public class MarketEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Level {
+    public enum Level implements IEnum<Integer> {
         /**
          * 一级
          */
@@ -32,11 +33,24 @@ public class MarketEnum {
         @JsonValue
         private final Integer level;
         private final String info;
+
+        @Override
+        public Integer getCode() {
+            return level;
+        }
+
+        @Override
+        public String getValue() {
+            return info;
+        }
     }
 
+    /**
+     * 数量类型
+     */
     @Getter
     @AllArgsConstructor
-    public enum NumType {
+    public enum NumType implements IEnum<Integer> {
         /** 下级推广人数 */
         SUB_BIND_NUM(1, "下级推广人数"),
         /** 销量 */
@@ -50,6 +64,16 @@ public class MarketEnum {
         @JsonValue
         private final Integer type;
         private final String info;
+
+        @Override
+        public Integer getCode() {
+            return type;
+        }
+
+        @Override
+        public String getValue() {
+            return info;
+        }
     }
 
     /**
@@ -57,7 +81,7 @@ public class MarketEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Type {
+    public enum Type implements IEnum<String> {
         /**
          * 普通市场
          */
@@ -71,10 +95,16 @@ public class MarketEnum {
          */
         GOLD_ZONE("GOLD_ZONE", "黄金专区"),
         ;
+
         @EnumValue
         @JsonValue
         private final String code;
         private final String desc;
+
+        @Override
+        public String getValue() {
+            return desc;
+        }
 
         public static String getByCode(String code) {
             for (Type typeEnum : values()) {
@@ -91,7 +121,7 @@ public class MarketEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum User {
+    public enum User implements IEnum<Integer> {
         /**
          * 运营商
          */
@@ -110,6 +140,16 @@ public class MarketEnum {
         private final Integer type;
         private final RoleEnum.CompanyRole role;
         private final String info;
+
+        @Override
+        public Integer getCode() {
+            return type;
+        }
+
+        @Override
+        public String getValue() {
+            return info;
+        }
 
         public static Integer accountTypeByRoleId(Long roleId) {
             return Arrays.stream(values())

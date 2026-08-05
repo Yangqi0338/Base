@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.AuditBaseDO;
 import com.newzkl.platform.base.common.core.model.dto.Money;
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

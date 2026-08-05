@@ -1,8 +1,11 @@
-package com.newzkl.platform.base.biz.finance.model.enums;
+package com.newzkl.platform.base.common.ddd.model.enums.finance;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,7 +18,7 @@ public class BIEnum {
     /* 运营商收益模块 */
     @Getter
     @AllArgsConstructor
-    public enum OperatorFinanceModule {
+    public enum OperatorFinanceModule implements IEnum<Integer> {
         TEAM_COUNT(0, "伞下总人数", "直接或间接邀请的用户数量（不包括渠道商|供应商）"),
         DIRECT_SUPPLIER_COUNT(1, "直推供应商数量", "直接邀请的供应商数量"),
         DIRECT_CHANNEL_COUNT(2, "直推渠道商数量", "直接邀请的渠道商数量"),
@@ -23,6 +26,8 @@ public class BIEnum {
         TEAM_CONTRIBUTE(4, "伞下贡献总额（元）", "伞下的订单流水总额"),
         GOODS_AUDIT_COUNT(5, "商品上架总数（个）", "所招募的供应商在平台审核通过的商品总数量"),
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
         private final String desc;
@@ -35,11 +40,13 @@ public class BIEnum {
     /* 运营商收益模块 */
     @Getter
     @AllArgsConstructor
-    public enum OperatorRelatedModule {
+    public enum OperatorRelatedModule implements IEnum<Integer> {
         SUPPLIER_NUM(6, "供应商数量", ""),
         GOODS_NUM(7, "商品数量", ""),
         SALE_AMOUNT(8, "总销售额", ""),
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
         private final String desc;
@@ -52,7 +59,7 @@ public class BIEnum {
     /* 查询维度 */
     @Getter
     @AllArgsConstructor
-    public enum Dimension {
+    public enum Dimension implements IEnum<Integer> {
         DATE(0, "当日") {
             @Override
             public DateTime getStartTime(Date endTime) {
@@ -115,6 +122,8 @@ public class BIEnum {
             }
         },
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
 
@@ -133,7 +142,7 @@ public class BIEnum {
     /* 汇总维度 */
     @Getter
     @AllArgsConstructor
-    public enum SummaryDimension {
+    public enum SummaryDimension implements IEnum<Integer> {
         TIME(0, "分时"),
         DATE(1, "今日"),
         YESTERDAY(2, "昨日"),
@@ -142,6 +151,8 @@ public class BIEnum {
         SEASON(5, "季度"),
         YEAR(6, "年度"),
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
 
@@ -154,13 +165,15 @@ public class BIEnum {
     /* 汇总维度 */
     @Getter
     @AllArgsConstructor
-    public enum SummaryStorageType {
+    public enum SummaryStorageType implements IEnum<String> {
         CARD_BOARD("card_board", "卡片看板"),
         CHANNEL_RECHARGE_SUMMARY("channel_recharge_summary", "采购金汇总"),
         TEAM_TREND("team_trend", "招募趋势"),
         AREA("area", "专属区域统计"),
         INDUSTRY("industry", "专属行业统计"),
         ;
+        @EnumValue
+        @JsonValue
         private final String code;
         private final String value;
     }

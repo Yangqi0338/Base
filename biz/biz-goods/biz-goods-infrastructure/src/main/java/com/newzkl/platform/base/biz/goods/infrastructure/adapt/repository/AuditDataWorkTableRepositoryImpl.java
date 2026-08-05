@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditDataW
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataWorkTable;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataWorkTableQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
-import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

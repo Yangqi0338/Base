@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.market.domain.distribution.repository.Distri
 import com.newzkl.platform.base.biz.market.infrastructure.dao.StoreDistributionDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.StoreDistributionDO;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
-import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
