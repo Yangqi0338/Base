@@ -7,10 +7,11 @@ import com.newzkl.platform.base.biz.goods.facade.model.SkuQuery;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
 import com.newzkl.platform.base.biz.order.model.support.api.DistributionDetailVO;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSkuVO;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSpuVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
 
 import com.newzkl.platform.base.biz.order.model.support.api.order.*;
+import com.newzkl.platform.base.common.ddd.facade.*;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

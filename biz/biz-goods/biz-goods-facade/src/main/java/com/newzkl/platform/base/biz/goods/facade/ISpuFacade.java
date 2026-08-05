@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.goods.facade;
 
 
 import com.newzkl.platform.base.biz.goods.facade.model.SkuQuery;
-import com.newzkl.platform.base.biz.goods.facade.model.SkuRpcVO;
+import com.newzkl.platform.base.common.ddd.facade.SkuRpcVO;
 
 import java.util.List;
 

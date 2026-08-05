@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSkuVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuStateVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.openapi.ApiSpuVO;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SupplierSpuStatisticsQuery;
+import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuStateVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
+import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
+import com.newzkl.platform.base.common.ddd.facade.SupplierSpuStatisticsQuery;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SkuDO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO;
-import com.newzkl.platform.base.biz.goods.rpc.model.order.GoodsVO;
+import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import org.apache.ibatis.annotations.Mapper;

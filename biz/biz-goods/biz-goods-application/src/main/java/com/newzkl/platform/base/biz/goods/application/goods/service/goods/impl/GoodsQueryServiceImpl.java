@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
-import com.newzkl.platform.base.biz.goods.rpc.model.spu.SpuQuery;
+import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.order.model.support.api.spu;
 
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
+import com.newzkl.platform.base.common.ddd.facade.SkuRpcVO;
+import com.newzkl.platform.base.common.ddd.facade.SpuAttributeRpcVO;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

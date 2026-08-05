@@ -2,10 +2,10 @@ package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
 import com.newzkl.platform.base.biz.order.model.support.api.DistributionDetailVO;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSkuVO;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSpuVO;
-import com.newzkl.platform.base.biz.order.model.support.api.order.GoodsVO;
-import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckReq;
+import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
+import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderGoodsCheckReq;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
 import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;

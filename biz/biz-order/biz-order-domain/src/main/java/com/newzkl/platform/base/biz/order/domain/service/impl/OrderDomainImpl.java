@@ -19,8 +19,9 @@ import com.newzkl.platform.base.biz.order.model.res.*;
 
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSpuVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.*;
+import com.newzkl.platform.base.common.ddd.facade.*;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
