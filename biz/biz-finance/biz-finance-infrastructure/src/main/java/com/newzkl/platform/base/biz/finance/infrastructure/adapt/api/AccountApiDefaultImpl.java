@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.adapt.api;
 
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountInfo;
-import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import org.springframework.stereotype.Component;
 

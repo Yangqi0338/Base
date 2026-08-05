@@ -7,9 +7,9 @@ import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuServi
 import com.newzkl.platform.base.biz.goods.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
-import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.user.identity.OperatorEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;

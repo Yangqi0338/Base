@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionDetailVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO;
 import com.newzkl.platform.base.biz.market.model.rpc.spu.GoodsSellNumVO;
-import com.newzkl.platform.base.biz.market.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.market.model.enums.DistributionEnum;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;

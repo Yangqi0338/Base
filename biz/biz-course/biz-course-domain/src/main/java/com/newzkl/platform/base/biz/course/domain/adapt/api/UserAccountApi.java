@@ -15,13 +15,6 @@ package com.newzkl.platform.base.biz.course.domain.adapt.api;
 public interface UserAccountApi {
 
     /**
-     * 取当前登录用户ID
-     *
-     * @return 当前登录用户ID, 取不到返回 null
-     */
-    Long currentUserId();
-
-    /**
      * 校验用户是否存在
      *
      * @param userId 用户ID

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.support.api;
 
-import com.newzkl.platform.base.biz.order.model.support.api.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.order.model.support.api.enums.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;

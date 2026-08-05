@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuWorkflowDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
-import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.user.AuditErrorCode;
 import lombok.RequiredArgsConstructor;

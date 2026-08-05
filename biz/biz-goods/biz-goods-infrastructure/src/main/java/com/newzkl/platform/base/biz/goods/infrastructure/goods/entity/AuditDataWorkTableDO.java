@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.AuditBaseDO;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.OldColumnName;

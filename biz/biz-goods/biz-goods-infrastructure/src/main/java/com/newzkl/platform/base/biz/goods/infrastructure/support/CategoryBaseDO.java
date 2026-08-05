@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.support;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.biz.goods.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

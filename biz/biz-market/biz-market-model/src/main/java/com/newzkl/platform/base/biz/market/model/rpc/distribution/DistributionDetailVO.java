@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.rpc.distribution;
 
-import com.newzkl.platform.base.biz.market.model.enums.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 
 import java.io.Serializable;

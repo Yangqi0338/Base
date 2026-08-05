@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseChapterWatchReco
 import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchRecordQuery;
 import com.newzkl.platform.base.biz.course.model.watch.req.CourseChapterWatchRecordReq;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRecordRes;
+import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,8 @@ public class CourseChapterWatchRecordController {
     @PostMapping("/saveOrUpdate")
     public PlatformResult<CourseChapterWatchRecordRes> saveOrUpdate(
             @Validated @RequestBody CourseChapterWatchRecordReq req) {
-        return PlatformResult.success(courseChapterWatchRecordDomain.saveOrUpdate(req, true));
+        req.setUserId(SecurityUtils.getAccountId());
+        return PlatformResult.success(courseChapterWatchRecordDomain.saveOrUpdate(req));
     }
 
     /**

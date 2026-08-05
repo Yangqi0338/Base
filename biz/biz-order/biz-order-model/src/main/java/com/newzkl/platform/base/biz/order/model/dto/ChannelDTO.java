@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.model.dto;
 
 import com.newzkl.platform.base.common.core.model.dto.Money;
 
-import com.newzkl.platform.base.biz.order.model.support.api.enums.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 

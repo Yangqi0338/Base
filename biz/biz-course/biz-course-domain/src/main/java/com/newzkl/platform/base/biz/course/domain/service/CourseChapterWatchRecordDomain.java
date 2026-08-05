@@ -22,10 +22,9 @@ public interface CourseChapterWatchRecordDomain {
      * MQ 异步通道由消息体携带 userId, 不覆写。</p>
      *
      * @param req         观看记录请求
-     * @param currentUser 是否以当前登录用户覆写 userId
      * @return 观看记录视图
      */
-    CourseChapterWatchRecordRes saveOrUpdate(CourseChapterWatchRecordReq req, boolean currentUser);
+    CourseChapterWatchRecordRes saveOrUpdate(CourseChapterWatchRecordReq req);
 
     /**
      * 按用户与章节查观看记录

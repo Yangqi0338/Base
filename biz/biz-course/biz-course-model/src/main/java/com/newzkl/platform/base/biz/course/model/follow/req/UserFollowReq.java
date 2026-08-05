@@ -22,11 +22,12 @@ public class UserFollowReq implements Serializable {
     /**
      * 用户ID
      */
+    @NotNull
     private Long userId;
 
     /**
      * 讲师ID
      */
-    @NotNull(message = "讲师ID不能为空")
+    @NotNull
     private Long lecturerId;
 }

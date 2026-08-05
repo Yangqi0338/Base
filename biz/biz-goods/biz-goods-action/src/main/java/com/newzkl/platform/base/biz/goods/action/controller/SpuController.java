@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.goods.action.cmd.SpuCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;

@@ -42,7 +42,6 @@ public class UserLecturerFollowDomainImpl implements UserLecturerFollowDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean follow(UserFollowReq req) {
-        Long userId = resolveUserId(req);
         LecturerRes lecturer = lecturerRepository.detail(req.getLecturerId());
         ThrowsException.isNull(lecturer, BaseErrorCode.NODATA, "讲师");
         if (userLecturerFollowRepository.exists(userId, req.getLecturerId())) {
@@ -69,9 +68,6 @@ public class UserLecturerFollowDomainImpl implements UserLecturerFollowDomain {
 
     @Override
     public IPage<UserFollowRes> pageQueryFollowList(UserFollowQuery query) {
-        if (query.getUserId() == null) {
-            query.setUserId(userAccountApi.currentUserId());
-        }
         ThrowsException.isNull(query.getUserId(), BaseErrorCode.USER_NOT_LOGIN, "关注列表");
         Page<UserFollowRes> page = userLecturerFollowRepository.pageList(query);
         fillLecturer(page.getRecords());
@@ -113,10 +109,6 @@ public class UserLecturerFollowDomainImpl implements UserLecturerFollowDomain {
      * @return 用户ID
      */
     private Long resolveUserId(UserFollowReq req) {
-        if (req.getUserId() == null) {
-            req.setUserId(userAccountApi.currentUserId());
-        }
-        ThrowsException.isNull(req.getUserId(), BaseErrorCode.USER_NOT_LOGIN, "关注讲师");
         ThrowsException.isNull(req.getLecturerId(), BaseErrorCode.PARAM, "讲师ID");
         return req.getUserId();
     }

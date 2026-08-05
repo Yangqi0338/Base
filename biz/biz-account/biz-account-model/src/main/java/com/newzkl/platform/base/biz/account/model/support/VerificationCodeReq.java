@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.support;
 
-import com.newzkl.platform.base.biz.account.model.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

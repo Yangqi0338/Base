@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRec
 import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
-import com.newzkl.platform.base.biz.finance.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;

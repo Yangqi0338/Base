@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.rpc.model.openapi;
 
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

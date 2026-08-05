@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.goods.domain.spu.service.WorkTableWorkflowDo
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataWorkTable;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataWorkTableQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.user.AuditErrorCode;
 import lombok.RequiredArgsConstructor;

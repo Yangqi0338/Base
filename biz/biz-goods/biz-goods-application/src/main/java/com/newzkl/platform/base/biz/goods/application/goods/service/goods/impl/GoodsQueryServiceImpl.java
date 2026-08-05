@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.domain.video.service.ShortVideoDomain;
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;

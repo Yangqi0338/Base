@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SkuDO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuAttributeDO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO;
 import com.newzkl.platform.base.biz.goods.model.enums.AuditEnum;
-import com.newzkl.platform.base.biz.goods.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuAttributeDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;

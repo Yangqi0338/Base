@@ -40,12 +40,12 @@ public class CourseChapterWatchRecordDomainImpl implements CourseChapterWatchRec
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CourseChapterWatchRecordRes saveOrUpdate(CourseChapterWatchRecordReq req, boolean currentUser) {
-        if (currentUser) {
+    public CourseChapterWatchRecordRes saveOrUpdate(CourseChapterWatchRecordReq req) {
+
             Long currentUserId = userAccountApi.currentUserId();
             ThrowsException.isNull(currentUserId, BaseErrorCode.USER_NOT_LOGIN, "观看记录");
             req.setUserId(currentUserId);
-        }
+
         ThrowsException.isNull(req.getUserId(), BaseErrorCode.PARAM, "用户ID");
         ThrowsException.isFalse(userAccountApi.existsUser(req.getUserId()),
                 BaseErrorCode.USER_NOT_FOUND, String.valueOf(req.getUserId()));

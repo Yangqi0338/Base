@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketCategoryDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketBindDO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketDO;
-import com.newzkl.platform.base.biz.market.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.market.model.enums.MarketTypeEnum;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketBindDTO;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
