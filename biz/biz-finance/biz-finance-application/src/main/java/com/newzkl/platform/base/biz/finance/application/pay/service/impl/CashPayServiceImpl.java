@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseC
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
-import com.newzkl.platform.base.biz.finance.model.enums.CacheKey;
+import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.biz.finance.model.event.PaySuccessEvent;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;

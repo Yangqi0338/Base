@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.sys.infrastructure.dao.ProjectDAO;
 import com.newzkl.platform.base.biz.sys.infrastructure.dao.ProjectVideoDAO;
 import com.newzkl.platform.base.biz.sys.infrastructure.entity.ProjectDO;
 import com.newzkl.platform.base.biz.sys.infrastructure.entity.ProjectVideoDO;
-import com.newzkl.platform.base.biz.sys.model.enums.CacheKey;
+import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.biz.sys.model.project.query.ProjectQuery;
 import com.newzkl.platform.base.biz.sys.model.project.req.ProjectSaveReq;
 import com.newzkl.platform.base.biz.sys.model.project.res.ProjectListRes;

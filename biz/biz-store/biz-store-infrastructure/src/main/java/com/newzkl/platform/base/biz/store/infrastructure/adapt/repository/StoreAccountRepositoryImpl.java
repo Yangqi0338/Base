@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newzkl.platform.base.biz.store.model.store.msg.StoreAccountPayMsg;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.biz.store.model.enums.CacheKey;
+import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreAccount;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;

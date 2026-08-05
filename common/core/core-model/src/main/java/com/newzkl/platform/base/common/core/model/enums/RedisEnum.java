@@ -1,13 +1,17 @@
-package com.newzkl.platform.base.biz.finance.model.enums;
+package com.newzkl.platform.base.common.core.model.enums;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Redis key 枚举
+ *
+ * <p>各 biz 域原按域复制同名枚举, 现合并至 core-model 单一副本 (account 版为全集)。
+ * Key 是 redis key 构造器 ({@link Key#getCode()} 带模块前缀 + 占位符格式化),
+ * 语义非持久化值, 故不实现 IEnum。</p>
+ */
 public class RedisEnum {
-    public static void main(String[] args) {
-        System.out.print(Key.APP_ORDER.getCode("111"));
-    }
 
     /**
      * key
@@ -26,6 +30,12 @@ public class RedisEnum {
         PROLE_LIST(ModuleEnum.USER, "AMC:pRoleList:%s", "父角色列表, s = 账号ID"),
         /** 子结构列表, s = 账号ID */
         SUB_STRUCTURE(ModuleEnum.USER, "AMC:subStructure:%s", "子结构列表, s = 账号ID"),
+        /**
+         * 角色申请资料, s1 = 账号ID, s2 = 角色ID
+         * <p>沿用旧常量 {@code RoleEnum.ApplyCommandRedisKeyPre} 的裸 key 形态 (无模块前缀),
+         * 以便与旧数据共存。</p>
+         */
+        ROLE_APPLY_COMMAND(ModuleEnum.COMMON, "role:roleApplyCommand:%s:%s", "角色申请资料, s1 = 账号ID, s2 = 角色ID"),
 
         /* ============ 商品 ============ */
         /** 商品信息, s = SKU ID */

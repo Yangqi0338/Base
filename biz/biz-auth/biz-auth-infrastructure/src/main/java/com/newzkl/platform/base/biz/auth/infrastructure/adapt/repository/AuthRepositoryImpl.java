@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.auth.model.enums.AuthEnum;
-import com.newzkl.platform.base.biz.auth.model.enums.RedisEnum;
+import com.newzkl.platform.base.common.core.model.enums.RedisEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.AuthFunctionDAO;

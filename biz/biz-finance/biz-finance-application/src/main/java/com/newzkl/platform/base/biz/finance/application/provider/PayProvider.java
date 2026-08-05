@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelSettleReq;
 import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContributeDataReq;
-import com.newzkl.platform.base.biz.finance.model.enums.CacheKey;
+import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;

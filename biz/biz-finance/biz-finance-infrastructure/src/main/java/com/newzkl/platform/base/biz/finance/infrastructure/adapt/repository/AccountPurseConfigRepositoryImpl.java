@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
 import com.newzkl.platform.base.common.core.model.dto.Money;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
-import com.newzkl.platform.base.biz.finance.model.enums.RedisEnum;
+import com.newzkl.platform.base.common.core.model.enums.RedisEnum;
 import com.newzkl.platform.base.biz.finance.model.enums.user.DictEnum;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.OperatorApi;
