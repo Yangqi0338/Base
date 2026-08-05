@@ -17,7 +17,6 @@ import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.*;
 
-import com.newzkl.platform.base.biz.order.model.support.api.AccountGroupVO;
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiSpuVO;
@@ -30,6 +29,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelSettleReq;
 import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
@@ -1101,7 +1101,7 @@ public class OrderDomainImpl implements IOrderDomain {
             spuOrderExt.setStoreName(storeRPCVO.getName());
         }
         //查门店im账号
-        AccountGroupVO accountInfo = accountApi.accountInfo(spuOrder.getStoreId());
+        AccountGroupVO accountInfo = accountApi.channelInfo(spuOrder.getStoreId());
         if (Objects.nonNull(accountInfo)){
             spuOrderExt.setStoreAccount(accountInfo.getUserAccount());
         }

@@ -3,8 +3,6 @@ package com.newzkl.platform.base.biz.sys.action.controller;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.sys.action.cmd.SysCmd;
-import com.newzkl.platform.base.biz.sys.domain.adapt.api.LogisticsApi;
-import com.newzkl.platform.base.biz.sys.domain.adapt.api.LogisticsQueryReq;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OcrApi;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OssTokenApi;
 import com.newzkl.platform.base.biz.sys.domain.service.AppVersionDomain;
@@ -16,12 +14,7 @@ import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -73,7 +66,6 @@ public class CommonController {
     private final RegionDomain regionDomain;
     private final AppVersionDomain appVersionDomain;
     private final OssTokenApi ossTokenApi;
-    private final LogisticsApi logisticsApi;
     private final OcrApi ocrApi;
 
     /**
@@ -144,12 +136,8 @@ public class CommonController {
      */
     @PostMapping("/queryLogistics")
     public PlatformResult<String> queryLogistics(@RequestBody SysCmd.DeliverQueryReq req) {
-        LogisticsQueryReq queryReq = LogisticsQueryReq.builder()
-                .type(req.getType())
-                .number(req.getNumber())
-                .mobile(req.getMobile())
-                .build();
-        return PlatformResult.success(logisticsApi.queryLogistics(queryReq));
+        // FIXME
+        return PlatformResult.success();
     }
 
     /**

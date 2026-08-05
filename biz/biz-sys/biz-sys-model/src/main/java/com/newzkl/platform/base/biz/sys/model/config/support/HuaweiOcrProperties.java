@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.sys.model.config.support;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,23 +17,34 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@Data
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "huawei.ocr")
 public class HuaweiOcrProperties {
 
     /**
      * 华为云 access key (不设默认值, 经配置下发)
      */
-    private String ak;
+    public static String ak = "JIS6MBVGEUFLELWX6G0L";
 
     /**
      * 华为云 secret key (不设默认值, 经配置下发)
      */
-    private String sk;
+    public static String sk = "hn0NTc5HcL3Wsfx91T5sZBwnHtdPKqwZH4OMO3Gj";
 
     /**
      * OCR 服务区域, 与旧硬编码一致
      */
-    private String region = "cn-north-4";
+    public static String region = "cn-north-4";
+
+    public void setAk(String ak) {
+        HuaweiOcrProperties.ak = ak;
+    }
+
+    public void setSk(String sk) {
+        HuaweiOcrProperties.sk = sk;
+    }
+
+    public void setRegion(String region) {
+        HuaweiOcrProperties.region = region;
+    }
 }

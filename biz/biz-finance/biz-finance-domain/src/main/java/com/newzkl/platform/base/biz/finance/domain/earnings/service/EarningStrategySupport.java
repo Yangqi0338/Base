@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.finance.model.assembler.EarningRecordAssembl
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,20 +21,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EarningStrategySupport {
 
     protected static Map<EarningsEnum.ConsumeType, ConsumeEarnings> consumeTypeMap = new ConcurrentHashMap<>();
-    @Resource
-    private final List<ConsumeEarnings> consumeEarnings = new ArrayList<>();
+    @Autowired(required = false)
+    private List<ConsumeEarnings> consumeEarnings;
     @Resource
     protected ConsumeEarningDataRepository consumeEarningDataRepository;
-    @Resource
-    protected AccountContributeRepository accountContributeRepository;
     @Resource
     protected EarningRecordAssembler recordAssembler;
 
     @PostConstruct
     public void init() {
-        consumeEarnings.forEach(x -> {
-            consumeTypeMap.put(x.consumeType(), x);
-        });
+        if (consumeEarnings != null) {
+            consumeEarnings.forEach(x -> {
+                consumeTypeMap.put(x.consumeType(), x);
+            });
+        }
     }
 
 

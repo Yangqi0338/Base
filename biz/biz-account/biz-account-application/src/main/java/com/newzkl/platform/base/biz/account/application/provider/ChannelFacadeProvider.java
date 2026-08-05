@@ -10,6 +10,9 @@ import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +28,13 @@ import java.util.List;
  * @author KC
  */
 @Slf4j
-@Service
-@RequiredArgsConstructor
+@Component
+@DubboService
+
 public class ChannelFacadeProvider implements ChannelFacade {
 
-    private final ChannelClientDomain channelClientDomain;
+    @Autowired
+    private  ChannelClientDomain channelClientDomain;
 
     @Override
     public List<ChannelOutVO> channelList(ChannelRpcQuery query) {

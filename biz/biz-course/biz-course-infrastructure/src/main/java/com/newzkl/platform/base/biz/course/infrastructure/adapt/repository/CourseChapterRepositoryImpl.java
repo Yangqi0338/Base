@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class CourseChapterRepositoryImpl implements CourseChapterRepository {
+public class CourseChapterRepositoryImpl extends RepositorySupport implements CourseChapterRepository {
 
     /**
      * 时长字段名, 同名异型(秒 Double / 百分秒 Integer), 排除 Hutool 自动拷贝
@@ -125,6 +125,7 @@ public class CourseChapterRepositoryImpl implements CourseChapterRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean recover(Long id) {
+
         return courseChapterDAO.recoverById(id) > 0;
     }
 

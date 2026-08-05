@@ -20,7 +20,7 @@ public class EmpVO extends BaseRes {
     /**
      * 岗位ID
      *
-     * <p>历史遗留单值字段, 与 {@link EmpVO#jobIdList} 并存: 列表列才是落库列</p>
+     * <p>历史遗留单值字段, 与 并存: 列表列才是落库列</p>
      */
     private Long jobId;
 

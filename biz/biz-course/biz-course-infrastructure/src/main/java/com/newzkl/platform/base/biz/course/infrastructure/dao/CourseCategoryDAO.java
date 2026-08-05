@@ -31,16 +31,4 @@ public interface CourseCategoryDAO extends BaseMapper<CourseCategoryDO> {
         wrapper.orderByAsc(CourseCategoryDO::getSort).orderByDesc(CourseCategoryDO::getId);
         return wrapper;
     }
-
-    /**
-     * 恢复已逻辑删除的分类
-     *
-     * <p>逻辑删除后 {@code del_flag} 为 NULL, MyBatis-Plus 常规更新会被逻辑删除条件过滤,
-     * 故以注解 SQL 直接复位。</p>
-     *
-     * @param id 分类主键
-     * @return 受影响行数
-     */
-    @Update("UPDATE course_category SET del_flag = 0, update_time = NOW() WHERE id = #{id} AND del_flag IS NULL")
-    int recoverById(@Param("id") Long id);
 }

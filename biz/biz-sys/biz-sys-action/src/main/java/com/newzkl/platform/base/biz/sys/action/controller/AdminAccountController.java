@@ -29,7 +29,7 @@ import java.util.List;
  *
  * <p>[AUTH] 源 {@code passwordLogin} (SaToken token 签发) 归入口 starter (building-scm), 不迁本域;
  * {@code detail}/{@code passwordUpdate} 的当前登录 id 由入口 {@code SecurityContextFilter} 注入,
- * 本域经 {@link SecurityUtils#getAccountId()} 读取。源 {@code page} 上 {@code @EnableIdParse}
+ * 本域经 读取。源 {@code page} 上 {@code @EnableIdParse}
  * (角色 id→名称脱敏回填) 属入口关注, 已剥离。</p>
  *
  * <p>响应壳变更: 源 {@code page} 返回 PageHelper {@code PageInfo}, 本域降为

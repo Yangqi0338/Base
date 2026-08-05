@@ -28,17 +28,10 @@ import java.util.function.Function;
  */
 @Component
 @DubboService
-@Setter(onMethod_ = @Autowired)
 public class SupplierFacadeImpl implements SupplierFacade {
 
     @Autowired
-    private SupplierClientDomain supplierDomain;
-    @Autowired
     private UserQueryService supplierQueryAppService;
-    @Autowired
-    private SupplierRepository supplierRepository;
-    @Autowired
-    private SupplierDAO supplierDAO;
 
     @Override
     public SupplierOutVO getSupplierVO(Long accountId) {

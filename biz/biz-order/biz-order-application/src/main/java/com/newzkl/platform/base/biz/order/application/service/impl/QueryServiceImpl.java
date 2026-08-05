@@ -18,11 +18,11 @@ import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.support.api.AccountGroupVO;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class QueryServiceImpl implements QueryService {
     private final IOrderRepository orderRepository;
     private final ChannelApi channelApi;
     private final IRefundRepository refundRepository;
-    private final AccountApi accountFacade;
+    private final AccountApi accountApi;
     private final GoodsApi goodsApi;
 
     @Override
@@ -88,7 +88,7 @@ public class QueryServiceImpl implements QueryService {
         memberIds.add(memberId);
         memberIds.add(channelId);
         memberIds = memberIds.stream().distinct().collect(Collectors.toList());
-        List<AccountGroupVO> accountGroupVOS =CollUtil.isNotEmpty(memberIds)? accountFacade.listAccountByIds(memberIds):Collections.emptyList();
+        List<AccountGroupVO> accountGroupVOS =CollUtil.isNotEmpty(memberIds)? accountApi.listAccountByIds(memberIds):Collections.emptyList();
         if (CollUtil.isNotEmpty(accountGroupVOS)){
             Map<Long, AccountGroupVO> accountMap = accountGroupVOS.stream().collect(Collectors.toMap(AccountGroupVO::getId, v -> v));
             AccountGroupVO storeAccountDto = accountMap.get(spuOrderVO.getChannelId());
@@ -164,7 +164,7 @@ public class QueryServiceImpl implements QueryService {
         }
         String nickname = spuOrderQuery.getNickname();
         if (StrUtil.isNotBlank(nickname)) {
-            List<Long> longs = accountFacade.queryMember(nickname);
+            List<Long> longs = accountApi.queryMember(nickname);
             if (CollUtil.isEmpty(longs)){
                 return new Page<>();
             }
@@ -173,7 +173,7 @@ public class QueryServiceImpl implements QueryService {
         // ========== 2. 处理门店账号查询：转换为渠道ID列表 ==========
         String storeAccount = spuOrderQuery.getStoreAccount();
         if (StrUtil.isNotBlank(storeAccount)) {
-            AccountGroupVO accountGroup = accountFacade.selectByUserAccount(storeAccount);
+            AccountGroupVO accountGroup = accountApi.selectByUserAccount(storeAccount);
             RoleEnum.CompanyRole role = SecurityUtils.getRole();
             if (RoleEnum.CompanyRole.CHANNEL == role) {
                 Optional.ofNullable(accountGroup)
@@ -209,7 +209,7 @@ public class QueryServiceImpl implements QueryService {
         List<Long> storeIds = spuOrderVOList.stream().map(SpuOrderVO::getChannelId).distinct().collect(Collectors.toList());
         memberIds.addAll(storeIds);
         memberIds = memberIds.stream().distinct().collect(Collectors.toList());
-        List<AccountGroupVO> accountGroupVOS =CollUtil.isNotEmpty(memberIds)? accountFacade.listAccountByIds(memberIds):Collections.emptyList();
+        List<AccountGroupVO> accountGroupVOS =CollUtil.isNotEmpty(memberIds)? accountApi.listAccountByIds(memberIds):Collections.emptyList();
         Map<Long, AccountGroupVO> accountMap = accountGroupVOS.stream().collect(Collectors.toMap(AccountGroupVO::getId, v -> v));
         List<StoreRPCVO> storeRPCVOS =CollUtil.isNotEmpty(storeIds)? goodsApi.batchQueryStoreInfo(storeIds):Collections.emptyList();
         Map<Long, StoreRPCVO> storeMap = storeRPCVOS.stream().collect(Collectors.toMap(StoreRPCVO::getId, v -> v));

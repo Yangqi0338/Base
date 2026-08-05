@@ -34,7 +34,7 @@ public interface CourseChapterDAO extends BaseMapper<CourseChapterDO> {
                 .notNullEq(CourseChapterDO::getIsFree, query.getIsFree())
                 .notNullEq(CourseChapterDO::getIsEnabled, query.getIsEnabled())
                 .between(CourseChapterDO::getCreateTime, query.getCreateTime());
-        wrapper.orderByAsc(CourseChapterDO::getChapterNum);
+        wrapper.orderByAsc(CourseChapterDO::getCourseId).orderByAsc(CourseChapterDO::getChapterNum);
         return wrapper;
     }
 

@@ -27,12 +27,10 @@
         <module>biz-order</module>
         <module>biz-goods</module>
         <module>biz-market</module>
-        <module>biz-media</module>
         <module>biz-content</module>
         <module>biz-course</module>
         <module>biz-store</module>
         <module>biz-activity</module>
         <module>biz-social-bang</module>
-        <module>biz-notify</module>
     </modules>
 </project>

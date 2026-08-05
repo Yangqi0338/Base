@@ -6,10 +6,6 @@
                settleTypeList 不再取 skuName/spuName/spuImg, 仅保留 spo.create_time as createOrderTime, 见 findings -->
 <mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleRecordDAO">
 
-    <select id="totalSettleAmount" resultType="java.lang.Integer">
-        SELECT sum(settle_money) from settle_record where del_flag = 0
-    </select>
-
     <!-- 源侧同样只有 label 单分支 <set>, label 为空会语法错误, 调用方保证非空, 原样保留 -->
     <update id="editSettleRecord">
         update settle_record t

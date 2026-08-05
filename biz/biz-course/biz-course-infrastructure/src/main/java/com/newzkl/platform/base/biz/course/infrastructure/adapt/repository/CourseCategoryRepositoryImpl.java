@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class CourseCategoryRepositoryImpl implements CourseCategoryRepository {
+public class CourseCategoryRepositoryImpl extends RepositorySupport implements CourseCategoryRepository {
 
     private final CourseCategoryDAO courseCategoryDAO;
 
@@ -87,6 +87,6 @@ public class CourseCategoryRepositoryImpl implements CourseCategoryRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean recover(Long id) {
-        return courseCategoryDAO.recoverById(id) > 0;
+        return recoverDeleteById(id, CourseCategoryDO.class);
     }
 }

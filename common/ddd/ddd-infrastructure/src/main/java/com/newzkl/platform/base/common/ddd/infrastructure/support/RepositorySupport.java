@@ -46,13 +46,29 @@ public abstract class RepositorySupport {
     private JdbcTemplate jdbcTemplate;
 
     /**
+     * 根据id物理恢复数据
+     *
+     * @param id 主键id
+     * @return 操作结果
+     */
+    public <T extends BaseIdDO> Boolean recoverDeleteById(Long id, Class<T> clazz) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
+        String tableName = tableInfo.getTableName();
+        String sql = "UPDATE " + tableName + " SET del_flag = 0, update_time = NOW() WHERE id = ? AND del_flag IS NULL";
+        if (jdbcTemplate == null) return false;
+        int update = jdbcTemplate.update(sql,id);
+        log.warn("=================> 物理恢复 SQL：" + sql + " | 返回值：" + update);
+        return update > 0;
+    }
+
+    /**
      * 慎用！！！！！！！！
      * 根据id物理删除数据
      *
      * @param id 主键id
      * @return 操作结果
      */
-    public <T extends BaseIdDO> Boolean physicalDeleteById(String id, Class<T> clazz) {
+    public <T extends BaseIdDO> Boolean physicalDeleteById(Long id, Class<T> clazz) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
         String tableName = tableInfo.getTableName();
         String sql = "DELETE FROM " + tableName + " WHERE id = ?";

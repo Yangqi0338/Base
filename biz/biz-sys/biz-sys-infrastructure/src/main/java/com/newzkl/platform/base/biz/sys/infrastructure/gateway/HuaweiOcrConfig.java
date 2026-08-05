@@ -1,13 +1,10 @@
 package com.newzkl.platform.base.biz.sys.infrastructure.gateway;
 
-import cn.hutool.core.util.BooleanUtil;
 import com.huaweicloud.sdk.core.auth.BasicCredentials;
 import com.huaweicloud.sdk.core.auth.ICredential;
-import com.huaweicloud.sdk.core.http.HttpConfig;
 import com.huaweicloud.sdk.ocr.v1.OcrClient;
 import com.huaweicloud.sdk.ocr.v1.region.OcrRegion;
 import com.newzkl.platform.base.biz.sys.model.config.support.HuaweiOcrProperties;
-import com.newzkl.platform.base.common.core.utils.properties.HttpProxyProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +22,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class HuaweiOcrConfig {
 
-    private final HuaweiOcrProperties huaweiOcrProperties;
-    private final HttpProxyProperties httpProxyProperties;
-
     /**
      * 装配华为云 OCR 客户端
      *
@@ -35,17 +29,12 @@ public class HuaweiOcrConfig {
      */
     @Bean
     public OcrClient ocrClient() {
-        HttpConfig config = HttpConfig.getDefaultHttpConfig();
-        if (BooleanUtil.isTrue(httpProxyProperties.getEnabled())) {
-            config.withProxyHost(httpProxyProperties.getIp()).withProxyPort(httpProxyProperties.getPort());
-        }
         ICredential auth = new BasicCredentials()
-                .withAk(huaweiOcrProperties.getAk())
-                .withSk(huaweiOcrProperties.getSk());
+                .withAk(HuaweiOcrProperties.ak)
+                .withSk(HuaweiOcrProperties.sk);
         return OcrClient.newBuilder()
-                .withHttpConfig(config)
                 .withCredential(auth)
-                .withRegion(OcrRegion.valueOf(huaweiOcrProperties.getRegion()))
+                .withRegion(OcrRegion.valueOf(HuaweiOcrProperties.region))
                 .build();
     }
 }

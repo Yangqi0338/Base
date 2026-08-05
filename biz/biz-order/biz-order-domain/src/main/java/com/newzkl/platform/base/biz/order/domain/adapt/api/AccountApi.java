@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
 
 
-import com.newzkl.platform.base.biz.order.model.support.api.AccountGroupVO;
+import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 
 import java.util.List;
 
@@ -38,12 +38,11 @@ public interface AccountApi {
     AccountGroupVO selectByUserAccount(String userAccount);
 
     /**
-     * 按账户ID查询单个账户信息
+     * 获取账号信息
      *
-     * <p>迁移: 原跨域 {@code IAccountFacade.accountInfo(Long)} 返回 AccountInfo, 降级为本地 AccountGroupVO
-     *
-     * @param accountId 账户ID
-     * @return 账户信息, 无则 null
+     * @param id
+     * @return
      */
-    AccountGroupVO accountInfo(Long accountId);
+    AccountGroupVO accountInfo(Long id);
+    AccountGroupVO channelInfo(Long id);
 }

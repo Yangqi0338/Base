@@ -42,7 +42,7 @@ import java.util.List;
  * 关键结构差异: 旧 {@code emp} 表自带 {@code username} / {@code password} / {@code account_id},
  * 一行即一员工; Base 拆成 {@code account} (凭证 + 主子关系) 与 {@code emp} (类型 + 岗位)
  * 两行同主键, 故新增与删除都涉两表, 登录改走账号侧
- * {@link AccountLoginService#subPasswordLogin}。</p>
+ * </p>
  *
  * @author KC
  */
@@ -63,7 +63,7 @@ public class EmpController {
      * 员工新增
      *
      * <p>迁移补充: 旧 {@code EmpDomain.empCreate(req, accountId)} 中台化后只保留批量入口
-     * {@link AdminClientDomain#batchEmpCreate}, 此处按单元素集合调用, 语义等价。
+     * 此处按单元素集合调用, 语义等价。
      * 旧 {@code @Limit(code=1026, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
      *
      * @param empCreateReq 员工新增请求
@@ -95,7 +95,7 @@ public class EmpController {
      *
      * <p>入参形态逐字沿用旧契约: 直接收裸 {@code List<Long>} 请求体, 不包 {@code IdListCommand}。
      * 迁移补充: 旧只删 {@code emp} 单表, Base 下凭证在 {@code account}, 只删 {@code emp}
-     * 会留可登录的孤儿账号, 故 {@link AdminClientDomain#empDelete} 两表同删。
+     * 会留可登录的孤儿账号, 故 两表同删。
      * 旧 {@code @Limit(code=1026, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
      *
      * @param empIdList 员工 ID 列表

@@ -54,10 +54,6 @@ import java.util.*;
 public class AccountRepositoryImpl extends RepositorySupport implements AccountRepository {
 
     private final AccountDAO accountDAO;
-    private final AccountAssembler accountAssembler;
-
-    private final MemberDAO memberDAO;
-    private final MemberAssembler memberAssembler;
 
     @Override
     public Long findId(AccountQuery accountQuery) {
