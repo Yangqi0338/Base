@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.common.ddd.model.enums.account;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,7 +24,7 @@ public class OperatorEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Type {
+    public enum Type implements IEnum<Integer> {
         /**
          * 机构
          */
@@ -33,6 +36,8 @@ public class OperatorEnum {
         /** 品牌 */
         BRAND(3, "品牌"),
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
 

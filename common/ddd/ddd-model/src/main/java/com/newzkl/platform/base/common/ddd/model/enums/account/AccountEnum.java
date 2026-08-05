@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.account;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum SubUserType {
+    public enum SubUserType implements IEnum<Integer> {
         /**
          * 主账号
          */
@@ -41,7 +42,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum BodyType {
+    public enum BodyType implements IEnum<Integer> {
         /** 企业 */
         COMPANY(0, "企业"),
         /** 个人 */
@@ -58,7 +59,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum State {
+    public enum State implements IEnum<Integer> {
         /** 已销毁 */
         DESTROY(-1, "已销毁"),
         /** 禁用,冻结 */
@@ -77,7 +78,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum LoginType {
+    public enum LoginType implements IEnum<Integer> {
         /** 密码 */
         PASSWORD(0, "密码"),
         /** 验证码 */
@@ -107,7 +108,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum ImSyncState {
+    public enum ImSyncState implements IEnum<Integer> {
         /**
          * 未同步
          */

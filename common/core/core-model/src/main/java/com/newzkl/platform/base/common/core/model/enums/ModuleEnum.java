@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.common.core.model.enums;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,7 +38,6 @@ public enum ModuleEnum implements IEnum<String> {
     GATEWAY("gateway", "网关"),
     ;
 
-    @EnumValue
     @JsonValue
     private final String code;
     private final String desc;

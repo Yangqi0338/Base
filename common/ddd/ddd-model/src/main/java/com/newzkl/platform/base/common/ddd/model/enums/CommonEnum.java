@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.ddd.model.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,7 +20,7 @@ public class CommonEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Symbol {
+    public enum Symbol implements IEnum<Integer> {
         /**
          * 负数
          */
@@ -27,6 +28,8 @@ public class CommonEnum {
         /** 正数 */
         POSITIVE(1, "正数"),
         ;
+        @EnumValue
+        @JsonValue
         private final Integer code;
         private final String value;
 
@@ -43,7 +46,7 @@ public class CommonEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Client {
+    public enum Client implements IEnum<String> {
         /** 平台端 */
         ADMIN("admin", "平台端"),
         /** 后台端 */
@@ -74,7 +77,7 @@ public class CommonEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum SystemType {
+    public enum SystemType implements IEnum<Integer> {
         /** 数字门店 */
         STORE(0, "数字门店"),
         ;
@@ -97,7 +100,7 @@ public class CommonEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum YesOrNo {
+    public enum YesOrNo implements IEnum<Integer> {
         /** 是 */
         YES(1, "是"),
         /** 否 */
@@ -133,7 +136,7 @@ public class CommonEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum RequestStatusEnum {
+    public enum RequestStatusEnum implements IEnum<Integer> {
         /**
          * 成功
          */
@@ -145,7 +148,9 @@ public class CommonEnum {
 
         ;
 
-        private final int code;
+        @EnumValue
+        @JsonValue
+        private final Integer code;
         private final String description;
 
         public static RequestStatusEnum getByCode(int code) {
@@ -155,6 +160,16 @@ public class CommonEnum {
                 }
             }
             throw new IllegalArgumentException("未知的请求状态码: " + code);
+        }
+
+        /**
+         * 获取枚举描述 (IEnum 契约, 委托 description)
+         *
+         * @return 枚举描述
+         */
+        @Override
+        public String getValue() {
+            return description;
         }
     }
 }
