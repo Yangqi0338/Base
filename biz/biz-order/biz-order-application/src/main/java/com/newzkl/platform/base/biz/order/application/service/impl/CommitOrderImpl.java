@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSON;
 import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
 import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
@@ -60,12 +60,12 @@ import java.util.stream.Collectors;
 public class CommitOrderImpl implements CommitOrder {
 
 
-    private final IOrderDomain orderDomain;
+    private final OrderDomain orderDomain;
     private final GoodsApi goodsApi;
     private final PayApi orderPayApi;
     private final QueryService queryService;
     private final PurseApi accountPurseApi;
-    private final IOrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final AccountShipAddressApi shipAddressApi;
     private final LocalMessageApi localMessageApi;
 

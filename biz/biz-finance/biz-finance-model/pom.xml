@@ -22,6 +22,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-office</artifactId>
+        </dependency>
         <!-- WithdrawRecordVO/Res extends BaseDO (core.mybatis.entity). bundle 将 BaseDO 从 ddd-model 迁至 core-mybatis. TODO: VO 不应 extends DO, 后续重构 -->
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>

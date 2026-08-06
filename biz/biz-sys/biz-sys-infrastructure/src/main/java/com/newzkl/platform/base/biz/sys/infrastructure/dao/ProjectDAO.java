@@ -34,6 +34,6 @@ public interface ProjectDAO extends BaseMapper<ProjectDO> {
                 .notNullEq(ProjectDO::getInterestNum, query.getInterestNum())
                 .notEmptyLike(ProjectDO::getInterestPerson, query.getInterestPerson())
                 .between(ProjectDO::getCreateTime, query.getCreateTime())
-                .orderByDesc(ProjectDO::getCreateTime);
+                ;
     }
 }

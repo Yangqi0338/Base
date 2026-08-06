@@ -1,8 +1,11 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -10,22 +13,27 @@ import java.time.LocalDateTime;
  * 第三方订单请求数据对象 (DO)
  * @author sijiwang
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
+@TableName
 public class ThirdPartyOrderRecordDO extends BaseDO {
 
     /**
-     * 平台类型 (对应数据库表 `third_party_order_request.platform_type`)
+     * 平台类型
      */
+    @Index
     private PlatformTypeEnum platformType;
 
     /**
-     * 业务订单号 (对应数据库表 `third_party_order_request.biz_order_no`)
+     * 业务订单号
      */
+    @Index
     private String bizOrderNo;
 
     /**
-     * 第三方订单号 (对应数据库表 `third_party_order_request.third_order_no`)
+     * 第三方订单号
      */
+    @Index
     private String thirdOrderNo;
 
     /**
@@ -44,8 +52,9 @@ public class ThirdPartyOrderRecordDO extends BaseDO {
     private String responseJson;
 
     /**
-     * 请求状态 (对应数据库表 `third_party_order_request.request_status`)
+     * 请求状态
      */
+    @Index
     private Integer requestStatus;
 
     /**

@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.*;
@@ -43,9 +43,9 @@ import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextH
 @RequiredArgsConstructor
 public class QueryServiceImpl implements QueryService {
 
-    private final IOrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final ChannelApi channelApi;
-    private final IRefundRepository refundRepository;
+    private final RefundRepository refundRepository;
     private final AccountApi accountApi;
     private final GoodsApi goodsApi;
 

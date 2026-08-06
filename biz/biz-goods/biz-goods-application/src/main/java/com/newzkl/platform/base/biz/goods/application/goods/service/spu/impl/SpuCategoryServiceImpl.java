@@ -8,9 +8,12 @@ import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.model.goods.query.brand.PalletCategoryPageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.brand.IndustryReq;
+import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.biz.goods.model.biz.vo.CategoryLayerVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiCategoryVO;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -34,15 +37,16 @@ import java.util.stream.Collectors;
  *
  * <p><b>缺口清单 (TODO[capability-gap])</b></p>
  * <ul>
- *   <li>{@code bindBrand} —— <b>抛异常</b>。Base 侧 {@code CategoryVO}/{@code CategoryReq}/
- *       {@code CategoryLayerDO} 均无 {@code brandIdList} 字段, 库表亦无该列,
- *       补齐需模型加字段 + DB 迁移, 超出本次范围</li>
  *   <li>{@code palletCategoryList} —— <b>抛异常</b>。源实现走会订货外部接口
  *       {@code HuiDingHuoApiUtils#getCategoryList}, Base 无该外部链路</li>
  *   <li>{@code categoryList} 的 SUPPLIER 角色分支 —— 源需 user 域
  *       {@code supplierFacade} 取供应商所属行业列表再按行业过滤分类, Base 无对等 port;
  *       当前退化为不按行业过滤 (返回全量分类), 主流程可跑</li>
  * </ul>
+ *
+ * <p>2026-08-06 补迁 {@code bindBrand}: 恢复 {@code spu_category.brand_id_list} 列 +
+ * {@code SpuCategoryVO}/{@code SpuCategoryReq}/{@code CategoryLayerDO} 补 {@code brandIdList} 字段,
+ * 逗号串 add/cut 逻辑与 {@code bindIndustry} 一致</p>
  *
  * @author KC
  */
@@ -122,15 +126,30 @@ public class SpuCategoryServiceImpl implements SpuCategoryService {
     /**
      * 分类绑定/解绑品牌
      *
+     * <p>分类侧以逗号串保存已绑定的品牌 ID 集合, 绑定即追加, 解绑即剔除
+     * (与 {@link SpuCategoryServiceImpl#bindIndustry} 同模式)。</p>
+     *
+     * <p>迁移说明: {@code spu_category.brand_id_list} 列 (源 category 表已有, Base 建表时曾删)
+     * 已随本端点恢复; {@code SpuCategoryVO}/{@code SpuCategoryReq}/{@code CategoryLayerDO}
+     * 均补 {@code brandIdList} 字段。此处读 VO 取旧串, add/cut 后仅携 {@code id + brandIdList}
+     * 走 {@code categoryEdit}, 其余字段为 null 经 MyBatis-Plus NOT_NULL 策略不参与 update,
+     * 不会覆盖分类名/父级等既有列。</p>
+     *
      * @param categoryId 分类主键
      * @param brandId    品牌主键
      * @param isBind     true 绑定, false 解绑
-     * @throws UnsupportedOperationException 模型与库表均缺 brandIdList 字段
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void bindBrand(Long categoryId, Long brandId, boolean isBind) {
-        throw new UnsupportedOperationException(GAP
-                + "分类绑定品牌需 CategoryVO/CategoryReq/CategoryLayerDO 新增 brandIdList 字段并做 DB 迁移, 超出本次范围");
+        SpuCategoryVO category = spuCategoryRepository.category(categoryId);
+        String newIdList = isBind
+                ? BizUtil.addIdString(category.getBrandIdList(), brandId)
+                : BizUtil.cutIdString(category.getBrandIdList(), brandId);
+        SpuCategoryReq categoryReq = new SpuCategoryReq();
+        categoryReq.setId(categoryId);
+        categoryReq.setBrandIdList(newIdList);
+        spuCategoryRepository.categoryEdit(categoryReq);
     }
 
     /**
@@ -175,5 +194,32 @@ public class SpuCategoryServiceImpl implements SpuCategoryService {
     public List<SpuCategoryVO> palletCategoryList(PalletCategoryPageQuery categoryQuery) {
         throw new UnsupportedOperationException(GAP
                 + "货盘分类源走会订货外部接口 HuiDingHuoApiUtils#getCategoryList, Base 无该外部链路");
+    }
+
+    /**
+     * API-分类列表
+     *
+     * @param accountId 调用方账号主键
+     * @param pid       父分类主键
+     * @return 对外分类列表
+     */
+    @Override
+    public List<ApiCategoryVO> apiCategoryList(Long accountId, Long pid) {
+        SpuCategoryQuery query = new SpuCategoryQuery();
+        query.setAccountId(accountId);
+        query.setPid(pid);
+        List<SpuCategoryVO> list = categoryList(query);
+        return TransferUtils.transfers(list, this::toApiCategoryVO);
+    }
+
+    /**
+     * SpuCategoryVO 递归转 ApiCategoryVO
+     */
+    private ApiCategoryVO toApiCategoryVO(CategoryLayerVO src) {
+        ApiCategoryVO vo = TransferUtils.transfer(src, ApiCategoryVO::new);
+        if (CollUtil.isNotEmpty(src.getChildren())) {
+            vo.setChildren(TransferUtils.transfers(src.getChildren(), this::toApiCategoryVO));
+        }
+        return vo;
     }
 }

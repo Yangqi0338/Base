@@ -29,6 +29,12 @@ public abstract class BaseDO extends BaseIdDO {
     protected ExecutorDTO executor;
 
     /**
+     * 创建人id
+     */
+    @TableField(fill = FieldFill.INSERT)
+    protected Long creatorId;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -53,14 +59,13 @@ public abstract class BaseDO extends BaseIdDO {
      */
     public void preInsert() {
         setId(null);
-        this.createTime = null;
-        this.updateTime = null;
+        this.executor = null;
     }
 
     /**
      * 预更新清理
      */
     public void preUpdate() {
-        this.updateTime = null;
+        this.executor = null;
     }
 }

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.PayApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.*;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
@@ -48,13 +48,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RefundServiceImpl implements RefundService {
 
-    private final IOrderDomain orderDomain;
-    private final IRefundDomain refundDomain;
+    private final OrderDomain orderDomain;
+    private final RefundDomain refundDomain;
     private final PayApi balancePayApi;
     private final LocalMessageApi localMessageApi;
     private final QueryService queryService;
-    private final ISettleDomain settleDomain;
-    private final IRefundRepository refundRepository;
+    private final SettleDomain settleDomain;
+    private final RefundRepository refundRepository;
 
     @Override
     public Long refundCreateApi(RefundCommand refundCommand) {

@@ -4,6 +4,7 @@ package com.newzkl.platform.base.biz.goods.application.goods.service.spu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.brand.PalletCategoryPageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiCategoryVO;
 
 import java.util.List;
 
@@ -53,5 +54,10 @@ public interface SpuCategoryService {
      * 货盘分类分页
      */
     List<SpuCategoryVO> palletCategoryList(PalletCategoryPageQuery categoryQuery);
+
+    /**
+     * API-分类列表
+     */
+    List<ApiCategoryVO> apiCategoryList(Long accountId, Long pid);
 
 }

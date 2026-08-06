@@ -10,7 +10,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
 import lombok.Data;
@@ -136,6 +136,10 @@ public class AccountVO extends BaseRes {
      * 归属端
      */
     private CommonEnum.Client client;
+    /**
+     * 头像（平台账号端使用，与 head 语义一致）
+     */
+    private String face;
 
     /**
      * @param registerRole  要注册的角色

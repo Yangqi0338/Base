@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.OrderStateRecordVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -24,7 +24,7 @@ import java.util.List;
 public class OrderStateRecordController {
 
     @Autowired
-    private IOrderDomain orderDomain;
+    private OrderDomain orderDomain;
 
     /**
      * 按spuOrderId查询订单状态记录列表（按操作时间倒序）

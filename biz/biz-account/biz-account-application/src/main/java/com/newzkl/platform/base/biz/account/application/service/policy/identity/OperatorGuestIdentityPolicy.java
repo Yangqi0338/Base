@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Component;

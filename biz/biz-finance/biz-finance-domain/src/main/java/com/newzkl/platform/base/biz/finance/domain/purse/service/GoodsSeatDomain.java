@@ -30,4 +30,15 @@ public interface GoodsSeatDomain {
      * @param req 赠送入参 (supplierId / purchaseNum)
      */
     void platformGiftGoodsSeat(SupplierPurchaseGoodsSeatReq req);
+
+    /**
+     * 供应商提交SPU审核时扣减1个商品位
+     *
+     * <p>从供应商商品位额度扣1, 记一条SUPPLIER_GOODS_POSITION_SUB变动。
+     * 用于SPU提交审核流程(plugin-audit调用)</p>
+     *
+     * @param supplierId 供应商ID
+     * @param spuId SPU主键(记录关联ID)
+     */
+    void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId);
 }

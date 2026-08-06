@@ -68,6 +68,17 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
         accountPurseRepository.saveAccountPurseAlterRecord(records);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId) {
+        AccountPurseQuery subQuery = buildQuery(supplierId, PurseEnum.PurseType.GOODS_SEAT);
+        accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(1), false, false, false);
+        List<AccountPurseAlterRecordVO> records = new ArrayList<>();
+        records.add(buildRecord(supplierId, PurseEnum.PurseType.GOODS_SEAT, Money.of(1),
+                EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.PurseAlterType.SUPPLIER_GOODS_POSITION_SUB, spuId));
+        accountPurseRepository.saveAccountPurseAlterRecord(records);
+    }
+
     /**
      * 组装单账户动账作用域查询
      *

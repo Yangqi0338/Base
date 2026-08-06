@@ -25,7 +25,7 @@ import java.util.List;
  * 与应用服务 {@code UserLecturerFollowServiceImpl} 的合并结果。</p>
  *
  * <p>关注/取关同时维护讲师侧 {@code followCount} 累计值, 与旧实现一致。
- * 列表的讲师展示字段由讲师仓储逐条回读拼装(旧实现走 mapper XML 联表, 新架构避免自建 XML)。</p>
+ * 分页列表由 mapper XML join 讲师表一次带回, 字段完整。</p>
  *
  * @author KC
  */
@@ -68,37 +68,9 @@ public class UserLecturerFollowDomainImpl implements UserLecturerFollowDomain {
     public IPage<UserFollowRes> pageQueryFollowList(UserFollowQuery query) {
         ThrowsException.isNull(query.getUserId(), BaseErrorCode.USER_NOT_LOGIN, "关注列表");
         Page<UserFollowRes> page = userLecturerFollowRepository.pageList(query);
-        fillLecturer(page.getRecords());
         return page;
     }
 
-    /**
-     * 回填讲师展示字段
-     *
-     * @param records 关注记录列表
-     */
-    private void fillLecturer(List<UserFollowRes> records) {
-        if (records == null || records.isEmpty()) {
-            return;
-        }
-        for (UserFollowRes item : records) {
-            LecturerRes lecturer = lecturerRepository.detail(item.getLecturerId());
-            if (lecturer == null) {
-                continue;
-            }
-            item.setLecturerName(lecturer.getLecturerName());
-            item.setMainAccount(lecturer.getMainAccount());
-            item.setMainAccountId(lecturer.getMainAccountId());
-            item.setCourseCount(lecturer.getCourseCount());
-            item.setFollowCount(lecturer.getFollowCount());
-            item.setPersonalIntro(lecturer.getPersonalIntro());
-            item.setCoverImageUrl(lecturer.getCoverImageUrl());
-            item.setAvatarUrl(lecturer.getAvatarUrl());
-            item.setCategoryId(lecturer.getLecturerCategoryId() == null
-                    ? null : String.valueOf(lecturer.getLecturerCategoryId()));
-            item.setCategoryName(lecturer.getLecturerCategoryName());
-        }
-    }
 
     /**
      * 解析关注操作的用户ID, 缺省取当前登录用户

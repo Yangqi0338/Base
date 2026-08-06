@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
@@ -7,6 +8,9 @@ import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
@@ -16,19 +20,23 @@ import java.time.LocalDateTime;
  * @Description: 交易单
  * @date 2023/11/1014:50
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
+@TableName(value = "order", autoResultMap = true)
 public class OrderDO extends BaseDO {
 
     /**
      * 交易单号
      */
+    @Index(type = IndexTypeEnum.UNIQUE)
     private String orderNo;
-    
+
     /**
      * 订单类型 : 0 渠道商选品下单, 1 c端铺货下单
      */
+    @Index
     private Integer orderType;
-    
+
     /**
      * 外部订单号
      */
@@ -37,13 +45,16 @@ public class OrderDO extends BaseDO {
     /**
      * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部单为 null
      */
+    @Index
     private PlatformTypeEnum platformType;
 
     /**
      * 运营商ID
      */
+    @Index
     private Long operatorId;
-    
+
+    @Index
     private Long channelId;
 
     @JsonSerializable
@@ -97,17 +108,18 @@ public class OrderDO extends BaseDO {
     private Money memberAmount;
     
     private Integer orderState;
-    
+
     /**
      * C端支付状态 0 未支付 1 已支付
      */
     private Integer memberPayState;
-    
+
     /**
      * 渠道商支付状态 0 未支付 1 已支付
      */
     private Integer channelPayState;
-    
+
+    @Index
     private LocalDateTime payTime;
     
     private Integer payType;
@@ -117,13 +129,16 @@ public class OrderDO extends BaseDO {
     @JsonSerializable
     private OrderSnapVO orderSnapVO;
     
+    @Index
     private Long storeId;
-    
+
+    @Index
     private Long memberId;
-    
+
     /**
      * 账号id(account.id)
      */
+    @Index
     private Long accountId;
     
     /**

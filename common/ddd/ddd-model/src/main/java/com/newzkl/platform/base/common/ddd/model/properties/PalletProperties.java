@@ -31,6 +31,16 @@ public class PalletProperties {
     public static Integer hdhChannelType = 2;
 
     /**
+     * 中泽 D 平台商品同步地址
+     */
+    public static String zzDGoodsUrl;
+
+    /**
+     * 中泽 D 平台订单回调转发地址
+     */
+    public static String zzDOrderUrl;
+
+    /**
      * 售后地址解析正则模板列表
      * <p>每条正则需含 named groups: province / city / district / detail / receiver / phone</p>
      * @ext 运营弹窗"分析"按钮用
@@ -57,6 +67,14 @@ public class PalletProperties {
 
     public void setHdhChannelType(Integer hdhChannelType) {
         PalletProperties.hdhChannelType = hdhChannelType;
+    }
+
+    public void setZzDGoodsUrl(String zzDGoodsUrl) {
+        PalletProperties.zzDGoodsUrl = zzDGoodsUrl;
+    }
+
+    public void setZzDOrderUrl(String zzDOrderUrl) {
+        PalletProperties.zzDOrderUrl = zzDOrderUrl;
     }
 
     public void setAfterSaleAddressPatterns(List<String> regexList) {

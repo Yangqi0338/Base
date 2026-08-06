@@ -11,6 +11,7 @@ import com.newzkl.platform.base.biz.market.model.req.market.ClientBindMarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
 import com.newzkl.platform.base.biz.market.model.req.market.UpdateMarketDataReq;
 import com.newzkl.platform.base.biz.market.model.vo.market.*;
+import com.newzkl.platform.base.common.ddd.facade.MarketRpcVO;
 
 import java.util.List;
 
@@ -95,5 +96,10 @@ public interface MarketDomain {
     List<MarketGoodsCategoryVO> queryMarketGoodsCategory(Long marketId,Long userId);
 
     void alterMarketData(UpdateMarketDataReq req);
+
+    /**
+     * 查询账号绑定的渠道市场列表
+     */
+    List<MarketRpcVO> queryAccountBindMarket(Long accountId);
 
 }

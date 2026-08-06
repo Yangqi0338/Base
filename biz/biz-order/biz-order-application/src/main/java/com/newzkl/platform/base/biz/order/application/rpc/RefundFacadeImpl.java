@@ -6,12 +6,12 @@ import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
-import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
-import com.newzkl.platform.base.biz.order.facade.IOrderFacade;
-import com.newzkl.platform.base.biz.order.facade.IRefundFacade;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
+import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
+import com.newzkl.platform.base.biz.order.facade.OrderFacade;
+import com.newzkl.platform.base.biz.order.facade.RefundFacade;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.*;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
@@ -41,17 +41,17 @@ import java.util.function.Function;
 @DubboService
 @Component
 @RequiredArgsConstructor
-public class RefundFacadeImpl implements IRefundFacade {
+public class RefundFacadeImpl implements RefundFacade {
 
 
-    private final IRefundDomain refundDomain;
+    private final RefundDomain refundDomain;
     private final RefundService refundService;
     private final GoodsApi goodsApi;
-    private final IOrderFacade orderFacade;
+    private final OrderFacade orderFacade;
     private final SupplierApi supplierApi;
     private final QueryService queryService;
-    private final IOrderDomain orderDomain;
-    private final IRefundRepository refundRepository;
+    private final OrderDomain orderDomain;
+    private final RefundRepository refundRepository;
 
     @Override
     public Long apiSubmit(Long accountId, ApiRefundSubmitReq refundSubmitReq) {

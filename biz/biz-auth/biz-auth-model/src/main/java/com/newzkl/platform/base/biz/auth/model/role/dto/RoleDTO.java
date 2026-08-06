@@ -1,0 +1,27 @@
+package com.newzkl.platform.base.biz.auth.model.role.dto;
+
+import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 角色数据传输对象
+ *
+ * @author KC
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class RoleDTO extends BaseDTO {
+
+    /** 角色编码 */
+    private String code;
+
+    /** 角色名称 */
+    private String name;
+
+    /** 角色描述 */
+    private String description;
+
+    /** 排序 */
+    private Integer sort;
+}

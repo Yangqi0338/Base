@@ -7,8 +7,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
-import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.SettleRepository;
+import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.FreightSettleOrderWaitCommand;
 import com.newzkl.platform.base.biz.order.model.req.SettleGoodsCommand;
@@ -45,9 +45,9 @@ import java.util.stream.Collectors;
 */
 @Service
 @RequiredArgsConstructor
-public class SettleDomainImpl implements ISettleDomain {
+public class SettleDomainImpl implements SettleDomain {
 
-    private final ISettleRepository settleRepository;
+    private final SettleRepository settleRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

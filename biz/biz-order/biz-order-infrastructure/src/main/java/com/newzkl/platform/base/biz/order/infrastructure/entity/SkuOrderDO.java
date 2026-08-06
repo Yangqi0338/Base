@@ -1,9 +1,12 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -12,10 +15,14 @@ import java.time.LocalDateTime;
  * @Description: 订单
  * @date 2023/11/1014:50
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
+@TableName
 public class SkuOrderDO extends BaseDO {
 
+    @Index
     private Long orderId;
+    @Index
     private Long spuOrderId;
     private Money goodsAmount;
     /**
@@ -29,18 +36,22 @@ public class SkuOrderDO extends BaseDO {
      * 货款金额 supplier_amount
      */
     private Money supplierAmount;
+    @Index
     private Integer orderState;
     /**
      * 交易师ID dealer_id
      */
+    @Index
     private Long dealerId;
     /**
      * 运营商ID operator_id
      */
+    @Index
     private Long operatorId;
     /**
      * 供应商ID
      */
+    @Index
     private Long supplierId;
     /**
      * 结算配置 settlement_config_v_o
@@ -49,10 +60,12 @@ public class SkuOrderDO extends BaseDO {
     /**
      * skuID
      */
+    @Index
     private Long spuId;
     /**
      * skuID
      */
+    @Index
     private Long skuId;
     /**
      * 外部SkuId

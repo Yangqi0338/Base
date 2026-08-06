@@ -3,93 +3,76 @@ package com.newzkl.platform.base.biz.auth.domain.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
 import com.newzkl.platform.base.biz.auth.model.role.req.RoleReq;
-import com.newzkl.platform.base.biz.auth.model.role.res.RoleRes;
 import com.newzkl.platform.base.biz.auth.model.role.vo.RoleVO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * 角色领域服务
- *
- * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.service.IRoleDomain} (表 {@code role})。
- * 语义为"可申请的企业角色配置", 与鉴权角色 ({@code auth_role}) 无关。
- * 旧 {@code roleEdit(List<EditColumnDTO>, id)} 无调用方, 未随本切片迁移;
- * 旧 {@code addCount(long)} 参数名虽为 count, 实为角色 ID (mapper 按 id 自增计数),
- * 本仓改名为 {@link RoleDomain#addCount} 以消除误导。</p>
  *
  * @author KC
  */
 public interface RoleDomain {
 
     /**
-     * 角色保存
-     *
-     * <p>主键由领域层雪花生成, 与旧实现一致。</p>
+     * 创建角色
      *
      * @param req 角色入参
-     * @return 主键 ID
+     * @return 主键ID
      */
-    Long save(RoleReq req);
+    Long create(RoleReq req);
 
     /**
-     * 角色修改
+     * 更新角色
      *
-     * <p>以入参 {@code id} 为更新目标 (非请求体内的 id), 与旧实现一致。</p>
-     *
-     * @param id  角色 ID
      * @param req 角色入参
-     * @return 影响行数
      */
-    int edit(Long id, RoleReq req);
+    void update(RoleReq req);
 
     /**
-     * 角色删除
+     * 删除角色, 同步清理关系并重算受影响账号
      *
-     * @param idList ID 列表
-     * @return 影响行数
+     * @param id 主键
      */
-    int delete(List<Long> idList);
+    void delete(Long id);
 
     /**
-     * 角色领域视图
+     * 角色详情, 含绑定账号与权限
      *
-     * @param id 角色 ID
-     * @return 角色领域视图, 无则 null
+     * @param id 主键
+     * @return 角色视图
      */
-    RoleVO role(Long id);
+    RoleVO detail(Long id);
 
     /**
-     * 角色详情 (对外出参)
-     *
-     * @param id 角色 ID
-     * @return 角色出参, 无则 null
-     */
-    RoleRes detail(Long id);
-
-    /**
-     * 角色列表
-     *
-     * <p>旧 {@code /user/role/roleList} 返回的是分页查询后的列表 (非分页包装),
-     * 本方法保留该出参形态。</p>
-     *
-     * @param query 查询条件
-     * @return 角色出参列表, 无数据返回空集合
-     */
-    List<RoleRes> list(RoleQuery query);
-
-    /**
-     * 角色分页
+     * 分页查询
      *
      * @param query 查询条件
      * @return 分页结果
      */
-    Page<RoleRes> pageList(RoleQuery query);
+    Page<RoleVO> page(RoleQuery query);
 
     /**
-     * 角色用户量自增 1
+     * 列出全部角色
      *
-     * @param id 角色 ID
-     * @return 影响行数
+     * @return 角色列表
      */
-    int addCount(Long id);
+    List<RoleVO> listAll();
+
+    /**
+     * 绑定角色到账号集合, 全量替换
+     *
+     * @param roleId     角色ID
+     * @param accountIds 账号ID集合
+     */
+    void bindAccounts(Long roleId, Collection<Long> accountIds);
+
+    /**
+     * 为角色分配权限, 全量替换并重算受影响账号
+     *
+     * @param roleId        角色ID
+     * @param permissionIds 权限ID集合
+     */
+    void assignPermissions(Long roleId, Collection<Long> permissionIds);
 }

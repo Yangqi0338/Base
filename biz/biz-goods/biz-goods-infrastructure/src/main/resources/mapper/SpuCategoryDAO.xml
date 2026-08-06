@@ -50,11 +50,12 @@
     </select>
 
     <!-- 分类分页 (迁移自 new-scm CategoryDAO.xml 的 listByQuery; 分页壳由 PageInfo 改为 MyBatis-Plus Page
-         已删列: brand_id_list / brand_name_list (Base spu_category 无此两列)
+         恢复列: brand_id_list (源 category 表有, Base 建表曾删, 本轮 bindBrand 端点补迁时恢复)
+         仍删列: brand_name_list (品牌名冗余存储, 前端未用, 不恢复)
          新增列: idx / is_enabled / pid_list / level (Base CategoryLayerDO 新增字段) -->
     <select id="listByQuery" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO">
         select
-        t.`id`,t.`account_id`,t.`name`,t.`desc`,t.`img`,t.`idx`,t.`is_enabled`,t.`pid`,t.`pid_list`,t.`level`,t.`create_time`,t.`update_time`
+        t.`id`,t.`account_id`,t.`name`,t.`desc`,t.`img`,t.`idx`,t.`is_enabled`,t.`pid`,t.`pid_list`,t.`level`,t.`brand_id_list`,t.`create_time`,t.`update_time`
         from spu_category t
         <where>
             and t.del_flag = 0

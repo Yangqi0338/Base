@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuDetailVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuStateVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
@@ -85,4 +86,9 @@ public interface SpuService {
      * API-SKU列表
      */
     List<ApiSkuVO> apiSkuVOList(Long accountId, List<Long> spuIdList);
+
+    /**
+     * API-SPU详情
+     */
+    ApiSpuDetailVO apiSpuDetail(Long accountId, Long spuId);
 }

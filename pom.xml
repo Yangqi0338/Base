@@ -61,6 +61,7 @@
 
         <qiniu.version>7.5.0</qiniu.version>
         <huaweicloud.version>3.1.60</huaweicloud.version>
+        <zxing.version>3.5.3</zxing.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <forest.version>1.7.6</forest.version>
         <jsoup.version>1.15.3</jsoup.version>
@@ -274,6 +275,16 @@
                 <groupId>com.huaweicloud.sdk</groupId>
                 <artifactId>huaweicloud-sdk-ocr</artifactId>
                 <version>${huaweicloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
+                <version>${zxing.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

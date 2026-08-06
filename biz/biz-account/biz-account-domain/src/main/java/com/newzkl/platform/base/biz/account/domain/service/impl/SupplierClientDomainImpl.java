@@ -26,7 +26,7 @@ import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.SupplierAssembler;
 import com.newzkl.platform.base.biz.account.model.exception.SupplierErrorCode;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;

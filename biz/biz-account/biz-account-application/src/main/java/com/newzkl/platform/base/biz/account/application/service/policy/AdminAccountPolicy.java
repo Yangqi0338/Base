@@ -8,7 +8,9 @@ import com.newzkl.platform.base.biz.account.model.res.AccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountProxySaveReq;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 平台端账号策略
@@ -23,9 +25,23 @@ public class AdminAccountPolicy extends AbsAccountPolicy {
         return CommonEnum.Client.ADMIN;
     }
 
+    /**
+     * 平台端账号注册
+     *
+     * <p>管理员账号 = AccountDO 行(client=ADMIN, roleIdList 含 PLATFORM(1))。
+     * 旧 admin_account 表已合并至 account, 本策略负责 ADMIN 端注册逻辑。</p>
+     *
+     * @param customSaveReq 账号请求
+     * @return 注册结果
+     * @author KC
+     */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AccountRegisterRes customRegister(AccountCustomSaveReq customSaveReq) {
-        return null;
+        // 平台账号恒为 PLATFORM 角色, ADMIN 端
+        customSaveReq.setRole(RoleEnum.CompanyRole.PLATFORM);
+        AccountVO account = super.doRegisterAccount(customSaveReq);
+        return accountAssembler.vo2RegisterRes(account);
     }
 
     /**

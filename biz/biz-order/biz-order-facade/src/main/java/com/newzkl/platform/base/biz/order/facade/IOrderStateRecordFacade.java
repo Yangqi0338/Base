@@ -1,1 +1,0 @@
-package com.newzkl.platform.base.biz.order.facade;import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;/** * 订单状态记录RPC门面接口 * * @author sijiwang */public interface IOrderStateRecordFacade {    /**     * 保存订单状态记录     * @param orderStateRecordRPC 订单状态记录RPC传输模型     */    void save(OrderStateRecordRPC orderStateRecordRPC);}

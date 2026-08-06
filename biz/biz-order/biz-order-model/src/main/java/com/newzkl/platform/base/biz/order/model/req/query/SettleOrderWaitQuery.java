@@ -25,4 +25,16 @@ public class SettleOrderWaitQuery extends BizPageQuery {
      * 结算状态
      */
     private Integer settleState;
+    /**
+     * sku订单ID(单值, 供 getLw 精确匹配)
+     */
+    private Long skuOrderId;
+    /**
+     * 类型 0商品 1运费 2售后冲正(单值, 供 getLw 精确匹配)
+     */
+    private Integer type;
+    /**
+     * spu订单ID(单值, 供 getLw 精确匹配)
+     */
+    private Long spuOrderId;
 }

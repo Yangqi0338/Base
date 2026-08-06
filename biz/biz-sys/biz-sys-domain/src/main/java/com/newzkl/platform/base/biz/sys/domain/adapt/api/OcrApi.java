@@ -20,4 +20,15 @@ public interface OcrApi {
      *         识别失败返回 {@code null} (与源逐字一致: 源异常分支仅打印堆栈后返回 null)
      */
     Object recognizeIdCard(String imageUrl);
+
+    /**
+     * 营业执照识别
+     *
+     * <p>SDK 细节 (含 {@code RecognizeBusinessLicenseResponse}) 全落 gateway, 端口不出现 SDK 类型;
+     * 出参转为通用结构, 序列化后形状与源 {@code {result:{...}}} 一致, 供上层做地址反查区域码</p>
+     *
+     * @param imageUrl 营业执照图片 URL
+     * @return 三方识别结果 (已转为通用结构), 识别失败返回 {@code null} (与源逐字一致)
+     */
+    Object recognizeBusinessLicense(String imageUrl);
 }

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.web.DealerProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.web.OperatorProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.web.SelectorProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

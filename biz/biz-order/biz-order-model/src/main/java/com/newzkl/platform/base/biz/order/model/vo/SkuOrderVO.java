@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class SkuOrderVO extends BaseVO {
+public class SkuOrderVO extends BaseRes {
      /**
      * 订单ID
      */

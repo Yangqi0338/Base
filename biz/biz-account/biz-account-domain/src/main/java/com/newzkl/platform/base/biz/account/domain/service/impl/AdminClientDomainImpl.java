@@ -16,7 +16,6 @@ import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.EmpRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AdminClientDomain;
-import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.EmpCreateReq;
 import com.newzkl.platform.base.biz.account.model.req.EmpQuery;
@@ -47,7 +46,6 @@ import java.util.stream.Collectors;
 public class AdminClientDomainImpl implements AdminClientDomain {
 
     private final EmpRepository empRepository;
-    private final AuthRepository authRepository;
     private final AccountRepository accountRepository;
     private final EmpAssembler empAssembler;
 

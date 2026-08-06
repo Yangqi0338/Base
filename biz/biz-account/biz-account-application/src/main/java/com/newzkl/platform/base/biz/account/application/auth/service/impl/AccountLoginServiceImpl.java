@@ -33,7 +33,6 @@ import com.newzkl.platform.base.biz.account.model.vo.OperatorVO;
 import com.newzkl.platform.base.biz.account.model.vo.ResetMemberVO;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.TLSSigAPIv2;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
-import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -91,7 +90,6 @@ public class AccountLoginServiceImpl implements AccountLoginService {
     private final AccountDomain accountDomain;
     private final AccountLoginRepository accountLoginRepository;
     private final LoginAssembler loginAssembler;
-    private final AuthRepository authRepository;
 
     private final GoodsStoreApi goodsStoreApi;
 
@@ -136,7 +134,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
 
         // 腾讯IM
         generateUserSig(loginRes);
-        authRepository.cacheUserUnFunctionUrls(account.getId());
+        // 权限缓存改为拉取模型(@FuncPermission + AccountPermissionStpInterface), 登录不再预热, 移除 authRepository.cacheUserUnFunctionUrls
         log.info("密码登录成功：账号{}，角色{}，客户端{}", account.getId(), companyRole.getCode(), loginReq.getClient().getCode());
         return loginRes;
     }

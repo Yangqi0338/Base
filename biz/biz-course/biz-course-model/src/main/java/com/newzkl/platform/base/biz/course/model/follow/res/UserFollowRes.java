@@ -89,7 +89,7 @@ public class UserFollowRes implements Serializable {
     /**
      * 讲师分类ID
      */
-    private String categoryId;
+    private Long categoryId;
 
     /**
      * 讲师分类名称

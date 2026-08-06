@@ -1,8 +1,11 @@
 package com.newzkl.platform.base.biz.course.infrastructure.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.UserLecturerFollowDO;
 import com.newzkl.platform.base.biz.course.model.follow.query.UserFollowQuery;
+import com.newzkl.platform.base.biz.course.model.follow.res.UserFollowRes;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -34,6 +37,18 @@ public interface UserLecturerFollowDAO extends BaseMapper<UserLecturerFollowDO> 
         wrapper.orderByDesc(UserLecturerFollowDO::getFollowTime);
         return wrapper;
     }
+
+    /**
+     * 分页查关注讲师列表(join lecturer 表, 支持 lecturerName 模糊过滤)
+     *
+     * <p>迁移自 {@code com.zkl.scm.user.infrastructure.dao.UserLecturerFollowDAO#pageQueryFollowList}。
+     * 字段由一听 join 查询一次带回(Base lecturer 表已冗余存讲师展示字段, 无需 join channel/lecturer_category)。</p>
+     *
+     * @param page  分页参数
+     * @param query 查询条件(含 userId/lecturerName)
+     * @return 分页关注列表
+     */
+    IPage<UserFollowRes> pageQueryFollowList(Page<UserFollowRes> page, @Param("query") UserFollowQuery query);
 
     /**
      * 查用户已关注的讲师ID列表

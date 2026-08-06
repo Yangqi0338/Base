@@ -30,7 +30,7 @@ import com.newzkl.platform.base.biz.account.model.res.SubAccount;
 import com.newzkl.platform.base.biz.account.model.res.UpIdRes;
 import com.newzkl.platform.base.biz.account.model.res.UserCountRes;
 import com.newzkl.platform.base.biz.account.model.vo.*;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import lombok.RequiredArgsConstructor;

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,7 @@ public class PackOrderDO extends BaseDO {
     /**
      * 下单账号ID
      */
+    @Index
     private Long accountId;
 
     /**
@@ -37,6 +39,7 @@ public class PackOrderDO extends BaseDO {
     /**
      * 礼包商品ID
      */
+    @Index
     private Long packId;
 
     /**
@@ -87,5 +90,6 @@ public class PackOrderDO extends BaseDO {
     /**
      * 订单状态 (0,新订单),(2,待支付),(4,待发货),(6,已发货),(8,已收货),(10,已完成),(-1,已关闭)
      */
+    @Index
     private Integer state;
 }

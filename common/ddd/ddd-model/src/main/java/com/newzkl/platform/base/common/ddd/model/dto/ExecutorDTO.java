@@ -17,19 +17,14 @@ public class ExecutorDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 创建人 ID
+     * 创建人名称
      */
-    private Long creatorId;
+    private String creatorName;
 
     /**
      * 更新人 ID
      */
-    private Long updaterId;
-
-    /**
-     * 创建人名称
-     */
-    private String creatorName;
+    private Long updater;
 
     /**
      * 更新人名称

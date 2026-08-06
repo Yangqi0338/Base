@@ -16,6 +16,7 @@ public interface ThirdPartyOrderRecordDAO extends BaseMapper<ThirdPartyOrderReco
                 .notEmptyEq(ThirdPartyOrderRecordDO::getPlatformType, query.getPlatformType())
                 .notEmptyEq(ThirdPartyOrderRecordDO::getRequestStatus, query.getRequestStatus())
                 .notEmptyEq(ThirdPartyOrderRecordDO::getInterfaceName, query.getInterfaceName())
+                .notEmptyLt(ThirdPartyOrderRecordDO::getNextRetryTime, query.getNextRetryTimeBefore())
                 ;
     }
 }

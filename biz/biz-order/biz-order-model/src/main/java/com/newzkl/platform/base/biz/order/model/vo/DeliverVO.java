@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -8,7 +8,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class DeliverVO extends BaseVO {
+public class DeliverVO extends BaseRes {
      /**
      * 主键
      */

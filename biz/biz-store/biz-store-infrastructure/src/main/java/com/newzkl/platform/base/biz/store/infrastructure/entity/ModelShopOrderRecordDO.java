@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -26,11 +27,13 @@ public class ModelShopOrderRecordDO {
     /**
      * 门店id
      */
+    @Index
     private Long storeId;
-    
+
     /**
      * 样板店ID
      */
+    @Index
     private Long modelShopId;
     
     /**

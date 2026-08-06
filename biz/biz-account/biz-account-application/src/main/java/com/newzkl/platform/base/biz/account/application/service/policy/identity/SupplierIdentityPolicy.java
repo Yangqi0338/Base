@@ -26,7 +26,6 @@ import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.AuditRoleApplyVO;
 import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
@@ -140,48 +139,60 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
 
 
 
+    /**
+     * 角色申请审核事件回调。
+     *
+     * <p>迁移说明: 角色申请审核业务已下线({@code AuditRoleApplyVO} 模型删除),
+     * 原实现依赖该模型解析审批数据、驱动供应商审核通过/失败与短信通知,
+     * 故整体注释保留。保留 {@code @Override} 与方法签名, 以满足抽象方法契约;
+     * 待新审批链路接入后重写。</p>
+     *
+     * @param auditEvent 审批事件
+     * @author KC
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void roleApplyAuditEvent(AuditEvent auditEvent) {
-        Integer state = auditEvent.getState();
-        Long accountId = auditEvent.getAccountId();
-        String data = auditEvent.getData();
-        AuditRoleApplyVO auditRoleApplyDataVO = JSON.parseObject(data, AuditRoleApplyVO.class);
-        AccountVO accountVO = accountDomain.account(null, accountId);
-        //成功处理
-        if (AuditEnum.State.SUCCESS.getCode().equals(state)) {
-            String companyInfo = auditRoleApplyDataVO.getCompanyInfo();
-            String nameAuthInfo = auditRoleApplyDataVO.getNameAuthInfo();
-            //创建角色
-            supplierDomain.auditPass(accountVO, companyInfo);
-            //个人账号处理
-            if (StringUtils.isNotEmpty(nameAuthInfo)) {
-                NameAuthVO nameAuthVO = JSONObject.parseObject(nameAuthInfo, NameAuthVO.class);
-                accountDomain.nameAuthSuccess(accountId, nameAuthVO);
-            }
-            //角色计数
-//            roleDomain.addCount(auditRoleApplyDataVO.getRoleId().longValue());
-        } else if (AuditEnum.State.FAIL.getCode().equals(state)) {
-            supplierDomain.auditFail(accountId, auditEvent.getLastRefuseReason());
-        } else {
-            log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
-            throw new PlatformException(BaseErrorCode.PARAM);
-        }
-        //发送短信
-        CodeReq codeReq = new CodeReq();
-        codeReq.setPhone(auditRoleApplyDataVO.getRegisterPhone());
-        if (AuditEnum.State.SUCCESS.getCode().equals(state)) {
-            codeReq.setType(SmsEnum.Type.SUPPLIER_AUDIT_SUCCESS);
-            smsApi.sendCode(codeReq);
-        } else if (AuditEnum.State.FAIL.getCode().equals(state)) {
-            RoleEnum.CompanyRole companyRole = auditRoleApplyDataVO.getRole();
-            codeReq.setType(SmsEnum.Type.SUPPLIER_AUDIT_FAIL);
-            //codeReq.setParams(Arrays.asList(companyRole.getValue(), auditEvent.getLastRefuseReason()));
-            smsApi.sendCode(codeReq);
-        } else {
-            log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
-            throw new PlatformException(BaseErrorCode.PARAM);
-        }
+        // 角色申请审核业务已下线, 原实现依赖已删除的 AuditRoleApplyVO 模型, 整体注释保留:
+//        Integer state = auditEvent.getState();
+//        Long accountId = auditEvent.getAccountId();
+//        String data = auditEvent.getData();
+//        AuditRoleApplyVO auditRoleApplyDataVO = JSON.parseObject(data, AuditRoleApplyVO.class);
+//        AccountVO accountVO = accountDomain.account(null, accountId);
+//        //成功处理
+//        if (AuditEnum.State.SUCCESS.getCode().equals(state)) {
+//            String companyInfo = auditRoleApplyDataVO.getCompanyInfo();
+//            String nameAuthInfo = auditRoleApplyDataVO.getNameAuthInfo();
+//            //创建角色
+//            supplierDomain.auditPass(accountVO, companyInfo);
+//            //个人账号处理
+//            if (StringUtils.isNotEmpty(nameAuthInfo)) {
+//                NameAuthVO nameAuthVO = JSONObject.parseObject(nameAuthInfo, NameAuthVO.class);
+//                accountDomain.nameAuthSuccess(accountId, nameAuthVO);
+//            }
+//            //角色计数
+////            roleDomain.addCount(auditRoleApplyDataVO.getRoleId().longValue());
+//        } else if (AuditEnum.State.FAIL.getCode().equals(state)) {
+//            supplierDomain.auditFail(accountId, auditEvent.getLastRefuseReason());
+//        } else {
+//            log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
+//            throw new PlatformException(BaseErrorCode.PARAM);
+//        }
+//        //发送短信
+//        CodeReq codeReq = new CodeReq();
+//        codeReq.setPhone(auditRoleApplyDataVO.getRegisterPhone());
+//        if (AuditEnum.State.SUCCESS.getCode().equals(state)) {
+//            codeReq.setType(SmsEnum.Type.SUPPLIER_AUDIT_SUCCESS);
+//            smsApi.sendCode(codeReq);
+//        } else if (AuditEnum.State.FAIL.getCode().equals(state)) {
+//            RoleEnum.CompanyRole companyRole = auditRoleApplyDataVO.getRole();
+//            codeReq.setType(SmsEnum.Type.SUPPLIER_AUDIT_FAIL);
+//            //codeReq.setParams(Arrays.asList(companyRole.getValue(), auditEvent.getLastRefuseReason()));
+//            smsApi.sendCode(codeReq);
+//        } else {
+//            log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
+//            throw new PlatformException(BaseErrorCode.PARAM);
+//        }
     }
 
 

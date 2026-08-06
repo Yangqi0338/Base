@@ -5,7 +5,7 @@ import com.dtflys.forest.http.ForestRequest;
 import com.dtflys.forest.interceptor.Interceptor;
 import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import jakarta.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
 

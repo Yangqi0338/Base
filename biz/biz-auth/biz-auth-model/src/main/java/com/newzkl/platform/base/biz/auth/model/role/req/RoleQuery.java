@@ -1,23 +1,21 @@
 package com.newzkl.platform.base.biz.auth.model.role.req;
 
-import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
+import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
-
-import java.util.List;
+import lombok.EqualsAndHashCode;
 
 /**
- * 角色
+ * 角色分页查询
  *
- * @author fang
+ * @author KC
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class RoleQuery extends PageQuery {
-    /** 主键ID */
-    private Long id;
-    /** ID列表 */
-    private List<Long> idList;
-    /**
-     * 角色名称 (查询)
-     */
-    private String name;
+public class RoleQuery extends BizPageQuery {
+
+    /** 关键字 */
+    private String keyword;
+
+    /** 角色编码 */
+    private String code;
 }

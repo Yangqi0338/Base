@@ -25,15 +25,19 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-account-facade</artifactId>
         </dependency>
-        <!-- biz-auth 切分: AdminClientDomainImpl 需 AuthRepository (RBAC 权限缓存).
-             依赖方向 biz-account -> biz-auth 单向, 反向禁止 -->
-        <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>biz-auth-domain</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-domain</artifactId>
+        </dependency>
+        <!-- AbsAccountPolicy 权限缓存键用 RedisEnum -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-redis</artifactId>
+        </dependency>
+        <!-- Admin/UserClientDomainImpl 子账号 Excel 导入用 EasyExcelUtil -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-office</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

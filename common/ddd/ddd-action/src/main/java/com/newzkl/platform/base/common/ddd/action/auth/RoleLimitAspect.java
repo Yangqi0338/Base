@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.common.ddd.action.auth;
 
 import cn.hutool.core.util.ArrayUtil;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -37,13 +38,19 @@ public class RoleLimitAspect {
     @Around("@within(roleLimit) || @annotation(roleLimit)")
     public Object check(ProceedingJoinPoint pjp, RoleLimit roleLimit) throws Throwable {
         RoleEnum.CompanyRole[] allowed = roleLimit.value();
-        if (ArrayUtil.isEmpty(allowed)) {
+        CommonEnum.Client[] clientAllowed = roleLimit.client();
+        if (ArrayUtil.isEmpty(allowed) && ArrayUtil.isEmpty(clientAllowed)) {
             return pjp.proceed();
         }
         RoleEnum.CompanyRole current = SecurityUtils.getRole();
-        if (!ArrayUtil.contains(allowed, current)) {
-            throw new PlatformException(BaseErrorCode.NO_AUTH);
+        if (current != null) {
+            if (ArrayUtil.contains(allowed, current)) {
+                return pjp.proceed();
+            }
+            if (ArrayUtil.contains(clientAllowed, current.getClient())) {
+                return pjp.proceed();
+            }
         }
-        return pjp.proceed();
+        throw new PlatformException(BaseErrorCode.NO_AUTH);
     }
 }

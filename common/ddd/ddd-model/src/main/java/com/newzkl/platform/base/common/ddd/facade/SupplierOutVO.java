@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class SupplierOutVO extends BaseVO {
+public class SupplierOutVO extends BaseRes {
 
      /**
      * 角色ID

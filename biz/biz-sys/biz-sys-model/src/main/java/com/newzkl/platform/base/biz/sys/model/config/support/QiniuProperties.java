@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.sys.model.config.support;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,33 +14,49 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@Data
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "qiniuyun.config")
 public class QiniuProperties {
 
     /**
-     * 七牛 AccessKey
+     * 七牛云AccessKey
      */
-    private String accessKey;
+    public static String accessKey = "OtWjVh3OdkGtbk-CEW6FDZmso7U_i80JFxLVS7Js";
 
     /**
-     * 七牛 SecretKey
+     * 七牛云SecretKey
      */
-    private String secretKey;
+    public static String secretKey = "AL1Cu1KHHFRytsAWxCqVX31DQJni1lrv_vcLSPh2";
 
     /**
-     * 目标存储空间名
+     * 存储空间名称
      */
-    private String bucket;
+    public static String bucket = "zhongzetp";
 
     /**
-     * 资源访问域名
+     * 访问域名
      */
-    private String domain;
+    public static String domain = "https://oss.jiufucloud.com";
 
     /**
-     * 凭证有效期, 单位秒
+     * 签名过期时间
+     * @ext 秒
      */
-    private Long expires;
+    public static Long expires = 3600L;
+
+    public void setAccessKey(String accessKey) {
+        QiniuProperties.accessKey = accessKey;
+    }
+    public void setSecretKey(String secretKey) {
+        QiniuProperties.secretKey = secretKey;
+    }
+    public void setBucket(String bucket) {
+        QiniuProperties.bucket = bucket;
+    }
+    public void setDomain(String domain) {
+        QiniuProperties.domain = domain;
+    }
+    public void setExpires(Long expires) {
+        QiniuProperties.expires = expires;
+    }
 }

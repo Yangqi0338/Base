@@ -13,9 +13,9 @@ import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
-import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
+import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
@@ -52,14 +52,14 @@ import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextH
 @RequiredArgsConstructor
 public class OrderTaskJobHandler {
 
-    private final IOrderDomain orderDomain;
+    private final OrderDomain orderDomain;
     private final OrderService orderService;
     private final QueryService queryService;
     private final DictApi dictApi;
     private final LocalMessageApi localMessageApi;
-    private final IRefundRepository refundRepository;
+    private final RefundRepository refundRepository;
     private final RefundService refundService;
-    private final IRefundDomain refundDomain;
+    private final RefundDomain refundDomain;
 
     private static final String SUCCESS = "SUCCESS";
 

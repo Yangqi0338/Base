@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.order.*;
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 @Repository
 @Slf4j
 @RequiredArgsConstructor
-public class OrderRepositoryImpl extends RepositorySupport implements IOrderRepository {
+public class OrderRepositoryImpl extends RepositorySupport implements OrderRepository {
 
     private static final String PRE_PAY_ORDER_KEY = "prePayOrder:";
 

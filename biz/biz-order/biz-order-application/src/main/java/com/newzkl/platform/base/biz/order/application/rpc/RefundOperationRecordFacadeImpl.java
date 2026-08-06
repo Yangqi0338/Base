@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.order.application.rpc;
 
 
-import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
-import com.newzkl.platform.base.biz.order.facade.IRefundOperationRecordFacade;
+import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
+import com.newzkl.platform.base.biz.order.facade.RefundOperationRecordFacade;
 import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationRecordRPC;
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
  */
 @DubboService
 @Component
-public class RefundOperationRecordFacadeImpl implements IRefundOperationRecordFacade {
+public class RefundOperationRecordFacadeImpl implements RefundOperationRecordFacade {
 
     @Autowired
-    private IRefundDomain refundDomain;
+    private RefundDomain refundDomain;
 
     @Override
     public Long save(RefundOperationRecordRPC refundOperationRecordRPC) {

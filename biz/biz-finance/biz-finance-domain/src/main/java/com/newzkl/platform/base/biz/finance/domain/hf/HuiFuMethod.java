@@ -26,9 +26,10 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.TripartiteAccountBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.TripartiteBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;

@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class SpuOrderVO extends BaseVO {
+public class SpuOrderVO extends BaseRes {
 
      /**
      * 订单ID

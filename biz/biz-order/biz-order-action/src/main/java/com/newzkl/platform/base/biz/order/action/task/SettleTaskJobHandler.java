@@ -4,8 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.PayApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
-import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.SettleRepository;
+import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;
@@ -38,9 +38,9 @@ public class SettleTaskJobHandler {
 
 
     private final SupplierApi supplierApi;
-    private final ISettleDomain settleDomain;
+    private final SettleDomain settleDomain;
     private final SettleTaskJobHandlerInner inner;
-    private final ISettleRepository settleRepository;
+    private final SettleRepository settleRepository;
 
     /**
      * 每日供应商定时结算
@@ -111,9 +111,9 @@ public class SettleTaskJobHandler {
     @Component
     public static class SettleTaskJobHandlerInner{
         private final PayApi balancePayApi;
-        private final ISettleDomain settleDomain;
+        private final SettleDomain settleDomain;
 
-        public SettleTaskJobHandlerInner(PayApi balancePayApi, ISettleDomain settleDomain) {
+        public SettleTaskJobHandlerInner(PayApi balancePayApi, SettleDomain settleDomain) {
             this.balancePayApi = balancePayApi;
             this.settleDomain = settleDomain;
         }

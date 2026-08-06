@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.refun
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundOperationRecordRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundOperationRecordRepository;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.refund.RefundOperationRecordDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.RefundOperationRecordDO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
@@ -22,7 +22,7 @@ import java.util.List;
  * @since 2026-01-23
  */
 @Repository
-public class RefundOperationRecordRepositoryImpl implements IRefundOperationRecordRepository {
+public class RefundOperationRecordRepositoryImpl implements RefundOperationRecordRepository {
 
     @Autowired
     private RefundOperationRecordDAO refundOperationRecordDAO;

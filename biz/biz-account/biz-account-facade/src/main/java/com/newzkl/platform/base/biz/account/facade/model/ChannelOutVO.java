@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.facade.model;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-public class ChannelOutVO extends BaseVO implements java.io.Serializable{
+public class ChannelOutVO extends BaseRes implements java.io.Serializable{
      /**
      * ID
      */

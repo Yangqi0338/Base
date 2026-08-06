@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.goods.application.goods.service.spu.impl;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
 import com.newzkl.platform.base.biz.goods.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
@@ -21,6 +22,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSkuSaleAttributeVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuAttributeVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiSpuDetailVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuStateVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
@@ -74,6 +76,7 @@ public class SpuServiceImpl implements SpuService {
     private final SpuDomain spuDomain;
     private final SpuRepository spuRepository;
     private final OperatorApi operatorApi;
+    private final GoodsQueryService goodsQueryService;
 
     /**
      * 供应商提交商品审核
@@ -249,6 +252,22 @@ public class SpuServiceImpl implements SpuService {
         skuQuery.setSpuIdList(spuIdList);
         List<SkuVO> skuVOList = spuDomain.skuVOList(skuQuery);
         return TransferUtils.transfers(skuVOList, this::toApiSkuVO);
+    }
+
+    /**
+     * API-SPU 详情
+     *
+     * @param accountId 调用方账号主键
+     * @param spuId     商品主键
+     * @return SPU 详情 (含 SKU 列表)
+     */
+    @Override
+    public ApiSpuDetailVO apiSpuDetail(Long accountId, Long spuId) {
+        SpuVO spuVO = goodsQueryService.spuVO(spuId, false);
+        ApiSpuDetailVO apiSpuDetailVO = new ApiSpuDetailVO();
+        apiSpuDetailVO.setSpu(toApiSpuVO(spuVO));
+        apiSpuDetailVO.setSkuList(TransferUtils.transfers(spuVO.getSkuList(), this::toApiSkuVO));
+        return apiSpuDetailVO;
     }
 
     /**

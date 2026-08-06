@@ -9,10 +9,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundOperationRecordRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
-import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundOperationRecordRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
+import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
@@ -65,10 +65,10 @@ import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextH
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RefundDomainImpl implements IRefundDomain {
+public class RefundDomainImpl implements RefundDomain {
 
-    private final IRefundRepository refundRepository;
-    private final IOrderRepository orderRepository;
+    private final RefundRepository refundRepository;
+    private final OrderRepository orderRepository;
 
     private final AccountApi accountApi;
     private final GoodsApi goodsApi;
@@ -708,7 +708,7 @@ public class RefundDomainImpl implements IRefundDomain {
     }
 
 
-    private final IRefundOperationRecordRepository refundOperationRecordRepository;
+    private final RefundOperationRecordRepository refundOperationRecordRepository;
 
     @Override
     public Long createRecord(RefundOperationRecordDTO entity) {

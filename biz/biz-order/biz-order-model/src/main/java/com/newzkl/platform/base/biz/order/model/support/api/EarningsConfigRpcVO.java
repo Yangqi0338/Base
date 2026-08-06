@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 分润配置跨域 ACL 视图
  *
  * <p>迁移: 跨域 message 结构 {@code com.zkl.scm.message.rpc.model.user.EarningsConfigRpcVO}
- * 降级为 order 本地 ACL DTO。经 {@code IOrderRepository#channelEarningsConfig} 出站获取,
+ * 降级为 order 本地 ACL DTO。经 {@code OrderRepository#channelEarningsConfig} 出站获取,
  * 供下单编排读取渠道商上级链(运营商/交易师)与费率</p>
  *
  * @author KC

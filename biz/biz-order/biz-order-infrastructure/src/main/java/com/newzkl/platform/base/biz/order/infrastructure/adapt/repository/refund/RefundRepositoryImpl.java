@@ -5,7 +5,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundFreightAddressVO;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundStateVO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.order.SkuOrderDAO;
@@ -45,7 +45,7 @@ import java.util.List;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class RefundRepositoryImpl extends RepositorySupport implements IRefundRepository {
+public class RefundRepositoryImpl extends RepositorySupport implements RefundRepository {
 
     private final RefundDAO refundDAO;
     private final SkuOrderDAO skuOrderDAO;

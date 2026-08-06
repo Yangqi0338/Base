@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.order.application.rpc;
 
 
-import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
-import com.newzkl.platform.base.biz.order.facade.ISettleFacade;
+import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
+import com.newzkl.platform.base.biz.order.facade.SettleFacade;
 import com.newzkl.platform.base.biz.order.facade.model.settle.SettleGoodsRpcCommand;
 import com.newzkl.platform.base.biz.order.model.req.SettleGoodsCommand;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -17,13 +17,13 @@ import java.util.function.Function;
  */
 @DubboService
 @Component
-public class SettleFacadeImpl implements ISettleFacade {
+public class SettleFacadeImpl implements SettleFacade {
 
     private static final Integer INITIAL_CAPACITY = 16;
 
-    private final ISettleDomain settleDomain;
+    private final SettleDomain settleDomain;
 
-    public SettleFacadeImpl(ISettleDomain settleDomain) {
+    public SettleFacadeImpl(SettleDomain settleDomain) {
         this.settleDomain = settleDomain;
     }
 

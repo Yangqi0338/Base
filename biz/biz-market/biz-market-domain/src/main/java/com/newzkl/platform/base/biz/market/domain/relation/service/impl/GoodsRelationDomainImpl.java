@@ -164,4 +164,20 @@ public class GoodsRelationDomainImpl implements GoodsRelationDomain {
         goodsRelationRepository.updateMarketGoodsLabel(req);
     }
 
+    @Override
+    public void updateMarketGoodsLabel(Long accountId, Long goodsId, String productLabel) {
+        GoodsRelationQueryDTO query = new GoodsRelationQueryDTO();
+        query.setUserId(accountId);
+        query.setGoodsId(goodsId);
+        query.setRelationType(3);
+        List<MarketGoodsRelationDTO> list = queryGoodsRelationListByDTO(query);
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        UpdateGoodsRelationReq req = new UpdateGoodsRelationReq();
+        req.setId(list.get(0).getId());
+        req.setGoodsInfo(productLabel);
+        updateMarketGoodsLabel(req);
+    }
+
 }

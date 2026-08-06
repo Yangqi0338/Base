@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.model.vo;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class OrderVO extends BaseVO {
+public class OrderVO extends BaseRes {
      /**
      * 交易单ID
      */

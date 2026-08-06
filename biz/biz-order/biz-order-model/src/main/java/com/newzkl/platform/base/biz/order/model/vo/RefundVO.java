@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.ReceiveAddressOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class RefundVO extends BaseVO {
+public class RefundVO extends BaseRes {
      /**
      * 主键
      */

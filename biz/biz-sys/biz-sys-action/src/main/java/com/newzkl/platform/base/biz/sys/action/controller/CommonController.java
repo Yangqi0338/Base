@@ -1,5 +1,9 @@
 package com.newzkl.platform.base.biz.sys.action.controller;
 
+import cn.hutool.core.img.ColorUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.qrcode.QrCodeUtil;
+import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.sys.action.cmd.SysCmd;
@@ -13,24 +17,34 @@ import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 /**
  * 平台-公共控制器
  *
- * <p>迁移说明: 源 {@code CommonController} 共 12 个端点, 已迁入 10 个。仍未迁部分及原因:</p>
+ * <p>迁移说明: 源 {@code CommonController} 共 12 个端点, 已迁入 11 个。仍未迁部分及原因:</p>
  * <ul>
  *   <li>{@code /generateQrCode} — 依赖 zxing (hutool QrCodeUtil 的可选依赖), Base 未引入。</li>
  *   <li>{@code /getRegionByCode} — 源已标 {@code @Deprecated} (前端零引用), 按规则不迁。</li>
- *   <li>{@code /businessIdentify} — 依赖华为云 OCR SDK 之外还需 {@code RecognizeBusinessLicenseRes}
- *       出参 VO + "按营业执照地址反查区域编码"逻辑, 待后续单端点补迁。</li>
  * </ul>
+ *
+ * <p>2026-08-06 补迁 {@code /businessIdentify} (华为云 OCR 营业执照识别 + 地址反查区域码):
+ * 复用既有 {@code OcrClient} bean, SDK 调用落 {@code HuaweiOcrGateway#recognizeBusinessLicense},
+ * controller 经 {@code OcrApi} 出站端口调用, 未改任何 pom。地址反查区域码逻辑落
+ * {@code RegionDomainImpl#businessIdentify} (复用 {@code Area#getCodeByName} + areaMap 剥名),
+ * 出参不引入源 {@code RecognizeBusinessLicenseRes} (其 extends SDK 类型, 会漏 SDK 进 model),
+ * 改由 gateway 转通用 JSON 结构, 序列化后契约 {@code {result:{...},areaCode:[]}} 与源逐字一致。</p>
  *
  * <p>2026-08-04 补迁 {@code /ocrIdentify} (华为云 OCR 身份证识别, 用户授权引入
  * {@code com.huaweicloud.sdk:huaweicloud-sdk-ocr:3.1.60}): SDK 调用下沉
@@ -61,6 +75,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/common")
 @RequiredArgsConstructor
+@Validated
 public class CommonController {
 
     private final RegionDomain regionDomain;
@@ -164,6 +179,30 @@ public class CommonController {
     }
 
     /**
+     * 营业执照识别
+     *
+     * <p>经华为云 OCR SDK 识别营业执照图片, SDK 调用下沉 {@code infrastructure/gateway} 的
+     * {@code HuaweiOcrGateway}, controller 只经 {@code OcrApi} 出站端口调用; 识别结果里的
+     * 注册地址由 {@code RegionDomain} 反查行政区域编码, 剥去命中的区域名后回填, 顶层追加
+     * {@code areaCode} 编码列表</p>
+     *
+     * <p>契约对齐: 入参沿用旧 {@code StringObj#string} (营业执照图片 URL); 出参形状与源
+     * {@code {result:{...}, areaCode:[]}} 一致 (源出参 VO {@code RecognizeBusinessLicenseRes}
+     * extends SDK 响应, 会把 SDK 类型漏进 model, 本实现改用通用结构承载, 序列化后形状不变)。
+     * 识别失败返回 {@code data} 为 {@code null} (与源逐字一致)</p>
+     *
+     * <p>安全提示: 华为云 AK/SK 已由源硬编码改为 {@code huawei.ocr} 配置项下发,
+     * 旧硬编码凭证已泄漏在 git 历史, 上线前应轮换</p>
+     *
+     * @param stringObj 营业执照图片 URL 载体
+     * @return 三方识别结果 (含反查区域编码)
+     */
+    @PostMapping("/businessIdentify")
+    public PlatformResult<Object> businessIdentify(@RequestBody SysCmd.StringObj stringObj) {
+        return PlatformResult.success(regionDomain.businessIdentify(stringObj.getString()));
+    }
+
+    /**
      * 查询 app 版本列表
      *
      * <p>TODO[auth-defer]: 旧实现带 {@code @Limit(app_manage, get)}, 鉴权注解整体延后,
@@ -233,5 +272,45 @@ public class CommonController {
         String fileName = URLEncoder.encode("Excel导入异常记录", StandardCharsets.UTF_8).replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), SysCmd.ExcelErrorItem.class).sheet("模板").doWrite(excelError);
+    }
+
+    /**
+     * 生成二维码
+     *
+     * <p>渲染 600x600 无白边二维码 PNG, base64 编码后以 {@code text/plain} 直写响应体,
+     * 由前端拿 base64 串自行渲染 (响应契约与源逐字一致)。</p>
+     *
+     * <p>实现说明: 沿用源 hutool {@code QrCodeUtil} (zxing 薄封装, 本轮经用户授权在
+     * biz-sys-action pom 引入 {@code com.google.zxing:core+javase:3.5.3});
+     * {@code foreColor} 可选, 传入时经 {@code ColorUtil#getColor} 解析前景色。</p>
+     *
+     * @param content   二维码内容, 不可为空
+     * @param foreColor 前景色 (可选), 十六进制或颜色名, 由 hutool {@code ColorUtil} 解析
+     * @param response  servlet 响应, 直接写出 base64 串
+     * @throws IOException 写出响应流失败时抛出
+     */
+    @GetMapping("/generateQrCode")
+    public void generateQrCode(@NotBlank(message = "内容不能为空") @RequestParam(name = "content") String content,
+                               @RequestParam(name = "foreColor", required = false) String foreColor,
+                               HttpServletResponse response) throws IOException {
+        QrConfig config = new QrConfig(600, 600);
+        config.setMargin(0);
+        if (StrUtil.isNotBlank(foreColor)) {
+            config.setForeColor(ColorUtil.getColor(foreColor));
+        }
+        try (PrintWriter out = response.getWriter()) {
+            byte[] bytes = QrCodeUtil.generatePng(content, config);
+            String base64Str = Base64.getEncoder().encodeToString(bytes);
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setDateHeader("Expires", 0);
+            out.write(base64Str);
+            out.flush();
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.getWriter().write("二维码生成失败：" + e.getMessage());
+        }
     }
 }

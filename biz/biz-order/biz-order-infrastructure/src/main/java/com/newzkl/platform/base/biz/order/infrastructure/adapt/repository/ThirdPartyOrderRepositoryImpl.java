@@ -13,6 +13,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -48,6 +49,7 @@ public class ThirdPartyOrderRepositoryImpl implements ThirdPartyOrderRepository 
                 .platformType(platformType)
                 .requestStatus(status)
                 .interfaceName(interfaceName)
+                .nextRetryTimeBefore(LocalDateTime.now())
                 .build();
         List<ThirdPartyOrderRecordDO> list = recordDAO.selectList(recordDAO.getLw(query));
         return TransferUtils.transfers(list, ThirdPartyOrderRecordDTO.class);

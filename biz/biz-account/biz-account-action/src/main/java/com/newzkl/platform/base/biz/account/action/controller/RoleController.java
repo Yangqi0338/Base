@@ -2,18 +2,15 @@ package com.newzkl.platform.base.biz.account.action.controller;
 
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -54,48 +51,6 @@ public class RoleController {
 
     private final IdentityService identityService;
     private final UserQueryService userQueryService;
-
-    /**
-     * 申请角色
-     *
-     * @param roleApplyCommand 角色申请入参
-     * @return 申请单ID
-     */
-    @PostMapping("/applyRole")
-    public PlatformResult<Long> applyRole(@RequestBody RoleApplyCommand roleApplyCommand) {
-        return PlatformResult.success(identityService.applyRole(roleApplyCommand));
-    }
-
-    /**
-     * 保存申请资料
-     *
-     * @param roleApplyCommand 角色申请入参
-     * @return 空结果
-     */
-    @PostMapping("/saveApplyCommand")
-    public PlatformResult<Void> saveApplyCommand(@RequestBody RoleApplyCommand roleApplyCommand) {
-        identityService.saveApplyCommand(roleApplyCommand);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 加载申请资料
-     *
-     * <p>保留旧语义: 读取异常只告警不抛出, 返回 null。</p>
-     *
-     * @param roleId 角色ID
-     * @return 角色申请资料, 无或异常则 null
-     */
-    @GetMapping("/loadApplyCommand")
-    public PlatformResult<RoleApplyCommand> loadApplyCommand(@RequestParam("roleId") Long roleId) {
-        RoleApplyCommand roleApplyCommand = null;
-        try {
-            roleApplyCommand = identityService.loadApplyCommand(roleId);
-        } catch (Exception e) {
-            log.warn("加载申请资料异常", e);
-        }
-        return PlatformResult.success(roleApplyCommand);
-    }
 
     /**
      * 账号角色信息

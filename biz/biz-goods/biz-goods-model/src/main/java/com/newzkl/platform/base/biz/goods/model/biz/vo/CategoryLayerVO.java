@@ -21,6 +21,12 @@ public class CategoryLayerVO extends CategoryVO implements PlatformTreeNode<Cate
     private String pidList;
     /** 级别 */
     private Integer level;
+    /**
+     * 已绑定的品牌 ID 列表 (逗号拼接, 无尾逗号)
+     *
+     * <p>对应 spu_category 表 brand_id_list 列, 由 bindBrand 端点 add/cut 维护</p>
+     */
+    private String brandIdList;
 
     /**
      * 子分类

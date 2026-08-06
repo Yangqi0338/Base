@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.core.sms.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,7 +25,7 @@ public class SmsEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Type {
+    public enum Type implements IEnum<String> {
         /** 登录验证码 */
         Login("1001", "登录验证码", "94792ac718374b54a949a5b6c0ec8316", 1),
         /** 用户修改密码 */

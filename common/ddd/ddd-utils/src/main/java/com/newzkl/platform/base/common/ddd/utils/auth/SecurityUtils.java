@@ -43,6 +43,11 @@ public class SecurityUtils {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
+    public static Long getDefaultAccountId() {
+        String s = SecurityContextHolder.get(TokenConstants.DETAILS_ACCOUNT_ID, String.class);
+        return NumberUtil.parseLong(s, 0L);
+    }
+
     public static Long getAccountId() {
         String s = SecurityContextHolder.get(TokenConstants.DETAILS_ACCOUNT_ID, String.class);
         return NumberUtil.parseLong(s, null);

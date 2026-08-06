@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 迁移自 new-scm/scm-user UserLecturerFollowMapper.xml
+     适配: resultType 改 Base UserFollowRes; 表名列名以 Base DO 为准(del_flag 替代 is_deleted);
+           Base lecturer 表已冗余存 lecturerName/mainAccount 等, 无需 join channel/lecturer_category;
+           参数名 query 对齐 Base DAO 签名 -->
 <mapper namespace="com.newzkl.platform.base.biz.course.infrastructure.dao.UserLecturerFollowDAO">
 
-    <select id="pageQueryFollowList" resultType="com.zkl.scm.user.domain.lecturer.model.res.UserFollowRes">
+    <select id="pageQueryFollowList" resultType="com.newzkl.platform.base.biz.course.model.follow.res.UserFollowRes">
         SELECT
         uf.id AS follow_id,
         uf.user_id AS user_id,
         uf.lecturer_id AS lecturer_id,
         uf.follow_time AS follow_time,
+        l.lecturer_name AS lecturer_name,
+        l.main_account AS main_account,
         l.main_account_id AS main_account_id,
         l.course_count AS course_count,
         l.follow_count AS follow_count,
         l.personal_intro AS personal_intro,
         l.cover_image_url AS cover_image_url,
         l.avatar_url AS avatar_url,
-        c.name AS lecturer_name,
-        c.username AS main_account,
-        c.head_img AS channel_head_img,
-        lc.id AS category_id,
-        lc.category_name AS category_name
+        l.lecturer_category_id AS category_id,
+        l.lecturer_category_name AS category_name
         FROM user_lecturer_follow uf
-        LEFT JOIN lecturer l ON uf.lecturer_id = l.id AND l.is_deleted = 0
-        LEFT JOIN channel c ON l.main_account_id = c.id
-        LEFT JOIN lecturer_category lc ON lc.id = l.lecturer_category_id
-        WHERE uf.is_deleted = 0
-        AND uf.user_id = #{req.userId}
-        <if test="req.lecturerName != null and req.lecturerName != ''">
-            AND c.name LIKE CONCAT('%', #{req.lecturerName}, '%')
+        LEFT JOIN lecturer l ON uf.lecturer_id = l.id AND l.del_flag = 0
+        WHERE uf.del_flag = 0
+        AND uf.user_id = #{query.userId}
+        <if test="query.lecturerName != null and query.lecturerName != ''">
+            AND l.lecturer_name LIKE CONCAT('%', #{query.lecturerName}, '%')
         </if>
         ORDER BY uf.follow_time DESC
     </select>

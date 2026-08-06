@@ -37,7 +37,7 @@ import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

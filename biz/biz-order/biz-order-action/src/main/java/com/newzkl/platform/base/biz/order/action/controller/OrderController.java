@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
 import com.newzkl.platform.base.biz.order.application.service.OrderService;
 import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.OperatorApi;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.req.*;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
@@ -48,7 +48,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private IOrderDomain orderDomain;
+    private OrderDomain orderDomain;
 
     @Autowired
     private QueryService queryService;

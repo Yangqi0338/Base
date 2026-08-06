@@ -80,8 +80,8 @@ public class MemberVO extends BaseRes {
     public void init() {
         this.countDealAmount = Money.ZERO;
         this.countDealNumber = 0;
-        this.createTime = LocalDateTime.now();
-        this.updateTime = LocalDateTime.now();
+        setCreateTime(LocalDateTime.now());
+        setUpdateTime(LocalDateTime.now());
         if (this.getId() == null) {
             this.id = SnowflakeIdAble.getSnowflakeId();
         }

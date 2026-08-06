@@ -8,8 +8,8 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.order.application.service.OrderService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.*;
 import com.newzkl.platform.base.biz.order.domain.spi.ThirdPartyOrderProcessor;
 import com.newzkl.platform.base.biz.order.model.dto.*;
@@ -63,15 +63,15 @@ public class OrderServiceImpl implements OrderService {
 
     private final OperatorApi operatorFacade;
 
-    private final IOrderDomain orderDomain;
+    private final OrderDomain orderDomain;
 
-    private final IOrderRepository orderRepository;
-    private final IRefundRepository refundRepository;
+    private final OrderRepository orderRepository;
+    private final RefundRepository refundRepository;
     private final ChannelApi channelApi;
 
     private final PayApi payApi;
 
-    private final ISettleDomain settleDomain;
+    private final SettleDomain settleDomain;
 
     private final LocalMessageApi localMessageApi;
 

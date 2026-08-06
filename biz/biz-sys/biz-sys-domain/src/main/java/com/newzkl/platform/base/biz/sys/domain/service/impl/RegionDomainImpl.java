@@ -5,12 +5,15 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.newzkl.platform.base.biz.sys.domain.adapt.api.OcrApi;
 import com.newzkl.platform.base.biz.sys.domain.service.RegionDomain;
 import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -37,9 +40,12 @@ import java.util.function.Consumer;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RegionDomainImpl implements RegionDomain {
 
     private static final String AREA_JSON = "area.json";
+
+    private final OcrApi ocrApi;
 
     private volatile List<Area> areaList = new ArrayList<>();
     private final Map<Integer, Area> areaMap = new HashMap<>();
@@ -113,6 +119,40 @@ public class RegionDomainImpl implements RegionDomain {
         }
 
         return source;
+    }
+
+    @Override
+    public Object businessIdentify(String imageUrl) {
+        Object recognized = ocrApi.recognizeBusinessLicense(imageUrl);
+        if (recognized == null) {
+            return null;
+        }
+        JSONObject response = JSONUtil.parseObj(JSONUtil.toJsonStr(recognized));
+        JSONObject result = response.getJSONObject("result");
+        if (result == null) {
+            return response;
+        }
+        String address = result.getStr("address");
+        if (StrUtil.isBlank(address)) {
+            return response;
+        }
+        loadIfAbsent();
+        List<Integer> codeList = new ArrayList<>();
+        for (Area area : areaList) {
+            area.getCodeByName(codeList, address);
+        }
+        if (CollUtil.isNotEmpty(codeList)) {
+            codeList = CollUtil.reverse(codeList);
+            for (Integer code : codeList) {
+                Area area = areaMap.get(code);
+                if (area != null && StrUtil.isNotBlank(area.getName())) {
+                    address = address.replace(area.getName(), StrUtil.EMPTY);
+                }
+            }
+            result.set("address", address);
+            response.set("areaCode", codeList);
+        }
+        return response;
     }
 
     /**

@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.SettleRepository;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleGoodsDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleOrderWaitDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleRecordDAO;
@@ -46,7 +46,7 @@ import java.util.List;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class SettleRepositoryImpl implements ISettleRepository {
+public class SettleRepositoryImpl implements SettleRepository {
 
     private final SettleGoodsDAO settleGoodsDAO;
     private final SettleOrderWaitDAO settleOrderWaitDAO;
@@ -163,7 +163,11 @@ public class SettleRepositoryImpl implements ISettleRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void alterWaitSettleFreightTimeNode(Long spuOrderId,Long settleNodeTime) {
-        settleOrderWaitDAO.alterWaitSettleFreightTimeNode(spuOrderId, settleNodeTime);
+        SettleOrderWaitQuery query = new SettleOrderWaitQuery();
+        query.setSpuOrderId(spuOrderId);
+        settleOrderWaitDAO.update(settleOrderWaitDAO.getLw(query).toUpdate()
+                .set(SettleOrderWaitDO::getSettleTimeNode, settleNodeTime)
+        );
     }
 
     @Override
@@ -188,11 +192,20 @@ public class SettleRepositoryImpl implements ISettleRepository {
 
     @Override
     public Integer closeSettleOrder(Long skuOrderId, Long refundId) {
-        Long id = settleOrderWaitDAO.idBySkuOrderIdAndType(skuOrderId, 0);
-        if(id == null){
+        SettleOrderWaitQuery query = new SettleOrderWaitQuery();
+        query.setSkuOrderId(skuOrderId);
+        query.setType(0);
+        SettleOrderWaitDO settleOrderWaitDO = CollUtil.getFirst(settleOrderWaitDAO.selectList(settleOrderWaitDAO.getLw(query)));
+        if(settleOrderWaitDO == null){
             return null;
         }else {
-            return settleOrderWaitDAO.editRefundState(id, 0, 1, refundId);
+            SettleOrderWaitQuery updateQuery = new SettleOrderWaitQuery();
+            updateQuery.setId(settleOrderWaitDO.getId());
+            updateQuery.setSettleState(0);
+            return settleOrderWaitDAO.update(settleOrderWaitDAO.getLw(updateQuery).toUpdate()
+                    .set(SettleOrderWaitDO::getRefundState, 1)
+                    .set(SettleOrderWaitDO::getRefundId, refundId)
+            );
         }
     }
 

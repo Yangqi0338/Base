@@ -68,14 +68,8 @@ public class UserLecturerFollowRepositoryImpl implements UserLecturerFollowRepos
 
     @Override
     public Page<UserFollowRes> pageList(UserFollowQuery query) {
-        Page<UserLecturerFollowDO> page = userLecturerFollowDAO.selectPage(RepositorySupport.page(query),
-                userLecturerFollowDAO.getLw(query));
-        return TransferUtils.transferPage(page, UserFollowRes::new, (followDO, res) -> {
-            res.setFollowId(followDO.getId());
-            res.setUserId(followDO.getUserId());
-            res.setLecturerId(followDO.getLecturerId());
-            res.setFollowTime(followDO.getFollowTime());
-        });
+        return (Page<UserFollowRes>) userLecturerFollowDAO.pageQueryFollowList(
+                RepositorySupport.page(query), query);
     }
 
     @Override

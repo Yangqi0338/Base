@@ -362,12 +362,13 @@ public class SpuController {
     }
 
     // TODO[service-gap]: 以下源端点未迁, 依赖 Base 侧尚不存在的能力, 待补齐后按原契约恢复:
-    // 1. spuSubmit (POST spuSubmit)            → SpuService#supplierSpuSubmit 当前抛 UnsupportedOperationException,
-    //    缺商品位扣减与审批提交端口
-    // 2. supplierSpuStatistics (GET supplierSpuStatistics) → SpuService#supplierSpuStatistics 当前抛
+    // 1. supplierSpuStatistics (GET supplierSpuStatistics) → SpuService#supplierSpuStatistics 当前抛
     //    UnsupportedOperationException, 缺供应商主体查询端口
-    // 3. palletSpuPage (POST /palletSpuPage)   → 源走会订货外部接口 HuiDingHuoApiUtils#batchGetProducts, Base 无该外部链路
-    // 4. palletSpu (POST /palletSpu)           → 源走会订货外部接口 HuiDingHuoApiUtils#getProductById, Base 无该外部链路
-    // 5. spuPageVOListInMarket (POST spuPageVOListInMarket) → 依赖 biz-market 的 IMarketFacade 跨域调用, 无对等 port
-    // 6. spuUpload (POST spuUpload)            → 依赖 SpuImportService/QiConfigProperties Excel 导入链路, 未迁
+    // 2. spuPageVOListInMarket (POST spuPageVOListInMarket) → 依赖 biz-market 的 IMarketFacade 跨域调用, 无对等 port
+    // 3. spuUpload (POST spuUpload)            → 依赖 SpuImportService/QiConfigProperties Excel 导入链路, 未迁
+
+    // 已迁移端点:
+    // - spuSubmit (POST /goods/spu/spuSubmit)   → 已迁至 plugin-audit SpuController, 由 SpuSubmitService 编排审批流
+    // - palletSpuPage (POST /goods/spu/palletSpuPage) → 已迁至 plugin-hdh PalletController (会订货 batchGetProducts)
+    // - palletSpu (POST /goods/spu/palletSpu)   → 已迁至 plugin-hdh PalletController (会订货 getProductById)
 }

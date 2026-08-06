@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.order.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.action.cmd.RefundCmd;
 import com.newzkl.platform.base.biz.order.application.service.RefundService;
-import com.newzkl.platform.base.biz.order.domain.service.IRefundDomain;
+import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
@@ -36,7 +36,7 @@ public class RefundController {
     @Autowired
     private RefundService refundService;
     @Autowired
-    private IRefundDomain refundDomain;
+    private RefundDomain refundDomain;
 
     /**
      * C端创建售后

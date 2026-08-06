@@ -12,9 +12,6 @@ import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRegisterReq;
-import com.newzkl.platform.base.common.core.redis.RedisEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
@@ -34,7 +31,6 @@ import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.OperatorReq;
-import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
@@ -68,52 +64,6 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long applyRole(RoleApplyCommand roleApplyCommand) {
-        //基础信息
-        Long accountId = SecurityUtils.getAccountId();
-        //查询用户
-        AccountVO accountVO = accountDomain.account(null, accountId);
-
-        //解析JSON
-        JSONObject jsonObject = JSON.parseObject(roleApplyCommand.getCompanyInfoVO());
-        //检查角色
-        if (RoleEnum.CompanyRole.contains(roleApplyCommand.getRole(), accountVO.getRoleIdList())) {
-            throw new PlatformException(AccountErrorCode.EXIST_ROLE);
-        }
-        //创建审核单
-        AuditRoleApplyVO auditRoleDataOutVO = new AuditRoleApplyVO();
-        auditRoleDataOutVO.setAccountId(accountId);
-        auditRoleDataOutVO.setRegisterPhone(accountVO.getUsername());
-        auditRoleDataOutVO.setRole(roleApplyCommand.getRole());
-        auditRoleDataOutVO.setBodyType(roleApplyCommand.getBodyType());
-        auditRoleDataOutVO.setInviteAccount(accountVO.getUsername());
-        auditRoleDataOutVO.setInviteNickName(accountVO.getNickname());
-        if (jsonObject != null) {
-            auditRoleDataOutVO.setLegalName(jsonObject.getString("legalName"));
-            auditRoleDataOutVO.setManagerName(jsonObject.getString("manageName"));
-            auditRoleDataOutVO.setCompanyName(jsonObject.getString("companyName"));
-            auditRoleDataOutVO.setCompanyInfo(roleApplyCommand.getCompanyInfoVO());
-        }
-        auditRoleDataOutVO.setUsername(SecurityUtils.getUsername());
-        auditRoleDataOutVO.setNameAuthInfo(roleApplyCommand.getNameAuthInfoVO());
-        //发起审批
-        Long flowId = null;
-//        try {
-//            AuditAccountVO auditAccountVO = new AuditAccountVO();
-//            auditAccountVO.setAccountId(SecurityUtils.getAccountId());
-//            auditAccountVO.setUsername(SecurityUtils.getUsername());
-//            auditAccountVO.setRoleId(SecurityUtils.getRole());
-//            flowId = auditFacade.submitRole(AuditEnum.TemplateType.ROLE_APPLY.getCode().longValue(), auditAccountVO, auditRoleDataOutVO);
-//        } catch (Exception e) {
-//            throw e;
-//        }
-        //修改审批状态
-        updateAuditState(accountId, roleApplyCommand.getRole());
-        return flowId;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void updateAuditState(Long accountId, RoleEnum.CompanyRole role) {
         IdentityCustomSaveReq req = new IdentityCustomSaveReq();
         // 角色只能是[渠道商|供应商]
@@ -122,37 +72,6 @@ public class IdentityServiceImpl implements IdentityService {
         }
 
         AbsIdentityPolicySupport.getPolicy(role).customRegister(req);
-    }
-
-    @Override
-    public void saveApplyCommand(RoleApplyCommand roleApplyCommand) {
-        Long accountId = SecurityUtils.getAccountId();
-        AccountVO accountVO = accountDomain.account(null, accountId);
-        // 保留旧语义: 账号尚未开通该角色时走 saveRole, 而旧 saveRole 三个分支均直接抛异常
-        if (accountVO == null || !RoleEnum.CompanyRole.contains(roleApplyCommand.getRole(), accountVO.getRoleIdList())) {
-            RoleEnum.CompanyRole role = roleApplyCommand.getRole();
-            if (RoleEnum.CompanyRole.CHANNEL == role || RoleEnum.CompanyRole.SUPPLIER == role) {
-                throw new PlatformException(BaseErrorCode.NOT_SERVICE);
-            }
-            throw new PlatformException(BaseErrorCode.PARAM, "申请角色");
-        }
-        RedisUtil.set(applyCommandKey(accountId, roleApplyCommand.getRole().getCode()), roleApplyCommand);
-    }
-
-    @Override
-    public RoleApplyCommand loadApplyCommand(Long roleId) {
-        return RedisUtil.get(applyCommandKey(SecurityUtils.getAccountId(), roleId));
-    }
-
-    /**
-     * 构建角色申请资料缓存键 (沿用旧 key 形态)
-     *
-     * @param accountId 账号 ID
-     * @param roleId    角色 ID
-     * @return 缓存键
-     */
-    private String applyCommandKey(Long accountId, Long roleId) {
-        return RedisEnum.Key.ROLE_APPLY_COMMAND.getCode(accountId, roleId);
     }
 
     @Override

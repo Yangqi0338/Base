@@ -2,19 +2,19 @@ package com.newzkl.platform.base.biz.order.action.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
+import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
+import com.newzkl.platform.base.biz.order.model.req.SettleTypeListReq;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
-import com.newzkl.platform.base.biz.order.model.req.SettleTypeListReq;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.core.model.res.PlatformResult;
-
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +37,7 @@ import java.util.function.Function;
 public class SettleController {
 
     @Autowired
-    private ISettleDomain settleDomain;
+    private SettleDomain settleDomain;
 
     /**
      * 结算单分页

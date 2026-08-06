@@ -65,6 +65,16 @@ Base + bom + common(ddd 5 + core 3) + biz(空聚合)。
 - `RoleLimitAspect`(`@Around @within||@annotation`, `@Order(1)`) 取 `SecurityUtils.getRole()` 比对，不匹配抛 `PlatformException(BaseErrorCode.NO_AUTH)`。
 - **全局唯一**：biz-store 旧 `enums.RoleLimit` 已删，统一用 ddd-action 版。
 
+### biz-auth 权限模型（功能点/菜单合并 permission + @FuncPermission 拉取式鉴权）
+- **模型合并**：旧 RBAC(功能点 function + 菜单 menu + 角色 role 关系) 全删，合并为单一 `PermissionDO`(permission 表) + `PermissionRelationDO`(permission_relation, 角色↔权限绑定)。对齐 adopt-chicken 方案。
+- **角色系统单一化**：旧 `AuthRole`(RBAC) 与 biz-account 侧公司 `Role`(角色申请审核) **两套全删**；biz-auth 新建 adopt-chicken 式 `RoleDO`(role 表, code/name/description/sort)。角色申请审核业务(`AuditRoleApplyVO`/`RoleApplyCommand`/`AuditDataRoleApplyDO`)整体下线。
+- **@FuncPermission 拉取式**（取代旧登录预热 push）：
+  - 端点标 `@FuncPermission`(ddd-action/auth) + `FuncPermissionAspect` 拦截校验。
+  - 权限来源 = `AccountPermissionStpInterface`(sa-token `StpInterface`) 运行时**拉取** account 的 permission/role 列表；`AccountPermissionRecalculator` 负责重算并写 Redis 缓存(`PermissionCacheKeys`)。
+  - **登录不再预热**：旧 `AuthRepository.cacheUserUnFunctionUrls(accountId)`(登录时 push 未授权 url 集)已删；`AccountLoginServiceImpl` 登录链路移除该调用。
+  - `PermissionSyncService`(biz-auth-action) 负责权限点扫描/同步。
+- **跨域方向**：biz-account → biz-auth 单向(旧 `AdminClientDomainImpl`/`AccountLoginServiceImpl` 反引 `biz.auth.domain.AuthRepository` 已断，biz-account-domain 去 biz-auth-domain 依赖)。
+
 ## 违规白名单
 
 <!-- 空 -->

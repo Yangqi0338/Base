@@ -96,4 +96,9 @@ public interface GoodsRelationDomain {
     Page<ApiChannelSpuRelationVO> channelSpuRelationList(GoodsListPageQuery query);
 
     void updateMarketGoodsLabel(UpdateGoodsRelationReq updateGoodsRelationReq);
+
+    /**
+     * 更新市场商品标签 (按账号+商品查询)
+     */
+    void updateMarketGoodsLabel(Long accountId, Long goodsId, String productLabel);
 }

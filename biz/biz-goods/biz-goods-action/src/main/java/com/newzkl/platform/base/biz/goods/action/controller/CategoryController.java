@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
+import com.newzkl.platform.base.biz.goods.action.cmd.CategoryCmd;
 import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuCategoryService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
@@ -8,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -106,9 +107,25 @@ public class CategoryController {
         return PlatformResult.success(BizUtil.listToTree(spuCategoryService.appCategoryList(categoryQuery)));
     }
 
-    // TODO[service-gap]: 源 palletCategoryList (POST palletCategoryList) 与 bindBrand (POST bindBrand) 未迁。
-    // palletCategoryList 源走会订货外部接口 HuiDingHuoApiUtils#getCategoryList, Base 无该外部链路;
-    // bindBrand 需 CategoryVO/CategoryReq/CategoryLayerDO 新增 brandIdList 字段并做 DB 迁移。
-    // 二者对应的 SpuCategoryService 方法当前均抛 UnsupportedOperationException, 接线即为假端点, 故不接。
+    /**
+     * 分类绑定/解绑品牌
+     *
+     * <p>分类侧以逗号串保存已绑定的品牌 ID 集合, {@code isBind=true} 追加, {@code false} 剔除。
+     * {@code spu_category.brand_id_list} 列 (源 category 表已有, Base 建表时曾删) 已随本端点恢复,
+     * DB 迁移脚本见 {@code rebuild/docs/sql}。</p>
+     *
+     * @param bindCategory 绑定命令 (分类 ID / 品牌 ID / 是否绑定)
+     * @return 空结果
+     */
+    @PostMapping("bindBrand")
+    public PlatformResult<Void> bindBrand(@Validated @RequestBody CategoryCmd.BindBrand bindCategory) {
+        spuCategoryService.bindBrand(bindCategory.getCategoryId(), bindCategory.getBrandId(),
+                Boolean.TRUE.equals(bindCategory.getIsBind()));
+        return PlatformResult.success();
+    }
+
+    // 已迁移端点:
+    // - palletCategoryList (POST /goods/category/palletCategoryList) → 已迁至 plugin-hdh PalletController,
+    //   走会订货 HuiDingHuoApiUtils#getCategoryList 外链, 会订货能力聚于 plugin-hdh
     // 源 category (GET category) 已由既有 spuDomain#category 能力覆盖, 本次不在补迁范围。
 }

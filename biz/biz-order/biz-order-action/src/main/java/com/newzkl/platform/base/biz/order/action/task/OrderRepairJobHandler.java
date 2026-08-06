@@ -3,10 +3,10 @@ package com.newzkl.platform.base.biz.order.action.task;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IRefundRepository;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.ISettleRepository;
-import com.newzkl.platform.base.biz.order.domain.service.ISettleDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.SettleRepository;
+import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
 import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.FreightSettleOrderWaitCommand;
@@ -42,10 +42,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderRepairJobHandler {
 
-    private final IOrderRepository orderRepository;
-    private final IRefundRepository refundRepository;
-    private final ISettleDomain settleDomain;
-    private final ISettleRepository settleRepository;
+    private final OrderRepository orderRepository;
+    private final RefundRepository refundRepository;
+    private final SettleDomain settleDomain;
+    private final SettleRepository settleRepository;
 
     /**
      * 初始化待结算订单

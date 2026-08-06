@@ -25,10 +25,20 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
-        <!-- AuthRepositoryImpl 用 RedisUtil 缓存接口清单 / 账号无权限接口 -->
+        <!-- AccountPermissionStpInterface 用 RedisUtil 缓存账号权限/角色 code 列表 -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-redis</artifactId>
+        </dependency>
+        <!-- AccountPermissionStpInterface implements sa-token StpInterface -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+        </dependency>
+        <!-- AccountPermissionStpInterface 用 SecurityUtils.getRole() 判平台管理员 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-utils</artifactId>
         </dependency>
     </dependencies>
 </project>

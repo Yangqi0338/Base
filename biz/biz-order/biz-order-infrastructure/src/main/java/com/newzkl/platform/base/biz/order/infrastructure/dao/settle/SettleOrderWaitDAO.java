@@ -29,24 +29,19 @@ public interface SettleOrderWaitDAO extends BaseMapper<SettleOrderWaitDO> {
      */
     List<SettleOrderWaitVO> queryWaitSettleOrder(@Param("spuIdList") List<Long> spuIds);
 
-    /**
-     * 统计
-     * @param skuOrderId
-     * @return
-     */
-    Long idBySkuOrderIdAndType(@Param("skuOrderId") Long skuOrderId, @Param("type") Integer type);
-
     List<SettleOrderWaitVO> queryWaitSettleOrderIn(@Param("spuIdList") List<Long> spuIds, @Param("skuOrderId") List<Long> skuOrderId);
-
-    Integer editRefundState(@Param("id") Long id, @Param("sourceState") int sourceSettleState, @Param("refundState") int refundState, @Param("refundId") Long refundId);
-
-    void alterWaitSettleFreightTimeNode( @Param("spuOrderId")Long spuOrderId, @Param("settleNodeTime")Long settleNodeTime);
 
     List<SettleOrderWaitVO> queryWaitSettleOrderTimeNode(Long settleTimeNode);
 
     default BaseLambdaQueryWrapper<SettleOrderWaitDO> getLw(SettleOrderWaitQuery query){
         return new BaseLambdaQueryWrapper<SettleOrderWaitDO>()
-                .notEmptyIn(SettleOrderWaitDO::getId,query.getIdList())
+                .notEmptyIn(SettleOrderWaitDO::getId, query.getIdList())
+                .notEmptyIn(SettleOrderWaitDO::getSpuId, query.getSpuIdList())
+                .notNullEq(SettleOrderWaitDO::getSupplierId, query.getSupplierId())
+                .notNullEq(SettleOrderWaitDO::getSettleState, query.getSettleState())
+                .notNullEq(SettleOrderWaitDO::getSkuOrderId, query.getSkuOrderId())
+                .notNullEq(SettleOrderWaitDO::getType, query.getType())
+                .notNullEq(SettleOrderWaitDO::getSpuOrderId, query.getSpuOrderId())
                 ;
     }
 }

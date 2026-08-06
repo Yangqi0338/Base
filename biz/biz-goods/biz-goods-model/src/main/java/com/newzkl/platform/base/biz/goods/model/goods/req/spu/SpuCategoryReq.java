@@ -22,5 +22,11 @@ public class SpuCategoryReq extends CategoryReq {
      */
     @NotBlank(message = "分类名称不能为空")
     private String name;
+    /**
+     * 已绑定品牌 ID 列表, 逗号拼接
+     *
+     * <p>仅 {@code bindBrand} 走此字段做整存整取, 无 like 查询; 分类创建/修改主流程不填</p>
+     */
+    private String brandIdList;
 
 }

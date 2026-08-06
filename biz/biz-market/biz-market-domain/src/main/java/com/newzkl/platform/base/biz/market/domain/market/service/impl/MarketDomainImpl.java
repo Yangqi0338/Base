@@ -16,6 +16,7 @@ import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
 import com.newzkl.platform.base.biz.market.model.req.market.UpdateMarketDataReq;
 import com.newzkl.platform.base.biz.market.model.vo.market.*;
 import com.newzkl.platform.base.biz.market.model.biz.req.CategoryReq;
+import com.newzkl.platform.base.common.ddd.facade.MarketRpcVO;
 import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -149,6 +150,15 @@ public class MarketDomainImpl implements MarketDomain {
     @Override
     public void alterMarketData(UpdateMarketDataReq req) {
         marketRepository.alterMarketData(req);
+    }
+
+    @Override
+    public List<MarketRpcVO> queryAccountBindMarket(Long accountId) {
+        BindMarketListReq req = new BindMarketListReq();
+        req.setClientId(accountId);
+        req.setBindType(MarketEnum.User.CHANNEL.getType());
+        List<BindMarketVO> list = queryBindMarket(req);
+        return TransferUtils.transfers(list, MarketRpcVO.class);
     }
 
 }

@@ -5,7 +5,6 @@ import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.model.req.OperatorReq;
-import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
 
 /**
  * @author muc_fang
@@ -13,38 +12,14 @@ import com.newzkl.platform.base.biz.account.model.req.RoleApplyCommand;
  * @date 2024/4/814:28
  */
 public interface IdentityService {
-    /**
-     * 申请角色
-     *
-     * @param roleApplyCommand
-     */
-    Long applyRole(RoleApplyCommand roleApplyCommand);
 
+    /**
+     * 更新角色审核状态
+     *
+     * @param accountId 账号 ID
+     * @param role      申请角色
+     */
     void updateAuditState(Long accountId, RoleEnum.CompanyRole role);
-
-    /**
-     * 保存角色申请资料
-     *
-     * <p>迁移补充: 旧 {@code IRoleService.saveApplyCommand}。保留旧语义 —— 当前账号尚未开通
-     * 该申请角色时, 旧实现会转入 {@code saveRole}, 而该方法三个分支均直接抛异常
-     * (渠道商 / 供应商 抛"无此服务", 其余角色抛"参数异常"), 故此路径不会落缓存;
-     * 仅当账号已存在该角色记录时, 申请资料才写入缓存。</p>
-     *
-     * @param roleApplyCommand 角色申请资料
-     * @author KC
-     */
-    void saveApplyCommand(RoleApplyCommand roleApplyCommand);
-
-    /**
-     * 加载角色申请资料
-     *
-     * <p>迁移补充: 旧 {@code IRoleService.loadApplyCommand}, 按 (登录账号, 角色) 读缓存。</p>
-     *
-     * @param roleId 角色 ID
-     * @return 角色申请资料, 无则 null
-     * @author KC
-     */
-    RoleApplyCommand loadApplyCommand(Long roleId);
 
     /**
      * 提交保证金缴纳流水

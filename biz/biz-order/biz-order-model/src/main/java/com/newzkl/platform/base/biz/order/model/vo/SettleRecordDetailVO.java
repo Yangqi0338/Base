@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @author fang
  */
 @Data
-public class SettleRecordDetailVO extends BaseVO {
+public class SettleRecordDetailVO extends BaseRes {
      /**
      * 结算单信息
      */

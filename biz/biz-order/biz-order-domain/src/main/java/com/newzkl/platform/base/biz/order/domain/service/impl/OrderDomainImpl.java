@@ -8,8 +8,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
-import com.newzkl.platform.base.biz.order.domain.adapt.repository.IOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
+import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
@@ -69,9 +69,9 @@ import static com.baomidou.mybatisplus.extension.ddl.DdlScriptErrorHandler.Print
  */
 @Service
 @RequiredArgsConstructor
-public class OrderDomainImpl implements IOrderDomain {
+public class OrderDomainImpl implements OrderDomain {
 
-    private final IOrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final ChannelApi channelApi;
     private final LocalMessageApi localMessageApi;
     private final GoodsApi goodsApi;

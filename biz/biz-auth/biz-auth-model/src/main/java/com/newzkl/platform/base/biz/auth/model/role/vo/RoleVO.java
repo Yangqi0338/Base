@@ -7,13 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * 角色领域视图对象
- *
- * <p>迁移自旧 {@code com.zkl.scm.user.domain.role.model.entity.Role} (表 {@code role})。
- * 语义为"可申请的企业角色配置"(角色名 / 申请条件 / 提供服务 / 资料组), 与鉴权角色
- * ({@code auth_role}) 不是同一概念。旧实体回塞 {@code repository} 引用的充血写法已去除;
- * 旧 {@code dataGroupIdList} 以 {@code JSONObject.toJSONString} 手工序列化为 String,
- * 本仓改为强类型 {@code List<Long>}。</p>
+ * 角色视图
  *
  * @author KC
  */
@@ -21,33 +15,39 @@ import java.util.List;
 @Data
 public class RoleVO extends BaseRes {
 
-    /**
-     * 角色名称
-     */
+    /** 角色编码 */
+    private String code;
+
+    /** 角色名称 */
     private String name;
 
-    /**
-     * 申请条件
-     */
-    private String applyCondition;
+    /** 角色描述 */
+    private String description;
+
+    /** 排序 */
+    private Integer sort;
+
+    /** 绑定账号数 */
+    private Integer accountCount;
+
+    /** 权限数 */
+    private Integer permissionCount;
 
     /**
-     * 提供服务
+     * 绑定账号ID列表
+     * @ext 详情查时填
      */
-    private String provideServices;
+    private List<Long> accountIds;
 
     /**
-     * 当前角色用户量
+     * 权限ID列表
+     * @ext 详情查时填, 含半选
      */
-    private Integer totalUserNum;
+    private List<Long> permissionIds;
 
     /**
-     * 描述 (旧 DO 列 {@code des})
+     * 半选权限ID列表
+     * @ext 详情查时填
      */
-    private String des;
-
-    /**
-     * 资料组 ID 集合
-     */
-    private List<Long> dataGroupIdList;
+    private List<Long> halfCheckedPermissionIds;
 }

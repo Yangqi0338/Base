@@ -47,4 +47,16 @@ public interface RegionDomain {
      * @return 区域列表
      */
     List<Area> getBusinessRegion(RegionReq req);
+
+    /**
+     * 营业执照识别 (识别 + 地址反查区域编码)
+     *
+     * <p>经 OCR 出站端口识别营业执照图片, 再对识别出的注册地址做区域反查: 从区域树按名称匹配
+     * 收集编码, 逆序后逐级把已匹配的区域名从地址串剔除, 匹配到的编码列表回填到结果顶层
+     * {@code areaCode} 字段, 供前端联动地址选择器。识别失败时返回 {@code null} (与源逐字一致)</p>
+     *
+     * @param imageUrl 营业执照图片 URL
+     * @return 识别结果 (结构 {@code {result:{...}, areaCode:[]}}), 识别失败返回 {@code null}
+     */
+    Object businessIdentify(String imageUrl);
 }

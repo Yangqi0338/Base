@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.facade.model;
 
 
-import com.newzkl.platform.base.common.ddd.model.vo.BaseVO;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author fang
  */
 @Data
-public class ShipAddressOutVO extends BaseVO implements Serializable {
+public class ShipAddressOutVO extends BaseRes implements Serializable {
      /**
      * ID
      */

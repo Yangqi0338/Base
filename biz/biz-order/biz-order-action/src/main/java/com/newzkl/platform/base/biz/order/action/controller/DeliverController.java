@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.action.controller;
 import com.alibaba.excel.EasyExcel;
 import com.newzkl.platform.base.biz.order.action.cmd.DeliverCmd;
 import com.newzkl.platform.base.biz.order.application.service.OrderService;
-import com.newzkl.platform.base.biz.order.domain.service.IOrderDomain;
+import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.ExcelErrorVO;
 import com.newzkl.platform.base.biz.order.model.req.DeliverCodeCommand;
 import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
@@ -34,7 +34,7 @@ import java.util.Map;
 public class DeliverController {
 
     @Autowired
-    private IOrderDomain orderDomain;
+    private OrderDomain orderDomain;
     @Autowired
     private OrderService orderService;
 

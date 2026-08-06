@@ -3,6 +3,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.goods;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 public class SpuEnum {
     @Getter
     @AllArgsConstructor
-    public enum SaleType {
+    public enum SaleType implements IEnum<Integer> {
         /**
          * 实物
          */
@@ -37,7 +38,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum SpuAttributeType {
+    public enum SpuAttributeType implements IEnum<Integer> {
         /** 销售属性 */
         SALE(0, "销售属性"),
         /** 参数属性 */
@@ -51,7 +52,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum SpuChannelSource {
+    public enum SpuChannelSource implements IEnum<Integer> {
         /** 平台 */
         PLATFORM(0, "平台"),
         /** 怡亚通 */
@@ -71,7 +72,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum State {
+    public enum State implements IEnum<Integer> {
         /** 初始化 */
         INIT(-1, "初始化"),
         /** 仓库中 */
@@ -91,7 +92,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum OperateTarget {
+    public enum OperateTarget implements IEnum<Integer> {
         /** SPU基础信息 */
         SPU_BASE(1, "SPU基础信息"),
         /** 销售属性 */
@@ -111,7 +112,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum OperateType {
+    public enum OperateType implements IEnum<Integer> {
         /** 修改 */
         UPDATE(1, "修改"),
         /** 新增 */
@@ -127,7 +128,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum DeliverTimeType {
+    public enum DeliverTimeType implements IEnum<Integer> {
         /** 3日内 */
         DAY_LESS_3(0, "3日内"),
         /** 大于3日 */
@@ -141,7 +142,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum ChannelType {
+    public enum ChannelType implements IEnum<Integer> {
         /** 供应商商品 */
         SELECTION(0, "供应商商品"),
         /** 商户自营商品 */
@@ -163,7 +164,7 @@ public class SpuEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum SpecType {
+    public enum SpecType implements IEnum<Integer> {
         /** 多规格 */
         MULTIPLE(0, "多规格"),
         /** 单规格 */
@@ -178,7 +179,7 @@ public class SpuEnum {
     //来源
     @Getter
     @AllArgsConstructor
-    public enum Source {
+    public enum Source implements IEnum<Integer> {
         /** 市场 */
         MARKET(0, "市场"),
         /** 平台 */

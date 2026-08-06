@@ -48,25 +48,18 @@ public class QiniuOssTokenGateway implements OssTokenApi {
      */
     private static final String HMAC_SHA1 = "HmacSHA1";
 
-    /**
-     * 凭证默认有效期, 单位秒, 与 qiniu-java-sdk 内置默认值一致
-     */
-    private static final long DEFAULT_EXPIRES = 3600L;
-
-    private final QiniuProperties qiniuProperties;
-
     @Override
     public String uploadToken() {
-        String accessKey = qiniuProperties.getAccessKey();
-        String secretKey = qiniuProperties.getSecretKey();
-        String bucket = qiniuProperties.getBucket();
+        String accessKey = QiniuProperties.accessKey;
+        String secretKey = QiniuProperties.secretKey;
+        String bucket = QiniuProperties.bucket;
         if (StrUtil.hasBlank(accessKey, secretKey, bucket)) {
             log.error("[QiniuOssTokenGateway] 七牛配置缺失, 请检查 qiniuyun.config 下 access-key/secret-key/bucket");
             throw new PlatformException(BaseErrorCode.SERVER);
         }
 
-        Long expires = qiniuProperties.getExpires();
-        long deadline = System.currentTimeMillis() / 1000 + (expires == null ? DEFAULT_EXPIRES : expires);
+        Long expires = QiniuProperties.expires;
+        long deadline = System.currentTimeMillis() / 1000 + expires;
 
         Map<String, Object> policy = new LinkedHashMap<>(2);
         policy.put("scope", bucket);

@@ -5,7 +5,10 @@ import com.huaweicloud.sdk.core.exception.ConnectionException;
 import com.huaweicloud.sdk.core.exception.RequestTimeoutException;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.huaweicloud.sdk.ocr.v1.OcrClient;
+import com.huaweicloud.sdk.ocr.v1.model.BusinessLicenseRequestBody;
 import com.huaweicloud.sdk.ocr.v1.model.IdCardRequestBody;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseRequest;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseResponse;
 import com.huaweicloud.sdk.ocr.v1.model.RecognizeIdCardRequest;
 import com.huaweicloud.sdk.ocr.v1.model.RecognizeIdCardResponse;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OcrApi;
@@ -51,6 +54,24 @@ public class HuaweiOcrGateway implements OcrApi {
             log.error("[HuaweiOcrGateway] 身份证识别连接/超时失败, url={}", imageUrl, e);
         } catch (ServiceResponseException e) {
             log.error("[HuaweiOcrGateway] 身份证识别服务异常, url={}, httpStatus={}, errorCode={}, errorMsg={}",
+                    imageUrl, e.getHttpStatusCode(), e.getErrorCode(), e.getErrorMsg(), e);
+        }
+        return null;
+    }
+
+    @Override
+    public Object recognizeBusinessLicense(String imageUrl) {
+        RecognizeBusinessLicenseRequest request = new RecognizeBusinessLicenseRequest();
+        BusinessLicenseRequestBody body = new BusinessLicenseRequestBody();
+        body.withUrl(imageUrl);
+        request.withBody(body);
+        try {
+            RecognizeBusinessLicenseResponse response = ocrClient.recognizeBusinessLicense(request);
+            return JSONUtil.parse(JSONUtil.toJsonStr(response));
+        } catch (ConnectionException | RequestTimeoutException e) {
+            log.error("[HuaweiOcrGateway] 营业执照识别连接/超时失败, url={}", imageUrl, e);
+        } catch (ServiceResponseException e) {
+            log.error("[HuaweiOcrGateway] 营业执照识别服务异常, url={}, httpStatus={}, errorCode={}, errorMsg={}",
                     imageUrl, e.getHttpStatusCode(), e.getErrorCode(), e.getErrorMsg(), e);
         }
         return null;
