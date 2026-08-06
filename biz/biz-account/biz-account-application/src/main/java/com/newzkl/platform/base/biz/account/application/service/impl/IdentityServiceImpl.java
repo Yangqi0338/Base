@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.account.application.service.impl;
+import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;

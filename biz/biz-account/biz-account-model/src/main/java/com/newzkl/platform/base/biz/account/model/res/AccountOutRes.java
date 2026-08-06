@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.account.model.res;
+import com.newzkl.platform.base.common.ddd.facade.ChannelOutRes;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;

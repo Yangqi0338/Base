@@ -1,4 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.adapt.api;
+import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
+import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 
