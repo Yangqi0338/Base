@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.model.earnings.vo.AwardInfoVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.GoodsInfoVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.PickPackInfoVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;

@@ -19,7 +19,7 @@ import com.newzkl.platform.base.biz.account.model.support.CodeReq;
 import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -35,9 +35,10 @@ import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.CodeUpdatePasswordReq;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.biz.TransactionUtils;
+
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.utils.spring.TransactionUtils;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.validation.constraints.NotNull;
@@ -112,6 +113,8 @@ public class AccountDomainImpl implements AccountDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void editPassword(CodeUpdatePasswordReq req) {
+        BizUtil.validate(req);
+
         CommonEnum.Client client = req.getClient();
         Long accountId = req.getAccountId();
         // TODO 加密字符串修改
@@ -137,6 +140,8 @@ public class AccountDomainImpl implements AccountDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void editUsername(CodeUpdateUsernameReq req) {
+        BizUtil.validate(req);
+
         //查询用户信息
         Long accountId = req.getAccountId();
         CommonEnum.Client client = req.getClient();

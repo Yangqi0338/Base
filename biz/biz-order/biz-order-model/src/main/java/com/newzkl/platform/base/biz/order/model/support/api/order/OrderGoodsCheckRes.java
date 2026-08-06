@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.support.api.order;
 
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

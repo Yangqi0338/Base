@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.market.model.vo.market;
 
 
 import com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;

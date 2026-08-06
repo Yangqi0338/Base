@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.market.model.biz.req.CategorySyncReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

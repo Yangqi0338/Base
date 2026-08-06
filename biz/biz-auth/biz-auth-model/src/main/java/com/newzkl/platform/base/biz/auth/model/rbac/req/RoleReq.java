@@ -1,15 +1,12 @@
 package com.newzkl.platform.base.biz.auth.model.rbac.req;
 
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class RoleReq {
-
-    /**
-     * id
-     */
-    private Long id;
+public class RoleReq extends BaseReq {
 
     /**
      * 角色名称
@@ -23,13 +20,9 @@ public class RoleReq {
     private String des;
 
     /**
-     * 创建人id
-     */
-    private Long createId;
-
-    /**
      * 修改人id
      */
+    @OauthUserId
     private Long menderId;
 
     /**

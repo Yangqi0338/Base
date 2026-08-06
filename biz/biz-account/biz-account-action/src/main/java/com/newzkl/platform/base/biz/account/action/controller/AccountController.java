@@ -42,11 +42,11 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountAwardUserVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -217,9 +217,7 @@ public class AccountController {
     @PostMapping("/account/codeUpdatePassword")
     public PlatformResult<Void> editPassword(@Validated @RequestBody CodeUpdatePasswordCommand codeUpdatePasswordCommand) {
         CodeUpdatePasswordReq req = TransferUtils.transfer(codeUpdatePasswordCommand, CodeUpdatePasswordReq::new);
-        req.setClient(SecurityUtils.getClient());
-        req.setAccountId(SecurityUtils.getAccountId());
-        accountLoginService.editPassword(req);
+        accountDomain.editPassword(req);
         return PlatformResult.success();
     }
 
@@ -235,9 +233,7 @@ public class AccountController {
     @PostMapping("/account/updateUsername")
     public PlatformResult<Void> editUsername(@Validated @RequestBody CodeUpdateUsernameCommand codeUpdateUsernameCommand) {
         CodeUpdateUsernameReq req = TransferUtils.transfer(codeUpdateUsernameCommand, CodeUpdateUsernameReq::new);
-        req.setClient(SecurityUtils.getClient());
-        req.setAccountId(SecurityUtils.getAccountId());
-        accountLoginService.editUsername(req);
+        accountDomain.editUsername(req);
         return PlatformResult.success();
     }
 

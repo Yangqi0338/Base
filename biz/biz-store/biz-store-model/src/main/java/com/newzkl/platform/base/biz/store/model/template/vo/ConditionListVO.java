@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.template.vo;
 
-import com.newzkl.platform.base.biz.store.model.template.vo.MarketRpcVO;
+import com.newzkl.platform.base.common.ddd.facade.MarketRpcVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

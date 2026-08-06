@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.repository;
 
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 
 /**
  * @author niu

@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.account.domain.repository.CountSaleRepositor
 import com.newzkl.platform.base.biz.account.model.req.CountSaleQuery;
 import com.newzkl.platform.base.biz.account.model.req.CountSaleReq;
 import com.newzkl.platform.base.biz.account.model.res.CountSaleVO;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

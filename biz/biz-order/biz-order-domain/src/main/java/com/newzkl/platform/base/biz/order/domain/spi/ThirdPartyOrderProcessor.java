@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
 import com.newzkl.platform.base.common.ddd.domain.Processor;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderDTO;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

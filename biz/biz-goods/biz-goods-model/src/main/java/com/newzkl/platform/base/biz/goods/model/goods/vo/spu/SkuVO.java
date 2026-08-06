@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.spu;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

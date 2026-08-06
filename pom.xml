@@ -287,6 +287,21 @@
     </dependencies>
 
     <build>
+        <!--
+          源码 .java 作资源打入 jar: 运行期 QDox 解析字段 javadoc 拼校验错误(生产 classpath 读内嵌源码,
+          开发期 CommonUtil.loadJavaSource 优先读磁盘). 子模块继承此 resources 配置.
+        -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.java</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

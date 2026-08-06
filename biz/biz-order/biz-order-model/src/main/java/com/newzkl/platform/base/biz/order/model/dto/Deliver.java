@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
 import com.newzkl.platform.base.biz.order.model.req.DeliverItemCommand;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverItemVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.Data;
 

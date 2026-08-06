@@ -10,8 +10,8 @@ import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusP
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
 import com.newzkl.platform.base.biz.activity.domain.adapt.repository.BonusPoolRepository;
 import com.newzkl.platform.base.biz.activity.domain.event.service.bonus.partake.BonusPoolPartake;
-import com.newzkl.platform.base.common.core.model.dto.Money;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

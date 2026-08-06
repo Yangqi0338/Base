@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreePostConditi
 import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreightTemplateVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.RegionVO;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.core.model.enums.RedisEnum;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

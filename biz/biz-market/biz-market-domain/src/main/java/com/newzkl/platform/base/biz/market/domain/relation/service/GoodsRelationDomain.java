@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarke
 import com.newzkl.platform.base.biz.market.model.req.relation.SaveGoodsRelationReq;
 import com.newzkl.platform.base.biz.market.model.req.relation.UpdateGoodsRelationReq;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
-import com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO;
-import com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO;
+import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
 
 import java.util.List;
 

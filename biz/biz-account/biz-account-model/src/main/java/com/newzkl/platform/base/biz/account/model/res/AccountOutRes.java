@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountRoleVO;

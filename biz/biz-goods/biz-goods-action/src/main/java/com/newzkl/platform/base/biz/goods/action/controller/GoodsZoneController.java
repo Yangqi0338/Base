@@ -5,8 +5,8 @@ import com.newzkl.platform.base.biz.goods.application.goods.service.goodsZone.Go
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZoneAddReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodsZone.GoodsZonePageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.goodsZone.GoodsZoneRes;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

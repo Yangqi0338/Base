@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.report.ReportReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.report.ReportRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

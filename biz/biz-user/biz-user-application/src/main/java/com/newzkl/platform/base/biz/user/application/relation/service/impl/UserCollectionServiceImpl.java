@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionCreate
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionReq;
 import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

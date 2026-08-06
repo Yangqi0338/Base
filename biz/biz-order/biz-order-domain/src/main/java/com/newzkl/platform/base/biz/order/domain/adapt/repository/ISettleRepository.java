@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 import java.time.LocalDateTime;
 import java.util.List;

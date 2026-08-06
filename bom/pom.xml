@@ -50,6 +50,11 @@
                 <artifactId>ddd-infrastructure</artifactId>
                 <version>${base.revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>ddd-utils</artifactId>
+                <version>${base.revision}</version>
+            </dependency>
 
             <!-- ===== common / core ===== -->
             <dependency>
@@ -125,6 +130,11 @@
             <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-mybatis-infrastructure</artifactId>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-office</artifactId>
                 <version>${base.revision}</version>
             </dependency>
 

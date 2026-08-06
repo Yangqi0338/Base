@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;

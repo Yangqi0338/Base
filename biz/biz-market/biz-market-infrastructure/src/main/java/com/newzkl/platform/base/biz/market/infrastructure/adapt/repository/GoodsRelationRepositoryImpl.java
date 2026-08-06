@@ -10,9 +10,9 @@ import com.newzkl.platform.base.biz.market.model.dto.relation.MarketGoodsRelatio
 import com.newzkl.platform.base.biz.market.model.query.relation.GoodsListPageQuery;
 import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarketNotAddGoodsReq;
 import com.newzkl.platform.base.biz.market.model.req.relation.UpdateGoodsRelationReq;
-import com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO;
-import com.newzkl.platform.base.biz.market.model.rpc.relation.AlterChannelSelectorSellDataReq;
-import com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO;
+import com.newzkl.platform.base.common.ddd.facade.AlterChannelSelectorSellDataReq;
+import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;

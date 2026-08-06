@@ -15,14 +15,14 @@ import com.newzkl.platform.base.biz.market.model.query.distribution.Distribution
 import com.newzkl.platform.base.biz.market.model.query.distribution.StoreDistributionQuery;
 import com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsDetailRes;
 import com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsListRes;
-import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionDetailVO;
+import com.newzkl.platform.base.common.ddd.facade.DistributionDetailVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;

@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.res.interaction.StoreTarge
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionEvent;
 import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

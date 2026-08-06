@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureMenuVO;
 import com.newzkl.platform.base.biz.store.model.resource.vo.PictureResourceVO;
 import com.newzkl.platform.base.biz.store.domain.resource.repository.PictureResourceRepository;

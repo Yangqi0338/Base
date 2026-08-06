@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

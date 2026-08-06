@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.entity.ShipAddressDO;
 import com.newzkl.platform.base.biz.user.model.relation.dto.ShipAddressDTO;
 import com.newzkl.platform.base.biz.user.model.relation.req.ShipAddressPageReq;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

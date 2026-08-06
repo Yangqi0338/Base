@@ -7,9 +7,9 @@ import com.newzkl.platform.base.biz.market.model.query.relation.GoodsListPageQue
 import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarketNotAddGoodsReq;
 import com.newzkl.platform.base.biz.market.model.req.relation.UpdateGoodsRelationReq;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
-import com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO;
-import com.newzkl.platform.base.biz.market.model.rpc.relation.AlterChannelSelectorSellDataReq;
-import com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO;
+import com.newzkl.platform.base.common.ddd.facade.AlterChannelSelectorSellDataReq;
+import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
 
 import java.util.List;
 

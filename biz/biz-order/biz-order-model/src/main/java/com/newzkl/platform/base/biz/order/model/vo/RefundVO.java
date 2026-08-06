@@ -1,11 +1,10 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.biz.order.model.support.api.ReceiveAddressOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;

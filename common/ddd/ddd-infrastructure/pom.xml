@@ -25,9 +25,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-redis</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-utils</artifactId>
+            <artifactId>ddd-utils</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>

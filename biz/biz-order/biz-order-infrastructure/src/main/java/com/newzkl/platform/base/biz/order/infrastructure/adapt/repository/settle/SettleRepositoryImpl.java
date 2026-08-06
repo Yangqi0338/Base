@@ -25,7 +25,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.SettleOrderWaitQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;

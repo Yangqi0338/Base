@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.sys.model.project.req;
 
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertFalse;

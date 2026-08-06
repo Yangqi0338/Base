@@ -5,8 +5,8 @@ import com.newzkl.platform.base.biz.user.model.task.record.query.MemberTaskRecor
 import com.newzkl.platform.base.biz.user.model.task.record.req.MemberTaskRecordAddReq;
 import com.newzkl.platform.base.biz.user.model.task.record.res.MemberTaskRecordExportRes;
 import com.newzkl.platform.base.biz.user.model.task.record.res.MemberTaskRecordRes;
-import com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

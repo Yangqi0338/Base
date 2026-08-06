@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.biz.req.query;
 
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Builder;
 import lombok.Data;

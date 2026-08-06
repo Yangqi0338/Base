@@ -4,8 +4,8 @@ import com.newzkl.platform.base.biz.goods.domain.goodPackage.service.GoodPackage
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
-import com.newzkl.platform.base.common.core.model.dto.Money;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 import cn.hutool.core.util.NumberUtil;
 import com.newzkl.platform.base.biz.order.model.req.OrderItemCommand;
@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 

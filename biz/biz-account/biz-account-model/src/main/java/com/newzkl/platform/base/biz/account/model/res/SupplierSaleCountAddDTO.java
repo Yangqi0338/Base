@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

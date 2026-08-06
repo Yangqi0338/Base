@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.support.api;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 

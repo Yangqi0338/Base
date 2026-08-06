@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validation-config
+        xmlns="https://jakarta.ee/xml/ns/validation/configuration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/validation/configuration
+            https://jakarta.ee/xml/ns/validation/validation-configuration-3.0.xsd"
+        version="3.0">
+
+    <!--
+      声明式绑定 OauthUserInjection 约束 → OauthUserInjectionValidator。
+      注解在 ddd-model, 校验器在 ddd-utils; 经此 XML 绑定, 避免 ddd-model 反依赖 ddd-utils。
+    -->
+    <constraint-mapping>META-INF/oauth-injection-constraints.xml</constraint-mapping>
+</validation-config>

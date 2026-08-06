@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.application.service.policy;
 
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicy;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;

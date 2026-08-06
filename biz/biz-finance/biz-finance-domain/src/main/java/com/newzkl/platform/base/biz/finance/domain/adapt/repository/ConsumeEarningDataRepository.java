@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.earnings.vo.EarningRecordVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.PackOrderRpcVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.TotalEarningVO;
 import com.newzkl.platform.base.biz.finance.model.event.SkuOrderWaitEarningVO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 
 import java.util.List;

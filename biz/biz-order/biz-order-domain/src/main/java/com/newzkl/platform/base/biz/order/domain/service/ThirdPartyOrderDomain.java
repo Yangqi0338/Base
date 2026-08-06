@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.domain.service;
 
 
 import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 
 public interface ThirdPartyOrderDomain {

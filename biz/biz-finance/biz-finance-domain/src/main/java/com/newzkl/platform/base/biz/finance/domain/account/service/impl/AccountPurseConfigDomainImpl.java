@@ -8,11 +8,11 @@ import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurse
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.ConfigChannelRepository;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.biz.finance.model.account.req.BatchQueryConfigChannelQuery;
-import com.newzkl.platform.base.biz.finance.model.account.req.ChargeConfigChannelReq;
+import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.biz.finance.model.support.ChannelConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

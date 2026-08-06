@@ -1,21 +1,20 @@
 package com.newzkl.platform.base.biz.store.application.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.biz.store.application.service.StoreService;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountBaseInfo;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelContactReq;
-import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelStoreVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelStoreVO;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.UserFollowApi;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreAccountDomain;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreStyleDomain;
 import com.newzkl.platform.base.biz.store.domain.template.service.ModelShopDomain;
-import com.newzkl.platform.base.common.core.utils.properties.SysProperties;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;

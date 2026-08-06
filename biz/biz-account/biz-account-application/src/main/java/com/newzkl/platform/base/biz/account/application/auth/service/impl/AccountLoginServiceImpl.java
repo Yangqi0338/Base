@@ -1,5 +1,4 @@
 package com.newzkl.platform.base.biz.account.application.auth.service.impl;
-import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
 import cn.dev33.satoken.session.TokenSign;
 import cn.dev33.satoken.stp.SaLoginConfig;
@@ -9,63 +8,58 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.application.auth.service.AccountLoginService;
+import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreAccountCreateReq;
-import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
-import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
-import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.application.auth.service.AccountLoginService;
+import com.newzkl.platform.base.biz.account.domain.auth.repository.AccountLoginRepository;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
-import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
-import com.newzkl.platform.base.biz.account.domain.auth.repository.AccountLoginRepository;
-import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
-import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
-import com.newzkl.platform.base.biz.account.model.req.CodeUpdateUsernameReq;
-import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
-import com.newzkl.platform.base.biz.account.model.req.ResetMemberReq;
-import com.newzkl.platform.base.biz.account.model.vo.ResetMemberVO;
-import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
-import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.core.redis.utils.ResetPwdRedisUtil;
-import com.newzkl.platform.base.common.core.utils.common.JsonEncryptDecryptUtils;
-import com.newzkl.platform.base.biz.account.model.res.AccountLoginLog;
-import com.newzkl.platform.base.biz.account.model.res.AccountLoginLogRes;
-import com.newzkl.platform.base.biz.account.model.res.LoginAccountRes;
-import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.OperatorVO;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.TLSSigAPIv2;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
 import com.newzkl.platform.base.biz.account.model.assembler.LoginAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.*;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
 import com.newzkl.platform.base.biz.account.model.auth.res.TokenAndExpireRes;
-import com.newzkl.platform.base.common.core.utils.biz.BizUtil;
+import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
+import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.biz.account.model.res.AccountLoginLog;
+import com.newzkl.platform.base.biz.account.model.res.AccountLoginLogRes;
+import com.newzkl.platform.base.biz.account.model.res.LoginAccountRes;
+import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
+import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
+import com.newzkl.platform.base.biz.account.model.vo.OperatorVO;
+import com.newzkl.platform.base.biz.account.model.vo.ResetMemberVO;
+import com.newzkl.platform.base.biz.account.model.vo.tencent.TLSSigAPIv2;
+import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
+import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
+import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
+import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
+import com.newzkl.platform.base.common.core.redis.utils.ResetPwdRedisUtil;
+import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.utils.common.JsonEncryptDecryptUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import static com.newzkl.platform.base.common.core.utils.biz.BizUtil.async;
 
 /**
  * @author muc_fang
@@ -258,7 +252,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         LoginAccountRes accountVO = loginAssembler.vo2LoginRes(account);
         loginRes.setAccountVO(accountVO);
         // 通知
-        async(this, (service) -> service.loginNotify(account, loginType));
+        BizUtil.async(this, (service) -> service.loginNotify(account, loginType));
         return loginRes;
     }
 
@@ -492,16 +486,6 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             throw new PlatformException(accountRegisterRes.getErrorCode());
         }
         return accountRegisterRes.getId();
-    }
-
-    @Override
-    public void editUsername(CodeUpdateUsernameReq codeUpdateUsernameReq) {
-        accountDomain.editUsername(codeUpdateUsernameReq);
-    }
-
-    @Override
-    public void editPassword(CodeUpdatePasswordReq codeUpdateUsernameReq) {
-        accountDomain.editPassword(codeUpdateUsernameReq);
     }
 
     @Override

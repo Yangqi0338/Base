@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.PersonalEnum;
 import lombok.Data;

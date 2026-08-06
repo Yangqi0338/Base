@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
-import com.newzkl.platform.base.common.ddd.model.res.PlatformTreeNode;
+import com.newzkl.platform.base.common.core.model.res.PlatformTreeNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

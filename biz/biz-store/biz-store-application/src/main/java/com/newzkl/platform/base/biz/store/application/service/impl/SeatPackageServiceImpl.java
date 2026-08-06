@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
-import com.newzkl.platform.base.biz.store.model.store.vo.ChannelConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

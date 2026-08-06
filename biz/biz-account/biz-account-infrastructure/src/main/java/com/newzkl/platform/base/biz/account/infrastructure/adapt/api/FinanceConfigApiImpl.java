@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
-import com.newzkl.platform.base.biz.account.domain.adapt.api.ChannelServiceAmountRes;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.ChargeConfigChannelReq;
+import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
+import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
 import com.newzkl.platform.base.biz.finance.facade.AccountConfigFacade;
 import com.newzkl.platform.base.biz.finance.facade.model.ChannelConfigRes;

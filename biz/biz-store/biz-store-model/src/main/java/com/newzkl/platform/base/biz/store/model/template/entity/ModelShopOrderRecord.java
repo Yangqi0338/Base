@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.template.entity;
 
 import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 import java.time.LocalDateTime;

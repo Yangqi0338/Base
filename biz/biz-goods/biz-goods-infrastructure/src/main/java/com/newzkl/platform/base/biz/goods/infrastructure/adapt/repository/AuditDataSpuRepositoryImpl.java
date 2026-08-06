@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditSpuDO
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

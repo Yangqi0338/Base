@@ -8,8 +8,8 @@ import com.newzkl.platform.base.biz.market.model.dto.relation.GoodsRelationQuery
 import com.newzkl.platform.base.biz.market.model.query.relation.GoodsListPageQuery;
 import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarketNotAddGoodsReq;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
-import com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO;
-import com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO;
+import com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO;
+import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

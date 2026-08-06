@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.activity.model.event.res.BonusDetailsRes;
 import com.newzkl.platform.base.biz.activity.model.event.res.HistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 
 import java.util.List;
 

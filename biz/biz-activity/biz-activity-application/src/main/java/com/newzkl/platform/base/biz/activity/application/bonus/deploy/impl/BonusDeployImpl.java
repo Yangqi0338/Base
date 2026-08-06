@@ -15,8 +15,8 @@ import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityQueryDetailV
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityQueryPageVO;
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityVO;
 import com.newzkl.platform.base.biz.activity.model.event.vo.BonusPoolDataVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

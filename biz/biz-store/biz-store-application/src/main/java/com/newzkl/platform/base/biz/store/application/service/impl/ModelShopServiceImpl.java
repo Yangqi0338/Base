@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.application.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.biz.store.application.service.ModelShopService;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionApi;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;

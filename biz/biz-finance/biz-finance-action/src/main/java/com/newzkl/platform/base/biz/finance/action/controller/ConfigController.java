@@ -7,8 +7,8 @@ import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigCh
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
 import com.newzkl.platform.base.biz.finance.model.pay.req.UpdatePayeeInfoReq;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PayeeInfoVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

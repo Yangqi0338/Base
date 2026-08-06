@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<constraint-mappings
+        xmlns="https://jakarta.ee/xml/ns/validation/mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/validation/mapping
+            https://jakarta.ee/xml/ns/validation/validation-mapping-3.0.xsd"
+        version="3.0">
+
+    <!-- 为 OauthUserInjection(validatedBy 留空) 补绑校验器实现 -->
+    <constraint-definition annotation="com.newzkl.platform.base.common.ddd.model.auth.OauthUserInjection">
+        <validated-by include-existing-validators="false">
+            <value>com.newzkl.platform.base.common.ddd.utils.auth.OauthUserInjectionValidator</value>
+        </validated-by>
+    </constraint-definition>
+</constraint-mappings>

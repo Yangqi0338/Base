@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
 
 import java.io.Serializable;

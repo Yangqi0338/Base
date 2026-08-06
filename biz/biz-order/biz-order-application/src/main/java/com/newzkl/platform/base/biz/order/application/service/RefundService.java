@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.application.service;
 
 
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 /**
  * @author muc_fang

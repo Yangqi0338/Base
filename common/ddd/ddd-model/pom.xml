@@ -21,6 +21,11 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-model</artifactId>
         </dependency>
+        <!-- BaseReq @NotNull + OauthUserInjection @Constraint meta-annotation 需 jakarta 校验 API(注解处理器需真实解析) -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
@@ -45,10 +50,7 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

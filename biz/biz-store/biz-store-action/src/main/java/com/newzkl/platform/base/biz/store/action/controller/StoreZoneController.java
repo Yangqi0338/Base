@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.action.controller;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreZoneDomain;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneCreateReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneUpdateReq;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

@@ -8,13 +8,12 @@ import com.newzkl.platform.base.biz.order.infrastructure.dao.ThirdPartyOrderReco
 import com.newzkl.platform.base.biz.order.infrastructure.entity.ThirdPartyOrderRecordDO;
 import com.newzkl.platform.base.biz.order.model.req.query.ThirdPartyOrderRecordQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

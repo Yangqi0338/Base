@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.goods.domain.goodPackage.adapt.repository.Go
 import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPackageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.facade;
 
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import java.util.List;
 

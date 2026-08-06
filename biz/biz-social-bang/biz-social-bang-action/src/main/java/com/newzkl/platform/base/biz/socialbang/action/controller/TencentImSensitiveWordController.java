@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.socialbang.model.im.query.SensitiveWordQuery
 import com.newzkl.platform.base.biz.socialbang.model.im.req.SensitiveWordRequest;
 import com.newzkl.platform.base.biz.socialbang.model.im.vo.SensitiveWord;
 import com.newzkl.platform.base.biz.socialbang.model.im.vo.SensitiveWordImportVO;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

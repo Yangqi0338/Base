@@ -37,14 +37,12 @@ public class UserLecturerFollowDomainImpl implements UserLecturerFollowDomain {
 
     private final LecturerRepository lecturerRepository;
 
-    private final UserAccountApi userAccountApi;
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean follow(UserFollowReq req) {
         LecturerRes lecturer = lecturerRepository.detail(req.getLecturerId());
         ThrowsException.isNull(lecturer, BaseErrorCode.NODATA, "讲师");
-        if (userLecturerFollowRepository.exists(userId, req.getLecturerId())) {
+        if (userLecturerFollowRepository.exists(req.getUserId(), req.getLecturerId())) {
             return true;
         }
         userLecturerFollowRepository.save(req);

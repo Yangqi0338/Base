@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
 
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;

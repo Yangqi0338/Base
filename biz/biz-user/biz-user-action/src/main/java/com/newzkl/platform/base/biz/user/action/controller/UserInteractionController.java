@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.user.model.interaction.res.BatchInteractionR
 import com.newzkl.platform.base.biz.user.model.interaction.vo.InteractionRPCVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionAddVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionCountVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryPageRe
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityQueryDetailVO;
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityQueryPageVO;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

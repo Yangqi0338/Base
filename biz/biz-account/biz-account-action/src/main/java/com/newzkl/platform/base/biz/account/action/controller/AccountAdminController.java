@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.req.AdminDisableAccountReq;
 import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

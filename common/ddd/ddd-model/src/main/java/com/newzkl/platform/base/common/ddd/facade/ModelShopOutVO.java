@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import lombok.Data;
 

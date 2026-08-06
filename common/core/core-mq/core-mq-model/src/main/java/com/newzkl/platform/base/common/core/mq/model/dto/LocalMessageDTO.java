@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.core.mq.model.dto;
 
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

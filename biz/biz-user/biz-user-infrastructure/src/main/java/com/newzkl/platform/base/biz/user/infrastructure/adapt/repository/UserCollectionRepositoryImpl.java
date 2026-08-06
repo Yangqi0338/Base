@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

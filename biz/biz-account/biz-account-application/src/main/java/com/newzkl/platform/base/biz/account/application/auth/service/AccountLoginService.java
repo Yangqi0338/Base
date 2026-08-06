@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.application.auth.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.account.model.req.CodeUpdateUsernameReq;
 import com.newzkl.platform.base.biz.account.model.req.ResetMemberReq;
@@ -90,20 +90,6 @@ public interface AccountLoginService {
      * 供应商通过运营商生成的注册链接进行注册
      */
     Long inviteSupplierRegister(IdentityCustomSaveReq customSaveReq, String host);
-
-    /**
-     * 修改账号名称
-     *
-     * @param codeUpdateUsernameReq 修改用户名命令
-     */
-    void editUsername(CodeUpdateUsernameReq codeUpdateUsernameReq);
-
-    /**
-     * 修改密码
-     *
-     * @param codeUpdateUsernameReq 修改密码命令
-     */
-    void editPassword(CodeUpdatePasswordReq codeUpdateUsernameReq);
 
     /**
      * 重置会员密码 第一步 验证短信

@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.user.model.pack.query.PackGoodsQuery;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackGoodsCommand;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

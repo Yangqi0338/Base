@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderDeliverCommand;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressVO;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.Data;
 
 import java.io.Serializable;

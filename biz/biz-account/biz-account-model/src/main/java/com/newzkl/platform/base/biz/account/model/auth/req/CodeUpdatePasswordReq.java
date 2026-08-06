@@ -1,7 +1,10 @@
 package com.newzkl.platform.base.biz.account.model.auth.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.auth.req.web.CodeUpdatePasswordCommand;
+
+import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -15,10 +18,12 @@ public class CodeUpdatePasswordReq extends CodeUpdatePasswordCommand {
     /**
      * 归属端
      */
+    @OauthRole
     private CommonEnum.Client client;
     /**
      * 账号id
      */
+    @OauthUserId
     private Long accountId;
     /**
      * 加密字符串

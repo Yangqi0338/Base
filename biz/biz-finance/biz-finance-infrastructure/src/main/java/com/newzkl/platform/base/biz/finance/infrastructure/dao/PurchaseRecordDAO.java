@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.finance.infrastructure.entity.PurchaseRecordDO;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 /**
  * 购买记录 (purchase_record)表数据库访问层

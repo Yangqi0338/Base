@@ -24,7 +24,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;

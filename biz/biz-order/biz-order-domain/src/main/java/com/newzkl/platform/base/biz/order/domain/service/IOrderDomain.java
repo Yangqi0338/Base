@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.order.model.res.*;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 

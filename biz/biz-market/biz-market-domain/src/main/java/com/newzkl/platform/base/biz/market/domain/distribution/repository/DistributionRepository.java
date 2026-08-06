@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.market.domain.distribution.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryV
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
-import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionDetailVO;
+import com.newzkl.platform.base.common.ddd.facade.DistributionDetailVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 

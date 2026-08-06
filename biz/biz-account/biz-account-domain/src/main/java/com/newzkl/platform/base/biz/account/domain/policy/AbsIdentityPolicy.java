@@ -1,15 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.policy;
-import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.LevelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 // TODO[cross-domain relation]: import com.zkl.scm.user.domain.relation.service.ILevelDomain; (relation biz, 迁 biz-user)
@@ -22,15 +14,10 @@ import com.newzkl.platform.base.biz.account.model.assembler.IdentityAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 // TODO[cross-domain relation]: relation.req.AccountLevelUpReq/ConditionReq/TeamUserCountReq, relation.res.PackGoodsInfo, relation.vo.LevelVO (迁 biz-user)
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author muc_fang

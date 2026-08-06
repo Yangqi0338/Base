@@ -7,8 +7,8 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCat
 import com.newzkl.platform.base.biz.content.model.common.req.RecommendGroupReq;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

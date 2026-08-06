@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.sys.model.appversion.query.AppVersionQuery;
 import com.newzkl.platform.base.biz.sys.model.appversion.vo.AppVersionVO;
 import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

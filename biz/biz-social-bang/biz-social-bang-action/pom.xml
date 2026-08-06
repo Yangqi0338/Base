@@ -30,8 +30,8 @@
             <artifactId>core-utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-office</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>

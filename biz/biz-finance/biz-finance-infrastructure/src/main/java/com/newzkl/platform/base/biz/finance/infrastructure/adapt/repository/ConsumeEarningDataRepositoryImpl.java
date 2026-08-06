@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 
 import cn.hutool.core.util.StrUtil;
@@ -16,8 +16,8 @@ import com.newzkl.platform.base.biz.finance.model.earnings.vo.PackOrderRpcVO;
 import com.newzkl.platform.base.biz.finance.model.earnings.vo.TotalEarningVO;
 import com.newzkl.platform.base.biz.finance.model.event.SkuOrderWaitEarningVO;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.model.enums.RedisEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;

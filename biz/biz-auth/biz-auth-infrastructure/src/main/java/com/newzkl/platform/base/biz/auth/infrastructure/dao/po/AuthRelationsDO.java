@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import com.newzkl.platform.base.biz.auth.model.enums.AuthEnum;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,16 +15,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("auth_relations")
-public class AuthRelationsDO {
-
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
-    private LocalDateTime createTime;
-
-    /**
-     * 创建人id
-     */
-    private Long createId;
+public class AuthRelationsDO extends BaseDO {
 
     /**
      * 类型

@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderExt;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;

@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.user.model.relation.req.ShipAddressAddReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.ShipAddressPageReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.ShipAddressUpdateReq;
 import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

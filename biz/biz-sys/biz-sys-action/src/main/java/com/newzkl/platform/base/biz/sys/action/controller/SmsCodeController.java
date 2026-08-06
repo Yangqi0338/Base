@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.sys.application.service.CodeService;
 import com.newzkl.platform.base.biz.sys.model.code.req.CodeReq;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

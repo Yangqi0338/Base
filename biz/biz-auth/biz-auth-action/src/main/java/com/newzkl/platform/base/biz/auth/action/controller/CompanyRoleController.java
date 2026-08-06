@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.auth.domain.service.RoleDomain;
 import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
 import com.newzkl.platform.base.biz.auth.model.role.req.RoleReq;
 import com.newzkl.platform.base.biz.auth.model.role.res.RoleRes;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
@@ -11,7 +11,6 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 

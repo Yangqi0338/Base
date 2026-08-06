@@ -22,5 +22,6 @@
         <module>ddd-application</module>
         <module>ddd-action</module>
         <module>ddd-infrastructure</module>
+        <module>ddd-utils</module>
     </modules>
 </project>

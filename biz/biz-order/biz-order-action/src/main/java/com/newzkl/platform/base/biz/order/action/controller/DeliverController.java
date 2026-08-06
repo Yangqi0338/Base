@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverVO;
 import com.newzkl.platform.base.biz.order.model.vo.FullDeliverExcelVO;
 import com.newzkl.platform.base.biz.order.model.vo.SplitDeliverExcelVO;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

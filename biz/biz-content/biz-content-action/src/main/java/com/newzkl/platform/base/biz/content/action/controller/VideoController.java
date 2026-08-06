@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
 import com.newzkl.platform.base.biz.content.model.video.req.VideoReq;
 import com.newzkl.platform.base.biz.content.model.video.res.VideoRes;
 import com.newzkl.platform.base.biz.content.model.video.vo.RecommendVideoVO;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

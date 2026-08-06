@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

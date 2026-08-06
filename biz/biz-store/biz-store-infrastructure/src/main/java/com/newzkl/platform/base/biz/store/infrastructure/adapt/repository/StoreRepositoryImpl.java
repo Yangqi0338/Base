@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionRandomInfo;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;

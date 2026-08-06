@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryPageRe
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.service.UserLecturerFollowDoma
 import com.newzkl.platform.base.biz.course.model.follow.query.UserFollowQuery;
 import com.newzkl.platform.base.biz.course.model.follow.req.UserFollowReq;
 import com.newzkl.platform.base.biz.course.model.follow.res.UserFollowRes;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

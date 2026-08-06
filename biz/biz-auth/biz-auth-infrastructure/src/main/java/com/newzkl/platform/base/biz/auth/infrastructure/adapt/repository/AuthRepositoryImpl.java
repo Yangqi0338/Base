@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.auth.model.enums.AuthEnum;
-import com.newzkl.platform.base.common.core.model.enums.RedisEnum;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AuthRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.AuthFunctionDAO;
@@ -25,7 +25,7 @@ import com.newzkl.platform.base.biz.auth.model.rbac.vo.FunctionVO;
 import com.newzkl.platform.base.biz.auth.model.rbac.vo.InterfaceVO;
 import com.newzkl.platform.base.biz.auth.model.rbac.vo.LimitRoleVO;
 import com.newzkl.platform.base.biz.auth.model.rbac.vo.MenuTreeVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,6 @@ public class AuthRepositoryImpl implements AuthRepository {
 
         //新增角色与系统的关联
         AuthRelationsDO authRelationsDO = new AuthRelationsDO();
-        authRelationsDO.setCreateId(roleReq.getCreateId());
         authRelationsDO.setType(AuthEnum.RelationType.SYS_ROLE.name());
         authRelationsDO.setSourceId(roleReq.getSystemId());
         authRelationsDO.setTargetId(roleDO.getId());

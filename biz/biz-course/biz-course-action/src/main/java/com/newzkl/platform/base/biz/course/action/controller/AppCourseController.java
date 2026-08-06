@@ -10,8 +10,8 @@ import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCou
 import com.newzkl.platform.base.biz.course.model.purchase.req.CoursePurchaseReq;
 import com.newzkl.platform.base.biz.course.model.purchase.res.CoursePurchaseCreateRes;
 import com.newzkl.platform.base.biz.course.model.purchase.res.UserPurchasedCourseRes;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

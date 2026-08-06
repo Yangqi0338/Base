@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.entity.audit;
 
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**

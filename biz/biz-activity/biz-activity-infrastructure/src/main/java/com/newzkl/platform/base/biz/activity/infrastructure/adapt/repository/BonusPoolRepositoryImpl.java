@@ -18,7 +18,7 @@ import com.newzkl.platform.base.biz.activity.model.event.req.*;
 import com.newzkl.platform.base.biz.activity.model.event.res.HistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.res.SettleHistoryBonusPoolReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.*;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;

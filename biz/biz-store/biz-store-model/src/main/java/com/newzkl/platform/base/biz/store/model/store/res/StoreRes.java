@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
 import com.newzkl.platform.base.biz.store.model.enums.StoreTypeEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 

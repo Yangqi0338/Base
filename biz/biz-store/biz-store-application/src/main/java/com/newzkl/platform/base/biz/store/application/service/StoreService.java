@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.application.service;
 
 import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelContactReq;
-import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelStoreVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelStoreVO;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 

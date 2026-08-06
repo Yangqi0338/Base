@@ -1,8 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -5,9 +5,9 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseChapterWatchReco
 import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchRecordQuery;
 import com.newzkl.platform.base.biz.course.model.watch.req.CourseChapterWatchRecordReq;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRecordRes;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

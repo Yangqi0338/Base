@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.dto.relation;
 
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 import java.io.Serializable;

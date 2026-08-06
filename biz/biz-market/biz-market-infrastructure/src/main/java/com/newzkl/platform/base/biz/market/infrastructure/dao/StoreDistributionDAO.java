@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryV
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
-import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionDetailVO;
+import com.newzkl.platform.base.common.ddd.facade.DistributionDetailVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 import org.apache.ibatis.annotations.Mapper;

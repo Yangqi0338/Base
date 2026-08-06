@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import lombok.Data;

@@ -5,10 +5,10 @@ import com.newzkl.platform.base.biz.sys.model.adminaccount.query.AdminAccountQue
 import com.newzkl.platform.base.biz.sys.model.adminaccount.req.AdminAccountReq;
 import com.newzkl.platform.base.biz.sys.model.adminaccount.req.PasswordUpdateReq;
 import com.newzkl.platform.base.biz.sys.model.adminaccount.res.AdminAccountRes;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

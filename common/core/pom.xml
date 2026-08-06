@@ -25,5 +25,6 @@
         <module>core-mq</module>
         <module>core-db-migrate</module>
         <module>core-mybatis</module>
+        <module>core-office</module>
     </modules>
 </project>

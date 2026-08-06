@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.goods.domain.service.impl;
 import com.newzkl.platform.base.biz.goods.domain.adapt.repository.ThirdPartyGoodsRepository;
 import com.newzkl.platform.base.biz.goods.domain.service.ThirdPartyGoodsDomain;
 import com.newzkl.platform.base.biz.goods.facade.model.thirdparty.ThirdPartyGoodsRecordDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.store.model.template.res.ModelShopDataRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStyleRes;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

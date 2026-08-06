@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.infrastructure.adapt.api;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountBaseInfo;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountGroupInfo;
-import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelStoreVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelStoreVO;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

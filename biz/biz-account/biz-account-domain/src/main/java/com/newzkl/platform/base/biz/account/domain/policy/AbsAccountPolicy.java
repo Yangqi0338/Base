@@ -8,7 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.enums.RedisEnum;
 import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;

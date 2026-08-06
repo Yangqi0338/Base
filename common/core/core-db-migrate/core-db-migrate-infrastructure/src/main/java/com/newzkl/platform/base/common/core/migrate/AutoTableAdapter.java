@@ -10,7 +10,7 @@ import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import com.newzkl.platform.base.common.core.mybatis.MybatisPlusConfig;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
-import com.newzkl.platform.base.common.core.utils.properties.SysProperties;
+import com.newzkl.platform.base.common.core.model.properties.SysProperties;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;

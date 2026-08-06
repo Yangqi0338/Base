@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.store.domain.store.repository.StoreRepositor
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepository;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreCategoryDomain;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;

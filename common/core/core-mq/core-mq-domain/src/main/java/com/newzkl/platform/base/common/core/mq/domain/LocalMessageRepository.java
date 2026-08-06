@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.core.mq.domain;
 
 import com.newzkl.platform.base.common.core.mq.model.dto.LocalMessageDTO;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;

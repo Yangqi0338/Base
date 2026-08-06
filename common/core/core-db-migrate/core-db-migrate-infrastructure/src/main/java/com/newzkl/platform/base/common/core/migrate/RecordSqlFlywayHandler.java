@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
-import com.newzkl.platform.base.common.core.utils.properties.SysProperties;
+import com.newzkl.platform.base.common.core.model.properties.SysProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.autotable.core.AutoTableGlobalConfig;
 import org.dromara.autotable.core.config.PropertyConfig;

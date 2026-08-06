@@ -25,7 +25,7 @@ import com.newzkl.platform.base.biz.user.model.pack.res.PackOrderPreRes;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackOrderRes;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.RequiredArgsConstructor;

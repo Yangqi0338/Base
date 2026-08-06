@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.model.query;
 
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserInjection;
 import jakarta.validation.constraints.AssertTrue;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import lombok.Data;
  * @author god
  */
 @Data
+@OauthUserInjection
 public class PageQuery extends QuerySupport {
     /**
      * 当前页

@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.dao.ThirdPartyGoodsReco
 import com.newzkl.platform.base.biz.goods.infrastructure.entity.ThirdPartyGoodsRecordDO;
 import com.newzkl.platform.base.biz.goods.model.biz.req.query.ThirdPartyGoodsRecordQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

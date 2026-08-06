@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.activity.model.bonus.req;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**

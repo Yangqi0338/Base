@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryPageRe
 import com.newzkl.platform.base.biz.activity.model.event.req.ActivityQueryReq;
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityQueryDetailVO;
 import com.newzkl.platform.base.biz.activity.model.event.vo.ActivityQueryPageVO;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 
 /**
  * 奖金池配置应用接口

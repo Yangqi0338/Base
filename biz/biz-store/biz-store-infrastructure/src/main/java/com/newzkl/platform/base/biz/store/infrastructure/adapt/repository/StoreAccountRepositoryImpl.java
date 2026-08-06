@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreDO;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountGroupInfo;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountBaseInfo;
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

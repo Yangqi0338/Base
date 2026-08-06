@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.biz.vo;
 
-import com.newzkl.platform.base.common.ddd.model.res.PlatformTreeNode;
+import com.newzkl.platform.base.common.core.model.res.PlatformTreeNode;
 import lombok.Data;
 
 import java.util.ArrayList;

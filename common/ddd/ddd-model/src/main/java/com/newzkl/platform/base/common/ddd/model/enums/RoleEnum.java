@@ -30,23 +30,23 @@ public class RoleEnum {
         /**
          * 平台管理员
          */
-        PLATFORM(1L, "平台管理员", CommonEnum.Client.ADMIN),
+        PLATFORM(1L, "平台管理员", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.ADMIN),
         /** 平台员工 */
-        EMP(2L, "平台员工", CommonEnum.Client.ADMIN),
+        EMP(2L, "平台员工", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.ADMIN),
         /** C端客户 */
-        MEMBER(1000L, "C端客户", CommonEnum.Client.USER),
+        MEMBER(1000L, "C端客户", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.USER),
         /** 供应商 */
-        SUPPLIER(1001L, "供应商", CommonEnum.Client.SUPPLIER),
+        SUPPLIER(1001L, "供应商", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.SUPPLIER),
         /** 渠道商 */
-        CHANNEL(1002L, "渠道商", CommonEnum.Client.CHANNEL),
+        CHANNEL(1002L, "渠道商", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.CHANNEL),
         /** 运营商 */
-        OPERATOR(1004L, "运营商", CommonEnum.Client.OPERATOR, 3),
+        OPERATOR(1004L, "运营商", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.OPERATOR, 3),
         /** 交易师 */
-        DEALER(1005L, "交易师", CommonEnum.Client.OPERATOR, 2),
+        DEALER(1005L, "交易师", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.OPERATOR, 2),
         /** 甄选师 */
-        SELECTOR(1006L, "甄选师", CommonEnum.Client.OPERATOR, 1),
+        SELECTOR(1006L, "甄选师", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.OPERATOR, 1),
         /** 游客 */
-        OPERATOR_GUEST(-1L, "游客", CommonEnum.Client.OPERATOR, 0),
+        OPERATOR_GUEST(-1L, "游客", com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client.OPERATOR, 0),
 
         ;
 
@@ -55,11 +55,11 @@ public class RoleEnum {
         private final Long code;
         private final String value;
         /** 所属端 */
-        private final CommonEnum.Client client;
+        private final com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client client;
         /** 角色级别 */
         private final Integer level;
 
-        CompanyRole(Long code, String value, CommonEnum.Client client) {
+        CompanyRole(Long code, String value, com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client client) {
             this.code = code;
             this.value = value;
             this.client = client;
@@ -172,7 +172,7 @@ public class RoleEnum {
          * @param client 客户端类型
          * @return 匹配的游客角色，未匹配返回 null
          */
-        public static GuestCompanyRole findByClient(CommonEnum.Client client) {
+        public static GuestCompanyRole findByClient(com.newzkl.platform.base.common.core.model.enums.CommonEnum.Client client) {
             return Arrays.stream(values()).filter(item -> item.name().equals(client.name())).findFirst().orElse(null);
         }
 

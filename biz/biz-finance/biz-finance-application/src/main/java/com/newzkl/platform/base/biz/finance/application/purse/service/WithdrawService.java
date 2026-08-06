@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuRollOutRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountWithdrawReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyAuditReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyReq;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 
 /**
  * 提现业务编排接口

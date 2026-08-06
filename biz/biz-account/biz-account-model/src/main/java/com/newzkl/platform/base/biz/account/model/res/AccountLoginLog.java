@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.common.core.utils.biz.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.Data;
 
 import java.time.LocalDateTime;

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.user.model.task.info.req.TaskInfoIdReq;
 import com.newzkl.platform.base.biz.user.model.task.info.req.TaskInfoOperateReq;
 import com.newzkl.platform.base.biz.user.model.task.info.req.TaskInfoStatusReq;
 import com.newzkl.platform.base.biz.user.model.task.info.res.TaskInfoRes;
-import com.newzkl.platform.base.common.ddd.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

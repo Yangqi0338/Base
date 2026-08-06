@@ -1,8 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
-import com.newzkl.platform.base.common.core.model.dto.Money;
+import com.newzkl.platform.base.common.core.model.money.Money;
 
-import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import lombok.Data;
 
 import java.util.List;

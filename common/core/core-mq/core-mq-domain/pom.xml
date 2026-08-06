@@ -21,9 +21,5 @@
             <groupId>com.newzkl.platform.Base.core</groupId>
             <artifactId>core-mq-model</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>ddd-domain</artifactId>
-        </dependency>
     </dependencies>
 </project>
