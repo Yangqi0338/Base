@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.sys.model.config.enums.DictEnum;
 import com.newzkl.platform.base.biz.sys.model.config.support.AdminSysProperties;
 import com.newzkl.platform.base.biz.sys.model.config.vo.AppConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
-import com.newzkl.platform.base.biz.sys.model.config.vo.OrderConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
 import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;

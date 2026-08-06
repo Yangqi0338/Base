@@ -15,8 +15,8 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTarge
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatPageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.interaction.StoreTargetInteractionStatPageRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.interaction.CacheKeyParam;
-import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionEvent;
-import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
+import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionEvent;
+import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionSummaryObj;
 import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import lombok.AllArgsConstructor;

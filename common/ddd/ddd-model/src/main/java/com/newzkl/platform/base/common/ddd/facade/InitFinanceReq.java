@@ -1,5 +1,4 @@
-package com.newzkl.platform.base.biz.finance.model.purse.req;
-
+package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -8,43 +7,43 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author niu
- * @description: 初始化财务请求对象
- * @date 2023/12/18 10:08
+ * 初始化钱包入参
+ *
+ * <p>迁移: 跨域 finance 结构 {@code com.zkl.scm.finance.rpc.model.purse.req.InitFinanceReq}
+ * 降级为 account 本地端口 DTO。</p>
+ *
+ * @author KC
  */
 @Data
 public class InitFinanceReq implements Serializable {
 
     /**
-     * 客户id
+     * 账户ID
      */
     private Long accountId;
 
     /**
-     * 客户名称
+     * 账户名称
      */
     private String accountName;
 
     /**
-     * 客户类型
+     * 资金账户类型
      */
     private PurseEnum.FinanceUser financeUser;
 
     /**
-     * 无需子账户传null
-     * 若需开通子账户必传  集合长度==子账户数量  集合元素代表子账户类型
-     * 同一accountId,同一账户类型，子账户类型唯一
+     * 需初始化的子钱包类型
      */
     private List<PurseEnum.PurseType> subPurseType;
 
     /**
-     * 上级id 没有上级传0
+     * 上级账户ID
      */
     private Long parentId;
 
     /**
-     * 杠杆比例
+     * 杠杆倍率
      */
     private Integer leverageRatio;
-
 }

@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.user.domain.service;
+import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionEvent;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.interaction.query.BatchInteractionQuery;

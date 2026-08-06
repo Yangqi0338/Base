@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.assembler;
 
-import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseReq;
+import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AddAccountPurseReq;
 import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPurseRes;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;

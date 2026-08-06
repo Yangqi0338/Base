@@ -3,7 +3,7 @@ import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;

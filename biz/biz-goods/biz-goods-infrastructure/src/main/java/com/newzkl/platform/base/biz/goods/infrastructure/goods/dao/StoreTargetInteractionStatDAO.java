@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.dao;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.StoreTargetInteractionStatDO;
-import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
+import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionSummaryObj;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -21,7 +21,7 @@ import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;

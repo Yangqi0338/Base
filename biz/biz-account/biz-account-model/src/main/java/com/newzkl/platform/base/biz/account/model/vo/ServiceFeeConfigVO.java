@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.account.model.vo;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 
 import lombok.Data;
 

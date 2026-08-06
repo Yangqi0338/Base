@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.order.model.support.api.order;
+package com.newzkl.platform.base.common.ddd.facade;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

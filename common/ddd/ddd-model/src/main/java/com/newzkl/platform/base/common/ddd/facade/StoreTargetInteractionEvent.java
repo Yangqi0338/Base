@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.order.model.support.api.interaction;
+package com.newzkl.platform.base.common.ddd.facade;
 
 import lombok.Data;
 

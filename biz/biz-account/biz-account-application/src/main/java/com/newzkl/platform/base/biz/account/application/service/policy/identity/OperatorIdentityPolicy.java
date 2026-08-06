@@ -6,7 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRegisterReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;

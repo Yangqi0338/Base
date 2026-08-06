@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
 import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountContributeRpcQuery;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountPurseReq;
+import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DeveloperInitReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceEarningApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.OpenapiDeveloperApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.SmsApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreAccountCreateReq;

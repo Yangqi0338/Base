@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
-import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 
 import java.util.List;
 

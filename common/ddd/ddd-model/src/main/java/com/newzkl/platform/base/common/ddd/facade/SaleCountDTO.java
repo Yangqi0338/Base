@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.goods.rpc.model.count;
+package com.newzkl.platform.base.common.ddd.facade;
 
 import lombok.Data;
 

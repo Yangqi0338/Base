@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
-import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountPurseReq;
+import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseAmountRes;
 import org.springframework.stereotype.Component;
 

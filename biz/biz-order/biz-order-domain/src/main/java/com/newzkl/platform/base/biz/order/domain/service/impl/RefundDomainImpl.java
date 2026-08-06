@@ -25,7 +25,7 @@ import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
 import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
-import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;

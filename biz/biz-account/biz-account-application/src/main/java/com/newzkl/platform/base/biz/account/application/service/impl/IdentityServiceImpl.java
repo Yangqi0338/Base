@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRegisterReq;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.biz.account.model.vo.AmountRateDTO;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;

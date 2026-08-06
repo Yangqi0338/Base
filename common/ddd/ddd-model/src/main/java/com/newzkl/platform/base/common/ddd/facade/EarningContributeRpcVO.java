@@ -1,55 +1,59 @@
-package com.newzkl.platform.base.biz.finance.model.earnings.vo;
-
+package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 收益贡献结果
+ *
+ * <p>迁移: 跨域 finance 结构
+ * {@code com.zkl.scm.finance.rpc.model.earnings.vo.EarningContributeRpcVO}
+ * 降级为 account 本地端口 DTO。</p>
+ *
+ * @author KC
+ */
 @Data
 public class EarningContributeRpcVO implements Serializable {
 
     /**
-     * id
+     * 主键
      */
     private Long id;
 
     /**
-     * 账户id
+     * 账户ID
      */
     private Long accountId;
 
-
     /**
-     * 客户类型
+     * 资金账户类型
      */
     private PurseEnum.FinanceUser accountType;
 
-
     /**
-     * 客户姓名
+     * 账户名称
      */
     private String accountName;
 
-
     /**
-     * 上级id
+     * 上级账户ID
      */
     private Long parentId;
 
     /**
-     * 总消费
+     * 累计消费 (分)
      */
     private Integer totalConsume;
 
     /**
-     * 分润贡献
+     * 收益贡献 (分)
      */
     private Integer earningContribute;
 
-
     /**
-     * 服务费贡献
+     * 服务费贡献 (分)
      */
     private Integer serviceChangeContribute;
 }

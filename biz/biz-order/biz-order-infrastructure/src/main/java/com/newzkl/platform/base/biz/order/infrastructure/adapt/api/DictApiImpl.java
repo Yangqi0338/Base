@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.account.facade.OperatorFacade;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.OperatorApi;
-import com.newzkl.platform.base.biz.order.model.support.api.order.OrderConfigVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.sys.facade.IDictFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

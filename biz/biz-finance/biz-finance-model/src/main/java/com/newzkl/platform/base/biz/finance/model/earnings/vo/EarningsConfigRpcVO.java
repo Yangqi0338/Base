@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.vo;
 
 
-import com.newzkl.platform.base.biz.finance.model.earnings.res.AmountRateDTO;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import lombok.Data;
 
 import java.io.Serializable;

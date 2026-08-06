@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.store.domain.adapt.api;
+import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 
 import java.util.List;
 

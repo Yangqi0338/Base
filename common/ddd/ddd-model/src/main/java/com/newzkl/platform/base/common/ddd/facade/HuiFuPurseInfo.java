@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.finance.model.purse.res;
+package com.newzkl.platform.base.common.ddd.facade;
 
 
 import lombok.Data;

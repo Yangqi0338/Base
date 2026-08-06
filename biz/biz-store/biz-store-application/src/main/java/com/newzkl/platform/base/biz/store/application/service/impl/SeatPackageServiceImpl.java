@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.application.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.store.application.service.SeatPackageService;
-import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountPurseReq;
+import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseAmountRes;

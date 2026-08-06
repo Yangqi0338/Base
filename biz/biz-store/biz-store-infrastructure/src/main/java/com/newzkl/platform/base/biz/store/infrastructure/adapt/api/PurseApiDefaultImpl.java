@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.api;
 
-import com.newzkl.platform.base.biz.store.domain.adapt.api.AccountPurseReq;
+import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseAmountRes;
 import org.springframework.stereotype.Component;

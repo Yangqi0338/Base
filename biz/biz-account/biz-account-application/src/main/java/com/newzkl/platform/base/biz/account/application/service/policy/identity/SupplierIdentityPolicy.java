@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.SmsApi;
 import com.newzkl.platform.base.biz.account.model.support.CodeReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;

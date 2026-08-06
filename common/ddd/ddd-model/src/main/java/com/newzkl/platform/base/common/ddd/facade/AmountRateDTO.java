@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.account.model.vo;
+package com.newzkl.platform.base.common.ddd.facade;
 
 import lombok.Data;
 

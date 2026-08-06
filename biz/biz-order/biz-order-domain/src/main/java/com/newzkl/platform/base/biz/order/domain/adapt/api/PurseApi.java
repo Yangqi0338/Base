@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
+import com.newzkl.platform.base.common.ddd.facade.HuiFuPurseInfo;
 
 /**
  * 账户钱包出站端口

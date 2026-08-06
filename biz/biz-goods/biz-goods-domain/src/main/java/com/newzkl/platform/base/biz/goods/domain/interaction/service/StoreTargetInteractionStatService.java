@@ -6,8 +6,8 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.Interactio
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatBatchReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatPageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.interaction.StoreTargetInteractionStatPageRes;
-import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionEvent;
-import com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj;
+import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionEvent;
+import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionSummaryObj;
 
 import java.util.List;
 

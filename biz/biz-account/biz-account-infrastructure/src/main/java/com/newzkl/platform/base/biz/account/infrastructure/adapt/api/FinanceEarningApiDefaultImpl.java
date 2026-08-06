@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
 import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountContributeRpcQuery;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.EarningContributeRpcVO;
+import com.newzkl.platform.base.common.ddd.facade.EarningContributeRpcVO;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceEarningApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
