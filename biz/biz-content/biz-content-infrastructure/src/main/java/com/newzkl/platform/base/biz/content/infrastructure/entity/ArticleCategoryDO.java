@@ -13,12 +13,6 @@ import java.time.LocalDateTime;
 /**
  * 文章分类数据实体
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.ArticleCategoryDO}。</p>
- *
- * <p><b>不继承 </b>{@code BaseDO}: 旧 {@code article_category} 表<b>无</b>
- * {@code update_time} / {@code del_flag} / {@code executor} 列, 继承会令 MyBatis-Plus
- * 自动填充并拼入不存在的列, 运行期 SQL 直接报错。故按旧表列逐字声明。</p>
- *
  * @author KC
  */
 @Data

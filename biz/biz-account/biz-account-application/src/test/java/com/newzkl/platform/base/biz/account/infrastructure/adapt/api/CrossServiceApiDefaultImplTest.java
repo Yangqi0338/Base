@@ -41,7 +41,7 @@ class CrossServiceApiDefaultImplTest {
     @Test
     @DisplayName("DictApi 兜底: 取字典值恒返回 null 且不抛异常")
     void dictApiReturnsNull() {
-        DictApi api = new DictApiDefaultImpl();
+        DictApi api = new DictApiImpl();
         assertNull(api.get(1001L), "兜底字典应返回 null");
         assertNull(api.get(null), "入参为 null 时兜底字典仍不应抛异常");
     }

@@ -15,11 +15,6 @@ import java.time.LocalDateTime;
 /**
  * 视频分类数据实体
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.VideoCategoryDO}。</p>
- *
- * <p><b>不继承 </b>{@code BaseDO}: 旧 {@code video_category} 表<b>无</b>
- * {@code update_time} / {@code del_flag} / {@code executor} 列, 继承会拼入不存在的列。</p>
- *
  * @author KC
  */
 @Data

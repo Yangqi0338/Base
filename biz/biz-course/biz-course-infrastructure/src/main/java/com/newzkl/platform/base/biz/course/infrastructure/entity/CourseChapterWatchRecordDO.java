@@ -11,11 +11,6 @@ import java.time.LocalDateTime;
 /**
  * 课程章节观看记录数据对象
  *
- * <p>迁移自 {@code com.zkl.scm.user.infrastructure.entity.CourseChapterWatchRecordDO}
- * (表 {@code course_chapter_watch_record})。偏离说明: 源逻辑删除列 {@code is_deleted}
- * 由 {@link BaseDO#getDelFlag} 承担, 源 {@code createBy}/{@code updateBy}
- * 由 {@link BaseDO#getExecutor} 承担。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

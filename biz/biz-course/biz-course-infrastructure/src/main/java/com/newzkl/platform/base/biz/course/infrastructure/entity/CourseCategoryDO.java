@@ -9,11 +9,6 @@ import lombok.EqualsAndHashCode;
 /**
  * 课程分类数据对象
  *
- * <p>迁移自 {@code com.zkl.scm.user.infrastructure.entity.CourseCategoryDO}(表 {@code course_category})。
- * 偏离说明: 源逻辑删除列为 {@code is_deleted}(0/1), Base 统一由 {@link BaseDO#getDelFlag}
- * 承担({@code del_flag}, 正常 0 / 删除 NULL), 故不再声明 {@code is_deleted};
- * 源 {@code createBy}/{@code updateBy} 由 {@link BaseDO#getExecutor} 承担。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

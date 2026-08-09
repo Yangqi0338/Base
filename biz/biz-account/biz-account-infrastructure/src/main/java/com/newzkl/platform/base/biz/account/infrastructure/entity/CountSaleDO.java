@@ -12,10 +12,6 @@ import java.time.LocalDateTime;
 /**
  * 销售统计持久化对象
  *
- * <p>对应旧表 {@code count_sale} (旧 {@code com.zkl.scm.user.infrastructure.entity.CountSaleDO})。
- * id / createTime / updateTime / delFlag / executor 由 {@code BaseDO} 提供;
- * 旧 DO 自行声明 {@code id} 造成与基类重复, 本仓去除。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

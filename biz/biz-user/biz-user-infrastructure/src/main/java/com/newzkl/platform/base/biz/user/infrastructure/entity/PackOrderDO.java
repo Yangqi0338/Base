@@ -21,13 +21,6 @@ import java.util.List;
 /**
  * 入会礼包订单(pack_order)持久化对象
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.PackOrderDO}（表 {@code pack_order}）。</p>
- *
- * <p>迁移说明：{@code @TableName} 不写显式表名，中台 {@code DynamicTableNameInnerInterceptor}
- * 按类名去 {@code DO} 后缀推表名（{@code PackOrderDO} → {@code pack_order}）；
- * 旧手写 id/actable 注释去除，主键雪花与 createTime/updateTime/delFlag/executor 由 {@code BaseDO} 承接；
- * {@code shipVO} 靠 MP 下划线策略生成列 {@code ship_v_o}，autotable 按字段名重建列，无需 {@code @TableField}。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

@@ -13,12 +13,6 @@ import java.time.LocalDateTime;
 /**
  * 视频数据实体
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.VideoDO}。</p>
- *
- * <p><b>不继承 </b>{@code BaseDO}: 旧 {@code video} 表列由旧 DO 逐字声明, 无基类列。
- * 主键沿用旧 {@code IdType.ASSIGN_ID} 雪花策略。旧表 {@code like_num}/{@code share_num}
- * 不落列, 由跨域统计填充(迁移后降级, 见 {@code VideoDO} 未含该两列)。</p>
- *
  * @author KC
  */
 @Data

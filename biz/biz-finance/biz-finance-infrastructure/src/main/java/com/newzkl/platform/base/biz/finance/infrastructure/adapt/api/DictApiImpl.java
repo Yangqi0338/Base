@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@Component("financeDictApiDefaultImpl")
+@Component("financeDictApiImpl")
 @RequiredArgsConstructor
-public class DictApiDefaultImpl implements DictApi {
+public class DictApiImpl implements DictApi {
 
     private final IDictFacade dictFacade;
 

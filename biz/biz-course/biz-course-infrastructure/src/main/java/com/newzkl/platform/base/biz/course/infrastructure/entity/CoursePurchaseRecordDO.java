@@ -11,11 +11,7 @@ import java.time.LocalDateTime;
 /**
  * 课程购买记录(course_purchase_record)持久化对象
  *
- * <p>迁移自 {@code com.zkl.scm.user.infrastructure.entity.CoursePurchaseRecordDO}。
- * {@code @TableName} 不写显式表名, 中台 {@code DynamicTableNameInnerInterceptor} 按类名去
- * {@code DO} 后缀推表名({@code CoursePurchaseRecordDO} → {@code course_purchase_record});
- * 主键雪花与 createTime/updateTime/delFlag/executor 由 {@code BaseDO} 承接,
- * 源手写 id/isDeleted/createBy/updateBy 去除。价格单位分。</p>
+ * <p>价格单位分。</p>
  *
  * @author KC
  */

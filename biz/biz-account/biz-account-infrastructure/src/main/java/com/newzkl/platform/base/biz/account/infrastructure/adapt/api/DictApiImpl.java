@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@Component("accountDictApiDefaultImpl")
-public class DictApiDefaultImpl implements DictApi {
+@Component("accountDictApiImpl")
+public class DictApiImpl implements DictApi {
 
     @Override
     public String get(Long code) {

@@ -13,13 +13,6 @@ import java.time.LocalDateTime;
 /**
  * 营销任务(task_info)持久化对象
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.TaskInfoDO}（表 {@code task_info}）。</p>
- *
- * <p>迁移说明：中台 {@code DynamicTableNameInnerInterceptor} 按类名去 {@code DO} 后缀推表名，
- * {@code TaskInfoDO} → {@code task_info}，故不写显式表名；旧 {@code @TableField} 逐字段声明
- * 由 MyBatis-Plus 下划线策略替代；旧 {@code is_deleted} 逻辑删除由 {@code BaseDO} 的
- * {@code delFlag} 统一承接。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

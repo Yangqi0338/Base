@@ -11,10 +11,6 @@ import java.time.LocalDateTime;
 /**
  * 课程章节数据对象
  *
- * <p>迁移自 {@code com.zkl.scm.user.infrastructure.entity.CourseChapterDO}(表 {@code course_chapter})。
- * 偏离说明: 源逻辑删除列 {@code is_deleted} 由 {@link BaseDO#getDelFlag} 承担,
- * 源 {@code createBy}/{@code updateBy} 由 {@link BaseDO#getExecutor} 承担。</p>
- *
  * <p>{@code courseId} 指向 {@code course.id}(源字段注释写"课程编号", 实际类型与用法均为课程主键)。
  * 时长列单位为百分秒, 入参单位为秒, 换算在仓储实现完成。</p>
  *

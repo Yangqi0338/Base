@@ -8,10 +8,6 @@ import lombok.EqualsAndHashCode;
 /**
  * 商品-短视频数据对象
  *
- * <p>迁移偏离: new-scm 用 {@code VideoDO} 泛型基类支撑长/短视频两型,
- * 本轮仅短视频入 scope, 故字段扁平化进本类 (YAGNI)。
- * 表名旧在 mapper xml, 此处补 {@code TableName}。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

@@ -11,12 +11,6 @@ import org.dromara.autotable.annotation.Index;
 /**
  * 营销任务类型(task_config)持久化对象
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.TaskConfigDO}（表 {@code task_config}）。</p>
- *
- * <p>迁移说明：中台 {@code DynamicTableNameInnerInterceptor} 按类名去 {@code DO} 后缀推表名，
- * {@code TaskConfigDO} → {@code task_config}，故不写显式表名；旧 {@code @TableField} 逐字段声明
- * 由 MyBatis-Plus 下划线策略替代。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

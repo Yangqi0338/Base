@@ -10,9 +10,6 @@ import org.dromara.autotable.annotation.Index;
 /**
  * 用户任务(user_task)持久化对象
  *
- * <p>迁移说明：源 scm-user 被 import 但无实体文件，据 UserTaskRes 字段补建以保编译。
- * TODO[future-common] 待确认真实表结构后校准字段。</p>
- *
  * @author kc
  */
 @EqualsAndHashCode(callSuper = true)

@@ -9,9 +9,6 @@ import lombok.EqualsAndHashCode;
 /**
  * 商品-套餐数据对象
  *
- * <p>迁移说明: 仅保留业务列; 旧表的 create_id/create_name 由 {@code BaseDO.executor}
- * (JSON 列) 接管, create_time/update_time 由 {@code BaseDO} 自动填充。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

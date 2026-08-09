@@ -15,11 +15,6 @@ import java.util.List;
 /**
  * 文章数据实体
  *
- * <p>迁移自旧 {@code com.zkl.scm.admin.infrastructure.entity.ArticleDO}。</p>
- *
- * <p><b>不继承 </b>{@code BaseDO}: 旧 {@code article} 表列由旧 DO 逐字声明,
- * 无 {@code update_time}/{@code del_flag} 等基类列, 继承会令自动填充拼入不存在的列。</p>
- *
  * @author KC
  */
 @Data
