@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
+import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 
 import cn.hutool.core.collection.CollUtil;
@@ -26,8 +27,8 @@ import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountInfo;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
+import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
     private final AccountPurseAlterRecordDAO accountPurseAlterRecordDAO;
 
-    private final AccountApi accountFacade;
+    private final AccountApi accountApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,8 +76,8 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
         AccountPurseDO entity = accountPurseDAO.selectOne(queryWrapper);
 
         AccountPurseVO accountPurseVO = TransferUtils.transfer(entity, AccountPurseVO::new);
-        AccountInfo account = accountFacade.account(
-                CommonEnum.Client.getByCode(entity.getAccountType().getRole().getClient().getCode()),
+        AccountGroupVO account = accountApi.account(
+                entity.getAccountType().getRole().getClient(),
                 SecurityUtils.getAccountId());
         if (ObjectUtil.isNotNull(account)) {
             accountPurseVO.setHeadImg(account.getHead());

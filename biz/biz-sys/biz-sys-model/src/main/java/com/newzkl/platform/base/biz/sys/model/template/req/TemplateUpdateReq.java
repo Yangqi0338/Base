@@ -66,12 +66,16 @@ public class TemplateUpdateReq implements Serializable {
     private String responsiblePerson;
 
     /**
-     * 状态: 0-停用, 1-启用 (可选)
+     * 状态 (可选)
+     *
+     * @ext 取值: 0-停用, 1-启用
      */
     private Integer status;
 
     /**
-     * 是否默认模板: 0-否, 1-是 (可选)
+     * 是否默认模板 (可选)
+     *
+     * @ext 取值: 0-否, 1-是
      */
     private Integer isDefault;
 }

@@ -2,9 +2,12 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -20,8 +23,12 @@ import java.util.List;
  * @date 2023/5/417:37
  */
 @Data
+@TableName(autoResultMap = true)
 public class RefundDO extends BaseDO {
 
+    /**
+     * 交易单ID
+     */
     private Long orderId;
     /**
      * 外部售后单号
@@ -30,13 +37,13 @@ public class RefundDO extends BaseDO {
     /**
      * 申请人角色
      */
-    private Long createRole;
+    private RoleEnum.CompanyRole createRole;
     /**
-     * 订单类型 : 0 渠道商选品下单, 1 c端铺货下单
+     * 订单类型
      */
-    private Integer orderType;
+    private OrderEnum.OrderType orderType;
     /**
-     * 渠道类型 0 供货商品 1 自营商品
+     * 渠道类型
      */
     private SpuEnum.ChannelType spuChannelType;
     /**
@@ -48,21 +55,32 @@ public class RefundDO extends BaseDO {
      */
     private Long memberId;
     /**
-     * 商户ID
+     * SPU订单ID
      */
-    private Long merchantId;
     private Long spuOrderId;
     /**
-     * 渠道商ID channel_id
+     * 渠道商ID
      */
     private Long channelId;
     /**
-     * 供应商ID supplier_id
+     * 供应商ID
      */
     private Long supplierId;
+    /**
+     * 售后状态
+     */
     private RefundEnum.State refundState;
-     private RefundEnum.RefundType refundType;
+    /**
+     * 售后类型
+     */
+    private RefundEnum.RefundType refundType;
+    /**
+     * 运费金额
+     */
     private Money freightAmount;
+    /**
+     * 退款金额
+     */
     private Money refundAmount;
     /**
      * 货款金额
@@ -80,15 +98,47 @@ public class RefundDO extends BaseDO {
      * 服务费
      */
     private Money serviceAmount;
+    /**
+     * 售后原因
+     */
     private String reason;
+    /**
+     * 备注
+     */
     private String remark;
+    /**
+     * 凭证图片
+     */
     private String images;
+    /**
+     * 联系电话
+     */
     private String phone;
+    /**
+     * 物流公司名称
+     */
     private String freightCompanyName;
+    /**
+     * 物流单号
+     */
     private String freightNo;
+    /**
+     * 收货状态
+     * @ext 源列 take_delivery_state, 取值 0/1
+     */
     private Integer takeDeliveryState;
+    /**
+     * 退款支付状态
+     * @ext 源列 pay_state, 取值 0/1
+     */
     private Integer payState;
+    /**
+     * 审核时间
+     */
     private LocalDateTime auditTime;
+    /**
+     * 退款完成时间
+     */
     private LocalDateTime refundTime;
     /**
      * 状态变化时间
@@ -108,7 +158,8 @@ public class RefundDO extends BaseDO {
      */
     private OrderEnum.State fromOrderState;
     /**
-     * 售后明细 格式: List<RefundItemVO>
+     * 售后明细
+     * @ext JSON 结构 List&lt;RefundItemVO&gt;
      */
     @JsonSerializable
     private List<RefundItemVO> item;
@@ -117,10 +168,14 @@ public class RefundDO extends BaseDO {
      */
     private String refuseReason;
     /**
-     * 外部售后地址 ApiRefundFreightAddressVO.class
+     * 外部售后地址
+     * @ext JSON 结构 ApiRefundFreightAddressVO
      */
     private String outRefundAddress;
 
+    /**
+     * 运费扩展信息
+     */
     @JsonSerializable
     private FreightExt freightExt;
 }

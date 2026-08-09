@@ -12,5 +12,8 @@ import java.util.List;
 @Data
 public class RefundItemQuery extends PageQuery {
 
+    /**
+     * 售后单ID
+     */
     private Long refundId;
 }

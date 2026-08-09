@@ -3,55 +3,45 @@ package com.newzkl.platform.base.biz.store.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
 /**
- * 门店客户表实体类
+ * 门店客户表
  */
 @Data
-@TableName("store_account")
-public class StoreAccountDO {
-
-    /**
-     * 主键
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+@TableName
+public class StoreAccountDO extends BaseDO {
 
     /**
      * 门店id
      */
+    @Index
     private Long storeId;
     /**
      * 客户id
      */
+    @Index
     private Long accountId;
 
     /**
      * 渠道商ID
      */
+    @Index
     private Long channelId;
 
     /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 统计：支付笔数
+     * 支付笔数
      */
     private Integer countPayNumber;
 
     /**
-     * 支付金额 (Money, 落库 BIGINT 分)
+     * 支付金额
      */
     private Money countPayAmount;
 
@@ -71,7 +61,7 @@ public class StoreAccountDO {
     private LocalDateTime lastPayTime;
 
     /**
-     * 最后支付金额 (Money, 落库 BIGINT 分)
+     * 最后支付金额
      */
     private Money lastPayAmount;
 
@@ -83,6 +73,6 @@ public class StoreAccountDO {
     /**
      * 是否默认：1 是
      */
-    private Integer defult;
+    private CommonEnum.YesOrNo defult;
 
 }

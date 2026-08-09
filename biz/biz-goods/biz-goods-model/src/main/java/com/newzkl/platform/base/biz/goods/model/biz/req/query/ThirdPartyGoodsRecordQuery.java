@@ -12,11 +12,23 @@ import lombok.Data;
 @Builder
 public class ThirdPartyGoodsRecordQuery {
 
+    /**
+     * 外部SPU ID
+     */
     private String outSpuId;
 
+    /**
+     * 接口名称
+     */
     private String interfaceName;
 
+    /**
+     * 平台类型
+     */
     private PlatformTypeEnum platformType;
 
+    /**
+     * 请求状态
+     */
     private CommonEnum.RequestStatusEnum requestStatus;
 }

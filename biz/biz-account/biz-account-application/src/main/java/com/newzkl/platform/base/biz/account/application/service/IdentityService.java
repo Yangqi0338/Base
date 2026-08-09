@@ -21,12 +21,12 @@ public interface IdentityService {
      */
     void updateAuditState(Long accountId, RoleEnum.CompanyRole role);
 
-    /**
-     * 提交保证金缴纳流水
-     *
-     * @param promiseFlowVO
-     */
-    Long submitPromiseFlow(PromiseFlowVO promiseFlowVO);
+//    /**
+//     * 提交保证金缴纳流水
+//     *
+//     * @param promiseFlowVO
+//     */
+//    Long submitPromiseFlow(PromiseFlowVO promiseFlowVO);
 
     /**
      * 服务费修改

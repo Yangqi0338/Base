@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.pack.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -53,6 +55,8 @@ public enum PackOrderStateEnum {
     /**
      * 状态编码
      */
+    @EnumValue
+    @JsonValue
     private final Integer code;
 
     /**

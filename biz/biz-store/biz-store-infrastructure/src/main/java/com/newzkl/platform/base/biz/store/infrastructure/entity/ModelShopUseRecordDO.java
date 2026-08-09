@@ -3,36 +3,29 @@ package com.newzkl.platform.base.biz.store.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
 /**
- * 样板店使用记录实体类
- * 对应数据库表：model_shop_use_record
+ * 样板店使用记录
+ * @ext DB 表 model_shop_use_record
  */
 @Data
-@TableName("model_shop_use_record")
-public class ModelShopUseRecordDO {
-    
-    /**
-     * 主键
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+@TableName
+public class ModelShopUseRecordDO extends BaseDO {
     
     /**
      * 门店id
      */
+    @Index
     private Long storeId;
 
     /**
      * 样板店ID
      */
+    @Index
     private Long modelShopId;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
 }

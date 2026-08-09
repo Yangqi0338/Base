@@ -9,7 +9,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreCategoryRepository;
 

@@ -43,6 +43,11 @@ public class DealerQuery extends PageQuery {
      */
     private Integer stateOver;
 
+    /**
+     * 按ID构造
+     *
+     * @param id 交易师ID
+     */
     public DealerQuery(Long id) {
         this.id = id;
     }

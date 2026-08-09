@@ -24,7 +24,8 @@ public class LevelReq extends BaseReq {
     private Integer type;
 
     /**
-     * 是否开启: 0 否 1 是
+     * 是否开启
+     * @ext 0 否 1 是; 无对应枚举, 保留 Integer
      */
     private Integer enable;
 

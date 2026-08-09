@@ -46,7 +46,7 @@ public class AlterAccountContributeDataReq implements Serializable {
     private Money alterValue;
 
     /**
-     * 1：个人消费  2：分润  3：服务费
+     * 贡献类型
      */
     private EarningsEnum.ContributeType alterType;
 

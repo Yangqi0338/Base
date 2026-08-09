@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,13 +13,8 @@ import java.util.Date;
  * @author niu
  */
 @Data
-@TableName("activity")
-public class ActivityDO implements Serializable {
-    /**
-     * id
-     */
-    private Long id;
-
+@TableName
+public class ActivityDO extends BaseDO {
     /**
      * 活动id
      */
@@ -30,7 +26,8 @@ public class ActivityDO implements Serializable {
     private Long channelId;
 
     /**
-     * 客户端类型 1：平台  2：渠道商
+     * 客户端类型
+     * @ext 1 平台, 2 渠道商
      */
     private Integer clientType;
 
@@ -50,7 +47,8 @@ public class ActivityDO implements Serializable {
     private Long strategyId;
 
     /**
-     * 门槛类型 0：贡献值  1：会员等级  2：会员卡等级
+     * 门槛类型
+     * @ext 0 贡献值, 1 会员等级, 2 会员卡等级
      */
     private Integer conditionType;
 
@@ -60,7 +58,8 @@ public class ActivityDO implements Serializable {
     private Integer conditionValue;
 
     /**
-     * 复类型 0：单次  1：周期
+     * 复类型
+     * @ext 0 单次, 1 周期
      */
     private Integer repeatType;
 
@@ -70,7 +69,8 @@ public class ActivityDO implements Serializable {
     private Long repeatValue;
 
     /**
-     * 状态 0：关闭 1：开启
+     * 状态
+     * @ext 0 关闭, 1 开启
      */
     private String state;
 
@@ -79,20 +79,4 @@ public class ActivityDO implements Serializable {
      */
     private Long otherConfig;
 
-    /**
-     * 创建人
-     */
-    private Long creator;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
 }

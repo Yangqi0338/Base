@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.task.config.query.TaskConfigQuery;
 import com.newzkl.platform.base.biz.user.model.task.config.res.TaskConfigRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 /**
  * 营销任务类型仓储接口
@@ -56,7 +57,7 @@ public interface TaskConfigRepository {
      * @param isEnabled 目标状态（1-启用，0-禁用）
      * @return 更新后的任务类型
      */
-    TaskConfigRes updateEnableStatus(Long id, Integer isEnabled);
+    TaskConfigRes updateEnableStatus(Long id, CommonEnum.YesOrNo isEnabled);
 
     /**
      * 按类型+分组查询（业务唯一键）

@@ -3,10 +3,16 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
+import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -20,31 +26,52 @@ import java.time.LocalDateTime;
 @TableName
 public class SkuOrderDO extends BaseDO {
 
+    /**
+     * 交易单ID
+     */
     @Index
     private Long orderId;
+    /**
+     * SPU订单ID
+     */
     @Index
     private Long spuOrderId;
+    /**
+     * 选品金额
+     */
     private Money goodsAmount;
     /**
      * 铺货金额
      */
     private Money storeAmount;
+    /**
+     * 运费金额
+     */
     private Money freightAmount;
+    /**
+     * 优惠金额
+     */
     private Money discountAmount;
+    /**
+     * 总金额
+     */
     private Money totalAmount;
     /**
-     * 货款金额 supplier_amount
+     * 货款金额
      */
     private Money supplierAmount;
-    @Index
-    private Integer orderState;
     /**
-     * 交易师ID dealer_id
+     * 订单状态
+     */
+    @Index
+    private OrderEnum.State orderState;
+    /**
+     * 交易师ID
      */
     @Index
     private Long dealerId;
     /**
-     * 运营商ID operator_id
+     * 运营商ID
      */
     @Index
     private Long operatorId;
@@ -54,11 +81,13 @@ public class SkuOrderDO extends BaseDO {
     @Index
     private Long supplierId;
     /**
-     * 结算配置 settlement_config_v_o
+     * 结算配置
+     * @ext 源列 settlement_config_v_o, 多来源 JSON 故用 String
      */
-    private String settlementConfigVO;
+    @JsonSerializable
+    private SettlementConfigVO settlementConfigVO;
     /**
-     * skuID
+     * spuID
      */
     @Index
     private Long spuId;
@@ -86,6 +115,7 @@ public class SkuOrderDO extends BaseDO {
     /**
      * sku销售属性
      */
+    @JsonSerializable
     private String skuSaleAttribute;
     /**
      * sku名称
@@ -100,7 +130,7 @@ public class SkuOrderDO extends BaseDO {
      */
     private Double skuVolume;
     /**
-     * sku供货价 sku_supplier_price
+     * sku供货价
      */
     private Money skuSupplierPrice;
     /**
@@ -124,7 +154,8 @@ public class SkuOrderDO extends BaseDO {
      */
     private Integer refundedCount;
     /**
-     * 订单状态流转日志,逗号隔开
+     * 订单状态流转日志
+     * @ext 逗号隔开
      */
     private String orderStateLog;
     /**
@@ -138,11 +169,11 @@ public class SkuOrderDO extends BaseDO {
     /**
      * 结算节点
      */
-    private Integer settleOrderType;
+    private SettleType settleOrderType;
     /**
      * 结算发送状态
      */
-    private Integer settleSendState;
+    private CommonEnum.YesOrNo settleSendState;
     /**
      * 总服务费
      */

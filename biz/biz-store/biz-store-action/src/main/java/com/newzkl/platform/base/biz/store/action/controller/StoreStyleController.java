@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreStyleDomain;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreStyleCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreStylePageQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreStyleQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreStyleUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleResponse;
@@ -44,7 +44,7 @@ public class StoreStyleController {
      */
     @PostMapping("/storeStylePage")
     public PlatformResult<Page<StoreStyleResponse>> storeStylePage(
-            @Validated @RequestBody StoreStylePageQuery req) {
+            @Validated @RequestBody StoreStyleQuery req) {
         return PlatformResult.success(storeStyleDomain.storeStylePage(req));
     }
 

@@ -18,7 +18,9 @@ public class GoodsStateAlterReq {
     private Long goodsId;
 
     /**
-     * 更新商品状态 0：下架 1：上架
+     * 更新商品状态
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer state;
 

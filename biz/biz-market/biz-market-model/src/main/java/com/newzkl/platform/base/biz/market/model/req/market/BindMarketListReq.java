@@ -16,7 +16,9 @@ public class BindMarketListReq {
     private Long clientId;
 
     /**
-     * 绑定类型 1：运营商  2：交易师  3:渠道商
+     * 绑定类型
+     *
+     * @ext 1：运营商 2：交易师 3：渠道商
      */
     private Integer bindType;
 
@@ -32,12 +34,16 @@ public class BindMarketListReq {
     private Long categoryId;
 
     /**
-     * 时间排序 1：降序  2：升序
+     * 时间排序
+     *
+     * @ext 1：降序 2：升序
      */
     private Integer timeSort;
 
     /**
-     * 数量排序 1：降序  2：升序
+     * 数量排序
+     *
+     * @ext 1：降序 2：升序
      */
     private Integer numSort;
 

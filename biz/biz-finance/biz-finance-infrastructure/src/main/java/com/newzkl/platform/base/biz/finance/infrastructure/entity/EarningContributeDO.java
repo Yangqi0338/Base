@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
@@ -47,16 +48,16 @@ public class EarningContributeDO extends BaseDO {
     /**
      * 总消费
      */
-    private Integer totalConsume;
+    private Money totalConsume;
 
     /**
      * 分润贡献
      */
-    private Integer earningContribute;
+    private Money earningContribute;
 
     /**
      * 服务费贡献
      */
-    private Integer serviceChangeContribute;
+    private Money serviceChangeContribute;
 
 }

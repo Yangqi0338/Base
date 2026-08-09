@@ -13,16 +13,19 @@ import java.util.List;
 @Data
 public class OrderQuery extends BizPageQuery {
     /**
-    * 渠道类型 (0:API) 查询
-    */
+     * 渠道类型查询
+     * @ext 0 API; 无对应枚举, 保留 Integer
+     */
     private Integer channelType;
     /**
-    * 订单类型 (0:渠道商订单 1:c端订单) 查询
-    */
+     * 订单类型查询
+     * @ext 前端传数字 code, Jackson 经 OrderEnum.OrderType 的 @JsonValue 反序列化为枚举
+     */
     private OrderEnum.OrderType orderType;
     /**
-    * 商品类型 (0:实物 1:课程 2:服务) 查询
-    */
+     * 商品类型查询
+     * @ext 0 实物 1 课程 2 服务; 无对应枚举, 保留 Integer
+     */
     private Integer goodsType;
     /**
      * 运营商ID

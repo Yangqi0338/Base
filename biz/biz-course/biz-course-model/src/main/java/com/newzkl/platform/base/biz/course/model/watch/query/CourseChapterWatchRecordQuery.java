@@ -32,7 +32,9 @@ public class CourseChapterWatchRecordQuery extends BizPageQuery {
     private Long courseChapterId;
 
     /**
-     * 是否观看过: 1-是, 0-否
+     * 是否观看过
+     *
+     * @ext 1-是, 0-否
      */
     private Integer isWatched;
 }

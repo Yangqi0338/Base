@@ -6,6 +6,8 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
 /**
 * sku
 * @author fang
@@ -35,29 +37,32 @@ public class SkuDO extends BaseDO {
 	 */
 	private Double volume;
 	/**
-	 * spuId (查询)
+	 * spuId
+	 * @ext 查询
 	 */
     @Index
 	private Long spuId;
 	/**
-	 * 市场价 (Money, 落库 BIGINT 分)
+	 * 市场价
 	 */
 	private Money marketPrice;
 	/**
-	 * 供货价 (Money, 落库 BIGINT 分)
+	 * 供货价
 	 */
 	private Money supplyPrice;
 	/**
-     * 销售价(to channel) (Money, 落库 BIGINT 分)
+     * 销售价(to channel)
      */
     private Money salePrice;
     /**
-     * 销售价(to c) (Money, 落库 BIGINT 分)
+     * 销售价(to c)
      */
     private Money unitPrice;
 	/**
-	 * 商品销售属性，json格式
+	 * 商品销售属性
+	 * @ext json格式
 	 */
+    @JsonSerializable
 	private String saleAttribute;
 	/**
 	 * 外部SkuId
@@ -74,5 +79,6 @@ public class SkuDO extends BaseDO {
     /**
      * 追加: 扩展字段
      */
+    @JsonSerializable
     private String expand;
 }

@@ -207,7 +207,7 @@
     <!-- 按门店ID列表汇总 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectSummaryByStoreIdList;
          源 resultType 为 StoreTargetInteractionSummaryEntity, Base 对应 StoreTargetInteractionSummaryObj) -->
     <select id="selectSummaryByStoreIdList"
-            resultType="com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj">
+            resultType="com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionSummaryObj">
         SELECT
         SUM(view_count) AS totalViewCount,
         SUM(like_count) AS totalLikeCount,
@@ -226,7 +226,7 @@
 
     <!-- 按发布者汇总 (迁移自 new-scm StoreTargetInteractionStatDAO.xml 的 selectSummaryByPublisherId) -->
     <select id="selectSummaryByPublisherId"
-            resultType="com.newzkl.platform.base.biz.goods.rpc.model.interaction.StoreTargetInteractionSummaryObj">
+            resultType="com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionSummaryObj">
         SELECT
         SUM(view_count) AS totalViewCount,
         SUM(like_count) AS totalLikeCount,

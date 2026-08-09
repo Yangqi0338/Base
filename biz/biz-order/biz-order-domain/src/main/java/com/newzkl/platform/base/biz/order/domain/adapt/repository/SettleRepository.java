@@ -105,6 +105,7 @@ public interface SettleRepository {
 
     Integer closeSettleOrder(Long skuOrderId, Long refundId);
 
+    // TODO 上层没了检查一下
     void editSettleRecord(SettleRecordEditReq settleRecordEditReq);
 
     List<SettleOrderWaitVO> settleTypeList(SettleTypeListReq settleTypeList);

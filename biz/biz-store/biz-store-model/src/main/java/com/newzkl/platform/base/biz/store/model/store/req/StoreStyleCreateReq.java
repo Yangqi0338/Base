@@ -37,9 +37,8 @@ public class StoreStyleCreateReq implements Serializable {
     private String packageDescribe;
 
     /**
-     * 页面类型：HOME_PAGE首页
-     *
-     * @see StoreStyleEnum.PageType
+     * 页面类型
+     * @ext 取值范围: HOME_PAGE=首页, 见 {@link StoreStyleEnum.PageType}
      */
     @NotNull
     private String pageType;
@@ -51,6 +50,7 @@ public class StoreStyleCreateReq implements Serializable {
 
     /**
      * 商品id集合
+     * @ext 逗号隔开存储
      */
     private String goodsIdListStr;
 

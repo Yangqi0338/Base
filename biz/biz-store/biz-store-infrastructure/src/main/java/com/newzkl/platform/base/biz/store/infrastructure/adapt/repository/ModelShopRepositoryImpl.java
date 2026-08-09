@@ -3,11 +3,13 @@ package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaUpdateWrapper;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShop;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
 import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
-import com.newzkl.platform.base.biz.store.model.template.req.QueryModelShopReq;
+import com.newzkl.platform.base.biz.store.model.template.req.ModelShopQuery;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopRes;
 import com.newzkl.platform.base.biz.store.domain.template.repository.ModelShopRepository;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.ModelShopDAO;
@@ -29,7 +31,7 @@ import java.util.List;
  */
 @Slf4j
 @Repository
-public class ModelShopRepositoryImpl implements ModelShopRepository {
+public class ModelShopRepositoryImpl extends RepositorySupport implements ModelShopRepository {
 
     @Autowired
     private ModelShopDAO modelShopDAO;
@@ -38,19 +40,16 @@ public class ModelShopRepositoryImpl implements ModelShopRepository {
 
 
     @Override
-    public void create(ModelShop modelShop) {
+    public void create(ModelShopDTO modelShop) {
         modelShopDAO.insert(TransferUtils.transfer(modelShop, ModelShopDO::new));
     }
 
     @Override
-    public void update(ModelShop modelShop) {
-        BaseLambdaQueryWrapper<ModelShopDO> wrapper = new BaseLambdaQueryWrapper<ModelShopDO>();
-        if (modelShop.getId() != null) {
-            wrapper.eq(ModelShopDO::getId, modelShop.getId());
-        } else {
-            wrapper.eq(ModelShopDO::getStyleCode, modelShop.getStyleCode());
-        }
-        modelShopDAO.update(TransferUtils.transfer(modelShop, ModelShopDO::new), wrapper);
+    public void update(ModelShopDTO modelShop) {
+        ModelShopQuery query = new ModelShopQuery();
+        query.setId(modelShop.getId());
+        query.setStyleCode(modelShop.getStyleCode());
+        modelShopDAO.update(TransferUtils.transfer(modelShop, ModelShopDO::new), modelShopDAO.getLw(query));
     }
 
     @Override
@@ -65,29 +64,28 @@ public class ModelShopRepositoryImpl implements ModelShopRepository {
     }
 
     @Override
-    public Page<ModelShopRes> queryModelShopPage(QueryModelShopReq req) {
-        BaseLambdaQueryWrapper<ModelShopDO> wrapper = modelShopDAO.buildQueryWrapper(TransferUtils.transfer(req, ModelShopDO::new));
-        wrapper.between(req.getCreateTimeL() != null && req.getCreateTimeR() != null, ModelShopDO::getCreateTime, req.getCreateTimeL(), req.getCreateTimeR());
-        wrapper.orderByDesc(ModelShopDO::getId);
-        return TransferUtils.transferPage(modelShopDAO.selectPage(com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport.page(req), wrapper), ModelShopRes::new);
+    public Page<ModelShopRes> queryModelShopPage(ModelShopQuery query) {
+        BaseLambdaQueryWrapper<ModelShopDO> wrapper = modelShopDAO.getLw(query);
+
+        return TransferUtils.transferPage(modelShopDAO.selectPage(com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport.page(query), wrapper), ModelShopRes::new);
     }
 
     @Override
-    public ModelShop queryByModelShop(ModelShop modelShop) {
-        return TransferUtils.transfer(modelShopDAO.selectOne(modelShopDAO.buildQueryWrapper(TransferUtils.transfer(modelShop, ModelShopDO::new))), ModelShop::new);
+    public ModelShopDTO queryByModelShop(ModelShopQuery query) {
+        return TransferUtils.transfer(modelShopDAO.selectOne(modelShopDAO.getLw(query)), ModelShopDTO::new);
     }
 
     @Override
-    public List<ModelShop> queryByModelShopList(ModelShop modelShop) {
-        return TransferUtils.transfers(modelShopDAO.selectList(modelShopDAO.buildQueryWrapper(TransferUtils.transfer(modelShop, ModelShopDO::new))), ModelShop::new);
+    public List<ModelShopDTO> queryByModelShopList(ModelShopQuery query) {
+        return TransferUtils.transfers(modelShopDAO.selectList(modelShopDAO.getLw(query)), ModelShopDTO::new);
     }
 
     @Override
-    public ModelShop queryByStyleCode(String styleCode) {
+    public ModelShopDTO queryByStyleCode(String styleCode) {
         return TransferUtils.transfer(
                 modelShopDAO.selectOne(new BaseLambdaQueryWrapper<ModelShopDO>()
                         .eq(ModelShopDO::getStyleCode, styleCode)),
-                ModelShop::new
+                ModelShopDTO::new
         );
     }
 
@@ -103,7 +101,7 @@ public class ModelShopRepositoryImpl implements ModelShopRepository {
 
     @Override
     public void updateModelShopData(ModelShopDataDTO dto) {
-        LambdaUpdateWrapper<ModelShopDO> wrapper = new LambdaUpdateWrapper<>();
+        BaseLambdaUpdateWrapper<ModelShopDO> wrapper = new BaseLambdaUpdateWrapper<>();
         if (ObjectUtil.equals(ModeShopOrderType.PAY.name(), dto.getType())) {
             wrapper.setSql("total_pay_amount = total_pay_amount + " + dto.getAmount())
                     .setSql("total_pay_num = total_pay_num + 1");
@@ -116,7 +114,7 @@ public class ModelShopRepositoryImpl implements ModelShopRepository {
 
     @Override
     public void deleteModelShop(Long id) {
-        modelShopDAO.update(new LambdaUpdateWrapper<ModelShopDO>().eq(ModelShopDO::getId, id).set(ModelShopDO::getIsDelete, 1));
+        modelShopDAO.deleteById(id);
     }
 
     @Override

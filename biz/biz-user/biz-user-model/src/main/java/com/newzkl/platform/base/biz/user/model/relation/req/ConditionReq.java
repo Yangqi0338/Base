@@ -28,8 +28,7 @@ public class ConditionReq extends BaseReq {
 
     /**
      * 订单流水
-     * 0：直属下级总流水
-     * 1：非直属下级总流水
+     * @ext key 0：直属下级总流水；1：非直属下级总流水
      */
     private Map<Integer, Integer> amountScopeMap;
 

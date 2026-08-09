@@ -25,7 +25,8 @@ public class PackGoodsQuery extends PageQuery {
     private Long id;
 
     /**
-     * 类型（角色 ID）
+     * 类型
+     * @ext 角色 ID
      */
     private Integer type;
 
@@ -50,12 +51,14 @@ public class PackGoodsQuery extends PageQuery {
     private List<Long> idList;
 
     /**
-     * 状态 0 下架 1 上架
+     * 状态
+     * @ext 0 下架 1 上架
      */
     private Integer state;
 
     /**
-     * 是否初始化查询（true 跳过角色分流）
+     * 是否初始化查询
+     * @ext true 跳过角色分流
      */
     private Boolean isInit;
 

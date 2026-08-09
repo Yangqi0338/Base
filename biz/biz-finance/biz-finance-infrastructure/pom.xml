@@ -26,6 +26,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-store-facade</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
+        </dependency>
         <!-- 跨域出站: DictApi 经 IDictFacade 调 biz-sys 字典能力 (只依赖 facade 契约) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

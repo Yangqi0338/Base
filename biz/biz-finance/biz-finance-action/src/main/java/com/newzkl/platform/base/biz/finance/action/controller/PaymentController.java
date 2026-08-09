@@ -45,7 +45,6 @@ public class PaymentController {
      */
     @PostMapping("/paymentList")
     public PlatformResult<Page<PaymentVO>> paymentList(@RequestBody PaymentQuery query) {
-        query.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(orderPayDomain.tradeOrderQuery(query));
     }
 }

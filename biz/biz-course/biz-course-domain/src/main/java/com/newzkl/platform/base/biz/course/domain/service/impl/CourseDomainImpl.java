@@ -16,6 +16,7 @@ import com.newzkl.platform.base.biz.course.model.course.req.CourseReq;
 import com.newzkl.platform.base.biz.course.model.course.res.AppCourseRes;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseWatchStatisticRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -91,13 +92,13 @@ public class CourseDomainImpl implements CourseDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean enable(Long id) {
-        return updateEnabled(id, 1);
+        return updateEnabled(id, CommonEnum.YesOrNo.YES);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean disable(Long id) {
-        return updateEnabled(id, 0);
+        return updateEnabled(id, CommonEnum.YesOrNo.NO);
     }
 
     @Override
@@ -229,7 +230,7 @@ public class CourseDomainImpl implements CourseDomain {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否成功
      */
-    private boolean updateEnabled(Long id, Integer isEnabled) {
+    private boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         CourseRes exist = courseRepository.detail(id);
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程");
         return courseRepository.updateEnabled(id, isEnabled);

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.task.config.query.TaskConfigQuery;
 import com.newzkl.platform.base.biz.user.model.task.config.req.TaskConfigOperateReq;
 import com.newzkl.platform.base.biz.user.model.task.config.res.TaskConfigRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 /**
  * 营销任务类型领域服务
@@ -50,7 +51,7 @@ public interface TaskConfigDomain {
      * @param isEnabled 目标状态（1-启用，0-禁用）
      * @return 操作后的任务类型
      */
-    TaskConfigRes toggleEnable(Long id, Integer isEnabled);
+    TaskConfigRes toggleEnable(Long id, CommonEnum.YesOrNo isEnabled);
 
     /**
      * 按ID查询任务类型

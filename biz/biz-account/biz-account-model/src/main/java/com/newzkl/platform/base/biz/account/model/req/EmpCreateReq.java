@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 员工创建请求参数
+ */
 @Data
 public class EmpCreateReq {
     /** 员工ID */

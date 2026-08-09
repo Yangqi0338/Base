@@ -34,11 +34,15 @@ public class StoreDistributionDO extends BaseDO {
     @Index
     private Long marketId;
     /**
-     * 数据类型 0：商品  1：sku
+     * 数据类型
+     *
+     * @ext 0：商品  1：sku
      */
     private Integer dataType;
     /**
-     * 销售价 (Money, 落库 BIGINT 分)
+     * 销售价
+     *
+     * @ext Money，落库 BIGINT 分
      */
     private Money sellPrice;
     /**
@@ -61,11 +65,15 @@ public class StoreDistributionDO extends BaseDO {
     @Index
     private Long channelId;
     /**
-     * 零售价 (Money, 落库 BIGINT 分)
+     * 零售价
+     *
+     * @ext Money，落库 BIGINT 分
      */
     private Money unitPrice;
     /**
-     * 供货价 (Money, 落库 BIGINT 分)
+     * 供货价
+     *
+     * @ext Money，落库 BIGINT 分
      */
     private Money supplierPrice;
     /**
@@ -73,7 +81,9 @@ public class StoreDistributionDO extends BaseDO {
      */
     private String goodsInfo;
     /**
-     * 是否需要更新：0不需要，1需要
+     * 是否需要更新
+     *
+     * @ext 0不需要，1需要
      */
     private Integer needUpdate;
     /**

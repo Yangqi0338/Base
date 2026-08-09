@@ -8,14 +8,14 @@ import lombok.Data;
  * 绑卡请求
  *
  * @author niu
- * @description:
  * @date 2025-08-25 17:05:40
  */
 @Data
 public class BindCardReq {
 
     /**
-     * 卡类型 0：对公，1：对私法人，4：对公非同名；
+     * 卡类型
+     * @ext 0 对公 1 对私法人 4 对公非同名; 无对应枚举, 保留 String
      */
     @NotBlank(message = "卡类型不能为空")
     private String cardType;
@@ -72,17 +72,20 @@ public class BindCardReq {
     private String certNo;
 
     /**
-     * 证件有效期类型 1：长期有效；0：非长期有效；
+     * 证件有效期类型
+     * @ext 1 长期有效 0 非长期有效; 无对应枚举, 保留 String
      */
     private String certValidType;
 
     /**
-     * 证件有效期开始日期 日期格式：yyyyMMdd
+     * 证件有效期开始日期
+     * @ext 日期格式 yyyyMMdd
      */
     private String certBeginDate;
 
     /**
-     * 证件有效期截止日期 日期格式：yyyyMMdd
+     * 证件有效期截止日期
+     * @ext 日期格式 yyyyMMdd
      */
     private String certEndDate;
 

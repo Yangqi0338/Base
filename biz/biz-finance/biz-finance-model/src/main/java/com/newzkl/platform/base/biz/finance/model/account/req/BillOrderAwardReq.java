@@ -8,6 +8,9 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
+/**
+ * 订单奖励账单请求
+ */
 @Data
 public class BillOrderAwardReq extends BaseRes {
 

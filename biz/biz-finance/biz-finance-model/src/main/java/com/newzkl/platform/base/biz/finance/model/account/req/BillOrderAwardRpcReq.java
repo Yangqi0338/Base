@@ -8,6 +8,9 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+/**
+ * 订单奖励账单 RPC 请求
+ */
 @Data
 public class BillOrderAwardRpcReq extends BaseRes {
 

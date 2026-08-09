@@ -35,13 +35,8 @@
             <artifactId>core-mybatis-infrastructure</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.dromara.autotable</groupId>
-            <artifactId>auto-table-strategy-mysql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-db-migrate-infrastructure</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.dubbo</groupId>

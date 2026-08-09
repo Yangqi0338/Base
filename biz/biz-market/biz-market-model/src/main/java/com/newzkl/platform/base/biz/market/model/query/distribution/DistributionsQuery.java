@@ -24,17 +24,23 @@ public class DistributionsQuery extends PageQuery {
     private Long channelId;
 
     /**
-     * 类型  0： 自营  1：供应链
+     * 类型
+     *
+     * @ext 0：自营 1：供应链
      */
     private Integer goodsType;
 
     /**
-     * 状态 0：下架  1：上架
+     * 状态
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer state;
 
     /**
-     * 状态 0：下架  1：上架
+     * 状态 (排除)
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer stateNot;
 
@@ -63,7 +69,9 @@ public class DistributionsQuery extends PageQuery {
      */
     private Long categoryId;
     /**
-     * 删除状态 1：删除
+     * 删除状态
+     *
+     * @ext 1：删除
      */
     private Integer delState;
 
@@ -88,7 +96,9 @@ public class DistributionsQuery extends PageQuery {
     private Integer supplierPriceR;
 
     /**
-     * 是否需要更新：0不需要，1需要
+     * 是否需要更新
+     *
+     * @ext 0：不需要 1：需要
      */
     private Integer needUpdate;
 

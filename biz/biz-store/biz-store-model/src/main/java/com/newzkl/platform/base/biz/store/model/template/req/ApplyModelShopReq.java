@@ -3,8 +3,9 @@ package com.newzkl.platform.base.biz.store.model.template.req;
 import lombok.Data;
 
 /**
+ * 申请样板店请求
+ *
  * @author niu
- * @description: 申请样板店req
  * @date 2024/4/7 16:14
  */
 @Data

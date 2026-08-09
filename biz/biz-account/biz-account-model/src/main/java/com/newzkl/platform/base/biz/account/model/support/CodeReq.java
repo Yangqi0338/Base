@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 发送短信验证码请求参数
+ */
 @Data
 public class CodeReq {
 

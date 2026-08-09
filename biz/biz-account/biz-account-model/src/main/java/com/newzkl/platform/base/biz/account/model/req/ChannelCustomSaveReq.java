@@ -35,7 +35,8 @@ public class ChannelCustomSaveReq implements Serializable {
      */
     private String username;
     /**
-     * 渠道商名称 (查询) channel_name
+     * 渠道商名称 (查询)
+     * @ext 来源列 channel_name
      */
     private String name;
     /**
@@ -45,7 +46,6 @@ public class ChannelCustomSaveReq implements Serializable {
 
     /**
      * 主体类型
-
      */
     private AccountEnum.BodyType bodyType;
 

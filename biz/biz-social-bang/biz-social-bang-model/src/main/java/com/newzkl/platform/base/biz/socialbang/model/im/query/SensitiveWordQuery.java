@@ -32,7 +32,8 @@ public class SensitiveWordQuery extends BizPageQuery {
     private String sensitiveWord;
 
     /**
-     * 来源类型: manual-手动添加, batch-批量导入
+     * 来源类型
+     * @ext manual-手动添加 batch-批量导入
      */
     private String sourceType;
 

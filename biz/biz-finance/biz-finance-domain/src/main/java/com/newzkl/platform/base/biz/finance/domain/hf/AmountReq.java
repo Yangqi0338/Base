@@ -18,8 +18,9 @@ import java.util.List;
 abstract class AmountReq {
 
     /**
+     * 汇付支付请求
+     *
      * @author niu
-     * @description:
      * @date 2025-08-25 17:26:49
      */
     @EqualsAndHashCode(callSuper = true)
@@ -99,8 +100,9 @@ abstract class AmountReq {
     }
 
     /**
+     * 汇付取现请求
+     *
      * @author niu
-     * @description:
      * @date 2025-08-25 17:26:49
      */
     @EqualsAndHashCode(callSuper = true)
@@ -165,8 +167,9 @@ abstract class AmountReq {
     }
 
     /**
+     * 汇付退款请求
+     *
      * @author niu
-     * @description:
      * @date 2025-08-25 17:26:49
      */
     @EqualsAndHashCode(callSuper = true)
@@ -605,8 +608,9 @@ abstract class AmountReq {
     }
 
     /**
+     * 汇付转出请求
+     *
      * @author niu
-     * @description:
      * @date 2025-08-25 17:26:49
      */
     @EqualsAndHashCode(callSuper = true)

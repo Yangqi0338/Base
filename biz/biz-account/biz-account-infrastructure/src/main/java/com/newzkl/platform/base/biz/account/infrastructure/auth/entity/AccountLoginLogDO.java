@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @Data
 public class AccountLoginLogDO extends BaseIdDO {
     /**
-     * 账号ID (查询)
+     * 账号ID
+     * @ext 查询
      */
     private Long accountId;
     /**

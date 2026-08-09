@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.finance.model.earnings.vo.TotalEarningVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,7 @@ public class EarningController {
     @PostMapping("/queryEarningRecord")
     public PlatformResult<Page<EarningRecordVO>> queryEarningRecord(@RequestBody EarningRecordQuery req) {
         if (req.getAccountId() == null) {
-            req.setAccountId(SecurityUtils.getAccountId());
+
             req.setRoleId(RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId()));
         }
         return PlatformResult.success(earningDomain.queryEarningRecord(req));
@@ -76,7 +77,7 @@ public class EarningController {
      * @return APP 分润记录分页
      */
     @PostMapping("/queryAppEarningRecord")
-    public PlatformResult<Page<AppEarningRecordRes>> queryAppEarningRecord(@RequestBody EarningRecordQuery req) {
+    public PlatformResult<Page<AppEarningRecordRes>> queryAppEarningRecord(@RequestBody @Valid EarningRecordQuery req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
         }

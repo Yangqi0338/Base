@@ -27,18 +27,21 @@ public class ActivityQueryPageReq extends BizPageQuery {
 
 
     /**
-     * 分红周期 {@link ActivityEnum.DividendCycle} WEEKLY:周结算 MONTHLY:月结算
+     * 分红周期
+     * @ext 候选枚举 {@link ActivityEnum.DividendCycle}: WEEKLY-周结算 MONTHLY-月结算
      */
     private String dividendCycle;
 
 
     /**
-     * 分红方式 {@link ActivityEnum.DividendMethod} AVERAGE:平均分红 WEIGHT: 加权分红
+     * 分红方式
+     * @ext 候选枚举 {@link ActivityEnum.DividendMethod}: AVERAGE-平均分红 WEIGHT-加权分红
      */
     private String dividendMethod;
 
     /**
-     * 状态 {@link ActivityEnum.ExecuteState} PENDING:未生效;ACTIVE:生效中;CANCELLED:已作废
+     * 状态
+     * @ext 候选枚举 {@link ActivityEnum.ExecuteState}: PENDING-未生效 ACTIVE-生效中 CANCELLED-已作废
      */
     private String state;
 

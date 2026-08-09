@@ -37,7 +37,8 @@ public class StoreStyleUpdateReq implements Serializable {
     private String packageDescribe;
 
     /**
-     * 类型：1 默认
+     * 类型
+     * @ext 取值范围: 1=默认
      */
     private Integer type;
 
@@ -48,11 +49,13 @@ public class StoreStyleUpdateReq implements Serializable {
 
     /**
      * 商品id集合
+     * @ext 逗号隔开存储
      */
     private String goodsIdListStr;
 
     /**
-     * 状态：0 禁用,1 启用
+     * 状态
+     * @ext 取值范围: 0=禁用, 1=启用
      */
     private Integer state;
 

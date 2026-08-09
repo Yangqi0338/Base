@@ -310,7 +310,7 @@ public class OrderServiceImpl implements OrderService {
             BalancePayReq balancePayReq = getBalancePayReq(order);
             BalancePayResult balancePayResult = payApi.balancePay(balancePayReq);
             if(BooleanUtil.isTrue(balancePayResult.isOperatorPayState())){
-                //orderAgg.allPaySuccess(localMessageFacade, orderRepository);
+                allPaySuccess(orderAgg);
             }else {
                 if(BooleanUtil.isTrue(balancePayResult.isPayState())) {
                     // 迁移: 原聚合根方法 orderAgg.channelPaySuccess(localMessageFacade, orderRepository) 平展到 application(去聚合根)
@@ -321,17 +321,16 @@ public class OrderServiceImpl implements OrderService {
             }
         }else {
             //支付成功
-            //orderAgg.allPaySuccess(localMessageFacade, orderRepository);
+            allPaySuccess(orderAgg);
         }
     }
-    @Override
 
+    @Override
     public void orderBalancePay(Long... idList) {
         for (Long id : idList) {
             OrderAgg orderAgg = orderDomain.orderAgg(id);
             //检查状态 TODO
 //            ScmUtil.checkInState(Collections.singletonList(OrderEnum.State.CHANNEL_WAIT_PAY), orderAgg.getOrder().getOrderState(), OrderErrorCode.STATE_ERROR);
-            //可能会发生服务费变化 MQ TODO
             recalculateServiceAmount(orderAgg);
             //扣减余额
             BalancePayReq balancePayReq = getBalancePayReq(orderAgg.getOrder());
@@ -348,7 +347,6 @@ public class OrderServiceImpl implements OrderService {
                     ThrowsException.exception(OrderErrorCode.AMOUNT_LESS);
                 }
                 if (BooleanUtil.isTrue(balancePayResult.isPayState())) {
-                    // 迁移: 原聚合根方法 orderAgg.channelPaySuccess(orderRepository) 平展到 application(去聚合根)
                     channelPaySuccess(orderAgg);
                 } else {
                     ThrowsException.exception(OrderErrorCode.AMOUNT_LESS);
@@ -433,7 +431,7 @@ public class OrderServiceImpl implements OrderService {
                 // orderRepository.outOrderSave(outOrderList);
             }
         }
-        paySuccessNotify(orderAgg);
+        localMessageApi.paySuccessNotify(orderAgg);
     }
 
     /**
@@ -458,12 +456,12 @@ public class OrderServiceImpl implements OrderService {
                 skuOrder.setOrderStateLog(OrderEnum.State.OPERATOR_WAIT_PAY.toString());
             }
         } else {
-            int count = orderRepository.batchUpdateOrderState(Arrays.asList(order.getId()), OrderEnum.State.CHANNEL_WAIT_PAY, OrderEnum.State.OPERATOR_WAIT_PAY);
+            int count = orderRepository.batchUpdateOrderState(Collections.singletonList(order.getId()), OrderEnum.State.CHANNEL_WAIT_PAY, OrderEnum.State.OPERATOR_WAIT_PAY);
             if (count < 1){
                 ThrowsException.exception(BaseErrorCode.REPEAT);
             }
-            orderRepository.batchUpdateSpuOrderStateByOrderId(Arrays.asList(order.getId()), null, OrderEnum.State.OPERATOR_WAIT_PAY, null);
-            orderRepository.batchUpdateSkuOrderStateByOrderId(Arrays.asList(order.getId()), null, OrderEnum.State.OPERATOR_WAIT_PAY);
+            orderRepository.batchUpdateSpuOrderStateByOrderId(Collections.singletonList(order.getId()), null, OrderEnum.State.OPERATOR_WAIT_PAY, null);
+            orderRepository.batchUpdateSkuOrderStateByOrderId(Collections.singletonList(order.getId()), null, OrderEnum.State.OPERATOR_WAIT_PAY);
         }
     }
 

@@ -19,11 +19,4 @@ import java.util.List;
 public interface SettleRecordDAO extends BaseMapper<SettleRecordDO> {
 
     List<SettleOrderWaitVO> settleTypeList(@Param("query") SettleTypeListReq settleTypeList);
-
-    /**
-     * 按 ID 更新结算记录标签
-     *
-     * @param settleRecordEditReq 结算记录编辑入参, id + label 非空
-     */
-    void editSettleRecord(@Param("model") SettleRecordEditReq settleRecordEditReq);
 }

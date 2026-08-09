@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.pack.res;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,17 +14,12 @@ import java.io.Serializable;
  * @author KC
  */
 @Data
-public class PackOrderPreRes implements Serializable {
-
-    /**
-     * 订单ID
-     */
-    private Long id;
+public class PackOrderPreRes extends BaseRes {
 
     /**
      * 订单金额（分）
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 订单明细 JSON（结构：List&lt;PackGoodsRes&gt;）

@@ -34,7 +34,7 @@ public class PackGoodsRepositoryImpl implements PackGoodsRepository {
     @Override
     public PackGoodsRes save(PackGoodsRes res) {
         PackGoodsDO doObj = TransferUtils.transfer(res, PackGoodsDO::new);
-        doObj.setIntro(res.getDesc());
+        doObj.setDesc(res.getDesc());
         packGoodsDAO.insert(doObj);
         return toRes(doObj);
     }
@@ -42,7 +42,7 @@ public class PackGoodsRepositoryImpl implements PackGoodsRepository {
     @Override
     public PackGoodsRes updateById(PackGoodsRes res) {
         PackGoodsDO doObj = TransferUtils.transfer(res, PackGoodsDO::new);
-        doObj.setIntro(res.getDesc());
+        doObj.setDesc(res.getDesc());
         packGoodsDAO.updateById(doObj);
         return getById(doObj.getId());
     }
@@ -65,7 +65,7 @@ public class PackGoodsRepositoryImpl implements PackGoodsRepository {
         List<PackGoodsRes> records = resPage.getRecords();
         List<PackGoodsDO> doRecords = doPage.getRecords();
         for (int i = 0; i < records.size(); i++) {
-            records.get(i).setDesc(doRecords.get(i).getIntro());
+            records.get(i).setDesc(doRecords.get(i).getDesc());
         }
         return resPage;
     }
@@ -81,7 +81,7 @@ public class PackGoodsRepositoryImpl implements PackGoodsRepository {
             return null;
         }
         PackGoodsRes res = TransferUtils.transfer(doObj, PackGoodsRes::new);
-        res.setDesc(doObj.getIntro());
+        res.setDesc(doObj.getDesc());
         return res;
     }
 }

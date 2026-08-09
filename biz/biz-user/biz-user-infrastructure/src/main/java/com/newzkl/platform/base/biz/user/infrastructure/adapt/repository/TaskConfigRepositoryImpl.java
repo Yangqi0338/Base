@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.dao.TaskConfigDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.TaskConfigDO;
 import com.newzkl.platform.base.biz.user.model.task.config.query.TaskConfigQuery;
 import com.newzkl.platform.base.biz.user.model.task.config.res.TaskConfigRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -55,7 +56,7 @@ public class TaskConfigRepositoryImpl implements TaskConfigRepository {
     }
 
     @Override
-    public TaskConfigRes updateEnableStatus(Long id, Integer isEnabled) {
+    public TaskConfigRes updateEnableStatus(Long id, CommonEnum.YesOrNo isEnabled) {
         TaskConfigDO updateDO = new TaskConfigDO();
         updateDO.setId(id);
         updateDO.setIsEnabled(isEnabled);

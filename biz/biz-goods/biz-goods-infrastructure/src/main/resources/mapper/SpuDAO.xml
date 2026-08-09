@@ -44,7 +44,7 @@
     </select>
 
     <!-- 供应商库存紧张/售完计数 (迁移自 new-scm SpuDAO.xml 的 goodsCountVO) -->
-    <select id="goodsCountVO" resultType="com.newzkl.platform.base.biz.goods.rpc.model.count.GoodsCountVO">
+    <select id="goodsCountVO" resultType="com.newzkl.platform.base.common.ddd.facade.GoodsCountVO">
         SELECT
             sum(if(t.inventory = 0 , 1, 0)) as 'stockWarn',
             sum(if(t.inventory_warning > t.inventory, 1,0))  as 'stockEmpty'

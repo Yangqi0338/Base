@@ -22,7 +22,8 @@ public class ShipAddressQuery extends BizPageQuery {
     private Long roleId;
 
     /**
-     * 是否默认: 0 否 1 是
+     * 是否默认
+     * @ext 0 否 1 是; 无对应枚举, 保留 Integer
      */
     private Integer isDefault;
 }

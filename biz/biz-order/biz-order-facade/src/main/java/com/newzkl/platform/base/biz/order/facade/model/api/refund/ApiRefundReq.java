@@ -21,11 +21,11 @@ public class ApiRefundReq implements Serializable {
      */
     private List<Long> idList;
     /**
-     * (0,"待渠道商审核"),(2,"待供应商审核"),(4,"待提交物流"),(6,"待确认收货"),(7,"待平台介入"),(8,"平台介入中"),(9,"退款中"),(10,"已完成"),(-2,"已拒绝"),(-4,"已关闭"),
+     * 售后状态
      */
     private RefundEnum.State refundState;
     /**
-     * 售后类型 (0 仅退款 1 退货退款)
+     * 售后类型
      */
      private RefundEnum.RefundType refundType;
     /**

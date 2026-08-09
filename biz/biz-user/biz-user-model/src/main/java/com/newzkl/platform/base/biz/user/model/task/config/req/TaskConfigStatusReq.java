@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.task.config.req;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -16,12 +17,12 @@ public class TaskConfigStatusReq {
     /**
      * 主键ID
      */
-    @NotNull(message = "ID不能为空")
+    @NotNull
     private Long id;
 
     /**
-     * 目标状态（1-启用，0-禁用）
+     * 目标状态
      */
-    @NotNull(message = "状态不能为空")
-    private Integer isEnabled;
+    @NotNull
+    private CommonEnum.YesOrNo isEnabled;
 }

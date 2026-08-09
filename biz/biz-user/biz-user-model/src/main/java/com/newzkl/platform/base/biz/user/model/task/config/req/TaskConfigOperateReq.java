@@ -15,12 +15,14 @@ import lombok.Data;
 public class TaskConfigOperateReq {
 
     /**
-     * 主键ID（新增留空，修改必填）
+     * 主键ID
+     * @ext 新增留空，修改必填
      */
     private Long id;
 
     /**
-     * 任务类型编码（1-观看激励广告，2-购买商品）
+     * 任务类型编码
+     * @ext 1-观看激励广告，2-购买商品
      */
     @NotNull(message = "任务类型不能为空")
     private Integer taskType;
@@ -44,7 +46,8 @@ public class TaskConfigOperateReq {
     private String taskGroupName;
 
     /**
-     * 是否启用（1-是，0-否），默认启用
+     * 是否启用
+     * @ext 1-是，0-否，默认启用
      */
     private Integer isEnabled = 1;
 

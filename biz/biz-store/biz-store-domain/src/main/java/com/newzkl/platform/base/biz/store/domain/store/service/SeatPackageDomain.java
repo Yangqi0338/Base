@@ -2,9 +2,9 @@ package com.newzkl.platform.base.biz.store.domain.store.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
+import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 
 /**
  * 席位套餐
@@ -17,7 +17,7 @@ public interface SeatPackageDomain {
     void update(SeatPackageUpdateReq req);
 
 
-    Page<SeatPackageResponse> seatPackagePage(SeatPackagePageReq req);
+    Page<SeatPackageRes> seatPackagePage(SeatPackageQuery req);
 
     /**
      * 按 id 查席位套餐详情
@@ -25,7 +25,7 @@ public interface SeatPackageDomain {
      * @param id 席位套餐 id
      * @return 套餐详情; 不存在时返回 null
      */
-    SeatPackageResponse detail(Long id);
+    SeatPackageRes detail(Long id);
 
     /**
      * 新增席位个数

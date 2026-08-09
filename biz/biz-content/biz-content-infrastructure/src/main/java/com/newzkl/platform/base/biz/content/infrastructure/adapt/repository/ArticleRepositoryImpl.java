@@ -37,8 +37,6 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     @Override
     public void save(ArticleReq req) {
         ArticleDO articleDO = TransferUtils.transfer(req, ArticleDO::new);
-        articleDO.setCreatorId(SecurityUtils.getAccountId());
-        articleDO.setCreatorName(SecurityUtils.getNickName());
         contentArticleDAO.insert(articleDO);
     }
 

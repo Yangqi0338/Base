@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.store.model.store.entity.SeatPackage;
-import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.SeatPackageRepository;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.SeatPackageDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.SeatPackageDO;
@@ -39,19 +39,19 @@ public class SeatPackageRepositoryImpl extends ServiceImpl<SeatPackageDAO, SeatP
     }
 
     @Override
-    public SeatPackageResponse detail(Long id) {
+    public SeatPackageRes detail(Long id) {
         SeatPackageDO entity = this.getById(id);
-        return TransferUtils.transfer(entity, SeatPackageResponse::new);
+        return TransferUtils.transfer(entity, SeatPackageRes::new);
     }
 
     @Override
-    public Page<SeatPackageResponse> seatPackagePage(SeatPackagePageReq req) {
+    public Page<SeatPackageRes> seatPackagePage(SeatPackageQuery req) {
         // 创建分页对象
         Page<SeatPackageDO> queryPage = new Page<>(req.getPageNo(), req.getPageSize());
 
         LambdaQueryWrapper<SeatPackageDO> wrapper = new LambdaQueryWrapper<SeatPackageDO>()
                 .eq(req.getState() != null, SeatPackageDO::getState, req.getState())
-                .orderByAsc(!RoleEnum.CompanyRole.PLATFORM.getCode().equals(req.getRoleId()), SeatPackageDO::getSeatNum);
+                .orderByAsc(RoleEnum.CompanyRole.PLATFORM != req.getRole(), SeatPackageDO::getSeatNum);
 
         // 多字段模糊查询
         if (StrUtil.isNotBlank(req.getSearchContent())) {
@@ -66,11 +66,11 @@ public class SeatPackageRepositoryImpl extends ServiceImpl<SeatPackageDAO, SeatP
         Page<SeatPackageDO> page = this.page(queryPage, wrapper);
 
         // 转换为响应对象列表
-        List<SeatPackageResponse> responseList = page.getRecords().stream()
-                .map(x -> BeanUtil.toBean(x, SeatPackageResponse.class)).collect(Collectors.toList());
+        List<SeatPackageRes> responseList = page.getRecords().stream()
+                .map(x -> BeanUtil.toBean(x, SeatPackageRes.class)).collect(Collectors.toList());
 
         // 构建新的 Page 对象
-        Page<SeatPackageResponse> resultPage = new Page<>();
+        Page<SeatPackageRes> resultPage = new Page<>();
         resultPage.setRecords(responseList);
         resultPage.setTotal(page.getTotal());
         resultPage.setSize(page.getSize());
@@ -81,7 +81,7 @@ public class SeatPackageRepositoryImpl extends ServiceImpl<SeatPackageDAO, SeatP
     }
 
     @Override
-    public List<SeatPackageResponse> seatPackageList(SeatPackagePageReq req) {
+    public List<SeatPackageRes> seatPackageList(SeatPackageQuery req) {
         LambdaQueryWrapper<SeatPackageDO> wrapper = new LambdaQueryWrapper<SeatPackageDO>()
                 .eq(req.getState() != null, SeatPackageDO::getState, req.getState())
                 .orderByDesc(SeatPackageDO::getId);
@@ -100,7 +100,7 @@ public class SeatPackageRepositoryImpl extends ServiceImpl<SeatPackageDAO, SeatP
 
         // 转换为响应对象列表
         return list.stream()
-                .map(x -> BeanUtil.toBean(x, SeatPackageResponse.class)).collect(Collectors.toList());
+                .map(x -> BeanUtil.toBean(x, SeatPackageRes.class)).collect(Collectors.toList());
     }
 
 

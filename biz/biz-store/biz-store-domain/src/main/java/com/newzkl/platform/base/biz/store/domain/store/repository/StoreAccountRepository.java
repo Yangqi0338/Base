@@ -3,8 +3,8 @@ package com.newzkl.platform.base.biz.store.domain.store.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.msg.StoreAccountPayMsg;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreAccount;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountResponse;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreAccountQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountRes;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface StoreAccountRepository {
 
-    Page<StoreAccountResponse> queryStoreAccountPage(StoreAccountQuery req);
+    Page<StoreAccountRes> queryStoreAccountPage(StoreAccountQuery req);
 
     void createStoreAccount(StoreAccount storeAccount);
 

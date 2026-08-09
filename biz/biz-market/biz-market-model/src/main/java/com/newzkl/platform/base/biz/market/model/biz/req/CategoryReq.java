@@ -37,7 +37,9 @@ public class CategoryReq extends BaseReq {
      */
     private Integer idx;
     /**
-     * 分类来源类型 0:平台同步 1:自营
+     * 分类来源类型
+     *
+     * @ext 0:平台同步 1:自营
      */
     private Integer type;
     /**

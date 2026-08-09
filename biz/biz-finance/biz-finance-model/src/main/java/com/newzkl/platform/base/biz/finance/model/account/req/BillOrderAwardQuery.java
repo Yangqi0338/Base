@@ -6,6 +6,9 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * 订单奖励账单查询
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BillOrderAwardQuery extends BizPageQuery {

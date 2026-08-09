@@ -1,16 +1,12 @@
 package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
-import com.newzkl.platform.base.biz.finance.domain.pay.service.PayeeInfoDomain;
 import com.newzkl.platform.base.biz.finance.model.account.req.BatchQueryConfigChannelQuery;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.biz.finance.model.pay.req.UpdatePayeeInfoReq;
-import com.newzkl.platform.base.biz.finance.model.pay.vo.PayeeInfoVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,31 +32,6 @@ import java.util.List;
 public class ConfigController {
 
     private final AccountPurseConfigDomain accountPurseConfigDomain;
-
-    private final PayeeInfoDomain payeeInfoDomain;
-
-    /**
-     * 更新收款方配置
-     *
-     * @param req 收款方更新请求
-     * @return 成功结果
-     */
-    @PostMapping("/alterPayeeInfo")
-    public PlatformResult<Boolean> alterPayeeInfo(@RequestBody UpdatePayeeInfoReq req) {
-        payeeInfoDomain.updatePayeeInfo(req);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 查询收款方信息
-     *
-     * @param consumeType 消费类型
-     * @return 收款方信息列表
-     */
-    @PostMapping("/queryPayeeInfo/{consumeType}")
-    public PlatformResult<List<PayeeInfoVO>> queryPayeeInfo(@PathVariable Integer consumeType) {
-        return PlatformResult.success(payeeInfoDomain.queryPayeeInfo(consumeType));
-    }
 
     /**
      * 批量查询渠道商服务费配置

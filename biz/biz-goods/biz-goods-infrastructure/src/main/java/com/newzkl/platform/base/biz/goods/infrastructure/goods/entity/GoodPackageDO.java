@@ -20,7 +20,8 @@ import lombok.EqualsAndHashCode;
 public class GoodPackageDO extends BaseDO {
 
     /**
-     * 套餐业务编码 (唯一)
+     * 套餐业务编码
+     * @ext 唯一
      */
     private String packageId;
 
@@ -35,7 +36,7 @@ public class GoodPackageDO extends BaseDO {
     private Long goodsNum;
 
     /**
-     * 套餐价格 (Money, 落库 BIGINT 分)
+     * 套餐价格
      */
     private Money packagePrice;
 
@@ -45,7 +46,8 @@ public class GoodPackageDO extends BaseDO {
     private String packageDesc;
 
     /**
-     * 状态: 1 启用, 0 停用
+     * 状态
+     * @ext 1 启用，0 停用
      */
     private Integer state;
 }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.pack.req;
 
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,7 +16,8 @@ import java.io.Serializable;
 public class PackOrderPayReq implements Serializable {
 
     /**
-     * 订单ID（为空时按 packId 预创建并提交后再支付）
+     * 订单ID
+     * @ext 为空时按 packId 预创建并提交后再支付
      */
     private Long orderId;
 
@@ -25,7 +27,7 @@ public class PackOrderPayReq implements Serializable {
     private Long packId;
 
     /**
-     * 支付方式 1-微信支付 2-支付宝支付
+     * 支付方式
      */
-    private Integer payType;
+    private OrderEnum.PayType payType;
 }

@@ -6,16 +6,21 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 /**
+ * 验证码登录并注册请求参数
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/2/2211:22
+ * @date 2024/2/22 11:22
  */
 @Data
 public class CodeLoginRegisterReq {
-    /** 账号 */
+    /**
+     * 账号
+     */
     @NotEmpty(message = "username")
     private String username;
-    /** 验证码 */
+    /**
+     * 验证码
+     */
     @NotEmpty(message = "code?")
     private String code;
     /**
@@ -29,12 +34,14 @@ public class CodeLoginRegisterReq {
     private CommonEnum.Client client;
 
     /**
-     * 邀请码(邀请码和父账号 二选一 且非必填)
+     * 邀请码
+     * @ext 邀请码和父账号二选一, 且非必填
      */
     private String yqm;
 
     /**
-     * 父账号(邀请码和父账号 二选一 且非必填)
+     * 父账号
+     * @ext 邀请码和父账号二选一, 且非必填
      */
     private String superiorAccount;
 

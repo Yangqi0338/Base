@@ -14,18 +14,24 @@ import java.util.List;
 public class StoreDistributionQuery extends BizPageQuery {
 
     /**
-     * 状态 0：下架  1：上架
+     * 状态
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer state;
 
     /**
-     * 状态 0：下架  1：上架
+     * 状态 (排除)
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer stateNot;
 
 
     /**
-     * 数据类型 0：商品  1：sku
+     * 数据类型
+     *
+     * @ext 0：商品 1：sku
      */
     private Integer dataType;
 

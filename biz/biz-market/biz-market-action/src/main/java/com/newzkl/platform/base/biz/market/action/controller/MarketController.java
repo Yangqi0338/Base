@@ -2,8 +2,7 @@ package com.newzkl.platform.base.biz.market.action.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.market.service.MarketDomain;
-import com.newzkl.platform.base.biz.market.model.dto.market.MarketCategoryPageQuery;
+import com.newzkl.platform.base.biz.market.domain.market.MarketDomain;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.biz.market.model.query.market.AppBindMarketGoodsPageQuery;
@@ -17,7 +16,6 @@ import com.newzkl.platform.base.biz.market.model.req.market.UpdateMarketDataReq;
 import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketGoodsVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.BindMarketVO;
-import com.newzkl.platform.base.biz.market.model.vo.market.MarketCategoryVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketGoodsCategoryVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketUserVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketVO;
@@ -262,40 +260,6 @@ public class MarketController {
     @PostMapping("/queryMarketUser")
     public PlatformResult<List<MarketUserVO>> queryMarketUser(@RequestBody MarketUserReq req) {
         return PlatformResult.success(marketDomain.queryMarketUser(req));
-    }
-
-    /**
-     * 查询市场分类列表
-     *
-     * @param req 查询条件
-     * @return 市场分类列表
-     */
-    @PostMapping("/queryMarketCategoryList")
-    public PlatformResult<Page<MarketCategoryVO>> queryMarketCategoryList(@RequestBody MarketCategoryPageQuery req) {
-        return PlatformResult.success(marketDomain.queryMarketCategoryPage(req));
-    }
-
-    /**
-     * 删除分类
-     *
-     * @param id 分类ID
-     * @return 操作结果
-     */
-    @PostMapping("/deleteMarketCategory/{id}")
-    public PlatformResult<Object> deleteMarketCategory(@PathVariable Long id) {
-        marketDomain.deleteMarketCategory(id);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 查询市场商品分类
-     *
-     * @param marketId 市场ID
-     * @return 市场商品分类列表
-     */
-    @PostMapping("/queryMarketGoodsCategory/{marketId}")
-    public PlatformResult<List<MarketGoodsCategoryVO>> queryMarketGoodsCategory(@PathVariable Long marketId) {
-        return PlatformResult.success(marketDomain.queryMarketGoodsCategory(marketId, null));
     }
 
     /**

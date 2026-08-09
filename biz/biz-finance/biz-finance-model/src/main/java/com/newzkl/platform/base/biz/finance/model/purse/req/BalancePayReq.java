@@ -8,8 +8,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 余额支付请求
+ *
  * @author niu
- * @description: 余额支付req
  * @date 2024/1/10 10:15
  */
 @Data
@@ -26,8 +27,8 @@ public class BalancePayReq implements Serializable {
     private PurseEnum.FinanceUser accountType;
 
     /**
-     * 账户类型 渠道商不用传
-     * 运营商传1
+     * 账户类型
+     * @ext 渠道商不用传, 运营商传采购账户
      */
     private PurseEnum.PurseType purseType = PurseEnum.PurseType.PURCHASE;
 
@@ -52,12 +53,13 @@ public class BalancePayReq implements Serializable {
     private String orderInfo;
 
     /**
-     * 运营商id 仅客户类型为渠道商时传入
-     * 备注：余额支付其他配置，当前只有渠道商余额支付时，涉及所属运营商财务模式，不过度涉及，暂定指定传值
-     * 后续有其他客户类型的余额支付额外配置，再另行设计
+     * 运营商id
+     * @ext 仅客户类型为渠道商时传入; 涉及所属运营商财务模式, 暂定指定传值
      */
     private Long operatorId;
 
-    /* 用户id */
+    /**
+     * 用户id
+     */
     private Long memberId;
 }

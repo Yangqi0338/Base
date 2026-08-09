@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.store.domain.store.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.entity.SeatPackage;
-import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ public interface SeatPackageRepository {
 
     void update(SeatPackage seatPackage);
 
-    SeatPackageResponse detail(Long id);
+    SeatPackageRes detail(Long id);
 
-    Page<SeatPackageResponse> seatPackagePage(SeatPackagePageReq req);
+    Page<SeatPackageRes> seatPackagePage(SeatPackageQuery req);
 
-    List<SeatPackageResponse> seatPackageList(SeatPackagePageReq req);
+    List<SeatPackageRes> seatPackageList(SeatPackageQuery req);
 
     /**
      * 新增席位个数

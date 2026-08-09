@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.relation.repository.GoodsRelationRepository;
+import com.newzkl.platform.base.biz.market.domain.adapt.repository.GoodsRelationRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketGoodsRelationDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketGoodsRelationDO;
 import com.newzkl.platform.base.biz.market.model.dto.relation.GoodsRelationQueryDTO;

@@ -1,8 +1,10 @@
 package com.newzkl.platform.base.common.ddd.model.res;
 
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,8 +16,7 @@ import java.time.LocalDateTime;
  *
  * @author god
  */
-@Setter
-@Getter
+@Data
 public class BaseRes implements Serializable {
 
     /**

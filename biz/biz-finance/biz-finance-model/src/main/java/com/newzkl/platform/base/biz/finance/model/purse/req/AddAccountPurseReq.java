@@ -5,8 +5,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**
+ * 添加客户账户请求
+ *
  * @author niu
- * @description: 添加客户账户req
  * @date 2023/12/18 15:12
  */
 @Data

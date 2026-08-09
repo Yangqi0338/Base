@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 /**
- * @author 提现记录
+ * 提现记录请求
  */
 @Data
 public class AccountWithdrawRecordReq extends BaseRes {
@@ -41,7 +41,8 @@ public class AccountWithdrawRecordReq extends BaseRes {
     private String tripartiteTradeNo;
 
     /**
-     * 状态
+     * 提现状态
+     * @ext 编码值; 保留 Integer
      */
     private Integer state;
 }

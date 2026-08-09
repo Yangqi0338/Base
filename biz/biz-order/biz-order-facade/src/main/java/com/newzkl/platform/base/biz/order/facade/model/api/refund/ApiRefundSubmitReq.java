@@ -18,7 +18,7 @@ import java.util.List;
 public class ApiRefundSubmitReq  implements Serializable {
 
     /**
-     * 售后类型 0 仅退款 1 退货退款
+     * 售后类型
      */
     @NotNull
      private RefundEnum.RefundType refundType;
@@ -42,7 +42,8 @@ public class ApiRefundSubmitReq  implements Serializable {
      */
     private String remark;
     /**
-     * 申请图片 : (字符串, 逗号隔开)
+     * 申请图片
+     * @ext 多图 URL 逗号隔开
      */
     private String images;
 }

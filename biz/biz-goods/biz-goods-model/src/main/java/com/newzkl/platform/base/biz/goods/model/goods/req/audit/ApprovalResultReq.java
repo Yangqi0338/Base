@@ -29,7 +29,8 @@ public class ApprovalResultReq implements Serializable {
     private String reason;
 
     /**
-     * 修改参数: JSON格式, 具体格式约定
+     * 修改参数
+     * @ext JSON格式, 具体格式约定
      */
     private String editCommand;
 

@@ -8,7 +8,7 @@ import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreStyleCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreStylePageQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreStyleQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreStyleUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.req.SupplierTemplateUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleResponse;
@@ -36,7 +36,7 @@ public class StoreStyleDomainImpl implements StoreStyleDomain {
     private final StoreRepository storeRepository;
 
     @Override
-    public Page<StoreStyleResponse> storeStylePage(StoreStylePageQuery req) {
+    public Page<StoreStyleResponse> storeStylePage(StoreStyleQuery req) {
         return storeStyleRepository.storeStylePage(req);
     }
 

@@ -17,7 +17,8 @@ public class StoreAccountUpdateReq implements Serializable {
     private Long id;
 
     /**
-     * 0:未拉黑，1已拉黑
+     * 拉黑状态
+     * @ext 取值范围: 0=未拉黑, 1=已拉黑
      */
     private Integer relationType;
 

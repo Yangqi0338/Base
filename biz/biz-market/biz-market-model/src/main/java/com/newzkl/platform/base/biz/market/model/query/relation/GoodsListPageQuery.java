@@ -42,26 +42,36 @@ public class GoodsListPageQuery extends PageQuery {
      */
     private List<Long> goodsIdList;
     /**
-     * 关系类型：  1：一级市场商品  2：二级市场商品  3：市场选品商品
+     * 关系类型
+     *
+     * @ext 1：一级市场商品 2：二级市场商品 3：市场选品商品
      */
     private Integer relationType;
 
     /** 绑定类型 */
     private Integer bindType;
     /**
-     * 商品上下架状态 : 2 上架 3 下架
+     * 商品上下架状态
+     *
+     * @ext 2 上架 3 下架
      */
     private String spuState;
     /**
-     * 时间排序 1 升序 2 降序
+     * 时间排序
+     *
+     * @ext 1 升序 2 降序
      */
     private Integer timeSort;
     /**
-     * 价格排序 1 升序 2 降序
+     * 价格排序
+     *
+     * @ext 1 升序 2 降序
      */
     private Integer priceSort;
     /**
-     * 利润排序 1 升序 2 降序
+     * 利润排序
+     *
+     * @ext 1 升序 2 降序
      */
     private Integer profitSort;
     /**

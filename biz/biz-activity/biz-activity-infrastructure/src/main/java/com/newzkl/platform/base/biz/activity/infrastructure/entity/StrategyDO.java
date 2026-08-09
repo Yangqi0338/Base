@@ -3,6 +3,8 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import lombok.Data;
 
@@ -15,26 +17,22 @@ import java.util.Date;
  * @author niu
  */
 @Data
-@TableName("strategy")
-public class StrategyDO implements Serializable {
-    /**
-     * 策略id
-     */
-    @TableId(value = "strategy_id", type = IdType.INPUT)
-    private Long strategyId;
-
+@TableName
+public class StrategyDO extends BaseDO {
     /**
      * 策略描述
      */
     private String strategyDesc;
 
     /**
-     * 策略方式 0：奖金池贡献值  1：暂未其他
+     * 策略方式
+     * @ext 0 奖金池贡献值, 1 暂未其他
      */
     private Integer strategyMode;
 
     /**
-     * 发放奖品方式「1:即时、2:定时、3:人工
+     * 发放奖品方式
+     * @ext 1 即时, 2 定时, 3 人工
      */
     private Integer grantType;
 
@@ -54,45 +52,27 @@ public class StrategyDO implements Serializable {
     private Integer orderAmountsRate;
 
     /**
-     * 分红周期 {@link ActivityEnum.DividendCycle}
+     * 分红周期
      */
-    private String dividendCycle;
+    private ActivityEnum.DividendCycle dividendCycle;
 
     /**
-     * 分红策略 {@link ActivityEnum.SettlementStrategy}
+     * 分红策略
      */
-    private String settlementStrategy;
+    private ActivityEnum.SettlementStrategy settlementStrategy;
 
     /**
-     * 分红方式 {@link ActivityEnum.DividendMethod}
+     * 分红方式
      */
-    private String dividendMethod;
+    private ActivityEnum.DividendMethod dividendMethod;
 
     /**
      * 分红角色
      */
-    private String dividendRole;
+    private RoleEnum.CompanyRole dividendRole;
 
     /**
      * 分红用户
      */
     private String dividendUser;
-
-
-    /**
-     * 创建人
-     */
-    private Long creator;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
 }

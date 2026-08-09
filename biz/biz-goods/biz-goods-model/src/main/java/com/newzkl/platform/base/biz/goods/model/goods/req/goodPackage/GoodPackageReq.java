@@ -52,7 +52,8 @@ public class GoodPackageReq {
     private String packageDesc;
 
     /**
-     * 状态: 1 启用, 0 停用
+     * 状态
+     * @ext 1 启用, 0 停用
      */
     private Integer state;
 }

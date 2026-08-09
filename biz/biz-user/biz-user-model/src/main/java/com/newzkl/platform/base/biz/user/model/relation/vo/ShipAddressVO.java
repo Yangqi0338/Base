@@ -1,9 +1,8 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * 收货地址视图对象
@@ -14,10 +13,6 @@ import java.time.LocalDateTime;
  */
 @Data
 public class ShipAddressVO {
-    /**
-     * 地址ID
-     */
-    private Long id;
     /**
      * 所属账号ID
      */
@@ -86,12 +81,4 @@ public class ShipAddressVO {
      * 角色关联ID
      */
     private RoleEnum.CompanyRole role;
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
 }

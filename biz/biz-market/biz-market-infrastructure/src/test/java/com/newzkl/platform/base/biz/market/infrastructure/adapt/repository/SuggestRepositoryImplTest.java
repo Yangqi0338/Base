@@ -2,10 +2,6 @@ package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
 
 import com.newzkl.platform.base.biz.market.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.market.domain.adapt.api.UpIdRes;
-import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketSuggestTagConfigDAO;
-import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketSuggestTagDAO;
-import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketSuggestTagConfigDO;
-import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketSuggestTagDO;
 import com.newzkl.platform.base.biz.market.model.suggest.req.CommitTagReq;
 import com.newzkl.platform.base.biz.market.model.suggest.req.TagConfigReq;
 import com.newzkl.platform.base.biz.market.model.suggest.vo.CommitTagVO;

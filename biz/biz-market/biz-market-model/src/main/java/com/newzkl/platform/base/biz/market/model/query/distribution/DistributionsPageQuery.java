@@ -14,12 +14,16 @@ import java.util.List;
 public class DistributionsPageQuery extends PageQuery {
 
     /**
-     * 状态 0：下架  1：上架
+     * 状态
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer state;
 
     /**
-     * 状态 0：下架  1：上架
+     * 状态 (排除)
+     *
+     * @ext 0：下架 1：上架
      */
     private Integer stateNot;
 

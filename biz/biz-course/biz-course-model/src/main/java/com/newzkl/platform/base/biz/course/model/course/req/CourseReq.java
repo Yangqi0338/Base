@@ -53,12 +53,16 @@ public class CourseReq extends BaseReq {
     private Long categoryId;
 
     /**
-     * 原价 (Money; JSON 入参数字/字符串按元反序列化)
+     * 原价
+     *
+     * @ext Money; JSON 入参数字/字符串按元反序列化
      */
     private Money originalPrice;
 
     /**
-     * 售价 (Money; JSON 入参数字/字符串按元反序列化)
+     * 售价
+     *
+     * @ext Money; JSON 入参数字/字符串按元反序列化
      */
     private Money sellPrice;
 
@@ -68,7 +72,9 @@ public class CourseReq extends BaseReq {
     private Integer virtualPurchaseCount = 0;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
+     *
+     * @ext 1-启用, 0-禁用
      */
     @NotNull(message = "启用状态不能为空")
     private Integer isEnabled = 1;

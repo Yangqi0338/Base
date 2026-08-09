@@ -9,6 +9,8 @@ import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(autoResultMap = true)
+@TableName
 public class MarketGoodsRelationDO extends BaseDO {
     /**
      * 商品id
@@ -30,11 +32,13 @@ public class MarketGoodsRelationDO extends BaseDO {
     @Index
     private Long marketId;
     /**
-     * 关系类型：  1：一级市场商品  2：二级市场商品  3：市场选品商品
+     * 关系类型
+     * @ext 1：一级市场商品  2：二级市场商品  3：市场选品商品
      */
     private Integer relationType;
     /**
-     * 用户id   0：为平台   >0:为客户
+     * 用户id
+     * @ext 0：为平台   >0:为客户
      */
     @Index
     private Long userId;
@@ -43,11 +47,13 @@ public class MarketGoodsRelationDO extends BaseDO {
      */
     private Integer sellNum;
     /**
-     * 销售额 (Money, 落库 BIGINT 分)
+     * 销售额
      */
     private Money sellAmount;
     /**
-     * 状态  1：正常  0：删除
+     * 状态
+     *
+     * @ext 1：正常  0：删除
      */
     private Integer state;
     /**
@@ -60,9 +66,7 @@ public class MarketGoodsRelationDO extends BaseDO {
     private Integer discountRate;
     /**
      * 商品信息
-     *
-     * @ext 库中以 JSON 列存放, 走 {@code JacksonTypeHandler} 序列化; 依赖类级 {@code autoResultMap = true} 才生效
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
+    @JsonSerializable
     private MarketGoodsInfoVO goodsInfo;
 }

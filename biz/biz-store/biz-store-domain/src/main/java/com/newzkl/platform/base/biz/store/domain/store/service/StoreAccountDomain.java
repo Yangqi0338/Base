@@ -2,12 +2,10 @@ package com.newzkl.platform.base.biz.store.domain.store.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.msg.StoreAccountPayMsg;
-import com.newzkl.platform.base.biz.store.model.web.EventTrackingReq;
-import com.newzkl.platform.base.biz.store.model.store.entity.StoreAccount;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreAccountQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountRes;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +19,7 @@ public interface StoreAccountDomain {
 
     void updateStoreAccount(StoreAccountUpdateReq req);
 
-    Page<StoreAccountResponse> queryStoreAccountPage(StoreAccountQuery req);
-
-    void eventTracking(EventTrackingReq req);
+    Page<StoreAccountRes> queryStoreAccountPage(StoreAccountQuery req);
 
     void storeAccountPayEvent(StoreAccountPayMsg storeAccountPayMsg);
 

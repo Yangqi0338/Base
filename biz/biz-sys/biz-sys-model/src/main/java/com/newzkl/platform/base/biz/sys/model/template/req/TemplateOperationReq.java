@@ -22,7 +22,9 @@ public class TemplateOperationReq implements Serializable {
     private Long id;
 
     /**
-     * 操作类型: 1-启用, 0-禁用, 2-设为默认
+     * 操作类型
+     *
+     * @ext 取值: 1-启用, 0-禁用, 2-设为默认
      */
     @NotNull(message = "操作类型不能为空")
     private Integer operation;

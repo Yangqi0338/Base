@@ -25,7 +25,7 @@ public class ProjectDO extends BaseDO {
     /**
      * 简介
      *
-     * <p>{@code desc} 为 SQL 保留字, 列名需反引号包裹。</p>
+     * @ext {@code desc} 为 SQL 保留字, 列名需反引号包裹。
      */
     @TableField("`desc`")
     private String desc;
@@ -46,12 +46,16 @@ public class ProjectDO extends BaseDO {
     private Integer area;
 
     /**
-     * 合作金额 (Money, 落库 BIGINT 分)
+     * 合作金额
+     *
+     * @ext Money 类型, 落库 BIGINT 分
      */
     private Money basicAmount;
 
     /**
-     * 标签 (逗号分隔串)
+     * 标签
+     *
+     * @ext 逗号分隔串
      */
     private String flags;
 

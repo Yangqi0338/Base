@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 
+/**
+ * 历史奖金池结算分页查询请求对象
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SettleHistoryBonusPoolReq extends BizPageQuery {
@@ -34,11 +37,13 @@ public class SettleHistoryBonusPoolReq extends BizPageQuery {
 
     /**
      * 结算状态
+     * @ext 候选枚举 {@link com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum.SettleState}: PENDING_CONFIRMATION-待确认 CONFIRMED-已确认 DELETED-已删除
      */
     private String state;
 
     /**
      * 分红方式
+     * @ext 候选枚举 {@link com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum.DividendMethod}: AVERAGE-平均分红 WEIGHT-加权分红
      */
     private String dividendMethod;
 

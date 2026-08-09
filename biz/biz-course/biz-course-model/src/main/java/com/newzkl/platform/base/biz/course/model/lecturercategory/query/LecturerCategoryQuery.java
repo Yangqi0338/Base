@@ -22,7 +22,9 @@ public class LecturerCategoryQuery extends BizPageQuery {
     private String categoryName;
 
     /**
-     * 是否启用: 1-启用, 0-禁用; 为空查全部
+     * 是否启用
+     *
+     * @ext 1-启用, 0-禁用; 为空查全部
      */
     private Integer isEnabled;
 }

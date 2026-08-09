@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 渠道商 RPC 查询入参
+ */
 @Data
 public class ChannelQueryRpcReq extends BizPageQuery {
 
@@ -13,7 +16,7 @@ public class ChannelQueryRpcReq extends BizPageQuery {
      */
     private Integer state;
     /**
-     * 状态 (查询)
+     * 状态集合 (查询)
      */
     private List<Integer> stateList;
     /**

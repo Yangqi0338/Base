@@ -2,14 +2,14 @@ package com.newzkl.platform.base.biz.store.domain.store.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreZone;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreZonePageReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneResponse;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreZoneQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneRes;
 
 /**
  * 门店专区仓储接口
  */
 public interface StoreZoneRepository {
-    Page<StoreZoneResponse> storeZonePage(StoreZonePageReq req);
+    Page<StoreZoneRes> storeZonePage(StoreZoneQuery req);
 
     void create(StoreZone storeZone);
 

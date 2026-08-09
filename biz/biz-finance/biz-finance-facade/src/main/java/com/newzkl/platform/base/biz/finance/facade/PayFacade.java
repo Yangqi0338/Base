@@ -24,7 +24,6 @@ public interface PayFacade {
      */
     PayBaseResult orderPay(OrderPayReq req);
 
-
     BalancePayResult balancePay(BalancePayReq req);
 
     MemberRefundRes sellAfterRefund(SellAfterRefundReq req);

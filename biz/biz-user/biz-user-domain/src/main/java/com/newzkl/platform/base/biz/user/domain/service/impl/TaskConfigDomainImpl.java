@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.user.domain.service.TaskConfigDomain;
 import com.newzkl.platform.base.biz.user.model.task.config.query.TaskConfigQuery;
 import com.newzkl.platform.base.biz.user.model.task.config.req.TaskConfigOperateReq;
 import com.newzkl.platform.base.biz.user.model.task.config.res.TaskConfigRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -97,11 +98,11 @@ public class TaskConfigDomainImpl implements TaskConfigDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public TaskConfigRes toggleEnable(Long id, Integer isEnabled) {
+    public TaskConfigRes toggleEnable(Long id, CommonEnum.YesOrNo isEnabled) {
         if (id == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "状态切换时ID不能为空");
         }
-        if (isEnabled == null || (isEnabled != 0 && isEnabled != 1)) {
+        if (isEnabled == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "状态值非法，仅支持0/1");
         }
         if (!taskConfigRepository.existsById(id)) {

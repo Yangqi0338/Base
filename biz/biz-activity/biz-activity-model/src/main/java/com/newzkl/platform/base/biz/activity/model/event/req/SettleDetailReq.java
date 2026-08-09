@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 
+/**
+ * 结算明细分页查询请求对象
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SettleDetailReq extends BizPageQuery {

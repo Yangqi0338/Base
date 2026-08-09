@@ -25,7 +25,8 @@ public class SpuAttributeQuery extends BizPageQuery {
         this.spuIdList = doWrapperList(spuIdList, spuId);
     }
     /**
-    * 类型 0:销售属性 1:参数属性 (查询)
+    * 类型 (查询)
+    * @ext 0:销售属性 1:参数属性
     */
     private Integer type;
 }

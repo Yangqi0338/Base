@@ -2,10 +2,10 @@ package com.newzkl.platform.base.biz.store.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreAccountDomain;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreAccountQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountExportResponse;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountExportRes;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -44,7 +44,7 @@ public class StoreAccountController {
      * @return 门店客户分页
      */
     @PostMapping("/queryStoreAccountPage")
-    public PlatformResult<Page<StoreAccountResponse>> queryStoreAccountPage(
+    public PlatformResult<Page<StoreAccountRes>> queryStoreAccountPage(
             @Validated @RequestBody StoreAccountQuery req) {
         req.setChannelId(SecurityUtils.getAccountId());
         return PlatformResult.success(storeAccountDomain.queryStoreAccountPage(req));
@@ -70,9 +70,9 @@ public class StoreAccountController {
      */
     @PostMapping("/storeAccountExport")
     public void storeAccountExport(@RequestBody StoreAccountQuery req) throws IOException {
-        List<StoreAccountExportResponse> exportResponses = TransferUtils.transfers(
+        List<StoreAccountExportRes> exportResponses = TransferUtils.transfers(
                 storeAccountDomain.queryStoreAccountPage(req).getRecords(),
-                StoreAccountExportResponse::new,
+                StoreAccountExportRes::new,
                 (c, v) -> {
                     v.setRelationType(c.getRelationType() == 1 ? "已拉黑" : "正常");
                     // countPayAmount 已 Money, 直取元字符串 (Money.getAmount 元 BigDecimal)

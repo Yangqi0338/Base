@@ -7,20 +7,38 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 三方订单记录查询请求对象
+ *
+ * @author fang
+ */
 @Data
 @Builder
 public class ThirdPartyOrderRecordQuery {
 
+    /**
+     * 业务订单号
+     */
     private String bizOrderNo;
 
+    /**
+     * 接口名称
+     */
     private String interfaceName;
 
+    /**
+     * 平台类型
+     */
     private PlatformTypeEnum platformType;
 
+    /**
+     * 请求状态
+     */
     private CommonEnum.RequestStatusEnum requestStatus;
 
     /**
-     * 下次重试时间上限(lt), 用于扫描超时未重试的记录
+     * 下次重试时间上限(lt)
+     * @ext 用于扫描超时未重试的记录
      */
     private LocalDateTime nextRetryTimeBefore;
 }

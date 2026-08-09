@@ -3,16 +3,16 @@ package com.newzkl.platform.base.biz.user.domain.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserInteractionRepository;
 import com.newzkl.platform.base.biz.user.domain.service.UserInteractionDomain;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum.ActionTypeEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum.TargetTypeEnum;
 import com.newzkl.platform.base.biz.user.model.interaction.query.BatchInteractionQuery;
-import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionPageQueryRPC;
 import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionQuery;
 import com.newzkl.platform.base.biz.user.model.interaction.res.BatchInteractionResult;
 import com.newzkl.platform.base.biz.user.model.interaction.vo.InteractionRPCVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionAddVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionCountVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserInteraction;
+import com.newzkl.platform.base.biz.user.model.relation.req.InteractionAddReq;
+import com.newzkl.platform.base.biz.user.model.relation.res.InteractionCountRes;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserInteractionDTO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,68 +40,25 @@ public class UserInteractionDomainImpl implements UserInteractionDomain {
 
     private final UserInteractionRepository userInteractionRepository;
 
-    /**
-     * 解析目标类型编码
-     *
-     * @param code 目标类型编码
-     * @return 目标类型枚举
-     */
-    private TargetTypeEnum parseTargetType(String code) {
-        TargetTypeEnum targetType = TargetTypeEnum.getByCode(code);
-        if (targetType == null) {
-            throw new PlatformException(BaseErrorCode.PARAM, "targetType 不合法：" + code);
-        }
-        return targetType;
-    }
-
-    /**
-     * 解析操作类型编码
-     *
-     * @param code 操作类型编码
-     * @return 操作类型枚举
-     */
-    private ActionTypeEnum parseActionType(String code) {
-        ActionTypeEnum actionType = ActionTypeEnum.getByCode(code);
-        if (actionType == null) {
-            throw new PlatformException(BaseErrorCode.PARAM, "actionType 不合法：" + code);
-        }
-        return actionType;
-    }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean add(InteractionAddVO addVO) {
-        TargetTypeEnum targetType = parseTargetType(addVO.getTargetType());
-        ActionTypeEnum actionType = parseActionType(addVO.getActionType());
-
-        if (userInteractionRepository.exists(addVO.getUserId(), targetType, addVO.getTargetId(), actionType)) {
-            log.info("用户{}已对目标{}执行过{}", addVO.getUserId(), addVO.getTargetId(), actionType.getCode());
+    public boolean add(InteractionAddReq addVO) {
+        InteractionQuery existsQuery = TransferUtils.transfer(addVO, InteractionQuery.class);
+        if (userInteractionRepository.exists(existsQuery)) {
+            log.info("用户{}已对目标{}执行过{}", addVO.getUserId(), addVO.getTargetId(), addVO.getTargetType());
             return true;
         }
 
-        UserInteraction interaction = new UserInteraction();
-        interaction.setUserId(addVO.getUserId());
-        interaction.setPublisherId(addVO.getPublisherId());
-        interaction.setStoreId(addVO.getStoreId());
-        interaction.setTargetType(targetType);
-        interaction.setTargetId(addVO.getTargetId());
-        interaction.setActionType(actionType);
-        interaction.setCreatedTime(LocalDateTime.now());
-        interaction.setUpdatedTime(LocalDateTime.now());
-
-        // TODO[infra-gap] 旧实现成功后调 IGoodsCountFacade.remoteProcess 同步 +1 增量到商品域, 中台无该出站端口。
-        return userInteractionRepository.add(interaction);
+        return userInteractionRepository.add(TransferUtils.transfer(addVO, UserInteractionDTO.class));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean cancel(InteractionAddVO addVO) {
-        TargetTypeEnum targetType = parseTargetType(addVO.getTargetType());
-        ActionTypeEnum actionType = parseActionType(addVO.getActionType());
-
-        boolean result = userInteractionRepository.cancel(addVO.getUserId(), targetType, addVO.getTargetId(), actionType);
+    public boolean cancel(InteractionAddReq addVO) {
+        InteractionQuery cancelQuery = TransferUtils.transfer(addVO, InteractionQuery.class);
+        boolean result = userInteractionRepository.cancel(cancelQuery);
         if (!result) {
-            throw new PlatformException(BaseErrorCode.NODATA, actionType.getDesc());
+            throw new PlatformException(BaseErrorCode.NODATA, addVO.getTargetType().getValue());
         }
 
         // TODO[infra-gap] 旧实现成功后调 IGoodsCountFacade.remoteProcess 同步 -1 增量到商品域, 中台无该出站端口。
@@ -110,22 +66,18 @@ public class UserInteractionDomainImpl implements UserInteractionDomain {
     }
 
     @Override
-    public Page<InteractionRPCVO> getUserInteractionsPage(InteractionPageQueryRPC query) {
-        parseActionType(query.getActionType());
-        // TODO[infra-gap] 旧实现用 IStoreTargetInteractionFacade 汇总补 actionTypeCount, 中台无该出站端口, 字段保持为空。
+    public Page<InteractionRPCVO> getUserInteractionsPage(InteractionQuery query) {
         return userInteractionRepository.queryByUserPage(query);
     }
 
     @Override
     public boolean checkIsInteracted(InteractionQuery query) {
-        TargetTypeEnum targetType = parseTargetType(query.getTargetType());
-        ActionTypeEnum actionType = parseActionType(query.getActionType());
-        return userInteractionRepository.exists(query.getUserId(), targetType, query.getTargetId(), actionType);
+        return userInteractionRepository.exists(query);
     }
 
     @Override
-    public InteractionCountVO countTargetInteractions(String targetType, Long targetId, String actionType) {
-        return userInteractionRepository.countByTarget(parseTargetType(targetType), targetId, parseActionType(actionType));
+    public InteractionCountRes countTargetInteractions(TargetTypeEnum targetType, Long targetId, ActionTypeEnum actionType) {
+        return userInteractionRepository.countByTarget(targetType, targetId, actionType);
     }
 
     @Override

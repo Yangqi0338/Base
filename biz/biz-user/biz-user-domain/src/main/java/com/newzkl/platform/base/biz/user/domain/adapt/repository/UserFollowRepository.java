@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserFollowPageReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollow;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserFollowQuery;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserFollowDTO;
 
 import java.util.List;
 import java.util.Set;
@@ -23,7 +23,7 @@ public interface UserFollowRepository {
      * @param userFollow 关注实体
      * @return 保存后的实体
      */
-    UserFollow save(UserFollow userFollow);
+    UserFollowDTO save(UserFollowDTO userFollow);
 
     /**
      * 删除关注关系
@@ -49,7 +49,7 @@ public interface UserFollowRepository {
      * @param follower 关注者ID
      * @return 关注列表
      */
-    List<UserFollow> findFollowingList(Long follower);
+    List<UserFollowDTO> findFollowingList(Long follower);
 
     /**
      * 分页查询关注列表
@@ -57,7 +57,7 @@ public interface UserFollowRepository {
      * @param query 分页查询请求
      * @return 关注分页
      */
-    Page<UserFollow> findFollowingPage(UserFollowPageReq query);
+    Page<UserFollowDTO> findFollowingPage(UserFollowQuery query);
 
     /**
      * 查询粉丝列表（关注我的人）
@@ -65,7 +65,7 @@ public interface UserFollowRepository {
      * @param following 被关注者ID
      * @return 粉丝列表
      */
-    List<UserFollow> findFollowerList(Long following);
+    List<UserFollowDTO> findFollowerList(Long following);
 
     /**
      * 分页查询粉丝列表
@@ -73,7 +73,7 @@ public interface UserFollowRepository {
      * @param query 分页查询请求
      * @return 粉丝分页
      */
-    Page<UserFollow> findFollowerPage(UserFollowPageReq query);
+    Page<UserFollowDTO> findFollowerPage(UserFollowQuery query);
 
     /**
      * 统计关注数（我关注的人数）

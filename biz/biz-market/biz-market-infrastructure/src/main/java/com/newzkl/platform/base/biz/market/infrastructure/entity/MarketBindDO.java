@@ -24,9 +24,8 @@ public class MarketBindDO extends BaseDO {
     @Index
     private Long marketId;
     /**
-     * 绑定类型  1：运营商  2：交易师  3:渠道商
+     * 绑定类型
      */
-    @Index
     private RoleEnum.CompanyRole bindType;
     /**
      * 客户id
@@ -38,7 +37,7 @@ public class MarketBindDO extends BaseDO {
      */
     private String userName;
     /**
-     * 状态  0：删除  1：正常
+     * 状态
      */
     private CommonEnum.YesOrNo state;
     /**

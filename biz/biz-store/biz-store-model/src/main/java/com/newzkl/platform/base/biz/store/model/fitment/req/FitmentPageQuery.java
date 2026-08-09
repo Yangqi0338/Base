@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 装修分页查询
+ *
  * @author niu
- * @description:
  * @date 2024/3/29 15:27
  */
 @EqualsAndHashCode(callSuper = true)

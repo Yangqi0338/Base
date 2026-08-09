@@ -6,8 +6,8 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveCommand;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreCategoryQuery;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreCategoryQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreCategoryRepository;
@@ -87,7 +87,7 @@ public class StoreCategoryDomainImpl implements StoreCategoryDomain {
     public void del(Long id) {
         // 判断门店是否关联了该分类
         StoreQuery storeQueryReq = new StoreQuery();
-        storeQueryReq.setType(id);
+        storeQueryReq.setCategoryId(id);
         storeQueryReq.resetQuerySingle();
         Page<StoreSearchRes> page = storeDomain.storeSearchPage(storeQueryReq);
         boolean hasStore = page.getTotal() > 0;

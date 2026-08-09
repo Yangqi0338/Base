@@ -7,10 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 奖励的分润
+ * 奖励分润执行请求
  *
  * @author niu
- * @description: 分润请求对象
  * @date 2023/12/18 16:55
  */
 @EqualsAndHashCode(callSuper = true)
@@ -58,16 +57,14 @@ public class EarningsAwardExecReq extends EarningsExecReq {
     private String serialId;
 
     /**
-     * {@code ActivityEnum.DividendMethod}
      * 分红方式
-     * AVERAGE("AVERAGE", "平均分红"),
-     * WEIGHT("WEIGHT","加权分红");
+     * @ext AVERAGE 平均分红 WEIGHT 加权分红; 候选枚举 ActivityEnum.DividendMethod; 保留 String
      */
     private String dividendMethod;
 
     /**
-     * 分红周期 {@code ActivityEnum.DividendCycle}
      * 结算周期类型
+     * @ext 候选枚举 ActivityEnum.DividendCycle; 保留 String
      */
     private String settlementType;
 

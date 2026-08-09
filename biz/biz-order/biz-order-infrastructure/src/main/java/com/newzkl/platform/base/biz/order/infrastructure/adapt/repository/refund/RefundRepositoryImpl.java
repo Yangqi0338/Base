@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.refun
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
@@ -153,11 +154,11 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
 
     @Override
     public ApiRefundFreightAddressVO getOutRefundAddress(Long spuOrderId, Long spuId) {
-        String outRefundAddress = refundDAO.getOutRefundAddress(spuOrderId, spuId);
-        if(StrUtil.isEmpty(outRefundAddress)){
-            return null;
-        }
-        return JSONObject.parseObject(outRefundAddress, ApiRefundFreightAddressVO.class);
+        RefundQuery query = new RefundQuery();
+        query.setSpuOrderId(spuOrderId);
+        query.setSpuId(spuId);
+        String outRefundAddress = findOneField(refundDAO, refundDAO.getLw(query), RefundDO::getOutRefundAddress);
+        return JSONUtil.toBean(outRefundAddress, ApiRefundFreightAddressVO.class);
     }
 
     @Override

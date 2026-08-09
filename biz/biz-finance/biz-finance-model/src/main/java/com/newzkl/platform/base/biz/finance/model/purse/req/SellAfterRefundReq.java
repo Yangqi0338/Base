@@ -8,8 +8,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 售后退款请求
+ *
  * @author niu
- * @description: 售后退款请求对象
  * @date 2024/1/26 17:55
  */
 @Data
@@ -41,7 +42,7 @@ public class SellAfterRefundReq implements Serializable {
     private Long orderNo;
 
     /**
-     * 备注
+     * 账户变动类型
      */
     private PurseEnum.PurseAlterType alterType = PurseEnum.PurseAlterType.SELL_AFTER;
 }

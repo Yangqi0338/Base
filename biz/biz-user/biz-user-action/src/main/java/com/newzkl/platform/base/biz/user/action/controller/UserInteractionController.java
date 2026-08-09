@@ -3,12 +3,11 @@ package com.newzkl.platform.base.biz.user.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.service.UserInteractionDomain;
 import com.newzkl.platform.base.biz.user.model.interaction.query.BatchInteractionQuery;
-import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionPageQueryRPC;
 import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionQuery;
 import com.newzkl.platform.base.biz.user.model.interaction.res.BatchInteractionResult;
 import com.newzkl.platform.base.biz.user.model.interaction.vo.InteractionRPCVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionAddVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionCountVO;
+import com.newzkl.platform.base.biz.user.model.relation.req.InteractionAddReq;
+import com.newzkl.platform.base.biz.user.model.relation.res.InteractionCountRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +46,7 @@ public class UserInteractionController {
      * @return 是否成功
      */
     @PostMapping("/add")
-    public PlatformResult<Boolean> addInteraction(@Validated @RequestBody InteractionAddVO addVO) {
+    public PlatformResult<Boolean> addInteraction(@Validated @RequestBody InteractionAddReq addVO) {
         Long currentUserId = SecurityUtils.getAccountId();
         log.info("用户新增互动: userId={}, targetType={}, targetId={}, actionType={}",
                 currentUserId, addVO.getTargetType(), addVO.getTargetId(), addVO.getActionType());
@@ -62,7 +61,7 @@ public class UserInteractionController {
      * @return 是否成功
      */
     @PostMapping("/cancel")
-    public PlatformResult<Boolean> cancelInteraction(@Validated @RequestBody InteractionAddVO addVO) {
+    public PlatformResult<Boolean> cancelInteraction(@Validated @RequestBody InteractionAddReq addVO) {
         Long currentUserId = SecurityUtils.getAccountId();
         log.info("用户取消互动: userId={}, targetType={}, targetId={}, actionType={}",
                 currentUserId, addVO.getTargetType(), addVO.getTargetId(), addVO.getActionType());
@@ -84,7 +83,7 @@ public class UserInteractionController {
      * @return 互动记录分页
      */
     @PostMapping("/page")
-    public PlatformResult<Page<InteractionRPCVO>> getUserInteractionsPage(@Validated @RequestBody InteractionPageQueryRPC query) {
+    public PlatformResult<Page<InteractionRPCVO>> getUserInteractionsPage(@Validated @RequestBody InteractionQuery query) {
         Long currentUserId = SecurityUtils.getAccountId();
         log.info("分页查询用户互动: userId={}, actionType={}, pageNo={}, pageSize={}",
                 currentUserId, query.getActionType(), query.getPageNo(), query.getPageSize());
@@ -114,7 +113,7 @@ public class UserInteractionController {
      * @return 统计结果
      */
     @PostMapping("/count")
-    public PlatformResult<InteractionCountVO> countTargetInteractions(@Validated @RequestBody InteractionQuery query) {
+    public PlatformResult<InteractionCountRes> countTargetInteractions(@Validated @RequestBody InteractionQuery query) {
         Long currentUserId = SecurityUtils.getAccountId();
         log.info("统计目标对象的互动操作数量: userId={}, targetType={}, targetId={}, actionType={}",
                 currentUserId, query.getTargetType(), query.getTargetId(), query.getActionType());

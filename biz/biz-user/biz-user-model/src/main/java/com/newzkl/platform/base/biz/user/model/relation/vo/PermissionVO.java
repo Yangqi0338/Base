@@ -17,13 +17,13 @@ public class PermissionVO implements Serializable {
     /**
      * 直推奖配置
      */
-    private DirectConfig directConfig;
+    private DirectConfigVO directConfig;
 
     /**
      * 直推奖配置
      */
     @Data
-    public static class DirectConfig implements Serializable {
+    public static class DirectConfigVO implements Serializable {
         /**
          * 直接下属购买礼包收益开关
          */

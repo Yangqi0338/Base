@@ -16,7 +16,7 @@ import org.dromara.autotable.annotation.Index;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("ship_address")
+@TableName
 public class ShipAddressDO extends BaseDO {
 
     /**
@@ -60,7 +60,8 @@ public class ShipAddressDO extends BaseDO {
     private Integer shipAreaCode;
 
     /**
-     * 是否默认: 0 否 1 是
+     * 是否默认
+     * @ext 0 否, 1 是
      */
     private Integer isDefault;
 

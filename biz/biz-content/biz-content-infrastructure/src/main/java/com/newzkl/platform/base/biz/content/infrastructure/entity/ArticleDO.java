@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,78 +23,38 @@ import java.util.List;
  * @author KC
  */
 @Data
-@TableName(value = "article", autoResultMap = true)
-public class ArticleDO {
-
-    /**
-     * 主键ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+@TableName(autoResultMap = true)
+public class ArticleDO extends BaseDO {
 
     /**
      * 文章标题
      */
-    @TableField("title")
     private String title;
 
     /**
      * 文章内容
      */
-    @TableField("content")
     private String content;
 
     /**
      * 封面图URL
      */
-    @TableField("cover_image")
     private String coverImage;
 
     /**
-     * 海报轮播图URL列表(JSON数组)
+     * 海报轮播图URL列表
+     * @ext JSON数组, 源列 poster_images
      */
-    @TableField(value = "poster_images", typeHandler = JacksonTypeHandler.class)
-    private List<String> posterImages;
+    private String posterImages;
 
     /**
      * 分类ID
      */
-    @TableField("category_id")
     private Long categoryId;
 
     /**
-     * 创建时间
+     * 是否显示
+     * @ext 0-不显示, 1-显示
      */
-    @TableField(value = "create_time")
-    private LocalDateTime createTime;
-
-    /**
-     * 是否显示:0-不显示,1-显示
-     */
-    @TableField("is_visible")
-    private Integer isVisible;
-
-    /**
-     * 创建人ID
-     */
-    @TableField("creator_id")
-    private Long creatorId;
-
-    /**
-     * 创建人姓名
-     */
-    @TableField("creator_name")
-    private String creatorName;
-
-    /**
-     * 发布人id
-     */
-    @TableField("issuer_id")
-    private Long issuerId;
-
-    /**
-     * 发布人
-     */
-    @TableField("issuer")
-    private String issuer;
+    private CommonEnum.YesOrNo isVisible;
 }

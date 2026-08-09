@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,11 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("strategy_detail")
-public class StrategyDetailDO implements Serializable {
-    /**
-     * id
-     */
-    private Long id;
+public class StrategyDetailDO extends BaseDO {
 
     /**
      * 策略ID
@@ -24,7 +21,8 @@ public class StrategyDetailDO implements Serializable {
     private Long strategyId;
 
     /**
-     * 奖品ID 0表示现金，不限量
+     * 奖品ID
+     * @ext 0 表示现金, 不限量
      */
     private Long awardId;
 
@@ -47,6 +45,4 @@ public class StrategyDetailDO implements Serializable {
      * 策略内容
      */
     private String strategyContent;
-
-    private static final long serialVersionUID = 1L;
 }

@@ -9,8 +9,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 渠道商购买商品位请求
+ *
  * @author niu
- * @description: 渠道商购买商品位请求参数
  * @date 2025-08-26 15:44:24
  */
 @Data

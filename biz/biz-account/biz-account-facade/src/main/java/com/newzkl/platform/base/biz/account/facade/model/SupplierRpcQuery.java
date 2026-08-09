@@ -8,17 +8,22 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 供应商查询入参
+ *
+ * @author KC
+ */
 @Data
 public class SupplierRpcQuery extends BizPageQuery {
 
     /**
      * 状态 (查询)
-     * 1 已开通 0未开通
+     * @ext 0 未开通 1 已开通; 无对应枚举, 保留 Integer
      */
     private Integer state;
     /**
      * 状态集合
-     * 0未开通 1 已开通  2 已入驻
+     * @ext 0 未开通 1 已开通 2 已入驻; 无对应枚举, 保留 List
      */
     private List<Long> stateList;
 
@@ -39,7 +44,8 @@ public class SupplierRpcQuery extends BizPageQuery {
      */
     private String companyName;
     /**
-     * 审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过",4,"终止")
+     * 审批状态
+     * @ext 0 待用户提交 1 待审核 2 通过 3 未通过 4 终止; 无对应枚举, 保留 Integer
      */
     private Integer auditState;
     /**

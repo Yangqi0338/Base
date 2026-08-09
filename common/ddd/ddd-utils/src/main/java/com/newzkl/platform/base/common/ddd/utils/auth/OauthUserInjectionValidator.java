@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,41 +32,84 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class OauthUserInjectionValidator implements ConstraintValidator<OauthUserInjection, Object> {
 
+    private static volatile ConcurrentHashMap<Class<?>, List<AnnotatedElement>> CACHE = new ConcurrentHashMap<>();
+
     @Override
     public boolean isValid(Object bean, ConstraintValidatorContext context) {
         if (bean == null) {
             return true;
         }
-        Field[] fields = resolveFields(bean.getClass());
-        if (ArrayUtil.isEmpty(fields)) {
-            return true;
+        Class<?> clazz = bean.getClass();
+        List<AnnotatedElement> annotatedElementList = CACHE.get(clazz);
+        if (annotatedElementList == null) {
+            annotatedElementList = new ArrayList<>();
+            CollUtil.addAll(annotatedElementList,resolveFields(clazz));
+            CollUtil.addAll(annotatedElementList,resolveMethod(clazz));
         }
         Long accountId = SecurityUtils.getAccountId();
         Long roleId = SecurityUtils.getRoleId();
         boolean valid = true;
-        for (Field field : fields) {
-            OauthUserId userMark = field.getAnnotation(OauthUserId.class);
-            OauthRole roleMark = field.getAnnotation(OauthRole.class);
-            if (userMark != null) {
+        for (AnnotatedElement element : annotatedElementList) {
+            if (element.isAnnotationPresent(OauthUserId.class)) {
+                OauthUserId userMark = element.getAnnotation(OauthUserId.class);
                 if (accountId == null) {
                     if (userMark.required()) {
                         valid = false;
                     }
                 } else {
-                    injectUser(bean, field, accountId);
+                    if (element instanceof Field field) {
+                        injectUser(bean, field, accountId);
+                    }else if (element instanceof Method method) {
+                        injectUser(bean, method, accountId);
+                    }
                 }
             }
-            if (roleMark != null) {
+
+            if (element.isAnnotationPresent(OauthRole.class)) {
+                OauthRole roleMark = element.getAnnotation(OauthRole.class);
                 if (roleId == null) {
                     if (roleMark.required()) {
                         valid = false;
                     }
                 } else {
-                    injectRole(bean, field, roleId);
+                    if (element instanceof Field field) {
+                        injectRole(bean, field, accountId);
+                    }else if (element instanceof Method method) {
+                        injectRole(bean, method, accountId);
+                    }
                 }
             }
         }
+        CACHE.put(clazz, annotatedElementList);
         return valid;
+    }
+
+    private void injectRole(Object bean, Method method, Long roleId) {
+        try {
+            Parameter parameter = method.getParameters()[0];
+            Class<?> type = parameter.getType();
+            if (Long.class.equals(type)) {
+                method.invoke(bean, roleId);
+            } else if (RoleEnum.CompanyRole.class.equals(type)) {
+                method.invoke(bean, RoleEnum.CompanyRole.getByCode(roleId));
+            }
+        } catch (IllegalAccessException | InvocationTargetException ignored) {
+            // 注入失败不阻断校验主流程
+        }
+    }
+
+    private void injectUser(Object bean, Method method, Long accountId) {
+        try {
+            Parameter parameter = method.getParameters()[0];
+            Class<?> type = parameter.getType();
+            if (Long.class.equals(type)) {
+                method.invoke(bean, accountId);
+            } else if (String.class.equals(type)) {
+                method.invoke(bean, String.valueOf(accountId));
+            }
+        } catch (IllegalAccessException | InvocationTargetException ignored) {
+            // 注入失败不阻断校验主流程
+        }
     }
 
     /**
@@ -119,6 +162,10 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
         return ReflectUtil.getFields(clazz, this::isMarked);
     }
 
+    private Method[] resolveMethod(Class<?> clazz) {
+        return ReflectUtil.getMethods(clazz, this::isMarked);
+    }
+
     /**
      * 字段是否带任一注入标记
      *
@@ -128,6 +175,15 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
     private boolean isMarked(Field field) {
         for (Class<? extends Annotation> mark : List.of(OauthUserId.class, OauthRole.class)) {
             if (field.isAnnotationPresent(mark)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isMarked(Method method) {
+        for (Class<? extends Annotation> mark : List.of(OauthUserId.class, OauthRole.class)) {
+            if (method.isAnnotationPresent(mark) && method.getParameterCount() == 1) {
                 return true;
             }
         }

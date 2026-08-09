@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.domain.template.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopUseRecord;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopUseRecordDTO;
 import com.newzkl.platform.base.biz.store.model.template.query.ModelShopStorePageQuery;
 import com.newzkl.platform.base.biz.store.model.template.res.ModeShopDataSummary;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ModelShopUseRecordRepository {
 
-    void create(ModelShopUseRecord modelShopUseRecord);
+    void create(ModelShopUseRecordDTO modelShopUseRecord);
 
     Page<ModelShopStorePageRes> modelShopStorePage(ModelShopStorePageQuery query);
 

@@ -5,6 +5,8 @@ import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
 /**
 * 操作日志
 * @author fang
@@ -34,9 +36,11 @@ public class ExecuteLogDO extends BaseDO {
 	/**
 	 * 原数据
 	 */
+    @JsonSerializable
 	private String oldData;
 	/**
 	 * 改动数据
 	 */
+    @JsonSerializable
 	private String updateData;
 }

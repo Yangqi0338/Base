@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
 public class CountSaleReq implements Serializable {
 
     /**
-     * 角色编码 (旧表以字符串存储)
+     * 角色编码
+     * @ext 旧表以字符串存储
      */
     private String role;
 
@@ -39,7 +40,8 @@ public class CountSaleReq implements Serializable {
     private Integer totalOrderNumber;
 
     /**
-     * 累计订单金额 (Money, 落库 BIGINT 分)
+     * 累计订单金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money totalOrderAmount;
 
@@ -49,12 +51,14 @@ public class CountSaleReq implements Serializable {
     private Integer totalRefundNumber;
 
     /**
-     * 累计退款金额 (Money, 落库 BIGINT 分)
+     * 累计退款金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money totalRefundAmount;
 
     /**
-     * 贡献金额 (Money, 落库 BIGINT 分)
+     * 贡献金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money contributeAmount;
 }

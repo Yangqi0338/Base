@@ -10,9 +10,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
+ * 登录请求参数
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/2/2211:22
+ * @date 2024/2/22 11:22
  */
 @Data
 public class LoginReq {
@@ -34,7 +35,7 @@ public class LoginReq {
     private String password;
 
     /**
-     * 用户密码
+     * 验证码
      */
     private String code;
 
@@ -55,11 +56,21 @@ public class LoginReq {
     @NotNull(message = "登录类型不能为空")
     private AccountEnum.LoginType type;
 
+    /**
+     * 校验密码登录时密码是否为空
+     *
+     * @return 密码为空时返回 true
+     */
     @AssertFalse(message = "密码不能为空")
     public boolean isPasswordBlank() {
         return type == AccountEnum.LoginType.PASSWORD && StrUtil.isBlank(password);
     }
 
+    /**
+     * 校验验证码登录时验证码是否为空
+     *
+     * @return 验证码为空时返回 true
+     */
     @AssertFalse(message = "验证码不能为空")
     public boolean isCodeBlank() {
         return type == AccountEnum.LoginType.CODE && StrUtil.isBlank(code);

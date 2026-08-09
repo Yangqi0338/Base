@@ -54,7 +54,7 @@ public class OrderPayReq implements Serializable {
     /**
      * 手机号
      */
-    private Long accountMobile;
+    private String accountMobile;
 
     /**
      * 注册时间。用户在商户系统中的注册时间， 格式须为yyyyMMddHHmmss， 24小时制。
@@ -68,7 +68,7 @@ public class OrderPayReq implements Serializable {
     private String accountName;
 
     /**
-     * 支付方式  1:微信支付  2：支付宝支付
+     * 支付方式
      */
     private OrderEnum.PayType payType;
 

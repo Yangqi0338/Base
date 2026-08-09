@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.dao;
+import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseQueryWrapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,9 +15,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PaymentDAO extends BaseMapper<PaymentDO> {
 
     default LambdaQueryWrapper<PaymentDO> getLw(PaymentQuery query) {
-        return new BaseQueryWrapper<PaymentDO>()
-                .jsonEq("order_info", "level", false, query.getLevel())
-                .lambda()
+        return new BaseLambdaQueryWrapper<PaymentDO>()
+                .jsonEq(PaymentDO::getOrderInfo, "level", false, query.getLevel())
                 .notEmptyEq(PaymentDO::getAccountId, query.getAccountId())
                 .notEmptyEq(PaymentDO::getPayState, query.getPayState())
                 .notEmptyIn(PaymentDO::getTradeNo, query.getTradeNoList())

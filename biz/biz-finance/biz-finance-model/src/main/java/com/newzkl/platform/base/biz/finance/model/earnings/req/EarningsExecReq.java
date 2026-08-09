@@ -8,9 +8,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 分润请求对象
+ * 分润执行请求
+ *
  * @author niu
- * @description: 分润请求对象
  * @date 2023/12/18 16:55
  */
 @Data

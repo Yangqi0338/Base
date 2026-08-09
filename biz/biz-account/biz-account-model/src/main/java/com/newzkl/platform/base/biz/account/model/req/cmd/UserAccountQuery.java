@@ -4,6 +4,9 @@ import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/**
+ * 用户账号查询入参
+ */
 @Data
 public class UserAccountQuery {
     /**

@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.user.domain.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserFollowPageReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollowVO;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserFollowQuery;
+import com.newzkl.platform.base.biz.user.model.relation.res.UserFollowRes;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public interface UserFollowDomain {
      * @param userId 关注者ID
      * @return 关注列表
      */
-    List<UserFollowVO> getFollowingList(Long userId);
+    List<UserFollowRes> getFollowingList(Long userId);
 
     /**
      * 分页查询关注列表（我关注的人）
@@ -62,7 +62,7 @@ public interface UserFollowDomain {
      * @param query 分页查询请求
      * @return 关注分页
      */
-    Page<UserFollowVO> getFollowingPage(UserFollowPageReq query);
+    Page<UserFollowRes> getFollowingPage(UserFollowQuery query);
 
     /**
      * 查询粉丝列表（关注我的人）
@@ -70,7 +70,7 @@ public interface UserFollowDomain {
      * @param userId 被关注者ID
      * @return 粉丝列表
      */
-    List<UserFollowVO> getFollowerList(Long userId);
+    List<UserFollowRes> getFollowerList(Long userId);
 
     /**
      * 分页查询粉丝列表（关注我的人）
@@ -78,7 +78,7 @@ public interface UserFollowDomain {
      * @param query 分页查询请求
      * @return 粉丝分页
      */
-    Page<UserFollowVO> getFollowerPage(UserFollowPageReq query);
+    Page<UserFollowRes> getFollowerPage(UserFollowQuery query);
 
     /**
      * 统计关注数（我关注的人数）

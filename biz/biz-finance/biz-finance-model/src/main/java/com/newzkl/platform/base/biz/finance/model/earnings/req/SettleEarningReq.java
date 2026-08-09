@@ -6,8 +6,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 结算收益请求
+ *
  * @author niu
- * @description:
  * @date 2024/5/13 15:52
  */
 @Data

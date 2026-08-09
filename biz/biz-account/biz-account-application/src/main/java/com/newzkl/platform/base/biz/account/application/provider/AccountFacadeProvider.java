@@ -9,6 +9,7 @@ import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,9 @@ public class AccountFacadeProvider implements AccountFacade {
         if (account == null) {
             return null;
         }
-        return new AccountGroupVO().setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead()).setId(account.getId());
+        AccountGroupVO accountGroupVO = new AccountGroupVO();
+        accountGroupVO.setId(account.getId());
+        return accountGroupVO.setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
     }
 
     @Override
@@ -55,7 +58,9 @@ public class AccountFacadeProvider implements AccountFacade {
         if (account == null) {
             return null;
         }
-        return new AccountGroupVO().setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead()).setId(account.getId());
+        AccountGroupVO accountGroupVO = new AccountGroupVO();
+        accountGroupVO.setId(account.getId());
+        return new AccountGroupVO().setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
 
     }
 }

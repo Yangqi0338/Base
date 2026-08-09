@@ -7,10 +7,9 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * 奖励的分润
+ * 奖励分润批量执行请求
  *
  * @author niu
- * @description: 分润请求对象
  * @date 2023/12/18 16:55
  */
 @EqualsAndHashCode(callSuper = true)

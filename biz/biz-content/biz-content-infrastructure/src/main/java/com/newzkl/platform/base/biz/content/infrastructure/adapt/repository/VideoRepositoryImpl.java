@@ -11,6 +11,7 @@ import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
 import com.newzkl.platform.base.biz.content.model.video.req.VideoReq;
 import com.newzkl.platform.base.biz.content.model.video.res.VideoRes;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -49,10 +50,7 @@ public class VideoRepositoryImpl implements VideoRepository {
     @Override
     public void save(VideoReq req) {
         VideoDO videoDO = TransferUtils.transfer(req, VideoDO::new);
-        videoDO.setCreatorId(SecurityUtils.getAccountId());
-        videoDO.setCreatorName(SecurityUtils.getNickName());
-        // 旧: CommonEnum.Switch.OFF.getCode() —— 新建视频默认不可见(0), Base 无 CommonEnum.Switch, 用字面量 0
-        videoDO.setIsVisible(0);
+        videoDO.setIsVisible(CommonEnum.YesOrNo.YES);
         contentVideoDAO.insert(videoDO);
     }
 

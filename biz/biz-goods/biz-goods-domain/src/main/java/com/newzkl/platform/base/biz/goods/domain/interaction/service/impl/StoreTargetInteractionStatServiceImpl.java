@@ -387,7 +387,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
                 case VIEW -> dto.setViewCount(dto.getViewCount() + increment);
                 case LIKE -> dto.setLikeCount(dto.getLikeCount() + increment);
                 case SHARE -> dto.setShareCount(dto.getShareCount() + increment);
-                default -> throw new IllegalArgumentException("不支持的互动类型: " + actionType.getDesc());
+                default -> throw new IllegalArgumentException("不支持的互动类型: " + actionType.getValue());
             }
             RedisUtil.set(redisStatKey, JSONUtil.toJsonStr(dto));
         } catch (Exception e) {

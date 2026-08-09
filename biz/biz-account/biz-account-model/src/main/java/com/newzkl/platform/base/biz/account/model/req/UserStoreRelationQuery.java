@@ -8,32 +8,38 @@ import lombok.Data;
 @Data
 public class UserStoreRelationQuery {
     /**
-     * 用户ID（精确匹配）
+     * 用户ID
+     * @ext 精确匹配
      */
     private String userId;
 
     /**
-     * 门店ID（精确匹配）
+     * 门店ID
+     * @ext 精确匹配
      */
     private String storeId;
 
     /**
-     * 用户名（模糊查询）
+     * 用户名
+     * @ext 模糊查询
      */
     private String userName;
 
     /**
-     * 门店名（模糊查询）
+     * 门店名
+     * @ext 模糊查询
      */
     private String storeName;
 
     /**
-     * 是否有效（1-有效，0-无效）
+     * 是否有效
+     * @ext 1 有效 0 无效; 无对应枚举, 保留 Integer
      */
     private Integer isValid;
 
     /**
-     * 页码（1基，从1开始）
+     * 页码
+     * @ext 1 基, 从 1 开始
      */
     private Integer pageNum;
 
@@ -43,7 +49,8 @@ public class UserStoreRelationQuery {
     private Integer pageSize;
 
     /**
-     * 分页偏移量（由Service层计算：offset = (pageNum - 1) * pageSize）
+     * 分页偏移量
+     * @ext 由 Service 层计算 offset = (pageNum - 1) * pageSize
      */
     private Integer offset;
 }

@@ -25,7 +25,7 @@ public class SupplierReq extends BaseReq {
      */
     // TODO[cross-domain relation]: private ShipAddressVO receiveAddress;
     /**
-     * 审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过",4,"终止")
+     * 审批状态
      */
     private AuditEnum.State auditState;
 }

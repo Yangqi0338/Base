@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreZone;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreZonePageReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneResponse;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreZoneQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreZoneRepository;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreZoneDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreZoneDO;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class StoreZoneRepositoryImpl extends ServiceImpl<StoreZoneDAO, StoreZoneDO> implements StoreZoneRepository {
 
     @Override
-    public Page<StoreZoneResponse> storeZonePage(StoreZonePageReq req) {
+    public Page<StoreZoneRes> storeZonePage(StoreZoneQuery req) {
         // 创建分页对象
         Page<StoreZoneDO> queryPage = new Page<>(req.getPageNo(), req.getPageSize());
 
@@ -47,11 +47,11 @@ public class StoreZoneRepositoryImpl extends ServiceImpl<StoreZoneDAO, StoreZone
         Page<StoreZoneDO> page = this.page(queryPage, wrapper);
 
         // 转换为响应对象列表
-        List<StoreZoneResponse> responseList = page.getRecords().stream()
-                .map(x -> BeanUtil.toBean(x, StoreZoneResponse.class)).collect(Collectors.toList());
+        List<StoreZoneRes> responseList = page.getRecords().stream()
+                .map(x -> BeanUtil.toBean(x, StoreZoneRes.class)).collect(Collectors.toList());
 
         // 构建新的 Page 对象
-        Page<StoreZoneResponse> resultPage = new Page<>();
+        Page<StoreZoneRes> resultPage = new Page<>();
         resultPage.setRecords(responseList);
         resultPage.setTotal(page.getTotal());
         resultPage.setSize(page.getSize());

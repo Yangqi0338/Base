@@ -15,7 +15,8 @@ public class OperatorDO extends OperatorClientBaseDO {
      */
     private OperatorEnum.Type type;
     /**
-     * 行业id,区域地址编码 | (多选,拼接)
+     * 行业id / 区域地址编码
+     * @ext 多选, 拼接
      */
     private String typeForeignId;
     /**

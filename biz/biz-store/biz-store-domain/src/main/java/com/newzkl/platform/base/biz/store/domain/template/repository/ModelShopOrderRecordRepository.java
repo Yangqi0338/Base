@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.domain.template.repository;
 
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopOrderRecord;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopOrderRecordDTO;
 import com.newzkl.platform.base.biz.store.model.template.res.ModeShopDataSummary;
 import com.newzkl.platform.base.biz.store.model.template.vo.ModelShopOrderDataVO;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ModelShopOrderRecordRepository {
 
-    void create(ModelShopOrderRecord modelShopOrderRecord);
+    void create(ModelShopOrderRecordDTO modelShopOrderRecord);
 
     List<ModelShopOrderDataVO> modelShopPayOrderData(Long modelShopId, List<Long> storeIdList);
 

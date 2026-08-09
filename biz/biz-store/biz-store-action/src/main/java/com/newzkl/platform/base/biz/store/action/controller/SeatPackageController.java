@@ -5,10 +5,10 @@ import com.newzkl.platform.base.biz.store.application.service.SeatPackageService
 import com.newzkl.platform.base.biz.store.domain.store.service.SeatPackageDomain;
 import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
+import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -45,8 +45,8 @@ public class SeatPackageController {
      * @return 席位套餐分页
      */
     @PostMapping("/seatPackagePage")
-    public PlatformResult<Page<SeatPackageResponse>> seatPackagePage(@Validated @RequestBody SeatPackagePageReq req) {
-        req.setRoleId(SecurityUtils.getRoleId());
+    public PlatformResult<Page<SeatPackageRes>> seatPackagePage(@Validated @RequestBody SeatPackageQuery req) {
+        req.setRole(SecurityUtils.getRole());
         return PlatformResult.success(seatPackageDomain.seatPackagePage(req));
     }
 

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.market.action.controller;
 
 import cn.hutool.core.lang.Opt;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.distribution.service.DistributionDomain;
+import com.newzkl.platform.base.biz.market.domain.distribution.DistributionDomain;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;

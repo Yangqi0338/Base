@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.distribution.repository.DistributionRepository;
+import com.newzkl.platform.base.biz.market.domain.adapt.repository.DistributionRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.StoreDistributionDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.StoreDistributionDO;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;

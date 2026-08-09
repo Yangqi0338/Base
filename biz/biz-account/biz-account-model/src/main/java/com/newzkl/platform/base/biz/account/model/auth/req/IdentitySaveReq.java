@@ -7,9 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 身份注册请求参数
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/2/2211:22
+ * @date 2024/2/22 11:22
  */
 @Data
 public class IdentitySaveReq extends AccountSaveReq {
@@ -120,6 +121,11 @@ public class IdentitySaveReq extends AccountSaveReq {
          */
         private String detailAddress;
 
+        /**
+         * 按企业名称构造
+         *
+         * @param companyName 企业名称
+         */
         public CompanyInfo(String companyName) {
             this.companyName = companyName;
         }

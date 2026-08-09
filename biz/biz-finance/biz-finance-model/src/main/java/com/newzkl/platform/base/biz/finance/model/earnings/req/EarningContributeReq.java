@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
 
 /**
- * @author 个人贡献表
+ * 个人贡献请求
  */
 @Data
 public class EarningContributeReq extends BaseRes {

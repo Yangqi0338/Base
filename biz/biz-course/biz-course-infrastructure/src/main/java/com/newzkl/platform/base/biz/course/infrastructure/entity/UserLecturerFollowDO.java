@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("user_lecturer_follow")
+@TableName
 public class UserLecturerFollowDO extends BaseDO {
 
     /**
@@ -29,7 +29,8 @@ public class UserLecturerFollowDO extends BaseDO {
     private Long userId;
 
     /**
-     * 讲师ID, 关联讲师表主键
+     * 讲师ID
+     * @ext 关联讲师表主键
      */
     private Long lecturerId;
 

@@ -18,15 +18,16 @@ import java.time.LocalDateTime;
 
 /**
  * 用户账号
+ *
  * @author fang
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName
 public class AccountDO extends BaseDO {
-    /*
+    /**
      * 主键ID
-     * */
+     */
     @PrimaryKey
     @TableId(type = IdType.ASSIGN_ID)
     protected Long id;
@@ -114,11 +115,13 @@ public class AccountDO extends BaseDO {
     @Index
     private String phone;
     /**
-     * 账号(tencent IM用)
+     * 账号
+     * @ext tencent IM 用
      */
     private String userAccount;
     /**
-     * IM同步状态（0-未同步，1-已同步，2-同步失败）
+     * IM同步状态
+     * @ext 0-未同步, 1-已同步, 2-同步失败
      */
     private Integer imSyncStatus;
 

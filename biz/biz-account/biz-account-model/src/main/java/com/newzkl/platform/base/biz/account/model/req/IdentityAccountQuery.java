@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * 渠道商
+ * 身份账号查询入参
  *
  * @author fang
  */

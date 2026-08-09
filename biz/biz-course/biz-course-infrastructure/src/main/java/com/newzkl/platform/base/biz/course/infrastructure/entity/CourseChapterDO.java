@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,11 +22,12 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("course_chapter")
+@TableName
 public class CourseChapterDO extends BaseDO {
 
     /**
-     * 所属课程ID, 关联课程表主键
+     * 所属课程ID
+     * @ext 关联课程表主键
      */
     private Long courseId;
 
@@ -35,7 +37,8 @@ public class CourseChapterDO extends BaseDO {
     private String title;
 
     /**
-     * 章节数, 从1开始, 同一课程下不重复
+     * 章节数
+     * @ext 从1开始, 同一课程下不重复
      */
     private Integer chapterNum;
 
@@ -45,9 +48,9 @@ public class CourseChapterDO extends BaseDO {
     private Integer virtualStudyCount;
 
     /**
-     * 是否免费: 1-是, 0-否
+     * 是否免费
      */
-    private Integer isFree;
+    private CommonEnum.YesOrNo isFree;
 
     /**
      * 自媒体上传视频URL
@@ -65,17 +68,19 @@ public class CourseChapterDO extends BaseDO {
     private LocalDateTime publishTime;
 
     /**
-     * 章节视频时长, 单位百分秒
+     * 章节视频时长
+     * @ext 单位百分秒
      */
     private Integer durationCentisecond;
 
     /**
-     * 时长描述, 冗余字段用于前端展示
+     * 时长描述
+     * @ext 冗余字段用于前端展示
      */
     private String durationDesc;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 }

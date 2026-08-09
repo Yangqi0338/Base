@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
@@ -19,11 +20,11 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("course")
+@TableName
 public class CourseDO extends BaseDO {
 
     /**
-     * 课程编码, K 前缀自编码
+     * 课程编码
      */
     private String courseNum;
 
@@ -38,22 +39,24 @@ public class CourseDO extends BaseDO {
     private String intro;
 
     /**
-     * 讲师ID, 关联讲师表主键
+     * 讲师ID
+     * @ext 关联讲师表主键
      */
     private Long lecturerId;
 
     /**
-     * 课程分类ID, 关联课程分类表主键
+     * 课程分类ID
+     * @ext 关联课程分类表主键
      */
     private Long categoryId;
 
     /**
-     * 原价 (Money, 落库 BIGINT 分)
+     * 原价
      */
     private Money originalPrice;
 
     /**
-     * 售价 (Money, 落库 BIGINT 分)
+     * 售价
      */
     private Money sellPrice;
 
@@ -73,7 +76,8 @@ public class CourseDO extends BaseDO {
     private String coverImage;
 
     /**
-     * 轮播图URL, 多个用逗号分隔
+     * 轮播图URL
+     * @ext 多个用逗号分隔
      */
     private String carouselImages;
 
@@ -88,22 +92,25 @@ public class CourseDO extends BaseDO {
     private String details;
 
     /**
-     * 章节总数, 冗余字段
+     * 章节总数
+     * @ext 冗余字段
      */
     private Integer chapterCount;
 
     /**
-     * 课程总时长, 单位百分秒, 冗余字段
+     * 课程总时长
+     * @ext 单位百分秒, 冗余字段
      */
     private Long totalDurationCentisecond;
 
     /**
-     * 课程总时长描述, 冗余字段
+     * 课程总时长描述
+     * @ext 冗余字段
      */
     private String totalDurationDesc;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 }

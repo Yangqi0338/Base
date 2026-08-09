@@ -5,6 +5,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 /**
 * 结算记录明细表
@@ -15,10 +16,12 @@ public class SettleRecordItemDO extends BaseDO {
 	/**
 	 * 结算记录ID
 	 */
+    @Index
 	private Long settleRecordId;
 	/**
 	 * SPU_ID
 	 */
+    @Index
 	private Long spuId;
 	/**
 	 * spu名称

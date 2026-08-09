@@ -4,19 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import com.newzkl.platform.base.biz.user.application.pack.service.PackOrderService;
-import com.newzkl.platform.base.biz.user.domain.adapt.api.AccountInfoDTO;
-import com.newzkl.platform.base.biz.user.domain.adapt.api.AccountLevelApi;
-import com.newzkl.platform.base.biz.user.domain.adapt.api.AccountQueryApi;
-import com.newzkl.platform.base.biz.user.domain.adapt.api.OrderPayApi;
-import com.newzkl.platform.base.biz.user.domain.adapt.api.OrderPayCommand;
+import com.newzkl.platform.base.biz.user.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.user.domain.adapt.api.PackUpCheckCommand;
+import com.newzkl.platform.base.biz.user.domain.adapt.api.PayApi;
 import com.newzkl.platform.base.biz.user.domain.adapt.api.PayResultDTO;
 import com.newzkl.platform.base.biz.user.domain.pack.entity.PackOrder;
 import com.newzkl.platform.base.biz.user.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.user.domain.service.PackOrderDomain;
-import com.newzkl.platform.base.biz.user.model.enums.EarningsEnum;
 import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
-import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.biz.user.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderPayReq;
@@ -24,10 +19,15 @@ import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackOrderPreRes;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackOrderRes;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
+import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
+import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -71,11 +71,9 @@ public class PackOrderServiceImpl implements PackOrderService {
 
     private final PackOrderDomain packOrderDomain;
 
-    private final AccountLevelApi accountLevelApi;
+    private final AccountApi accountApi;
 
-    private final AccountQueryApi accountQueryApi;
-
-    private final OrderPayApi orderPayApi;
+    private final PayApi payApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -93,7 +91,7 @@ public class PackOrderServiceImpl implements PackOrderService {
         checkCommand.setAmount(packGoods.getAmount());
         checkCommand.setLevel(packGoods.getLevel());
         checkCommand.setType(packGoods.getType());
-        Integer checkState = accountLevelApi.packUpCheck(checkCommand);
+        Integer checkState = accountApi.packUpCheck(checkCommand);
         if (checkState != null && checkState == -1) {
             throw new PlatformException(PackOrderErrorCode.ALREADY_LEVEL);
         }
@@ -137,7 +135,7 @@ public class PackOrderServiceImpl implements PackOrderService {
     @Transactional(rollbackFor = Exception.class)
     public PayResultDTO packOrderPay(PackOrderPayReq payReq) {
         Long orderId = payReq.getOrderId();
-        Integer amount;
+        Money amount;
         Integer packLevel;
         Integer packType;
         String levelName;
@@ -164,26 +162,26 @@ public class PackOrderServiceImpl implements PackOrderService {
             accountId = orderRes.getAccountId();
         }
 
-        AccountInfoDTO accountInfo = accountQueryApi.accountInfo(accountId);
+        AccountGroupVO accountInfo = accountApi.accountInfo(accountId);
 
-        OrderPayCommand payCommand = new OrderPayCommand();
-        payCommand.setOrderNo(orderId);
-        payCommand.setConsumeType(EarningsEnum.ConsumeType.PICK_PACK.getType());
-        payCommand.setOrderAmount(amount);
-        payCommand.setPayAmount(amount);
+        OrderPayReq apiPayReq = new OrderPayReq();
+        apiPayReq.setOrderNo(orderId);
+        apiPayReq.setConsumeType(EarningsEnum.ConsumeType.PICK_PACK);
+        apiPayReq.setOrderAmount(amount);
+        apiPayReq.setPayAmount(amount);
         RoleEnum.CompanyRole companyRole = packType == null ? null : RoleEnum.CompanyRole.getByCode(packType.longValue());
-        payCommand.setOrderInfo((companyRole == null ? "" : companyRole.getValue()) + "礼包");
-        payCommand.setGoodsInfo(String.format("等级: %s, 名称:%s", packLevel, levelName));
-        payCommand.setAccountId(accountId);
+        apiPayReq.setOrderInfo((companyRole == null ? "" : companyRole.getValue()) + "礼包");
+        apiPayReq.setGoodsInfo(String.format("等级: %s, 名称:%s", packLevel, levelName));
+        apiPayReq.setAccountId(accountId);
         if (accountInfo != null) {
-            payCommand.setAccountMobile(accountInfo.getUsername() == null ? null : Long.parseLong(accountInfo.getUsername()));
-            payCommand.setRegisterTime(accountInfo.getCreateTime() == null ? null
+            apiPayReq.setAccountMobile(accountInfo.getPhone());
+            apiPayReq.setRegisterTime(accountInfo.getCreateTime() == null ? null
                     : DateUtil.format(java.util.Date.from(accountInfo.getCreateTime()
                     .atZone(java.time.ZoneId.systemDefault()).toInstant()), "yyyyMMddHHmmss"));
-            payCommand.setAccountName(accountInfo.getUsername());
+            apiPayReq.setAccountName(accountInfo.getNickname());
         }
-        payCommand.setPayType(payReq.getPayType());
+        apiPayReq.setPayType(payReq.getPayType());
 
-        return orderPayApi.orderPay(payCommand);
+        return payApi.packOrderPay(apiPayReq);
     }
 }

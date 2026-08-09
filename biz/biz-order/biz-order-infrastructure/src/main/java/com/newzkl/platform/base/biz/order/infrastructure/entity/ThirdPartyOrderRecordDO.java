@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
@@ -21,7 +22,6 @@ public class ThirdPartyOrderRecordDO extends BaseDO {
     /**
      * 平台类型
      */
-    @Index
     private PlatformTypeEnum platformType;
 
     /**
@@ -37,48 +37,37 @@ public class ThirdPartyOrderRecordDO extends BaseDO {
     private String thirdOrderNo;
 
     /**
-     * 接口名称 (对应数据库表 `third_party_order_request.interface_name`)
+     * 接口名称
      */
     private String interfaceName;
 
     /**
-     * 请求参数JSON (对应数据库表 `third_party_order_request.request_json`)
+     * 请求参数 JSON
      */
     private String requestJson;
 
     /**
-     * 响应结果JSON (对应数据库表 `third_party_order_request.response_json`)
+     * 响应结果 JSON
      */
     private String responseJson;
 
     /**
      * 请求状态
      */
-    @Index
-    private Integer requestStatus;
+    private CommonEnum.RequestStatusEnum requestStatus;
 
     /**
-     * 错误信息 (对应数据库表 `third_party_order_request.error_message`)
+     * 错误信息
      */
     private String errorMessage;
 
     /**
-     * 重试次数 (对应数据库表 `third_party_order_request.retry_count`)
+     * 重试次数
      */
     private Integer retryCount;
 
     /**
-     * 下次重试时间 (对应数据库表 `third_party_order_request.next_retry_time`)
+     * 下次重试时间
      */
     private LocalDateTime nextRetryTime;
-
-    /**
-     * 创建时间 (对应数据库表 `third_party_order_request.created_at`)
-     */
-    private LocalDateTime createdAt;
-
-    /**
-     * 更新时间 (对应数据库表 `third_party_order_request.updated_at`)
-     */
-    private LocalDateTime updatedAt;
 }

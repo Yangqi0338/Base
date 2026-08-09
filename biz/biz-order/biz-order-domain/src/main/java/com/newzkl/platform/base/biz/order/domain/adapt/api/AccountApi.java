@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
 
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
+import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 
 import java.util.List;
 
@@ -45,4 +46,6 @@ public interface AccountApi {
      */
     AccountGroupVO accountInfo(Long id);
     AccountGroupVO channelInfo(Long id);
+
+
 }

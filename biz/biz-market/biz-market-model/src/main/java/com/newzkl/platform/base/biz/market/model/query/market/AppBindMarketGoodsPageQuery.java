@@ -6,8 +6,9 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-
-
+/**
+ * App 端已绑定市场商品分页查询
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AppBindMarketGoodsPageQuery extends PageQuery {
@@ -39,14 +40,18 @@ public class AppBindMarketGoodsPageQuery extends PageQuery {
      */
     private List<Long> goodsIdList;
     /**
-     * 关系类型：  1：一级市场商品  2：二级市场商品  3：市场选品商品
+     * 关系类型
+     *
+     * @ext 1：一级市场商品 2：二级市场商品 3：市场选品商品
      */
     private Integer relationType;
 
     /** 绑定类型 */
     private Integer bindType;
     /**
-     * 商品上下架状态 :  0:仓库中 2:上架中 3:待上架
+     * 商品上下架状态
+     *
+     * @ext 0：仓库中 2：上架中 3：待上架
      */
     private String spuState;
 

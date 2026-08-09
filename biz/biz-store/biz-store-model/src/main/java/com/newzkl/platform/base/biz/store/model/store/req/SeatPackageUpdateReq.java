@@ -38,7 +38,8 @@ public class SeatPackageUpdateReq implements Serializable {
     private String packageDescribe;
 
     /**
-     * 状态：0 禁用,1 启用
+     * 状态
+     * @ext 取值范围: 0=禁用, 1=启用
      */
     private Integer state;
 

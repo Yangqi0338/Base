@@ -31,7 +31,8 @@ public class StoreZoneUpdateReq implements Serializable {
     private String zoneDescribe;
 
     /**
-     * 状态：0 禁用,1 启用
+     * 状态
+     * @ext 取值范围: 0=禁用, 1=启用
      */
     private Integer state;
 

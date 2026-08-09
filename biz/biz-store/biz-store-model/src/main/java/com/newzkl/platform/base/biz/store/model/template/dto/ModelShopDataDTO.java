@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.biz.store.model.template.dto;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
+import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,7 +11,7 @@ import java.io.Serializable;
  * @author 样板店数据DTO
  */
 @Data
-public class ModelShopDataDTO implements Serializable {
+public class ModelShopDataDTO extends BaseDTO {
 
     /**
      * 门店id
@@ -21,14 +24,13 @@ public class ModelShopDataDTO implements Serializable {
     private Long modelShopId;
 
     /**
-     * 本次金额 (分, 入站 MQ/跨域契约保持 Integer; 落 ModelShopOrderRecord 时 Money.of 升 Money)
+     * 本次金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 类型
-     * @see com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType
      */
-    private String type;
+    private ModeShopOrderType type;
 
 }

@@ -22,8 +22,6 @@ import java.util.List;
 @Mapper
 public interface RefundDAO extends BaseMapper<RefundDO> {
 
-    String getOutRefundAddress(@Param("spuOrderId") Long spuOrderId, @Param("spuId") Long spuId);
-
     default BaseLambdaQueryWrapper<RefundDO> getLw(RefundQuery query){
         return new BaseLambdaQueryWrapper<RefundDO>()
                 .notEmptyIn(RefundDO::getId, query.getIdList())
@@ -38,6 +36,7 @@ public interface RefundDAO extends BaseMapper<RefundDO> {
                 .notEmptyNotIn(RefundDO::getFromOrderState, query.getFromOrderStateNot())
                 .between(RefundDO::getCreateTime, query.getCreateTime())
                 .jsonLike(RefundDO::getItem, "spuName",query.getSpuName())
+                .jsonEq(RefundDO::getItem, "spuId",query.getSpuId())
                 ;
     }
 }

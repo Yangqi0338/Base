@@ -6,9 +6,9 @@ import com.newzkl.platform.base.biz.user.application.relation.service.UserCollec
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserCollectionRepository;
 import com.newzkl.platform.base.biz.user.model.relation.req.UncollectedProductReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionCreateReq;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserCollectionDTO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class UserCollectionServiceImpl implements UserCollectionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserCollection collectProduct(UserCollectionCreateReq req) {
+    public UserCollectionDTO collectProduct(UserCollectionCreateReq req) {
         Long userId = req.getUserId();
         Long storeDistributionId = req.getStoreDistributionId();
 
@@ -44,12 +44,12 @@ public class UserCollectionServiceImpl implements UserCollectionService {
                 .orElseGet(() -> {
                     // TODO[infra-gap] 旧实现先经 IDistributionRpcFacade.selectById 校验铺货并回填
                     //  storeId/spuId/skuId/price，中台无 market 出站端口，改用入参快照。
-                    UserCollection newCollection = TransferUtils.transfer(req, UserCollection::new, (source, target) -> {
+                    UserCollectionDTO newCollection = TransferUtils.transfer(req, UserCollectionDTO::new, (source, target) -> {
                         target.setIsValid(true);
                         target.setIsDeleted(false);
                         target.setCollectionTime(LocalDateTime.now());
                     });
-                    UserCollection saved = userCollectionRepository.save(newCollection);
+                    UserCollectionDTO saved = userCollectionRepository.save(newCollection);
                     log.info("用户[{}]新增收藏：铺货ID={}, SPU={}, SKU={}",
                             userId, storeDistributionId, req.getSpuId(), req.getSkuId());
                     return saved;
@@ -67,7 +67,7 @@ public class UserCollectionServiceImpl implements UserCollectionService {
             query.setStoreId(req.getStoreId());
             query.setSpuId(req.getGoodsId());
             query.resetQueryList();
-            List<UserCollection> list = userCollectionRepository.findPageByUserId(query).getRecords();
+            List<UserCollectionDTO> list = userCollectionRepository.findPageByUserId(query).getRecords();
             list.forEach(userCollection -> idList.add(userCollection.getId()));
         }
         idList.forEach(userCollectionRepository::logicDeleteByUserIdAndProductId);
@@ -80,7 +80,7 @@ public class UserCollectionServiceImpl implements UserCollectionService {
     }
 
     @Override
-    public List<UserCollection> getUserCollections(Long userId) {
+    public List<UserCollectionDTO> getUserCollections(Long userId) {
         // TODO[infra-gap] 旧实现经 ISpuFacade/IDistributionRpcFacade 富化商品名/主图/售价/销量，
         //  中台无对应出站端口，出参保持收藏时刻快照。
         return userCollectionRepository.findByUserId(userId);
@@ -94,7 +94,7 @@ public class UserCollectionServiceImpl implements UserCollectionService {
     }
 
     @Override
-    public Page<UserCollection> getUserCollectionsPage(UserCollectionQuery query) {
+    public Page<UserCollectionDTO> getUserCollectionsPage(UserCollectionQuery query) {
         // TODO[infra-gap] 同 getUserCollections，商品实时数据未富化（含 sellNum）。
         return userCollectionRepository.findPageByUserId(query);
     }

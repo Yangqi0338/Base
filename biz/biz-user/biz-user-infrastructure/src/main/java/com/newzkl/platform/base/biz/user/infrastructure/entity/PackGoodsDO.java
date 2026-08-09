@@ -1,9 +1,14 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.OldColumnName;
 
 /**
  * 入会礼包商品(pack_goods)持久化对象
@@ -25,9 +30,10 @@ import lombok.EqualsAndHashCode;
 public class PackGoodsDO extends BaseDO {
 
     /**
-     * 类型（角色 ID）
+     * 类型
+     * @ext 角色 ID
      */
-    private Integer type;
+    private RoleEnum.CompanyRole type;
 
     /**
      * 礼包等级
@@ -35,9 +41,9 @@ public class PackGoodsDO extends BaseDO {
     private Integer level;
 
     /**
-     * 礼包金额（分）
+     * 礼包金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 礼包名称
@@ -50,12 +56,13 @@ public class PackGoodsDO extends BaseDO {
     private String img;
 
     /**
-     * 礼包简介（旧列名 {@code desc} 为保留字，改名 {@code intro}）
+     * 礼包简介
      */
-    private String intro;
+    @TableField("`desc`")
+    private String desc;
 
     /**
-     * 状态 0 下架 1 上架
+     * 状态
      */
-    private Integer state;
+    private CommonEnum.YesOrNo state;
 }

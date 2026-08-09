@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
+ * 更新客户贡献数据请求对象
+ *
  * @author niu
- * @description: 更新客户贡献数据请求对象
  * @date 2024/1/25 11:30
  */
 @Data

@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.infrastructure.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.UserCollectionDO;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

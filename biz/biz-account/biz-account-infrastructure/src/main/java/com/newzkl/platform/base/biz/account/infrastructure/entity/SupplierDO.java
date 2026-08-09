@@ -24,7 +24,7 @@ public class SupplierDO extends BaseDO {
      */
     private AuditEnum.State auditState;
     /**
-     * 状态  0 未开通 1 已开通 2 已入驻
+     * 状态
      */
     private SupplierEnum.State state;
     /**
@@ -40,7 +40,8 @@ public class SupplierDO extends BaseDO {
      */
     private CommonEnum.YesOrNo promisePayState;
     /**
-     * 保证金金额 (Money, 落库 BIGINT 分)
+     * 保证金金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money promisePayAmount;
     /**
@@ -48,8 +49,8 @@ public class SupplierDO extends BaseDO {
      */
     private AuditEnum.State promisePayAuditState;
     /**
-     * 保证金缴纳配置 promise_pay_config
-     * 0 即时 1 延迟
+     * 保证金缴纳配置
+     * @ext 源列 promise_pay_config; 0 即时, 1 延迟
      */
     private Integer promisePayConfig;
     /**
@@ -61,7 +62,8 @@ public class SupplierDO extends BaseDO {
      */
     private String periodSetConfig;
     /**
-     * 应付保证金金额 (Money, 落库 BIGINT 分)
+     * 应付保证金金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money shouldPromisePayAmount;
     /**
@@ -90,5 +92,9 @@ public class SupplierDO extends BaseDO {
     private LocalDateTime inTime;
 
     /* ------------------------- 冗余 ------------------------- */
+    /**
+     * 名称
+     * @ext 冗余字段
+     */
     private String name;
 }

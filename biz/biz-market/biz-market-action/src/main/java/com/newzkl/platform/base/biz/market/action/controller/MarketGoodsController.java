@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.market.action.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.market.service.MarketDomain;
-import com.newzkl.platform.base.biz.market.domain.relation.service.GoodsRelationDomain;
+import com.newzkl.platform.base.biz.market.domain.market.MarketDomain;
+import com.newzkl.platform.base.biz.market.domain.relation.GoodsRelationDomain;
 import com.newzkl.platform.base.biz.market.model.dto.relation.GoodsRelationQueryDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;

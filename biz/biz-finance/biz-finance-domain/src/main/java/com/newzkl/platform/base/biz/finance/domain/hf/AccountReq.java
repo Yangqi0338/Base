@@ -488,8 +488,7 @@ abstract class AccountReq {
     /**
      * 斗拱e账户功能配置
      *
-     * @author 斗拱e账户功能配置
-     * @description: kc
+     * @author kc
      * @date 2025-08-25 17:05:40
      */
     @Data
@@ -739,8 +738,7 @@ abstract class AccountReq {
         /**
          * 斗拱e账户功能扩展
          *
-         * @author 斗拱e账户功能配置
-         * @description: kc
+         * @author kc
          * @date 2025-08-25 17:05:40
          */
         @EqualsAndHashCode(callSuper = true)

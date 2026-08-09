@@ -26,7 +26,9 @@ public class CourseDetailReq extends BaseReq {
     private String coverImage;
 
     /**
-     * 轮播图URL, 多个用逗号分隔
+     * 轮播图URL
+     *
+     * @ext 多个用逗号分隔
      */
     private String carouselImages;
 

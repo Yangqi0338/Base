@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDom
 import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
+import com.newzkl.platform.base.biz.finance.model.pay.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
@@ -29,6 +30,7 @@ import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,8 +79,7 @@ public class PurseController {
      * @return 客户账户列表
      */
     @PostMapping("/queryAccountPurse")
-    public PlatformResult<List<AccountPurseVO>> queryAccountPurse(@RequestBody AccountPurseQuery req) {
-        req.setAccountId(SecurityUtils.getAccountId());
+    public PlatformResult<List<AccountPurseVO>> queryAccountPurse(@RequestBody @Valid AccountPurseQuery req) {
         return PlatformResult.success(accountPurseDomain.queryAccountPurse(req));
     }
 
@@ -89,8 +90,7 @@ public class PurseController {
      * @return 采购金账户
      */
     @PostMapping("/queryAccountPurchasePurse")
-    public PlatformResult<AccountPurseVO> queryAccountPurchasePurse(@RequestBody AccountPurseQuery req) {
-        req.setAccountId(SecurityUtils.getAccountId());
+    public PlatformResult<AccountPurseVO> queryAccountPurchasePurse(@RequestBody @Valid AccountPurseQuery req) {
         return PlatformResult.success(accountPurseDomain.queryAccountPurchasePurse(req));
     }
 
@@ -139,10 +139,7 @@ public class PurseController {
      * @return 变动记录分页
      */
     @PostMapping("/queryAccountPurseAlterRecords")
-    public PlatformResult<Page<AccountPurseAlterRecordVO>> queryAccountPurseAlterRecords(@RequestBody AccountPurseAlterRecordQuery req) {
-        if (req.getAccountId() == null) {
-            req.setAccountId(SecurityUtils.getAccountId());
-        }
+    public PlatformResult<Page<AccountPurseAlterRecordVO>> queryAccountPurseAlterRecords(@RequestBody @Valid AccountPurseAlterRecordQuery req) {
         return PlatformResult.success(accountPurseDomain.queryAccountPurseAlterRecords(req));
     }
 
@@ -343,5 +340,18 @@ public class PurseController {
     public PlatformResult<PayBaseResult> channelPurchaseGoodsSeat(@RequestBody ChannelPurchaseGoodsSeatReq req) {
         req.setChannelId(SecurityUtils.getAccountId());
         return PlatformResult.success(goodsSeatChannelService.channelPurchaseGoodsSeat(req));
+    }
+
+    /**
+     * 提交保证金缴纳信息
+     *
+     * @param promiseFlowVO 保证金流水
+     * @return 流水ID
+     */
+    @PostMapping("/submitPromiseFlow")
+    public PlatformResult<Long> submitPromiseFlow(@RequestBody @Valid PromiseFlowVO promiseFlowVO) {
+        // TODO 源代码见com.zkl.scm.user.interfaces.controller.RoleController.submitPromiseFlow
+//        identityService.submitPromiseFlow(promiseFlowVO)
+        return PlatformResult.success();
     }
 }

@@ -31,7 +31,8 @@ public class PackOrderQuery extends PageQuery {
     private List<Long> idList;
 
     /**
-     * 订单状态 (0,新订单),(2,待支付),(4,待发货),(6,已发货),(8,已收货),(10,已完成),(-1,已关闭)
+     * 订单状态
+     * @ext (0,新订单),(2,待支付),(4,待发货),(6,已发货),(8,已收货),(10,已完成),(-1,已关闭)
      */
     private Integer state;
 
@@ -46,7 +47,8 @@ public class PackOrderQuery extends PageQuery {
     private Long packId;
 
     /**
-     * 礼包类型（角色 ID）
+     * 礼包类型
+     * @ext 角色 ID
      */
     private Integer packType;
 

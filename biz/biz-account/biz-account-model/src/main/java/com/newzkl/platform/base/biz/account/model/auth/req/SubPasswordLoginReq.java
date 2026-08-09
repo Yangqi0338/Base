@@ -3,6 +3,9 @@ package com.newzkl.platform.base.biz.account.model.auth.req;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
+/**
+ * 子账号密码登录请求参数
+ */
 @Data
 public class SubPasswordLoginReq {
     /**

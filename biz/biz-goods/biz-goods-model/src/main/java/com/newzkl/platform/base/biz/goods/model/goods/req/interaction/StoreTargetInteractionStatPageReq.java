@@ -29,7 +29,8 @@ public class StoreTargetInteractionStatPageReq {
     private Long storeId;
 
     /**
-     * 目标类型编码（如GOODS/ACTIVITY，对应TargetTypeEnum的code）
+     * 目标类型编码
+     * @ext 如GOODS/ACTIVITY, 对应TargetTypeEnum的code
      */
     private String targetTypeCode;
 

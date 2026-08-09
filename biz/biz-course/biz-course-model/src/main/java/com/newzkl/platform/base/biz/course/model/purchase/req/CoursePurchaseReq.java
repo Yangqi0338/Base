@@ -21,13 +21,17 @@ public class CoursePurchaseReq {
     private Long courseId;
 
     /**
-     * 支付方式(必填: 1-微信支付, 2-支付宝支付)
+     * 支付方式
+     *
+     * @ext 1-微信支付, 2-支付宝支付
      */
     @NotNull(message = "支付方式不能为空")
     private Integer payType;
 
     /**
-     * 用户ID(非必填, 前端未传由登录态覆写)
+     * 用户ID
+     *
+     * @ext 非必填, 前端未传由登录态覆写
      */
     private Long userId;
 }

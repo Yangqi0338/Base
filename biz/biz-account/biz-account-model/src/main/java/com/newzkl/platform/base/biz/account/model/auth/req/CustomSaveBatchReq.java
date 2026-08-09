@@ -6,9 +6,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 批量自定义注册请求参数
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/2/2211:22
+ * @date 2024/2/22 11:22
  */
 @Data
 public class CustomSaveBatchReq {

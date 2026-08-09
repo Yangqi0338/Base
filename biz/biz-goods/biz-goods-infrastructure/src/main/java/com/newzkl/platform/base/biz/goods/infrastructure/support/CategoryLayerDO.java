@@ -14,9 +14,8 @@ public abstract class CategoryLayerDO extends CategoryBaseDO {
      */
     private Long pid;
     /**
-     * 祖先路径+自身ID，逗号分隔，逗号结尾
-     * 根节点为 "id,"，如 "11,"
-     * 子节点为 "父pidList + 自身id + ,"，如 "11,1101,"
+     * 祖先路径含自身ID，逗号分隔逗号结尾
+     * @ext 根节点为 "id,"；子节点为 "父pidList+自身id+,"；用于树路径查询
      */
     private String pidList;
     /**

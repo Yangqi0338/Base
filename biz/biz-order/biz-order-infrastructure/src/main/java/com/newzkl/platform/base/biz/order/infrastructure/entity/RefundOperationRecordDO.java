@@ -1,10 +1,16 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.Data;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -34,14 +40,14 @@ public class RefundOperationRecordDO extends BaseDO {
     private Long operatorId;
 
     /**
-     * 操作方角色编码（对应RoleEnum.CompanyRole的code：1000=C端客户，1001=供应商，1002=渠道商，0=平台等）
+     * 操作方角色编码
      */
-    private Long operatorRoleCode;
+    private RoleEnum.CompanyRole operatorRoleCode;
 
     /**
-     * 操作方客户端类型（对应CommonEnum.Client的code：user=用户端，supplier=供应商端，channel=渠道商端，admin=平台端等）
+     * 操作方客户端类型
      */
-    private String operatorClient;
+    private CommonEnum.Client operatorClient;
 
     /**
      * 操作方名称
@@ -49,19 +55,19 @@ public class RefundOperationRecordDO extends BaseDO {
     private String operatorName;
 
     /**
-     * 操作前售后单状态（对应RefundEnum.State的code）
+     * 操作前售后单状态
      */
-    private Integer beforeState;
+    private RefundEnum.State beforeState;
 
     /**
-     * 操作后售后单状态（对应RefundEnum.State的code）
+     * 操作后售后单状态
      */
-    private Integer afterState;
+    private RefundEnum.State afterState;
 
     /**
-     * 操作类型（0=发起退款申请，1=审核通过，2=审核拒绝，3=提交物流信息，4=确认收货，5=退款完成，6=关闭售后，7=平台介入）
+     * 操作类型
      */
-    private Integer operationType;
+    private RefundOperateTypeEnum operationType;
 
     /**
      * 操作内容描述
@@ -69,7 +75,8 @@ public class RefundOperationRecordDO extends BaseDO {
     private String operationContent;
 
     /**
-     * 本次操作涉及的退款金额（单位：分，和refund表保持一致）
+     * 本次操作涉及的退款金额
+     * @ext 落库 BIGINT 分, 与 refund 表口径一致
      */
     private Money refundAmount;
 
@@ -89,19 +96,8 @@ public class RefundOperationRecordDO extends BaseDO {
     private String reason;
 
     /**
-     * 操作时间
+     * 拓展字段
      */
-    @TableField(fill = FieldFill.INSERT) // 插入时自动填充
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField(fill = FieldFill.INSERT_UPDATE) // 插入/更新时自动填充
-    private LocalDateTime updateTime;
-
-    /**
-     * 拓展字段（JSON格式存储额外信息）
-     */
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String ext;
 }

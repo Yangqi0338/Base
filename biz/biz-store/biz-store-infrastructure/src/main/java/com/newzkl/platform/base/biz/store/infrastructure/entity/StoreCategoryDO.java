@@ -11,7 +11,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
-@TableName("store_category")
+@TableName
 public class StoreCategoryDO extends BaseDO {
 
     /**

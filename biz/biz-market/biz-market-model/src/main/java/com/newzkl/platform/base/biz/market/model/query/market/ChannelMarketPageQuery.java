@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-
+/**
+ * 渠道商市场分页查询
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ChannelMarketPageQuery extends PageQuery {
@@ -27,7 +29,9 @@ public class ChannelMarketPageQuery extends PageQuery {
     private String marketName;
 
     /**
-     * 绑定类型 1：运营商  3:渠道商
+     * 绑定类型
+     *
+     * @ext 1：运营商 3：渠道商
      */
     private Integer bindType;
 

@@ -20,9 +20,9 @@ import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 @Data
 @TableName("permission_relation")
 @TableIndexes({
-        @TableIndex(name = "idx_key", type = IndexTypeEnum.UNIQUE, fields = {"type", "source_id", "target_id"}),
-        @TableIndex(name = "idx_source", fields = {"type", "source_id"}),
-        @TableIndex(name = "idx_target", fields = {"type", "target_id"}),
+        @TableIndex(name = "idx_key", type = IndexTypeEnum.UNIQUE, fields = {"type", "sourceId", "targetId"}),
+        @TableIndex(name = "idx_source", fields = {"type", "sourceId"}),
+        @TableIndex(name = "idx_target", fields = {"type", "targetId"})
 })
 public class PermissionRelationDO extends BaseDO {
 

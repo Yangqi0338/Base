@@ -16,7 +16,7 @@ import org.dromara.autotable.annotation.Index;
 @TableName("app_version")
 public class AppVersionDO extends BaseDO {
     /**
-     * app code 查询
+     * 应用编码
      */
     @Index
     private String appCode;
@@ -27,6 +27,7 @@ public class AppVersionDO extends BaseDO {
     /**
      * app 版本
      */
+    @Index
     private String appVersion;
     /**
      * 更新配置

@@ -17,18 +17,18 @@ import java.util.List;
 public class AccountPurseAlterRecordQuery extends BizPageQuery {
 
     /**
-     * 账户类型 0:总账户  其他：甄选师有多个分账户  1：直推奖  2：分红奖
+     * 账户类型
      */
     private PurseEnum.PurseType purseType;
 
     /**
-     * 变动类型  1:进账  2：出账
+     * 变动类型
      */
     private EarningsEnum.PurseAlterTypeEnum earningAlterType;
 
     /**
-     * 客户类型  1:供应商 2：渠道商 3：甄选师  4：运营商  5：交易师
-     * 个人不传 平台传
+     * 客户类型
+     * @ext 个人不传, 平台传
      */
     private PurseEnum.FinanceUser accountType;
 

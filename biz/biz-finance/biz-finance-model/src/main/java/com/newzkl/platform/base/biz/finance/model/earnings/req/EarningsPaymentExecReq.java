@@ -8,10 +8,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**
- * 带交易的分润
+ * 带交易的分润执行请求
  *
  * @author niu
- * @description: 分润请求对象
  * @date 2023/12/18 16:55
  */
 @Data

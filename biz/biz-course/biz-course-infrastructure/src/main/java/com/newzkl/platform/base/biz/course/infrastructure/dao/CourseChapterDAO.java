@@ -39,16 +39,6 @@ public interface CourseChapterDAO extends BaseMapper<CourseChapterDO> {
     }
 
     /**
-     * 恢复已逻辑删除的章节
-     *
-     * @param id 章节主键
-     * @return 受影响行数
-     */
-    @Update("UPDATE course_chapter SET del_flag = 0, update_time = NOW() "
-            + "WHERE id = #{id} AND del_flag IS NULL")
-    int recoverById(@Param("id") Long id);
-
-    /**
      * 批量统计课程有效章节数与总时长
      *
      * <p>只统计启用({@code is_enabled = 1})且未删除({@code del_flag = 0})的章节。

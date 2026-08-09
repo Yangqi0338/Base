@@ -59,6 +59,11 @@ public class ChannelQuery extends BizPageQuery {
      */
     private Long invitedId;
 
+    /**
+     * 设置单个状态 (内部包装为列表)
+     *
+     * @param state 渠道商状态
+     */
     public void setState(ChannelEnum.State state) {
         this.stateList = doWrapperList(this.stateList, state);
     }

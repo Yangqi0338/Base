@@ -47,7 +47,9 @@ public class CourseCategoryReq extends BaseReq {
     private Integer sort = 0;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
+     *
+     * @ext 1-启用, 0-禁用
      */
     @NotNull(message = "启用状态不能为空")
     private Integer isEnabled = 1;

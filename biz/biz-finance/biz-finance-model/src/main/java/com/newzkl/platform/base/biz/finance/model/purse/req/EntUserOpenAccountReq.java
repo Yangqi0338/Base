@@ -7,7 +7,6 @@ import lombok.Data;
  * 企业用户开户请求
  *
  * @author niu
- * @description:
  * @date 2025-08-25 17:03:02
  */
 @Data
@@ -26,19 +25,22 @@ public class EntUserOpenAccountReq {
     private String licenseCode;
 
     /**
-     * 证照有效期类型 1:长期有效 0:非长期有效；
+     * 证照有效期类型
+     * @ext 1 长期有效 0 非长期有效; 无对应枚举, 保留 String
      */
     @NotBlank(message = "证照有效期类型不能为空")
     private String licenseValidType;
 
     /**
-     * 证照有效期起始日期 日期格式：yyyyMMdd；
+     * 证照有效期起始日期
+     * @ext 日期格式 yyyyMMdd
      */
     @NotBlank(message = "证照有效期起始日期不能为空")
     private String licenseBeginDate;
 
     /**
-     * 证照有效期结束日期 日期格式：yyyyMMdd;
+     * 证照有效期结束日期
+     * @ext 日期格式 yyyyMMdd
      */
     private String licenseEndDate;
 
@@ -73,7 +75,8 @@ public class EntUserOpenAccountReq {
     private String legalName;
 
     /**
-     * 法人证件类型 00 身份证
+     * 法人证件类型
+     * @ext 00 身份证; 无对应枚举, 保留 String
      */
     @NotBlank(message = "法人证件类型不能为空")
     private String legalCertType;
@@ -85,19 +88,22 @@ public class EntUserOpenAccountReq {
     private String legalCertNo;
 
     /**
-     * 法人证件有效期类型  1:长期有效 0:非长期有效；
+     * 法人证件有效期类型
+     * @ext 1 长期有效 0 非长期有效; 无对应枚举, 保留 String
      */
     @NotBlank(message = "法人证件有效期类型不能为空")
     private String legalCertValidType;
 
     /**
-     * 法人证件有效期开始日期 日期格式：yyyyMMdd；
+     * 法人证件有效期开始日期
+     * @ext 日期格式 yyyyMMdd
      */
     @NotBlank(message = "法人证件有效期开始日期不能为空")
     private String legalCertBeginDate;
 
     /**
-     * 法人证件有效期截止日期 日期格式：yyyyMMdd；
+     * 法人证件有效期截止日期
+     * @ext 日期格式 yyyyMMdd
      */
     private String legalCertEndDate;
 

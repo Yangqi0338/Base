@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.user.model.task.enums.TaskTypeEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,20 +39,16 @@ public class TaskInfoDO extends BaseDO {
     private String taskName;
 
     /**
-     * 任务配置ID（关联 task_config 主键）
+     * 任务配置ID
+     * @ext 关联 task_config 主键
      */
     @Index
     private Long taskId;
 
     /**
-     * 任务类型编码（1-观看激励广告，2-购买商品）
+     * 任务类型编码
      */
-    private Integer taskType;
-
-    /**
-     * 任务类型名称
-     */
-    private String taskTypeName;
+    private TaskTypeEnum taskType;
 
     /**
      * 任务开始时间
@@ -63,12 +61,14 @@ public class TaskInfoDO extends BaseDO {
     private LocalDateTime endTime;
 
     /**
-     * 任务简介（最多200字）
+     * 任务简介
+     * @ext 最多200字
      */
     private String taskIntro;
 
     /**
-     * 完整观看广告数（仅观看激励广告类型有效）
+     * 完整观看广告数
+     * @ext 仅观看激励广告类型有效
      */
     private Integer adCount;
 
@@ -83,7 +83,7 @@ public class TaskInfoDO extends BaseDO {
     private Integer completeCount;
 
     /**
-     * 是否显示（1-是，0-否）
+     * 是否显示
      */
-    private Integer isShow;
+    private CommonEnum.YesOrNo isShow;
 }

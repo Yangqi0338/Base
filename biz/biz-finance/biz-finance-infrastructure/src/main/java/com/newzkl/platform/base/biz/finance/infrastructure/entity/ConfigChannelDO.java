@@ -1,18 +1,21 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 /**
- * @author 渠道商服务费配置
+ * 渠道商服务费配置 DO
+ *
+ * @author kc
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap=true)
 public class ConfigChannelDO extends BaseDO {
     /**
      * 渠道商id
@@ -23,13 +26,13 @@ public class ConfigChannelDO extends BaseDO {
     /**
      * 平台服务费
      */
-    @JsonSerialize
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String platformConfig;
 
     /**
      * 运营商服务费
      */
-    @JsonSerialize
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String operatorConfig;
 
     /**

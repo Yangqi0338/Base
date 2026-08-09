@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopOrderRecord;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopOrderRecordDTO;
 import com.newzkl.platform.base.biz.store.model.template.res.ModeShopDataSummary;
 import com.newzkl.platform.base.biz.store.model.template.vo.ModelShopOrderDataVO;
 import com.newzkl.platform.base.biz.store.domain.template.repository.ModelShopOrderRecordRepository;
@@ -23,7 +23,7 @@ public class ModelShopOrderRecordRepositoryImpl implements ModelShopOrderRecordR
     private final ModelShopOrderRecordDAO modelShopOrderRecordDAO;
 
     @Override
-    public void create(ModelShopOrderRecord modelShopOrderRecord) {
+    public void create(ModelShopOrderRecordDTO modelShopOrderRecord) {
         modelShopOrderRecordDAO.insert(TransferUtils.transfer(modelShopOrderRecord, ModelShopOrderRecordDO::new));
     }
 

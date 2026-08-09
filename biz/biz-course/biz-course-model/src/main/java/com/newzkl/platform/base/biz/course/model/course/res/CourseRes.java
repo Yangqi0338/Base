@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.course.model.course.res;
 
+import com.newzkl.platform.base.common.core.model.annotation.JsonTranslate;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
@@ -115,10 +117,6 @@ public class CourseRes extends BaseRes {
     /**
      * 是否启用: 1-启用, 0-禁用
      */
-    private Integer isEnabled;
-
-    /**
-     * 启用状态描述: 启用/禁用
-     */
-    private String isEnabledDesc;
+    @JsonTranslate
+    private CommonEnum.YesOrNo isEnabled;
 }

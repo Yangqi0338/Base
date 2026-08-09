@@ -41,7 +41,7 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
 
     private final EarningRecordDAO earningRecordDAO;
 
-    private final AccountApi accountFacade;
+    private final AccountApi accountApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -115,7 +115,7 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
 
     @Override
     public UpIdRes upId(CommonEnum.Client client, Long accountId) {
-        return accountFacade.upId(client, accountId);
+        return accountApi.upId(client, accountId);
     }
 
     @Override

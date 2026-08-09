@@ -36,8 +36,7 @@ public class AccountPurseAlterRecordDO extends BaseDO {
     private PurseEnum.PurseType purseType;
 
     /**
-     * 分润修改类型  1 进账 2 出账
-     *
+     * 分润修改类型
      */
     private EarningsEnum.PurseAlterTypeEnum earningAlterType;
 

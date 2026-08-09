@@ -19,11 +19,23 @@
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-goods-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

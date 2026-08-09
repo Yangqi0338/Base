@@ -102,6 +102,11 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
         return this;
     }
 
+    public <R> BaseLambdaQueryWrapper<T> notEmptyLe(SFunction<T, R> column, R val) {
+        this.le(!ObjectUtil.isEmpty(val), column, val);
+        return this;
+    }
+
     public <R> BaseLambdaQueryWrapper<T> notEmptyGt(SFunction<T, R> column, R val) {
         this.gt(!ObjectUtil.isEmpty(val), column, val);
         return this;
@@ -116,7 +121,7 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
         return jsonLike(column, key, false, value);
     }
 
-    public BaseLambdaQueryWrapper<T> jsonEq(SFunction<T, ?> column, String key, String value) {
+    public BaseLambdaQueryWrapper<T> jsonEq(SFunction<T, ?> column, String key, Object value) {
         return jsonEq(column, key, false, value);
     }
 

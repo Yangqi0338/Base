@@ -3,8 +3,8 @@ package com.newzkl.platform.base.biz.user.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.service.UserFollowDomain;
 import com.newzkl.platform.base.biz.user.model.relation.req.FollowReq;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserFollowPageReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollowVO;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserFollowQuery;
+import com.newzkl.platform.base.biz.user.model.relation.res.UserFollowRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +82,7 @@ public class UserFollowController {
      * @return 关注列表
      */
     @PostMapping("/followingList")
-    public PlatformResult<List<UserFollowVO>> getFollowingList() {
+    public PlatformResult<List<UserFollowRes>> getFollowingList() {
         Long userId = SecurityUtils.getAccountId();
         log.info("查询用户{}的关注列表", userId);
         return PlatformResult.success(userFollowDomain.getFollowingList(userId));
@@ -102,7 +102,7 @@ public class UserFollowController {
      * @return 关注分页
      */
     @PostMapping("/followingPage")
-    public PlatformResult<Page<UserFollowVO>> getFollowingPage(@RequestBody UserFollowPageReq query) {
+    public PlatformResult<Page<UserFollowRes>> getFollowingPage(@RequestBody UserFollowQuery query) {
         query.setUserId(SecurityUtils.getAccountId());
         log.info("分页查询用户{}的关注列表，pageNo={}, pageSize={}", query.getUserId(), query.getPageNo(), query.getPageSize());
         return PlatformResult.success(userFollowDomain.getFollowingPage(query));
@@ -114,7 +114,7 @@ public class UserFollowController {
      * @return 粉丝列表
      */
     @PostMapping("/followerList")
-    public PlatformResult<List<UserFollowVO>> getFollowerList() {
+    public PlatformResult<List<UserFollowRes>> getFollowerList() {
         Long userId = SecurityUtils.getAccountId();
         log.info("查询用户{}的粉丝列表", userId);
         return PlatformResult.success(userFollowDomain.getFollowerList(userId));
@@ -134,7 +134,7 @@ public class UserFollowController {
      * @return 粉丝分页
      */
     @PostMapping("/followerPage")
-    public PlatformResult<Page<UserFollowVO>> getFollowerPage(@RequestBody UserFollowPageReq query) {
+    public PlatformResult<Page<UserFollowRes>> getFollowerPage(@RequestBody UserFollowQuery query) {
         query.setUserId(SecurityUtils.getAccountId());
         log.info("分页查询用户{}的粉丝列表，pageNo={}, pageSize={}", query.getUserId(), query.getPageNo(), query.getPageSize());
         return PlatformResult.success(userFollowDomain.getFollowerPage(query));

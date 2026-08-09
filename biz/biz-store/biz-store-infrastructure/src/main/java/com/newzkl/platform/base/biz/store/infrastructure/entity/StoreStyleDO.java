@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.store.model.enums.StoreStyleEnum;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -12,17 +14,13 @@ import java.time.LocalDateTime;
  * 门店样式领域对象
  */
 @Data
-@TableName("store_style")
-public class StoreStyleDO {
-    /**
-     * 主键
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+@TableName
+public class StoreStyleDO extends BaseDO {
     
     /**
      * 样式code
      */
+    @Index
     private String styleCode;
     
     /**
@@ -33,6 +31,7 @@ public class StoreStyleDO {
     /**
      * 主色
      */
+    @Index
     private String essentialColour;
     
     /**
@@ -59,45 +58,11 @@ public class StoreStyleDO {
      * 状态：0 禁用,1 启用
      */
     private Integer state;
-    
-    /**
-     * 状态：0 正常,1 已删除
-     */
-    private Integer deleted;
-    
-    /**
-     * 创建人id
-     */
-    private Long createId;
-    
-    /**
-     * 创建人名
-     */
-    private String createName;
-    
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-    
-    /**
-     * 修改人id
-     */
-    private Long menderId;
-    
-    /**
-     * 修改人名
-     */
-    private String menderName;
-    
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
 
     /**
      * 来源模板code
      */
+    @Index
     private String sourceCode;
 
     /**
@@ -106,11 +71,9 @@ public class StoreStyleDO {
     private String sourceName;
 
     /**
-     * 页面类型：HOME_PAGE首页
-     *
-     * @see StoreStyleEnum.PageType
+     * 页面类型
      */
-    private String pageType;
+    private StoreStyleEnum.PageType pageType;
 
     /**
      * 样式内容

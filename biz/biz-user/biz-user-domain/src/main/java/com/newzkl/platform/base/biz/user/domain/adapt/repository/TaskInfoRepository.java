@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.task.info.query.TaskInfoQuery;
 import com.newzkl.platform.base.biz.user.model.task.info.res.TaskInfoRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 /**
  * 营销任务仓储端口
@@ -55,7 +56,7 @@ public interface TaskInfoRepository {
      * @param isShow 目标显示状态
      * @return 更新后的任务
      */
-    TaskInfoRes updateShowStatus(Long id, Integer isShow);
+    TaskInfoRes updateShowStatus(Long id, CommonEnum.YesOrNo isShow);
 
     /**
      * 按任务编号查询

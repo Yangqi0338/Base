@@ -17,7 +17,8 @@ public class ModelShopUpdateReq {
     private String styleCode;
 
     /**
-     * 状态:0正常，1已禁用
+     * 状态
+     * @ext 取值范围: 0=正常, 1=已禁用
      */
     private Integer state;
 }

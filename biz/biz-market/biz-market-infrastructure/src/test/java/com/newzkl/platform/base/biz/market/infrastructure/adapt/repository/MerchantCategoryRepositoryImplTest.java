@@ -1,7 +1,5 @@
 package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
 
-import com.newzkl.platform.base.biz.market.infrastructure.dao.MerchantCategoryDAO;
-import com.newzkl.platform.base.biz.market.infrastructure.entity.MerchantCategoryDO;
 import com.newzkl.platform.base.biz.market.model.biz.req.CategoryReq;
 import com.newzkl.platform.base.biz.market.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.biz.market.model.biz.vo.CategoryVO;

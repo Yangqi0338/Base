@@ -7,9 +7,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 渠道商期权值同步请求
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/4/1316:14
+ * @date 2024/4/13 16:14
  */
 @Data
 public class ChannelOptionSyncReq implements Serializable {
@@ -24,12 +25,14 @@ public class ChannelOptionSyncReq implements Serializable {
     @NotNull
     private Integer value;
     /**
-     * 操作标识 1 增加 0 减少
+     * 操作标识
+     * @ext 1 增加 0 减少; 无对应枚举, 保留 Integer
      */
     @NotNull
     private Integer symbol;
     /**
-     * UUID 随机唯一值, 小于128位
+     * UUID 随机唯一值
+     * @ext 小于 128 位
      */
     @NotNull
     private String uuid;

@@ -3,9 +3,9 @@ package com.newzkl.platform.base.biz.user.application.relation.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.relation.req.UncollectedProductReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionCreateReq;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserCollectionDTO;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public interface UserCollectionService {
      * @param req 收藏创建请求
      * @return 收藏记录
      */
-    UserCollection collectProduct(UserCollectionCreateReq req);
+    UserCollectionDTO collectProduct(UserCollectionCreateReq req);
 
     /**
      * 取消收藏商品
@@ -61,7 +61,7 @@ public interface UserCollectionService {
      * @param userId 用户ID
      * @return 收藏列表
      */
-    List<UserCollection> getUserCollections(Long userId);
+    List<UserCollectionDTO> getUserCollections(Long userId);
 
     /**
      * 检查用户是否已收藏指定商品
@@ -77,5 +77,5 @@ public interface UserCollectionService {
      * @param query 分页查询
      * @return 收藏分页
      */
-    Page<UserCollection> getUserCollectionsPage(UserCollectionQuery query);
+    Page<UserCollectionDTO> getUserCollectionsPage(UserCollectionQuery query);
 }

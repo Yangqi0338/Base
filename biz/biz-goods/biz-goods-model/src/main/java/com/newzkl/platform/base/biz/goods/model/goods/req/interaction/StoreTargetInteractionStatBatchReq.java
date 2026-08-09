@@ -28,17 +28,20 @@ public class StoreTargetInteractionStatBatchReq {
     private List<Long> targetIdList;
 
     /**
-     * 浏览量范围 [min, max]（数组长度2，null表示不限制）
+     * 浏览量范围
+     * @ext [min, max] 数组长度2, null表示不限制
      */
     private Integer[] viewCountRange;
 
     /**
-     * 点赞量范围 [min, max]（数组长度2，null表示不限制）
+     * 点赞量范围
+     * @ext [min, max] 数组长度2, null表示不限制
      */
     private Integer[] likeCountRange;
 
     /**
-     * 分享量范围 [min, max]（数组长度2，null表示不限制）
+     * 分享量范围
+     * @ext [min, max] 数组长度2, null表示不限制
      */
     private Integer[] shareCountRange;
 }

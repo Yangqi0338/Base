@@ -7,8 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
+ * 装修模板查询
+ *
  * @author niu
- * @description: 装修模板查询
  * @date 2024/3/29 15:19
  */
 @EqualsAndHashCode(callSuper = true)
@@ -23,7 +24,8 @@ public class FitmentTemplateQuery extends PageQuery {
     private Long operatorId;
 
     /**
-     * 渠道id 0：平台配置  1：样板店快照  >1：渠道商装修
+     * 渠道id
+     * @ext 取值范围: 0=平台配置, 1=样板店快照, >1=渠道商装修
      */
     private Long channelId;
 

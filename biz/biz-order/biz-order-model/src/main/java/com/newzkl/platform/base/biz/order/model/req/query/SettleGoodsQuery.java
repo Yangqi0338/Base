@@ -17,6 +17,12 @@ public class SettleGoodsQuery extends BizPageQuery {
      * 小于结算时间
      */
     private LocalDateTime lessSettleTime;
+    /**
+     * 供应商ID
+     */
     private Long supplierId;
+    /**
+     * SPU ID
+     */
     private Long spuId;
 }

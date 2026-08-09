@@ -18,11 +18,13 @@ public class AuditDataWorkTableQuery extends PageQuery {
      */
     private List<Long> idList;
     /**
-     * 操作类型  1 修改  2 新增  3 删除
+     * 操作类型
+     * @ext 1 修改  2 新增  3 删除
      */
     private Integer operateType;
     /**
-     * 操作目标  1 SPU基本信息  2 销售规格  3 属性规格   4 SKU信息 5 SPU状态
+     * 操作目标
+     * @ext 1 SPU基本信息  2 销售规格  3 属性规格   4 SKU信息 5 SPU状态
      */
     private Integer operateTarget;
     /**

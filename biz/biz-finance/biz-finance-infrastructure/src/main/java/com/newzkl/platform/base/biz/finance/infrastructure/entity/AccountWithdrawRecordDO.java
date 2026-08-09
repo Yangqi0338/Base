@@ -10,13 +10,14 @@ import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 /**
  * @author 提现记录
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(autoResultMap = true)
+@TableName
 public class AccountWithdrawRecordDO extends BaseDO {
 
     /**
@@ -37,10 +38,8 @@ public class AccountWithdrawRecordDO extends BaseDO {
 
     /**
      * 配置
-     *
-     * @ext 库中以 JSON 列存放, 走 {@code JacksonTypeHandler} 序列化; 依赖类级 {@code autoResultMap = true} 才生效
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
+    @JsonSerializable
     private WithdrawConfig config;
 
     /**

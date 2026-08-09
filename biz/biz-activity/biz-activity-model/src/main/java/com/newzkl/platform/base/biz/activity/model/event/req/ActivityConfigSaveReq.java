@@ -25,11 +25,15 @@ public class ActivityConfigSaveReq {
     private Long id;
 
     /**
-     * 活动id，自定义 FHC+创建日期+6位自编码000001,FHC 2025 08 31 10 30 30 000001
+     * 活动id
+     * @ext 自定义 FHC+创建日期+6位自编码000001, 如 FHC 2025 08 31 10 30 30 000001
      */
     @ActivityIdValid(groups = UpdateCommand.class)
     private String  activityId;
 
+    /**
+     * 策略id
+     */
     private Long strategyId;
 
     /**
@@ -38,14 +42,16 @@ public class ActivityConfigSaveReq {
     private String strategyDesc;
 
     /**
-     * 策略方式 0：奖金池贡献值  1：暂未其他
+     * 策略方式
+     * @ext 候选枚举 {@link ActivityEnum.StrategyMode}: 0-贡献值分配 1-甄选师等级分配
      */
     private Integer strategyMode;
 
 
 
     /**
-     * 状态 {@link ActivityEnum.ExecuteState}
+     * 状态
+     * @ext 候选枚举 {@link ActivityEnum.ExecuteState}: PENDING-未生效 ACTIVE-生效中 CANCELLED-已作废
      */
     private String state;
 
@@ -69,17 +75,16 @@ public class ActivityConfigSaveReq {
     private Integer orderAmountsRate;
 
     /**
-     * 分红周期 {@link ActivityEnum.DividendCycle}
-     * WEEKLY("WEEKLY", "周结算"),MONTHLY("MONTHLY","月结算");
+     * 分红周期
+     * @ext 候选枚举 {@link ActivityEnum.DividendCycle}: WEEKLY-周结算 MONTHLY-月结算
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
     private String dividendCycle;
 
 
     /**
-     * 分红策略 {@link ActivityEnum.SettlementStrategy}
-     *  "CYCLE": "周期循环"),
-     *  "ONCE": "单次结算后关闭");
+     * 分红策略
+     * @ext 候选枚举 {@link ActivityEnum.SettlementStrategy}: CYCLE-周期循环 ONCE-单次结算后关闭
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
     private String settlementStrategy;
@@ -87,16 +92,16 @@ public class ActivityConfigSaveReq {
 
 
     /**
-     * 分红方式 {@link ActivityEnum.DividendMethod}
+     * 分红方式
+     * @ext 候选枚举 {@link ActivityEnum.DividendMethod}: AVERAGE-平均分红 WEIGHT-加权分红
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
     private String dividendMethod;
 
 
     /**
-     *  {@link com.zkl.scm.model.constants.user.RoleEnum}
-     * 分红角色 1004 : "运营商", 1005L, "交易师" 1006L: "甄选师"
-     * 传参格式 dividendRole: "dividendRole": "{\"roles\": [1004, 1005]}",
+     * 分红角色
+     * @ext 候选枚举 {@link com.zkl.scm.model.constants.user.RoleEnum}: 1004-运营商 1005-交易师 1006-甄选师; 传参格式 {"roles": [1004, 1005]}
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
     private String dividendRole;
@@ -109,7 +114,8 @@ public class ActivityConfigSaveReq {
     }
 
     /**
-     * 分红用户 dividendUser:[{"userId":1, roleName: "运营商","username": "10010011004",time:"2025-10-21 20:00:00" }]
+     * 分红用户
+     * @ext 传参格式 [{"userId":1, "roleName": "运营商", "username": "10010011004", "time":"2025-10-21 20:00:00"}]
      */
     private String dividendUser;
 

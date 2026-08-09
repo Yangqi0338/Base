@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.user.model.enums.EarningsEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;

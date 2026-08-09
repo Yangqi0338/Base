@@ -33,23 +33,4 @@ public interface CourseDAO extends BaseMapper<CourseDO> {
         wrapper.orderByDesc(CourseDO::getId);
         return wrapper;
     }
-
-    /**
-     * 实际购买数递增
-     *
-     * @param id 课程主键
-     * @return 受影响行数
-     */
-    @Update("UPDATE course SET purchase_count = IFNULL(purchase_count, 0) + 1, update_time = NOW() "
-            + "WHERE id = #{id} AND del_flag = 0")
-    int addPurchaseCount(@Param("id") Long id);
-
-    /**
-     * 恢复已逻辑删除的课程
-     *
-     * @param id 课程主键
-     * @return 受影响行数
-     */
-    @Update("UPDATE course SET del_flag = 0, update_time = NOW() WHERE id = #{id} AND del_flag IS NULL")
-    int recoverById(@Param("id") Long id);
 }

@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
-import com.newzkl.platform.base.biz.account.domain.repository.MerchantRepository;
 import com.newzkl.platform.base.biz.account.model.assembler.MerchantAssembler;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.merchant.req.MerchantReq;

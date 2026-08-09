@@ -19,7 +19,7 @@ import com.newzkl.platform.base.biz.store.model.store.entity.Store;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShop;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +63,7 @@ public class StoreServiceImpl implements StoreService {
 
         // 样板店
         if (store.getModelShopId() != null) {
-            ModelShop modelShop = modelShopDomain.queryById(store.getModelShopId());
+            ModelShopDTO modelShop = modelShopDomain.queryById(store.getModelShopId());
             storeStyleVO.setModelShopName(modelShop.getModelShopName());
             storeStyleVO.setModelDescription(modelShop.getModelDescription());
         }

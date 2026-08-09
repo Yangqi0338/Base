@@ -211,7 +211,8 @@ public class SettleRepositoryImpl implements SettleRepository {
 
     @Override
     public void editSettleRecord(SettleRecordEditReq settleRecordEditReq) {
-        settleRecordDAO.editSettleRecord(settleRecordEditReq);
+        SettleRecordDO recordDO = TransferUtils.transfer(settleRecordEditReq, SettleRecordDO.class);
+        settleRecordDAO.updateById(recordDO);
     }
 
     @Override

@@ -41,12 +41,14 @@ public class MemberTaskRecordQuery extends PageQuery {
     private Integer taskStatus;
 
     /**
-     * 创建时间起（yyyy-MM-dd HH:mm:ss）
+     * 创建时间起
+     * @ext yyyy-MM-dd HH:mm:ss
      */
     private String startTime;
 
     /**
-     * 创建时间止（yyyy-MM-dd HH:mm:ss）
+     * 创建时间止
+     * @ext yyyy-MM-dd HH:mm:ss
      */
     private String endTime;
 

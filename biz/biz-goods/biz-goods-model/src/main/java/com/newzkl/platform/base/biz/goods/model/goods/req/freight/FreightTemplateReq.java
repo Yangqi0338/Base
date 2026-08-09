@@ -29,16 +29,19 @@ public class FreightTemplateReq {
      @NotBlank(message = "模板名称不能为空")
      private String name;
      /**
-     * 是否包邮 0：不包邮  1：包邮
+     * 是否包邮
+     * @ext 0：不包邮  1：包邮
      */
      private Integer freePost;
      /**
-     * 计价方式 1:按件数 2:按重量 3:按体积
+     * 计价方式
+     * @ext 1:按件数 2:按重量 3:按体积
      */
      @NotNull(message = "计费方式不能为空")
      private Integer pricingManner;
      /**
-     * 是否指定条件包邮 0:否 1:是
+     * 是否指定条件包邮
+     * @ext 0:否 1:是
      */
      private Integer isFreePostCondition;
      /**

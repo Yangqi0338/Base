@@ -6,9 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
+ * 注销角色请求参数
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/2/2218:13
+ * @date 2024/2/22 18:13
  */
 @Data
 public class DestroyRoleReq {

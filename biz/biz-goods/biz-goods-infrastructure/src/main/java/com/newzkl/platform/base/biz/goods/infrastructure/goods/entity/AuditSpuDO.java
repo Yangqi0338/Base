@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.OldColumnName;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
 /**
  * @author muc_fang
  * @Description:
@@ -37,10 +39,12 @@ public class AuditSpuDO extends AuditBaseDO {
     /**
      * 商品创建信息
      */
+    @JsonSerializable
     private String spuCreateInfoJson;
     /**
-     * sku销售价 json (Map格式)
+     * sku销售价
      */
+    @JsonSerializable
     private String skuSalePriceJson;
     /**
      * sku审批人值对象
@@ -51,15 +55,15 @@ public class AuditSpuDO extends AuditBaseDO {
      */
     private String brandName;
     /**
-     * 供货价 (Money, 落库 BIGINT 分)
+     * 供货价
      */
     private Money supplyPrice;
     /**
-     * 市场价 (Money, 落库 BIGINT 分)
+     * 市场价
      */
     private Money marketPrice;
     /**
-     * 建议零售价 (Money, 落库 BIGINT 分)
+     * 建议零售价
      */
     private Money unitPrice;
     /**

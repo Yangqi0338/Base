@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.store.application.service.StoreService;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelContactReq;
 import com.newzkl.platform.base.common.ddd.facade.ChannelStoreVO;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;

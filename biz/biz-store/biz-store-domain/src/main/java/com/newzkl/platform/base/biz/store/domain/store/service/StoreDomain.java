@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.domain.store.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreSaveReq;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;

@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,12 +14,8 @@ import java.util.Date;
  * @author niu
  */
 @Data
-@TableName("bonus_pool_partake")
-public class BonusPoolPartakeDO implements Serializable {
-    /**
-     * 主键id
-     */
-    private Long id;
+@TableName
+public class BonusPoolPartakeDO extends BaseDO {
 
     /**
      * 渠道商id
@@ -86,7 +83,7 @@ public class BonusPoolPartakeDO implements Serializable {
     private Integer personPercent;
 
     /**
-     * 个人分红金额 (Money, 落库 BIGINT 分)
+     * 个人分红金额
      */
     private Money dividendAmount;
 
@@ -122,14 +119,7 @@ public class BonusPoolPartakeDO implements Serializable {
     private Integer buyNum;
 
     /**
-     * 录入奖金 (Money, 落库 BIGINT 分)
+     * 录入奖金
      */
     private Money bonus;
-
-    /**
-     * 录入时间
-     */
-    private Date createTime;
-
-    private static final long serialVersionUID = 1L;
 }

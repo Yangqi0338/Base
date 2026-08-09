@@ -26,7 +26,9 @@ public class VideoQuery implements Serializable {
     private Long categoryId;
 
     /**
-     * 是否显示:0-不显示,1-显示
+     * 是否显示
+     *
+     * @ext 0-不显示, 1-显示
      */
     private Integer isVisible;
 

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,13 +13,8 @@ import java.util.Date;
  * @author niu
  */
 @Data
-@TableName("award_record")
-public class AwardRecordDO implements Serializable {
-    /**
-     * 记录id
-     */
-    private Long id;
-
+@TableName
+public class AwardRecordDO extends BaseDO {
     /**
      * 渠道商id
      */
@@ -40,12 +36,14 @@ public class AwardRecordDO implements Serializable {
     private Long channelActivityId;
 
     /**
-     * 奖品状态 0:待发放  1：已发放
+     * 奖品状态
+     * @ext 0-待发放, 1-已发放
      */
     private Integer awardState;
 
     /**
-     * 发放奖品方式「1:即时、2:定时、3:人工
+     * 发放奖品方式
+     * @ext 1-即时, 2-定时, 3-人工
      */
     private Integer grantType;
 
@@ -70,14 +68,7 @@ public class AwardRecordDO implements Serializable {
     private String extInfo;
 
     /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
      * 发放时间
      */
     private Date grantTime;
-
-    private static final long serialVersionUID = 1L;
 }

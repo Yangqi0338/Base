@@ -25,7 +25,7 @@ public class SeatPackageChannelRes implements Serializable {
     /**
      * 席位列表
      */
-    private List<SeatPackageResponse> seatPackageList;
+    private List<SeatPackageRes> seatPackageList;
 
     /**
      * 席位原价 (Money)

@@ -3,9 +3,9 @@ package com.newzkl.platform.base.biz.user.domain.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserFollowRepository;
 import com.newzkl.platform.base.biz.user.domain.service.UserFollowDomain;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserFollowPageReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollow;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollowVO;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserFollowQuery;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserFollowDTO;
+import com.newzkl.platform.base.biz.user.model.relation.res.UserFollowRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -38,8 +38,8 @@ public class UserFollowDomainImpl implements UserFollowDomain {
      * @param entity 关注实体
      * @return 视图对象
      */
-    private UserFollowVO toFollowingVO(UserFollow entity) {
-        UserFollowVO vo = new UserFollowVO();
+    private UserFollowRes toFollowingVO(UserFollowDTO entity) {
+        UserFollowRes vo = new UserFollowRes();
         vo.setId(entity.getId());
         vo.setUserId(entity.getFollowing());
         vo.setFollowTime(entity.getCreateTime());
@@ -52,8 +52,8 @@ public class UserFollowDomainImpl implements UserFollowDomain {
      * @param entity 关注实体
      * @return 视图对象
      */
-    private UserFollowVO toFollowerVO(UserFollow entity) {
-        UserFollowVO vo = new UserFollowVO();
+    private UserFollowRes toFollowerVO(UserFollowDTO entity) {
+        UserFollowRes vo = new UserFollowRes();
         vo.setId(entity.getId());
         vo.setUserId(entity.getFollower());
         vo.setFollowTime(entity.getCreateTime());
@@ -72,7 +72,7 @@ public class UserFollowDomainImpl implements UserFollowDomain {
             return true;
         }
 
-        UserFollow userFollow = new UserFollow();
+        UserFollowDTO userFollow = new UserFollowDTO();
         userFollow.setFollower(follower);
         userFollow.setFollowing(following);
         userFollowRepository.save(userFollow);
@@ -95,26 +95,26 @@ public class UserFollowDomainImpl implements UserFollowDomain {
     }
 
     @Override
-    public List<UserFollowVO> getFollowingList(Long userId) {
+    public List<UserFollowRes> getFollowingList(Long userId) {
         return userFollowRepository.findFollowingList(userId).stream()
                 .map(this::toFollowingVO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<UserFollowVO> getFollowingPage(UserFollowPageReq query) {
+    public Page<UserFollowRes> getFollowingPage(UserFollowQuery query) {
         return TransferUtils.transferPage(userFollowRepository.findFollowingPage(query), this::toFollowingVO);
     }
 
     @Override
-    public List<UserFollowVO> getFollowerList(Long userId) {
+    public List<UserFollowRes> getFollowerList(Long userId) {
         return userFollowRepository.findFollowerList(userId).stream()
                 .map(this::toFollowerVO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<UserFollowVO> getFollowerPage(UserFollowPageReq query) {
+    public Page<UserFollowRes> getFollowerPage(UserFollowQuery query) {
         return TransferUtils.transferPage(userFollowRepository.findFollowerPage(query), this::toFollowerVO);
     }
 

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,22 +22,16 @@ import java.time.LocalDateTime;
  * @author KC
  */
 @Data
-@TableName("article_category")
-public class ArticleCategoryDO {
-
-    /**
-     * 主键ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
-
+@TableName
+public class ArticleCategoryDO extends BaseDO {
     /**
      * 分类名称
      */
     private String name;
 
     /**
-     * 排序值(小于100, 相同时按创建时间倒序)
+     * 排序值
+     * @ext 小于100, 相同时按创建时间倒序
      */
     private Integer sort;
 
@@ -45,17 +41,14 @@ public class ArticleCategoryDO {
     private Integer articleCount;
 
     /**
-     * 创建时间
+     * 是否启用
+     * @ext 0-禁用, 1-启用
      */
-    private LocalDateTime createTime;
+    private CommonEnum.YesOrNo isEnabled;
 
     /**
-     * 是否启用(0-禁用, 1-启用)
-     */
-    private Integer isEnabled;
-
-    /**
-     * 推荐人群(逗号分隔)
+     * 推荐人群
+     * @ext 逗号分隔
      *
      * @see RecommendGroupEnum
      */

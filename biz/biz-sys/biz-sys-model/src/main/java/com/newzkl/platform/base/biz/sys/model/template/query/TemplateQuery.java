@@ -35,7 +35,9 @@ public class TemplateQuery extends PageQuery implements Serializable {
     private String responsiblePerson;
 
     /**
-     * 状态: 0-禁用, 1-启用 (精确匹配, 可选)
+     * 状态 (精确匹配, 可选)
+     *
+     * @ext 取值: 0-禁用, 1-启用
      */
     private Integer status;
 

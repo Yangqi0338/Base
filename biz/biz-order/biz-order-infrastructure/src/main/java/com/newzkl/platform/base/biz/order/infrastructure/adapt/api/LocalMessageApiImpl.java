@@ -6,9 +6,7 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.StoreAccountPayCommand;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationRecordRPC;
-import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
+import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiDeliverEvent;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
@@ -185,5 +183,35 @@ public class LocalMessageApiImpl implements LocalMessageApi {
         command.setAccountId(accountId);
         command.setPayAmount(payAmount);
         MQUtil.send(MQ.Tag.STORE_ACCOUNT_PAY_EVENT, command);
+    }
+
+    /**
+     * 支付成功通知
+     * 1. 仅通知选品的sku订单
+     */
+    @Override
+    public void paySuccessNotify(OrderAgg orderAgg) {
+        // FIXME[goods-pay-event-removed]: 选品支付成功事件(GoodsPaySuccessEvent/goodsOrderPaySuccess)迁移期已删,
+        // 待新履约模型接入后以新事件替换。方法暂留空壳(私有且当前无调用方)。
+//        GoodsPaySuccessEvent goodsPaySuccessEvent = new GoodsPaySuccessEvent();
+//        goodsPaySuccessEvent.setOrderId(orderAgg.getOrder().getId());
+//        List<SkuOrderMessageVO> skuOrderMessageVOList = new ArrayList<>();
+//        Map<Long, SpuOrderDTO> spuOrderMap = orderAgg.getSpuOrderList().stream().collect(Collectors.toMap(SpuOrderDTO::getSpuId, Function.identity()));
+//        for (SkuOrderDTO skuOrder : orderAgg.getSkuOrderList()) {
+//            SkuOrderMessageVO skuOrderMessageVO = TransferUtils.transfer(skuOrder,SkuOrderMessageVO.class);
+//            skuOrderMessageVO.setChannelId(orderAgg.getOrder().getChannelId());
+//            SpuOrderDTO spuOrder = spuOrderMap.get(skuOrder.getSpuId());
+//            skuOrderMessageVO.setSpuChannelType(spuOrder.getSpuChannelType());
+//            skuOrderMessageVOList.add(skuOrderMessageVO);
+//        }
+//        List<SpuOrderMessageVO> spuOrderMessageVOList = new ArrayList<>();
+//        for (SpuOrderDTO spuOrder : orderAgg.getSpuOrderList()) {
+//            SpuOrderMessageVO spuOrderMessageVO = TransferUtils.transfer(spuOrder,SpuOrderMessageVO.class);
+//            spuOrderMessageVOList.add(spuOrderMessageVO);
+//        }
+//        goodsPaySuccessEvent.setSkuOrderList(skuOrderMessageVOList);
+//        goodsPaySuccessEvent.setSpuOrderList(spuOrderMessageVOList);
+//        //支付成功通知
+//        orderRepository.goodsOrderPaySuccess(goodsPaySuccessEvent);
     }
 }

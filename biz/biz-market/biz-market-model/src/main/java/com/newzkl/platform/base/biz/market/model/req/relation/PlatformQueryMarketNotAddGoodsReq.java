@@ -42,8 +42,9 @@ public class PlatformQueryMarketNotAddGoodsReq extends PageQuery {
     private Long categoryId;
 
     /**
-     * 市场类型: 市场类型：GENERAL-普通市场，SPECIAL-专区
-     * {link com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum}
+     * 市场类型
+     *
+     * @ext GENERAL-普通市场，SPECIAL-专区; 候选枚举 {@link com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum}
      */
     private String marketType;
     /**

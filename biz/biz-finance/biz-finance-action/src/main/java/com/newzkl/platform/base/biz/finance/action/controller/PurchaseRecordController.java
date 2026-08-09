@@ -2,6 +2,8 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
@@ -36,11 +38,6 @@ import java.util.List;
 @RequestMapping("/purchaseRecord")
 @RequiredArgsConstructor
 public class PurchaseRecordController {
-
-    /**
-     * 金额分转元的除数
-     */
-    private static final BigDecimal HUNDRED = new BigDecimal("100");
 
     private final PurchaseRecordDomain purchaseRecordDomain;
 

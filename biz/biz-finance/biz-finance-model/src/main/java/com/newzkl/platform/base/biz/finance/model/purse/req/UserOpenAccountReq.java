@@ -7,7 +7,6 @@ import lombok.Data;
  * 用户开户请求
  *
  * @author niu
- * @description:
  * @date 2025-08-25 16:58:54
  */
 @Data
@@ -19,7 +18,8 @@ public class UserOpenAccountReq {
     private String name;
 
     /**
-     * 证件类型 00 身份证号
+     * 证件类型
+     * @ext 00 身份证号; 无对应枚举, 保留 String
      */
     @NotBlank(message = "证件类型不能为空")
     private String certType;
@@ -31,19 +31,22 @@ public class UserOpenAccountReq {
     private String certNo;
 
     /**
-     * 证件有效期类型 1:长期有效 0:非长期有效；
+     * 证件有效期类型
+     * @ext 1 长期有效 0 非长期有效; 无对应枚举, 保留 String
      */
     @NotBlank(message = "证件有效期类型不能为空")
     private String certValidType;
 
     /**
-     * 证件有效期开始日期 日期格式：yyyyMMdd；
+     * 证件有效期开始日期
+     * @ext 日期格式 yyyyMMdd
      */
     @NotBlank(message = "证件有效期开始日期不能为空")
     private String certBeginDate;
 
     /**
-     * 证件有效期截止日期 日期格式：yyyyMMdd；
+     * 证件有效期截止日期
+     * @ext 日期格式 yyyyMMdd
      */
     private String certEndDate;
 

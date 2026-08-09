@@ -31,7 +31,8 @@ public class OperatorReq extends BaseReq {
      */
     private String serviceFeeConfigVO;
     /**
-     * 服务费 (Money, 落库 BIGINT 分)
+     * 服务费
+     * @ext Money, 落库 BIGINT 分
      */
     private Money serviceAmount;
     /**
@@ -47,11 +48,13 @@ public class OperatorReq extends BaseReq {
      */
     private String info;
     /**
-     * 运营类型 0 机构 1 行业 2 区域
+     * 运营类型
+     * @ext 前端传数字 code, Jackson 经 OperatorEnum.Type 的 @JsonValue 反序列化为枚举
      */
     private OperatorEnum.Type type;
     /**
-     * 行业id,区域地址编码 | (多选,拼接)
+     * 行业id/区域地址编码
+     * @ext 多选时拼接
      */
     private String typeForeignId;
     /**

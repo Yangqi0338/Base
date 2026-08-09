@@ -22,7 +22,8 @@ public class ChannelUpdateReq {
     private ChannelEnum.State state;
 
     /**
-     * 渠道商名称 (查询) channel_name
+     * 渠道商名称 (查询)
+     * @ext 来源列 channel_name
      */
     @NotNull(message = "渠道商名称不能为空")
     private String name;
@@ -47,6 +48,9 @@ public class ChannelUpdateReq {
      */
     private CompanyInfo companyInfo;
 
+    /**
+     * 企业资质信息
+     */
     @Data
     public static class CompanyInfo {
         /**

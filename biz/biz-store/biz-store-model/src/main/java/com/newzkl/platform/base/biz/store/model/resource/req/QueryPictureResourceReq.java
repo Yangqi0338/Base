@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 查询图片资源
+ *
  * @author niu
- * @description: 查询图片资源
  * @date 2024/4/12 10:45
  */
 @EqualsAndHashCode(callSuper = true)

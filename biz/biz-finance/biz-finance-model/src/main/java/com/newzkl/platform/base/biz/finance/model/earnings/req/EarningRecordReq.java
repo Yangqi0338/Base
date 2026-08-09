@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @author 分润记录
+ * 分润记录请求
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

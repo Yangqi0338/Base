@@ -10,8 +10,9 @@ import lombok.Getter;
 import java.util.Arrays;
 
 /**
+ * 三方提现记录查询
+ *
  * @author niu
- * @description:
  * @date 2024/1/5 18:40
  */
 @EqualsAndHashCode(callSuper = true)

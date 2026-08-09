@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.store.application.provider;
 import com.newzkl.platform.base.biz.store.domain.store.service.SeatPackageDomain;
 import com.newzkl.platform.base.biz.store.facade.SeatPackageFacade;
 import com.newzkl.platform.base.biz.store.facade.model.SeatPackageFacadeVO;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class SeatPackageFacadeProvider implements SeatPackageFacade {
         if (seatPackageId == null) {
             return null;
         }
-        SeatPackageResponse detail = seatPackageDomain.detail(seatPackageId);
+        SeatPackageRes detail = seatPackageDomain.detail(seatPackageId);
         if (detail == null) {
             return null;
         }

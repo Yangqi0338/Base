@@ -4,9 +4,8 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.market.repository.MarketRepository;
+import com.newzkl.platform.base.biz.market.domain.adapt.repository.MarketRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketBindDAO;
-import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketCategoryDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketBindDO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketDO;
@@ -40,10 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MarketRepositoryImpl implements MarketRepository {
 
-    private static final String CATEGORY_CACHE_KEY = "category:";
-
     private final MarketBindDAO marketBindDAO;
-    private final MarketCategoryDAO marketCategoryDAO;
     private final MarketDAO marketDAO;
 
     @Override
@@ -222,21 +218,6 @@ public class MarketRepositoryImpl implements MarketRepository {
             vo.setBindTime(bind.getCreateTime());
             return vo;
         }).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<MarketGoodsCategoryVO> queryMarketGoodsCategory(Long marketId, Long userId) {
-        String key = marketId != null ? CATEGORY_CACHE_KEY + marketId : CATEGORY_CACHE_KEY + userId;
-        List<MarketGoodsCategoryVO> cached = RedisUtil.get(key);
-        if (cached != null) {
-            return cached;
-        }
-        List<MarketGoodsCategoryVO> result = marketCategoryDAO.queryMarketGoodsCategory(marketId, userId);
-        // 分类缓存30分钟
-        if (!CollectionUtils.isEmpty(result)) {
-            RedisUtil.set(key, result, 30L, TimeUnit.MINUTES);
-        }
-        return result;
     }
 
 }

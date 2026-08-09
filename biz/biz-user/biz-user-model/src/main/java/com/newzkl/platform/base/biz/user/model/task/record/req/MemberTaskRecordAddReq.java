@@ -33,7 +33,8 @@ public class MemberTaskRecordAddReq implements Serializable {
     private String memberNickname;
 
     /**
-     * 新增数值（广告数量/订单金额）
+     * 新增数值
+     * @ext 广告数量/订单金额
      */
     private Long num;
 

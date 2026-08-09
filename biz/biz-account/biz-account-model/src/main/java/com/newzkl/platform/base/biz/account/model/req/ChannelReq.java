@@ -24,7 +24,8 @@ public class ChannelReq extends BaseReq {
      */
     private ChannelEnum.State state;
     /**
-     * 渠道商名称 (查询) channel_name
+     * 渠道商名称 (查询)
+     * @ext 来源列 channel_name
      */
     private String name;
     /**

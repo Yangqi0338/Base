@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -30,17 +31,19 @@ public class ThirdPartyGoodsRecordDO extends BaseDO {
     private String interfaceName;
 
     /**
-     * 请求参数JSON
+     * 请求参数
      */
+    @JsonSerializable
     private String requestJson;
 
     /**
-     * 响应结果JSON
+     * 响应结果
      */
+    @JsonSerializable
     private String responseJson;
 
     /**
-     * 请求状态 (存 enum code)
+     * 请求状态
      */
     private Integer requestStatus;
 

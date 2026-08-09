@@ -38,7 +38,7 @@ public class SupplierQuery extends BizPageQuery {
      */
     private String username;
     /**
-     * 审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过",4,"终止")
+     * 审批状态
      */
     private AuditEnum.State auditState;
     /**
@@ -46,6 +46,11 @@ public class SupplierQuery extends BizPageQuery {
      */
     private String companyName;
 
+    /**
+     * 设置单个状态 (内部包装为列表)
+     *
+     * @param state 供应商状态
+     */
     public void setState(SupplierEnum.State state) {
         this.stateList = doWrapperList(this.stateList, state);
     }

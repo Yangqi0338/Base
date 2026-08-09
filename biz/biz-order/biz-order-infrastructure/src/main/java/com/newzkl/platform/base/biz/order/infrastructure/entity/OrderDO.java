@@ -5,7 +5,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(value = "order", autoResultMap = true)
+@TableName(autoResultMap = true)
 public class OrderDO extends BaseDO {
 
     /**
@@ -32,10 +34,9 @@ public class OrderDO extends BaseDO {
     private String orderNo;
 
     /**
-     * 订单类型 : 0 渠道商选品下单, 1 c端铺货下单
+     * 订单类型
      */
-    @Index
-    private Integer orderType;
+    private OrderEnum.OrderType orderType;
 
     /**
      * 外部订单号
@@ -43,9 +44,9 @@ public class OrderDO extends BaseDO {
     private String outOrderNo;
 
     /**
-     * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部单为 null
+     * 外部平台来源
+     * @ext 三方单来源, 非外部单为 null
      */
-    @Index
     private PlatformTypeEnum platformType;
 
     /**
@@ -54,12 +55,21 @@ public class OrderDO extends BaseDO {
     @Index
     private Long operatorId;
 
+    /**
+     * 渠道商ID
+     */
     @Index
     private Long channelId;
 
+    /**
+     * 收货信息
+     */
     @JsonSerializable
     private ShipVO shipVO;
-    
+
+    /**
+     * 订单备注
+     */
     private String remark;
     
     /**
@@ -107,31 +117,54 @@ public class OrderDO extends BaseDO {
      */
     private Money memberAmount;
     
-    private Integer orderState;
+    /**
+     * 订单状态
+     */
+    @Index
+    private OrderEnum.State orderState;
 
     /**
-     * C端支付状态 0 未支付 1 已支付
+     * C端支付状态
      */
-    private Integer memberPayState;
+    private CommonEnum.YesOrNo memberPayState;
 
     /**
-     * 渠道商支付状态 0 未支付 1 已支付
+     * 渠道商支付状态
      */
-    private Integer channelPayState;
+    private CommonEnum.YesOrNo channelPayState;
 
+    /**
+     * 支付时间
+     */
     @Index
     private LocalDateTime payTime;
-    
-    private Integer payType;
-    
+
+    /**
+     * 支付方式
+     */
+    private OrderEnum.PayType payType;
+
+    /**
+     * 订单状态流转日志
+     * @ext 逗号分隔
+     */
     private String orderStateLog;
 
+    /**
+     * 订单快照
+     */
     @JsonSerializable
     private OrderSnapVO orderSnapVO;
-    
+
+    /**
+     * 门店ID
+     */
     @Index
     private Long storeId;
 
+    /**
+     * C端会员ID
+     */
     @Index
     private Long memberId;
 
@@ -149,7 +182,7 @@ public class OrderDO extends BaseDO {
     /**
      * 购买方式
      */
-    private String buyMode;
+    private OrderEnum.BuyMode buyMode;
 
     /**
      * 用户名

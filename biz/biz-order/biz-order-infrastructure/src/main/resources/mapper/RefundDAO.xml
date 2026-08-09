@@ -6,17 +6,4 @@
            (枚举 toString 落库会写成枚举名而非数字, 原样照抄必错) -->
 <mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.refund.RefundDAO">
 
-    <select id="getOutRefundAddress" resultType="java.lang.String">
-        select t.out_refund_address
-        from refund t
-        left join spu_order t1 on t.spu_order_no = t1.spu_order_no
-        where
-          t.`spu_order_no` = #{spuOrderNo,jdbcType=VARCHAR}
-          and t1.spu_id = #{spuId}
-          and t.refund_state in (0,1,2,4)
-          and t.del_flag = 0
-    </select>
-
-
-
 </mapper>

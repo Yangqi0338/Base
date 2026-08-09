@@ -27,12 +27,16 @@ public class CourseChapterQuery extends BizPageQuery {
     private String title;
 
     /**
-     * 是否免费: 1-免费, 0-付费; 为空查全部
+     * 是否免费
+     *
+     * @ext 1-免费, 0-付费; 为空查全部
      */
     private Integer isFree;
 
     /**
-     * 是否启用: 1-启用, 0-禁用; 为空查全部
+     * 是否启用
+     *
+     * @ext 1-启用, 0-禁用; 为空查全部
      */
     private Integer isEnabled;
 }

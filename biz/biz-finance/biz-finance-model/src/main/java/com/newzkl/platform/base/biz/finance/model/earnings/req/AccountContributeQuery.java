@@ -7,8 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 客户贡献值查询
+ *
  * @author niu
- * @description:
  * @date 2024/1/25 15:35
  */
 @EqualsAndHashCode(callSuper = true)

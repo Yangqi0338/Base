@@ -22,12 +22,14 @@ import java.time.LocalDateTime;
 public class TaskInfoQuery extends PageQuery {
 
     /**
-     * 任务名称（模糊匹配）
+     * 任务名称
+     * @ext 模糊匹配
      */
     private String taskName;
 
     /**
-     * 任务编号（精确匹配）
+     * 任务编号
+     * @ext 精确匹配
      */
     private String taskNum;
 
@@ -37,12 +39,14 @@ public class TaskInfoQuery extends PageQuery {
     private Integer taskType;
 
     /**
-     * 开始时间下界（筛选 start_time &gt;= 该值）
+     * 开始时间下界
+     * @ext 筛选 start_time &gt;= 该值
      */
     private LocalDateTime startTime;
 
     /**
-     * 结束时间上界（筛选 end_time &lt;= 该值）
+     * 结束时间上界
+     * @ext 筛选 end_time &lt;= 该值
      */
     private LocalDateTime endTime;
 

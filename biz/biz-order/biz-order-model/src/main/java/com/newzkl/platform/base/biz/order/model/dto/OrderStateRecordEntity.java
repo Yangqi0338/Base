@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -31,9 +33,9 @@ public class OrderStateRecordEntity {
     private Long skuOrderId;
 
     /**
-     * 变更前订单状态（对应OrderEnum.State的code：0=新订单，1=C端待付款，2=渠道商待付款，3=运营商待付款，4=派发中，6=待发货，8=待收货，10=已收货，12=已完成，14=售后中，99=已关闭）
+     * 变更前订单状态
      */
-    private Integer beforeOrderState;
+    private OrderEnum.State beforeOrderState;
 
     /**
      * 变更前订单状态描述（如：新订单、待发货、已完成）
@@ -41,9 +43,9 @@ public class OrderStateRecordEntity {
     private String beforeStateDesc;
 
     /**
-     * 变更后订单状态（对应OrderEnum.State的code：0=新订单，1=C端待付款，2=渠道商待付款，3=运营商待付款，4=派发中，6=待发货，8=待收货，10=已收货，12=已完成，14=售后中，99=已关闭）
+     * 变更后订单状态
      */
-    private Integer afterOrderState;
+    private OrderEnum.State afterOrderState;
 
     /**
      * 变更后订单状态描述（如：新订单、待发货、已完成）
@@ -61,9 +63,9 @@ public class OrderStateRecordEntity {
     private Long operatorId;
 
     /**
-     * 操作人角色ID（对应角色枚举code：如1000=C端客户，1001=供应商，1002=渠道商，0=平台，-1=系统）
+     * 操作人角色
      */
-    private Long operatorRoleId;
+    private RoleEnum.CompanyRole operatorRoleId;
 
     /**
      * 角色描述（如：C端客户、系统、平台管理员）

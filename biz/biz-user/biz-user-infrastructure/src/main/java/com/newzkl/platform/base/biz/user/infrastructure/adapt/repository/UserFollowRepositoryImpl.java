@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserFollowRepository;
 import com.newzkl.platform.base.biz.user.infrastructure.dao.UserFollowDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.UserFollowDO;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserFollowPageReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserFollow;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserFollowQuery;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserFollowDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +39,11 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
      * @param doObj 数据对象
      * @return 领域实体
      */
-    private UserFollow toDomain(UserFollowDO doObj) {
+    private UserFollowDTO toDomain(UserFollowDO doObj) {
         if (doObj == null) {
             return null;
         }
-        UserFollow entity = new UserFollow();
+        UserFollowDTO entity = new UserFollowDTO();
         entity.setId(doObj.getId());
         entity.setFollower(doObj.getFollowerId());
         entity.setFollowing(doObj.getFollowingId());
@@ -57,7 +57,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
      * @param entity 领域实体
      * @return 数据对象
      */
-    private UserFollowDO toDO(UserFollow entity) {
+    private UserFollowDO toDO(UserFollowDTO entity) {
         UserFollowDO doObj = new UserFollowDO();
         doObj.setId(entity.getId());
         doObj.setFollowerId(entity.getFollower());
@@ -67,7 +67,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public UserFollow save(UserFollow userFollow) {
+    public UserFollowDTO save(UserFollowDTO userFollow) {
         UserFollowDO doObj = toDO(userFollow);
         if (doObj.getCreateTime() == null) {
             doObj.setCreateTime(LocalDateTime.now());
@@ -93,7 +93,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public List<UserFollow> findFollowingList(Long follower) {
+    public List<UserFollowDTO> findFollowingList(Long follower) {
         List<UserFollowDO> doList = userFollowDAO.selectList(new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowerId, follower)
                 .orderByDesc(UserFollowDO::getId));
@@ -101,7 +101,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public Page<UserFollow> findFollowingPage(UserFollowPageReq query) {
+    public Page<UserFollowDTO> findFollowingPage(UserFollowQuery query) {
         Page<UserFollowDO> page = new Page<>(query.getPageNo(), query.getPageSize());
         Page<UserFollowDO> doPage = userFollowDAO.selectPage(page, new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowerId, query.getUserId())
@@ -110,7 +110,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public List<UserFollow> findFollowerList(Long following) {
+    public List<UserFollowDTO> findFollowerList(Long following) {
         List<UserFollowDO> doList = userFollowDAO.selectList(new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowingId, following)
                 .orderByDesc(UserFollowDO::getId));
@@ -118,7 +118,7 @@ public class UserFollowRepositoryImpl implements UserFollowRepository {
     }
 
     @Override
-    public Page<UserFollow> findFollowerPage(UserFollowPageReq query) {
+    public Page<UserFollowDTO> findFollowerPage(UserFollowQuery query) {
         Page<UserFollowDO> page = new Page<>(query.getPageNo(), query.getPageSize());
         Page<UserFollowDO> doPage = userFollowDAO.selectPage(page, new LambdaQueryWrapper<UserFollowDO>()
                 .eq(UserFollowDO::getFollowingId, query.getUserId())

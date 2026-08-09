@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.user.model.task.enums.TaskTypeEnum;
 import com.newzkl.platform.base.biz.user.model.task.info.query.TaskInfoQuery;
 import com.newzkl.platform.base.biz.user.model.task.info.req.TaskInfoOperateReq;
 import com.newzkl.platform.base.biz.user.model.task.info.res.TaskInfoRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -149,11 +150,11 @@ public class TaskInfoDomainImpl implements TaskInfoDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public TaskInfoRes toggleShow(Long id, Integer isShow) {
+    public TaskInfoRes toggleShow(Long id, CommonEnum.YesOrNo isShow) {
         if (id == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "状态切换时ID不能为空");
         }
-        if (isShow == null || (isShow != 0 && isShow != 1)) {
+        if (isShow == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "显示状态值非法，仅支持0/1");
         }
         if (!taskInfoRepository.existsById(id)) {

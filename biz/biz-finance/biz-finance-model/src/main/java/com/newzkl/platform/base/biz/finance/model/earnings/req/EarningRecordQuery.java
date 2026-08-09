@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.earnings.req;
 
 
+import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.query.QuerySupport;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
@@ -40,12 +41,12 @@ public class EarningRecordQuery extends BizPageQuery {
     private Long orderNo;
 
     /**
-     * 结算状态  0：待结算  1：已结算  2:已售后
+     * 结算状态
      */
     private EarningsEnum.State state;
 
     /**
-     * 非结算状态  0：待结算  1：已结算  2:已售后
+     * 非结算状态
      */
     private EarningsEnum.State stateNot;
 
@@ -64,6 +65,7 @@ public class EarningRecordQuery extends BizPageQuery {
      */
     private Long earningEndTime;
 
+    @OauthRole
     public void setRoleId(RoleEnum.CompanyRole roleId) {
         this.roleList = this.wrapList(this.roleList, roleId);
     }

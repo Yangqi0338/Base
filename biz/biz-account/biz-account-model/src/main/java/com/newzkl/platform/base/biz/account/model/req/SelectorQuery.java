@@ -56,6 +56,11 @@ public class SelectorQuery extends PageQuery {
      */
     private Integer stateOver;
 
+    /**
+     * 按ID构造
+     *
+     * @param id 甄选师ID
+     */
     public SelectorQuery(Long id) {
         this.id = id;
     }

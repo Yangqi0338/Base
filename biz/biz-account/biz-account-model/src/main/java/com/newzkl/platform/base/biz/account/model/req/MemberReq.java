@@ -47,7 +47,8 @@ public class MemberReq extends BaseReq {
      */
     private Integer countDealNumber;
     /**
-     * 统计：成交金额 (Money, 落库 BIGINT 分)
+     * 统计：成交金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money countDealAmount;
     /**

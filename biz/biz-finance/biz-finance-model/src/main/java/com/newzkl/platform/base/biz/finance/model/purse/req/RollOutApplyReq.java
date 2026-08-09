@@ -5,8 +5,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**
+ * 转出申请请求
+ *
  * @author niu
- * @description: 转出申请请求对象
  * @date 2023/12/23 11:41
  */
 @Data

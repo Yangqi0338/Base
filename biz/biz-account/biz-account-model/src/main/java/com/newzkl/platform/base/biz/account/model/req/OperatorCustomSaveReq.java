@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * 市场交易师
+ * 运营商自助注册请求参数
  *
  * @author fang
  */
@@ -37,9 +37,9 @@ public class OperatorCustomSaveReq {
      */
     private Long inviteId;
     /**
-     * 采购金类型 0 自营 1 合作
+     * 采购金类型
+     * @ext 0 自营 1 合作; 无对应枚举, 保留 Integer
      */
-    /** @NotNull */
     private Integer balanceType;
 
     @NotNull

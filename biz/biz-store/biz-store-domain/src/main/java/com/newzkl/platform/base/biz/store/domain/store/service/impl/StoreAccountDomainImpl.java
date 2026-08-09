@@ -6,18 +6,16 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.msg.StoreAccountPayMsg;
-import com.newzkl.platform.base.biz.store.model.web.EventTrackingReq;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreAccount;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreAccountQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreAccountRepository;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreAccountDomain;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,30 +39,11 @@ public class StoreAccountDomainImpl implements StoreAccountDomain {
     }
 
     @Override
-    public Page<StoreAccountResponse> queryStoreAccountPage(StoreAccountQuery req) {
+    public Page<StoreAccountRes> queryStoreAccountPage(StoreAccountQuery req) {
         if (CollUtil.isEmpty(req.getSortField())) {
             req.addDescSortField("id");
         }
         return storeAccountRepository.queryStoreAccountPage(req);
-    }
-
-    @Override
-    public void eventTracking(EventTrackingReq req) {
-        DateTime now = DateUtil.date();
-        StoreAccountQuery storeAccountQueryReq = new StoreAccountQuery();
-        storeAccountQueryReq.resetQueryList();
-        storeAccountQueryReq.setAccountId(req.getAccountId());
-        storeAccountQueryReq.setChannelId(req.getStoreId());
-//        storeAccountQueryReq.setViewTimeL(DateUtil.offset(now, DateField.MINUTE, 30).toString());
-        List<StoreAccountResponse> records = storeAccountRepository.queryStoreAccountPage(storeAccountQueryReq).getRecords();
-        if (CollUtil.isNotEmpty(records)) {
-            records.forEach(record -> {
-                record.setCountVisitNumber(record.getCountVisitNumber() + 1);
-                record.setLastViewTime(now.toLocalDateTime());
-                storeAccountRepository.updateStoreAccount(BeanUtil.copyProperties(record, StoreAccount.class));
-            });
-
-        }
     }
 
     @Override

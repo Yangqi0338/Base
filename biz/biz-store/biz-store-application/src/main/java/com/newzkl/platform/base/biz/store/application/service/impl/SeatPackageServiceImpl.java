@@ -9,9 +9,9 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseAmountRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.SeatPackageRepository;
 import com.newzkl.platform.base.biz.store.model.enums.DictEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
-import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
+import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,9 +35,9 @@ public class SeatPackageServiceImpl implements SeatPackageService {
     public SeatPackageChannelRes seatPackageStoreVO(Long accountId) {
         SeatPackageChannelRes channelVO = new SeatPackageChannelRes();
 
-        SeatPackagePageReq seatPackagePageReq = new SeatPackagePageReq();
+        SeatPackageQuery seatPackagePageReq = new SeatPackageQuery();
         seatPackagePageReq.setState(1);
-        List<SeatPackageResponse> seatPackageList = repository.seatPackageList(seatPackagePageReq);
+        List<SeatPackageRes> seatPackageList = repository.seatPackageList(seatPackagePageReq);
         channelVO.setSeatPackageList(seatPackageList);
 
         // 查询渠道商钱包席位

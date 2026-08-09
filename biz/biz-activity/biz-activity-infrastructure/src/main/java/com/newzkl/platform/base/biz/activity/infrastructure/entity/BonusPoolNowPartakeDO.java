@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("bonus_pool_now_partake")
-public class BonusPoolNowPartakeDO {
-    private Long id;
+public class BonusPoolNowPartakeDO extends BaseDO {
     private String serialId;
     private Long channelId;
     private String activityId;
@@ -30,7 +30,7 @@ public class BonusPoolNowPartakeDO {
     private String roleName;
     private Integer personPercent;
     /**
-     * 个人分红金额 (Money, 落库 BIGINT 分)
+     * 个人分红金额
      */
     private Money dividendAmount;
     private String dividendCycle;
@@ -40,8 +40,7 @@ public class BonusPoolNowPartakeDO {
     private Long skuCode;
     private Integer buyNum;
     /**
-     * 录入奖金 (Money, 落库 BIGINT 分)
+     * 录入奖金
      */
     private Money bonus;
-    private LocalDateTime createTime;
 }

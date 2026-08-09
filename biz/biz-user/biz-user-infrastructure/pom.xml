@@ -25,5 +25,14 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-finance-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
+        </dependency>
     </dependencies>
 </project>

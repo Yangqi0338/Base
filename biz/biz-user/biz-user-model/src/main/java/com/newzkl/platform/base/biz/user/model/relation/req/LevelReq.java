@@ -16,7 +16,8 @@ public class LevelReq {
      */
     private Long id;
     /**
-     * 业务类型 0 甄选师
+     * 业务类型
+     * @ext 0 甄选师
      */
     private Integer type;
     /**

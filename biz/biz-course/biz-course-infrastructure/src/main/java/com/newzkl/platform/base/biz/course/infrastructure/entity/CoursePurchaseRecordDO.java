@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,7 +25,8 @@ import java.time.LocalDateTime;
 public class CoursePurchaseRecordDO extends BaseDO {
 
     /**
-     * 订单编号(唯一)
+     * 订单编号
+     * @ext 唯一
      */
     private Long orderNo;
 
@@ -34,7 +36,8 @@ public class CoursePurchaseRecordDO extends BaseDO {
     private Long courseId;
 
     /**
-     * 课程编码(冗余)
+     * 课程编码
+     * @ext 冗余
      */
     private String courseNum;
 
@@ -44,17 +47,20 @@ public class CoursePurchaseRecordDO extends BaseDO {
     private Long userId;
 
     /**
-     * 课程原价(分)
+     * 课程原价
+     * @ext 单位分
      */
     private Long originalPrice;
 
     /**
-     * 实际支付金额(分)
+     * 实际支付金额
+     * @ext 单位分
      */
     private Long payPrice;
 
     /**
-     * 支付状态: 0-待支付, 1-支付成功, 2-支付失败
+     * 支付状态
+     * @ext 0-待支付, 1-支付成功, 2-支付失败
      */
     private Integer payState;
 
@@ -64,9 +70,10 @@ public class CoursePurchaseRecordDO extends BaseDO {
     private LocalDateTime payTime;
 
     /**
-     * 支付方式: 1-微信支付, 2-支付宝支付
+     * 支付方式
+     * @ext 1-微信支付, 2-支付宝支付
      */
-    private Integer payType;
+    private OrderEnum.PayType payType;
 
     /**
      * 第三方支付流水号

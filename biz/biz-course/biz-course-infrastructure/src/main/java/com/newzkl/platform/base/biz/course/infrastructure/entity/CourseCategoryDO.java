@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,11 +18,11 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("course_category")
+@TableName
 public class CourseCategoryDO extends BaseDO {
 
     /**
-     * 分类编码, KF 前缀自编码
+     * 分类编码
      */
     private String categoryCode;
 
@@ -36,17 +37,18 @@ public class CourseCategoryDO extends BaseDO {
     private String subTitle;
 
     /**
-     * 排序值, 越小越靠前
+     * 排序值
+     * @ext 越小越靠前
      */
     private Integer sort;
 
     /**
-     * 该分类下课程总数, 不分状态
+     * 该分类下课程总数
      */
     private Integer courseCount;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 }

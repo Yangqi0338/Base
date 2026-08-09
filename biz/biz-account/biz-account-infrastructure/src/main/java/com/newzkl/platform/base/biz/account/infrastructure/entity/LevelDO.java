@@ -26,18 +26,21 @@ import org.dromara.autotable.annotation.Index;
 public class LevelDO extends BaseDO {
 
     /**
-     * 类型 (角色 ID)
+     * 类型
+     * @ext 角色 ID
      */
     @Index
     private Integer type;
 
     /**
-     * 是否开启: 0 否 1 是
+     * 是否开启
+     * @ext 0 否, 1 是
      */
     private Integer enable;
 
     /**
-     * 等级值: 1 2 3 ...
+     * 等级值
+     * @ext 1 2 3 ...
      */
     private Integer value;
 
@@ -47,19 +50,22 @@ public class LevelDO extends BaseDO {
     private String name;
 
     /**
-     * 等级权限 (JSON 列)
+     * 等级权限
+     * @ext JSON 列
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private PermissionVO permission;
 
     /**
-     * 升级条件 (JSON 列)
+     * 升级条件
+     * @ext JSON 列
      */
     @TableField(value = "`condition`", typeHandler = JacksonTypeHandler.class)
     private ConditionVO condition;
 
     /**
-     * 条件判断类型: 0 满足任意一项 1 全部满足
+     * 条件判断类型
+     * @ext 0 满足任意一项, 1 全部满足
      */
     private Integer conditionJudgeType;
 }

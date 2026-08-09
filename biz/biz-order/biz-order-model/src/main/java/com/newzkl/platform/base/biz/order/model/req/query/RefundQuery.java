@@ -36,14 +36,14 @@ public class RefundQuery extends BizPageQuery {
      */
     private Long supplierId;
     /**
-     * (0,"待渠道商审核"),(2,"待供应商审核"),(4,"待提交物流"),(6,"待确认收货"),(7,"待平台介入"),(8,"平台介入中"),(9,"退款中"),(10,"已完成"),(-2,"已拒绝"),(-4,"已关闭"),
+     * 售后状态集合
      */
     private List<RefundEnum.State> refundStateList;
     public void setRefundState(RefundEnum.State refundState){
         this.refundStateList = doWrapperList(refundStateList, refundState);
     }
     /**
-     * 售后类型 (0 仅退款 1 退货退款)
+     * 售后类型
      */
      private RefundEnum.RefundType refundType;
     /**
@@ -51,7 +51,7 @@ public class RefundQuery extends BizPageQuery {
      */
     private List<OrderEnum.State> fromOrderStateNot;
     /**
-     * 订单类型 (0:渠道商订单 1:c端订单) 查询
+     * 订单类型查询
      */
     private OrderEnum.OrderType orderType;
     /**
@@ -74,5 +74,9 @@ public class RefundQuery extends BizPageQuery {
      * 商品名称
      */
     private String spuName;
+    /**
+     * 商品id
+     */
+    private Long spuId;
 
 }

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("lecturer_category")
+@TableName
 public class LecturerCategoryDO extends BaseDO {
 
     /**
@@ -30,7 +31,7 @@ public class LecturerCategoryDO extends BaseDO {
     private String iconUrl;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 }

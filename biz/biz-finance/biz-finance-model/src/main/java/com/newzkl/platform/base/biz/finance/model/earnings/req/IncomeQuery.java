@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 
 
+/**
+ * 收益查询
+ */
 @Data
 public class IncomeQuery implements Serializable {
     /**
@@ -17,12 +20,14 @@ public class IncomeQuery implements Serializable {
     private Long accountId;
 
     /**
-     * 状态
+     * 结算状态
+     * @ext 编码值, 候选枚举 EarningsEnum.State; 保留 Integer
      */
     private Integer state;
 
     /**
-     * 非状态
+     * 非结算状态
+     * @ext 编码值, 候选枚举 EarningsEnum.State; 保留 Integer
      */
     private Integer stateNot;
 

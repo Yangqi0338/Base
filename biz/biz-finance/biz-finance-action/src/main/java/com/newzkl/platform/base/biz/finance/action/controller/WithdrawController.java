@@ -125,11 +125,7 @@ public class WithdrawController {
      * @return 转出申请分页
      */
     @PostMapping("/queryClientWithdrawRecords")
-    public PlatformResult<Page<RollOutApplyVO>> queryClientWithdrawRecords(@RequestBody RollOutApplyQuery req) {
-        req.setAccountId(SecurityUtils.getAccountId());
-        if (req.getPurseType() == null) {
-            return PlatformResult.fail();
-        }
+    public PlatformResult<Page<RollOutApplyVO>> queryClientWithdrawRecords(@RequestBody @Valid RollOutApplyQuery req) {
         return PlatformResult.success(withdrawDomain.queryRollOutApplyPage(req));
     }
 
@@ -170,10 +166,7 @@ public class WithdrawController {
      * @return 提现记录分页
      */
     @PostMapping("/queryTripartiteWithdrawRecordList")
-    public PlatformResult<Page<WithdrawRecordVO>> queryTripartiteWithdrawRecordList(@RequestBody TripartiteWithdrawRecordQuery req) {
-        if (req.getAccountId() == null) {
-            req.setAccountId(SecurityUtils.getAccountId());
-        }
+    public PlatformResult<Page<WithdrawRecordVO>> queryTripartiteWithdrawRecordList(@RequestBody @Valid TripartiteWithdrawRecordQuery req) {
         return PlatformResult.success(withdrawDomain.queryTripartiteWithdrawRecordList(req));
     }
 

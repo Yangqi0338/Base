@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserTaskRepository;
 import com.newzkl.platform.base.biz.user.infrastructure.dao.UserTaskDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.UserTaskDO;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserTaskQuery;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserTaskQuery;
 import com.newzkl.platform.base.biz.user.model.relation.res.UserTaskRes;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserTaskVO;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserTaskDTO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -38,9 +38,9 @@ public class UserTaskRepositoryImpl implements UserTaskRepository {
     }
 
     @Override
-    public List<UserTaskVO> queryList(UserTaskQuery query) {
+    public List<UserTaskDTO> queryList(UserTaskQuery query) {
         List<UserTaskDO> doList = dao.selectList(dao.getLw(query));
-        return TransferUtils.transfers(doList, UserTaskVO::new);
+        return TransferUtils.transfers(doList, UserTaskDTO::new);
     }
 
     @Override
@@ -68,10 +68,10 @@ public class UserTaskRepositoryImpl implements UserTaskRepository {
     }
 
     @Override
-    public UserTaskVO lastTask(UserTaskQuery query) {
+    public UserTaskDTO lastTask(UserTaskQuery query) {
         query.setSortField(CollUtil.newArrayList("count"));
         query.setSortMode(CollUtil.newArrayList("desc"));
         UserTaskDO entity = dao.selectOne(dao.getLw(query));
-        return TransferUtils.transfer(entity, UserTaskVO::new);
+        return TransferUtils.transfer(entity, UserTaskDTO::new);
     }
 }

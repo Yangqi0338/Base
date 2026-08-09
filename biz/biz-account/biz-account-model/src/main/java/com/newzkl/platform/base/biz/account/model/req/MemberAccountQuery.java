@@ -13,15 +13,18 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class MemberAccountQuery extends PageQuery {
     /**
-     * 账号手机号（模糊查询）
+     * 账号手机号
+     * @ext 模糊查询
      */
     private String phone;
     /**
-     * 会员昵称（模糊查询）
+     * 会员昵称
+     * @ext 模糊查询
      */
     private String nickname;
     /**
-     * 会员账号（模糊查询）
+     * 会员账号
+     * @ext 模糊查询
      */
     private String userAccount;
 }

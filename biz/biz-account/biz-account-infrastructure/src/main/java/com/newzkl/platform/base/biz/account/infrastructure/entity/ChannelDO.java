@@ -17,7 +17,8 @@ import lombok.Data;
 @TableName
 public class ChannelDO extends BaseDO {
     /**
-     * 名称(account.realname)
+     * 名称
+     * @ext 源 account.realname
      */
     private String name;
     /**
@@ -50,15 +51,15 @@ public class ChannelDO extends BaseDO {
      */
     private CommonEnum.YesOrNo storePermission;
     /**
-     * 店铺地址，省CODE, 6位
+     * 店铺地址, 省 CODE, 6 位
      */
     private Integer shipProvinceCode;
     /**
-     * 店铺地址，市CODE, 6位
+     * 店铺地址, 市 CODE, 6 位
      */
     private Integer shipCityCode;
     /**
-     * 店铺地址，区CODE, 6位
+     * 店铺地址, 区 CODE, 6 位
      */
     private Integer shipAreaCode;
     /**

@@ -35,12 +35,14 @@ public class OperatorProxySaveReq {
     @NotNull(message = "服务费?")
     // TODO[cross-domain finance]: private ServiceFeeConfigVO serviceFeeConfigVO;
     /**
-     * 运营类型 0 机构 1 行业 2 区域
+     * 运营类型
+     * @ext 前端传数字 code, Jackson 经 OperatorEnum.Type 的 @JsonValue 反序列化为枚举
      */
     @NotNull(message = "运营类型?")
     private OperatorEnum.Type type;
     /**
-     * 行业id,区域地址编码 | (多选,拼接)
+     * 行业id/区域地址编码
+     * @ext 多选时拼接
      */
     @NotNull(message = "运营行业id|区域地址id")
     private String typeForeignId;
@@ -50,7 +52,8 @@ public class OperatorProxySaveReq {
     @NotNull(message = "运营行业|区域地址|品牌名?")
     private String typeForeignName;
     /**
-     * 采购金类型 0 自营 1 合作
+     * 采购金类型
+     * @ext 0 自营 1 合作; 无对应枚举, 保留 Integer
      */
     @NotNull
     private Integer balanceType;

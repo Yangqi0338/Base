@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.model.chapter.query.CourseChapterQuer
 import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterStatRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public interface CourseChapterRepository {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否更新成功
      */
-    boolean updateEnabled(Long id, Integer isEnabled);
+    boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled);
 
     /**
      * 更新免费/收费状态
@@ -63,7 +64,7 @@ public interface CourseChapterRepository {
      * @param isFree 是否免费 1-是 0-否
      * @return 是否更新成功
      */
-    boolean updateFree(Long id, Integer isFree);
+    boolean updateFree(Long id, CommonEnum.YesOrNo isFree);
 
     /**
      * 判断同一课程下章节数是否重复

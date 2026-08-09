@@ -6,17 +6,6 @@
                settleTypeList 不再取 skuName/spuName/spuImg, 仅保留 spo.create_time as createOrderTime, 见 findings -->
 <mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleRecordDAO">
 
-    <!-- 源侧同样只有 label 单分支 <set>, label 为空会语法错误, 调用方保证非空, 原样保留 -->
-    <update id="editSettleRecord">
-        update settle_record t
-        <set>
-            <if test="model.label != null">
-                t.`label` = #{model.label},
-            </if>
-        </set>
-        where t.id = #{model.id,jdbcType=BIGINT}
-    </update>
-
     <select id="settleTypeList" resultType="com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO">
         <choose>
             <when test="query.type == 0">

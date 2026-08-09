@@ -14,7 +14,8 @@ import lombok.Data;
 public class UserCollectionReq {
 
     /**
-     * 用户ID（由控制器填充当前登录账号）
+     * 用户ID
+     * @ext 由控制器填充当前登录账号
      */
     private Long userId;
 

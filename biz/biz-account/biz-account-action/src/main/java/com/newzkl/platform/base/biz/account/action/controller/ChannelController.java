@@ -2,13 +2,10 @@ package com.newzkl.platform.base.biz.account.action.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.action.cmd.ChannelCmd;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
-import com.newzkl.platform.base.biz.account.domain.service.MerchantDomain;
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO;
-import com.newzkl.platform.base.biz.account.action.cmd.ChannelCmd;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
@@ -18,19 +15,15 @@ import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户-渠道商
@@ -48,7 +41,6 @@ public class ChannelController {
     private final ChannelClientDomain channelClientDomain;
     private final UserQueryService userQueryService;
     private final IdentityService identityService;
-    private final MerchantDomain merchantDomain;
 
     /**
      * 渠道商修改
@@ -163,56 +155,6 @@ public class ChannelController {
     @PostMapping("/queryServiceFeeConfig")
     public PlatformResult<ServiceFeeConfigVO> queryServiceFeeConfig(@RequestBody @Valid IdListCommand idListCommand) {
         return PlatformResult.success(identityService.queryServiceFeeConfig(CollUtil.getFirst(idListCommand.getIdList())));
-    }
-
-    /**
-     * 设置渠道商微信公众号配置
-     *
-     * <p>旧 {@code @Limit(code=1023, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
-     *
-     * @param wxMpConfigVO 微信公众号配置
-     * @return 空结果
-     */
-    @PostMapping("wxMpConfigSet")
-    public PlatformResult<Void> wxMpConfigSet(@RequestBody WxMpConfigVO wxMpConfigVO) {
-        merchantDomain.wxMpConfigSet(wxMpConfigVO);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 获取appId
-     *
-     * @param idListCommand 渠道商ID入参
-     * @return 微信公众号 appId
-     */
-    @PostMapping("appId")
-    public PlatformResult<String> appId(@RequestBody IdListCommand idListCommand) {
-        WxMpConfigVO wxMpConfig = merchantDomain.wxMpConfig(CollUtil.getFirst(idListCommand.getIdList()));
-        return PlatformResult.success(wxMpConfig == null ? null : wxMpConfig.getAppId());
-    }
-
-    /**
-     * 获取微信参数
-     *
-     * @return 微信公众号配置
-     */
-    @PostMapping("getWxMpConfigVO")
-    public PlatformResult<WxMpConfigVO> getWxMpConfigVO() {
-        return PlatformResult.success(merchantDomain.wxMpConfig(SecurityUtils.getAccountId()));
-    }
-
-    /**
-     * 配置微信参数
-     *
-     * <p>旧 {@code @Limit(code=1023, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
-     *
-     * @param wxMpConfigVO 微信公众号配置
-     * @return 空结果
-     */
-    @PostMapping("setWxMpConfigVO")
-    public PlatformResult<Void> setWxMpConfigVO(@RequestBody WxMpConfigVO wxMpConfigVO) {
-        merchantDomain.wxMpConfigSet(wxMpConfigVO);
-        return PlatformResult.success();
     }
 
     /**

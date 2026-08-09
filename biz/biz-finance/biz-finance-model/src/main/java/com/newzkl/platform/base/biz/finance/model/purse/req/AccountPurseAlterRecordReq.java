@@ -8,8 +8,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 账户变动记录请求
+ *
  * @author niu
- * @description: 账户变动记录查询对象
  * @date 2023/12/23 16:53
  */
 @Data
@@ -36,8 +37,7 @@ public class AccountPurseAlterRecordReq implements Serializable {
     private Money amount;
 
     /**
-     * 账号修改类型  1 进账 2 出账
-     *
+     * 账号修改类型
      */
     private PurseEnum.PurseAlterType alterType;
 

@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreStylePageQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreStyleQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleResponse;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepository;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreStyleDAO;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -39,13 +38,13 @@ public class StoreStyleRepositoryImpl extends ServiceImpl<StoreStyleDAO, StoreSt
     }
 
     @Override
-    public Page<StoreStyleResponse> storeStylePage(StoreStylePageQuery req) {
+    public Page<StoreStyleResponse> storeStylePage(StoreStyleQuery req) {
         // 创建分页对象
         Page<StoreStyleDO> queryPage = new Page<>(req.getPageNo(), req.getPageSize());
 
         LambdaQueryWrapper<StoreStyleDO> wrapper = new LambdaQueryWrapper<StoreStyleDO>()
                 .eq(req.getState() != null, StoreStyleDO::getState, req.getState())
-                .eq(StoreStyleDO::getCreateId, SecurityUtils.getAccountId())
+                .eq(StoreStyleDO::getCreatorId, SecurityUtils.getAccountId())
                 .orderByDesc(StoreStyleDO::getId);
 
         // 多字段模糊查询
@@ -111,8 +110,6 @@ public class StoreStyleRepositoryImpl extends ServiceImpl<StoreStyleDAO, StoreSt
         copyStyle.setStyleName(storeStyleDO.getStyleName());
         copyStyle.setStyleCode(BusinessCodeUtil.generate(BusinessType.STORE_STYLE));
         copyStyle.setPackageDescribe(storeStyleDO.getPackageDescribe());
-        copyStyle.setCreateId(SecurityUtils.getAccountId());
-        copyStyle.setCreateName(SecurityUtils.getNickName());
         copyStyle.setPageType(storeStyleDO.getPageType());
         copyStyle.setSourceCode(storeStyleDO.getStyleCode());
         copyStyle.setSourceName(storeStyleDO.getStyleName());
@@ -133,12 +130,12 @@ public class StoreStyleRepositoryImpl extends ServiceImpl<StoreStyleDAO, StoreSt
 
     @Override
     public StoreStyle getOneselfStyle(String storeStyle) {
-        return TransferUtils.transfer(storeStyleDAO.selectOne(new BaseLambdaQueryWrapper<StoreStyleDO>().notNullEq(StoreStyleDO::getStyleCode, storeStyle).eq(StoreStyleDO::getCreateId, SecurityUtils.getAccountId())), StoreStyle::new);
+        return TransferUtils.transfer(storeStyleDAO.selectOne(new BaseLambdaQueryWrapper<StoreStyleDO>().notNullEq(StoreStyleDO::getStyleCode, storeStyle).eq(StoreStyleDO::getCreatorId, SecurityUtils.getAccountId())), StoreStyle::new);
     }
 
     @Override
     public void deleteCopyStyle(String styleCode) {
-        storeStyleDAO.delete(new BaseLambdaQueryWrapper<StoreStyleDO>().eq(StoreStyleDO::getStyleCode, styleCode).eq(StoreStyleDO::getCreateId, SecurityUtils.getAccountId()));
+        storeStyleDAO.delete(new BaseLambdaQueryWrapper<StoreStyleDO>().eq(StoreStyleDO::getStyleCode, styleCode).eq(StoreStyleDO::getCreatorId, SecurityUtils.getAccountId()));
     }
 
     @Override

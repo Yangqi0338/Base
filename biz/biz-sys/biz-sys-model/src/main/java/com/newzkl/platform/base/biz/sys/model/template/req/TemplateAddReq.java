@@ -68,7 +68,9 @@ public class TemplateAddReq implements Serializable {
     private String responsiblePerson;
 
     /**
-     * 是否默认模板: 0-否 (默认), 1-是
+     * 是否默认模板
+     *
+     * @ext 取值: 0-否 (默认), 1-是
      */
     private Integer isDefault = 0;
 }

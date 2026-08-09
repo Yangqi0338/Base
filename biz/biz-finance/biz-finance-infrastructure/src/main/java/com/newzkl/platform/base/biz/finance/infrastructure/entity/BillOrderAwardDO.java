@@ -10,13 +10,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 
+/**
+ * 订单奖励账单 DO
+ *
+ * @author kc
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName
 public class BillOrderAwardDO extends BaseDO {
 
     /**
-     * 角色id
+     * 角色
      */
     private RoleEnum.CompanyRole role;
 

@@ -53,12 +53,14 @@ public class RecordAwardOrderReq {
     private Long userId;
 
     /**
-     * 奖品id 0为现金
+     * 奖品id
+     * @ext 0 为现金
      */
     private Long awardId = 0L;
 
     /**
-     * 奖品类型 0：现金
+     * 奖品类型
+     * @ext 0-现金
      */
     private Integer awardType = 0;
 

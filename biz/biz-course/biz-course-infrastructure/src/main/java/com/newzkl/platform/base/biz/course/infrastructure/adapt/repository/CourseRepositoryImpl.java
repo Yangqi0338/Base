@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.infrastructure.adapt.repository;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
 import com.newzkl.platform.base.biz.course.infrastructure.convert.CourseUnitConverter;
@@ -9,6 +10,7 @@ import com.newzkl.platform.base.biz.course.model.course.query.CourseQuery;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseDetailReq;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseReq;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -29,7 +31,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class CourseRepositoryImpl implements CourseRepository {
+public class CourseRepositoryImpl extends RepositorySupport implements CourseRepository {
 
     private final CourseDAO courseDAO;
 
@@ -89,7 +91,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateEnabled(Long id, Integer isEnabled) {
+    public boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         CourseDO courseDO = new CourseDO();
         courseDO.setId(id);
         courseDO.setIsEnabled(isEnabled);
@@ -99,7 +101,9 @@ public class CourseRepositoryImpl implements CourseRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addPurchaseCount(Long id) {
-        return courseDAO.addPurchaseCount(id) > 0;
+        // TODO 空值可能+1会报错
+        return courseDAO.update(new LambdaUpdateWrapper<CourseDO>().eq(CourseDO::getId, id)
+                .setIncrBy(CourseDO::getPurchaseCount, 1)) > 0;
     }
 
     @Override
@@ -149,7 +153,7 @@ public class CourseRepositoryImpl implements CourseRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean recover(Long id) {
-        return courseDAO.recoverById(id) > 0;
+        return recoverDeleteById(id,CourseDO.class);
     }
 
     /**
@@ -165,17 +169,6 @@ public class CourseRepositoryImpl implements CourseRepository {
         // 价格 Money→Money 直拷; 仅时长(百分秒→秒)仍需换算
         CourseRes res = TransferUtils.transfer(courseDO, CourseRes::new);
         res.setTotalDurationSeconds(CourseUnitConverter.centisecondToSeconds(courseDO.getTotalDurationCentisecond()));
-        res.setIsEnabledDesc(toEnabledDesc(courseDO.getIsEnabled()));
         return res;
-    }
-
-    /**
-     * 启用状态转描述
-     *
-     * @param isEnabled 启用状态
-     * @return 描述文案
-     */
-    private String toEnabledDesc(Integer isEnabled) {
-        return isEnabled != null && isEnabled == 1 ? "启用" : "禁用";
     }
 }

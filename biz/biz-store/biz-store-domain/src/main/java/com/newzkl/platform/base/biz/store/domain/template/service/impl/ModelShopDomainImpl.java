@@ -8,14 +8,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.BIEnum;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShop;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopOrderRecord;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopOrderRecordDTO;
 import com.newzkl.platform.base.biz.store.model.template.query.ModelShopDataQuery;
 import com.newzkl.platform.base.biz.store.model.template.query.ModelShopStorePageQuery;
 import com.newzkl.platform.base.biz.store.model.template.req.ApplyModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.req.ModelShopUpdateReq;
-import com.newzkl.platform.base.biz.store.model.template.req.QueryModelShopReq;
+import com.newzkl.platform.base.biz.store.model.template.req.ModelShopQuery;
 import com.newzkl.platform.base.biz.store.model.template.res.ModeShopDataSummary;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopDataRes;
 import com.newzkl.platform.base.biz.store.model.template.vo.ModelShopOrderDataVO;
@@ -65,25 +65,25 @@ public class ModelShopDomainImpl implements ModelShopDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void applyModelShop(ApplyModelShopReq req) {
-        ModelShop query = new ModelShop();
+        ModelShopQuery query = new ModelShopQuery();
         query.setChannelId(SecurityUtils.getAccountId());
-        ModelShop modelShop = modelShopRepository.queryByModelShop(query);
+        ModelShopDTO modelShop = modelShopRepository.queryByModelShop(query);
         if (modelShop == null) {
             //复制模板
             StoreStyle storeStyle = storeStyleRepository.copyStyle(null);
 
             //新增样板店
-            modelShop = new ModelShop();
+            modelShop = new ModelShopDTO();
             modelShop.setModelShopName(req.getModelShopName());
             modelShop.setModelDescription(req.getModelDescription());
             modelShop.setChannelId(SecurityUtils.getAccountId());
             modelShop.setStyleCode(storeStyle.getStyleCode());
-            modelShop.setCreateId(SecurityUtils.getAccountId());
-            modelShop.setCreateName(SecurityUtils.getNickName());
+            modelShop.setCreatorId(SecurityUtils.getAccountId());
+            modelShop.setCreatorName(SecurityUtils.getNickName());
             modelShopRepository.create(modelShop);
-        } else if (AuditEnum.State.FAIL.getCode().equals(modelShop.getAuditState())) {
+        } else if (AuditEnum.State.FAIL == modelShop.getAuditState()) {
             modelShop.setId(modelShop.getId());
-            modelShop.setAuditState(AuditEnum.State.AUDITING.getCode());
+            modelShop.setAuditState(AuditEnum.State.AUDITING);
             modelShop.setAuditInfo(null);
             modelShopRepository.update(modelShop);
         }
@@ -93,8 +93,8 @@ public class ModelShopDomainImpl implements ModelShopDomain {
     public void auditModelShop(AuditModelShopReq req) {
         modelShopRepository.auditModelShop(req);
 
-        if (AuditEnum.State.SUCCESS.getCode().equals(req.getAuditState())) {
-            ModelShop modelShop = modelShopRepository.queryByStyleCode(req.getStyleCode());
+        if (AuditEnum.State.SUCCESS == req.getAuditState()) {
+            ModelShopDTO modelShop = modelShopRepository.queryByStyleCode(req.getStyleCode());
             Store store = new Store();
             store.setId(modelShop.getChannelId());
             store.setIsModelShop(1);
@@ -104,7 +104,7 @@ public class ModelShopDomainImpl implements ModelShopDomain {
     }
 
     @Override
-    public Page<ModelShopRes> queryModelShopPage(QueryModelShopReq req) {
+    public Page<ModelShopRes> queryModelShopPage(ModelShopQuery req) {
         Page<ModelShopRes> page = modelShopRepository.queryModelShopPage(req);
         //填充模板数据
         List<ModelShopRes> records = page.getRecords();
@@ -177,7 +177,7 @@ public class ModelShopDomainImpl implements ModelShopDomain {
 
     @Override
     public ModelShopDataRes modelShopData(ModelShopDataQuery query) {
-        ModelShop modelShop = new ModelShop();
+        ModelShopQuery modelShop = new ModelShopQuery();
         modelShop.setId(query.getModelShopId());
         // 查询样板店基本信息
         ModelShopDataRes shopDataRes = TransferUtils.transfer(
@@ -219,20 +219,20 @@ public class ModelShopDomainImpl implements ModelShopDomain {
     }
 
     @Override
-    public ModelShop queryByStyleCode(String styleCode) {
+    public ModelShopDTO queryByStyleCode(String styleCode) {
         return modelShopRepository.queryByStyleCode(styleCode);
     }
 
     @Override
-    public ModelShop queryById(Long id) {
-        ModelShop modelShop = new ModelShop();
+    public ModelShopDTO queryById(Long id) {
+        ModelShopQuery modelShop = new ModelShopQuery();
         modelShop.setId(id);
         return modelShopRepository.queryByModelShop(modelShop);
     }
 
     @Override
-    public ModelShop queryByChannelId(Long channelId) {
-        ModelShop modelShop = new ModelShop();
+    public ModelShopDTO queryByChannelId(Long channelId) {
+        ModelShopQuery modelShop = new ModelShopQuery();
         modelShop.setChannelId(channelId);
         return modelShopRepository.queryByModelShop(modelShop);
     }
@@ -242,11 +242,10 @@ public class ModelShopDomainImpl implements ModelShopDomain {
         List<ModelShopStyleRes> modelShopStyleVOList = new ArrayList<>();
 
         // 添加已上线的样板店
-        ModelShop query = new ModelShop();
-        query.setAuditState(AuditEnum.State.SUCCESS.getCode());
-        query.setIsDelete(0);
+        ModelShopQuery query = new ModelShopQuery();
+        query.setAuditState(AuditEnum.State.SUCCESS);
         query.setState(1);
-        List<ModelShop> modelShops = modelShopRepository.queryByModelShopList(query);
+        List<ModelShopDTO> modelShops = modelShopRepository.queryByModelShopList(query);
         if (CollectionUtil.isNotEmpty(modelShops)) {
             modelShopStyleVOList.addAll(TransferUtils.transfers(modelShops, ModelShopStyleRes::new));
         }
@@ -293,16 +292,16 @@ public class ModelShopDomainImpl implements ModelShopDomain {
 
     @Override
     public void updateModelShop(ModelShopUpdateReq req) {
-        modelShopRepository.update(TransferUtils.transfer(req, ModelShop::new));
+        modelShopRepository.update(TransferUtils.transfer(req, ModelShopDTO::new));
     }
 
     @Override
     public void syncModelShop() {
         Store store = storeRepository.store(SecurityUtils.getAccountId());
         if (store != null && store.getModelShopId() != null) {
-            ModelShop modelShopQuery = new ModelShop();
+            ModelShopQuery modelShopQuery = new ModelShopQuery();
             modelShopQuery.setId(store.getModelShopId());
-            ModelShop modelShop = modelShopRepository.queryByModelShop(modelShopQuery);
+            ModelShopDTO modelShop = modelShopRepository.queryByModelShop(modelShopQuery);
             // 同步后的新样式
             StoreStyle storeStyle = storeStyleRepository.copyStyle(store.getStyleCode());
             // 删除旧的复制样式
@@ -325,9 +324,8 @@ public class ModelShopDomainImpl implements ModelShopDomain {
             dto.setModelShopId(store.getModelShopId());
             //修改数据
             modelShopRepository.updateModelShopData(dto);
-            //生成记录 (dto.amount 为分 Integer, 显式 Money.of 升 Money, 避免 TransferUtils 按元误换算)
-            modelShopOrderRecordRepository.create(TransferUtils.transfer(dto, ModelShopOrderRecord::new,
-                    (c, v) -> v.setAmount(Money.of(c.getAmount()))));
+            //生成记录
+            modelShopOrderRecordRepository.create(TransferUtils.transfer(dto, ModelShopOrderRecordDTO::new));
         }
     }
 

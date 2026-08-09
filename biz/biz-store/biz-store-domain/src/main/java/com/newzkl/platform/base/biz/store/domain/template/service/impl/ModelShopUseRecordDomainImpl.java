@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.domain.template.service.impl;
 
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopUseRecord;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopUseRecordDTO;
 import com.newzkl.platform.base.biz.store.domain.template.repository.ModelShopUseRecordRepository;
 import com.newzkl.platform.base.biz.store.domain.template.service.ModelShopUseRecordDomain;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class ModelShopUseRecordDomainImpl implements ModelShopUseRecordDomain {
     private final ModelShopUseRecordRepository modelShopUseRecordRepository;
 
     @Override
-    public void create(ModelShopUseRecord modelShopUseRecord) {
+    public void create(ModelShopUseRecordDTO modelShopUseRecord) {
         modelShopUseRecordRepository.create(modelShopUseRecord);
     }
 }

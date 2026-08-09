@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.interaction.query;
 
+import com.newzkl.platform.base.biz.user.model.interaction.req.InteractionBatchItem;
 import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,20 +17,22 @@ import java.util.List;
 @Data
 public class BatchInteractionQuery implements Serializable {
     /**
-     * 目标类型（批量查询的所有子项共用该类型）
+     * 目标类型
+     * @ext 批量查询的所有子项共用该类型；前端传数字 code, Jackson 经 InteractionEnum.TargetTypeEnum @JsonValue 反序列化
      */
-    @NotNull(message = "目标类型不能为空")
+    @NotNull
     private InteractionEnum.TargetTypeEnum targetType;
 
     /**
-     * 操作类型（批量查询的所有子项共用该类型）
+     * 操作类型
+     * @ext 批量查询的所有子项共用该类型；前端传数字 code, Jackson 经 InteractionEnum.ActionTypeEnum @JsonValue 反序列化
      */
-    @NotNull(message = "操作类型不能为空")
+    @NotNull
     private InteractionEnum.ActionTypeEnum actionType;
 
     /**
      * 批量检查的子项列表
      */
-    @NotEmpty(message = "批量检查的子项列表不能为空")
+    @NotEmpty
     private List<InteractionBatchItem> items;
 }

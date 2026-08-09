@@ -21,7 +21,8 @@ public class BrandDO extends BaseDO {
     @Index
 	private Long accountId;
 	/**
-	 * 名称 查询
+	 * 名称
+	 * @ext 查询
 	 */
 	private String name;
 	/**

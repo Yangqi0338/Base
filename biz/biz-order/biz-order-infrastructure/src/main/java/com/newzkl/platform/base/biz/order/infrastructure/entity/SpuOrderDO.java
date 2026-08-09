@@ -3,12 +3,12 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderExt;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -26,12 +26,11 @@ import java.time.LocalDateTime;
 @TableName(value = "spu_order", autoResultMap = true)
 public class SpuOrderDO extends BaseDO {
     /**
-     * 订单类型 : 0 渠道商选品下单, 1 c端铺货下单
+     * 订单类型
      */
-    @Index
-    private Integer orderType;
+    private OrderEnum.OrderType orderType;
     /**
-     * 渠道类型 0 供货商品 1 自营商品
+     * 渠道类型
      */
     private SpuEnum.ChannelType spuChannelType;
     /**
@@ -39,57 +38,70 @@ public class SpuOrderDO extends BaseDO {
      */
     @Index
     private String outOrderNo;
+    /**
+     * 交易单ID
+     */
     @Index
     private Long orderId;
     /**
-     * 渠道商ID channel_id
+     * 渠道商ID
      */
     @Index
     private Long channelId;
     /**
-     * 商户ID
-     */
-    @Index
-    private Long merchantId;
-    /**
-     * 供应商ID supplier_id
+     * 供应商ID
      */
     @Index
     private Long supplierId;
     /**
-     * 交易师ID dealer_id
+     * 交易师ID
      */
     @Index
     private Long dealerId;
     /**
-     * 运营商ID operator_id
+     * 运营商ID
      */
     @Index
     private Long operatorId;
     /**
-     * spu_id
+     * SPU_ID
      */
     @Index
     private Long spuId;
     /**
-     * spu_name
+     * SPU名称
      */
     private String spuName;
     /**
-     * spu_img
+     * SPU图片
      */
     private String spuImg;
+    /**
+     * SKU种类数量
+     */
     private Integer skuCount;
+    /**
+     * 选品金额
+     */
     private Money goodsAmount;
     /**
      * 铺货金额
      */
     private Money storeAmount;
+    /**
+     * 运费金额
+     */
     private Money freightAmount;
+    /**
+     * 优惠金额
+     */
     private Money discountAmount;
+    /**
+     * 渠道商待支付总金额
+     */
     private Money totalAmount;
     /**
-     * 货款金额 supplier_amount
+     * 货款金额
      */
     private Money supplierAmount;
     /**
@@ -100,10 +112,16 @@ public class SpuOrderDO extends BaseDO {
      * 服务费: 渠道商应付
      */
     private Money serviceAmount;
+    /**
+     * 订单状态
+     */
     @Index
-    private Integer orderState;
+    private OrderEnum.State orderState;
 
-    @JsonSerialize
+    /**
+     * 收货信息
+     */
+    @JsonSerializable
     private ShipVO shipVO;
     /**
      * 收货人手机号
@@ -114,15 +132,22 @@ public class SpuOrderDO extends BaseDO {
      */
     private String remark;
     /**
-     * 订单状态流转日志,逗号隔开
+     * 订单状态流转日志
+     * @ext 逗号隔开
      */
     private String orderStateLog;
     /**
      * 运费结算发送状态
      */
     private CommonEnum.YesOrNo settleSendState;
+    /**
+     * 门店ID
+     */
     @Index
     private Long storeId;
+    /**
+     * C端会员ID
+     */
     @Index
     private Long memberId;
     /**
@@ -153,5 +178,8 @@ public class SpuOrderDO extends BaseDO {
     @JsonSerializable
     private SpuOrderExt spuOrderExt;
 
-    private Integer refund;
+    /**
+     * 是否有售后
+     */
+    private CommonEnum.YesOrNo refund;
 }

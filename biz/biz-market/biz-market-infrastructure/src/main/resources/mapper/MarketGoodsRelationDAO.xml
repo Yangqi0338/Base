@@ -29,7 +29,7 @@
 
     <!-- 统计SPU关联的市场数量 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 getSpuRelevancyMarketNum) -->
     <select id="getSpuRelevancyMarketNum"
-            resultType="com.newzkl.platform.base.biz.market.model.rpc.relation.SpuRelevancyMarketVO">
+            resultType="com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO">
         SELECT
             a.goods_id as spuId,
             COUNT(DISTINCT a.market_id) as marketNum
@@ -248,7 +248,7 @@
     <!-- Base DAO 改名 channelSpuRelationList 以避开 BaseMapper.selectList; 源侧裸参数改 req. 前缀 -->
     <!-- 排序: 源侧手写 order by + foreach(sortField/sortMode), 空集合会产生残留 order by, 此处改用等价的 ${req.sortSQL} -->
     <select id="channelSpuRelationList"
-            resultType="com.newzkl.platform.base.biz.market.model.rpc.openapi.ApiChannelSpuRelationVO">
+            resultType="com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO">
         select mgr.id,mgr.discount_rate,mt.market_type,sp.id as spu_id,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state as spu_state,sp.unit_price,mgr.goods_info,sp.min_pricing_num
         from market_goods_relation mgr,spu sp,market mt
         <where>

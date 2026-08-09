@@ -24,12 +24,16 @@ public class RegionReq extends PageQuery {
     private Integer parentCode;
 
     /**
-     * 是否按运营商已开通区域打标, 1=打标
+     * 是否按运营商已开通区域打标
+     *
+     * @ext 取值: 1=打标
      */
     private Integer operatorFilter;
 
     /**
-     * 是否剔除已打标区域, 1=剔除
+     * 是否剔除已打标区域
+     *
+     * @ext 取值: 1=剔除
      */
     private Integer flagRemove;
 

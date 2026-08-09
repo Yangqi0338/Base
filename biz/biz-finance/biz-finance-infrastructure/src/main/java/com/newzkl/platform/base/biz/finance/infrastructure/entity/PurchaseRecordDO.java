@@ -8,6 +8,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 // TODO[pom-gap mybatis-plus-ext]: import org.dromara.mpe.autofill.annotation.JsonSerializable; (annotation 依赖延迟补)
 
 /**
@@ -90,5 +91,6 @@ public class PurchaseRecordDO extends BaseDO {
      * 订单信息
      */
     // TODO[pom-gap mybatis-plus-ext]: @JsonSerializable (autofill json, 依赖延迟补)
+    @JsonSerializable
     private String orderInfo;
 }

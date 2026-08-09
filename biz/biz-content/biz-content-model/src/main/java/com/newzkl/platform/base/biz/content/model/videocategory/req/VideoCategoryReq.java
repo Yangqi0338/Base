@@ -26,18 +26,23 @@ public class VideoCategoryReq implements Serializable {
     private String name;
 
     /**
-     * 排序值(小于100)
+     * 排序值
+     *
+     * @ext 小于100
      */
     private Integer sort;
 
     /**
-     * 是否启用(0-禁用, 1-启用)
+     * 是否启用
+     *
+     * @ext 0-禁用, 1-启用
      */
     private Integer isEnabled;
 
     /**
-     * 推荐人群(逗号分隔)
+     * 推荐人群
      *
+     * @ext 逗号分隔存储, 候选枚举 {@link RecommendGroupEnum}
      * @see RecommendGroupEnum
      */
     private String recommendGroups;

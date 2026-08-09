@@ -3,8 +3,9 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 import lombok.Data;
 
 /**
+ * 客户提现请求
+ *
  * @author niu
- * @description: 客户提现req
  * @date 2023/12/25 15:26
  */
 @Data

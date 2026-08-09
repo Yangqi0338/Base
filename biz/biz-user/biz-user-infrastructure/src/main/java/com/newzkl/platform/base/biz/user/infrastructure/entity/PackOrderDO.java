@@ -1,12 +1,22 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
+import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
+import com.newzkl.platform.base.biz.user.model.pack.vo.PackGoodsVO;
+import com.newzkl.platform.base.biz.user.model.relation.res.ShipAddressRes;
+import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressVO;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.OldColumnName;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 入会礼包订单(pack_order)持久化对象
@@ -22,7 +32,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class PackOrderDO extends BaseDO {
 
     /**
@@ -32,9 +42,11 @@ public class PackOrderDO extends BaseDO {
     private Long accountId;
 
     /**
-     * 收货信息 JSON（结构：ShipAddressVO）
+     * 收货信息
      */
-    private String shipVO;
+    @OldColumnName("shipVO")
+    @JsonSerializable
+    private ShipAddressVO ship;
 
     /**
      * 礼包商品ID
@@ -43,9 +55,9 @@ public class PackOrderDO extends BaseDO {
     private Long packId;
 
     /**
-     * 礼包类型（角色 ID）
+     * 礼包类型
      */
-    private Integer packType;
+    private RoleEnum.CompanyRole packType;
 
     /**
      * 礼包等级
@@ -58,9 +70,9 @@ public class PackOrderDO extends BaseDO {
     private String levelName;
 
     /**
-     * 订单金额（分）
+     * 订单金额
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 物流公司
@@ -73,9 +85,10 @@ public class PackOrderDO extends BaseDO {
     private String freightCode;
 
     /**
-     * 订单明细 JSON（结构：List&lt;PackGoodsRes&gt;）
+     * 订单明细
      */
-    private String packOrderItemList;
+    @JsonSerializable
+    private List<PackGoodsVO> packOrderItemList;
 
     /**
      * 发货时间
@@ -88,8 +101,8 @@ public class PackOrderDO extends BaseDO {
     private LocalDateTime lastFreightApiUseTime;
 
     /**
-     * 订单状态 (0,新订单),(2,待支付),(4,待发货),(6,已发货),(8,已收货),(10,已完成),(-1,已关闭)
+     * 订单状态
      */
     @Index
-    private Integer state;
+    private PackOrderStateEnum state;
 }

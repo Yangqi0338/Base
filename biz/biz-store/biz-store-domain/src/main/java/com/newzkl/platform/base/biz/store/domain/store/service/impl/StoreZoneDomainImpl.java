@@ -8,9 +8,9 @@ import com.newzkl.platform.base.biz.store.model.store.entity.StoreZone;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreZoneBackgroundImage;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreZoneGoodsRelation;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreZonePageReq;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreZoneQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreZoneBackgroundImageRepository;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreZoneGoodsRelationRepository;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreZoneRepository;
@@ -36,7 +36,7 @@ public class StoreZoneDomainImpl implements StoreZoneDomain {
     private final StoreZoneGoodsRelationRepository storeZoneGoodsRelationRepository;
 
     @Override
-    public Page<StoreZoneResponse> storeZonePage(StoreZonePageReq req) {
+    public Page<StoreZoneRes> storeZonePage(StoreZoneQuery req) {
         return storeZoneRepository.storeZonePage(req);
     }
 

@@ -52,7 +52,7 @@ public class AccountQuery extends BizPageQuery {
      */
     private List<String> usernameList;
     /**
-     * 帐号状态（0正常 1停用） (查询)
+     * 帐号状态 (查询)
      */
     private AccountEnum.State state;
     /**
@@ -92,12 +92,19 @@ public class AccountQuery extends BizPageQuery {
      */
     private CommonEnum.Client client;
 
+    /**
+     * 设置单个邀请人账号ID (内部包装为列表)
+     *
+     * @param inviteAccountId 邀请人账号ID
+     */
     public void setInviteAccountId(Long inviteAccountId) {
         this.inviteAccountIdList = doWrapperList(this.inviteAccountIdList, inviteAccountId);
     }
 
     /**
-     * 用户
+     * 设置单个用户名 (内部包装为列表)
+     *
+     * @param username 用户名
      */
     public void setUsername(String username) {
         this.usernameList = doWrapperList(this.usernameList, username);

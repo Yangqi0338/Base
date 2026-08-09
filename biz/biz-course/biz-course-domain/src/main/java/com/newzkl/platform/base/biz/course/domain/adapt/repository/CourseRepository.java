@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.model.course.query.CourseQuery;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseDetailReq;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseReq;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public interface CourseRepository {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否更新成功
      */
-    boolean updateEnabled(Long id, Integer isEnabled);
+    boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled);
 
     /**
      * 实际购买数递增

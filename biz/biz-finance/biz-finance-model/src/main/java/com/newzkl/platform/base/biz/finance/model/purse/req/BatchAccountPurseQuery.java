@@ -24,7 +24,8 @@ public class BatchAccountPurseQuery {
     private PurseEnum.FinanceUser accountType;
 
     /**
-     * 1：累计收益  2：当前可提现收益
+     * 收益统计口径
+     * @ext 1 累计收益 2 当前可提现收益; 无对应枚举, 保留 Integer
      */
     private Integer totalOrNow;
 }

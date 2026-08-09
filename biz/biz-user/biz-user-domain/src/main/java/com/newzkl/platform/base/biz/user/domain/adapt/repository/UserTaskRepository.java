@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 
-import com.newzkl.platform.base.biz.user.model.relation.req.UserTaskQuery;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserTaskQuery;
 import com.newzkl.platform.base.biz.user.model.relation.res.UserTaskRes;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserTaskVO;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserTaskDTO;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface UserTaskRepository {
      * @param query 查询条件
      * @return 列表
      */
-    List<UserTaskVO> queryList(UserTaskQuery query);
+    List<UserTaskDTO> queryList(UserTaskQuery query);
 
     /**
      * 新增数据
@@ -56,6 +56,6 @@ public interface UserTaskRepository {
      * @param query 查询条件
      * @return 最后一条任务
      */
-    UserTaskVO lastTask(UserTaskQuery query);
+    UserTaskDTO lastTask(UserTaskQuery query);
 
 }

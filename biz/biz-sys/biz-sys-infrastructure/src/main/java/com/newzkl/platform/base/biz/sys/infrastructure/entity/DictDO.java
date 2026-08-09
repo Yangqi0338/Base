@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.Index;
 
 /**
  * 字典数据对象
@@ -19,6 +20,7 @@ public class DictDO extends BaseDO {
     /**
      * 字典值
      */
+    @Index
     private String value;
 
     /**

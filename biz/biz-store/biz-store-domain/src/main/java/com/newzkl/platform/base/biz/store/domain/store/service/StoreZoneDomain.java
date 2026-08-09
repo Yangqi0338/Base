@@ -2,16 +2,16 @@ package com.newzkl.platform.base.biz.store.domain.store.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreZonePageReq;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreZoneQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreZoneRes;
 
 /**
  * 门店专区
  */
 public interface StoreZoneDomain {
 
-    Page<StoreZoneResponse> storeZonePage(StoreZonePageReq req);
+    Page<StoreZoneRes> storeZonePage(StoreZoneQuery req);
 
     void create(StoreZoneCreateReq req);
 

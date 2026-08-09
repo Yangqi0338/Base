@@ -6,6 +6,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 
+/**
+ * 订单金额统计查询参数
+ *
+ * @author fang
+ */
 @Data
 public class OrderAmountReq implements java.io.Serializable{
 

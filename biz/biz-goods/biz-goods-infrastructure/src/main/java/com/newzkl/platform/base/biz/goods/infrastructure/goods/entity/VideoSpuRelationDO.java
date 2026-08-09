@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author KC
  */
 @Data
-@TableName("video_spu_relation")
+@TableName
 public class VideoSpuRelationDO implements Serializable {
 
     /**
@@ -27,7 +27,8 @@ public class VideoSpuRelationDO implements Serializable {
     private Long spuId;
 
     /**
-     * 视频类型: 1 短视频, 2 长视频
+     * 视频类型
+     * @ext 1 短视频，2 长视频
      */
     private Integer type;
 }

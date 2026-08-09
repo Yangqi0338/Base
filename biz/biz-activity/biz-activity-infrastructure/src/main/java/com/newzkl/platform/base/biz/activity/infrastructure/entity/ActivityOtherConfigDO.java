@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,19 +13,12 @@ import java.util.Date;
  * @author niu
  */
 @Data
-@TableName("activity_other_config")
-public class ActivityOtherConfigDO implements Serializable {
-    private Long id;
-
+@TableName
+public class ActivityOtherConfigDO extends BaseDO {
     /**
      * 渠道商id
      */
     private Long channelId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 显示配置
@@ -36,5 +30,4 @@ public class ActivityOtherConfigDO implements Serializable {
      */
     private String configDetails;
 
-    private static final long serialVersionUID = 1L;
 }

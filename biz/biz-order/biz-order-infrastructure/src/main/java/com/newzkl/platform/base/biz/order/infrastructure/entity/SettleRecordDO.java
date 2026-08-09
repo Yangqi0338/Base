@@ -5,6 +5,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -17,10 +18,12 @@ public class SettleRecordDO extends BaseDO {
 	/**
 	 * 供应商ID
 	 */
+    @Index
 	private Long supplierId;
 	/**
 	 * 结算时间(版本号)
 	 */
+    @Index
 	private LocalDateTime settleTime;
 	/**
 	 * 结算金额

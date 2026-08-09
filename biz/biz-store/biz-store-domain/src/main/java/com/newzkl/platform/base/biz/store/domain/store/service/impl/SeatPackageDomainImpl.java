@@ -6,9 +6,9 @@ import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.biz.store.model.store.entity.SeatPackage;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageCreateReq;
-import com.newzkl.platform.base.biz.store.model.store.req.SeatPackagePageReq;
+import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageUpdateReq;
-import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageResponse;
+import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.SeatPackageRepository;
 import com.newzkl.platform.base.biz.store.domain.store.service.SeatPackageDomain;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -40,12 +40,12 @@ public class SeatPackageDomainImpl implements SeatPackageDomain {
     }
 
     @Override
-    public Page<SeatPackageResponse> seatPackagePage(SeatPackagePageReq req) {
+    public Page<SeatPackageRes> seatPackagePage(SeatPackageQuery req) {
         return seatPackageRepository.seatPackagePage(req);
     }
 
     @Override
-    public SeatPackageResponse detail(Long id) {
+    public SeatPackageRes detail(Long id) {
         return seatPackageRepository.detail(id);
     }
 

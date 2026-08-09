@@ -32,8 +32,7 @@ public interface SettleGoodsDAO extends BaseMapper<SettleGoodsDO> {
                 .notEmptyIn(SettleGoodsDO::getId, query.getIdList())
                 .notEmptyEq(SettleGoodsDO::getSupplierId, query.getSupplierId())
                 .notEmptyEq(SettleGoodsDO::getSpuId, query.getSpuId())
-                ;
-        wrapper.le(query.getLessSettleTime() != null, SettleGoodsDO::getNextSettleTime, query.getLessSettleTime());
+                .notEmptyLe(SettleGoodsDO::getNextSettleTime, query.getLessSettleTime());
         return wrapper;
     }
 }

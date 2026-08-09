@@ -18,13 +18,15 @@ import org.dromara.autotable.annotation.Index;
 public class UserInteractionDO extends BaseDO {
 
     /**
-     * 操作人ID（关联用户表）
+     * 操作人ID
+     * @ext 关联用户表
      */
     @Index
     private Long userId;
 
     /**
-     * 被操作对象发布者ID（视频/商品的发布者，关联用户表）
+     * 被操作对象发布者ID
+     * @ext 视频/商品的发布者，关联用户表
      */
     @Index
     private Long publisherId;
@@ -42,13 +44,14 @@ public class UserInteractionDO extends BaseDO {
     private InteractionEnum.TargetTypeEnum targetType;
 
     /**
-     * 被操作对象ID（视频ID或商品ID，与targetType对应）
+     * 被操作对象ID
+     * @ext 视频ID或商品ID，与targetType对应
      */
     @Index
     private Long targetId;
 
     /**
-     * 操作类型（LIKE：点赞；SHARE：转发）
+     * 操作类型
      */
     private InteractionEnum.ActionTypeEnum actionType;
 }

@@ -8,9 +8,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 子账号编辑请求参数
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/2/2310:23
+ * @date 2024/2/23 10:23
  */
 @Data
 public class SubEditReq {

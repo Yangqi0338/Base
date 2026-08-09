@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserCollectionRepository;
 import com.newzkl.platform.base.biz.user.infrastructure.dao.UserCollectionDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.UserCollectionDO;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserCollectionDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
@@ -39,7 +39,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
      * @param collection 领域实体
      * @return 数据对象
      */
-    private UserCollectionDO toDO(UserCollection collection) {
+    private UserCollectionDO toDO(UserCollectionDTO collection) {
         UserCollectionDO doObj = new UserCollectionDO();
         doObj.setId(collection.getId());
         doObj.setUserId(collection.getUserId());
@@ -67,11 +67,11 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
      * @param doObj 数据对象
      * @return 领域实体
      */
-    private UserCollection toDomain(UserCollectionDO doObj) {
+    private UserCollectionDTO toDomain(UserCollectionDO doObj) {
         if (doObj == null) {
             return null;
         }
-        UserCollection collection = new UserCollection();
+        UserCollectionDTO collection = new UserCollectionDTO();
         collection.setId(doObj.getId());
         collection.setUserId(doObj.getUserId());
         collection.setUserName(doObj.getUserName());
@@ -92,7 +92,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     @Override
-    public UserCollection save(UserCollection userCollection) {
+    public UserCollectionDTO save(UserCollectionDTO userCollection) {
         UserCollectionDO doObj = toDO(userCollection);
         if (doObj.getId() == null) {
             userCollectionMapper.insert(doObj);
@@ -114,7 +114,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     @Override
-    public List<UserCollection> findByUserId(Long userId) {
+    public List<UserCollectionDTO> findByUserId(Long userId) {
         UserCollectionQuery query = new UserCollectionQuery();
         query.setUserId(userId);
         List<UserCollectionDO> doList = userCollectionMapper.selectList(userCollectionMapper.getLw(query));
@@ -122,7 +122,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     @Override
-    public Optional<UserCollection> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId) {
+    public Optional<UserCollectionDTO> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId) {
         UserCollectionDO doObj = userCollectionMapper.selectWithDeletedByUserId(userId, storeDistributionId);
         return Optional.ofNullable(toDomain(doObj));
     }
@@ -134,7 +134,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     @Override
-    public Page<UserCollection> findPageByUserId(UserCollectionQuery query) {
+    public Page<UserCollectionDTO> findPageByUserId(UserCollectionQuery query) {
         Page<UserCollectionDO> doPage = userCollectionMapper.selectPage(
                 RepositorySupport.page(query), userCollectionMapper.getLw(query));
         return TransferUtils.transferPage(doPage, this::toDomain);

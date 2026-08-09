@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.user.model.task.enums.TaskTypeEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,15 +25,9 @@ import org.dromara.autotable.annotation.Index;
 public class TaskConfigDO extends BaseDO {
 
     /**
-     * 任务类型编码（1-观看激励广告，2-购买商品）
+     * 任务类型
      */
-    @Index
-    private Integer taskType;
-
-    /**
-     * 任务类型名称
-     */
-    private String taskTypeName;
+    private TaskTypeEnum taskType;
 
     /**
      * 任务分组编码
@@ -45,14 +41,15 @@ public class TaskConfigDO extends BaseDO {
     private String taskGroupName;
 
     /**
-     * 任务数量（关联的任务条数）
+     * 任务数量
+     * @ext 关联的任务条数
      */
     private Integer taskCount;
 
     /**
-     * 是否启用（1-是，0-否）
+     * 是否启用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 
     /**
      * 备注信息

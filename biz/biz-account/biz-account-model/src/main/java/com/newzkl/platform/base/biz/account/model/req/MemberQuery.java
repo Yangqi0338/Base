@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class MemberQuery extends PageQuery {
     /**
-     *
+     * 主键ID
      */
     private Long id;
     /**
@@ -29,7 +29,8 @@ public class MemberQuery extends PageQuery {
     private String head;
 
     /**
-     * 性别：0-未知，1-男，2-女
+     * 性别
+     * @ext 0 未知 1 男 2 女; 无对应枚举, 保留 Integer
      */
     private Integer gender;
 
@@ -66,7 +67,8 @@ public class MemberQuery extends PageQuery {
      */
     private Integer countDealNumber;
     /**
-     * 统计：成交金额 (Money, 落库 BIGINT 分)
+     * 统计：成交金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money countDealAmount;
     /**

@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.user.model.task.enums.TaskStatusEnum;
+import com.newzkl.platform.base.biz.user.model.task.enums.TaskTypeEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,13 +37,15 @@ public class MemberTaskRecordDO extends BaseDO {
     private String memberNickname;
 
     /**
-     * 任务编号（关联 task_info.task_num）
+     * 任务编号
+     * @ext 关联 task_info.task_num
      */
     @Index
     private String taskNum;
 
     /**
-     * 任务配置ID（关联 task_config 主键）
+     * 任务配置ID
+     * @ext 关联 task_config 主键
      */
     private Long taskConfigId;
 
@@ -51,14 +55,14 @@ public class MemberTaskRecordDO extends BaseDO {
     private String taskName;
 
     /**
-     * 任务类型编码（1-观看激励广告，2-购买商品）
+     * 任务类型编码
      */
-    private Integer taskType;
+    private TaskTypeEnum taskType;
 
     /**
-     * 任务状态编码（1-待完成，2-已完成，3-完成失败）
+     * 任务状态编码
      */
-    private Integer taskStatus;
+    private TaskStatusEnum taskStatus;
 
     /**
      * 任务完成次数或金额
@@ -76,7 +80,8 @@ public class MemberTaskRecordDO extends BaseDO {
     private String taskProgress;
 
     /**
-     * 红包奖励（单位 0.0001 元，1元存 10000）
+     * 红包奖励
+     * @ext 单位 0.0001 元，1元存 10000
      */
     private Long redPacketReward;
 }

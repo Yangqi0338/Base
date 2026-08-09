@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -27,7 +28,7 @@ public class RollOutApplyQuery extends BizPageQuery {
     /**
      * 账户类型
      */
-    @NotNull(message = "账户类不能为空", groups = {CheckCommand.class})
+    @NotNull
     private PurseEnum.PurseType purseType;
 
     /**
@@ -52,5 +53,11 @@ public class RollOutApplyQuery extends BizPageQuery {
 
     public void setAuditState(AuditEnum.WithdrawSate auditState) {
         this.auditStateList = BizPageQuery.doWrapperList(auditStateList, auditState);
+    }
+
+    @Override
+    @OauthUserId
+    public void setAccountId(Long accountId) {
+        super.setAccountId(accountId);
     }
 }

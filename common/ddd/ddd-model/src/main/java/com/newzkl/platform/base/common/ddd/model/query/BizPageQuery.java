@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

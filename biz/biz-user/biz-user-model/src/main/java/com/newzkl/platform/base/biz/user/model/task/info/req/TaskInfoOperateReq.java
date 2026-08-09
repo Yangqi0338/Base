@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class TaskInfoOperateReq {
 
     /**
-     * 主键ID（新增时为空，修改时必填）
+     * 主键ID
+     * @ext 新增时为空，修改时必填
      */
     private Long id;
 
@@ -30,7 +31,8 @@ public class TaskInfoOperateReq {
     private String taskName;
 
     /**
-     * 任务配置ID（关联 task_config 主键）
+     * 任务配置ID
+     * @ext 关联 task_config 主键
      */
     @NotNull(message = "任务类型ID不能为空")
     private Long taskId;
@@ -48,13 +50,15 @@ public class TaskInfoOperateReq {
     private LocalDateTime endTime;
 
     /**
-     * 任务简介（最多200字）
+     * 任务简介
+     * @ext 最多200字
      */
     @Size(max = 200, message = "任务简介长度不能超过200字")
     private String taskIntro;
 
     /**
-     * 完整观看广告数（仅观看激励广告类型必填）
+     * 完整观看广告数
+     * @ext 仅观看激励广告类型必填
      */
     private Integer adCount;
 
@@ -64,7 +68,8 @@ public class TaskInfoOperateReq {
     private String goodsList;
 
     /**
-     * 是否显示（1-是，0-否），默认显示
+     * 是否显示
+     * @ext 1-是，0-否，默认显示
      */
     private Integer isShow = 1;
 }

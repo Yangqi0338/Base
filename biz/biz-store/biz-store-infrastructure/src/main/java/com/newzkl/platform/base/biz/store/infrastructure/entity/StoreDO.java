@@ -1,32 +1,26 @@
 package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.OldColumnName;
 
 /**
 * 门店
 * @author fang
 */
 @Data
-@TableName("store")
-public class StoreDO implements Serializable {
-	/**
-	 * 主键
-	 */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-	private Long id;
+@TableName
+public class StoreDO extends BaseDO {
 	/**
 	 * 门店名称
 	 */
+    @Index
 	private String name;
 	/**
-	 * 
+	 * 门店logo
 	 */
 	private String logo;
 	/**
@@ -44,18 +38,17 @@ public class StoreDO implements Serializable {
 	/**
 	 * 渠道商ID
 	 */
+    @Index
 	private Long channelId;
-	/**
-	 * 商户ID
-	 */
-	private Long merchantId;
 	/**
 	 * 管理员ID
 	 */
+    @Index
 	private Long managerId;
 	/**
 	 * 样板店ID
 	 */
+    @Index
 	private Long modelShopId;
 	/**
 	 * 是否是样板店
@@ -78,7 +71,7 @@ public class StoreDO implements Serializable {
 	 */
 	private Integer dealerNumber;
 	/**
-	 * 成交金额 (Money, 落库 BIGINT 分)
+	 * 成交金额
 	 */
 	private Money dealerAmount;
 
@@ -90,12 +83,38 @@ public class StoreDO implements Serializable {
     /**
      * 样式code
      */
+    @Index
     private String styleCode;
 
-    /*** 创建时间*/
-    private LocalDateTime createTime;
     /**
      * 门店类型
      */
-    private Long type;
+    @OldColumnName("type")
+    private Long categoryId;
+
+    /**
+     * 门店类型名称
+     */
+    @OldColumnName("typeName")
+    private String categoryName;
+
+    /**
+     * 样式内容
+     */
+    private String styleContent;
+
+    /**
+     * 商品id集合
+     */
+    private String goodsIdListStr;
+
+    /**
+     * 预览图
+     */
+    private String previewImage;
+
+    /**
+     * 样式名称
+     */
+    private String styleName;
 }

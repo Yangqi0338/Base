@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionRandomInf
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaUpdateWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreRepository;
@@ -121,10 +121,9 @@ public class StoreRepositoryImpl implements StoreRepository {
                 .notEmptyEq(StoreDO::getId, store.getId())
                 .notEmptyEq(StoreDO::getName, store.getName())
                 .notEmptyEq(StoreDO::getChannelId, store.getChannelId())
-                .notEmptyEq(StoreDO::getMerchantId, store.getMerchantId())
                 .notEmptyEq(StoreDO::getManagerId, store.getManagerId())
                 .notEmptyEq(StoreDO::getModelShopId, store.getModelShopId())
-                .notEmptyEq(StoreDO::getType, store.getType())
+//                .notEmptyEq(StoreDO::getCategoryId, store.getType())
                 .notEmptyEq(StoreDO::getIsModelShop, store.getIsModelShop())
                 .notEmptyEq(StoreDO::getStyleCode, store.getStyleCode());
         return TransferUtils.transfers(storeDAO.selectList(wrapper), Store::new);

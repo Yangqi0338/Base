@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreSaveReq;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;

@@ -10,6 +10,7 @@ import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterStatRes;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import lombok.RequiredArgsConstructor;
@@ -74,28 +75,28 @@ public class CourseChapterDomainImpl implements CourseChapterDomain {
     @Transactional(rollbackFor = Exception.class)
     public boolean enable(Long id) {
         CourseChapterRes exist = getExist(id);
-        return courseChapterRepository.updateEnabled(exist.getId(), 1);
+        return courseChapterRepository.updateEnabled(exist.getId(), CommonEnum.YesOrNo.YES);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean disable(Long id) {
         CourseChapterRes exist = getExist(id);
-        return courseChapterRepository.updateEnabled(exist.getId(), 0);
+        return courseChapterRepository.updateEnabled(exist.getId(), CommonEnum.YesOrNo.NO);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean setFree(Long id) {
         CourseChapterRes exist = getExist(id);
-        return courseChapterRepository.updateFree(exist.getId(), 1);
+        return courseChapterRepository.updateFree(exist.getId(), CommonEnum.YesOrNo.YES);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean setCharge(Long id) {
         CourseChapterRes exist = getExist(id);
-        return courseChapterRepository.updateFree(exist.getId(), 0);
+        return courseChapterRepository.updateFree(exist.getId(), CommonEnum.YesOrNo.NO);
     }
 
     @Override

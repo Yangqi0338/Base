@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.dao.TaskInfoDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.TaskInfoDO;
 import com.newzkl.platform.base.biz.user.model.task.info.query.TaskInfoQuery;
 import com.newzkl.platform.base.biz.user.model.task.info.res.TaskInfoRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -54,7 +55,7 @@ public class TaskInfoRepositoryImpl implements TaskInfoRepository {
     }
 
     @Override
-    public TaskInfoRes updateShowStatus(Long id, Integer isShow) {
+    public TaskInfoRes updateShowStatus(Long id, CommonEnum.YesOrNo isShow) {
         TaskInfoDO updateDO = new TaskInfoDO();
         updateDO.setId(id);
         updateDO.setIsShow(isShow);

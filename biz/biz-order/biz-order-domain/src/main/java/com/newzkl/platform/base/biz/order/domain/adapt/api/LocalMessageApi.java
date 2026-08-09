@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.domain.adapt.api;
 
+import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
@@ -69,4 +70,6 @@ public interface LocalMessageApi {
      * 门店用户支付消息
      */
     void storeAccountPay(Long storeId, Long accountId, Money memberAmount);
+
+    void paySuccessNotify(OrderAgg orderAgg);
 }

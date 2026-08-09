@@ -6,7 +6,6 @@ import lombok.Data;
  * 汇付检查支付状态请求
  *
  * @author niu
- * @description:
  * @date 2025-08-25 17:26:49
  */
 @Data

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 /**
+ * 注销会员请求参数
+ *
  * @author sijiwang
  */
 @Data

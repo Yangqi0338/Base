@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
-import com.newzkl.platform.base.biz.store.model.enums.StoreTypeEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
@@ -84,19 +83,6 @@ public class StoreRes extends BaseRes {
      * 门店ID
      */
     private String storeId;
-
-    /**
-     * {@code com.newzkl.platform.base.biz.store.model.enums.StoreTypeEnum}
-     */
-    private String storeType;
-
-    /**
-     * 获取门店类型描述
-     * @return
-     */
-    public String getStoreTypeDesc() {
-        return StoreTypeEnum.getByCode(storeType);
-    }
 
     /**
      * 门店分类id

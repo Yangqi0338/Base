@@ -24,7 +24,8 @@ public class OperatorQuery extends BizPageQuery {
      */
     private Integer proxyAreaCode;
     /**
-     * 运营类型 0 机构 1 行业 2 区域
+     * 运营类型
+     * @ext 前端传数字 code, Jackson 经 OperatorEnum.Type 的 @JsonValue 反序列化为枚举
      */
     private OperatorEnum.Type type;
     /**
@@ -32,6 +33,11 @@ public class OperatorQuery extends BizPageQuery {
      */
     private List<String> typeForeignIdList;
 
+    /**
+     * 设置单个运营类型关联id (内部包装为列表)
+     *
+     * @param typeForeignId 运营类型关联id
+     */
     public void setTypeForeignId(String typeForeignId) {
         this.typeForeignIdList = doWrapperList(this.typeForeignIdList, typeForeignId);
     }

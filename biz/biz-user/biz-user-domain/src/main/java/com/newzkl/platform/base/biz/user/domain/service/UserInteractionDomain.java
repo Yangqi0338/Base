@@ -1,14 +1,13 @@
 package com.newzkl.platform.base.biz.user.domain.service;
-import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionEvent;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.interaction.query.BatchInteractionQuery;
-import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionPageQueryRPC;
 import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionQuery;
 import com.newzkl.platform.base.biz.user.model.interaction.res.BatchInteractionResult;
 import com.newzkl.platform.base.biz.user.model.interaction.vo.InteractionRPCVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionAddVO;
-import com.newzkl.platform.base.biz.user.model.relation.vo.InteractionCountVO;
+import com.newzkl.platform.base.biz.user.model.relation.req.InteractionAddReq;
+import com.newzkl.platform.base.biz.user.model.relation.res.InteractionCountRes;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public interface UserInteractionDomain {
      * @param addVO 互动入参
      * @return 是否成功
      */
-    boolean add(InteractionAddVO addVO);
+    boolean add(InteractionAddReq addVO);
 
     /**
      * 取消互动操作（物理删除记录）
@@ -49,7 +48,7 @@ public interface UserInteractionDomain {
      * @param addVO 互动入参
      * @return 是否成功
      */
-    boolean cancel(InteractionAddVO addVO);
+    boolean cancel(InteractionAddReq addVO);
 
     /**
      * 分页查询用户互动记录
@@ -57,7 +56,7 @@ public interface UserInteractionDomain {
      * @param query 分页查询参数
      * @return 互动记录分页
      */
-    Page<InteractionRPCVO> getUserInteractionsPage(InteractionPageQueryRPC query);
+    Page<InteractionRPCVO> getUserInteractionsPage(InteractionQuery query);
 
     /**
      * 检查用户是否已对目标执行互动
@@ -75,7 +74,7 @@ public interface UserInteractionDomain {
      * @param actionType 操作类型编码
      * @return 统计结果
      */
-    InteractionCountVO countTargetInteractions(String targetType, Long targetId, String actionType);
+    InteractionCountRes countTargetInteractions(InteractionEnum.TargetTypeEnum targetType, Long targetId, InteractionEnum.ActionTypeEnum actionType);
 
     /**
      * 批量检查用户是否已对目标执行互动

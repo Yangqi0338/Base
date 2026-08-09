@@ -17,12 +17,14 @@ import lombok.Data;
 public class UserCollectionCreateReq {
 
     /**
-     * 用户ID（由控制器填充当前登录账号）
+     * 用户ID
+     * @ext 由控制器填充当前登录账号
      */
     private Long userId;
 
     /**
-     * 用户名称（由控制器填充当前登录账号）
+     * 用户名称
+     * @ext 由控制器填充当前登录账号
      */
     private String userName;
 
@@ -48,7 +50,8 @@ public class UserCollectionCreateReq {
     private Long spuId;
 
     /**
-     * SPU 名称 (快照)
+     * SPU 名称
+     * @ext 快照
      */
     @NotEmpty(message = "SPU名称不能为空")
     private String spuName;
@@ -59,17 +62,20 @@ public class UserCollectionCreateReq {
     private Long skuId;
 
     /**
-     * SKU 名称 (快照)
+     * SKU 名称
+     * @ext 快照
      */
     private String skuName;
 
     /**
-     * 商品价格快照 (Money, 入参 JSON 元 → Money, 落库 BIGINT 分)
+     * 商品价格快照
+     * @ext Money, 入参 JSON 元 → Money, 落库 BIGINT 分
      */
     private Money price;
 
     /**
-     * 商品主图URL (快照)
+     * 商品主图URL
+     * @ext 快照
      */
     @NotEmpty(message = "商品主图URL不能为空")
     private String mainImage;

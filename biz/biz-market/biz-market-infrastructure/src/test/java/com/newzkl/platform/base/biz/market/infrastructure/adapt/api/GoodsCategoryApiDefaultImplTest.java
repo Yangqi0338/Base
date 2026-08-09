@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class GoodsCategoryApiDefaultImplTest {
 
-    private final GoodsCategoryApiDefaultImpl goodsCategoryApi = new GoodsCategoryApiDefaultImpl();
+    private final GoodsCategoryApiImpl goodsCategoryApi = new GoodsCategoryApiImpl();
 
     @Test
     @DisplayName("兜底 platformCategoryTree: 返回非 null 空集合")

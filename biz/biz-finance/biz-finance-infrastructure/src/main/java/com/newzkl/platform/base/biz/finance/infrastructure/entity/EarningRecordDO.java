@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.OldColumnName;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 // TODO[pom-gap mybatis-plus-ext]: import org.dromara.mpe.autofill.annotation.JsonSerializable; (annotation 依赖延迟补)
 
 import java.time.LocalDateTime;
@@ -60,20 +63,20 @@ public class EarningRecordDO extends BaseDO {
     private Long joinOrderNo;
 
     /**
-     * 关联交易单号（源 earning_record.join_trade_no 列）
+     * 关联交易单号
      */
     private Long joinTradeNo;
 
     /**
-     * 分润角色 id（源 earning_record.role 列，列名 role 为保留字故显式指定）
+     * 分润角色 id
      */
-    @TableField("role")
-    private Long roleId;
+    private RoleEnum.CompanyRole role;
 
     /**
      * 商品信息
      */
     // TODO[pom-gap mybatis-plus-ext]: @JsonSerializable (autofill json, 依赖延迟补)
+    @JsonSerializable
     private String goodsInfo;
 
     /**

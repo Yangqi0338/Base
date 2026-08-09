@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.task.info.req;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
@@ -17,13 +18,12 @@ public class TaskInfoStatusReq {
     /**
      * 主键ID
      */
-    @NotNull(message = "ID不能为空")
-    @Positive(message = "ID必须为正整数")
+    @NotNull
     private Long id;
 
     /**
-     * 目标显示状态（1-显示，0-隐藏）
+     * 目标显示状态
      */
-    @NotNull(message = "显示状态不能为空")
-    private Integer isShow;
+    @NotNull
+    private CommonEnum.YesOrNo isShow;
 }

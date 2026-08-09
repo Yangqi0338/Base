@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.model.task.info.query.TaskInfoQuery;
 import com.newzkl.platform.base.biz.user.model.task.info.req.TaskInfoOperateReq;
 import com.newzkl.platform.base.biz.user.model.task.info.res.TaskInfoRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 /**
  * 营销任务领域服务
@@ -44,7 +45,7 @@ public interface TaskInfoDomain {
      * @param isShow 目标显示状态（1-显示，0-隐藏）
      * @return 操作后的任务
      */
-    TaskInfoRes toggleShow(Long id, Integer isShow);
+    TaskInfoRes toggleShow(Long id, CommonEnum.YesOrNo isShow);
 
     /**
      * 按ID查询任务详情

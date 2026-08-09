@@ -24,7 +24,8 @@ public class CountSaleQuery extends BizPageQuery {
     private Long role;
 
     /**
-     * 日期 (前端传 13 位时间戳)
+     * 日期
+     * @ext 前端传 13 位时间戳
      */
     private Long dataLong;
 

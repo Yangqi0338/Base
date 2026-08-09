@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.domain.store.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreStylePageQuery;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreStyleQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleResponse;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * 门店样式仓储接口
  */
 public interface StoreStyleRepository {
-    Page<StoreStyleResponse> storeStylePage(StoreStylePageQuery query);
+    Page<StoreStyleResponse> storeStylePage(StoreStyleQuery query);
 
     void create(StoreStyle storeStyle);
 

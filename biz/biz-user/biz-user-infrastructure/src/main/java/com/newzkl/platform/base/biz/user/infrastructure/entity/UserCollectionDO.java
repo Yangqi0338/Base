@@ -53,7 +53,8 @@ public class UserCollectionDO extends BaseDO {
     private Long spuId;
 
     /**
-     * SPU 名称 (快照)
+     * SPU 名称
+     * @ext 快照
      */
     private String spuName;
 
@@ -64,22 +65,25 @@ public class UserCollectionDO extends BaseDO {
     private Long skuId;
 
     /**
-     * SKU 名称 (快照)
+     * SKU 名称
+     * @ext 快照
      */
     private String skuName;
 
     /**
-     * 商品价格快照 (Money, 落库 BIGINT 分)
+     * 商品价格
+     * @ext 快照
      */
     private Money price;
 
     /**
-     * 商品主图URL (快照)
+     * 商品主图URL
+     * @ext 快照
      */
     private String mainImage;
 
     /**
-     * 是否有效：0-无效，1-有效
+     * 是否有效
      */
     private CommonEnum.YesOrNo isValid;
 

@@ -2,6 +2,8 @@ package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
+import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
+import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 
 /**
  * 账户域跨服务出站端口 (outbound port)
@@ -20,7 +22,7 @@ public interface AccountApi {
      * @param accountId 账户ID
      * @return 账户基础信息, 无则 null
      */
-    AccountInfo account(CommonEnum.Client client, Long accountId);
+    AccountGroupVO account(CommonEnum.Client client, Long accountId);
 
     /**
      * 获取账户多级上级链路

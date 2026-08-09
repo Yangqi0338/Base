@@ -36,31 +36,36 @@ public class GoodsZoneAddReq {
     private String backgroundImg;
 
     /**
-     * 排序类型：1-默认 2-销量从高到低 3-上架时间倒序
+     * 排序类型
+     * @ext 1-默认 2-销量从高到低 3-上架时间倒序
      */
     @NotNull(message = "排序类型不能为空")
     private Integer sortType;
 
     /**
-     * 搜索框显示状态：0-不显示 1-显示
+     * 搜索框显示状态
+     * @ext 0-不显示 1-显示
      */
     @NotNull(message = "搜索框显示状态不能为空")
     private Integer searchBoxStatus;
 
     /**
-     * 价格显示状态：0-不显示 1-显示
+     * 价格显示状态
+     * @ext 0-不显示 1-显示
      */
     @NotNull(message = "价格显示状态不能为空")
     private Integer priceShowStatus;
 
     /**
-     * 门店显示状态：0-不显示 1-显示
+     * 门店显示状态
+     * @ext 0-不显示 1-显示
      */
     @NotNull(message = "门店显示状态不能为空")
     private Integer storeShowStatus;
 
     /**
-     * 分组状态：0-禁用 1-启用
+     * 分组状态
+     * @ext 0-禁用 1-启用
      */
     @NotNull(message = "分组状态不能为空")
     private Integer state;

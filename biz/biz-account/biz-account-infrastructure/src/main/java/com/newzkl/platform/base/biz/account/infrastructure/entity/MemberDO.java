@@ -32,7 +32,8 @@ public class MemberDO extends BaseDO {
      */
     private LocalDate birthday;
     /**
-     * 常住地-省份,城市,区县
+     * 常住地
+     * @ext 省份, 城市, 区县
      */
     private String residence;
 

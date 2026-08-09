@@ -4,6 +4,9 @@ import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
+/**
+ * 简单账号查询入参
+ */
 @Data
 public class SimpleAccountQuery extends BizPageQuery {
     /**

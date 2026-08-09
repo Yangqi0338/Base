@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  *
  * @author KC
  */
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OauthRole {
 

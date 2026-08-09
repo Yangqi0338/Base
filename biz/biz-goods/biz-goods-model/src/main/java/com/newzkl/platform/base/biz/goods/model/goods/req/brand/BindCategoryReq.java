@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 行业-分类绑定请求
+ */
 @Data
 public class BindCategoryReq implements Serializable {
 
@@ -13,8 +16,8 @@ public class BindCategoryReq implements Serializable {
     /** 分类ID */
     private Long categoryId;
     /**
-     * 绑定 true
-     * 解绑 false
+     * 是否绑定
+     * @ext true 绑定, false 解绑
      */
     private Boolean isBind;
 }

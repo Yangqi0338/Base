@@ -3,7 +3,9 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -34,7 +36,8 @@ public class SettleOrderWaitDO extends BaseDO {
 	@Index
 	private Long skuOrderId;
 	/**
-	 * 类型 0商品 1运费 2售后
+	 * 类型
+	 * @ext 0 商品 1 运费 2 售后
 	 */
 	private Integer type;
 	/**
@@ -58,8 +61,7 @@ public class SettleOrderWaitDO extends BaseDO {
 	/**
 	 * 结算状态
 	 */
-	@Index
-	private Integer settleState;
+	private CommonEnum.YesOrNo settleState;
 	/**
 	 * 结算时间
 	 */
@@ -70,9 +72,10 @@ public class SettleOrderWaitDO extends BaseDO {
 	@Index
 	private Long refundId;
 	/**
-	 * 售后状态 0 待审核 1 退款中 2 已完成(对齐源 refund_state 列语义, 迁移补映射)
+	 * 售后状态
+	 * @ext 对齐源 refund_state 列语义, 迁移补映射
 	 */
-	private Integer refundState;
+	private RefundEnum.State refundState;
 	/**
 	 * 结算单ID
 	 */
@@ -84,7 +87,8 @@ public class SettleOrderWaitDO extends BaseDO {
 	private Money refundAmount;
 
 	/**
-	 * 结算时间节点(时间戳)
+	 * 结算时间节点
+	 * @ext 时间戳
 	 */
 	private Long settleTimeNode;
 }

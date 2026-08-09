@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderDeliverCommand;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
-import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressVO;
+import com.newzkl.platform.base.biz.user.model.relation.res.ShipAddressRes;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.Data;
@@ -110,7 +110,7 @@ public class PackOrder implements Serializable {
      * @param shipAddressVO 收货信息
      * @param packGoodsList 礼包明细
      */
-    public void init(PackOrderCommand command, ShipAddressVO shipAddressVO, List<PackGoodsRes> packGoodsList) {
+    public void init(PackOrderCommand command, ShipAddressRes shipAddressVO, List<PackGoodsRes> packGoodsList) {
         for (PackGoodsRes packGoods : packGoodsList) {
             if (Integer.valueOf(0).equals(packGoods.getState())) {
                 throw new PlatformException(PackOrderErrorCode.GOODS_DOWN);

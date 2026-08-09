@@ -18,7 +18,9 @@ public class MarketUnbindUserReq {
     private Long marketId;
 
     /**
-     * 绑定类型  1：运营商  2：交易师  3:渠道商
+     * 绑定类型
+     *
+     * @ext 1：运营商 2：交易师 3：渠道商
      */
     private Integer bindType;
 

@@ -6,8 +6,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 供应商结算请求
+ *
  * @author niu
- * @description: 供应商结算请求
  * @date 2024/1/26 18:04
  */
 @Data

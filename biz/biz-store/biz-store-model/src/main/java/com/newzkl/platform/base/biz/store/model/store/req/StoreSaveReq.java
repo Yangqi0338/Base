@@ -3,9 +3,10 @@ package com.newzkl.platform.base.biz.store.model.store.req;
 import lombok.Data;
 
 /**
-* 门店
-* @author fang
-*/
+ * 门店保存请求
+ *
+ * @author fang
+ */
 @Data
 public class StoreSaveReq {
     /**
@@ -17,7 +18,7 @@ public class StoreSaveReq {
      */
     private String name;
     /**
-     * 
+     * 门店logo
      */
     private String logo;
     /**

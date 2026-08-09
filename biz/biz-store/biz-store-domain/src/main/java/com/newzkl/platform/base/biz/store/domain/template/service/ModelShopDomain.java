@@ -1,13 +1,13 @@
 package com.newzkl.platform.base.biz.store.domain.template.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShop;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
 import com.newzkl.platform.base.biz.store.model.template.query.ModelShopDataQuery;
 import com.newzkl.platform.base.biz.store.model.template.query.ModelShopStorePageQuery;
 import com.newzkl.platform.base.biz.store.model.template.req.ApplyModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.req.ModelShopUpdateReq;
-import com.newzkl.platform.base.biz.store.model.template.req.QueryModelShopReq;
+import com.newzkl.platform.base.biz.store.model.template.req.ModelShopQuery;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopDataRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStyleRes;
@@ -41,7 +41,7 @@ public interface ModelShopDomain {
      * @param req
      * @return
      */
-    Page<ModelShopRes> queryModelShopPage(QueryModelShopReq req);
+    Page<ModelShopRes> queryModelShopPage(ModelShopQuery req);
 
     /**
      * 修改使用门店数
@@ -68,17 +68,17 @@ public interface ModelShopDomain {
      * @param styleCode 样式编码
      * @return 样板店信息
      */
-    ModelShop queryByStyleCode(String styleCode);
+    ModelShopDTO queryByStyleCode(String styleCode);
 
     /**
      * 根据id查询样板店
      */
-    ModelShop queryById(Long id);
+    ModelShopDTO queryById(Long id);
 
     /**
      * 根据渠道id查询样板店
      */
-    ModelShop queryByChannelId(Long channelId);
+    ModelShopDTO queryByChannelId(Long channelId);
 
     /**
      * 样板店列表

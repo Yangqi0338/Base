@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,66 +22,37 @@ import java.time.LocalDateTime;
  * @author KC
  */
 @Data
-@TableName(value = "video")
-public class VideoDO {
-
-    /**
-     * 主键ID
-     */
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+@TableName
+public class VideoDO extends BaseDO {
 
     /**
      * 视频名称
      */
-    @TableField("name")
     private String name;
 
     /**
      * 分类ID
      */
-    @TableField("category_id")
     private Long categoryId;
 
     /**
-     * 创建时间
+     * 是否显示
+     * @ext 0-不显示, 1-显示
      */
-    @TableField(value = "create_time")
-    private LocalDateTime createTime;
-
-    /**
-     * 是否显示:0-不显示,1-显示
-     */
-    @TableField("is_visible")
-    private Integer isVisible;
-
-    /**
-     * 创建人ID
-     */
-    @TableField("creator_id")
-    private Long creatorId;
-
-    /**
-     * 创建人姓名
-     */
-    @TableField("creator_name")
-    private String creatorName;
+    private CommonEnum.YesOrNo isVisible;
 
     /**
      * 视频地址
      */
-    @TableField("video_url")
     private String videoUrl;
 
     /**
      * 视频封面地址
      */
-    @TableField("video_cover_url")
     private String videoCoverUrl;
 
     /**
      * 发布人id
      */
-    @TableField("issuer_id")
     private Long issuerId;
 }

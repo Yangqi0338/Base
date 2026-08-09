@@ -229,7 +229,7 @@
 
     <!-- 查询商品总销量 (迁移自 new-scm StoreDistributionDAO.xml 的 queryGoodsSellNum) -->
     <select id="queryGoodsSellNum"
-            resultType="com.newzkl.platform.base.biz.market.model.rpc.spu.GoodsSellNumVO">
+            resultType="com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO">
         SELECT
         sd.id AS id,
         sd.sell_num + IFNULL(p.virtual_sale_num, 0) AS num

@@ -7,6 +7,8 @@ import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.OldColumnName;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
 /**
  * @author muc_fang
  * @Description:
@@ -17,7 +19,8 @@ import org.dromara.autotable.annotation.OldColumnName;
 public class AuditDataWorkTableDO extends AuditBaseDO {
 
     /**
-     * 商品名称 (查询)
+     * 商品名称
+     * @ext 查询
      */
     private String spuName;
     /**
@@ -32,14 +35,17 @@ public class AuditDataWorkTableDO extends AuditBaseDO {
     /**
      * 原商品信息
      */
+    @JsonSerializable
     private String spuInfoJson;
     /**
      * 商品修改信息
      */
+    @JsonSerializable
     private String spuEditInfoJson;
     /**
-     * sku销售价 json (Map格式)
+     * sku销售价
      */
+    @JsonSerializable
     private String skuSalePriceJson;
     /**
      * 审批状态

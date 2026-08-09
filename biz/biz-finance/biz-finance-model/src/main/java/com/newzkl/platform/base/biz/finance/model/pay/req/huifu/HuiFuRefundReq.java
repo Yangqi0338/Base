@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
  * 汇付退款请求
  *
  * @author niu
- * @description:
  * @date 2025-08-25 17:26:49
  */
 @Data

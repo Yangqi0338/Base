@@ -12,6 +12,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 后台注册身份请求参数
+ *
  * @author sijiwang
  */
 @Data
@@ -51,10 +53,16 @@ public class AdminRegisterIdentityReq {
      */
     private List<Long> jobIdList;
     /**
-     * 账号状态 (迁移补: 批量导入会员指定启用/禁用, 源 building-old 遗漏该字段导致编译不过)
+     * 账号状态
+     * @ext 批量导入会员指定启用/禁用
      */
     private AccountEnum.State state;
 
+    /**
+     * 校验账号或手机号不能为空
+     *
+     * @return 校验是否通过
+     */
     @AssertTrue(message = "账号或手机号不能为空")
     public boolean certificateCheck() {
         return StrUtil.isBlank(username) || StrUtil.isBlank(phone);

@@ -1,10 +1,15 @@
 package com.newzkl.platform.base.biz.user.model.interaction.query;
 
+import cn.hutool.core.collection.CollUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
+import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 检查/统计用户互动的查询参数
@@ -15,28 +20,45 @@ import java.io.Serializable;
  * @author KC
  */
 @Data
-public class InteractionQuery implements Serializable {
+public class InteractionQuery extends PageQuery {
 
     /**
-     * 用户ID（由控制器填充当前登录账号）
+     * 用户ID
      */
-    private Long userId;
+    private List<Long> userIdList;
+
+    public void setUserId(Long userId) {
+        this.userIdList = doWrapperList(this.userIdList,userId);
+    }
 
     /**
-     * 目标ID（如商品ID、视频ID）
+     * 门店 ID
      */
-    @NotNull(message = "目标ID不能为空")
-    private Long targetId;
+    private Long storeId;
 
     /**
-     * 目标类型（对应 InteractionEnum.TargetTypeEnum 编码）
+     * 目标ID
      */
-    @NotBlank(message = "目标类型不能为空")
-    private String targetType;
+    @NotEmpty
+    private List<Long> targetIdList;
+
+    public void setTargetId(Long targetId) {
+        this.targetIdList = doWrapperList(this.targetIdList, targetId);
+    }
+
+    public Long getTargetId() {
+        return CollUtil.getFirst(this.targetIdList);
+    }
 
     /**
-     * 操作类型（对应 InteractionEnum.ActionTypeEnum 编码）
+     * 目标类型
      */
-    @NotBlank(message = "操作类型不能为空")
-    private String actionType;
+    @NotNull
+    private InteractionEnum.TargetTypeEnum targetType;
+
+    /**
+     * 操作类型
+     */
+    @NotNull
+    private InteractionEnum.ActionTypeEnum actionType;
 }

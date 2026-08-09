@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.store.model.template.entity.ModelShopUseRecord;
+import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopUseRecordDTO;
 import com.newzkl.platform.base.biz.store.model.template.query.ModelShopStorePageQuery;
 import com.newzkl.platform.base.biz.store.model.template.res.ModeShopDataSummary;
 import com.newzkl.platform.base.biz.store.model.template.res.ModelShopStorePageRes;
@@ -25,7 +25,7 @@ public class ModelShopUseRecordRepositoryImpl implements ModelShopUseRecordRepos
     private final ModelShopUseRecordDAO modelShopUseRecordDAO;
 
     @Override
-    public void create(ModelShopUseRecord modelShopUseRecord) {
+    public void create(ModelShopUseRecordDTO modelShopUseRecord) {
         modelShopUseRecordDAO.insert(TransferUtils.transfer(modelShopUseRecord, ModelShopUseRecordDO::new));
     }
 

@@ -20,7 +20,8 @@ public class GoodsZonePageReq extends Page<GoodsZoneRes> {
     private String groupName;
 
     /**
-     * 分组状态：0-禁用 1-启用
+     * 分组状态
+     * @ext 0-禁用 1-启用
      */
     private Integer state;
 }

@@ -3,7 +3,9 @@ package com.newzkl.platform.base.biz.store.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.Index;
 
 import java.time.LocalDateTime;
 
@@ -11,17 +13,12 @@ import java.time.LocalDateTime;
  * 门店专区领域对象
  */
 @Data
-@TableName("store_zone")
-public class StoreZoneDO {
-    /**
-     * 主键
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
-    
+@TableName
+public class StoreZoneDO extends BaseDO {
     /**
      * 专区code
      */
+    @Index
     private String zoneCode;
     
     /**
@@ -53,24 +50,4 @@ public class StoreZoneDO {
      * 状态：0 禁用,1 启用
      */
     private Integer state;
-    
-    /**
-     * 创建人id
-     */
-    private Long createId;
-    
-    /**
-     * 创建人名
-     */
-    private String createName;
-    
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-    
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
 }

@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.biz.user.model.pack.res;
 
+import com.newzkl.platform.base.biz.user.model.relation.res.ShipAddressRes;
+import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,14 +27,14 @@ public class PackOrderRes extends BaseRes {
     private Long accountId;
 
     /**
-     * 收货信息 JSON（结构：ShipAddressVO）
+     * 收货信息
      */
-    private String shipVO;
+    private ShipAddressRes shipVO;
 
     /**
      * 订单金额（分）
      */
-    private Integer amount;
+    private Money amount;
 
     /**
      * 物流公司
@@ -54,9 +57,9 @@ public class PackOrderRes extends BaseRes {
     private LocalDateTime deliverTime;
 
     /**
-     * 订单状态 (0,新订单),(2,待支付),(4,待发货),(6,已发货),(8,已收货),(10,已完成),(-1,已关闭)
+     * 订单状态
      */
-    private Integer state;
+    private OrderEnum.State state;
 
     /**
      * 礼包商品ID

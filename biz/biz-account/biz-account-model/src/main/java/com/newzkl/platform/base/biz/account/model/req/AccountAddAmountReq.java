@@ -7,9 +7,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 账号升级请求
+ *
  * @author muc_fang
- * @Description: 账号升级请求
- * @date 2023/12/2110:17
+ * @date 2023/12/21 10:17
  */
 @Data
 public class AccountAddAmountReq implements Serializable {
@@ -25,12 +26,14 @@ public class AccountAddAmountReq implements Serializable {
     private RoleEnum.CompanyRole role;
 
     /**
-     * 商品金额 (Money, 落库 BIGINT 分)
+     * 商品金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money goodsAmount;
 
     /**
-     * 货款金额 (Money, 落库 BIGINT 分)
+     * 货款金额
+     * @ext Money, 落库 BIGINT 分
      */
     private Money supplierAmount;
 

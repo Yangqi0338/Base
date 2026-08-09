@@ -6,24 +6,24 @@ import lombok.Data;
 import jakarta.validation.constraints.NotEmpty;
 
 /**
+ * 审核样板店req
+ *
  * @author niu
- * @description: 审核样板店req
  * @date 2024/4/7 16:02
  */
 @Data
 public class AuditModelShopReq {
 
     /**
-     * 样板Code
+     * 样板编码
      */
-    @NotEmpty(message = "样板Code不能为空")
+    @NotEmpty
     private String styleCode;
 
     /**
      * 审核状态
-     * @see AuditEnum.State
      */
-    private Integer auditState;
+    private AuditEnum.State auditState;
 
     /**
      * 审核信息

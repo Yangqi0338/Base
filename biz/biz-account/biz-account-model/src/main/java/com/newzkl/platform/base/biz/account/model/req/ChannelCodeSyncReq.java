@@ -8,9 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 渠道商兑换码同步请求
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/4/1316:14
+ * @date 2024/4/13 16:14
  */
 @Data
 public class ChannelCodeSyncReq implements Serializable {

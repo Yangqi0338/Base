@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.finance.model.enums.finance.PaymentEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -71,11 +72,13 @@ public class PaymentDO extends BaseDO {
     /**
      * 订单信息
      */
+    @JsonSerializable
     private String orderInfo;
 
     /**
      * 收款方信息
      */
+    @JsonSerializable
     private String payeeInfo;
 
     /**

@@ -39,7 +39,7 @@ public class AccountReq extends BaseReq {
     @Pattern(regexp = PatternUtil.MOBILE, message = "手机号格式错误")
     private String phone;
     /**
-     * 主账号id
+     * 账号类型
      */
     private AccountEnum.SubUserType accountType;
     /**
@@ -63,7 +63,7 @@ public class AccountReq extends BaseReq {
      */
     private String pidList;
     /**
-     * 父id列表
+     * 父角色列表
      */
     private String pRoleList;
 

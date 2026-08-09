@@ -40,12 +40,7 @@ public class InteractionEnum {
         @EnumValue
         @JsonValue
         private final String code;
-        private final String desc;
-
-        @Override
-        public String getValue() {
-            return desc;
-        }
+        private final String value;
 
         /**
          * 根据编码获取枚举
@@ -80,12 +75,7 @@ public class InteractionEnum {
         @EnumValue
         @JsonValue
         private final String code;
-        private final String desc;
-
-        @Override
-        public String getValue() {
-            return desc;
-        }
+        private final String value;
 
         /**
          * 根据编码获取枚举

@@ -10,6 +10,7 @@ import com.newzkl.platform.base.biz.course.model.chapter.query.CourseChapterQuer
 import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterStatRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -80,7 +81,7 @@ public class CourseChapterRepositoryImpl extends RepositorySupport implements Co
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateEnabled(Long id, Integer isEnabled) {
+    public boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         CourseChapterDO chapterDO = new CourseChapterDO();
         chapterDO.setId(id);
         chapterDO.setIsEnabled(isEnabled);
@@ -89,7 +90,7 @@ public class CourseChapterRepositoryImpl extends RepositorySupport implements Co
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateFree(Long id, Integer isFree) {
+    public boolean updateFree(Long id, CommonEnum.YesOrNo isFree) {
         CourseChapterDO chapterDO = new CourseChapterDO();
         chapterDO.setId(id);
         chapterDO.setIsFree(isFree);
@@ -125,8 +126,7 @@ public class CourseChapterRepositoryImpl extends RepositorySupport implements Co
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean recover(Long id) {
-
-        return courseChapterDAO.recoverById(id) > 0;
+        return recoverDeleteById(id, CourseChapterDO.class);
     }
 
     /**

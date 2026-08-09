@@ -75,6 +75,11 @@ Base + bom + common(ddd 5 + core 3) + biz(空聚合)。
   - `PermissionSyncService`(biz-auth-action) 负责权限点扫描/同步。
 - **跨域方向**：biz-account → biz-auth 单向(旧 `AdminClientDomainImpl`/`AccountLoginServiceImpl` 反引 `biz.auth.domain.AuthRepository` 已断，biz-account-domain 去 biz-auth-domain 依赖)。
 
+### action 模块约定（biz-system arch-mode）
+- `biz-system` 模式下，每个业务域可含 `biz-{domain}-action` 模块，作为 controller / MQ listener / Job handler 的合法容器。
+- action 模块依赖 `ddd-action`（提供 spring-web 鉴权基建），不直接访问持久化层，业务编排经 domain → repository 调用。
+- action 模块的 task 包按 `{domain}-action/task/` 组织，MQ listener 按 `{domain}-action/listener/` 组织。
+
 ## 违规白名单
 
 <!-- 空 -->

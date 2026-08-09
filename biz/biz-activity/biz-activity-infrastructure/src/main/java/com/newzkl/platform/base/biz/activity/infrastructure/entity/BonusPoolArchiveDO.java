@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.activity.infrastructure.entity;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.activity.ActivityEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("bonus_pool_archive")
-public class BonusPoolArchiveDO implements Serializable {
+public class BonusPoolArchiveDO extends BaseDO {
     /**
      * 奖金池id
      */
@@ -145,22 +146,23 @@ public class BonusPoolArchiveDO implements Serializable {
     private Money orderBonus;
 
     /**
-     * 自定义奖金 (Money, 落库 BIGINT 分)
+     * 自定义奖金
      */
     private Money customBonus;
 
     /**
-     * 最终结算奖金 (Money, 落库 BIGINT 分)
+     * 最终结算奖金
      */
     private Money settleBonus;
 
     /**
-     * 结算方式 0：未结算 1：订单  2：自定义
+     * 结算方式
+     * @ext 0-未结算, 1-订单, 2-自定义
      */
     private Integer settleType;
 
     /**
-     * 状态 1：已结算  2：已作废
+     * 状态
      *
      * {@link ActivityEnum.SettleState}
      */
@@ -186,5 +188,4 @@ public class BonusPoolArchiveDO implements Serializable {
      */
     private LocalDate endTime;
 
-    private static final long serialVersionUID = 1L;
 }

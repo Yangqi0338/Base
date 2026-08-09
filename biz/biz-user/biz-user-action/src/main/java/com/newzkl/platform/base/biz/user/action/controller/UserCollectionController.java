@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.application.relation.service.UserCollectionService;
 import com.newzkl.platform.base.biz.user.model.relation.req.UncollectedProductReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionCreateReq;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionReq;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserCollectionDTO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class UserCollectionController {
      * @return 收藏记录
      */
     @PostMapping("/collect")
-    public PlatformResult<UserCollection> collectProduct(@Validated @RequestBody UserCollectionCreateReq createReq) {
+    public PlatformResult<UserCollectionDTO> collectProduct(@Validated @RequestBody UserCollectionCreateReq createReq) {
         createReq.setUserId(SecurityUtils.getAccountId());
         createReq.setUserName(SecurityUtils.getUsername());
         log.info("用户收藏商品: userId={}, storeDistributionId={}", createReq.getUserId(), createReq.getStoreDistributionId());
@@ -81,7 +81,7 @@ public class UserCollectionController {
      * @return 收藏列表
      */
     @PostMapping("/list")
-    public PlatformResult<List<UserCollection>> getUserCollections() {
+    public PlatformResult<List<UserCollectionDTO>> getUserCollections() {
         Long userId = SecurityUtils.getAccountId();
         log.info("查询用户收藏列表: userId={}", userId);
         return PlatformResult.success(userCollectionService.getUserCollections(userId));
@@ -114,7 +114,7 @@ public class UserCollectionController {
      * @return 收藏分页
      */
     @PostMapping("/page")
-    public PlatformResult<Page<UserCollection>> getUserCollectionsPage(@Validated @RequestBody UserCollectionQuery query) {
+    public PlatformResult<Page<UserCollectionDTO>> getUserCollectionsPage(@Validated @RequestBody UserCollectionQuery query) {
         query.setUserId(SecurityUtils.getAccountId());
         log.info("分页查询用户收藏: userId={}, pageNo={}, pageSize={}", query.getUserId(), query.getPageNo(), query.getPageSize());
         return PlatformResult.success(userCollectionService.getUserCollectionsPage(query));

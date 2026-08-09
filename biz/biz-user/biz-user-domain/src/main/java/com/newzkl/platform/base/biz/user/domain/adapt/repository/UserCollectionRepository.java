@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.user.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionQuery;
-import com.newzkl.platform.base.biz.user.model.relation.vo.UserCollection;
+import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
+import com.newzkl.platform.base.biz.user.model.relation.dto.UserCollectionDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public interface UserCollectionRepository {
      * @param userCollection 领域实体
      * @return 保存后的领域实体
      */
-    UserCollection save(UserCollection userCollection);
+    UserCollectionDTO save(UserCollectionDTO userCollection);
 
     /**
      * 修改铺货的有效状态
@@ -40,7 +40,7 @@ public interface UserCollectionRepository {
      * @param userId 用户ID
      * @return 收藏实体列表
      */
-    List<UserCollection> findByUserId(Long userId);
+    List<UserCollectionDTO> findByUserId(Long userId);
 
     /**
      * 根据用户ID和商品ID查询收藏记录，包含已逻辑删除的记录
@@ -49,7 +49,7 @@ public interface UserCollectionRepository {
      * @param storeDistributionId 铺货ID
      * @return 收藏实体
      */
-    Optional<UserCollection> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId);
+    Optional<UserCollectionDTO> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId);
 
     /**
      * 物理删除收藏（取消收藏）
@@ -65,7 +65,7 @@ public interface UserCollectionRepository {
      * @param query 分页查询对象
      * @return 收藏实体分页
      */
-    Page<UserCollection> findPageByUserId(UserCollectionQuery query);
+    Page<UserCollectionDTO> findPageByUserId(UserCollectionQuery query);
 
     /**
      * 根据用户ID取消所有无效收藏

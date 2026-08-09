@@ -13,8 +13,8 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQuer
 import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreAccount;
-import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountQuery;
-import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountResponse;
+import com.newzkl.platform.base.biz.store.model.store.query.StoreAccountQuery;
+import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreAccountRepository;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreAccountDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreDAO;
@@ -46,7 +46,7 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
     private final AccountApi accountApi;
 
     @Override
-    public Page<StoreAccountResponse> queryStoreAccountPage(StoreAccountQuery req) {
+    public Page<StoreAccountRes> queryStoreAccountPage(StoreAccountQuery req) {
         // 创建分页对象
         Page<StoreAccountDO> sourcePage = new Page<>(req.getPageNo(), req.getPageSize());
         if (StrUtil.isNotEmpty(req.getNickname())) {
@@ -74,11 +74,11 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
         Page<StoreAccountDO> storeAccountPage = this.page(sourcePage, wrapper);
 
         // 转换为响应对象列表
-        List<StoreAccountResponse> responseList = storeAccountPage.getRecords().stream()
-                .map(x -> BeanUtil.toBean(x, StoreAccountResponse.class)).collect(Collectors.toList());
+        List<StoreAccountRes> responseList = storeAccountPage.getRecords().stream()
+                .map(x -> BeanUtil.toBean(x, StoreAccountRes.class)).collect(Collectors.toList());
 
         // 用户id集合
-        List<Long> accountIdList = responseList.stream().map(StoreAccountResponse::getAccountId).collect(Collectors.toList());
+        List<Long> accountIdList = responseList.stream().map(StoreAccountRes::getAccountId).collect(Collectors.toList());
         Map<Long, AccountGroupInfo> accountMap = new HashMap<>();
         if(CollUtil.isNotEmpty(accountIdList)) {
             List<AccountGroupInfo> accountInfoList = accountApi.queryMemberByAccountIdList(accountIdList);
@@ -86,7 +86,7 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
         }
 
         // 门店id集合
-        List<Long> storeIdList = responseList.stream().map(StoreAccountResponse::getStoreId).collect(Collectors.toList());
+        List<Long> storeIdList = responseList.stream().map(StoreAccountRes::getStoreId).collect(Collectors.toList());
         Map<Long, String> storeMap = new HashMap<>();
         if(CollUtil.isNotEmpty(storeIdList)) {
             List<StoreDO> storeDOList = storeDAO.selectList(new BaseLambdaQueryWrapper<StoreDO>().in(StoreDO::getId, storeIdList));
@@ -94,7 +94,7 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
 
         }
 
-        for (StoreAccountResponse x : responseList){
+        for (StoreAccountRes x : responseList){
             AccountGroupInfo accountGroupVO = accountMap.get(x.getAccountId());
             if (accountGroupVO != null) {
                 x.setNickname(accountGroupVO.getNickname());
@@ -105,7 +105,7 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
         }
 
         // 构建新的 Page 对象
-        Page<StoreAccountResponse> resultPage = new Page<>();
+        Page<StoreAccountRes> resultPage = new Page<>();
         resultPage.setRecords(responseList);
         resultPage.setTotal(storeAccountPage.getTotal());
         resultPage.setSize(storeAccountPage.getSize());

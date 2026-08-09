@@ -37,7 +37,9 @@ public class ArticleReq implements Serializable {
     private String coverImage;
 
     /**
-     * 海报轮播图URL列表(JSON数组)
+     * 海报轮播图URL列表
+     *
+     * @ext 持久化为 JSON 数组
      */
     private List<String> posterImages;
 
@@ -47,7 +49,9 @@ public class ArticleReq implements Serializable {
     private Long categoryId;
 
     /**
-     * 是否显示:0-不显示,1-显示
+     * 是否显示
+     *
+     * @ext 0-不显示, 1-显示
      */
     private Integer isVisible;
 

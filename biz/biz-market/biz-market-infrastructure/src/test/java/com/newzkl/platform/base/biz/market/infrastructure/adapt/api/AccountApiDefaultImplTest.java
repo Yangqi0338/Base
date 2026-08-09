@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class AccountApiDefaultImplTest {
 
-    private final AccountApiDefaultImpl accountApi = new AccountApiDefaultImpl();
+    private final AccountApiImpl accountApi = new AccountApiImpl();
 
     @Test
     @DisplayName("兜底 upId: 返回非 null 空对象, oneId 为 null")

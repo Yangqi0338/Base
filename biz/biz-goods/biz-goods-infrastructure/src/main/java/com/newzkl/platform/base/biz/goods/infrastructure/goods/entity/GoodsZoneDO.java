@@ -37,17 +37,20 @@ public class GoodsZoneDO extends BaseDO {
     private Integer sortType;
 
     /**
-     * 搜索框显示状态（新增，0-不显示 1-显示，对应产品设计的「搜索框」选项）
+     * 搜索框显示状态
+     * @ext 新增；0 不显示，1 显示；对应产品设计的「搜索框」选项
      */
     private Integer searchBoxStatus;
 
     /**
-     * 价格显示状态（新增，0-不显示 1-显示，对应产品设计的「显示价格」勾选）
+     * 价格显示状态
+     * @ext 新增；0 不显示，1 显示；对应产品设计的「显示价格」勾选
      */
     private Integer priceShowStatus;
 
     /**
-     * 门店显示状态（新增，0-不显示 1-显示，对应产品设计的「显示门店」勾选）
+     * 门店显示状态
+     * @ext 新增；0 不显示，1 显示；对应产品设计的「显示门店」勾选
      */
     private Integer storeShowStatus;
 
@@ -57,18 +60,9 @@ public class GoodsZoneDO extends BaseDO {
     private Integer goodsNum;
 
     /**
-     * 分组状态（0-禁用 1-启用）
+     * 分组状态
+     * @ext 0 禁用，1 启用
      */
     private Integer state;
-
-    /**
-     * 创建人id
-     */
-    private Long createId;
-
-    /**
-     * 创建人
-     */
-    private String createName;
 
 }

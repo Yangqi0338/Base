@@ -17,7 +17,8 @@ import lombok.EqualsAndHashCode;
 public class ShipAddressReq extends BaseReq {
 
     /**
-     * 收货地区, 例如: 辽宁省,沈阳市,铁西区,XXX镇 (三级与四级地址均可下单)
+     * 收货地区
+     * @ext 例如 辽宁省,沈阳市,铁西区,XXX镇; 三级与四级地址均可下单
      */
     private String shipArea;
 
@@ -27,7 +28,8 @@ public class ShipAddressReq extends BaseReq {
     private String shipName;
 
     /**
-     * 收货地址, 如创业路东
+     * 收货地址
+     * @ext 如创业路东
      */
     private String shipAddress;
 
@@ -42,22 +44,26 @@ public class ShipAddressReq extends BaseReq {
     private String shipZipCode;
 
     /**
-     * 收货地址编码, 省 CODE, 6 位
+     * 收货省编码
+     * @ext 省 CODE, 6 位
      */
     private Integer shipProvinceCode;
 
     /**
-     * 收货地址编码, 市 CODE, 6 位
+     * 收货市编码
+     * @ext 市 CODE, 6 位
      */
     private Integer shipCityCode;
 
     /**
-     * 收货地址编码, 区 CODE, 6 位
+     * 收货区编码
+     * @ext 区 CODE, 6 位
      */
     private Integer shipAreaCode;
 
     /**
-     * 是否默认: 0 否 1 是
+     * 是否默认
+     * @ext 0 否 1 是; 无对应枚举, 保留 Integer
      */
     private Integer isDefault;
 

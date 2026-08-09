@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 校验验证码请求参数
+ */
 @Data
 public class VerificationCodeReq implements Serializable {
     /**

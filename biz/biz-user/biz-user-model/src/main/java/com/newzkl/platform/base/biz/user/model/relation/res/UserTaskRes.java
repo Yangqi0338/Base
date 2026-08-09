@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.res;
 
-import com.newzkl.platform.base.biz.user.model.enums.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

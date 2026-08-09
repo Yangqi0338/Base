@@ -4,8 +4,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**
+ * 采购金分配请求
+ *
  * @author niu
- * @description: 采购金分配请求对象
  * @date 2024/4/3 14:11
  */
 @Data
