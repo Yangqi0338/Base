@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("count_sale")
+@TableName
 public class CountSaleDO extends BaseDO {
 
     /**

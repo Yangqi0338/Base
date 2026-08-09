@@ -18,7 +18,7 @@ import org.dromara.autotable.annotation.enums.IndexTypeEnum;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("permission_relation")
+@TableName
 @TableIndexes({
         @TableIndex(name = "idx_key", type = IndexTypeEnum.UNIQUE, fields = {"type", "sourceId", "targetId"}),
         @TableIndex(name = "idx_source", fields = {"type", "sourceId"}),

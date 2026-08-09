@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("project")
+@TableName
 public class ProjectDO extends BaseDO {
 
     /**

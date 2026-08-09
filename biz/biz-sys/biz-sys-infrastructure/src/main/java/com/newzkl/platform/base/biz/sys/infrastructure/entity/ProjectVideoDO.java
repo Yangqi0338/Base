@@ -14,7 +14,7 @@ import org.dromara.autotable.annotation.Index;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("project_video")
+@TableName
 public class ProjectVideoDO extends BaseDO {
 
     /**

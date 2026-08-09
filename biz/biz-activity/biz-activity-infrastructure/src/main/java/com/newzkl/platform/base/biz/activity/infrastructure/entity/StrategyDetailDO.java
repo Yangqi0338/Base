@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author niu
  */
 @Data
-@TableName("strategy_detail")
+@TableName
 public class StrategyDetailDO extends BaseDO {
 
     /**

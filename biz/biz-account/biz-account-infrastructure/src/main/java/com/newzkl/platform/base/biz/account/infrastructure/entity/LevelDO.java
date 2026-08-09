@@ -22,7 +22,7 @@ import org.dromara.autotable.annotation.Index;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(value = "level", autoResultMap = true)
+@TableName(autoResultMap = true)
 public class LevelDO extends BaseDO {
 
     /**

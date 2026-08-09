@@ -16,7 +16,7 @@ import org.dromara.autotable.annotation.enums.IndexTypeEnum;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("role")
+@TableName
 public class RoleDO extends BaseDO {
 
     /**

@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * @since 2026-01-23
  */
 @Data
-@TableName("refund_operation_record")
+@TableName
 public class RefundOperationRecordDO extends BaseDO {
 
     /**

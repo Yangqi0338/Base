@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(value = "spu_order", autoResultMap = true)
+@TableName(autoResultMap = true)
 public class SpuOrderDO extends BaseDO {
     /**
      * 订单类型

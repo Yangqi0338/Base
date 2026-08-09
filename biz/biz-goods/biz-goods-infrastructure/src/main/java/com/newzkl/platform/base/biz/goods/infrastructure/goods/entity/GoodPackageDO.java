@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("good_package")
+@TableName
 public class GoodPackageDO extends BaseDO {
 
     /**

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * @author 活动
  */
 @Data
-@TableName("bonus_pool_archive")
+@TableName
 public class BonusPoolArchiveDO extends BaseDO {
     /**
      * 奖金池id

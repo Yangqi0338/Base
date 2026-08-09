@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("short_video")
+@TableName
 public class ShortVideoDO extends BaseDO {
 
     /**

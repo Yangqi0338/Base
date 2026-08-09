@@ -13,7 +13,7 @@ import org.dromara.autotable.annotation.Index;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("app_version")
+@TableName
 public class AppVersionDO extends BaseDO {
     /**
      * 应用编码

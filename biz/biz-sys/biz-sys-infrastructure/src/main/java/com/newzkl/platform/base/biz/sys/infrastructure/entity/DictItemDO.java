@@ -13,7 +13,7 @@ import org.dromara.autotable.annotation.Index;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("dict_item")
+@TableName
 public class DictItemDO extends BaseDO {
 
     /**
