@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.course.domain.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.course.domain.adapt.api.UserAccountApi;
+import com.newzkl.platform.base.biz.course.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseCategoryRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterWatchRecordRepository;
@@ -55,7 +55,7 @@ public class CourseDomainImpl implements CourseDomain {
 
     private final CourseChapterWatchRecordRepository courseChapterWatchRecordRepository;
 
-    private final UserAccountApi userAccountApi;
+    private final AccountApi accountApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -197,7 +197,7 @@ public class CourseDomainImpl implements CourseDomain {
         if (records == null || records.isEmpty()) {
             return new ArrayList<>();
         }
-        Long userId = userAccountApi.currentUserId();
+        Long userId = accountApi.currentUserId();
         if (userId == null) {
             records.forEach(item -> item.setWatchCount(0));
             return records;

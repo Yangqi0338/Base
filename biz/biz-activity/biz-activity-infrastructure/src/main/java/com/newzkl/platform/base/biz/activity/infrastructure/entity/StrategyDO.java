@@ -69,7 +69,7 @@ public class StrategyDO extends BaseDO {
     /**
      * 分红角色
      */
-    private RoleEnum.CompanyRole dividendRole;
+    private String dividendRole;
 
     /**
      * 分红用户

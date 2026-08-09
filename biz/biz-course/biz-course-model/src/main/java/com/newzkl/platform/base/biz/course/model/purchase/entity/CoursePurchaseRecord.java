@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.course.domain.purchase.entity;
+package com.newzkl.platform.base.biz.course.model.purchase.entity;
 
 import lombok.Data;
 

@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.course.domain.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.course.domain.adapt.api.UserAccountApi;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.LecturerRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.UserLecturerFollowRepository;
 import com.newzkl.platform.base.biz.course.domain.service.UserLecturerFollowDomain;
@@ -15,8 +14,6 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * 用户关注讲师领域服务实现

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
 import com.newzkl.platform.base.biz.course.model.lecturer.res.LecturerRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public interface LecturerRepository {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否更新成功
      */
-    boolean updateEnabled(Long id, Integer isEnabled);
+    boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled);
 
     /**
      * 冗余字段回填讲师分类名称

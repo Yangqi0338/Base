@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@Component("financeAccountApiImpl")
+@Component("financeAccountApi")
 public class AccountApiImpl implements AccountApi {
 
     @DubboReference

@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchR
 import com.newzkl.platform.base.biz.course.model.watch.req.CourseChapterWatchRecordReq;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRecordRes;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseWatchStatisticRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -34,7 +35,7 @@ public class CourseChapterWatchRecordRepositoryImpl implements CourseChapterWatc
     @Transactional(rollbackFor = Exception.class)
     public Long save(CourseChapterWatchRecordReq req) {
         CourseChapterWatchRecordDO recordDO = TransferUtils.transfer(req, CourseChapterWatchRecordDO::new);
-        recordDO.setIsWatched(1);
+        recordDO.setIsWatched(CommonEnum.YesOrNo.YES);
         recordDO.setTotalWatchTimes(1);
         recordDO.setWatchTime(LocalDateTime.now());
         courseChapterWatchRecordDAO.insert(recordDO);
@@ -101,7 +102,7 @@ public class CourseChapterWatchRecordRepositoryImpl implements CourseChapterWatc
             return null;
         }
         CourseChapterWatchRecordRes res = TransferUtils.transfer(recordDO, CourseChapterWatchRecordRes::new);
-        res.setIsWatchedDesc(recordDO.getIsWatched() != null && recordDO.getIsWatched() == 1 ? "已观看" : "未观看");
+        res.setIsWatchedDesc(recordDO.getIsWatched() == CommonEnum.YesOrNo.YES ? "已观看" : "未观看");
         return res;
     }
 }

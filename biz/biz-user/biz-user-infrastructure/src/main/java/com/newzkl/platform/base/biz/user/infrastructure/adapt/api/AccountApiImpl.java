@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @author KC
  */
 @Slf4j
-@Component("userAccountApiImpl")
+@Component("userAccountApi")
 public class AccountApiImpl implements AccountApi {
 
     @DubboReference

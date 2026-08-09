@@ -17,8 +17,8 @@ import java.util.List;
  *
  * @author KC
  */
-@Component("storeAccountApiDefaultImpl")
-public class AccountApiDefaultImpl implements AccountApi {
+@Component("storeAccountApi")
+public class AccountApiImpl implements AccountApi {
 
     @Override
     public List<Long> queryMember(String nickname) {

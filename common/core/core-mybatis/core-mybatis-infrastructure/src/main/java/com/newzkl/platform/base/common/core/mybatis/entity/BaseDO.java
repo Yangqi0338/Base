@@ -22,7 +22,6 @@ public abstract class BaseDO extends BaseIdDO {
 
     /**
      * 操作人信息
-     * @ext creator/updater 合并, JSON 列, 含 id 与名称
      */
     @JsonSerializable
     @TableField(fill = FieldFill.INSERT_UPDATE)

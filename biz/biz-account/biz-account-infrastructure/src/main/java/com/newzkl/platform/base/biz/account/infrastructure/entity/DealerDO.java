@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@TableName
 public class DealerDO extends OperatorClientBaseDO {
     /**
      * 分润比例

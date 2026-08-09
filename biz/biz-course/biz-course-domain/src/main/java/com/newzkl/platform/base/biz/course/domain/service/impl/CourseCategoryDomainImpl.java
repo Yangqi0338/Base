@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseCategoryDomain;
 import com.newzkl.platform.base.biz.course.model.category.query.CourseCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.category.req.CourseCategoryReq;
 import com.newzkl.platform.base.biz.course.model.category.res.CourseCategoryRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
@@ -65,13 +66,13 @@ public class CourseCategoryDomainImpl implements CourseCategoryDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean enable(Long id) {
-        return updateEnabled(id, 1);
+        return updateEnabled(id, CommonEnum.YesOrNo.YES);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean disable(Long id) {
-        return updateEnabled(id, 0);
+        return updateEnabled(id, CommonEnum.YesOrNo.NO);
     }
 
     @Override
@@ -124,7 +125,7 @@ public class CourseCategoryDomainImpl implements CourseCategoryDomain {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否成功
      */
-    private boolean updateEnabled(Long id, Integer isEnabled) {
+    private boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         CourseCategoryRes exist = courseCategoryRepository.detail(id);
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程分类");
         return courseCategoryRepository.updateEnabled(id, isEnabled);

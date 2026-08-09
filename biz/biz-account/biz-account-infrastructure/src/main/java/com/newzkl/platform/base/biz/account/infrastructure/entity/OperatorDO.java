@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import lombok.Data;
  * @author fang
  */
 @Data
+@TableName
 public class OperatorDO extends OperatorClientBaseDO {
     /**
      * 运营类型

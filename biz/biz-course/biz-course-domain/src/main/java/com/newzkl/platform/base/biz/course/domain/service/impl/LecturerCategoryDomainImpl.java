@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.course.domain.service.LecturerCategoryDomain
 import com.newzkl.platform.base.biz.course.model.lecturercategory.query.LecturerCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.req.LecturerCategoryReq;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +54,13 @@ public class LecturerCategoryDomainImpl implements LecturerCategoryDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean enable(Long id) {
-        return updateEnabled(id, 1);
+        return updateEnabled(id, CommonEnum.YesOrNo.YES);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean disable(Long id) {
-        return updateEnabled(id, 0);
+        return updateEnabled(id, CommonEnum.YesOrNo.NO);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class LecturerCategoryDomainImpl implements LecturerCategoryDomain {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否成功
      */
-    private boolean updateEnabled(Long id, Integer isEnabled) {
+    private boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         LecturerCategoryRes exist = lecturerCategoryRepository.detail(id);
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "讲师分类");
         return lecturerCategoryRepository.updateEnabled(id, isEnabled);

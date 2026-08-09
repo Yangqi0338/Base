@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 
@@ -12,6 +13,7 @@ import org.dromara.autotable.annotation.Index;
 * @author fang
 */
 @Data
+@TableName
 public class SettleRecordItemDO extends BaseDO {
 	/**
 	 * 结算记录ID

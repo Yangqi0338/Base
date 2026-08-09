@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.course.domain.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.newzkl.platform.base.biz.course.domain.adapt.api.UserAccountApi;
+import com.newzkl.platform.base.biz.course.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterWatchRecordRepository;
 import com.newzkl.platform.base.biz.course.domain.service.CourseChapterWatchRecordDomain;
@@ -36,7 +36,7 @@ public class CourseChapterWatchRecordDomainImpl implements CourseChapterWatchRec
 
     private final CourseChapterRepository courseChapterRepository;
 
-    private final UserAccountApi userAccountApi;
+    private final AccountApi userAccountApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

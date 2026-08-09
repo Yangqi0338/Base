@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.course.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.course.domain.purchase.entity.CoursePurchaseRecord;
+import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 
 import java.util.List;

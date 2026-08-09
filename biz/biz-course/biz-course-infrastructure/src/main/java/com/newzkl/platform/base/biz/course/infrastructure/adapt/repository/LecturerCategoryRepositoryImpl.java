@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.course.infrastructure.entity.LecturerCategor
 import com.newzkl.platform.base.biz.course.model.lecturercategory.query.LecturerCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.req.LecturerCategoryReq;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -60,7 +61,7 @@ public class LecturerCategoryRepositoryImpl implements LecturerCategoryRepositor
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateEnabled(Long id, Integer isEnabled) {
+    public boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         LecturerCategoryDO categoryDO = new LecturerCategoryDO();
         categoryDO.setId(id);
         categoryDO.setIsEnabled(isEnabled);

@@ -142,8 +142,8 @@ public class CourseChapterRepositoryImpl extends RepositorySupport implements Co
         CopyOptions opts = CopyOptions.create().setIgnoreProperties(DURATION_PROPS);
         CourseChapterRes res = TransferUtils.transfer(chapterDO, CourseChapterRes::new, opts);
         res.setDurationCentisecond(CourseUnitConverter.centisecondToSeconds(chapterDO.getDurationCentisecond()));
-        res.setIsFreeDesc(chapterDO.getIsFree() != null && chapterDO.getIsFree() == 1 ? "免费" : "付费");
-        res.setIsEnabledDesc(chapterDO.getIsEnabled() != null && chapterDO.getIsEnabled() == 1 ? "启用" : "禁用");
+        res.setIsFreeDesc(chapterDO.getIsFree() == CommonEnum.YesOrNo.YES ? "免费" : "付费");
+        res.setIsEnabledDesc(chapterDO.getIsEnabled() == CommonEnum.YesOrNo.YES ? "启用" : "禁用");
         return res;
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.model.category.query.CourseCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.category.req.CourseCategoryReq;
 import com.newzkl.platform.base.biz.course.model.category.res.CourseCategoryRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public interface CourseCategoryRepository {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否更新成功
      */
-    boolean updateEnabled(Long id, Integer isEnabled);
+    boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled);
 
     /**
      * 判断分类名称是否已存在

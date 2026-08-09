@@ -79,7 +79,7 @@ public class ActivityConfigSaveReq {
      * @ext 候选枚举 {@link ActivityEnum.DividendCycle}: WEEKLY-周结算 MONTHLY-月结算
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
-    private String dividendCycle;
+    private ActivityEnum.DividendCycle dividendCycle;
 
 
     /**
@@ -87,7 +87,7 @@ public class ActivityConfigSaveReq {
      * @ext 候选枚举 {@link ActivityEnum.SettlementStrategy}: CYCLE-周期循环 ONCE-单次结算后关闭
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
-    private String settlementStrategy;
+    private ActivityEnum.SettlementStrategy settlementStrategy;
 
 
 
@@ -96,7 +96,7 @@ public class ActivityConfigSaveReq {
      * @ext 候选枚举 {@link ActivityEnum.DividendMethod}: AVERAGE-平均分红 WEIGHT-加权分红
      */
     @NotBlank(groups = {AddCommand.class, UpdateCommand.class})
-    private String dividendMethod;
+    private ActivityEnum.DividendMethod dividendMethod;
 
 
     /**

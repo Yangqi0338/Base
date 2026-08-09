@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
 import com.newzkl.platform.base.biz.course.model.lecturer.res.LecturerRes;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import lombok.RequiredArgsConstructor;
@@ -65,13 +66,13 @@ public class LecturerDomainImpl implements LecturerDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean enable(Long id) {
-        return updateEnabled(id, 1);
+        return updateEnabled(id, CommonEnum.YesOrNo.YES);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean disable(Long id) {
-        return updateEnabled(id, 0);
+        return updateEnabled(id, CommonEnum.YesOrNo.NO);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class LecturerDomainImpl implements LecturerDomain {
      * @param isEnabled 启用状态 1-启用 0-禁用
      * @return 是否成功
      */
-    private boolean updateEnabled(Long id, Integer isEnabled) {
+    private boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         LecturerRes exist = lecturerRepository.detail(id);
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "讲师");
         return lecturerRepository.updateEnabled(id, isEnabled);

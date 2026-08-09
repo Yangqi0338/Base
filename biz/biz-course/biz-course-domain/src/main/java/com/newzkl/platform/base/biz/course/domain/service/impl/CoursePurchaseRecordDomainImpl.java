@@ -5,26 +5,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.domain.adapt.api.OrderPayApi;
 import com.newzkl.platform.base.biz.course.domain.adapt.api.OrderPayCommand;
 import com.newzkl.platform.base.biz.course.domain.adapt.api.PayResultDTO;
-import com.newzkl.platform.base.biz.course.domain.adapt.repository.CoursePurchaseRecordRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterWatchRecordRepository;
+import com.newzkl.platform.base.biz.course.domain.adapt.repository.CoursePurchaseRecordRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
-import com.newzkl.platform.base.biz.course.domain.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.domain.service.CourseDomain;
 import com.newzkl.platform.base.biz.course.domain.service.CoursePurchaseRecordDomain;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
+import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.model.purchase.enums.PurchasePayStateEnum;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 import com.newzkl.platform.base.biz.course.model.purchase.req.CoursePurchaseReq;
 import com.newzkl.platform.base.biz.course.model.purchase.res.CoursePurchaseCreateRes;
 import com.newzkl.platform.base.biz.course.model.purchase.res.UserPurchasedCourseRes;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseWatchStatisticRes;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -86,8 +85,8 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
                 BaseErrorCode.PARAM, "支付方式仅支持微信(1)和支付宝(2)");
 
         String lockKey = PURCHASE_LOCK_PREFIX + req.getUserId() + ":" + req.getCourseId();
-        boolean locked = RedissonLockUtil.tryLock(lockKey, LOCK_WAIT, LOCK_EXPIRE);
-        ThrowsException.isTrue(!locked, BaseErrorCode.BUSY, "");
+//        boolean locked = RedissonLockUtil.tryLock(lockKey, LOCK_WAIT, LOCK_EXPIRE);
+//        ThrowsException.isTrue(!locked, BaseErrorCode.BUSY, "");
         try {
             CourseRes course = courseDomain.getById(req.getCourseId());
 
@@ -136,7 +135,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             log.info("创建课程购买记录成功, 订单号: {}", saved.getOrderNo());
             return toCreateRes(saved, course.getTitle());
         } finally {
-            RedissonLockUtil.unlock(lockKey);
+//            RedissonLockUtil.unlock(lockKey);
         }
     }
 

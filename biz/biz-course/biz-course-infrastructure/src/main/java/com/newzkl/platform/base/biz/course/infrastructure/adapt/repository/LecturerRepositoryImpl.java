@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.course.infrastructure.entity.LecturerDO;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
 import com.newzkl.platform.base.biz.course.model.lecturer.res.LecturerRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
@@ -74,7 +75,7 @@ public class LecturerRepositoryImpl implements LecturerRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateEnabled(Long id, Integer isEnabled) {
+    public boolean updateEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
         LecturerDO lecturerDO = new LecturerDO();
         lecturerDO.setId(id);
         lecturerDO.setIsEnabled(isEnabled);

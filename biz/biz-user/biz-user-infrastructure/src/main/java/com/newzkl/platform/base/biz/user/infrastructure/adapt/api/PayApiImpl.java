@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @author KC
  */
 @Slf4j
-@Component("userOrderPayApiImpl")
+@Component("userOrderPayApi")
 public class PayApiImpl implements PayApi {
 
     @DubboReference

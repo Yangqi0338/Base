@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
  * @author KC
  */
 @Slf4j
-@Component("courseOrderPayApiDefaultImpl")
-public class OrderPayApiDefaultImpl implements OrderPayApi {
+@Component("courseOrderPayApi")
+public class OrderPayApiImpl implements OrderPayApi {
 
     @Override
     public PayResultDTO orderPay(OrderPayCommand command) {

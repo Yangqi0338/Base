@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@Component("marketAccountApiImpl")
+@Component("marketAccountApi")
 public class AccountApiImpl implements AccountApi {
 
     @Override

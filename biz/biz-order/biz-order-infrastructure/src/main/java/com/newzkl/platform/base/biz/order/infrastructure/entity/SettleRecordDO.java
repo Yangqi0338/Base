@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 * @author fang
 */
 @Data
+@TableName
 public class SettleRecordDO extends BaseDO {
 	/**
 	 * 供应商ID

@@ -12,7 +12,7 @@ package com.newzkl.platform.base.biz.course.domain.adapt.api;
  *
  * @author KC
  */
-public interface UserAccountApi {
+public interface AccountApi {
 
     /**
      * 取当前登录用户账号ID

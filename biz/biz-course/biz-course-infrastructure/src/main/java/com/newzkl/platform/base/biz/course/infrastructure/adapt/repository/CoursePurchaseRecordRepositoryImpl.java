@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.course.infrastructure.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CoursePurchaseRecordRepository;
-import com.newzkl.platform.base.biz.course.domain.purchase.entity.CoursePurchaseRecord;
+import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.infrastructure.dao.CoursePurchaseRecordDAO;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CoursePurchaseRecordDO;
 import com.newzkl.platform.base.biz.course.model.purchase.enums.PurchasePayStateEnum;
