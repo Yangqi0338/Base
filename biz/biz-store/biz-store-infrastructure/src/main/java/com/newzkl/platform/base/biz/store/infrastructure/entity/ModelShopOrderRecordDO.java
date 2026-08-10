@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
  * @ext DB 表 model_shop_order_record
  */
 @Data
+@TableName
 public class ModelShopOrderRecordDO extends BaseDO {
     
     /**

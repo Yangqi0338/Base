@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName
-@Ignore
 public class IdGeneratorDO extends BaseIdDO {
     private String generatorKey;
 

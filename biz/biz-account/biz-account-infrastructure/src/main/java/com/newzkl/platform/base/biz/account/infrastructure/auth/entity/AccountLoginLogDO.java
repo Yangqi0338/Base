@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.infrastructure.auth.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseIdDO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@TableName
 public class AccountLoginLogDO extends BaseIdDO {
     /**
      * 账号ID

@@ -81,11 +81,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AccountController {
 
-    /**
-     * 旧 {@code /user/account/init} 的甄选师统计触发魔数
-     */
-    private static final Long SELECTOR_COUNT_RESET_TRIGGER_ID = 147852L;
-
     private final AccountService accountService;
     private final UserQueryService userQueryService;
     private final AccountDomain accountDomain;
@@ -501,28 +496,6 @@ public class AccountController {
     @PostMapping("/account/destroy")
     public PlatformResult<LoginRes> destroy(@Validated @RequestBody DestroyRoleReq destroyRoleReq) {
         accountDomain.destroy(SecurityUtils.getAccountId(), destroyRoleReq);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 初始
-     *
-     * <p>运维一次性触发口: 旧实现仅当入参 ID 等于魔数 {@code 147852} 时调
-     * {@code RefreshJob.resetSelectorCount()}(甄选师团队人数统计回写), 其余 ID 为空操作。
-     * 空操作分支逐字保留; 魔数分支所需基建缺失, 见类内 infra-gap 说明。</p>
-     *
-     * @param idListCommand 触发 ID 入参 (旧 {@code IdObj})
-     * @return 空结果 (出参类型沿用旧声明)
-     * @throws UnsupportedOperationException 命中魔数分支且统计基建未迁时抛出
-     */
-    @PostMapping("/account/init")
-    public PlatformResult<LoginRes> initSyncJfUser(@Validated @RequestBody IdListCommand idListCommand) {
-        Long id = CollUtil.getFirst(idListCommand.getIdList());
-        if (SELECTOR_COUNT_RESET_TRIGGER_ID.equals(id)) {
-            throw new UnsupportedOperationException(
-                    "TODO[infra-gap]: 甄选师团队人数统计回写未迁 — 缺 SelectorRepository#countSelectorNumber "
-                            + "(旧 SelectorDAO.countSelectorNumber) 与 job/task handler 层");
-        }
         return PlatformResult.success();
     }
 
