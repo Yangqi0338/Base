@@ -17,27 +17,27 @@ public abstract class CategoryBaseDO extends BaseDO {
     /**
      * 专属人
      */
-    private Long accountId;
+    protected Long accountId;
     /**
      * 名称
      * @ext 查询
      */
-    private String name;
+    protected String name;
     /**
      * 描述
      */
     @TableField("`desc`")
-    private String desc;
+    protected String desc;
     /**
      * 图片
      */
-    private String img;
+    protected String img;
     /**
      * 排序
      */
-    private Integer idx;
+    protected Integer idx;
     /**
      * 是否启用
      */
-    private CommonEnum.YesOrNo isEnabled;
+    protected CommonEnum.YesOrNo isEnabled;
 }

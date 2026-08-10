@@ -16,9 +16,9 @@ public class OperatorClientBaseDO extends BaseDO {
     /**
      * 提货积分
      */
-    private Integer goodsPoints;
+    protected Integer goodsPoints;
     /**
      * 升级进度
      */
-    private Double levelUpProgress;
+    protected Double levelUpProgress;
 }

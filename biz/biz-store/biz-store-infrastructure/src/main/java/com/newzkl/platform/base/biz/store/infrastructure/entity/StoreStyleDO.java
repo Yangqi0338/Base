@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.store.model.enums.StoreStyleEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
 
 import java.time.LocalDateTime;
 
@@ -78,6 +80,7 @@ public class StoreStyleDO extends BaseDO {
     /**
      * 样式内容
      */
+    @ColumnType(value = MysqlTypeConstant.TEXT)
     private String styleContent;
 
     /**

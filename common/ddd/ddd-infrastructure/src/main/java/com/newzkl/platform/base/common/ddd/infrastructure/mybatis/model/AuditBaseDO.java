@@ -18,5 +18,5 @@ public class AuditBaseDO extends BaseDO {
      * 外键id
      */
     @Index
-    private Long foreignId;
+    protected Long foreignId;
 }
