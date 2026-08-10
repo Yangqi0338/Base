@@ -71,9 +71,4 @@ public class AuditDataSpuDO extends AuditBaseDO {
      */
     private AuditEnum.State state;
 
-    /**
-     * 申请人ID
-     */
-    @OldColumnName("accountId")
-    private Long creator;
 }

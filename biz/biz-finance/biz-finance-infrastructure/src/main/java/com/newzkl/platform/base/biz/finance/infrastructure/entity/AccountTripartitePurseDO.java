@@ -3,17 +3,19 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 /**
  * @author 三方账户信息
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class AccountTripartitePurseDO extends BaseDO {
     /**
      * 客户id
@@ -69,5 +71,6 @@ public class AccountTripartitePurseDO extends BaseDO {
     /**
      * 资料信息
      */
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String commitInfo;
 }

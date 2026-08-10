@@ -9,8 +9,10 @@ import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.OldColumnName;
+import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
 
 /**
 * spu
@@ -34,7 +36,7 @@ public class SpuDO extends BaseDO {
 	/**
 	 * 轮播图
 	 */
-    @Size(max = 1000)
+    @ColumnType(value = MysqlTypeConstant.TEXT)
 	private String scrollImg;
 	/**
 	 * 图片
@@ -47,6 +49,7 @@ public class SpuDO extends BaseDO {
 	/**
 	 * 详情
 	 */
+    @ColumnType(value = MysqlTypeConstant.TEXT)
 	private String detail;
 	/**
 	 * 商品类型

@@ -19,4 +19,10 @@ public class AuditBaseDO extends BaseDO {
      */
     @Index
     protected Long foreignId;
+
+    /**
+     * 审批流id
+     */
+    @Index
+    protected Long flowId;
 }

@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,8 +20,7 @@ import java.util.Map;
  *
  * @author fang
  */
-@Data
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "scm.sys")
 public class SysProperties {
 

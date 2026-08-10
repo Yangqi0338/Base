@@ -45,5 +45,9 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-finance-facade</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-sys-facade</artifactId>
+        </dependency>
     </dependencies>
 </project>

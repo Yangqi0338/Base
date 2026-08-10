@@ -6,7 +6,9 @@ import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 /**
@@ -35,6 +37,6 @@ public class SpuAttributeDO extends BaseDO {
 	/**
 	 * 手动添加规格或参数的值，参数单值
 	 */
-    @Size(max = 1000)
+    @ColumnType(value = MysqlTypeConstant.TEXT)
 	private String value;
 }

@@ -149,8 +149,7 @@ public class EmpController {
         loginReq.setClient(CommonEnum.Client.ADMIN);
         loginReq.setType(AccountEnum.LoginType.PASSWORD);
 
-        boolean isMainLogin = RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())
-                && MAIN_LOGIN_PARENT.equals(passwordLoginReq.getParentUsername());
+        boolean isMainLogin = MAIN_LOGIN_PARENT.equals(passwordLoginReq.getParentUsername());
         if (isMainLogin) {
             loginReq.setMainAccountId(AccountEnum.MAIN_ACCOUNT_PID);
             return PlatformResult.success(accountLoginService.accountLogin(loginReq));
@@ -164,7 +163,6 @@ public class EmpController {
      * <p>入参形态逐字沿用旧契约: 请求体 {@code {"string": "<excel地址>"}}。
      * 迁移补充: 旧用 {@code EasyExcel.read(...).sheet().doRead()} 配
      * {@code OpenSubAccountListener} 边读边落库, Base 统一走
-     * {@link com.newzkl.platform.base.common.core.utils.common.EasyExcelUtil#importBiz}
      * 先校验再批量落库, 出参对象为 {@code EasyExcelErrorVO}。
      * 旧 {@code @Limit(code=1026, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
      *

@@ -39,7 +39,6 @@ public class AuditDataSpuRepositoryImpl implements AuditDataSpuRepository {
     @Transactional(rollbackFor = Exception.class)
     public Long auditDataSpuSave(AuditDataSpu auditDataSpu) {
         AuditDataSpuDO auditDataSpuDO = TransferUtils.transfer(auditDataSpu, AuditDataSpuDO::new);
-        auditDataSpuDO.setCreator(SecurityUtils.getAccountId());
         if (auditDataSpuDO.getId() == null || auditDataSpuDO.getId() == 0) {
             auditDataSpuDO.setId(SnowflakeIdAble.getSnowflakeId());
             auditDataSpuDAO.insert(Collections.singletonList(auditDataSpuDO));

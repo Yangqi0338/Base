@@ -1,6 +1,13 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
+import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
+import com.newzkl.platform.base.biz.sys.facade.IDictFacade;
+import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,9 +21,21 @@ import org.springframework.stereotype.Component;
 @Component("accountDictApi")
 public class DictApiImpl implements DictApi {
 
+    @Autowired
+    private IDictFacade dictFacade;
+
     @Override
     public String get(Long code) {
         // TODO[cross-service]: 远程字典查询, 默认 null
         return null;
+    }
+
+    @Override
+    public TencentImConfig getTencentImConfig() {
+        String value = dictFacade.get(DictEnum.Key.TENCENT_IM_CONFIG.getCode());
+        if (StrUtil.isNotBlank(value)) {
+            return JSONUtil.toBean(value, TencentImConfig.class);
+        }
+        return new TencentImConfig();
     }
 }

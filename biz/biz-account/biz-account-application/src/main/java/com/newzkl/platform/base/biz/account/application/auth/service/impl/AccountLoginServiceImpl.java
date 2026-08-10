@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.auth.service.AccountLoginService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreAccountCreateReq;
 import com.newzkl.platform.base.biz.account.domain.auth.repository.AccountLoginRepository;
@@ -92,6 +93,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
     private final LoginAssembler loginAssembler;
 
     private final GoodsStoreApi goodsStoreApi;
+    private final DictApi dictApi;
 
     @Override
     public LoginRes accountLogin(LoginReq loginReq) {
@@ -282,7 +284,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         String userAccount = login.getAccountVO().getUserAccount();
         log.info("【UserSig生成】开始为用户{}生成签名", userAccount);
         try {
-            TencentImConfig config = accountLoginRepository.getTencentImConfig();
+            TencentImConfig config = dictApi.getTencentImConfig();
             TLSSigAPIv2 tlsSigAPIv2 = new TLSSigAPIv2(config.getSdkAppId(), config.getSecretKey());
             String userSig = tlsSigAPIv2.genUserSig(config.getIdentifier(), config.getExpire());
             login.setSdkAppId(config.getSdkAppId());

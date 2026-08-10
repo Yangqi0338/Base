@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
 import com.newzkl.platform.base.biz.sys.model.config.enums.DictEnum;
-import com.newzkl.platform.base.biz.sys.model.config.support.AdminSysProperties;
 import com.newzkl.platform.base.biz.sys.model.config.vo.AppConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
@@ -49,7 +48,6 @@ import java.util.stream.Collectors;
 public class ConfigController {
 
     private final DictDomain dictDomain;
-    private final AdminSysProperties adminSysProperties;
 
     /**
      * 订单配置查询
@@ -125,16 +123,6 @@ public class ConfigController {
         dictReq.setValue(JSONUtil.toJsonStr(appConfigList));
         dictDomain.dictSave(dictReq);
         return PlatformResult.success();
-    }
-
-    /**
-     * CDK 权限手机号查询
-     *
-     * @return CDK 权限手机号, 多个以逗号隔开
-     */
-    @PostMapping("/cdkPhone")
-    public PlatformResult<String> cdkPhone() {
-        return PlatformResult.success(adminSysProperties.getCdkPhone());
     }
 
     /**

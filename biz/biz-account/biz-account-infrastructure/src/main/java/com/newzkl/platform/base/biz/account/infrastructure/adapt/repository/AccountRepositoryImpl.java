@@ -54,7 +54,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
     @Override
     public Long findId(AccountQuery accountQuery) {
-        return getId(accountDAO, accountDAO.getLw(accountQuery));
+        return findOneField(accountDAO, accountDAO.getLw(accountQuery), AccountDO::getId);
     }
 
     @Override

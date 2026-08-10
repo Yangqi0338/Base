@@ -34,7 +34,6 @@ public class MigrateConfig {
      */
     @Bean
     @Primary
-    @DependsOn("sysProperties")
     public AutoTableMetadataAdapter autoTableOrmFrameAdapter(List<IgnoreExt> ignoreExts) {
         return new AutoTableAdapter(ignoreExts);
     }

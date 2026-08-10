@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.adapt.api;
 
+import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
+
 /**
  * 字典出站端口 (outbound port)
  *
@@ -17,4 +19,7 @@ public interface DictApi {
      * @return 字典值, 无则 null
      */
     String get(Long code);
+
+	TencentImConfig getTencentImConfig();
+
 }

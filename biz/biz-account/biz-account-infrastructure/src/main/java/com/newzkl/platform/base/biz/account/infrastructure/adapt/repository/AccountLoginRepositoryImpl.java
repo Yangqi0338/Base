@@ -23,9 +23,6 @@ public class AccountLoginRepositoryImpl implements AccountLoginRepository {
 
     private final AccountLoginLogDAO accountLoginLogDAO;
 
-//    @DubboReference
-//    private IDictFacade dictFacade;
-
     @Override
     public void accountLoginLogSave(AccountLoginLog accountLoginLog) {
         accountLoginLogDAO.insertOrUpdate(TransferUtils.transfer(accountLoginLog, AccountLoginLogDO::new));
@@ -36,11 +33,5 @@ public class AccountLoginRepositoryImpl implements AccountLoginRepository {
         BaseLambdaQueryWrapper<AccountLoginLogDO> queryWrapper = accountLoginLogDAO.getLw(query);
         Page<AccountLoginLogDO> pageList = accountLoginLogDAO.selectPage(RepositorySupport.page(query), queryWrapper);
         return TransferUtils.transferPage(pageList, AccountLoginLogVO::new);
-    }
-
-    @Override
-    public TencentImConfig getTencentImConfig() {
-//        String value = dictFacade.get(DictEnum.Key.TENCENT_IM_CONFIG.getCode());
-        return JSONUtil.toBean("", TencentImConfig.class);
     }
 }

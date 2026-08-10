@@ -7,6 +7,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -42,13 +43,15 @@ public class ThirdPartyOrderRecordDO extends BaseDO {
     private String interfaceName;
 
     /**
-     * 请求参数 JSON
+     * 请求参数
      */
+    @JsonSerializable
     private String requestJson;
 
     /**
-     * 响应结果 JSON
+     * 响应结果
      */
+    @JsonSerializable
     private String responseJson;
 
     /**

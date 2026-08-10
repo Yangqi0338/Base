@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.common.ddd.model.dto.ExecutorDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.ColumnDefault;
+import org.dromara.mpe.autofill.annotation.DefaultValue;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
@@ -49,6 +51,7 @@ public abstract class BaseDO extends BaseIdDO {
      * 逻辑删除标记
      * @ext 正常 0, 删除为 NULL(确保唯一索引生效)
      */
+    @ColumnDefault("0")
     @TableLogic(value = "0", delval = "NULL")
     @JsonIgnore
     protected Integer delFlag;

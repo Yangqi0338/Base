@@ -17,6 +17,4 @@ public interface AccountLoginRepository {
     void accountLoginLogSave(AccountLoginLog accountLoginLog);
 
     Page<AccountLoginLogVO> selectPage(AccountLoginLogQuery accountLoginLogQuery);
-
-    TencentImConfig getTencentImConfig();
 }
