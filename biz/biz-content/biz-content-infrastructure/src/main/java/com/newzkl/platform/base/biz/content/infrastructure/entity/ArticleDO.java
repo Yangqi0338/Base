@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
+import org.dromara.autotable.annotation.ColumnType;
+import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,7 @@ public class ArticleDO extends BaseDO {
     /**
      * 文章内容
      */
+    @ColumnType(value = MysqlTypeConstant.TEXT)
     private String content;
 
     /**

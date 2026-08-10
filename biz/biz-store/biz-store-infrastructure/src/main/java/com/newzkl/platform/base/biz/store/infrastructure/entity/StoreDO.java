@@ -95,7 +95,6 @@ public class StoreDO extends BaseDO {
     /**
      * 门店类型名称
      */
-    @OldColumnName("typeName")
     private String categoryName;
 
     /**

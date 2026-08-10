@@ -51,10 +51,5 @@ public class AuditDataWorkTableDO extends AuditBaseDO {
      * 审批状态
      */
     private AuditEnum.State state;
-    /**
-     * 申请人ID
-     */
-    @OldColumnName("accountId")
-    private Long creator;
 
 }

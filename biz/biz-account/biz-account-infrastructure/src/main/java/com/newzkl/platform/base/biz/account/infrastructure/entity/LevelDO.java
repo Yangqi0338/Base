@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.newzkl.platform.base.biz.account.model.level.vo.ConditionVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.PermissionVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 /**
  * 等级持久化对象
@@ -17,7 +19,7 @@ import org.dromara.autotable.annotation.Index;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(autoResultMap = true)
+@TableName
 public class LevelDO extends BaseDO {
 
     /**
@@ -48,14 +50,15 @@ public class LevelDO extends BaseDO {
      * 等级权限
      * @ext JSON 列
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
+    @JsonSerializable
     private PermissionVO permission;
 
     /**
      * 升级条件
      * @ext JSON 列
      */
-    @TableField(value = "`condition`", typeHandler = JacksonTypeHandler.class)
+    @JsonSerializable
+    @TableField(value = "`condition`")
     private ConditionVO condition;
 
     /**

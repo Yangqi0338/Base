@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.dao;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditSpuDO;
+import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditDataSpuDO;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface AuditDataSpuDAO extends BaseMapper<AuditSpuDO> {
+public interface AuditDataSpuDAO extends BaseMapper<AuditDataSpuDO> {
     /**
      * 查询条件的 QueryWrapper
      */
-    default QueryWrapper<AuditSpuDO> buildQueryWrapper(AuditDataSpuQuery query) {
-        QueryWrapper<AuditSpuDO> wrapper = new QueryWrapper<>();
+    default QueryWrapper<AuditDataSpuDO> buildQueryWrapper(AuditDataSpuQuery query) {
+        QueryWrapper<AuditDataSpuDO> wrapper = new QueryWrapper<>();
 
         // id 条件
         wrapper.eq(query.getId() != null, "id", query.getId());

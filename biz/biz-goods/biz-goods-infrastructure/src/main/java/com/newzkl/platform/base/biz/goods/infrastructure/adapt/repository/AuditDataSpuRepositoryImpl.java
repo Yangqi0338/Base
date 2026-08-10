@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.AuditDataSpuRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.AuditDataSpuDAO;
-import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditSpuDO;
+import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditDataSpuDO;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
@@ -38,7 +38,7 @@ public class AuditDataSpuRepositoryImpl implements AuditDataSpuRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long auditDataSpuSave(AuditDataSpu auditDataSpu) {
-        AuditSpuDO auditDataSpuDO = TransferUtils.transfer(auditDataSpu, AuditSpuDO::new);
+        AuditDataSpuDO auditDataSpuDO = TransferUtils.transfer(auditDataSpu, AuditDataSpuDO::new);
         auditDataSpuDO.setCreator(SecurityUtils.getAccountId());
         if (auditDataSpuDO.getId() == null || auditDataSpuDO.getId() == 0) {
             auditDataSpuDO.setId(SnowflakeIdAble.getSnowflakeId());
@@ -57,7 +57,7 @@ public class AuditDataSpuRepositoryImpl implements AuditDataSpuRepository {
 
     @Override
     public void auditDataSpuUpdateByQuery(AuditDataSpu auditDataSpu, AuditDataSpuQuery auditDataSpuQuery) {
-        auditDataSpuDAO.update(TransferUtils.transfer(auditDataSpu, AuditSpuDO::new), auditDataSpuDAO.buildQueryWrapper(auditDataSpuQuery));
+        auditDataSpuDAO.update(TransferUtils.transfer(auditDataSpu, AuditDataSpuDO::new), auditDataSpuDAO.buildQueryWrapper(auditDataSpuQuery));
     }
 
     @Override

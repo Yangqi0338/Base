@@ -6,6 +6,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -33,6 +34,7 @@ public class SpuDO extends BaseDO {
 	/**
 	 * 轮播图
 	 */
+    @Size(max = 1000)
 	private String scrollImg;
 	/**
 	 * 图片

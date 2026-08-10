@@ -8,6 +8,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import lombok.Data;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 
@@ -34,6 +35,7 @@ public class SupplierDO extends BaseDO {
     /**
      * 企业信息
      */
+    @JsonSerializable
     private String companyInfo;
     /**
      * 是否缴纳保证金

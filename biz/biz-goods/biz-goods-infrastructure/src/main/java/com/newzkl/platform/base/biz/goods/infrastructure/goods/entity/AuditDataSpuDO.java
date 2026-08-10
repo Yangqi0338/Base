@@ -18,7 +18,7 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName
-public class AuditSpuDO extends AuditBaseDO {
+public class AuditDataSpuDO extends AuditBaseDO {
     /**
      * 商品URL
      */
