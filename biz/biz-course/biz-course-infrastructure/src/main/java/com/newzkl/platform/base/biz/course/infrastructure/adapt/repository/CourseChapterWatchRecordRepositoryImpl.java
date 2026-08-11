@@ -10,8 +10,8 @@ import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRec
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseWatchStatisticRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

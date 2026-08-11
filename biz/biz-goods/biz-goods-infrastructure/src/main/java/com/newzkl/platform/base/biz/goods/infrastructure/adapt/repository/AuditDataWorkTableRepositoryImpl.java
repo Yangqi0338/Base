@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataWork
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataWorkTableQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataWorkTableVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -47,7 +47,7 @@ public class AuditDataWorkTableRepositoryImpl implements AuditDataWorkTableRepos
     @Override
     public Long auditDataWorkTableInsert(AuditDataWorkTable auditDataWorkTable) {
         AuditDataWorkTableDO auditDataWorkTableDO = TransferUtils.transfer(auditDataWorkTable, AuditDataWorkTableDO::new);
-        auditDataWorkTableDO.setId(SnowflakeIdAble.getSnowflakeId());
+        auditDataWorkTableDO.setId(SnowflakeGenerator.getSnowflakeId());
         auditDataWorkTableDAO.insert(Collections.singletonList(auditDataWorkTableDO));
         return auditDataWorkTableDO.getId();
     }

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.CountSaleDO;
 import com.newzkl.platform.base.biz.account.model.req.CountSaleQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

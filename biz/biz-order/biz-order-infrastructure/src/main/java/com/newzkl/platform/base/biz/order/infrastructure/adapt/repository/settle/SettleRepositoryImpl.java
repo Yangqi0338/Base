@@ -27,10 +27,10 @@ import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -90,7 +90,7 @@ public class SettleRepositoryImpl implements SettleRepository {
     public Long settleGoodsSave(SettleGoods settleGoods) {
         SettleGoodsDO settleGoodsDO = TransferUtils.transfer(settleGoods, SettleGoodsDO.class);
         if(settleGoodsDO.getId() == null || settleGoodsDO.getId() == 0){
-            settleGoodsDO.setId(SnowflakeIdAble.getSnowflakeId());
+            settleGoodsDO.setId(SnowflakeGenerator.getSnowflakeId());
             settleGoodsDAO.insert(settleGoodsDO);
         }else {
             settleGoodsDAO.updateById(settleGoodsDO);

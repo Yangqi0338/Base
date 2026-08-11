@@ -27,10 +27,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelSettleReq;
 import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
@@ -101,7 +100,7 @@ public class OrderDomainImpl implements OrderDomain {
         // 迁移: 原 domain 直连 redisClient 缓存违依赖硬线, 缓存下沉 infra(@Cacheable), domain 直调 repository
         EarningsConfigRpcVO earningsConfigRpcVO = orderRepository.channelEarningsConfig(orderCreateCommand.getChannelId());
         orderCreateCommand.setOperatorId(earningsConfigRpcVO.getUpOperatorId());
-        Long orderId = SnowflakeIdAble.getSnowflakeId();
+        Long orderId = SnowflakeGenerator.getSnowflakeId();
         Map<Long, Long> spuOrderIdMap = new HashMap<>();
         List<SkuOrderDTO> skuOrderList = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -112,7 +111,7 @@ public class OrderDomainImpl implements OrderDomain {
         for (OrderGoodsInfoVO orderGoodsInfoVO : goodsInfo) {
             Long spuId = orderGoodsInfoVO.getSpuId();
             if(!spuOrderIdMap.containsKey(spuId)){
-                Long spuOrderId = SnowflakeIdAble.getSnowflakeId();
+                Long spuOrderId = SnowflakeGenerator.getSnowflakeId();
                 spuOrderIdMap.put(spuId, spuOrderId);
             }
 
@@ -582,7 +581,7 @@ public class OrderDomainImpl implements OrderDomain {
         SkuOrderDTO skuOrder = new SkuOrderDTO();
         skuOrder.setFreightAmount(Money.ZERO);
         skuOrder.setDiscountAmount(Money.ZERO);
-        skuOrder.setId(SnowflakeIdAble.getSnowflakeId());
+        skuOrder.setId(SnowflakeGenerator.getSnowflakeId());
         skuOrder.setOrderId(orderId);
         skuOrder.setSpuId(orderGoodsInfoVO.getSpuId());
         skuOrder.setSkuImg(orderGoodsInfoVO.getImg());
@@ -936,7 +935,7 @@ public class OrderDomainImpl implements OrderDomain {
         ChannelNowServiceFeeRes channelNowServiceFee = channelApi.queryNowServiceFee(goodsInfo.get(0).getChannelId());
         // 获取渠道商分润配置
         EarningsConfigRpcVO earningsConfigRpcVO = orderRepository.channelEarningsConfig(goodsInfo.get(0).getChannelId());
-        Long orderId = SnowflakeIdAble.getSnowflakeId();
+        Long orderId = SnowflakeGenerator.getSnowflakeId();
         Map<Long, Long> spuOrderIdMap = new HashMap<>();
         List<SkuOrderDTO> skuOrderList = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -947,7 +946,7 @@ public class OrderDomainImpl implements OrderDomain {
         for (StoreDistributionDetailRpcVO orderGoodsInfoVO : goodsInfo) {
             Long spuId = orderGoodsInfoVO.getGoodsId();
             if(!spuOrderIdMap.containsKey(spuId)){
-                Long spuOrderId = SnowflakeIdAble.getSnowflakeId();
+                Long spuOrderId = SnowflakeGenerator.getSnowflakeId();
                 spuOrderIdMap.put(spuId, spuOrderId);
             }
             // 迁移(Q2): settleOrderType 缓存移交 infra(@Cacheable), domain 直调 repository
@@ -1012,7 +1011,7 @@ public class OrderDomainImpl implements OrderDomain {
         SkuOrderDTO skuOrder = new SkuOrderDTO();
         skuOrder.setFreightAmount(Money.ZERO);
         skuOrder.setDiscountAmount(Money.ZERO);
-        skuOrder.setId(SnowflakeIdAble.getSnowflakeId());
+        skuOrder.setId(SnowflakeGenerator.getSnowflakeId());
         skuOrder.setOrderId(orderId);
         skuOrder.setSpuId(orderGoodsInfoVO.getGoodsId());
         skuOrder.setSkuImg(orderGoodsInfoVO.getSkuImg());

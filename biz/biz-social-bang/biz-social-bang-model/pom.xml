@@ -17,12 +17,12 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-model</artifactId>
         </dependency>
-        <!-- 与 biz-account/biz-user/biz-store model 一致: 提供 SecurityUtils 与 mybatis-plus Page(传递) -->
+        <!-- 迁移补充: model VO/Res 使用 fastjson2/hutool, core-utils 传递 -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
         </dependency>
-        <!-- @ExcelProperty (SensitiveWordImportVO 敏感词导入模板) -->
+        <!-- SettleDetail*VO 用 easyexcel @ExcelProperty, 经 core-office 提供 (同 biz-order-model/biz-finance-model 范式) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-office</artifactId>

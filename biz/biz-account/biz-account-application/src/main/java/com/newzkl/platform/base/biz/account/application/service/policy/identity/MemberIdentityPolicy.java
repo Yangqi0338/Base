@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.application.service.policy.identity
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;

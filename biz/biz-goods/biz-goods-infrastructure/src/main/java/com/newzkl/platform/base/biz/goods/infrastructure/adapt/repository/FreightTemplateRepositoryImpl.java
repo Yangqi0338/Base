@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 
 import com.alibaba.fastjson2.JSON;

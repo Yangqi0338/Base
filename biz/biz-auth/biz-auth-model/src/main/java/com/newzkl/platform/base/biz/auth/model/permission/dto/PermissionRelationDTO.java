@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.model.permission.dto;
 
-import com.newzkl.platform.base.biz.auth.model.enums.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import lombok.Data;
 
 /**

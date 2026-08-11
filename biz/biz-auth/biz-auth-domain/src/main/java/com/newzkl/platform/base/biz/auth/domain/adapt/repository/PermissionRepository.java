@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.domain.adapt.repository;
 
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 
 import java.util.Collection;

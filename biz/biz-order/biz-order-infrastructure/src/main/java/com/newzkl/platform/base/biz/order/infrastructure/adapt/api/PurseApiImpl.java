@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("orderPurseApi")
 public class PurseApiImpl implements PurseApi {
 
     @Override

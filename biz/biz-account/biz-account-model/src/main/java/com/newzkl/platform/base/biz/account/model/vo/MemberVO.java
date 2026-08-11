@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.model.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -83,7 +83,7 @@ public class MemberVO extends BaseRes {
         setCreateTime(LocalDateTime.now());
         setUpdateTime(LocalDateTime.now());
         if (this.getId() == null) {
-            this.id = SnowflakeIdAble.getSnowflakeId();
+            this.id = SnowflakeGenerator.getSnowflakeId();
         }
     }
 

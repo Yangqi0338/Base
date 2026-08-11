@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.PackOrderDO;
 import com.newzkl.platform.base.biz.user.model.pack.query.PackOrderQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

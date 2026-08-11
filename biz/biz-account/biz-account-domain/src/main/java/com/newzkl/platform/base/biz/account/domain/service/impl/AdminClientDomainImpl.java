@@ -5,11 +5,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AuthEnum;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
@@ -104,7 +104,7 @@ public class AdminClientDomainImpl implements AdminClientDomain {
             }
         });
 
-        Long accountId = SnowflakeIdAble.getSnowflakeId();
+        Long accountId = SnowflakeGenerator.getSnowflakeId();
         AccountVO account = new AccountVO();
         account.init(roleList, username, null, parentAccount.getId(), null);
         account.setId(accountId);

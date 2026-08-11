@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res.huifu;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.HuifuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import lombok.Data;
 
 import java.util.List;

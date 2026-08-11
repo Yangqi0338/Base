@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.user.model.task.enums.TaskTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.TaskTypeEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;

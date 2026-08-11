@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.common.core.utils.generator;
 
+import com.newzkl.platform.base.common.core.utils.generator.random.AvatarGenerator;
+import com.newzkl.platform.base.common.core.utils.generator.random.UserNameGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,23 +13,28 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum BusinessType {
-    STORE_SPECIAL_ZONE("SSZ", "门店专区"),
-    SEAT_PACKAGE("SP", "席位套餐"),
-    STORE_STYLE("SS", "门店样式"),
-    RECHARGE_ORDER("RO", "充值订单"),
-    SEAT_PACKAGE_ORDER("SPO", "席位订单"),
-    PAYMENT("71", "交易订单", new SnowflakeIdAble()),
-    ORDER("D", "普通订单", new SnowflakeIdAble()),
-    ORDER_SPU("DP", "普通SPU订单", new SnowflakeIdAble()),
-    ORDER_SKU("DK", "普通SKU订单", new SnowflakeIdAble()),
-    REFUND_RETURN_ORDER("R", "售后订单", new SnowflakeIdAble()),
-    ORDER_DELIVERY("OD", "发货单"),
-    COURSE_CATEGORY("KF", "课程分类"),
-    COURSE("K", "课程"),
-    TASK_CODE("RW", "任务码"),
-
-    DEFAULT_AVATAR("", "默认头像", new AvatarGenerator()),
-    DEFAULT_USER_NAME("", "默认用户名", new UserNameGenerator()),
+    /* 门店 */
+    STORE_SPECIAL_ZONE("STSZ", "门店专区"),
+    STORE_STYLE("STS", "门店样式"),
+    /* 席位 */
+    SEAT_PACKAGE("SEP", "席位套餐"),
+    /* 订单 */
+    ORDER("O", "普通订单", new SnowflakeGenerator()),
+    ORDER_SPU("OSP", "普通SPU订单", new SnowflakeGenerator()),
+    ORDER_SKU("OSK", "普通SKU订单", new SnowflakeGenerator()),
+    ORDER_RECHARGE("OR", "充值订单", new SnowflakeGenerator()),
+    ORDER_SEAT_PACKAGE("OSEP", "席位订单", new SnowflakeGenerator()),
+    PAYMENT("P", "交易订单", new SnowflakeGenerator()),
+    ORDER_REFUND_RETURN("ORR", "售后订单", new SnowflakeGenerator()),
+    ORDER_DELIVERY("OD", "发货单", new SnowflakeGenerator()),
+    /* 课程 */
+    COURSE_CATEGORY("CC", "课程分类"),
+    COURSE("C", "课程"),
+    /* 任务 */
+    TASK_CODE("T", "任务码"),
+    /* 用户 */
+    USER_DEFAULT_AVATAR("", "默认头像", new AvatarGenerator()),
+    USER_DEFAULT_NAME("", "默认用户名", new UserNameGenerator()),
     IM_USER_ACCOUNT("C", "腾讯IM账号", null),
     ;
 
@@ -35,10 +42,16 @@ public enum BusinessType {
     private final String prefix;
     private final String desc;
     private final Generator generator;
+    /**
+     * 是否走 id_generator 表 DB 号段发号
+     */
+    private final boolean dbSegment;
 
     BusinessType(String prefix, String desc) {
-        this.prefix = prefix;
-        this.desc = desc;
-        this.generator = new DateTimeIdAble();
+        this(prefix, desc, new DateTimeGenerator(), false);
+    }
+
+    BusinessType(String prefix, String desc, Generator generator) {
+        this(prefix, desc, generator, false);
     }
 }

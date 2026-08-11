@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
 import com.newzkl.platform.base.biz.course.domain.service.CourseChapterDomain;
+import com.newzkl.platform.base.biz.course.domain.service.CourseChapterWatchRecordDomain;
 import com.newzkl.platform.base.biz.course.domain.service.CourseDomain;
 import com.newzkl.platform.base.biz.course.model.chapter.query.CourseChapterQuery;
 import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
@@ -42,6 +43,8 @@ public class CourseChapterDomainImpl implements CourseChapterDomain {
     private final CourseRepository courseRepository;
 
     private final CourseDomain courseDomain;
+
+    private final CourseChapterWatchRecordDomain courseChapterWatchRecordDomain;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -101,7 +104,9 @@ public class CourseChapterDomainImpl implements CourseChapterDomain {
 
     @Override
     public CourseChapterRes getById(Long id) {
-        return getExist(id);
+        CourseChapterRes res = getExist(id);
+        courseChapterWatchRecordDomain.bufferWatch(res);
+        return res;
     }
 
     @Override

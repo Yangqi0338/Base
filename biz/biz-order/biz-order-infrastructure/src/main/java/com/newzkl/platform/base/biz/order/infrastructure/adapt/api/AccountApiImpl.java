@@ -5,15 +5,15 @@ import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("orderAccountApi")
 public class AccountApiImpl implements AccountApi {
 
-    @DubboReference
+    @RpcReference
     private AccountFacade accountFacade;
 
     @Override

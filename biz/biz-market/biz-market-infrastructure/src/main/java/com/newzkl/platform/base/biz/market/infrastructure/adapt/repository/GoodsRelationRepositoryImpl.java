@@ -15,7 +15,7 @@ import com.newzkl.platform.base.common.ddd.facade.AlterChannelSelectorSellDataRe
 import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;

@@ -17,7 +17,7 @@
         <module>biz-social-bang-facade</module>
         <module>biz-social-bang-domain</module>
         <module>biz-social-bang-application</module>
-        <module>biz-social-bang-action</module>
         <module>biz-social-bang-infrastructure</module>
+        <module>biz-social-bang-action</module>
     </modules>
 </project>

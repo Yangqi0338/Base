@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.domain.pack.entity;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
-import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderDeliverCommand;

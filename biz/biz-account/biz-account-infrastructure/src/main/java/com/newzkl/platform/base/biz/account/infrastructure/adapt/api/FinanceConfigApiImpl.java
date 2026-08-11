@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.finance.facade.AccountConfigFacade;
 import com.newzkl.platform.base.biz.finance.facade.model.ChannelConfigRes;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FinanceConfigApiImpl implements FinanceConfigApi {
 
-    @DubboReference
+    @RpcReference
     private AccountConfigFacade accountFinanceConfigFacade;
 
     @Override

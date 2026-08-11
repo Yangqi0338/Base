@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.relation.res.condition;
 
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
-import com.newzkl.platform.base.biz.user.model.relation.res.PackGoodsInfo;
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
 import lombok.Data;
 
 /**

@@ -1,14 +1,25 @@
 package com.newzkl.platform.base.biz.account.application.provider;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
+import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
+import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
+import com.newzkl.platform.base.biz.account.model.req.ChannelCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
+import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +35,7 @@ import java.util.stream.Collectors;
 public class AccountFacadeProvider implements AccountFacade {
 
     private final AccountRepository accountRepository;
+    private final ChannelClientDomain channelDomain;
     private final MemberRepository memberRepository;
 
     @Override
@@ -62,5 +74,40 @@ public class AccountFacadeProvider implements AccountFacade {
         accountGroupVO.setId(account.getId());
         return new AccountGroupVO().setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
 
+    }
+
+    @Override
+    public boolean registerChannel(ChannelRegisterReq req) {
+        Long accountId = req.getAccountId();
+        RoleEnum.CompanyRole role = req.getRole();
+        CommonEnum.YesOrNo storePermission = req.getStorePermission();
+        String phone = req.getContactPhone();
+        String contactName = req.getContactName();
+        String storeName = req.getStoreName();
+
+        if (RoleEnum.CompanyRole.CHANNEL == role) {
+            ChannelReq channelReq = new ChannelReq();
+            channelReq.setState(ChannelEnum.State.OPEN);
+            channelReq.setStorePermission(storePermission);
+            channelReq.setContactsName(contactName);
+            channelReq.setStoreName(storeName);
+            channelReq.setContactsWay(phone);
+
+            return channelDomain.channelEdit(channelReq) > 0;
+        } else {
+            AccountVO accountVO = accountRepository.account(role.getClient(), accountId);
+            IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
+            saveReq.setUsername(accountVO.getUsername());
+            saveReq.setHeadImg(accountVO.getHead());
+            saveReq.setContactsWay(phone);
+            saveReq.setName(accountVO.getRealName());
+            saveReq.setStoreName(storeName);
+            saveReq.setContactsName(contactName);
+//        saveReq.setChannelType();
+            saveReq.setStorePermission(storePermission);
+            IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(role)
+                    .customRegister(saveReq);
+            return registerRes.isSuccess();
+        }
     }
 }

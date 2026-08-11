@@ -1,12 +1,15 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.api;
 
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
+import com.newzkl.platform.base.biz.account.facade.LevelFacade;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
+import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
-import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,12 +23,14 @@ import org.springframework.stereotype.Component;
 @Component("financeAccountApi")
 public class AccountApiImpl implements AccountApi {
 
-    @DubboReference
+    @RpcReference
     private AccountFacade accountFacade;
+
+    @RpcReference
+    private LevelFacade levelFacade;
 
     @Override
     public AccountGroupVO account(CommonEnum.Client client, Long accountId) {
-
         return accountFacade.accountInfo(client, accountId);
     }
 
@@ -38,5 +43,30 @@ public class AccountApiImpl implements AccountApi {
     @Override
     public void addGoodsPoints(Long accountId, Integer goodsPoints) {
         // TODO[cross-service]: 远程 user 提货积分增加, 默认空操作
+    }
+
+    @Override
+    public void leverSave(Long accountId, Integer radio) {
+
+    }
+
+    @Override
+    public Integer getLever(Long operatorId) {
+        return 0;
+    }
+
+    @Override
+    public Integer limitAmount(Long accountId) {
+        return 0;
+    }
+
+    @Override
+    public void registerChannel(ChannelRegisterReq req) {
+        accountFacade.registerChannel(req);
+    }
+
+    @Override
+    public PermissionRpcVO levelPermissionVO(RoleEnum.CompanyRole role, Integer level) {
+        return levelFacade.levelPermissionVO(role, level);
     }
 }

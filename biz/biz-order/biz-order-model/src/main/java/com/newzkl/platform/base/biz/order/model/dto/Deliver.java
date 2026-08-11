@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.order.model.req.DeliverItemCommand;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverItemVO;
 import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class Deliver {
     private List<DeliverItemVO> item;
 
     public void init(DeliverCommand deliverCommand, SpuOrderVO spuOrderVO) {
-        this.setId(SnowflakeIdAble.getSnowflakeId());
+        this.setId(SnowflakeGenerator.getSnowflakeId());
         this.setExpressCompanyName(deliverCommand.getExpressCompanyName());
         this.setExpressNo(deliverCommand.getExpressNo());
         this.setSpuOrderId(spuOrderVO.getId());
@@ -54,7 +54,7 @@ public class Deliver {
         this.item = new ArrayList<>();
         for (DeliverItemCommand deliverItemCommand : deliverCommand.getDeliverItemCommandList()) {
             DeliverItemVO deliverItem = new DeliverItemVO();
-            deliverItem.setId(SnowflakeIdAble.getSnowflakeId());
+            deliverItem.setId(SnowflakeGenerator.getSnowflakeId());
             deliverItem.setSpuOrderId(spuOrderVO.getId());
             deliverItem.setDeliverId(this.getId());
             deliverItem.setSkuId(deliverItemCommand.getSkuId());

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.common.core.redis.utils;
 
 
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import org.redisson.client.RedisException;
 
 import java.util.concurrent.TimeUnit;
@@ -13,14 +14,6 @@ import java.util.concurrent.TimeUnit;
 public class ResetPwdRedisUtil {
 
     public final static Integer EXPIRE_MINUTES = 5;
-    /**
-     * nonce防重放key前缀
-     */
-    private static final String NONCE_KEY_PREFIX = "reset:pwd:nonce:";
-    /**
-     * 接口限流key前缀
-     */
-    private static final String RATE_LIMIT_KEY_PREFIX = "reset:pwd:rate:";
 
     /**
      * 标记nonce已使用（防重放攻击）
@@ -32,7 +25,7 @@ public class ResetPwdRedisUtil {
         if (nonce == null || nonce.trim().isEmpty()) {
             throw new IllegalArgumentException("nonce不能为空");
         }
-        String key = NONCE_KEY_PREFIX + nonce;
+        String key = RedisEnum.Key.RESET_PWD_NONCE.getCode(nonce);
         try {
             RedisUtil.set(key, "1", expireMinutes, TimeUnit.MINUTES);
         } catch (RedisException e) {
@@ -50,7 +43,7 @@ public class ResetPwdRedisUtil {
         if (nonce == null || nonce.trim().isEmpty()) {
             throw new IllegalArgumentException("nonce不能为空");
         }
-        String key = NONCE_KEY_PREFIX + nonce;
+        String key = RedisEnum.Key.RESET_PWD_NONCE.getCode(nonce);
         try {
             return RedisUtil.exists(key);
         } catch (RedisException e) {
@@ -77,7 +70,7 @@ public class ResetPwdRedisUtil {
             throw new IllegalArgumentException("限流时间expireSeconds必须大于0");
         }
 
-        String key = RATE_LIMIT_KEY_PREFIX + uniqueKey;
+        String key = RedisEnum.Key.RESET_PWD_RATE_LIMIT.getCode(uniqueKey);
         try {
             long currentCount = RedisUtil.incrBy(key);
 

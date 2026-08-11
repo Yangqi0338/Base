@@ -27,7 +27,7 @@ import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -109,7 +109,7 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
         } else {
             // 微信 / 支付宝: 拉起三方支付, 落待付款记录
             OrderPayReq orderPayReq = new OrderPayReq();
-            orderPayReq.setOrderNo(SnowflakeIdAble.getSnowflakeId());
+            orderPayReq.setOrderNo(SnowflakeGenerator.getSnowflakeId());
             orderPayReq.setConsumeType(EarningsEnum.ConsumeType.GOODS_SEAT);
             orderPayReq.setOrderAmount(totalFee);
             orderPayReq.setPayAmount(totalFee);
@@ -145,7 +145,7 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
         String orderInfo = JSONUtil.toJsonStr(TransferUtils.transfer(req, SeatPackageOrderInfo::new));
 
         PurchaseRecordReq saveCommand = new PurchaseRecordReq();
-        saveCommand.setPurchaseNo(BusinessCodeUtil.generate(BusinessType.SEAT_PACKAGE_ORDER));
+        saveCommand.setPurchaseNo(BusinessCodeUtil.generate(BusinessType.ORDER_SEAT_PACKAGE));
         saveCommand.setType(PurseEnum.PurchaseRecordType.SEAT_PACKAGE.getCode());
         saveCommand.setTradeNo(0L);
         saveCommand.setOrderNo(0L);

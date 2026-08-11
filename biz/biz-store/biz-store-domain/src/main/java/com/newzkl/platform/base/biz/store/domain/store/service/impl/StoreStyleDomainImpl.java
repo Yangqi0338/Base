@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.store.domain.store.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.biz.store.model.enums.StoreStyleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;

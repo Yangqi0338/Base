@@ -10,15 +10,15 @@ import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.OpenapiDeveloperApi;
 import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
+import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.biz.account.model.enums.DictEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
@@ -38,7 +38,7 @@ import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -195,7 +195,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         DeveloperInitReq developerInitReq = new DeveloperInitReq();
         if (!isRegisterOnce) {
             developerInitReq.setAccountId(accountId);
-            developerInitReq.setAppId(String.valueOf(SnowflakeIdAble.getSnowflakeId()));
+            developerInitReq.setAppId(String.valueOf(SnowflakeGenerator.getSnowflakeId()));
             developerInitReq.setSecret(BizUtil.generateCode(32));
             openapiDeveloperApi.initDeveloper(developerInitReq);
         }

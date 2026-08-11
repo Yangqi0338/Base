@@ -1,16 +1,14 @@
 package com.newzkl.platform.base.biz.order.infrastructure.dao.settle;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.SettleOrderWaitDO;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleOrderWaitQuery;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

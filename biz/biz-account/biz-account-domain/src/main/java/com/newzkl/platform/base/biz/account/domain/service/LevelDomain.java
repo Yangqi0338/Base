@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsInfo;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
 import com.newzkl.platform.base.biz.account.model.level.res.LevelRes;
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
 
 import java.util.List;
 

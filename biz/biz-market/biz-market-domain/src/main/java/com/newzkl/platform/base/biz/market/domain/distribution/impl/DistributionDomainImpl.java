@@ -28,7 +28,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.market.model.enums.MarketErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.MarketErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

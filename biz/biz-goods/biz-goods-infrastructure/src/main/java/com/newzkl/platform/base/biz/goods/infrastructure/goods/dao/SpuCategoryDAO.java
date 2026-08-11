@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.dao;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

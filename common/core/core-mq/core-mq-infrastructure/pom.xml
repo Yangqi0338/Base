@@ -22,8 +22,8 @@
             <artifactId>core-mq-domain</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>ddd-infrastructure</artifactId>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mybatis-infrastructure</artifactId>
         </dependency>
         <!-- 合并自 core-rocketmq: RocketMQ 框架底座 (MQUtil/@MQProducer/@MQConsumer/config) -->
         <dependency>

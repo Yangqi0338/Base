@@ -1,15 +1,13 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.auth.repository.AccountLoginRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.auth.dao.AccountLoginLogDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.auth.entity.AccountLoginLogDO;
 import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.account.model.res.AccountLoginLog;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
 import com.newzkl.platform.base.biz.account.model.auth.vo.AccountLoginLogVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

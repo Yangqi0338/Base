@@ -9,12 +9,12 @@ import com.dtflys.forest.http.ForestRequest;
 import com.dtflys.forest.http.ForestResponse;
 import com.dtflys.forest.interceptor.ResponseResult;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
+import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties.sysId;
+import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.sysId;
 
 /**
  * 汇付拦截器

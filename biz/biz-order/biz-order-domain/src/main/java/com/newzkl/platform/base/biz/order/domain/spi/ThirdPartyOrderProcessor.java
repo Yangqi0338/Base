@@ -4,6 +4,7 @@ package com.newzkl.platform.base.biz.order.domain.spi;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.newzkl.platform.base.biz.order.domain.service.ThirdPartyOrderDomain;
+import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
@@ -107,7 +108,7 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
      * @param request 第三方订单记录 含 platformType
      */
     @Override
-    public void compensation(ThirdPartyOrderDTO request) {
+    public void compensation(ThirdPartyOrderRecordDTO request) {
         if (request == null || request.getPlatformType() == null) {
             log.warn("补偿请求为空或平台类型缺失 跳过补偿派发");
             return;

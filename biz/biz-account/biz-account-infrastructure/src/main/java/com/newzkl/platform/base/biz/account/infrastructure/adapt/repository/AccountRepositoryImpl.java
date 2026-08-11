@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
 import cn.hutool.core.collection.CollUtil;
@@ -18,7 +18,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.model.support.UserProperties;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.AccountDAO;

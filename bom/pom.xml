@@ -511,37 +511,6 @@
 
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-activity-model</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-activity-facade</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-activity-domain</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-activity-application</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-activity-infrastructure</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-activity-action</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
                 <artifactId>biz-social-bang-model</artifactId>
                 <version>${base.revision}</version>
             </dependency>
@@ -562,12 +531,12 @@
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-action</artifactId>
+                <artifactId>biz-social-bang-infrastructure</artifactId>
                 <version>${base.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-infrastructure</artifactId>
+                <artifactId>biz-social-bang-action</artifactId>
                 <version>${base.revision}</version>
             </dependency>
 

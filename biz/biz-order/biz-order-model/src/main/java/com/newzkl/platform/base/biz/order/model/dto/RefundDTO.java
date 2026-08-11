@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundItemCommand;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
@@ -176,7 +176,7 @@ public class RefundDTO extends BaseDTO {
 
 	public void init(RefundCommand refundCommand, SpuOrderAggVO spuOrderAggVO, Map<Long, SkuRefundDTO> skuRefundResMap, Money freightAmount) {
 		TransferUtils.transfer(refundCommand, this);
-		this.setId(SnowflakeIdAble.getSnowflakeId());
+		this.setId(SnowflakeGenerator.getSnowflakeId());
 		SpuOrderVO orderVO = spuOrderAggVO.getSpuOrderVO();
 		Map<Long, SkuOrderVO> orderItemVOMap = spuOrderAggVO.getSkuOrderList().stream().collect(Collectors.toMap(SkuOrderVO::getSkuId, Function.identity()));
 		Money refundAmount = Money.ZERO;

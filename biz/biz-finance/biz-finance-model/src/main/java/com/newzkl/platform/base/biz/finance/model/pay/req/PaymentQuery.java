@@ -1,11 +1,10 @@
 package com.newzkl.platform.base.biz.finance.model.pay.req;
 
 
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PaymentEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
-import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

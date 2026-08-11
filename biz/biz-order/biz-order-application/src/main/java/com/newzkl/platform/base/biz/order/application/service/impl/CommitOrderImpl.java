@@ -27,11 +27,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
-import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
 import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
@@ -113,7 +111,7 @@ public class CommitOrderImpl implements CommitOrder {
     private SkuOrderDTO buildSkuOrder(OrderGoodsInfoVO goodsInfo, Long spuOrderId, Long orderId, LocalDateTime createTime) {
         SkuOrderDTO skuOrder = new SkuOrderDTO();
         // 基础字段批量赋值（减少冗余行）
-        skuOrder.setId(SnowflakeIdAble.getSnowflakeId());
+        skuOrder.setId(SnowflakeGenerator.getSnowflakeId());
         skuOrder.setOrderId(orderId);
         skuOrder.setSpuOrderId(spuOrderId);
         skuOrder.setSpuId(goodsInfo.getSpuId());
@@ -281,8 +279,7 @@ public class CommitOrderImpl implements CommitOrder {
         modelShopDataDTO.setAmount(order.getOrderAgg().getOrder().getGoodsAmount());
         modelShopDataDTO.setType(ModeShopOrderType.ORDER);
         localMessageApi.sendModelShopMessage(modelShopDataDTO);
-        localMessageApi.sendDelayMessage(MQ.Tag.TIME_OUT_CLOSE_ORDER_EVENT, order.getOrderAgg().getOrder().getId(), MQEnum.DelayTimeLevel.MINUTE_30.getLevel());
-//            orderOperationRecordUtil.sendOrderNewRecordEvent(order.getOrderAgg().getSpuOrderList(), OrderEnum.State.NEW,OrderEnum.State.NEW,SecurityUtils.getAccountId(),SecurityUtils.getRole());
+        localMessageApi.orderExpireClose(order.getOrderAgg().getOrder().getId());
         return order.getOrderAgg();
     }
 

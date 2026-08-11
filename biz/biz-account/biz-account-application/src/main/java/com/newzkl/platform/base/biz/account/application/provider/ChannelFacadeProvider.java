@@ -30,7 +30,6 @@ import java.util.List;
 @Slf4j
 @Component
 @DubboService
-
 public class ChannelFacadeProvider implements ChannelFacade {
 
     @Autowired

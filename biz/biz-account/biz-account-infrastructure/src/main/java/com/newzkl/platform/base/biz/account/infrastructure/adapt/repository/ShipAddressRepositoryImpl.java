@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.infrastructure.entity.ShipAddressDO;
 import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressQuery;
 import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

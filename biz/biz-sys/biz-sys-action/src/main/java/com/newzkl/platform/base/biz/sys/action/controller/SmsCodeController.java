@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.sys.action.controller;
 import cn.hutool.core.util.RandomUtil;
 import com.newzkl.platform.base.biz.sys.application.service.CodeService;
 import com.newzkl.platform.base.biz.sys.model.code.req.CodeReq;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -48,16 +49,6 @@ import java.util.List;
 public class SmsCodeController {
 
     /**
-     * 分钟级限频 Hash key
-     */
-    private static final String MINUTE_HASH_KEY = "sms_limit:minute";
-
-    /**
-     * 小时级限频 Hash key
-     */
-    private static final String HOUR_HASH_KEY = "sms_limit:hour";
-
-    /**
      * 验证码长度
      */
     private static final int CODE_LENGTH = 6;
@@ -99,7 +90,7 @@ public class SmsCodeController {
         }
         SmsEnum.Type smsType = SmsEnum.Type.getByCode(codeReq.getType());
         String code = RandomUtil.randomNumbers(CODE_LENGTH);
-        RedisUtil.hSet(CodeReq.KEY_PREFIX, codeReq.getPhone(), code);
+        RedisUtil.hSet(RedisEnum.Key.SMS_CODE_HASH.getCode(), codeReq.getPhone(), code);
         codeReq.setParams(Collections.singletonList(code));
         codeReq.setTemplateId(smsType.getTemplateId());
         boolean result = codeService.sendCodeLianLu(codeReq);
@@ -150,7 +141,7 @@ public class SmsCodeController {
             return checked;
         }
         String code = RandomUtil.randomNumbers(CODE_LENGTH);
-        RedisUtil.hSet(CodeReq.KEY_PREFIX, mobile, code);
+        RedisUtil.hSet(RedisEnum.Key.SMS_CODE_HASH.getCode(), mobile, code);
         CodeReq codeReq = new CodeReq();
         codeReq.setPhone(mobile);
         codeReq.setParams(Collections.singletonList(code));
@@ -173,13 +164,13 @@ public class SmsCodeController {
         int hourCount = 0;
 
         if (!"dev".equals(prefix)) {
-            String minuteCountStr = RedisUtil.hGet(MINUTE_HASH_KEY, mobile);
+            String minuteCountStr = RedisUtil.hGet(RedisEnum.Key.SMS_SEND_COUNT_MINUTE.getCode(), mobile);
             minuteCount = minuteCountStr != null ? Integer.parseInt(minuteCountStr) : 0;
             if (minuteCount >= maxMinuteCount) {
                 return PlatformResult.fail("发送过于频繁，请稍后再试");
             }
 
-            String hourCountStr = RedisUtil.hGet(HOUR_HASH_KEY, mobile);
+            String hourCountStr = RedisUtil.hGet(RedisEnum.Key.SMS_SEND_COUNT_HOUR.getCode(), mobile);
             hourCount = hourCountStr != null ? Integer.parseInt(hourCountStr) : 0;
             if (hourCount >= maxHourCount) {
                 return PlatformResult.fail("发送次数已达上限，请稍后再试");
@@ -197,10 +188,10 @@ public class SmsCodeController {
      * @param counts 发送前的 {@code [分钟计数, 小时计数]}
      */
     private void alterSendCount(String mobile, int[] counts) {
-        RedisUtil.hSet(MINUTE_HASH_KEY, mobile, String.valueOf(counts[0] + 1));
-        RedisUtil.hSet(HOUR_HASH_KEY, mobile, String.valueOf(counts[1] + 1));
+        RedisUtil.hSet(RedisEnum.Key.SMS_SEND_COUNT_MINUTE.getCode(), mobile, String.valueOf(counts[0] + 1));
+        RedisUtil.hSet(RedisEnum.Key.SMS_SEND_COUNT_HOUR.getCode(), mobile, String.valueOf(counts[1] + 1));
 
-        RedisUtil.expire(MINUTE_HASH_KEY, 60);
-        RedisUtil.expire(HOUR_HASH_KEY, 3600);
+        RedisUtil.expire(RedisEnum.Key.SMS_SEND_COUNT_MINUTE.getCode(), 60);
+        RedisUtil.expire(RedisEnum.Key.SMS_SEND_COUNT_HOUR.getCode(), 3600);
     }
 }

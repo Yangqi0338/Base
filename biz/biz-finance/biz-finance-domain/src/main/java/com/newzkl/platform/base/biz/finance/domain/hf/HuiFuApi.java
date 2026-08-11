@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.finance.domain.hf;
 
 import com.dtflys.forest.annotation.*;
 import com.dtflys.forest.reflection.ForestMethod;
-import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties;
+import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties;
 import org.springframework.stereotype.Component;
 
 import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder.isDev;

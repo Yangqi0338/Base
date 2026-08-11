@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.interaction.repository.StoreTargetInteractionStatRepository;
 import com.newzkl.platform.base.biz.goods.domain.interaction.service.StoreTargetInteractionStatService;
 import com.newzkl.platform.base.biz.goods.model.constant.StoreInteractionStatRedisConstant;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.interaction.StoreTargetInteractionStat;
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.BatchSyncStatReq;
@@ -86,7 +87,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
                 Long.valueOf(dbStat.getLikeCount()),
                 Long.valueOf(dbStat.getShareCount()));
         RedisUtil.set(redisStatKey, JSONUtil.toJsonStr(dto));
-        RedisUtil.sAdd(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, redisStatKey);
+        RedisUtil.sAdd(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), redisStatKey);
         return dbStat;
     }
 
@@ -117,7 +118,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
         }
 
         String redisStatKey = buildRedisStatKey(targetTypeCode, targetId);
-        RedisUtil.sAdd(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, redisStatKey);
+        RedisUtil.sAdd(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), redisStatKey);
 
         initCacheFromDbIfNotExist(redisStatKey, targetTypeCode, targetId, event.getPublisherId());
         updateRedisFinalValue(redisStatKey, actionType, increment);
@@ -125,7 +126,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
 
     @Override
     public void syncCacheToDb() {
-        Set<Object> syncKeySet = RedisUtil.sMembers(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET);
+        Set<Object> syncKeySet = RedisUtil.sMembers(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode());
         if (CollUtil.isEmpty(syncKeySet)) {
             return;
         }
@@ -150,7 +151,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     public boolean deleteByStoreTarget(BatchSyncStatReq queryVO) {
         String redisStatKey = buildRedisStatKey(queryVO.getTargetType(), queryVO.getTargetId());
         RedisUtil.del(redisStatKey);
-        RedisUtil.sRem(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, redisStatKey);
+        RedisUtil.sRem(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), redisStatKey);
         return statRepository.deleteByStoreTarget(queryVO.getStoreId(), queryVO.getTargetType(), queryVO.getTargetId());
     }
 
@@ -229,7 +230,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
                             Long.valueOf(stat.getViewCount()), Long.valueOf(stat.getLikeCount()), Long.valueOf(stat.getShareCount()));
                     String cacheKey = buildRedisStatKey(combo.getKey(), combo.getValue());
                     batchCacheMap.put(cacheKey, JSONUtil.toJsonStr(dto));
-                    RedisUtil.sAdd(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, cacheKey);
+                    RedisUtil.sAdd(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), cacheKey);
                 }
             }
             if (!batchCacheMap.isEmpty()) {
@@ -307,7 +308,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
                         Long.valueOf(stat.getViewCount()), Long.valueOf(stat.getLikeCount()), Long.valueOf(stat.getShareCount()));
                 String cacheKey = buildRedisStatKey(combo.getKey(), combo.getValue());
                 batchCacheMap.put(cacheKey, JSONUtil.toJsonStr(dto));
-                RedisUtil.sAdd(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, cacheKey);
+                RedisUtil.sAdd(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), cacheKey);
             }
             if (!batchCacheMap.isEmpty()) {
                 RedisUtil.set(batchCacheMap);
@@ -459,7 +460,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
         if (CollUtil.isNotEmpty(syncDomainList)) {
             boolean saveSuccess = statRepository.batchSaveOrUpdate(syncDomainList);
             if (saveSuccess) {
-                RedisUtil.sRem(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, successKeyList.toArray());
+                RedisUtil.sRem(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), successKeyList.toArray());
             } else {
                 log.error("批量覆盖数据库失败, 批次: {}", JSONUtil.toJsonStr(syncDomainList));
             }
@@ -491,7 +492,7 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
         }
         String redisStatKey = buildRedisStatKey(targetTypeCode, targetId);
         RedisUtil.set(redisStatKey, DEFAULT_FINAL_VALUE_JSON);
-        RedisUtil.sAdd(StoreInteractionStatRedisConstant.SYNC_CACHE_KEY_SET, redisStatKey);
+        RedisUtil.sAdd(RedisEnum.Key.STORE_STAT_SYNC_SET.getCode(), redisStatKey);
         return defaultStat;
     }
 
@@ -561,15 +562,15 @@ public class StoreTargetInteractionStatServiceImpl implements StoreTargetInterac
     }
 
     private String buildRedisStatKey(String targetTypeCode, Long targetId) {
-        return String.format("%s%s:%s", StoreInteractionStatRedisConstant.REDIS_STAT_KEY_PREFIX, targetTypeCode, targetId);
+        return RedisEnum.Key.STORE_STAT.getCode(targetTypeCode, targetId);
     }
 
     private String buildRedisLockKeyForIncrement(String redisStatKey) {
-        return "lock:finalValue:" + redisStatKey;
+        return RedisEnum.Key.STORE_STAT_INCR_LOCK.getCode(redisStatKey);
     }
 
     private String buildRedisLockKey(String targetTypeCode, Long targetId) {
-        return String.format("%s%s:%s", StoreInteractionStatRedisConstant.REDIS_LOCK_KEY_PREFIX, targetTypeCode, targetId);
+        return RedisEnum.Key.STORE_STAT_LOCK.getCode(targetTypeCode, targetId);
     }
 
     private StoreTargetInteractionStat queryStatFromDb(String targetType, Long targetId, Long publisherId) {

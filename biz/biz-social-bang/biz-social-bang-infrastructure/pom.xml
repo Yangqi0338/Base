@@ -21,5 +21,14 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
+        </dependency>
+        <!-- 迁移补充: 奖金池 otherConfig 缓存 RedisUtil (core-redis), 对齐 biz-finance-infrastructure 既有先例 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-redis</artifactId>
+        </dependency>
     </dependencies>
 </project>

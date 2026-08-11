@@ -2,11 +2,14 @@ package com.newzkl.platform.base.biz.finance.application.pay.service.impl;
 
 import com.newzkl.platform.base.biz.finance.application.pay.service.PurchaseRecordService;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.CourseApi;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.NotifyApi;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PayEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PayEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
@@ -70,7 +73,10 @@ class CashPayServiceImplTest {
         cashPayService = new CashPayServiceImpl(orderPayDomain,
                 Mockito.mock(AccountPurseDomain.class),
                 Mockito.mock(AccountPurseConfigDomain.class),
-                Mockito.mock(PurchaseRecordService.class));
+                Mockito.mock(PurchaseRecordService.class),
+                Mockito.mock(NotifyApi.class),
+                Mockito.mock(CourseApi.class),
+                Mockito.mock(AccountApi.class));
 
         lock = Mockito.mock(RLock.class);
         locker = Mockito.mock(DistributedLocker.class);

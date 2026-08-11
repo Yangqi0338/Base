@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.WithdrawRepository;
@@ -15,12 +14,10 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.TripartiteWithdrawRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawConfig;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.user.DictEnum;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.DictApi;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -41,23 +38,16 @@ public class WithdrawRepositoryImpl implements WithdrawRepository {
 
     private final AccountWithdrawRecordDAO accountWithdrawRecordDAO;
 
-    private final DictApi dictFacade;
+    private final DictApi dictApi;
 
     @Override
     public ConfigWithdrawVO defaultWithdrawConfig() {
-        String value = dictFacade.get(DictEnum.Key.OPERATOR_WITHDRAW_CONFIG.getCode());
-        ConfigWithdrawVO configWithdrawVO = JSONUtil.toBean(value, ConfigWithdrawVO.class);
-        if (configWithdrawVO == null) {
-            configWithdrawVO = new ConfigWithdrawVO();
-            configWithdrawVO.setOrderEarningRatio(0);
-            configWithdrawVO.setWithdraw(new WithdrawConfig().init());
-        }
-        return configWithdrawVO;
+        return dictApi.defaultWithdrawConfig();
     }
 
     @Override
     public void alterWithdrawConfig(ConfigWithdrawVO withdrawVO) {
-        dictFacade.set(DictEnum.Key.OPERATOR_WITHDRAW_CONFIG.getCode(), JSONUtil.toJsonStr(withdrawVO));
+        dictApi.alterWithdrawConfig(withdrawVO);
     }
 
     @Override
@@ -90,7 +80,7 @@ public class WithdrawRepositoryImpl implements WithdrawRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void alterRollOutApplyId(Long id) {
-        rollOutDAO.alterRollOutApplyId(id, SnowflakeIdAble.getSnowflakeId());
+        rollOutDAO.alterRollOutApplyId(id, SnowflakeGenerator.getSnowflakeId());
     }
 
     @Override

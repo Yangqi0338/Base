@@ -1,20 +1,15 @@
 package com.newzkl.platform.base.biz.account.application.service.policy.identity;
 
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
 import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.SmsApi;
-import com.newzkl.platform.base.biz.account.model.support.CodeReq;
 import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
@@ -26,13 +21,11 @@ import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Component;
 

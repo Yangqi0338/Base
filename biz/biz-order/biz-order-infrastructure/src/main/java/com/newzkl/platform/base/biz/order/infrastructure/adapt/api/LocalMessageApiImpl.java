@@ -15,6 +15,7 @@ import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
 import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
+import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -44,7 +45,7 @@ import java.util.List;
  * @author KC
  */
 @Slf4j
-@Component
+@Component("orderLocalMessageApi")
 @RequiredArgsConstructor
 public class LocalMessageApiImpl implements LocalMessageApi {
 
@@ -63,11 +64,6 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     @Override
     public void sendRefundPassMessage(RefundDTO refund) {
         MQUtil.send(MQ.Tag.REFUND_PASS, TransferUtils.transfer(refund, RefundPassEvent.class));
-    }
-
-    @Override
-    public void sendDelayMessage(String tag, Object messageContent, int delayTimeLevel) {
-        MQUtil.sendDelayed(tag, messageContent, delayTimeLevel);
     }
 
     @Override
@@ -213,5 +209,10 @@ public class LocalMessageApiImpl implements LocalMessageApi {
 //        goodsPaySuccessEvent.setSpuOrderList(spuOrderMessageVOList);
 //        //支付成功通知
 //        orderRepository.goodsOrderPaySuccess(goodsPaySuccessEvent);
+    }
+
+    @Override
+    public void orderExpireClose(Long orderId) {
+        MQUtil.sendDelayed(MQ.Tag.TIME_OUT_CLOSE_ORDER_EVENT, orderId, MQEnum.DelayTimeLevel.MINUTE_30.getLevel());
     }
 }

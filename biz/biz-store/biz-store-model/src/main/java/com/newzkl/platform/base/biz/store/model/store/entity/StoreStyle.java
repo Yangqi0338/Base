@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.store.model.store.entity;
 
-import com.newzkl.platform.base.biz.store.model.enums.StoreStyleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;

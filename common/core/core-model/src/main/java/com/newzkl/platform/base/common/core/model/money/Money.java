@@ -252,9 +252,25 @@ public class Money extends cn.hutool.core.math.Money implements JSONString {
      * @ext a / divisor.amount, HALF_UP 保留 2 位
      */
     public Money divide(Money divisor) {
+        return divide(divisor, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * 除以另一金额的元值(标量), NULL/null 除数视为返回 ZERO
+     * @ext a / divisor.amount, HALF_UP 保留 2 位
+     */
+    public Money divide(Money divisor, RoundingMode roundingMode) {
         if (divisor == null || divisor.isNull()) {
             return ZERO;
         }
-        return wrap(super.divide(divisor.getAmount(), RoundingMode.HALF_UP));
+        return wrap(super.divide(divisor.getAmount(), roundingMode));
+    }
+
+    public Money percent(double ratio) {
+        return Money.of(this.getAmount().multiply(new BigDecimal(ratio))).percent();
+    }
+
+    public Money percent() {
+        return this.divide(Money.HUNDRED, RoundingMode.FLOOR);
     }
 }

@@ -20,6 +20,7 @@ import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -48,15 +49,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class SpuController {
-
-    /**
-     * 黄金实时价格缓存 key
-     */
-    private static final String GOLD_REAL_TIME_PRICE_KEY = "GoldRealTimePrice::realTimePrice";
-    /**
-     * 黄金价格更新时间缓存 key
-     */
-    private static final String GOLD_UPDATE_TIME_KEY = "GoldRealTimePrice::updateTime";
 
     private final SpuDomain spuDomain;
     private final SpuService spuService;
@@ -248,8 +240,8 @@ public class SpuController {
     @GetMapping("/getGoldRealTimePrice")
     public PlatformResult<GoldVO> getGoldRealTimePrice() {
         GoldVO goldVO = new GoldVO();
-        goldVO.setRealTimePrice(RedisUtil.get(GOLD_REAL_TIME_PRICE_KEY));
-        goldVO.setUpdateTime(RedisUtil.get(GOLD_UPDATE_TIME_KEY));
+        goldVO.setRealTimePrice(RedisUtil.get(RedisEnum.Key.GOLD_REAL_TIME_PRICE.getCode()));
+        goldVO.setUpdateTime(RedisUtil.get(RedisEnum.Key.GOLD_UPDATE_TIME.getCode()));
         return PlatformResult.success(goldVO);
     }
 

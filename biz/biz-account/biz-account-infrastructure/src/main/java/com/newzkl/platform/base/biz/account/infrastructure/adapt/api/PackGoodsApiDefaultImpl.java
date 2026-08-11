@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsInfo;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsQuery;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsSaveReq;
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
 import org.springframework.stereotype.Component;
 
 /**

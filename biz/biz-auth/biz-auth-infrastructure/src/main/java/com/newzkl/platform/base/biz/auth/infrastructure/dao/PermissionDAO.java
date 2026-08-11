@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.auth.infrastructure.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionDO;
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Collection;

@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseDomain;
 import com.newzkl.platform.base.biz.course.domain.service.CoursePurchaseRecordDomain;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
 import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
-import com.newzkl.platform.base.biz.course.model.purchase.enums.PurchasePayStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.course.PurchasePayStateEnum;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 import com.newzkl.platform.base.biz.course.model.purchase.req.CoursePurchaseReq;
 import com.newzkl.platform.base.biz.course.model.purchase.res.CoursePurchaseCreateRes;
@@ -21,8 +21,9 @@ import com.newzkl.platform.base.biz.course.model.watch.res.CourseWatchStatisticR
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,15 +69,11 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
     /**
      * 锁租约(秒)
      */
-    private static final int LOCK_EXPIRE = 30;
-
-    /**
-     * 锁等待(秒)
-     */
     private static final int LOCK_WAIT = 3;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DistributedLock(key = "'coursePurchase:' + #req.userId + ':' + #req.courseId")
     public CoursePurchaseCreateRes createCoursePurchaseRecord(CoursePurchaseReq req) {
         log.info("创建课程购买记录, 请求参数: {}", req);
         ThrowsException.isTrue(req.getCourseId() == null || req.getUserId() == null,
@@ -84,9 +81,6 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
         ThrowsException.isTrue(req.getPayType() == null || (req.getPayType() != 1 && req.getPayType() != 2),
                 BaseErrorCode.PARAM, "支付方式仅支持微信(1)和支付宝(2)");
 
-        String lockKey = PURCHASE_LOCK_PREFIX + req.getUserId() + ":" + req.getCourseId();
-//        boolean locked = RedissonLockUtil.tryLock(lockKey, LOCK_WAIT, LOCK_EXPIRE);
-//        ThrowsException.isTrue(!locked, BaseErrorCode.BUSY, "");
         try {
             CourseRes course = courseDomain.getById(req.getCourseId());
 
@@ -99,7 +93,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
 
             long sellCent = centOf(course.getSellPrice());
             CoursePurchaseRecord record = new CoursePurchaseRecord();
-            record.setOrderNo(SnowflakeIdAble.getSnowflakeId());
+            record.setOrderNo(SnowflakeGenerator.getSnowflakeId());
             record.setCourseId(course.getId());
             record.setCourseNum(course.getCourseNum());
             record.setUserId(req.getUserId());
@@ -135,7 +129,6 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             log.info("创建课程购买记录成功, 订单号: {}", saved.getOrderNo());
             return toCreateRes(saved, course.getTitle());
         } finally {
-//            RedissonLockUtil.unlock(lockKey);
         }
     }
 
@@ -163,6 +156,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DistributedLock(key = "'coursePurchase:' + #req.userId + ':' + #req.courseId")
     public void paySuccess(Long orderNo, String payNo) {
         CoursePurchaseRecord record = coursePurchaseRecordRepository.findByOrderNo(orderNo);
         ThrowsException.isNull(record, BaseErrorCode.NODATA, "订单");

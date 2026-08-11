@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.req.CountSaleQuery;
 import com.newzkl.platform.base.biz.account.model.req.CountSaleReq;
 import com.newzkl.platform.base.biz.account.model.res.CountSaleVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class CountSaleDomainImpl implements CountSaleDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long save(CountSaleReq req) {
         CountSaleVO item = TransferUtils.transfer(req, CountSaleVO::new);
-        item.setId(SnowflakeIdAble.getSnowflakeId());
+        item.setId(SnowflakeGenerator.getSnowflakeId());
         return countSaleRepository.save(item);
     }
 

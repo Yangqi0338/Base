@@ -38,16 +38,6 @@ public interface LocalMessageApi {
     void sendRefundPassMessage(RefundDTO refund);
 
     /**
-     * 发送延迟消息 (默认主题 {@code scm_main})
-     *
-     * @param tag            消息标签
-     * @param messageContent 消息内容对象
-     * @param messageClass   消息内容类全限定名
-     * @param delayTimeLevel 延迟级别 (1-18)
-     */
-    void sendDelayMessage(String tag, Object messageContent, int delayTimeLevel);
-
-    /**
      * 渠道订单支付后同步处理 (投递 {@code scm_order/orderSyncHandle})
      *
      * @param orderSyncHandleVO 订单同步处理消息体
@@ -72,4 +62,9 @@ public interface LocalMessageApi {
     void storeAccountPay(Long storeId, Long accountId, Money memberAmount);
 
     void paySuccessNotify(OrderAgg orderAgg);
+
+    /**
+     * 订单过期关闭
+     */
+    void orderExpireClose(Long orderId);
 }

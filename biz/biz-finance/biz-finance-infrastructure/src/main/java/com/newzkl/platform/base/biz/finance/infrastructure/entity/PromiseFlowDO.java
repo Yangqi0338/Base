@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PaymentEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;

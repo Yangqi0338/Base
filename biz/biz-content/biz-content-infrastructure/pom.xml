@@ -21,5 +21,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
         </dependency>
+        <!-- 迁移补充: 项目案例跨域回填省市区名, 经 RegionFacade 消费 biz-sys 区域能力 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-sys-facade</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,9 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 
+import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
+import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
+
 /**
  * 字典域跨服务出站端口 (outbound port)
  *
@@ -10,19 +14,31 @@ package com.newzkl.platform.base.biz.finance.domain.adapt.api;
  */
 public interface DictApi {
 
-    /**
-     * 按字典键取值
-     *
-     * @param code 字典键
-     * @return 字典值
-     */
-    String get(Long code);
+    ConfigSupplierVO querySupplierConfig();
 
     /**
-     * 按字典键设置值
+     * 保存供应商配置
      *
-     * @param code  字典键
-     * @param value 字典值
+     * @param configSupplierVO 供应商配置
      */
-    void set(Long code, String value);
+    void saveSupplierConfig(ConfigSupplierVO configSupplierVO);
+
+    /**
+     * 查询全局供应商配置
+     */
+    ChannelConfigVO defaultChannelConfig();
+
+    /**
+     * 查询默认提现配置
+     *
+     * @return
+     */
+    ConfigWithdrawVO defaultWithdrawConfig();
+
+    /**
+     * 更新提现配置
+     *
+     * @return
+     */
+    void alterWithdrawConfig(ConfigWithdrawVO incomeWithdraw);
 }

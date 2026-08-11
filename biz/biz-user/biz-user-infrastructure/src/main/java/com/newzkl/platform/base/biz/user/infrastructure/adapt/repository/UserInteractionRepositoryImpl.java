@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.domain.adapt.repository.UserInteraction
 import com.newzkl.platform.base.biz.user.infrastructure.dao.UserInteractionDAO;
 import com.newzkl.platform.base.biz.user.infrastructure.entity.UserInteractionDO;
 import com.newzkl.platform.base.biz.user.model.interaction.query.InteractionQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum.ActionTypeEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.interaction.InteractionEnum.TargetTypeEnum;
 import com.newzkl.platform.base.biz.user.model.interaction.query.BatchInteractionQuery;

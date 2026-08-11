@@ -13,11 +13,12 @@ import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContributeDataReq;
 import com.newzkl.platform.base.common.core.model.enums.CacheKey;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
+import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
@@ -48,10 +49,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class PayProvider implements PayFacade {
 
-    private static final String ORDER_PAY_CACHE_PRE = "orderPayCache:";
-
-    private static final String ORDER_PAY_LOCK_PRE = "orderPayLock:";
-
     private final OrderPayDomain orderPayDomain;
     private final AccountPurseDomain purseDomain;
     private final AccountContributeDomain contributeDomain;
@@ -59,42 +56,22 @@ public class PayProvider implements PayFacade {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DistributedLock(key = "'orderPay:' + #req.orderNo")
     public PayBaseResult orderPay(OrderPayReq req) {
-        RLock lock = RedissonLockUtil.lock(ORDER_PAY_LOCK_PRE + req.getOrderNo());
-        try {
-            // 查询是否有支付缓存（订单号+支付方式）
-//            PayBaseResult result = redisClient.getCacheObject(ORDER_PAY_CACHE_PRE + req.getOrderNo());
-//            if (result != null) {
-//                return result;
-//            }
+        Long tradeNo = orderPayDomain.saveOrderPayRecord(req, null);
 
+        PayBaseResult payBaseResult = null;
 
-            Long tradeNo = orderPayDomain.saveOrderPayRecord(req, null);
-
-
-//            HuiFuPayReq huiFuPayReq = buildHuiFuPay(req, tradeNo);
-
-
-            // 查询汇付id
-//            Long channelId = req.getChannelId();
-//            PayBaseResult payBaseResult = HuiFuPayMethod.huiFuPay(huiFuPayReq);
-            PayBaseResult payBaseResult = null;
-
-            String thirdTradeNo = payBaseResult.getThirdTradeNo();
-            if (StrUtil.isNotBlank(thirdTradeNo)) {
-                orderPayDomain.resetTripartiteTradeNo(tradeNo, thirdTradeNo);
-            }
-
-            String redisKey = StrUtil.format(CacheKey.PAYMENT_STATE, req.getConsumeType().getType(), payBaseResult.getTradeNo());
-            RedisUtil.set(redisKey, 1L);
-            RedisUtil.expire(redisKey, 15, TimeUnit.MINUTES);
-
-            // 5、缓存三方支付结果
-//            redisClient.setCacheObject(ORDER_PAY_CACHE_PRE + req.getOrderNo(),payBaseResult,60L, TimeUnit.MINUTES);
-            return payBaseResult;
-        }finally {
-            lock.unlock();
+        String thirdTradeNo = payBaseResult.getThirdTradeNo();
+        if (StrUtil.isNotBlank(thirdTradeNo)) {
+            orderPayDomain.resetTripartiteTradeNo(tradeNo, thirdTradeNo);
         }
+
+        String redisKey = StrUtil.format(CacheKey.PAYMENT_STATE, req.getConsumeType().getType(), payBaseResult.getTradeNo());
+        RedisUtil.set(redisKey, 1L);
+        RedisUtil.expire(redisKey, 15, TimeUnit.MINUTES);
+
+        return payBaseResult;
     }
 
     @Override

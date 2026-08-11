@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.auth.action.controller;
 
 import com.newzkl.platform.base.biz.auth.action.service.PermissionSyncService;
 import com.newzkl.platform.base.biz.auth.domain.service.PermissionDomain;
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionListDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.req.PermissionReq;
 import com.newzkl.platform.base.biz.auth.model.permission.vo.PermissionTreeVO;

@@ -7,9 +7,8 @@ import com.newzkl.platform.base.biz.course.infrastructure.entity.UserLecturerFol
 import com.newzkl.platform.base.biz.course.model.follow.query.UserFollowQuery;
 import com.newzkl.platform.base.biz.course.model.follow.req.UserFollowReq;
 import com.newzkl.platform.base.biz.course.model.follow.res.UserFollowRes;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -15,11 +15,29 @@
     <dependencies>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-user-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-order-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-course-facade</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-finance-domain</artifactId>
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-infrastructure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-infrastructure</artifactId>
         </dependency>
         <!-- 迁移补充: 渠道商购买席位跨域取套餐 (StorePackageApi 适配器经 biz-store-facade) -->
         <dependency>

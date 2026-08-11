@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.auth.domain.adapt.repository.PermissionRepos
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RoleRepository;
 import com.newzkl.platform.base.biz.auth.domain.support.PermissionCacheKeys;
-import com.newzkl.platform.base.biz.auth.model.enums.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import com.newzkl.platform.base.biz.auth.model.role.dto.RoleDTO;

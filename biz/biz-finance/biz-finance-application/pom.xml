@@ -22,6 +22,14 @@
             <groupId>com.newzkl.platform.Base.core</groupId>
             <artifactId>core-mq-infrastructure</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-application</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-infrastructure</artifactId>
+        </dependency>
         <!-- 迁移补充: 支付幂等用分布式锁 + 结果缓存 (RedissonLockUtil / RedisUtil) -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>

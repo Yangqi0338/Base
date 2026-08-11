@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.course.infrastructure.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.LecturerDO;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;

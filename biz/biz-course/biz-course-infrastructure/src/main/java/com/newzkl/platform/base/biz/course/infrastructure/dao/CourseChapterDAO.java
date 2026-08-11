@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CourseChapterDO;
 import com.newzkl.platform.base.biz.course.model.chapter.query.CourseChapterQuery;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterStatRes;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.auth.domain.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.domain.service.RelationDomain;
-import com.newzkl.platform.base.biz.auth.model.enums.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

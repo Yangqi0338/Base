@@ -6,7 +6,6 @@ import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
 import com.newzkl.platform.base.biz.sys.facade.IDictFacade;
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

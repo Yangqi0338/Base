@@ -3,10 +3,10 @@ package com.newzkl.platform.base.biz.store.infrastructure.adapt.repository;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaUpdateWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaUpdateWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
 import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
 import com.newzkl.platform.base.biz.store.model.template.req.ModelShopQuery;
@@ -67,7 +67,7 @@ public class ModelShopRepositoryImpl extends RepositorySupport implements ModelS
     public Page<ModelShopRes> queryModelShopPage(ModelShopQuery query) {
         BaseLambdaQueryWrapper<ModelShopDO> wrapper = modelShopDAO.getLw(query);
 
-        return TransferUtils.transferPage(modelShopDAO.selectPage(com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport.page(query), wrapper), ModelShopRes::new);
+        return TransferUtils.transferPage(modelShopDAO.selectPage(com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport.page(query), wrapper), ModelShopRes::new);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class LevelDO extends BaseDO {
      * @ext 角色 ID
      */
     @Index
-    private Integer type;
+    private Long type;
 
     /**
      * 是否开启

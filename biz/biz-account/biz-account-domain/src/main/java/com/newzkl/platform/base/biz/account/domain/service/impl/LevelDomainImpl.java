@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsInfo;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsQuery;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsSaveReq;
 import com.newzkl.platform.base.biz.account.domain.repository.LevelRepository;
@@ -100,7 +99,7 @@ public class LevelDomainImpl implements LevelDomain {
     }
 
     @Override
-    public PackGoodsInfo levelPack(Integer roleId) {
+    public com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo levelPack(Integer roleId) {
         PackGoodsQuery query = new PackGoodsQuery();
         query.setType(roleId);
         query.setLevel(DEFAULT_LEVEL_VALUE);

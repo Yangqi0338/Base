@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 
 import cn.hutool.core.collection.CollUtil;

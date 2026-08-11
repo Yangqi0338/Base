@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.order.infrastructure.entity.SkuOrderDO;
 
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

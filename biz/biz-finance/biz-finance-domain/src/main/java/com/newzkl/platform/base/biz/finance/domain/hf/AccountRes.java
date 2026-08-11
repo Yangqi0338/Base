@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.domain.hf;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.HuifuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

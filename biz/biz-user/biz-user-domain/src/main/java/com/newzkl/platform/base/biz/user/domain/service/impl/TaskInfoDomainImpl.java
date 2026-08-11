@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.user.domain.adapt.repository.TaskConfigRepos
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.TaskInfoRepository;
 import com.newzkl.platform.base.biz.user.domain.service.TaskInfoDomain;
 import com.newzkl.platform.base.biz.user.model.task.config.res.TaskConfigRes;
-import com.newzkl.platform.base.biz.user.model.task.enums.TaskTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.TaskTypeEnum;
 import com.newzkl.platform.base.biz.user.model.task.info.query.TaskInfoQuery;
 import com.newzkl.platform.base.biz.user.model.task.info.req.TaskInfoOperateReq;
 import com.newzkl.platform.base.biz.user.model.task.info.res.TaskInfoRes;

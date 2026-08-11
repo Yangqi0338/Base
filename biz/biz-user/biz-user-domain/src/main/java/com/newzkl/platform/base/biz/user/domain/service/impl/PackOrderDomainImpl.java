@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.user.domain.adapt.repository.PackOrderRepository;
 import com.newzkl.platform.base.biz.user.domain.pack.entity.PackOrder;
 import com.newzkl.platform.base.biz.user.domain.service.PackOrderDomain;
-import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
 import com.newzkl.platform.base.biz.user.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderDeliverCommand;

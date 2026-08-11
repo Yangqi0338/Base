@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.query.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
@@ -17,7 +17,6 @@ import com.newzkl.platform.base.biz.store.infrastructure.dao.StoreCategoryDAO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.StoreCategoryDO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -88,7 +87,6 @@ public class StoreCategoryRepositoryImpl implements StoreCategoryRepository {
      * @param storeCategory 新增实体
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void insert(StoreCategory storeCategory) {
         StoreCategoryDO storeCategoryDO = TransferUtils.transfer(storeCategory, StoreCategoryDO::new);
         dao.insert(storeCategoryDO);
@@ -101,7 +99,6 @@ public class StoreCategoryRepositoryImpl implements StoreCategoryRepository {
      * @param query         编辑查询
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void edit(StoreCategory storeCategory, StoreCategoryQuery query) {
         QueryWrapper<StoreCategoryDO> ew = buildLambdaQw(query);
         if (dao.selectCount(ew) == 0) {
@@ -118,7 +115,6 @@ public class StoreCategoryRepositoryImpl implements StoreCategoryRepository {
      * @param id 主键
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
         dao.deleteById(id);
     }

@@ -4,10 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.PermissionRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.PermissionDAO;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionDO;
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

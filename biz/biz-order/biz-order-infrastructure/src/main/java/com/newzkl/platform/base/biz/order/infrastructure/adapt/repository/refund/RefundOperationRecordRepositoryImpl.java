@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.infrastructure.entity.RefundOperationR
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

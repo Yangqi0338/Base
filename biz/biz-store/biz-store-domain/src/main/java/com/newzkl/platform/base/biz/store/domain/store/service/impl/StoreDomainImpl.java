@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepo
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreCategoryDomain;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,7 +44,7 @@ public class StoreDomainImpl implements StoreDomain {
     public Long storeSave(StoreSaveReq storeSaveReq) {
         Store item = TransferUtils.transfer(storeSaveReq, Store::new, (c, v)->{
             if(c.getId() == null){
-                v.setId(SnowflakeIdAble.getSnowflakeId());
+                v.setId(SnowflakeGenerator.getSnowflakeId());
             }else {
                 //主营门店将ID赋值给商户ID
                 v.setMerchantId(c.getId());

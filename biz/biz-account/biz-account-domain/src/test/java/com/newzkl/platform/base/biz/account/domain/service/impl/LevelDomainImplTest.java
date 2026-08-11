@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsInfo;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsQuery;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsSaveReq;
 import com.newzkl.platform.base.biz.account.domain.repository.LevelRepository;
@@ -17,6 +16,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

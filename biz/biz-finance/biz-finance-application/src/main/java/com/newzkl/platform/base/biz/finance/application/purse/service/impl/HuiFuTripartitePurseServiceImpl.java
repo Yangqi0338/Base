@@ -19,7 +19,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -111,8 +111,8 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         boolean doUpdateAction = this.checkSave(huifuId);
         Long accountId = SecurityUtils.getAccountId();
 
-        String openAccountReqSeqId = accountId + "OA" + SnowflakeIdAble.getSnowflakeId();
-        String bindCardReqSeqId = accountId + "BC" + SnowflakeIdAble.getSnowflakeId();
+        String openAccountReqSeqId = accountId + "OA" + SnowflakeGenerator.getSnowflakeId();
+        String bindCardReqSeqId = accountId + "BC" + SnowflakeGenerator.getSnowflakeId();
 
         // 转化为汇付的开户请求
         HuiFuUserOpenAccountReq accountReq = saveCommand.getAccountReq();

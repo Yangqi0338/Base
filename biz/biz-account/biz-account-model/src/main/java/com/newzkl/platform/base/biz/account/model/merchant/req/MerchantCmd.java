@@ -6,60 +6,17 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 商户端入参集合
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.MerchantCmd}, 内部类逐一对应。
- * 旧 {@code jakarta.validation} 已按 Jakarta EE 9 迁为 {@code jakarta.validation};
- * 旧 {@code MerchantCmd.ID} 无端点使用, 未迁入。</p>
+ * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.MerchantCmd}。中台化去重后仅保留
+ * 存活端点 {@code POST /merchant/orderPay} 所需的 {@code OrderPay} / {@code StoreInfo} 切片,
+ * 旧 IDList/Edit/EditWxMpConfigVO 等随 merchant 模型包 (MerchantReq/MerchantVO/MerchantRes) 一并下线。</p>
  *
  * @author KC
  */
 public class MerchantCmd {
-
-    /**
-     * 商户ID列表入参
-     */
-    @Data
-    public static class IDList implements Serializable {
-
-        /**
-         * 商户账号ID列表
-         */
-        @NotEmpty
-        private List<Long> merchantIdList;
-    }
-
-    /**
-     * 商户修改入参
-     */
-    @Data
-    public static class Edit implements Serializable {
-
-        /**
-         * 商户账号ID
-         */
-        private Long id;
-
-        /**
-         * 商户可改字段
-         */
-        private MerchantReq merchantCommand;
-    }
-
-    /**
-     * 微信公众号配置修改入参
-     */
-    @Data
-    public static class EditWxMpConfigVO implements Serializable {
-
-        /**
-         * 微信公众号配置
-         */
-        private com.newzkl.platform.base.biz.account.model.merchant.vo.WxMpConfigVO wxMpConfigVO;
-    }
 
     /**
      * 门店订单支付入参

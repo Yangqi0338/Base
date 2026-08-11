@@ -5,11 +5,11 @@ import com.newzkl.platform.base.biz.course.domain.adapt.repository.CoursePurchas
 import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.infrastructure.dao.CoursePurchaseRecordDAO;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CoursePurchaseRecordDO;
-import com.newzkl.platform.base.biz.course.model.purchase.enums.PurchasePayStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.course.PurchasePayStateEnum;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

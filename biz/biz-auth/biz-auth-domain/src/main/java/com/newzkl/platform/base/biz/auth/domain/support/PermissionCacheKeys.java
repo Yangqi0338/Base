@@ -1,7 +1,11 @@
 package com.newzkl.platform.base.biz.auth.domain.support;
 
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
+
 /**
  * 权限缓存 key 集合
+ *
+ * <p>key 统一收拢至 {@link RedisEnum.Key} 管理(COMMON 无模块前缀, 保持旧 key 值兼容)。</p>
  *
  * @author KC
  */
@@ -23,7 +27,7 @@ public final class PermissionCacheKeys {
      * @ext key = perm:account:{accountId}
      */
     public static String accountPerm(long accountId) {
-        return "perm:account:" + accountId;
+        return RedisEnum.Key.ACCOUNT_PERM.getCode(accountId);
     }
 
     /**
@@ -34,6 +38,6 @@ public final class PermissionCacheKeys {
      * @ext key = role:account:{accountId}
      */
     public static String accountRole(long accountId) {
-        return "role:account:" + accountId;
+        return RedisEnum.Key.ACCOUNT_ROLE.getCode(accountId);
     }
 }

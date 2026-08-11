@@ -19,7 +19,7 @@ public class LevelQuery extends BizPageQuery {
     /**
      * 类型 (角色 ID)
      */
-    private Integer type;
+    private Long type;
 
     /**
      * 等级值

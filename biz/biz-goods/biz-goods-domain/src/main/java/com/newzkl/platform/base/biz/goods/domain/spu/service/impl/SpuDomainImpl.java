@@ -36,7 +36,7 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
 import com.newzkl.platform.base.common.core.model.properties.SysProperties;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -612,7 +612,7 @@ public class SpuDomainImpl implements SpuDomain {
             if (!isPreSave && spuDTO.getRefresh() != Boolean.TRUE && spuDTO.getId() != null) {
                 v.setId(spuDTO.getId());
             } else {
-                v.setId(SnowflakeIdAble.getSnowflakeId());
+                v.setId(SnowflakeGenerator.getSnowflakeId());
             }
 
             // 设置审核状态
@@ -750,7 +750,7 @@ public class SpuDomainImpl implements SpuDomain {
         if (ObjectUtil.isNotEmpty(spuDTO.getSpuSaleAttributeList())) {
             List<SpuAttributeDTO> saleAttributeList = TransferUtils.transfers(
                     spuDTO.getSpuSaleAttributeList(), SpuAttributeDTO::new, (c, v) -> {
-                        v.setId(SnowflakeIdAble.getSnowflakeId());
+                        v.setId(SnowflakeGenerator.getSnowflakeId());
                         v.setSpuId(spuId);
                         v.setType(SpuEnum.SpuAttributeType.SALE.getCode());
                     });
@@ -761,7 +761,7 @@ public class SpuDomainImpl implements SpuDomain {
         if (ObjectUtil.isNotEmpty(spuDTO.getSpuParamAttributeList())) {
             List<SpuAttributeDTO> paramAttributeList = TransferUtils.transfers(
                     spuDTO.getSpuParamAttributeList(), SpuAttributeDTO::new, (c, v) -> {
-                        v.setId(SnowflakeIdAble.getSnowflakeId());
+                        v.setId(SnowflakeGenerator.getSnowflakeId());
                         v.setSpuId(spuId);
                         v.setType(SpuEnum.SpuAttributeType.PARAM.getCode());
                     });
@@ -926,7 +926,7 @@ public class SpuDomainImpl implements SpuDomain {
                 spuDTO.getSpuParamAttributeList(), SpuAttributeDTO::new, (c, v) -> {
                     v.setType(SpuEnum.SpuAttributeType.PARAM.getCode());
                     v.setSpuId(spuDTO.getId());
-                    v.setId(SnowflakeIdAble.getSnowflakeId());
+                    v.setId(SnowflakeGenerator.getSnowflakeId());
                 });
 
         // 插入新的销售属性
@@ -934,7 +934,7 @@ public class SpuDomainImpl implements SpuDomain {
                 spuDTO.getSpuSaleAttributeList(), SpuAttributeDTO::new, (c, v) -> {
                     v.setType(SpuEnum.SpuAttributeType.SALE.getCode());
                     v.setSpuId(spuDTO.getId());
-                    v.setId(SnowflakeIdAble.getSnowflakeId());
+                    v.setId(SnowflakeGenerator.getSnowflakeId());
                 }));
         spuRepository.spuAttributeListSave(updateAttributeList);
     }
@@ -956,7 +956,7 @@ public class SpuDomainImpl implements SpuDomain {
                             : spuRepository.getById(sku.getSpuId()).getImg();
                     sku.setImg(img);
                 }
-                sku.setId(SnowflakeIdAble.getSnowflakeId());
+                sku.setId(SnowflakeGenerator.getSnowflakeId());
                 spuRepository.skuSave(TransferUtils.transfer(sku, SkuDTO::new));
             } else {
                 // 更新SKU

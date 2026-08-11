@@ -7,12 +7,12 @@ import com.newzkl.platform.base.biz.store.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.PurseAmountRes;
 import com.newzkl.platform.base.biz.store.domain.store.repository.SeatPackageRepository;
-import com.newzkl.platform.base.biz.store.model.enums.DictEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
+import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -8,7 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
 import org.dromara.mpe.autofill.annotation.DefaultValue;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
@@ -110,7 +112,7 @@ public class LocalMessageDO extends BaseDO {
     /**
      * 消费异常信息
      */
-    @Size(max = 3500)
+    @ColumnType(value = MysqlTypeConstant.TEXT)
     private String consumeErrorMsg;
 
     /**

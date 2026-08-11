@@ -8,10 +8,9 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.goodPackage.GoodPack
 import com.newzkl.platform.base.biz.goods.model.goods.req.goodPackage.GoodPackageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.goodPackage.GoodPackageVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 商品套餐仓储实现
@@ -29,7 +28,6 @@ public class GoodPackageRepositoryImpl implements GoodPackageRepository {
     private final GoodPackageDAO goodPackageDAO;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Long save(GoodPackageReq req) {
         GoodPackageDO packageDO = TransferUtils.transfer(req, GoodPackageDO::new);
         if (packageDO.getId() == null) {
@@ -57,7 +55,6 @@ public class GoodPackageRepositoryImpl implements GoodPackageRepository {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void updateState(Long id, Integer state) {
         GoodPackageDO packageDO = new GoodPackageDO();
         packageDO.setId(id);

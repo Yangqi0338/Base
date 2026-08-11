@@ -1,0 +1,26 @@
+ALTER TABLE
+  `lecturer` DROP COLUMN `is_deleted`,
+  DROP COLUMN `create_by`,
+  DROP COLUMN `update_by`,
+  DROP COLUMN `deleted`,
+  MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `lecturer_name` varchar(255) NULL COMMENT '讲师名称(即渠道商名称)',
+  MODIFY COLUMN `main_account` varchar(255) NULL COMMENT '主体账号(展示用字符串)',
+  MODIFY COLUMN `main_account_id` bigint NULL COMMENT '主体账号ID(关联主体账号表主键)',
+  MODIFY COLUMN `lecturer_category_id` bigint NULL COMMENT '讲师分类ID(关联讲师分类表主键)',
+  MODIFY COLUMN `lecturer_category_name` varchar(255) NULL COMMENT '讲师分类名称(冗余存储便于展示)',
+  MODIFY COLUMN `course_count` int NULL COMMENT '课程数量',
+  MODIFY COLUMN `follow_count` int NULL COMMENT '被关注人数累计值',
+  MODIFY COLUMN `personal_intro` varchar(255) NULL COMMENT '个人简介',
+  MODIFY COLUMN `cover_image_url` varchar(255) NULL COMMENT '封面图URL',
+  MODIFY COLUMN `avatar_url` varchar(255) NULL COMMENT '头像URL',
+  MODIFY COLUMN `is_enabled` int NULL COMMENT '是否启用(0-禁用, 1-启用)',
+ADD
+  COLUMN `executor` json NULL COMMENT '操作人信息' AFTER `is_enabled`,
+ADD
+  COLUMN `creator_id` bigint NULL COMMENT '创建人id' AFTER `executor`,
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+ADD
+  COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = '讲师数据对象';

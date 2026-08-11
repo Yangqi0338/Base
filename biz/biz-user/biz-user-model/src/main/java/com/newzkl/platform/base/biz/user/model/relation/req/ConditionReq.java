@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.biz.user.model.relation.res.PackGoodsInfo;
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 

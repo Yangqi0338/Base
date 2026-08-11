@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.model.permission.dto;
 
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

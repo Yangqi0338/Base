@@ -24,7 +24,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -63,7 +63,7 @@ public class SettleDomainImpl implements SettleDomain {
         if (settlementConfigRpcVO.getOrderType().getCode() > 1){
             return null;
         }
-        Long settleRecordId = SnowflakeIdAble.getSnowflakeId();
+        Long settleRecordId = SnowflakeGenerator.getSnowflakeId();
         // 准备数据
         Money settleMoneyTotal = Money.ZERO;
         Money settleGoodsTotal = Money.ZERO;
@@ -141,7 +141,7 @@ public class SettleDomainImpl implements SettleDomain {
             //聚合
             SettleOrderWaitVO settleOrderWaitVO1 = spuSettleOrderWaitVOList.get(0);
             SettleRecordItemDTO settleRecordItem = new SettleRecordItemDTO();
-            settleRecordItem.setId(SnowflakeIdAble.getSnowflakeId());
+            settleRecordItem.setId(SnowflakeGenerator.getSnowflakeId());
             settleRecordItem.setSettleRecordId(settleRecordId);
             settleRecordItem.setSpuId(spuId);
             settleRecordItem.setSpuName(settleOrderWaitVO1.getSpuName());
@@ -191,7 +191,7 @@ public class SettleDomainImpl implements SettleDomain {
 
     @Override
     public ExecuteSettleRes executeSettle2(Long supplierId, List<SettleOrderWaitVO> settleOrderWaitVOList, LocalDateTime settleTime) {
-        Long settleRecordId = SnowflakeIdAble.getSnowflakeId();
+        Long settleRecordId = SnowflakeGenerator.getSnowflakeId();
         // 准备数据
         Money settleMoneyTotal = Money.ZERO;
         Money settleGoodsTotal = Money.ZERO;
@@ -246,7 +246,7 @@ public class SettleDomainImpl implements SettleDomain {
             //聚合
             SettleOrderWaitVO settleOrderWaitVO1 = spuSettleOrderWaitVOList.get(0);
             SettleRecordItemDTO settleRecordItem = new SettleRecordItemDTO();
-            settleRecordItem.setId(SnowflakeIdAble.getSnowflakeId());
+            settleRecordItem.setId(SnowflakeGenerator.getSnowflakeId());
             settleRecordItem.setSettleRecordId(settleRecordId);
             settleRecordItem.setSpuId(spuId);
             settleRecordItem.setSpuName(settleOrderWaitVO1.getSpuName());
@@ -292,7 +292,7 @@ public class SettleDomainImpl implements SettleDomain {
         for (SettleOrderWaitCommand skuOrderVO : settleOrderWaitCommandList) {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
             settleOrderWait.init();
-            settleOrderWait.setId(SnowflakeIdAble.getSnowflakeId());
+            settleOrderWait.setId(SnowflakeGenerator.getSnowflakeId());
             settleOrderWait.setSpuOrderId(skuOrderVO.getSpuOrderId());
             settleOrderWait.setSupplierId(skuOrderVO.getSupplierId());
             settleOrderWait.setSkuOrderId(skuOrderVO.getSkuOrderId());
@@ -328,7 +328,7 @@ public class SettleDomainImpl implements SettleDomain {
         for (FreightSettleOrderWaitCommand item : freightSettleOrderWaitCommands) {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
             settleOrderWait.init();
-            settleOrderWait.setId(SnowflakeIdAble.getSnowflakeId());
+            settleOrderWait.setId(SnowflakeGenerator.getSnowflakeId());
             settleOrderWait.setSpuOrderId(item.getSpuOrderId());
             settleOrderWait.setSupplierId(item.getSupplierId());
             settleOrderWait.setSkuOrderId(0L);

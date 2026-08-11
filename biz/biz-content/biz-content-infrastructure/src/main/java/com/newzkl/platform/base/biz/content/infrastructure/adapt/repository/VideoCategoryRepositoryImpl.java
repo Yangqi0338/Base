@@ -13,8 +13,8 @@ import com.newzkl.platform.base.biz.content.model.videocategory.req.VideoCategor
 import com.newzkl.platform.base.biz.content.model.videocategory.res.VideoCategoryRes;
 import com.newzkl.platform.base.biz.content.model.videocategory.vo.VideoCategoryWeightVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

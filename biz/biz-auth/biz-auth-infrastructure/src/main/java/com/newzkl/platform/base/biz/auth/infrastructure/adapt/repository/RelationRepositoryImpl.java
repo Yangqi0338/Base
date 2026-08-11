@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.PermissionRelationDAO;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionRelationDO;
-import com.newzkl.platform.base.biz.auth.model.enums.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

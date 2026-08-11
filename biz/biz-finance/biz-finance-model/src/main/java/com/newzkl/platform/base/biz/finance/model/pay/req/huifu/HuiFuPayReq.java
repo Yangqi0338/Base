@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.pay.req.huifu;
 
-import com.newzkl.platform.base.biz.finance.model.enums.finance.PayEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PayEnum;
 import lombok.Data;
 
 /**

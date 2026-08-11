@@ -3,7 +3,8 @@ package com.newzkl.platform.base.common.core.mq.infrastructure.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.common.core.mq.infrastructure.entity.LocalMessageDO;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

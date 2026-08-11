@@ -13,7 +13,6 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,14 +43,12 @@ public class UserTaskRepositoryImpl implements UserTaskRepository {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void insert(UserTaskRes userTask) {
         UserTaskDO userTaskDO = TransferUtils.transfer(userTask, UserTaskDO::new);
         dao.insert(userTaskDO);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void edit(UserTaskRes userTask, UserTaskQuery query) {
         LambdaQueryWrapper<UserTaskDO> queryWrapper = dao.getLw(query);
         if (dao.selectCount(queryWrapper) == 0) {
@@ -62,7 +59,6 @@ public class UserTaskRepositoryImpl implements UserTaskRepository {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
         dao.deleteById(id);
     }

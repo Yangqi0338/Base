@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
 
 public interface ThirdPartyOrderDomain {
 
-    <T> ThirdPartyOrderRecordDTO createRecord(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, T requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus, String errorMessage);
+    ThirdPartyOrderRecordDTO createRecord(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, Object requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus, String errorMessage);
 
     /**
      * 记录一次三方动作(下单/补偿等) 追加式动作日志 每次调用落一行 不做按业务订单号去重

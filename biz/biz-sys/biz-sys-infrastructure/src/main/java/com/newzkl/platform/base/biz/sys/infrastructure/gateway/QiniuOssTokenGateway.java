@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.sys.infrastructure.gateway;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OssTokenApi;
-import com.newzkl.platform.base.biz.sys.model.config.support.QiniuProperties;
+import com.newzkl.platform.base.common.ddd.model.properties.QiniuProperties;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import lombok.RequiredArgsConstructor;

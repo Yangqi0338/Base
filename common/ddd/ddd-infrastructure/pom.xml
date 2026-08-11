@@ -36,6 +36,14 @@
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-job-infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-mq-infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
             <artifactId>core-db-migrate-infrastructure</artifactId>
         </dependency>
         <dependency>

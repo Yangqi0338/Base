@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.user.domain.adapt.api.PackUpCheckCommand;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component("userAccountApi")
 public class AccountApiImpl implements AccountApi {
 
-    @DubboReference
+    @RpcReference
     private AccountFacade accountFacade;
 
     @Override

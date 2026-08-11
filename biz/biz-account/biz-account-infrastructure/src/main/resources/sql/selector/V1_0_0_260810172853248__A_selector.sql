@@ -1,0 +1,31 @@
+ALTER TABLE
+  `selector` DROP COLUMN `state`,
+  DROP COLUMN `name`,
+  DROP COLUMN `username`,
+  DROP COLUMN `role_id`,
+  DROP COLUMN `role_name`,
+  DROP COLUMN `invite_id`,
+  DROP COLUMN `team_count`,
+  DROP COLUMN `yesterday_invite`,
+  DROP COLUMN `today_invite`,
+  DROP COLUMN `week_invite`,
+  DROP COLUMN `month_invite`,
+  DROP COLUMN `head_img`,
+  DROP COLUMN `team_supplier_count`,
+  DROP COLUMN `team_selector_count`,
+  DROP COLUMN `to_month_invite`,
+  DROP COLUMN `order_amount`,
+  DROP COLUMN `order_total_amount`,
+  DROP COLUMN `phone`,
+  MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `level` int NULL COMMENT '等级',
+  MODIFY COLUMN `goods_points` int NULL COMMENT '提货积分' AFTER `level`,
+  MODIFY COLUMN `level_up_progress` double(6, 2) NULL COMMENT '升级进度' AFTER `goods_points`,
+ADD
+  COLUMN `executor` json NULL COMMENT '操作人信息' AFTER `level_up_progress`,
+ADD
+  COLUMN `creator_id` bigint NULL COMMENT '创建人id' AFTER `executor`,
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+ADD
+  COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))';

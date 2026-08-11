@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.HuifuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

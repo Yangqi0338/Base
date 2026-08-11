@@ -18,14 +18,12 @@ import java.util.List;
 public class BatchInteractionQuery implements Serializable {
     /**
      * 目标类型
-     * @ext 批量查询的所有子项共用该类型；前端传数字 code, Jackson 经 InteractionEnum.TargetTypeEnum @JsonValue 反序列化
      */
     @NotNull
     private InteractionEnum.TargetTypeEnum targetType;
 
     /**
      * 操作类型
-     * @ext 批量查询的所有子项共用该类型；前端传数字 code, Jackson 经 InteractionEnum.ActionTypeEnum @JsonValue 反序列化
      */
     @NotNull
     private InteractionEnum.ActionTypeEnum actionType;

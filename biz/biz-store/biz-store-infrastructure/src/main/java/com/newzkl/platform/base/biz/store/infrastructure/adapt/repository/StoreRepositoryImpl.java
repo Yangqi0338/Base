@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionApi;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.DistributionRandomInfo;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaUpdateWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaUpdateWrapper;
 import com.newzkl.platform.base.biz.store.model.store.entity.Store;
 import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
@@ -86,7 +86,7 @@ public class StoreRepositoryImpl implements StoreRepository {
     public Page<StoreRes> storePage(StoreQuery storeQueryReq) {
         BaseLambdaQueryWrapper<StoreDO> wrapper = storeDAO.buildQueryWrapper(TransferUtils.transfer(storeQueryReq, StoreDO::new));
         wrapper.notEmptyIn(StoreDO::getId, storeQueryReq.getIdList());
-        return TransferUtils.transferPage(storeDAO.selectPage(com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport.page(storeQueryReq), wrapper), StoreRes::new,(source,target) -> {
+        return TransferUtils.transferPage(storeDAO.selectPage(com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport.page(storeQueryReq), wrapper), StoreRes::new,(source, target) -> {
 
             target.setFanNumber(userFollowApi.countFollower(source.getChannelId()));
         });

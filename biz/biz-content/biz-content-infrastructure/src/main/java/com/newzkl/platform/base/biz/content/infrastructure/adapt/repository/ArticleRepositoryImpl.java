@@ -10,10 +10,9 @@ import com.newzkl.platform.base.biz.content.model.article.req.ArticleReq;
 import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayService;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.FinanceErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.RechargeOrderInfo;
@@ -13,7 +13,7 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,7 +100,7 @@ public class PayOrderController {
      */
     private OrderPayReq buildOrderPayReq(EarningsEnum.ConsumeType consumeType, Integer amount, Integer payType) {
         OrderPayReq req = new OrderPayReq();
-        req.setOrderNo(SnowflakeIdAble.getSnowflakeId());
+        req.setOrderNo(SnowflakeGenerator.getSnowflakeId());
         req.setConsumeType(consumeType);
         // amount 为分 Integer, Money.of(Integer)=分, 与 orderAmount/payAmount(Money) 对齐
         req.setOrderAmount(Money.of(amount));

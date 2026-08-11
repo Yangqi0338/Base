@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuer
 import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

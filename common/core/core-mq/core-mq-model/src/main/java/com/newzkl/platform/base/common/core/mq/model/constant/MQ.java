@@ -2,29 +2,7 @@ package com.newzkl.platform.base.common.core.mq.model.constant;
 
 public interface MQ {
 
-    String Scm_Main = "scm_main";
-
-    String SCM_GOODS = "scm_goods";
-
-    String SCM_DISTRIBUTION = "scm_distribution";
-
-    String SCM_TERMINAL = "scm_terminal";
-
-    String SCM_ORDER = "scm_order";
-
-    String SCM_EARNING = "scm_earning";
-
-    String SCM_FINANCE = "scm_finance";
-
-    String SCM_AWARD = "scm_award";
-
     interface Tag {
-
-        /**
-         * 审批:角色申请
-         */
-        String AUDIT_ROLE_APPLY = "audit:role";
-        String AUDIT_ROLE_APPLY_MESSAGE = "audit-role-message";
         /**
          * 审批:保证金缴纳
          */
@@ -41,16 +19,6 @@ public interface MQ {
          */
         String AUDIT_SPU_WORK_TABLE = "audit:worktable";
         String AUDIT_SPU_WORK_TABLE_MESSAGE = "audit-worktable-message";
-        /**
-         * 审批:品牌
-         */
-        String AUDIT_BRAND_CREATE = "audit:brand";
-        String AUDIT_BRAND_CREATE_MESSAGE = "audit-brand-message";
-        /**
-         * 审批:实名认证
-         */
-        String AUDIT_NAME_AUTH = "audit:nameauth";
-        String AUDIT_NAME_AUTH_MESSAGE = "audit-nameauth-message";
         /**
          * 支付:支付成功
          */
@@ -93,9 +61,10 @@ public interface MQ {
         String OPERATOR_NOTIFY_EVENT_MESSAGE = "operator-notify-message";
         /**
          * 自营商品:修改通知
+         * 暂时没有该业务。删除
          */
-        String CUSTOM_SPU_EDIT_EVENT = "custom:spu:edit:notify";
-        String CUSTOM_SPU_EDIT_EVENT_MESSAGE = "custom-spu-edit-notify-message";
+//        String CUSTOM_SPU_EDIT_EVENT = "custom:spu:edit:notify";
+//        String CUSTOM_SPU_EDIT_EVENT_MESSAGE = "custom-spu-edit-notify-message";
         /**
          * C端:支付成功
          */

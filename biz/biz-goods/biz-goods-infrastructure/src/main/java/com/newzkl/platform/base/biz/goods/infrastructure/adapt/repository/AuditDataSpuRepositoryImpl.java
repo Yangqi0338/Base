@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,8 +9,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.AuditDataS
 import com.newzkl.platform.base.biz.goods.model.goods.entity.audit.AuditDataSpu;
 import com.newzkl.platform.base.biz.goods.model.goods.query.audit.AuditDataSpuQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.audit.AuditDataSpuVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -40,7 +39,7 @@ public class AuditDataSpuRepositoryImpl implements AuditDataSpuRepository {
     public Long auditDataSpuSave(AuditDataSpu auditDataSpu) {
         AuditDataSpuDO auditDataSpuDO = TransferUtils.transfer(auditDataSpu, AuditDataSpuDO::new);
         if (auditDataSpuDO.getId() == null || auditDataSpuDO.getId() == 0) {
-            auditDataSpuDO.setId(SnowflakeIdAble.getSnowflakeId());
+            auditDataSpuDO.setId(SnowflakeGenerator.getSnowflakeId());
             auditDataSpuDAO.insert(Collections.singletonList(auditDataSpuDO));
         } else {
             auditDataSpuDAO.updateById(auditDataSpuDO);

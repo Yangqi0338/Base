@@ -2,8 +2,11 @@ package com.newzkl.platform.base.biz.order.model.req.query;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +17,9 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-public class ThirdPartyOrderRecordQuery {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ThirdPartyOrderRecordQuery extends PageQuery {
 
     /**
      * 业务订单号

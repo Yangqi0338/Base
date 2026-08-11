@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.SupplierPurchaseGoodsSeatReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,7 +109,7 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
                                                   EarningsEnum.PurseAlterTypeEnum earningAlterType,
                                                   PurseEnum.PurseAlterType alterType, Long joinRecordId) {
         AccountPurseAlterRecordVO record = new AccountPurseAlterRecordVO();
-        record.setId(SnowflakeIdAble.getSnowflakeId());
+        record.setId(SnowflakeGenerator.getSnowflakeId());
         record.setAccountId(accountId);
         record.setAccountType(PurseEnum.FinanceUser.SUPPLIER);
         record.setPurseType(purseType);

@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
 import com.newzkl.platform.base.biz.account.model.assembler.ShipAddressAssembler;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long save(ShipAddressReq req) {
         ShipAddressVO item = assembler.req2VO(req);
-        item.setId(SnowflakeIdAble.getSnowflakeId());
+        item.setId(SnowflakeGenerator.getSnowflakeId());
         item.setAccountId(SecurityUtils.getAccountId());
         item.setRoleId(SecurityUtils.getRoleId());
 

@@ -10,18 +10,18 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("orderChannelApi")
 public class ChannelApiImpl implements ChannelApi {
 
-    @DubboReference
+    @RpcReference
     private ChannelFacade channelFacade;
 
-    @DubboReference
+    @RpcReference
     private AccountConfigFacade accountFinanceConfigFacade;
 
     @Override

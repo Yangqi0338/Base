@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.auth.infrastructure.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.RoleDO;
 import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

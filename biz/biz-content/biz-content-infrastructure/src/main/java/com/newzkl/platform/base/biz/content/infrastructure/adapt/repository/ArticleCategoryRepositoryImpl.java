@@ -11,8 +11,8 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCat
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

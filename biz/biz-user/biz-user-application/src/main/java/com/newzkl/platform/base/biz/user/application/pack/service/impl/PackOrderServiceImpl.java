@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.user.domain.adapt.api.PayResultDTO;
 import com.newzkl.platform.base.biz.user.domain.pack.entity.PackOrder;
 import com.newzkl.platform.base.biz.user.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.user.domain.service.PackOrderDomain;
-import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
 import com.newzkl.platform.base.biz.user.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.user.model.pack.req.PackOrderPayReq;
@@ -20,6 +20,7 @@ import com.newzkl.platform.base.biz.user.model.pack.res.PackOrderPreRes;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackOrderRes;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
@@ -115,19 +116,19 @@ public class PackOrderServiceImpl implements PackOrderService {
 
         // 组装预单（收货同源逻辑传空，源亦仅 new 空 ShipAddressOutVO）
         PackOrder packOrder = packOrderDomain.packOrderCreate(command, null, CollUtil.newArrayList(packGoods));
-        RedisUtil.set(packOrder.getId().toString(), packOrder, PRE_ORDER_CACHE_MINUTES, TimeUnit.MINUTES);
+        RedisUtil.set(RedisEnum.Key.PACK_ORDER_PRE_CACHE.getCode(packOrder.getId()), packOrder, 30L, TimeUnit.MINUTES);
         return TransferUtils.transfer(packOrder, PackOrderPreRes::new);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long packOrderSubmit(Long orderId) {
-        PackOrder packOrder = RedisUtil.get(orderId.toString());
+        PackOrder packOrder = RedisUtil.get(RedisEnum.Key.PACK_ORDER_PRE_CACHE.getCode(orderId));
         if (packOrder == null) {
             throw new PlatformException(PackOrderErrorCode.ORDER_TIME_OUT);
         }
         packOrderDomain.packOrderCreate(packOrder);
-        RedisUtil.del(orderId.toString());
+        RedisUtil.del(RedisEnum.Key.PACK_ORDER_PRE_CACHE.getCode(orderId));
         return orderId;
     }
 

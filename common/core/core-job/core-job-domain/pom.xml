@@ -21,10 +21,6 @@
             <groupId>com.newzkl.platform.Base.core</groupId>
             <artifactId>core-job-model</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>ddd-domain</artifactId>
-        </dependency>
         <!-- @XxlJob 注解 + XxlJobSpringExecutor -->
         <dependency>
             <groupId>com.xuxueli</groupId>

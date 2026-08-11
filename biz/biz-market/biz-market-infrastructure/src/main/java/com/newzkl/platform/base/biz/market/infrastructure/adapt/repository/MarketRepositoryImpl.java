@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -20,7 +20,6 @@ import com.newzkl.platform.base.biz.market.model.req.market.ClientBindMarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
 import com.newzkl.platform.base.biz.market.model.req.market.UpdateMarketDataReq;
 import com.newzkl.platform.base.biz.market.model.vo.market.*;
-import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Repository

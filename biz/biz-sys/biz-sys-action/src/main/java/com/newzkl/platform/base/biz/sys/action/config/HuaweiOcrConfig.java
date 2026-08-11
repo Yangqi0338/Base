@@ -5,7 +5,7 @@ import com.huaweicloud.sdk.core.auth.BasicCredentials;
 import com.huaweicloud.sdk.core.auth.ICredential;
 import com.huaweicloud.sdk.ocr.v1.OcrClient;
 import com.huaweicloud.sdk.ocr.v1.region.OcrRegion;
-import com.newzkl.platform.base.biz.sys.model.config.support.HuaweiOcrProperties;
+import com.newzkl.platform.base.common.ddd.model.properties.HuaweiOcrProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

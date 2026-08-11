@@ -21,8 +21,8 @@ import com.newzkl.platform.base.biz.account.model.assembler.LoginAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.*;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
 import com.newzkl.platform.base.biz.account.model.auth.res.TokenAndExpireRes;
-import com.newzkl.platform.base.biz.account.model.enums.AuthEnum;
-import com.newzkl.platform.base.biz.account.model.exception.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AuthEnum;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.AccountLoginLog;
 import com.newzkl.platform.base.biz.account.model.res.AccountLoginLogRes;
@@ -38,6 +38,7 @@ import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.lock.impl.RedissonLockUtil;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.redis.utils.ResetPwdRedisUtil;
@@ -70,16 +71,6 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class AccountLoginServiceImpl implements AccountLoginService {
-
-    /**
-     * 找回密码 nonce 分布式锁 key 前缀 (逐字沿用旧实现)
-     */
-    private static final String RESET_PWD_NONCE_LOCK_PREFIX = "reset:pwd:nonce:lock:";
-
-    /**
-     * 找回密码「设备 + 手机号」验证通过标记 key 前缀 (逐字沿用旧实现)
-     */
-    private static final String RESET_PWD_DEVICE_PREFIX = "reset:pwd:device:";
 
     /**
      * 新密码强度: 至少含一个字母与一个数字 (正则逐字沿用旧实现)
@@ -508,7 +499,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         }
 
         // 4. 防重放
-        String nonceLockKey = RESET_PWD_NONCE_LOCK_PREFIX + resetMemberVO.getNonce();
+        String nonceLockKey = RedisEnum.Key.RESET_PWD_NONCE_LOCK.getCode(resetMemberVO.getNonce());
         try {
             if (!RedissonLockUtil.tryLock(nonceLockKey, TimeUnit.SECONDS, 3, 5)) {
                 log.error("重置密码失败：获取nonce锁失败");
@@ -651,7 +642,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
      * @return Redis Key
      */
     private String devicePhoneKey(String phone, String deviceCode) {
-        return RESET_PWD_DEVICE_PREFIX + phone + ":" + deviceCode;
+        return RedisEnum.Key.RESET_PWD_DEVICE.getCode(phone, deviceCode);
     }
 
 }

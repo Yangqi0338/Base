@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.auth.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

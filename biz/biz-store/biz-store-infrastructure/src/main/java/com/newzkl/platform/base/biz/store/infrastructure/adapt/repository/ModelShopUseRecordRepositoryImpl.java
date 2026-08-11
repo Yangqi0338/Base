@@ -31,7 +31,7 @@ public class ModelShopUseRecordRepositoryImpl implements ModelShopUseRecordRepos
 
     @Override
     public Page<ModelShopStorePageRes> modelShopStorePage(ModelShopStorePageQuery query) {
-        return modelShopUseRecordDAO.selectLatestRecordsByGroup(com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport.page(query), query);
+        return modelShopUseRecordDAO.selectLatestRecordsByGroup(com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport.page(query), query);
     }
 
     @Override

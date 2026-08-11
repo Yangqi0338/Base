@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfo
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;

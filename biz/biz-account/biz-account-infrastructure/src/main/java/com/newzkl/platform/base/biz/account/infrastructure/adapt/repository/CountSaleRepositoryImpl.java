@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.infrastructure.entity.CountSaleDO;
 import com.newzkl.platform.base.biz.account.model.req.CountSaleQuery;
 import com.newzkl.platform.base.biz.account.model.res.CountSaleVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

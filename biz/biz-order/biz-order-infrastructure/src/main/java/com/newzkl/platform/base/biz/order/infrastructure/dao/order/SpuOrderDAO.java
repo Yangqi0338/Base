@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO;
 import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import org.apache.ibatis.annotations.Mapper;

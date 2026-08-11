@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.model.permission.req;
 
-import com.newzkl.platform.base.biz.auth.model.enums.PermissionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

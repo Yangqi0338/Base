@@ -1,9 +1,11 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 
+import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
-import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
+import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 
 /**
  * 账户域跨服务出站端口 (outbound port)
@@ -43,4 +45,41 @@ public interface AccountApi {
      * @param goodsPoints 提货积分增量
      */
     void addGoodsPoints(Long accountId, Integer goodsPoints);
+
+    /**
+     * 保存运营商杠杆配置
+     *
+     * @param accountId 账户ID
+     * @param radio     杠杆比例
+     */
+    void leverSave(Long accountId, Integer radio);
+
+    /**
+     * 查询运营商杠杆
+     *
+     * @param operatorId 运营商ID
+     * @return 杠杆值
+     */
+    Integer getLever(Long operatorId);
+
+    /**
+     * 查询供应商提现限额
+     *
+     * @param accountId 供应商账户 id
+     * @return 限额 (分), 无限制返回 0
+     */
+    Integer limitAmount(Long accountId);
+
+    /**
+     * 创建渠道商
+     */
+    void registerChannel(ChannelRegisterReq req);
+
+    /**
+     * 权益配置值对象
+     *
+     * @param level 甄选师等级
+     * @return
+     */
+    PermissionRpcVO levelPermissionVO(RoleEnum.CompanyRole role, Integer level);
 }

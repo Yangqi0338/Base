@@ -31,5 +31,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
         </dependency>
+        <!-- 迁移补充: 观看统计走 Redis 缓冲队列 + 定时回写(替代旧 MQ), 依赖 RedisListUtil/RedissonLockUtil, 与 biz-goods-domain 一致 -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-redis</artifactId>
+        </dependency>
     </dependencies>
 </project>

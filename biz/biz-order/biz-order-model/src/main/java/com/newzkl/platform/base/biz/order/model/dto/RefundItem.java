@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.model.dto;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.Data;
 
 /**
@@ -33,6 +33,6 @@ public class RefundItem{
 	private Money refundAmount;
 
 	public void init() {
-		this.id = SnowflakeIdAble.getSnowflakeId();
+		this.id = SnowflakeGenerator.getSnowflakeId();
 	}
 }

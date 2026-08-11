@@ -25,7 +25,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.AccountBindSyn
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.TripartiteAccountBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.TripartiteBaseRes;
-import com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties;
+import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
 
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
@@ -53,8 +53,8 @@ import java.util.TreeMap;
 import java.util.function.BiConsumer;
 
 import static com.newzkl.platform.base.biz.finance.domain.hf.AmountReq.*;
-import static com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties.publicKey;
-import static com.newzkl.platform.base.biz.finance.model.support.FinanceProperties.HuiFuProperties.sysId;
+import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.publicKey;
+import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.sysId;
 
 /**
  * 汇付工具类

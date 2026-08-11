@@ -25,7 +25,9 @@ public class BusinessCodeUtil {
     }
 
     /**
-     * 用于外部增加
+     * 注册或覆盖业务类型的发号器
+     *
+     * <p>后注册覆盖先注册,供运行期(如 DB 号段发号器)替换枚举默认的内存发号器</p>
      *
      * @param businessType 业务类型
      * @param generator    生成器
@@ -35,9 +37,7 @@ public class BusinessCodeUtil {
             return;
         }
 
-        if (!SEQUENCE_MAP.containsKey(businessType)) {
-            SEQUENCE_MAP.put(businessType, generator);
-        }
+        SEQUENCE_MAP.put(businessType, generator);
     }
 
     private BusinessCodeUtil() {

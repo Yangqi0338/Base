@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SkuSaleInfo;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
@@ -225,7 +225,7 @@ public class SkuOrderDTO extends BaseDTO {
      */
     public void init(OrderItemCommand orderItemCommand, Long orderId, Long spuOrderId, SkuSaleInfo skuVO,
                      Integer freightAmount, EarningsConfigRpcVO channelVO, ChannelNowServiceFeeRes channelNowServiceFee) {
-        this.id = SnowflakeIdAble.getSnowflakeId();
+        this.id = SnowflakeGenerator.getSnowflakeId();
         this.orderId = orderId;
         this.spuId = skuVO.getSpuId();
         this.skuImg = skuVO.getImg();

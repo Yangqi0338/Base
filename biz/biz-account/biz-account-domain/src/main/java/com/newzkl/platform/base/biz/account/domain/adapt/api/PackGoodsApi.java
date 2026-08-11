@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.adapt.api;
 
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
+
 /**
  * 入会礼包商品出站端口 (outbound port)
  *

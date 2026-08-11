@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;

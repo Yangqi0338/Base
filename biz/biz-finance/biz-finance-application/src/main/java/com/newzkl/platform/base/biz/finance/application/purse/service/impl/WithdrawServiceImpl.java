@@ -4,8 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.purse.service.WithdrawService;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseConfigRepository;
-import com.newzkl.platform.base.biz.finance.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
@@ -23,7 +23,7 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.FinanceErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -48,8 +48,7 @@ public class WithdrawServiceImpl implements WithdrawService {
     private final AccountPurseDomain accountPurseService;
     private final AccountPurseConfigRepository accountPurseConfigRepository;
     private final TripartitePurseDomain tripartitePurse;
-
-    private final SupplierApi supplierFacade;
+    private final AccountApi accountApi;
 
     private static HuiFuRollOutReq buildRollOutReq(RollOutApplyVO rollOutApplyVO) {
         HuiFuRollOutReq rollOutReq = new HuiFuRollOutReq();
@@ -100,7 +99,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         PurseEnum.FinanceUser accountType = req.getAccountType();
         if (accountType == PurseEnum.FinanceUser.SUPPLIER) {
             // limitAmount 为分 Integer 门槛
-            Integer restrict = supplierFacade.limitAmount(SecurityUtils.getAccountId());
+            Integer restrict = accountApi.limitAmount(SecurityUtils.getAccountId());
             if (restrict > 0 && req.getAmount().smallerThan(Money.of(restrict))) {
                 return;
             }

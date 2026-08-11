@@ -1,0 +1,21 @@
+ALTER TABLE
+  `project` MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT '名称',
+  MODIFY COLUMN `desc` varchar(255) NULL COMMENT '简介({@code desc} 为 SQL 保留字, 列名需反引号包裹。)',
+  MODIFY COLUMN `province` int NULL COMMENT '省编码',
+  MODIFY COLUMN `city` int NULL COMMENT '市编码',
+  MODIFY COLUMN `area` int NULL COMMENT '区编码',
+  MODIFY COLUMN `basic_amount` bigint NULL COMMENT '合作金额(Money 类型, 落库 BIGINT 分)',
+  MODIFY COLUMN `flags` varchar(255) NULL COMMENT '标签(逗号分隔串)',
+  MODIFY COLUMN `detail` text NULL COMMENT '详情',
+  MODIFY COLUMN `interest_num` int NULL COMMENT '意向人数',
+  MODIFY COLUMN `interest_person` varchar(255) NULL COMMENT '意向人',
+ADD
+  COLUMN `executor` json NULL COMMENT '操作人信息' AFTER `interest_person`,
+ADD
+  COLUMN `creator_id` bigint NULL COMMENT '创建人id' AFTER `executor`,
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+ADD
+  COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = '项目数据对象';

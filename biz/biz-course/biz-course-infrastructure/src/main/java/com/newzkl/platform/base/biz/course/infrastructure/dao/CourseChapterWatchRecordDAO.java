@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CourseChapterWatchRecordDO;
 import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchRecordQuery;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseWatchStatisticRes;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

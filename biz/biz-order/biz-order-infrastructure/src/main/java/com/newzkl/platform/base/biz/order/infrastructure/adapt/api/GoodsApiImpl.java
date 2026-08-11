@@ -14,7 +14,7 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
  * @author KC
  */
 @Slf4j
-@Component
+@Component("orderGoodsApi")
 public class GoodsApiImpl implements GoodsApi {
 
-    @DubboReference
+    @RpcReference
     private ISpuFacade spuFacade;
 
     @Override

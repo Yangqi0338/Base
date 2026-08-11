@@ -4,11 +4,8 @@ package com.newzkl.platform.base.biz.order.infrastructure.dao.settle;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.SettleGoodsDO;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleGoodsQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.time.LocalDateTime;
 
 /**
 * 结算商品信息表

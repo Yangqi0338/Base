@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
+import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
 import lombok.Data;
 
 import java.io.Serializable;

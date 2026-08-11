@@ -24,7 +24,7 @@ import java.util.List;
  * @author KC
  */
 @Slf4j
-@Component
+@Component("orderDictApi")
 @RequiredArgsConstructor
 public class DictApiImpl implements DictApi {
 

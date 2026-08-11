@@ -156,6 +156,16 @@ public class SpuOrderDO extends BaseDO {
     @Index
     private Long accountId;
     /**
+     * 门店名称
+     * @ext 下单快照
+     */
+    private String storeName;
+    /**
+     * 门店头像
+     * @ext 下单快照
+     */
+    private String storeHead;
+    /**
      * 发货完成时间
      */
     private LocalDateTime deliveredTime;

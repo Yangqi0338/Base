@@ -25,5 +25,16 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-domain</artifactId>
         </dependency>
+        <!-- 迁移补充: domain 使用 MP Page(分页), 由 core-utils 传递 mp-extension -->
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
+        </dependency>
+        <!-- 迁移补充: @Resource/@PostConstruct(jakarta) 依赖注入注解, 对齐 biz-finance-domain 既有先例 -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
     </dependencies>
 </project>

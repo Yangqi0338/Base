@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.UserLecturerFollowDO;
 import com.newzkl.platform.base.biz.course.model.follow.query.UserFollowQuery;
 import com.newzkl.platform.base.biz.course.model.follow.res.UserFollowRes;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

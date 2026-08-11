@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.common.core.job.model.model.ExecuteLogEnum;
 import com.newzkl.platform.base.common.core.job.model.req.ExecuteLogQuery;
 import com.newzkl.platform.base.common.core.job.infrastructure.secondLevel.entity.ExecuteLogDO;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;

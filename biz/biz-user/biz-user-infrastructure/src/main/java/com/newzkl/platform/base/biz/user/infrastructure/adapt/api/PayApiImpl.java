@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component("userOrderPayApi")
 public class PayApiImpl implements PayApi {
 
-    @DubboReference
+    @RpcReference
     private PayFacade payFacade;
 
     @Override

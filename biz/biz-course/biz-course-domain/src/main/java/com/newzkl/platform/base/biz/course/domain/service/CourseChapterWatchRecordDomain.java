@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.course.domain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
 import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchRecordQuery;
 import com.newzkl.platform.base.biz.course.model.watch.req.CourseChapterWatchRecordReq;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRecordRes;
@@ -25,6 +26,24 @@ public interface CourseChapterWatchRecordDomain {
      * @return 观看记录视图
      */
     CourseChapterWatchRecordRes saveOrUpdate(CourseChapterWatchRecordReq req);
+
+    /**
+     * 缓冲一次章节观看事件
+     *
+     * <p>章节详情查询时调用, 取当前登录用户 ID 组装观看事件写入 Redis 缓冲队列, 由定时同步任务批量落库
+     * (替代旧 MQ 异步刷新)。无登录用户则跳过; 内部异常仅记录日志, 不影响查询主流程</p>
+     *
+     * @param chapter 章节详情
+     */
+    void bufferWatch(CourseChapterRes chapter);
+
+    /**
+     * 同步观看缓冲队列到数据库
+     *
+     * <p>由定时任务触发, 逐条 drain 缓冲队列中的观看事件并 upsert 观看记录(存在累加观看次数, 否则新增),
+     * 单次上限见 {@code CourseChapterWatchRedisConstant.SYNC_BATCH_SIZE}。逐条落库语义与旧 MQ 消费一致</p>
+     */
+    void syncBucketToDb();
 
     /**
      * 按用户与章节查观看记录

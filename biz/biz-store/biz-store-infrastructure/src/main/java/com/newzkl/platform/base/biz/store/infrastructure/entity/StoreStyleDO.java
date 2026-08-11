@@ -1,16 +1,12 @@
 package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.store.model.enums.StoreStyleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
-
-import java.time.LocalDateTime;
 
 /**
  * 门店样式领域对象

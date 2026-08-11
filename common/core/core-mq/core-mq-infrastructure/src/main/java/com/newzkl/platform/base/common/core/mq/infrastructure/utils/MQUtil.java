@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mq.infrastructure.producer.AbstractMQProducer;
 import com.newzkl.platform.base.common.core.mq.infrastructure.producer.AbstractMQTransactionProducer;
 import com.newzkl.platform.base.common.core.mq.infrastructure.config.MQProperties;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeIdAble;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -64,7 +64,7 @@ public class MQUtil {
     }
 
     public static SendResult send(String tag, Object messageContent) {
-        return send(null, tag, SnowflakeIdAble.getSnowflakeId(), messageContent);
+        return send(null, tag, SnowflakeGenerator.getSnowflakeId(), messageContent);
     }
 
     public static SendResult send(String topic, String tag, Long localMessageId, Object messageContent) {
@@ -115,7 +115,7 @@ public class MQUtil {
     }
 
     public static SendResult sendDelayed(String tag, Object messageContent, int delayTimeLevel) {
-        return sendDelayed(null, tag, SnowflakeIdAble.getSnowflakeId(), messageContent, delayTimeLevel);
+        return sendDelayed(null, tag, SnowflakeGenerator.getSnowflakeId(), messageContent, delayTimeLevel);
     }
     /**
      * 发送延迟消息（支持延迟级别 1-18）

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.user.infrastructure.entity.PackGoodsDO;
 import com.newzkl.platform.base.biz.user.model.pack.query.PackGoodsQuery;
 import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -32,17 +32,15 @@ public class EarningsEnum implements Serializable {
         RECHARGE(2, "渠道商充值"),
         /** 商品 */
         GOODS(3, "商品"),
-        /** 兑换码 */
-        REDEEM_CODE(4, "兑换码"),
         /** 供应商运营账户充值 */
         SUPPLIER_RECHARGE(5, "供应商运营账户充值"),
         /** 分红 */
         DIVIDEND_BONUS(6, "分红"),
         /** 商品席位 */
         GOODS_SEAT(7, "商品席位"),
-        /**
-         * 课程
-         */
+        /** 数智门店 */
+        STORE(8, "数智门店"),
+        /** 课程 */
         COURSE(9, "课程"),
         ;
 

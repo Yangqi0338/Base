@@ -1,5 +1,5 @@
 package com.newzkl.platform.base.biz.sys.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.sys.domain.adapt.repository.AppVersionRepository;
@@ -10,8 +10,6 @@ import com.newzkl.platform.base.biz.sys.model.appversion.vo.AppVersionVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * app 版本仓储实现

@@ -17,11 +17,6 @@ import java.util.List;
 public class CodeReq {
 
     /**
-     * 验证码缓存 Hash key
-     */
-    public static final String KEY_PREFIX = "SMS:";
-
-    /**
      * 手机号
      */
     @NotBlank(message = "手机号不能为空")

@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.biz.finance.model.enums.finance.FinanceErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.FinanceErrorCode;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;

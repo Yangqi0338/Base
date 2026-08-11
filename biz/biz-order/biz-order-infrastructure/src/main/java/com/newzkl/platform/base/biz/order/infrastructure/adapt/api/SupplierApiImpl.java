@@ -13,16 +13,16 @@ import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.facade.SupplierOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
-@Service
+@Service("orderSupplierApi")
 public class SupplierApiImpl implements SupplierApi {
 
-    @DubboReference
+    @RpcReference
     private SupplierFacade supplierFacade;
 
     @Override

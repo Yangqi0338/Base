@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.domain.service;
 
-import com.newzkl.platform.base.biz.auth.model.enums.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 
 import java.util.Collection;
 import java.util.List;

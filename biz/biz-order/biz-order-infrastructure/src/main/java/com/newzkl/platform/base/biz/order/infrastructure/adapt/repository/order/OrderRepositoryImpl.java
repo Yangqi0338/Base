@@ -27,11 +27,12 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -58,8 +59,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderRepositoryImpl extends RepositorySupport implements OrderRepository {
-
-    private static final String PRE_PAY_ORDER_KEY = "prePayOrder:";
 
     private static final Long TIME_OUT = 60L * 60;
 
@@ -560,7 +559,7 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     private String getPrePayOrderKey(MemberOrderCreateCommand memberOrderCreateCommand){
-        String key = PRE_PAY_ORDER_KEY + memberOrderCreateCommand.getStoreId() + "-" + memberOrderCreateCommand.getAccountId();
+        String key = RedisEnum.Key.PRE_PAY_ORDER.getCode(memberOrderCreateCommand.getStoreId(), memberOrderCreateCommand.getAccountId());
         log.info("预订单的key:{}",key);
         return key;
     }

@@ -1,12 +1,11 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.support;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.support.CategoryRepository;
-import com.newzkl.platform.base.biz.goods.infrastructure.support.CategoryBaseDO;
 import com.newzkl.platform.base.biz.goods.model.biz.req.CategoryReq;
 import com.newzkl.platform.base.biz.goods.model.biz.req.query.CategoryQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

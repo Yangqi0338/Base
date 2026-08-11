@@ -52,8 +52,8 @@ public class UserAccountPolicy extends AbsAccountPolicy {
 
     public void buildSaveReq(AccountSaveReq req) {
         // 若是没有昵称 头像 IM账号 默认生成
-        req.setNickname(StrUtil.blankToDefault(req.getNickname(), BusinessCodeUtil.generate(BusinessType.DEFAULT_USER_NAME)));
-        req.setHeadImg(StrUtil.blankToDefault(req.getHeadImg(), BusinessCodeUtil.generate(BusinessType.DEFAULT_AVATAR)));
+        req.setNickname(StrUtil.blankToDefault(req.getNickname(), BusinessCodeUtil.generate(BusinessType.USER_DEFAULT_NAME)));
+        req.setHeadImg(StrUtil.blankToDefault(req.getHeadImg(), BusinessCodeUtil.generate(BusinessType.USER_DEFAULT_AVATAR)));
         req.setUserAccount(StrUtil.blankToDefault(req.getUserAccount(), BusinessCodeUtil.generate(BusinessType.IM_USER_ACCOUNT)));
 
         // 用im账号直接作为登录凭证

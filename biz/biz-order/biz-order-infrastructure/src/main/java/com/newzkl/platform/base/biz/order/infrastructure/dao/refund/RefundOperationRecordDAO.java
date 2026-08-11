@@ -1,12 +1,10 @@
 package com.newzkl.platform.base.biz.order.infrastructure.dao.refund;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import com.newzkl.platform.base.biz.order.infrastructure.entity.DeliverDO;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.RefundOperationRecordDO;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
-import com.newzkl.platform.base.common.ddd.infrastructure.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

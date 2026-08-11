@@ -1,10 +1,8 @@
 package com.newzkl.platform.base.biz.user.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.biz.user.model.pack.enums.PackOrderStateEnum;
-import com.newzkl.platform.base.biz.user.model.pack.res.PackGoodsRes;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
 import com.newzkl.platform.base.biz.user.model.pack.vo.PackGoodsVO;
-import com.newzkl.platform.base.biz.user.model.relation.res.ShipAddressRes;
 import com.newzkl.platform.base.biz.user.model.relation.vo.ShipAddressVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
