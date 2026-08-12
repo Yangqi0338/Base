@@ -398,11 +398,6 @@ public class AccountDomainImpl implements AccountDomain {
                 null,
                 null
         );
-        //主账号计数加1
-        AccountVO parentAccount = new AccountVO();
-        parentAccount.setId(account.getId());
-        parentAccount.setSubAccountCount(account.getSubAccountCount() + 1);
-        accountRepository.accountEdit(parentAccount, null);
         //保存子账号
         accountRepository.subAccountSave(subAccount);
         return account;

@@ -50,11 +50,9 @@ public class DealerVO extends BaseRes {
     /**
      * 绑定的二级市场数量
      */
-    private Integer marketCount;
     /**
      * 供应商商品数量
      */
-    private Integer supplierGoodsCount;
     /**
      * 自身的订单流水 (Money, 落库 BIGINT 分)
      */

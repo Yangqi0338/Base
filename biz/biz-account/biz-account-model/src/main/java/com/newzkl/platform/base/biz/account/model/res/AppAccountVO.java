@@ -53,7 +53,6 @@ public class AppAccountVO extends BaseRes {
     /**
      * 运营商侧: 下级总人数
      */
-    private Integer subAccountCount = 0;
     /**
      * 运营商侧: 运营商侧总人数
      */

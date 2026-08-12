@@ -20,7 +20,6 @@ public class IndexCountRes {
     /**
      * 订单量
      */
-    private Integer orderCount;
     /**
      * 订单金额
      */

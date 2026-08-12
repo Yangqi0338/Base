@@ -32,7 +32,6 @@ public class ArticleCategoryRes extends BaseRes implements Serializable {
     /**
      * 文章数量
      */
-    private Integer articleCount;
 
     /**
      * 是否启用(0-禁用, 1-启用)

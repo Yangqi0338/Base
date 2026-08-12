@@ -35,7 +35,6 @@ public class VideoCategory implements Serializable {
     /**
      * 视频数量
      */
-    private Integer videoCount;
 
     /**
      * 创建时间

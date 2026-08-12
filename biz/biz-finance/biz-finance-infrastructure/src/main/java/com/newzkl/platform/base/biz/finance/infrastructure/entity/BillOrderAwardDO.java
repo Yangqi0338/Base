@@ -57,6 +57,5 @@ public class BillOrderAwardDO extends BaseDO {
     /**
      * 订单数
      */
-    private Integer orderCount;
 
 }

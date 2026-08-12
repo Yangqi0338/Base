@@ -48,7 +48,6 @@ public class EarningContributeDO extends BaseDO {
     /**
      * 总消费
      */
-    private Money totalConsume;
 
     /**
      * 分润贡献

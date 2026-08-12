@@ -24,7 +24,6 @@ public interface AccountPurseAssembler extends BaseAssembler<AccountPurseReq, Ac
 
     @Mappings({
             @Mapping(target = "earnings", source = "initAmount"),
-            @Mapping(target = "totalEarnings", source = "initAmount"),
     })
     AccountPurseVO addReq2VO(AddAccountPurseReq req);
 

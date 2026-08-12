@@ -95,9 +95,6 @@ public class ConsumeEarningDataRepositoryImpl implements ConsumeEarningDataRepos
             return totalEarningVO;
         }
         totalEarningVO = new TotalEarningVO();
-
-        // DAO 返回分 Integer, 包成 Money
-        totalEarningVO.setTotalEarning(Money.of(earningRecordDAO.queryTotalEarning(1)));
         totalEarningVO.setWaitEarning(Money.of(earningRecordDAO.queryTotalEarning(0)));
         RedisUtil.set(RedisEnum.Key.TOTAL_EARNING_AMOUNT.getCode(), totalEarningVO, 5L, TimeUnit.HOURS);
         return totalEarningVO;

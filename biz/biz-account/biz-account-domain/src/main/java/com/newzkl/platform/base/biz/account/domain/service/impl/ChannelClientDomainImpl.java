@@ -42,7 +42,6 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
         }
         ChannelVO item = TransferUtils.transfer(customSaveReq, ChannelVO::new, (c, v) -> {
             v.setDealerEarnings(Money.ZERO);
-            v.setMarketCount(0);
         });
         item.setRole(RoleEnum.CompanyRole.CHANNEL);
         item.setState(ChannelEnum.State.APPLY);

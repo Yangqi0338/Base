@@ -39,5 +39,4 @@ public class ChannelOutRes extends BaseRes {
     /**
      * 市场数量
      */
-    private Integer marketCount;
 }

@@ -49,7 +49,6 @@ public class AccountStructureTreeVO extends AccountStructureVO {
      * 下级账号数量
      *
      */
-    private Integer subAccountCount;
 
     /** 子账号数量映射 */
     @JsonIgnore
@@ -121,7 +120,6 @@ public class AccountStructureTreeVO extends AccountStructureVO {
 
     public void buildTotalCount(CommonEnum.Client client) {
         this.subAccountCountMap = new HashMap<>();
-        this.subAccountCount = 0;
         if (CollUtil.isNotEmpty(children)) {
             children.forEach(subAccount -> {
                 if (MapUtil.isEmpty(subAccount.getSubAccountCountMap())) {
@@ -137,7 +135,6 @@ public class AccountStructureTreeVO extends AccountStructureVO {
                                                     ))));
 
                     subAccountCountMap.compute(role, (k, v) -> v == null ? 1 : v + 1);
-                    subAccountCount += 1;
                 }
             });
         }

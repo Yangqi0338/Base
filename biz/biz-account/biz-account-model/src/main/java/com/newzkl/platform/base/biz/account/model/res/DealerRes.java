@@ -45,11 +45,9 @@ public class DealerRes {
     /**
      * 绑定的二级市场数量
      */
-    private Integer marketCount;
     /**
      * 供应商商品数量
      */
-    private Integer supplierGoodsCount;
     /**
      * 自身的订单流水 (Money, 落库 BIGINT 分)
      */
@@ -77,7 +75,6 @@ public class DealerRes {
 
     public void init() {
 
-        this.marketCount = 0;
         this.inviteChannelNumber = 0;
         this.serviceFee = Money.ZERO;
         this.serviceRate = 0.0;
@@ -85,7 +82,6 @@ public class DealerRes {
         this.levelUpProgress = 0.0;
         this.orderTotalAmount = Money.ZERO;
         this.orderAmount = Money.ZERO;
-        this.supplierGoodsCount = 0;
         if (StrUtil.isBlank(this.phone)) {
             this.phone = this.username;
         }

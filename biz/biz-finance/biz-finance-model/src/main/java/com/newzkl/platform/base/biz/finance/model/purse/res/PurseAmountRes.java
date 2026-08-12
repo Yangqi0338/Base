@@ -33,7 +33,6 @@ public class PurseAmountRes implements Serializable {
     /**
      * 总收益
      */
-    private Money totalEarnings;
 
     /**
      * 开户时间

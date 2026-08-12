@@ -42,7 +42,6 @@ public class CountSaleVO extends BaseRes {
     /**
      * 累计订单金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalOrderAmount;
 
     /**
      * 累计退款数

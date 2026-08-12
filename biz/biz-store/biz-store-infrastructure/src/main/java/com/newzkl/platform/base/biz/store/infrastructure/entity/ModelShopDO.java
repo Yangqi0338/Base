@@ -58,7 +58,6 @@ public class ModelShopDO extends BaseDO {
     /**
      * 总收益
      */
-    private Money totalEarning;
 
     /**
      * 审核状态
@@ -85,27 +84,22 @@ public class ModelShopDO extends BaseDO {
     /**
      * 累计使用门店数
      */
-    private Integer totalUseStoreNum;
 
     /**
      * 累计下单金额
      */
-    private Money totalOrderAmount;
 
     /**
      * 累计下单数
      */
-    private Integer totalOrderNum;
 
     /**
      * 累计支付金额
      */
-    private Money totalPayAmount;
 
     /**
      * 累计支付订单数
      */
-    private Integer totalPayNum;
 
     /**
      * 状态:0正常，1已禁用

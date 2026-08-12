@@ -61,11 +61,9 @@ public class SubAccount extends BaseRes {
     /**
      * 子账号数量
      */
-    private Integer subAccountCount;
     /**
      * 下级数量
      */
-    private Integer belowCount;
     /**
      * 邀请人账号ID, json格式, 每个角色都可能有邀请人账号ID
      */
@@ -123,7 +121,5 @@ public class SubAccount extends BaseRes {
         this.nameAuthAuditState = AuditEnum.State.CUSTOM.getCode();
         //默认实名认证审批状态
         this.setNameAuthAuditState(AuditEnum.State.CUSTOM.getCode());
-        this.subAccountCount = 0;
-        this.belowCount = 0;
     }
 }

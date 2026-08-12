@@ -77,7 +77,6 @@ public class Store{
     /**
      * 总客户数
      */
-    private Integer customCount;
 
     /**
      * 样式code

@@ -82,11 +82,9 @@ public class AccountVO extends BaseRes {
     /**
      * 子账号数量
      */
-    private Integer subAccountCount;
     /**
      * 下级数量
      */
-    private Integer belowCount;
     /**
      * 帐号状态
      */
@@ -184,8 +182,6 @@ public class AccountVO extends BaseRes {
 
         //默认实名认证审批状态
         this.nameAuthAuditState = AuditEnum.State.CUSTOM;
-        this.subAccountCount = 0;
-        this.belowCount = 0;
         return this;
     }
 

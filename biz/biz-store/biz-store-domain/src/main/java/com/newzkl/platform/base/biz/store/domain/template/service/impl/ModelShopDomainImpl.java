@@ -142,35 +142,6 @@ public class ModelShopDomainImpl implements ModelShopDomain {
             return page;
         }
 
-        // 收集门店ID
-        List<Long> storeIdList = page.getRecords().stream()
-                .map(ModelShopStorePageRes::getStoreId)
-                .distinct()
-                .collect(Collectors.toList());
-
-        // 批量查询订单统计数据
-        List<ModelShopOrderDataVO> dataVOList = modelShopOrderRecordRepository.modelShopPayOrderData(query.getModeShopId(), storeIdList);
-
-        // 构建映射关系（storeId -> 统计数据）
-        Map<Long, ModelShopOrderDataVO> orderDataMap = dataVOList.stream()
-                .collect(Collectors.toMap(
-                        ModelShopOrderDataVO::getStoreId,
-                        data -> data,
-                        (existing, replacement) -> existing
-                ));
-
-        // 填充订单统计数据
-        page.getRecords().forEach(item -> {
-            ModelShopOrderDataVO orderData = orderDataMap.get(item.getStoreId());
-            if (orderData != null) {
-                item.setTotalPayNum(orderData.getTotalPayNum());
-                item.setTotalPayAmount(orderData.getTotalPayAmount());
-            } else {
-                // 没有订单数据的门店设置为0
-                item.setTotalPayNum(0);
-                item.setTotalPayAmount(Money.ZERO);
-            }
-        });
 
         return page;
     }

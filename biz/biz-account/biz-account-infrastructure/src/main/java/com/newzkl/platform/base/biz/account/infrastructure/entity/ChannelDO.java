@@ -45,7 +45,6 @@ public class ChannelDO extends BaseDO {
     /**
      * 市场数量
      */
-    private Integer marketCount;
     /**
      * 数字门店权限
      */

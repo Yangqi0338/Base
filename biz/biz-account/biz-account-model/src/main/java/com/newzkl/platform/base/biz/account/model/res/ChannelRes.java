@@ -83,7 +83,6 @@ public class ChannelRes implements Serializable {
     /**
      * 市场数量
      */
-    private Integer marketCount;
     /**
      * 营业执照
      */
@@ -119,7 +118,6 @@ public class ChannelRes implements Serializable {
     /**
      * 总订单金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalOrderAmount;
     /**
      * 总售后笔数
      */
@@ -140,7 +138,6 @@ public class ChannelRes implements Serializable {
     /**
      * 客户总数
      */
-    private String customCount;
 
     /**
      * 联系方式

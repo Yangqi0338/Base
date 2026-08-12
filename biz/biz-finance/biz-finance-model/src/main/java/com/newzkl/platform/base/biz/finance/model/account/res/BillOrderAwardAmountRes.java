@@ -11,10 +11,8 @@ public class BillOrderAwardAmountRes implements Serializable {
     /**
      * 订单总金额
      */
-    private Integer totalOrderAmount;
 
     /**
      * 订单数量
      */
-    private Integer orderCount;
 }

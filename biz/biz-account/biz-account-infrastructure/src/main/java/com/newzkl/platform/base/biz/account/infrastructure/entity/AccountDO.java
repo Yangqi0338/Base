@@ -91,11 +91,9 @@ public class AccountDO extends BaseDO {
     /**
      * 子账号数量
      */
-    private Integer subAccountCount;
     /**
      * 下级数量
      */
-    private Integer belowCount;
     /**
      * 邀请人ID
      */

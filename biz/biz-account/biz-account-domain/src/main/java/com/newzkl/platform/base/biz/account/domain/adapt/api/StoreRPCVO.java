@@ -93,7 +93,6 @@ public class StoreRPCVO implements Serializable {
     /**
      * 自定义数量
      */
-    private Integer customCount;
 
     /**
      * 风格编码

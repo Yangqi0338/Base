@@ -42,7 +42,6 @@ public class StoreRPCVO extends BaseRes {
     /** 成交金额。 */
     private Integer dealerAmount;
     /** 总客户数。 */
-    private Integer customCount;
     /** 样式code。 */
     private String styleCode;
 }

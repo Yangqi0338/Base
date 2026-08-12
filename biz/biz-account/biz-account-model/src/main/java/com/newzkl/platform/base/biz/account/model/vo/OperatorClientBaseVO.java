@@ -30,7 +30,6 @@ public class OperatorClientBaseVO extends BaseRes {
     /**
      * 供应商商品数量
      */
-    private Integer supplierGoodsCount;
     /**
      * 自身的订单流水 (Money, 落库 BIGINT 分)
      */

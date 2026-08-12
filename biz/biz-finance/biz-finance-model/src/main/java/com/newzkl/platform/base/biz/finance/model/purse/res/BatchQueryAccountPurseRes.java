@@ -19,7 +19,6 @@ public class BatchQueryAccountPurseRes {
     /**
      * 累计收益
      */
-    private Money totalEarnings;
 
     /**
      * 可用收益

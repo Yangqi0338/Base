@@ -34,7 +34,6 @@ public class AccountContributeRes {
     /**
      * 总消费
      */
-    private Integer totalConsume;
 
     /**
      * 分润贡献

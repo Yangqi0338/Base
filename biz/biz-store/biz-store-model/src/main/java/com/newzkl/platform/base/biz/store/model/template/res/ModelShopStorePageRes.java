@@ -29,12 +29,10 @@ public class ModelShopStorePageRes extends BaseRes {
     /**
      * 总支付金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalPayAmount;
 
     /**
      * 总支付笔数
      */
-    private Integer totalPayNum;
 
     /**
      * 样板店名称

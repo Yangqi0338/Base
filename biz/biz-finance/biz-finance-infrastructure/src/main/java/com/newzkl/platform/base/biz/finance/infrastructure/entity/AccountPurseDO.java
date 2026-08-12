@@ -47,7 +47,6 @@ public class AccountPurseDO extends BaseDO {
     /**
      * 总收益
      */
-    private Money totalEarnings;
 
     /**
      * 三方余额

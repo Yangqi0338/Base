@@ -31,7 +31,6 @@ public class EarningContributeReq extends BaseRes {
     /**
      * 总消费
      */
-    private Money totalConsume;
     /**
      * 分润贡献
      */

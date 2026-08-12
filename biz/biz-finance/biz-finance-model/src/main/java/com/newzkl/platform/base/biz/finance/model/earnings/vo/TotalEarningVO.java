@@ -14,7 +14,6 @@ public class TotalEarningVO {
     /**
      * 累计已分润金额
      */
-    private Money totalEarning;
 
     /**
      * 带分润金额

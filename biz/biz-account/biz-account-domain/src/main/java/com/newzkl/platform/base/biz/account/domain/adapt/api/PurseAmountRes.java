@@ -39,7 +39,6 @@ public class PurseAmountRes implements Serializable {
     /**
      * 累计收益 (分)
      */
-    private Integer totalEarnings;
 
     /**
      * 创建时间

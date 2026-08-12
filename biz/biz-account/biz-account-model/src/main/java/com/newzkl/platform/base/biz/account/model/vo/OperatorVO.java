@@ -65,7 +65,6 @@ public class OperatorVO extends BaseRes {
     /**
      * 供应商商品数量
      */
-    private Integer supplierGoodsCount;
     /**
      * 自身的订单流水 (Money, 落库 BIGINT 分)
      */
@@ -148,7 +147,6 @@ public class OperatorVO extends BaseRes {
         this.oneMarketNumber = 0;
         this.twoMarketNumber = 0;
         this.inviteChannelNumber = 0;
-        this.supplierGoodsCount = 0;
         this.serviceAmount = Money.ZERO;
         this.orderAmount = Money.ZERO;
         this.goodsPoints = 0;

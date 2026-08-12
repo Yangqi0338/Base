@@ -25,11 +25,7 @@ public class StoreAccountExportRes implements Serializable {
     @ExcelProperty("账号")
     private String username;
 
-    @ExcelProperty("累计消费（元）")
-    private String countPayAmount;
 
-    @ExcelProperty("累计下单（次）")
-    private Integer countPayNumber;
 
     @ExcelProperty("绑定时间")
     private LocalDateTime createTime;

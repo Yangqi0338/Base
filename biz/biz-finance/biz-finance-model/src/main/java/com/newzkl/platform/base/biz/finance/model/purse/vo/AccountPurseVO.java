@@ -56,7 +56,6 @@ public class AccountPurseVO {
     /**
      * 总收益
      */
-    private Money totalEarnings;
 
     /**
      * 开户时间

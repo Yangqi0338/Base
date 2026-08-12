@@ -32,7 +32,6 @@ public class ArticleCategoryDO extends BaseDO {
     /**
      * 文章数量
      */
-    private Integer articleCount;
 
     /**
      * 是否启用

@@ -55,7 +55,6 @@ public class BillOrderAwardVO extends BaseRes {
     /**
      * 订单数
      */
-    private Integer orderCount;
 
     /**
      * 创建日期

@@ -52,7 +52,6 @@ public class ChannelDTO implements Serializable {
     /** 交易师收益。 */
     private Money dealerEarnings;
     /** 市场数量。 */
-    private Integer marketCount;
     /** 营业执照。 */
     private String license;
     /** 数字门店权限。 */
@@ -70,7 +69,6 @@ public class ChannelDTO implements Serializable {
     /** 总订单笔数。 */
     private Integer totalOrderNumber;
     /** 总订单金额。 */
-    private Money totalOrderAmount;
     /** 总售后笔数。 */
     private Integer totalRefundNumber;
     /** 总售后金额。 */
@@ -80,7 +78,6 @@ public class ChannelDTO implements Serializable {
     /** 层级贡献金额。 */
     private String contributeAmountStr;
     /** 客户总数。 */
-    private String customCount;
     /** 联系方式。 */
     private String contactsWay;
     /** 渠道商类型。 */

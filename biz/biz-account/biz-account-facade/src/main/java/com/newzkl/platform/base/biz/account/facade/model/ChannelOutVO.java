@@ -77,7 +77,6 @@ public class ChannelOutVO extends BaseRes implements java.io.Serializable{
      /**
      * 市场数量
      */
-     private Integer marketCount;
      /**
       * 适配
       */

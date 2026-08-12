@@ -63,10 +63,6 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
                 .notEmptyIn(StoreAccountDO::getAccountId, req.getAccountIdList())
                 .notEmptyEq(StoreAccountDO::getRelationType, req.getRelationType())
                 .doBetween(StoreAccountDO::getCreateTime, req.getBandTimeL(), req.getBandTimeR())
-                // countPayAmount 已 Money; 入参分 Integer 边界经 Money.of 升 Money 走 doBetween
-                .doBetween(StoreAccountDO::getCountPayAmount,
-                        req.getPayAmountL() == null ? null : Money.of(req.getPayAmountL()),
-                        req.getPayAmountR() == null ? null : Money.of(req.getPayAmountR()))
                 .doBetween(StoreAccountDO::getLastViewTime, req.getViewTimeL(), req.getViewTimeR())
                 .orderBy(req);
 
@@ -179,12 +175,7 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
         if (exists) {
             LambdaUpdateWrapper<StoreAccountDO> updateWrapper = new LambdaUpdateWrapper<StoreAccountDO>()
                     .eq(StoreAccountDO::getStoreId, storeAccountPayMsg.getStoreId())
-                    .eq(StoreAccountDO::getAccountId, storeAccountPayMsg.getAccountId());
-
-            // 支付笔数加一，累加总支付金额，更新最后支付时间
-            // MQ payAmount 为分 Integer; count_pay_amount setSql 累加走裸分整数 (列 BIGINT 分), lastPayAmount 列经 MoneyTypeHandler 需 Money.of 升 Money
-            updateWrapper.setSql("count_pay_number = IFNULL(count_pay_number, 0) + 1")
-                    .setSql("count_pay_amount = IFNULL(count_pay_amount, 0) + " + storeAccountPayMsg.getPayAmount())
+                    .eq(StoreAccountDO::getAccountId, storeAccountPayMsg.getAccountId())
                     .set(StoreAccountDO::getLastPayTime, LocalDateTime.now())
                     .set(StoreAccountDO::getLastPayAmount, Money.of(storeAccountPayMsg.getPayAmount()));
 
@@ -194,10 +185,7 @@ public class StoreAccountRepositoryImpl extends ServiceImpl<StoreAccountDAO, Sto
             storeAccount.setStoreId(storeAccountPayMsg.getStoreId());
             storeAccount.setChannelId(storeAccountPayMsg.getStoreId());
             storeAccount.setAccountId(storeAccountPayMsg.getAccountId());
-            // MQ payAmount 分 Integer → Money.of 升 Money
-            storeAccount.setCountPayAmount(Money.of(storeAccountPayMsg.getPayAmount()));
             storeAccount.setLastPayAmount(Money.of(storeAccountPayMsg.getPayAmount()));
-            storeAccount.setCountPayNumber(1);
             storeAccount.setLastPayTime(LocalDateTime.now());
             this.createStoreAccount(storeAccount);
         }

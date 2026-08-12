@@ -101,7 +101,6 @@ public class ChannelVO extends BaseRes {
     /**
      * 市场数量
      */
-    private Integer marketCount;
     /**
      * 营业执照
      */
@@ -141,7 +140,6 @@ public class ChannelVO extends BaseRes {
     /**
      * 总订单金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalOrderAmount;
     /**
      * 总售后笔数
      */

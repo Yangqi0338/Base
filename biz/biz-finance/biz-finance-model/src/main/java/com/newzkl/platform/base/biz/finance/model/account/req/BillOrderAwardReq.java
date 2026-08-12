@@ -45,7 +45,6 @@ public class BillOrderAwardReq extends BaseRes {
     /**
      * 订单数
      */
-    private Integer orderCount;
 
     /**
      * 角色名称

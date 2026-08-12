@@ -18,7 +18,6 @@ public class DealerOutRes extends OperatorClientBaseVO {
     /**
      * 绑定的二级市场数量
      */
-    private Integer marketCount;
     /**
      * 分润收益 (Money, 落库 BIGINT 分)
      */

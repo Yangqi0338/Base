@@ -67,7 +67,6 @@ public class ChannelPageRes extends BaseRes {
     /**
      * 客户总数
      */
-    private Integer customCount;
 
     /**
      * 采购金余额 (Money, 落库 BIGINT 分)

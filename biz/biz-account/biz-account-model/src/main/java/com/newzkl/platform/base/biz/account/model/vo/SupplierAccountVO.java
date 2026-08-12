@@ -157,7 +157,6 @@ public class SupplierAccountVO extends BaseRes {
     /**
      * 总订单金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalOrderAmount;
     /**
      * 总售后金额 (Money, 落库 BIGINT 分)
      */

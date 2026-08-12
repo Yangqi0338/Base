@@ -35,7 +35,6 @@ public class ArticleCategory implements Serializable {
     /**
      * 文章数量
      */
-    private Integer articleCount;
 
     /**
      * 创建时间

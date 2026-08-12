@@ -45,7 +45,6 @@ public class EarningContributeRpcVO implements Serializable {
     /**
      * 累计消费 (分)
      */
-    private Integer totalConsume;
 
     /**
      * 收益贡献 (分)

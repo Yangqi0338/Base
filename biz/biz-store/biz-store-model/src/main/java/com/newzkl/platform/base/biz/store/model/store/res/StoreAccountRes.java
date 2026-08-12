@@ -66,17 +66,14 @@ public class StoreAccountRes implements Serializable {
     /**
      * 统计：支付笔数
      */
-    private Integer countPayNumber;
 
     /**
      * 支付金额 (Money, 落库 BIGINT 分)
      */
-    private Money countPayAmount;
 
     /**
      * 进店总数
      */
-    private Integer countVisitNumber;
 
     /**
      * 最后进店时间

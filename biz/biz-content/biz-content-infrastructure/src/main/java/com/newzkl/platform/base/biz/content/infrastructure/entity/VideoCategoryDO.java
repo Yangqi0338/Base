@@ -35,7 +35,6 @@ public class VideoCategoryDO extends BaseDO {
     /**
      * 视频数量
      */
-    private Integer videoCount;
 
     /**
      * 是否启用

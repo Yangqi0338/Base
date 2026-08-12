@@ -22,27 +22,22 @@ public class ModelShopDataRes implements Serializable {
     /**
      * 累计使用门店数
      */
-    private Integer totalUseStoreNum;
 
     /**
      * 累计下单金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalOrderAmount;
 
     /**
      * 累计下单数
      */
-    private Integer totalOrderNum;
 
     /**
      * 累计支付金额 (Money, 落库 BIGINT 分)
      */
-    private Money totalPayAmount;
 
     /**
      * 累计支付订单数
      */
-    private Integer totalPayNum;
 
     /**
      *  门店使用数据

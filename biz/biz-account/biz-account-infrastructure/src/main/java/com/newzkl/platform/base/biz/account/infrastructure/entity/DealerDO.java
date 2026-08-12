@@ -20,9 +20,7 @@ public class DealerDO extends OperatorClientBaseDO {
     /**
      * 绑定的二级市场数量
      */
-    private Integer marketCount;
     /**
      * 供应商商品数量
      */
-    private Integer supplierGoodsCount;
 }

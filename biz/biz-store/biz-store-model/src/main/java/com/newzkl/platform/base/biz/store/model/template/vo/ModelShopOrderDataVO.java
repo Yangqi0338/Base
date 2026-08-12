@@ -17,11 +17,9 @@ public class ModelShopOrderDataVO {
     /**
      * 总支付金额 (Money; XML SUM(amount) 分 → MoneyTypeHandler 还原)
      */
-    private Money totalPayAmount;
 
     /**
      * 总支付笔数
      */
-    private Integer totalPayNum;
 
 }

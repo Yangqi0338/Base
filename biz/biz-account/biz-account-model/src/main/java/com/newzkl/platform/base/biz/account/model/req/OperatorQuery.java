@@ -57,5 +57,4 @@ public class OperatorQuery extends BizPageQuery {
     /**
      * 供应商商品数量
      */
-    private Integer supplierGoodsCount;
 }

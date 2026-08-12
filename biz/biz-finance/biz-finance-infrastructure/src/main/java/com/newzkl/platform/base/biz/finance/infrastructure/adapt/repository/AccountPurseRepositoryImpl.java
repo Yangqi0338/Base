@@ -147,9 +147,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
                 .toUpdate()
                 // 增加余额 (Money → 分 long 落库累加)
-                .setIncrBy(AccountPurseDO::getEarnings, amount.getCent())
-                // 根据flag决定是否增加总消费
-                .setIncrBy(isAddTotal, AccountPurseDO::getTotalEarnings, amount.getCent());
+                .setIncrBy(AccountPurseDO::getEarnings, amount.getCent());
 
         return accountPurseDAO.update(uw);
     }
@@ -168,9 +166,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
                 // 若是不允许负数, 则余额必须大于0
                 .gt(!isNegative, AccountPurseDO::getEarnings, 0)
                 // 扣减余额 (Money → 分 long 落库累减)
-                .setDecrBy(AccountPurseDO::getEarnings, amount.getCent())
-                // 根据flag决定是否减少总消费
-                .setDecrBy(isSubTotal, AccountPurseDO::getTotalEarnings, amount.getCent());
+                .setDecrBy(AccountPurseDO::getEarnings, amount.getCent());
 
         return accountPurseDAO.update(uw);
     }
