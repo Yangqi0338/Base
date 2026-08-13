@@ -1,11 +1,9 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsQuery;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PackGoodsSaveReq;
 import com.newzkl.platform.base.biz.account.domain.repository.LevelRepository;
 import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
+import com.newzkl.platform.base.biz.account.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.LevelAssembler;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
@@ -14,9 +12,13 @@ import com.newzkl.platform.base.biz.account.model.level.vo.ConditionVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.LevelVO;
 import com.newzkl.platform.base.biz.account.model.level.vo.PackCondition;
 import com.newzkl.platform.base.biz.account.model.level.vo.PermissionVO;
+import com.newzkl.platform.base.biz.account.model.pack.req.PackGoodsCommand;
+import com.newzkl.platform.base.biz.account.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ import java.util.List;
  * 等级领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.level.service.impl.LevelDomainImpl}。
- * 旧实现直连 {@code @DubboReference IPackGoodsFacade}, 中台化后改走出站端口 {@code PackGoodsApi}。</p>
+ * 旧实现直连 {@code @DubboReference IPackGoodsFacade}, PackGoods 迁回本域后直连 {@link PackGoodsDomain}</p>
  *
  * @author KC
  */
@@ -43,7 +45,7 @@ public class LevelDomainImpl implements LevelDomain {
 
     private final LevelRepository levelRepository;
     private final LevelAssembler assembler;
-    private final PackGoodsApi packGoodsApi;
+    private final PackGoodsDomain packGoodsDomain;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -61,14 +63,14 @@ public class LevelDomainImpl implements LevelDomain {
         }
 
         PackCondition pack = condition.getPack();
-        PackGoodsSaveReq packGoodsSaveReq = new PackGoodsSaveReq();
-        packGoodsSaveReq.setId(pack.getPackGoodsId());
-        packGoodsSaveReq.setType(level.getType());
-        packGoodsSaveReq.setLevel(level.getValue());
-        packGoodsSaveReq.setImg(pack.getPackImg());
-        packGoodsSaveReq.setAmount((int) pack.getAmount().getCent());
-        packGoodsSaveReq.setName(pack.getPackName());
-        pack.setPackGoodsId(packGoodsApi.save(packGoodsSaveReq));
+        PackGoodsCommand packGoodsCommand = new PackGoodsCommand();
+        packGoodsCommand.setId(pack.getPackGoodsId());
+        packGoodsCommand.setType(level.getType());
+        packGoodsCommand.setLevel(level.getValue());
+        packGoodsCommand.setImg(pack.getPackImg());
+        packGoodsCommand.setAmount((int) pack.getAmount().getCent());
+        packGoodsCommand.setName(pack.getPackName());
+        pack.setPackGoodsId(packGoodsDomain.packGoodsSave(packGoodsCommand));
 
         return levelRepository.save(level);
     }
@@ -99,11 +101,17 @@ public class LevelDomainImpl implements LevelDomain {
     }
 
     @Override
-    public com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo levelPack(Integer roleId) {
-        PackGoodsQuery query = new PackGoodsQuery();
-        query.setType(roleId);
-        query.setLevel(DEFAULT_LEVEL_VALUE);
-        return packGoodsApi.findByQuery(query);
+    public PackGoodsInfo levelPack(Integer roleId) {
+        PackGoodsRes res = packGoodsDomain.findByTypeAndLevel(roleId, DEFAULT_LEVEL_VALUE);
+        if (res == null) {
+            return null;
+        }
+        PackGoodsInfo info = new PackGoodsInfo();
+        info.setId(res.getId());
+        info.setAmount(res.getAmount());
+        info.setLevel(res.getLevel());
+        info.setType(res.getType() == null ? null : RoleEnum.CompanyRole.getByCode(res.getType().longValue()));
+        return info;
     }
 
     /**
