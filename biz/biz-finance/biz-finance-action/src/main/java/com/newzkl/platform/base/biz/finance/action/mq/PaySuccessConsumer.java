@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.action.mq;
 
-import com.newzkl.platform.base.biz.finance.domain.adapt.api.OrderApi;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.MessageApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.PackOrderApi;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 
@@ -31,7 +31,7 @@ public class PaySuccessConsumer extends AbstractMessageMQPushConsumer<PaySuccess
     private PackOrderApi packOrderApi;
 
     @Autowired
-    private OrderApi orderApi;
+    private MessageApi messageApi;
 
     @Override
     public void remoteProcess(PaySuccessEvent message, Map<String, Object> extMap) {
@@ -62,9 +62,9 @@ public class PaySuccessConsumer extends AbstractMessageMQPushConsumer<PaySuccess
             log.info("通知礼包订单:" + orderNo);
             packOrderApi.paySuccess(orderNo);
         }else if (EarningsEnum.ConsumeType.GOODS == tradeOrderInfoRes.getConsumeType()) {
-//            orderFacade.orderMemberPay(Collections.singletonList(orderNo));
-            // 后续扣减库存、扣减采购金、外部供应链订单请求创建订单放在支付后的异步处理中
-            orderApi.orderChannelPay(orderNo);
+            // 后续扣减库存、扣减采购金、外部供应链下单、会员/门店/升级编排全部放到支付后的异步处理中
+            // 发商品订单支付成功消息, 由 biz-order OrderPaySuccessConsumer 承接异步编排链
+            messageApi.sendGoodsPaySuccess(orderNo);
         }
     }
 }

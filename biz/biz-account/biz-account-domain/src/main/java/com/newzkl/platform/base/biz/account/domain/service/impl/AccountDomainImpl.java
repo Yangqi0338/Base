@@ -196,46 +196,6 @@ public class AccountDomainImpl implements AccountDomain {
     }
 
     @Override
-    public void nameAuthSubmit(Long accountId, NameAuthVO nameAuthVO) {
-        AccountVO account = new AccountVO();
-        account.setId(accountId);
-        account.setNameAuthAuditState(AuditEnum.State.AUDITING);
-        accountRepository.accountEdit(account, null);
-    }
-
-    @Override
-    public void nameAuthSuccess(Long accountId, NameAuthVO nameAuthVO) {
-        AccountVO account = new AccountVO();
-        account.setId(accountId);
-        account.setRealName(nameAuthVO.getName());
-        account.setNameAuthInfo(JSONObject.toJSONString(nameAuthVO));
-        account.setNameAuthAuditState(AuditEnum.State.SUCCESS);
-        accountRepository.accountEdit(account, null);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void nameAuthComplete(Long accountId, AuditEvent auditEvent) {
-        AuditDataNameAuthVO messageData = JSON.parseObject(auditEvent.getData(), AuditDataNameAuthVO.class);
-        if (AuditEnum.State.SUCCESS.getCode().equals(auditEvent.getState())) {
-            AccountVO account = new AccountVO();
-            account.setId(accountId);
-            NameAuthVO nameAuthVO = JSONObject.parseObject(messageData.getNameAuthInfo(), NameAuthVO.class);
-            account.setRealName(nameAuthVO.getName());
-            account.setNameAuthInfo(messageData.getNameAuthInfo());
-            account.setNameAuthAuditState(AuditEnum.State.SUCCESS);
-            accountRepository.accountEdit(account, null);
-        } else if (AuditEnum.State.FAIL.getCode().equals(auditEvent.getState())) {
-            AccountVO account = new AccountVO();
-            account.setId(accountId);
-            account.setNameAuthAuditState(AuditEnum.State.FAIL);
-            accountRepository.accountEdit(account, null);
-        } else {
-            log.warn("未处理其他事件");
-        }
-    }
-
-    @Override
     public void accountDelete(List<Long> accountIdList) {
         accountRepository.accountDelete(accountIdList);
     }

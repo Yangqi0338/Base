@@ -137,14 +137,6 @@ public interface AccountRepository {
     boolean destroy(AccountVO accountVO, RoleEnum.CompanyRole role);
 
     /**
-     * 获取渠道运营商ID
-     *
-     * @param accountId 账号ID
-     * @return 上级ID结果
-     */
-    UpIdRes channelOperatorId(Long accountId);
-
-    /**
      * 根据账号ID查询范围内子账号结构
      *
      * @param accountId 账号ID
@@ -161,27 +153,6 @@ public interface AccountRepository {
     Long selectCount(AccountQuery query);
 
     /**
-     * 查询运营商账号列表
-     *
-     * @return 运营商账号列表查询结果
-     */
-
-    /**
-     * 查询账号及其子账号的RPC列表
-     *
-     * @param accountList 账号ID列表
-     * @return 账号RPC结果列表
-     */
-    List<AccountRPCResVO> accountAndSonAccountRpcList(List<Long> accountList);
-
-    /**
-     * 查询账单用户RPC列表
-     *
-     * @return 账单用户RPC列表
-     */
-    List<AccountBillUserRpcVO> accountBillUserRpcList();
-
-    /**
      * 根据用户账号查询账号
      *
      * @param userAccount
@@ -192,8 +163,4 @@ public interface AccountRepository {
     List<AccountVO> listAccountByIds(List<Long> accountIdList);
 
     void verificationCode(VerificationCodeReq verificationCodeReq);
-
-    UserCountRes userCount();
-
-    List<GroupCountRes> groupCount(TimeQuery timeQuery);
 }

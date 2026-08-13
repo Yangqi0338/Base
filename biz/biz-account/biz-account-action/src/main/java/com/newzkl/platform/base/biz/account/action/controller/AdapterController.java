@@ -43,7 +43,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdapterController {
 
-    private final AccountService accountService;
     private final UserQueryService userQueryService;
     private final ChannelClientDomain channelClientDomain;
 
@@ -68,51 +67,6 @@ public class AdapterController {
     @GetMapping("/channel/channelForAdmin")
     public PlatformResult<ChannelVO> channelForAdmin(@RequestParam("id") Long id) {
         return PlatformResult.success(channelClientDomain.channel(id));
-    }
-
-    /**
-     * 甄选师提交实名认证信息
-     *
-     * @param nameAuthVO 实名认证信息
-     * @return 空结果
-     */
-    @PostMapping("/selector/submitNameAuthInfo")
-    public PlatformResult<Void> submitNameAuthInfo(@RequestBody NameAuthVO nameAuthVO) {
-        accountService.submitNameAuthInfo(nameAuthVO);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 甄选师查看供应商列表
-     *
-     * @param supplierQuery 供应商查询
-     * @return 甄选师视角供应商分页
-     */
-
-    /**
-     * 分组统计
-     *
-     * <p>迁移补充: 旧实现用匿名 {@code Function} 逐字段拷贝一份 {@code UserCountRes} 再挂分组数据,
-     * 语义等价于取统计结果后补 {@code groupCountRes}, 此处保留语义, 去掉冗余拷贝。</p>
-     *
-     * @param timeQuery 时间范围查询
-     * @return 用户统计结果
-     */
-    @PostMapping("/count/groupCount")
-    public PlatformResult<UserCountRes> indexCount(@RequestBody TimeQuery timeQuery) {
-        UserCountRes userCountRes = userQueryService.userCount();
-        userCountRes.setGroupCountRes(userQueryService.groupCount(timeQuery));
-        return PlatformResult.success(userCountRes);
-    }
-
-    /**
-     * 数量统计
-     *
-     * @return 用户统计结果
-     */
-    @PostMapping("/count/userCount")
-    public PlatformResult<UserCountRes> userCount() {
-        return PlatformResult.success(userQueryService.userCount());
     }
 
     /**

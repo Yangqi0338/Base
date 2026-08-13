@@ -67,8 +67,6 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final FinancePurseApi financePurseApi;
     private final GoodsStoreApi goodsStoreApi;
 
-    private final CountSaleDomain countSaleDomain;
-
     @Override
     public AccountOutRes accountOutVO(CommonEnum.Client client, Long id) {
         //查询账号
@@ -133,16 +131,6 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public UserCountRes userCount() {
-        return accountRepository.userCount();
-    }
-
-    @Override
-    public List<GroupCountRes> groupCount(TimeQuery timeQuery) {
-        return accountRepository.groupCount(timeQuery);
-    }
-
-    @Override
     public MemberVO memberVO(Long memberId) {
         MemberQuery query = new MemberQuery();
         query.setId(memberId);
@@ -161,25 +149,6 @@ public class UserQueryServiceImpl implements UserQueryService {
 //        return supplierClientDomain.supplierDescVOList(supplierIdList);
         return null;
     }
-
-    /**
-     * 销售统计分页
-     *
-     * <p>迁移补充: 旧实现直连 {@code CountSaleDAO.listByQuery} 并返回 PageHelper 的
-     * {@code PageInfo}, 中台改由 {@code CountSaleDomain} 承接, 统一返回 MyBatis-Plus 分页。</p>
-     *
-     * @param countSaleQuery 销售统计查询
-     * @return 销售统计分页
-     * @author KC
-     */
-
-    @Override
-    public UpIdRes channelUpId(Long accountId) {
-//        return channelDAO.channelUpId(accountId);
-        return null;
-    }
-
-    
 
 
     @Override
@@ -231,33 +200,27 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public int countByQuery(ChannelQuery channelQuery) {
-//        return channelDAO.countByQuery(channelQuery);
-        return 0;
-    }
-
-    @Override
     public ChannelEarningsConfigVO serviceFeeConfigVO(Long channelId) {
 //        return channelDAO.serviceFeeConfigVO(channelId);
         return null;
     }
 
-    
 
 
-    
 
 
-    
 
 
-    
 
 
-    
 
 
-    
+
+
+
+
+
+
 
 
     @Override
@@ -287,31 +250,6 @@ public class UserQueryServiceImpl implements UserQueryService {
         }
 //        return supplierDAO.supplierRelationVO(supplierIdList);
         return null;
-    }
-
-    @Override
-    public IndexCountRes indexCount() {
-        Long accountId = SecurityUtils.getAccountId();
-        IndexCountRes indexCountRes = new IndexCountRes();
-        ChannelQuery channelQuery = new ChannelQuery();
-        channelQuery.setStateList(Arrays.asList(ChannelEnum.State.OPEN, ChannelEnum.State.IN));
-        int channelCount = countByQuery(channelQuery);
-        indexCountRes.setChannelCount(channelCount);
-        indexCountRes.setWeekOrderCount(0);
-        indexCountRes.setMonthOrderCount(0);
-        return indexCountRes;
-    }
-
-    @Override
-    public String supplierRegistrationInvitationLink(String headHost) {
-        Long accountId = SecurityUtils.getAccountId();
-        if (accountId == null) {
-            throw new PlatformException(PARAM, "请先登录");
-        }
-
-
-        return "https://" + "domain" + "/#/register";
-
     }
 
 

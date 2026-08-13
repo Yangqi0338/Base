@@ -79,21 +79,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final AccountService accountService;
+
     private final UserQueryService userQueryService;
     private final AccountDomain accountDomain;
     private final AccountLoginService accountLoginService;
     private final UserClientDomain userClientDomain;
-
-    /**
-     * APP首页数据
-     *
-     * @return APP首页数据
-     */
-    @PostMapping("/account/appHomePageData")
-    public PlatformResult<AppHomePageDataVO> appHomePageData() {
-        return PlatformResult.success(accountService.appHomePageData(SecurityUtils.getAccountId()));
-    }
 
     /**
      * 切换身份
@@ -381,23 +371,6 @@ public class AccountController {
     }
 
     /**
-     * 用户收益统计
-     *
-     * @return 用户收益视图
-     */
-    @PostMapping("/account/finance")
-    public PlatformResult<AccountFinanceVO> accountFinanceVO() {
-        return PlatformResult.success(accountService.accountFinanceVO(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
-    }
-
-    /**
-     * 奖金池获取用户列表
-     *
-     * @param query 奖金池用户查询
-     * @return 奖金池用户分页
-     */
-
-    /**
      * 退出登录
      *
      * <p>迁移补充: 旧实现直接经 {@code RedisUtil.del} 清网关权限缓存, 属基础设施动作,
@@ -476,16 +449,5 @@ public class AccountController {
     public PlatformResult<LoginRes> destroy(@Validated @RequestBody DestroyRoleReq destroyRoleReq) {
         accountDomain.destroy(SecurityUtils.getAccountId(), destroyRoleReq);
         return PlatformResult.success();
-    }
-
-    /**
-     * 脉脉通查看用户主页信息
-     *
-     * @param userId 被查看用户ID
-     * @return 用户主页信息
-     */
-    @GetMapping("/account/userHomePage")
-    public PlatformResult<UserHomePageRes> getUserHomePage(@RequestParam Long userId) {
-        return PlatformResult.success(accountService.getUserHomePage(userId, SecurityUtils.getAccountId()));
     }
 }

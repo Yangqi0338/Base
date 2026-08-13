@@ -17,8 +17,6 @@ import java.util.List;
  */
 public interface AccountService {
 
-    void submitNameAuthInfo(NameAuthVO nameAuthVO);
-
     void batchCreateEmp(Long pid, List<SubProxySaveReq> subProxySaveReqList);
 
     /**
@@ -27,14 +25,6 @@ public interface AccountService {
      * @param customSaveBatchReqList
      */
     void customSaveBatch(List<CustomSaveBatchReq> customSaveBatchReqList);
-
-    /**
-     * 用户收益
-     *
-     * @param accountId
-     */
-
-
     /**
      * 分页查询会员账号
      *
@@ -56,24 +46,4 @@ public interface AccountService {
      * @param accountReq 账号创建请求
      */
     Long identityCreate(AdminRegisterIdentityReq accountReq);
-
-    /**
-     * 账号删除
-     *
-     * @param idList 删除id
-     */
-    void accountDelete(List<Long> idList);
-
-    /**
-     * 脉脉通-用户主页信息
-     *
-     * <p>迁移自旧 {@code IAccountService#getUserHomePage}。跨域数据(关注关系/铺货商品/获赞数)
-     * 一律经出站端口取, 端口默认兜底时对应字段为默认值,
-     * 见各 {@code *ApiDefaultImpl} 的 infra-gap 说明。</p>
-     *
-     * @param userId        被查看用户ID
-     * @param currentUserId 当前登录用户ID, 可为 null(未登录)
-     * @return 用户主页信息
-     */
-    UserHomePageRes getUserHomePage(Long userId, Long currentUserId);
 }

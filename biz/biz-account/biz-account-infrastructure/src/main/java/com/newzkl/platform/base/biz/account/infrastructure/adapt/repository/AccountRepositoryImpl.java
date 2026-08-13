@@ -86,12 +86,6 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
     }
 
     @Override
-    public UpIdRes channelOperatorId(Long accountId) {
-//        UpIdRes upIdRes = channelDAO.channelUpId(accountId);
-        return null;
-    }
-
-    @Override
     public List<AccountStructureVO> findScopeSubAccountStructure(Long accountId) {
         SubStructureReq req = new SubStructureReq();
         req.setPid(accountId);
@@ -103,62 +97,6 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         query.addCountField();
         BizCountMap countMap = accountDAO.countByCondition(query, accountDAO.getLw(query));
         return countMap.getCount(0);
-    }
-
-    @Override
-    public List<AccountRPCResVO> accountAndSonAccountRpcList(List<Long> list) {
-
-        if (CollectionUtil.isEmpty(list)) {
-            return Collections.emptyList();
-        }
-        // 通过id查询账号信息
-        QueryWrapper<AccountOutRes> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("id", list);
-        List<AccountRPCResVO> voList = accountDAO.selectAwardListByIdList(queryWrapper);
-        for (AccountRPCResVO entry : voList) {
-            RoleEnum.CompanyRole roleId = Arrays.stream(entry.getRoleIdList().split(","))
-                    .map(String::trim)
-                    .filter(str -> !str.isEmpty())
-                    .map(Long::parseLong)
-                    .filter(it -> RoleEnum.CompanyRole.OPERATOR_GUEST.equals(it) ||
-                            RoleEnumUtil.findClientRoleIdList(CommonEnum.Client.OPERATOR).contains(it))
-                    .findFirst()
-                    .map(RoleEnum.CompanyRole::getByCode)
-                    .orElse(RoleEnum.CompanyRole.OPERATOR_GUEST);
-            entry.setRole(roleId);
-            entry.setRoleName(Opt.ofNullable(roleId).map(RoleEnum.CompanyRole::getValue).orElse("游客"));
-            entry.setSonAccounts(accountDAO.selectSonIdList(entry.getId()));
-        }
-        return voList;
-    }
-
-    @Override
-    public List<AccountBillUserRpcVO> accountBillUserRpcList() {
-        QueryWrapper<AccountBillUserRpcVO> accountWrapper = new QueryWrapper<>();
-
-        accountWrapper.and(wrapper -> wrapper
-                        .like("role_id_list", RoleEnum.CompanyRole.SELECTOR.getCode())
-                        .or()
-                        .like("role_id_list", RoleEnum.CompanyRole.DEALER.getCode())
-                        .or()
-                        .like("role_id_list", RoleEnum.CompanyRole.OPERATOR.getCode()))
-                .eq("state", 1);
-
-        List<AccountBillUserRpcVO> list = accountDAO.selectBillUserList(accountWrapper);
-
-        for (AccountBillUserRpcVO entry : list) {
-            // 有个数组，如果发现匹配任何一个1004、1005、1006任何一个返回
-            RoleEnum.CompanyRole role = Arrays.stream(entry.getRoleIdList().split(","))
-                    .map(String::trim)
-                    .filter(str -> !str.isEmpty())
-                    .map(Long::parseLong)
-                    .filter(RoleEnumUtil.findClientRoleIdList(CommonEnum.Client.OPERATOR)::contains)
-                    .findFirst()
-                    .map(RoleEnum.CompanyRole::getByCode)
-                    .orElse(RoleEnum.CompanyRole.SELECTOR);
-            entry.setRole(role);
-        }
-        return list;
     }
 
     @Override
@@ -274,18 +212,6 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         if (!isRight) {
             throw new PlatformException(AccountErrorCode.CODE_ERROR);
         }
-    }
-
-    @Override
-    public UserCountRes userCount() {
-        // FIXME 统计方式有问题, 待修改
-        return accountDAO.userCount();
-    }
-
-    @Override
-    public List<GroupCountRes> groupCount(TimeQuery timeQuery) {
-        // FIXME 统计方式有问题, 待修改
-        return accountDAO.groupCount(timeQuery);
     }
 
     @Override

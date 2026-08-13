@@ -53,21 +53,6 @@ public interface UserQueryService {
     AccountVO accountByYqm(String yqm);
 
     /**
-     * 用户统计信息
-     *
-     * @return
-     */
-    UserCountRes userCount();
-
-    /**
-     * 用户分组统计
-     *
-     * @param timeQuery
-     * @return
-     */
-    List<GroupCountRes> groupCount(TimeQuery timeQuery);
-
-    /**
      * member详情
      *
      * @param memberId
@@ -87,8 +72,6 @@ public interface UserQueryService {
 
     Page<ChannelVO> channelPage(ChannelQuery channelQuery);
 
-    int countByQuery(ChannelQuery channelQuery);
-
     SupplierVO supplierVO(Long supplierId);
 
     /**
@@ -106,12 +89,6 @@ public interface UserQueryService {
     List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList);
 
     ChannelEarningsConfigVO serviceFeeConfigVO(Long channelId);
-
-    UpIdRes channelUpId(Long accountId);
-
-    IndexCountRes indexCount();
-
-    String supplierRegistrationInvitationLink(String headHost);
 
     /**
      * app账号详情

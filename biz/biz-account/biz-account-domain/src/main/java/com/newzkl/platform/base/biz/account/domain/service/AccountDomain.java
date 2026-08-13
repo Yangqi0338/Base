@@ -73,30 +73,6 @@ public interface AccountDomain {
     void subEditBase(Long pid, Long accountId, SubEditReq subEditReq);
 
     /**
-     * 实名认证审核信息提交
-     *
-     * @param accountId  账号ID
-     * @param nameAuthVO 实名认证信息
-     */
-    void nameAuthSubmit(Long accountId, NameAuthVO nameAuthVO);
-
-    /**
-     * 实名认证审核通过
-     *
-     * @param accountId  账号ID
-     * @param nameAuthVO 实名认证信息
-     */
-    void nameAuthSuccess(Long accountId, NameAuthVO nameAuthVO);
-
-    /**
-     * 实名认证审核结果
-     *
-     * @param accountId  账号ID
-     * @param auditEvent 审核事件
-     */
-    void nameAuthComplete(Long accountId, AuditEvent auditEvent);
-
-    /**
      * 账号删除
      *
      * @param accountIdList 账号ID列表
@@ -175,10 +151,4 @@ public interface AccountDomain {
     Page<SimpleAccountRes> simpleAccountPage(SimpleAccountQuery accountQuery);
 
     Page<AccountVO> accountPage(AccountQuery accountQuery);
-
-    /**
-     * 奖金池获取用户列表
-     *
-     * @return
-     */
 }
