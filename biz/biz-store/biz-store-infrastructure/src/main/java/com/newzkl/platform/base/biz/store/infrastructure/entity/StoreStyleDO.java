@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCode;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class StoreStyleDO extends BaseDO {
      * 样式code
      */
     @Index
+    @BusinessCode(BusinessType.STORE_STYLE)
     private String styleCode;
     
     /**

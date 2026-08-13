@@ -29,4 +29,34 @@ public @interface RpcReference {
      * @return 是否强制要求 provider 存在
      */
     boolean required() default false;
+
+    /**
+     * 注入模式
+     *
+     * <p>AUTO 探测 dubbo 可用则先试远程再降级本地; DUBBO 优先远程失败降级本地; LOCAL 只本地 autowire</p>
+     *
+     * @return 注入模式, 默认 AUTO
+     */
+    Mode mode() default Mode.AUTO;
+
+    /**
+     * 注入模式枚举
+     */
+    enum Mode {
+
+        /**
+         * 自动探测: dubbo 可用先试远程, 否则本地 autowire
+         */
+        AUTO,
+
+        /**
+         * 优先 dubbo 远程, 远程无结果降级本地
+         */
+        DUBBO,
+
+        /**
+         * 强制本地 autowire, 不尝试远程
+         */
+        LOCAL
+    }
 }

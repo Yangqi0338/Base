@@ -4,10 +4,16 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.Generator;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.mapper.IdGeneratorMapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.IdGeneratorDO;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
@@ -117,5 +123,37 @@ public class SegmentIdGenerator implements Generator {
     private IdGeneratorDO selectByKey() {
         return mapper.selectOne(new LambdaQueryWrapper<IdGeneratorDO>()
                 .eq(IdGeneratorDO::getGeneratorKey, generatorKey));
+    }
+
+    /**
+     * 号段发号器启动注册器
+     *
+     * <p>与发号器同文件便于管理。容器就绪后为标记 dbSegment 的 BusinessType 构造 SegmentIdGenerator
+     * 覆盖注册进 BusinessCodeUtil,替换枚举默认内存发号器。注册不触库,取段在首次发号时懒加载,
+     * 故用 @PostConstruct 安全</p>
+     *
+     * @author KC
+     */
+    @Component
+    @RequiredArgsConstructor
+    public static class Registrar {
+
+        private final IdGeneratorMapper idGeneratorMapper;
+
+        @Value("${id.generator.step:1000}")
+        private int step;
+
+        /**
+         * 启动期覆盖注册 DB 号段发号器
+         */
+        @PostConstruct
+        public void register() {
+            for (BusinessType type : BusinessType.values()) {
+                if (type.isDbSegment()) {
+                    Generator generator = new SegmentIdGenerator(idGeneratorMapper, type.name(), step);
+                    BusinessCodeUtil.addSequence(type, generator);
+                }
+            }
+        }
     }
 }
