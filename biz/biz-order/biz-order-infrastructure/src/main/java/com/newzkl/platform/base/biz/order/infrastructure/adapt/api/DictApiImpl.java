@@ -2,9 +2,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.newzkl.platform.base.biz.account.facade.OperatorFacade;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.DictApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.sys.facade.IDictFacade;
 import lombok.RequiredArgsConstructor;

@@ -35,14 +35,10 @@ public interface AccountAssembler extends BaseAssembler<AccountReq, AccountVO> {
 
     AppAccountVO account2AppVO(AccountVO accountVO);
 
-    void dealer2Operator(@MappingTarget Operator operator, DealerVO dealer);
-
-    void selector2Operator(@MappingTarget Operator operator, SelectorVO selector);
-
-    DealerVO account2Dealer(AccountRes account);
-
-    void selector2Dealer(@MappingTarget DealerVO dealer, SelectorVO selector);
-
+    
+    
+    
+    
     AccountOutRes vo2OutRes(AccountVO accountVO);
 
     AccountQuery identityQuery2Query(IdentityAccountQuery identityAccountQuery);

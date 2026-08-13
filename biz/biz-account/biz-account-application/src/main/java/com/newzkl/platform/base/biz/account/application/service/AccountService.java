@@ -3,10 +3,7 @@ package com.newzkl.platform.base.biz.account.application.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.req.*;
-import com.newzkl.platform.base.biz.account.model.res.AccountFinanceVO;
-import com.newzkl.platform.base.biz.account.model.res.AppHomePageDataVO;
 import com.newzkl.platform.base.biz.account.model.res.UserHomePageRes;
-import com.newzkl.platform.base.biz.account.model.vo.AccountAwardUserVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.CustomSaveBatchReq;
@@ -19,8 +16,6 @@ import java.util.List;
  * @date 2024/2/2210:36
  */
 public interface AccountService {
-
-    AppHomePageDataVO appHomePageData(Long accountId);
 
     void submitNameAuthInfo(NameAuthVO nameAuthVO);
 
@@ -38,9 +33,6 @@ public interface AccountService {
      *
      * @param accountId
      */
-    AccountFinanceVO accountFinanceVO(CommonEnum.Client client, Long accountId);
-
-    Page<AccountAwardUserVO> listOperatorUser(AccountAwardUserQuery req);
 
 
     /**

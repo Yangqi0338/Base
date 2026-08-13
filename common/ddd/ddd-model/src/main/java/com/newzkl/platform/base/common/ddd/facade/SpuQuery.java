@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -92,7 +91,6 @@ public class SpuQuery extends BizPageQuery implements Serializable {
     /**
      * 运营类型
      */
-    private OperatorEnum.Type type;
     /**
      * 规格类型
      */

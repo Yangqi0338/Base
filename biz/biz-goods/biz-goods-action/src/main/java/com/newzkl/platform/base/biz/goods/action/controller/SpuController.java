@@ -344,15 +344,6 @@ public class SpuController {
      * @param spuQuery 商品查询 (type 为必填运营类型)
      * @return 商品分页
      */
-    @PostMapping("querySupplierSpuPage")
-    public PlatformResult<Page<SpuVO>> querySupplierSpuPage(@RequestBody SpuQuery spuQuery) {
-        Long role = SecurityUtils.getRoleId();
-        if (!RoleEnum.CompanyRole.OPERATOR.getCode().equals(role)) {
-            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
-        }
-        return PlatformResult.success(spuService.operatorSpuPage(spuQuery));
-    }
-
     // TODO[service-gap]: 以下源端点未迁, 依赖 Base 侧尚不存在的能力, 待补齐后按原契约恢复:
     // 1. supplierSpuStatistics (GET supplierSpuStatistics) → SpuService#supplierSpuStatistics 当前抛
     //    UnsupportedOperationException, 缺供应商主体查询端口

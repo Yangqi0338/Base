@@ -46,16 +46,6 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public void leverSave(Long accountId, Integer radio) {
-
-    }
-
-    @Override
-    public Integer getLever(Long operatorId) {
-        return 0;
-    }
-
-    @Override
     public Integer limitAmount(Long accountId) {
         return 0;
     }

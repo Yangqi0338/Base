@@ -52,7 +52,7 @@ import java.util.Set;
  * SPU 仓储实现
  *
  * <p>补齐裸端口: {@code SpuRepository} 此前全仓无实现类, 注入方 (SpuDomainImpl /
- * GoodsZoneGoodsRelDomainServiceImpl / SpuServiceImpl) 启动即 NoSuchBeanDefinitionException
+ * SpuServiceImpl) 启动即 NoSuchBeanDefinitionException
  * 本类以 MyBatis-Plus {@code BaseMapper} 能力实现 CRUD / 分页 / 条件查询, 其余能力显式抛
  * {@code UnsupportedOperationException}, 不静默返回 null 或空集合冒充成功。</p>
  *

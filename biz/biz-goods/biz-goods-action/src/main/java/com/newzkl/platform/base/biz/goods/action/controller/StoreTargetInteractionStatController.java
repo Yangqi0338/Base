@@ -7,9 +7,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.Interactio
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatBatchReq;
 import com.newzkl.platform.base.biz.goods.model.goods.req.interaction.StoreTargetInteractionStatPageReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.interaction.StoreTargetInteractionStatPageRes;
-import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionEvent;
 import com.newzkl.platform.base.common.ddd.facade.StoreTargetInteractionSummaryObj;
-import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 门店对象互动统计控制器
@@ -96,18 +93,6 @@ public class StoreTargetInteractionStatController {
         return PlatformResult.success(statService.batchQuery(req));
     }
 
-    /**
-     * 互动事件远程处理 (MQ 消费入口验证)
-     *
-     * @param event 互动事件
-     * @return 空结果
-     */
-    @PostMapping("/remoteProcess")
-    public PlatformResult<String> remoteProcess(@Validated @RequestBody StoreTargetInteractionEvent event) {
-        log.info("测试MQ方法请求：{}", event);
-        statService.remoteProcess(event);
-        return PlatformResult.success();
-    }
 
     /**
      * 按目标类型与目标主键查询汇总统计
@@ -123,55 +108,9 @@ public class StoreTargetInteractionStatController {
                 Collections.singletonList(targetType), Collections.singletonList(targetId)));
     }
 
-    /**
-     * 查询指定缓存 key
-     *
-     * @param key 缓存 key
-     * @return 缓存值
-     */
-    @GetMapping("/interaction/cache")
-    public PlatformResult<String> queryCache(@RequestParam String key) {
-        return PlatformResult.success(RedisUtil.get(key));
-    }
 
-    /**
-     * 删除指定缓存 key
-     *
-     * @param key 缓存 key
-     * @return 空结果
-     */
-    @GetMapping("/deleteCache")
-    public PlatformResult<String> deleteCache(@RequestParam String key) {
-        RedisUtil.del(key);
-        return PlatformResult.success();
-    }
 
-    /**
-     * 判断缓存 key 是否存在
-     *
-     * @param key 缓存 key
-     * @return 是否存在
-     */
-    @GetMapping("/existsCache")
-    public PlatformResult<Boolean> existsCache(@RequestParam String key) {
-        return PlatformResult.success(RedisUtil.exists(key));
-    }
 
-    /**
-     * 按 key 前缀查询全部匹配的键值
-     *
-     * @param pattern key 前缀/匹配模式 (例如 goods:*)
-     * @return 键值集合
-     */
-    @GetMapping("/getAllByPattern")
-    public PlatformResult<Map<String, Object>> getAllByPattern(@RequestParam String pattern) {
-        try {
-            return PlatformResult.success(RedisUtil.getAllByKeyPattern(pattern));
-        } catch (Exception e) {
-            log.error("根据前缀查询Redis数据失败，pattern:{}", pattern, e);
-            return PlatformResult.fail("查询失败：" + e.getMessage());
-        }
-    }
 
     /**
      * 按发布者主键查询汇总统计

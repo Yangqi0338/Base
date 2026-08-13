@@ -52,7 +52,6 @@ public interface AccountApi {
      * @param accountId 账户ID
      * @param radio     杠杆比例
      */
-    void leverSave(Long accountId, Integer radio);
 
     /**
      * 查询运营商杠杆
@@ -60,7 +59,6 @@ public interface AccountApi {
      * @param operatorId 运营商ID
      * @return 杠杆值
      */
-    Integer getLever(Long operatorId);
 
     /**
      * 查询供应商提现限额

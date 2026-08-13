@@ -9,7 +9,6 @@ import com.newzkl.platform.base.biz.order.action.cmd.OrderCmd;
 import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
 import com.newzkl.platform.base.biz.order.application.service.OrderService;
 import com.newzkl.platform.base.biz.order.application.service.QueryService;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.req.*;
@@ -57,7 +56,6 @@ public class OrderController {
     private CommitOrder commitOrder;
 
     @Autowired
-    private OperatorApi operatorApi;
 
     /**
      * C端下单
@@ -218,13 +216,6 @@ public class OrderController {
     }
 
     /**
-     * 运营商: SPU订单状态分组
-     */
-    @PostMapping("operatorSpuOrderStateCount")
-    public PlatformResult<Map<OrderEnum.State, Integer>> spuOrderStateCountMap(@RequestBody @Valid SpuOrderQuery spuOrderQuery) {
-        return PlatformResult.success(orderService.spuOrderStateCountMap(spuOrderQuery));
-    }
-    /**
      * SPU订单明细导出
      */
     @PostMapping("exportSpuOrderItem")
@@ -263,25 +254,7 @@ public class OrderController {
             ));
         } else if (RoleEnum.CompanyRole.MEMBER == role) {
             spuOrderQuery.setMemberId(accountId);
-        } else if (RoleEnum.CompanyRole.OPERATOR == role) {
-            Integer type = spuOrderQuery.getType();
-            List<Long> supplierIdList = operatorApi.supplierIdListByType(accountId, type);
-            List<Long> searchSupplierIdList = Opt.ofNullable(spuOrderQuery.getSupplierIdList()).orElse(new ArrayList<>());
-            Collection<Long> idList = CollUtil.addAll(searchSupplierIdList, spuOrderQuery.getSupplierIdList());
-            if (CollUtil.isNotEmpty(idList)) {
-                supplierIdList = supplierIdList.stream().filter(idList::contains).collect(Collectors.toList());
-            }
-            if (CollUtil.isEmpty(supplierIdList)) {
-                return false;
-            }
-            spuOrderQuery.setSupplierIdList(supplierIdList);
-            spuOrderQuery.setOrderStateList(Arrays.asList(
-                    OrderEnum.State.WAIT_DELIVERY,
-                    OrderEnum.State.WAIT_RECEIVE,
-                    OrderEnum.State.DOWN_RECEIVE,
-                    OrderEnum.State.SUCCESS,
-                    OrderEnum.State.CLOSE
-            ));
+
         }
 
         return true;

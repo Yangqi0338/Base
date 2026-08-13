@@ -239,11 +239,4 @@ public class SupplierController {
      * @param supplierQuery 供应商查询
      * @return 供应商分页
      */
-    @PostMapping("operatorSupplierPage")
-    public PlatformResult<Page<SupplierVO>> operatorSupplierPage(@RequestBody SupplierQuery supplierQuery) {
-        if (!Objects.equals(RoleEnum.CompanyRole.OPERATOR.getCode(), SecurityUtils.getRoleId())) {
-            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
-        }
-        return PlatformResult.success(userQueryService.operatorSupplierPage(supplierQuery));
-    }
 }

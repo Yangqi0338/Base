@@ -26,7 +26,6 @@ import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySuppo
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
-import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelCustomSaveReq;
@@ -64,7 +63,6 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
     private final ChannelRepository channelRepository;
 
     private final AccountDomain accountDomain;
-    private final OperatorClientDomain operatorDomain;
     private final FinanceConfigApi financeConfigApi;
     private final OpenapiDeveloperApi openapiDeveloperApi;
     private final UserQueryService accountQueryAppService;
@@ -176,9 +174,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         if (!isRegisterOnce) {
             // 修改直属上级的邀请渠道商人数
             if (RoleEnum.CompanyRole.DEALER == inviteRole) {
-                operatorDomain.dealerEdit(Collections.singletonList(new EditColumnVO("invite_channel_number", 1)), inviteId);
             } else if (RoleEnum.CompanyRole.OPERATOR == inviteRole) {
-                operatorDomain.operatorEdit(Collections.singletonList(new EditColumnVO("invite_channel_number", 1)), inviteId);
             }
         }
         //初始化财务

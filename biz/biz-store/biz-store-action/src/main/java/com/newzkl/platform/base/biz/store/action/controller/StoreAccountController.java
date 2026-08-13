@@ -75,8 +75,6 @@ public class StoreAccountController {
                 StoreAccountExportRes::new,
                 (c, v) -> {
                     v.setRelationType(c.getRelationType() == 1 ? "已拉黑" : "正常");
-                    // countPayAmount 已 Money, 直取元字符串 (Money.getAmount 元 BigDecimal)
-                    v.setCountPayAmount(c.getCountPayAmount() == null ? null : c.getCountPayAmount().getAmount().toPlainString());
                 });
         EasyExcelUtil.export(exportResponses, "客户列表");
     }

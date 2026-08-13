@@ -6,16 +6,11 @@ import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
-import com.newzkl.platform.base.biz.account.model.req.DealerQuery;
-import com.newzkl.platform.base.biz.account.model.req.SelectorQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.res.AccountOutRes;
 import com.newzkl.platform.base.biz.account.model.res.UserCountRes;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
-import com.newzkl.platform.base.biz.account.model.vo.DealerVO;
 import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
-import com.newzkl.platform.base.biz.account.model.vo.SelectorSupplierVO;
-import com.newzkl.platform.base.biz.account.model.vo.SelectorVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -93,11 +88,6 @@ public class AdapterController {
      * @param supplierQuery 供应商查询
      * @return 甄选师视角供应商分页
      */
-    @PostMapping("/selector/selectorSupplierPageVO")
-    public PlatformResult<Page<SelectorSupplierVO>> selectorSupplierPageVO(@RequestBody SupplierQuery supplierQuery) {
-        supplierQuery.setInviteId(SecurityUtils.getAccountId());
-        return PlatformResult.success(userQueryService.selectorSupplierVO(supplierQuery));
-    }
 
     /**
      * 分组统计
@@ -135,12 +125,8 @@ public class AdapterController {
     public PlatformResult<?> userAccount(@RequestBody CountCmd.UserAccount userAccount) {
         if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(userAccount.getRoleId())) {
             return PlatformResult.success(userQueryService.supplierVO(userAccount.getAccountId()));
-        } else if (RoleEnum.CompanyRole.DEALER.getCode().equals(userAccount.getRoleId())) {
-            return PlatformResult.success(userQueryService.dealerVO(userAccount.getAccountId()));
         } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(userAccount.getRoleId())) {
             return PlatformResult.success(channelClientDomain.channel(userAccount.getAccountId()));
-        } else if (RoleEnum.CompanyRole.SELECTOR.getCode().equals(userAccount.getRoleId())) {
-            return PlatformResult.success(userQueryService.selectorVO(userAccount.getAccountId()));
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);
             return null;
@@ -148,23 +134,7 @@ public class AdapterController {
     }
 
     /**
-     * 供应商列表
-     *
-     * @param supplierPage 供应商列表入参
-     * @return 供应商列表
-     */
-    @PostMapping("/count/supplierPage")
-    public PlatformResult<List<SupplierVO>> supplierPage(@RequestBody CountCmd.SupplierPage supplierPage) {
-        SupplierQuery supplierQuery = new SupplierQuery();
-        supplierQuery.setInviteId(supplierPage.getInviteId());
-        return PlatformResult.success(userQueryService.operatorSupplierPage(supplierQuery).getRecords());
-    }
-
-    /**
-     * 渠道商列表
-     *
-     * <p>迁移补充: 旧实现按 {@code upDealerId} 过滤, 中台 {@code ChannelQuery} 无该筛选字段,
-     * 见迁移报告「数据隔离降级」。</p>
+     * 渠道商分页
      *
      * @param channelPage 渠道商列表入参
      * @return 渠道商列表
@@ -173,32 +143,6 @@ public class AdapterController {
     public PlatformResult<List<ChannelVO>> channelPage(@RequestBody CountCmd.ChannelPage channelPage) {
         ChannelQuery channelQuery = new ChannelQuery();
         return PlatformResult.success(userQueryService.channelPage(channelQuery).getRecords());
-    }
-
-    /**
-     * 甄选师分页
-     *
-     * @param selectorPage 甄选师列表入参
-     * @return 甄选师列表
-     */
-    @PostMapping("/count/selectorPage")
-    public PlatformResult<List<SelectorVO>> selectorPage(@RequestBody CountCmd.SelectorPage selectorPage) {
-        SelectorQuery selectorQuery = new SelectorQuery();
-        selectorQuery.setInviteId(selectorPage.getInviteId());
-        return PlatformResult.success(userQueryService.selectorPage(selectorQuery).getRecords());
-    }
-
-    /**
-     * 交易师分页
-     *
-     * @param dealerPage 交易师列表入参
-     * @return 交易师列表
-     */
-    @PostMapping("/count/dealerPage")
-    public PlatformResult<List<DealerVO>> dealerPage(@RequestBody CountCmd.DealerPage dealerPage) {
-        DealerQuery dealerQuery = new DealerQuery();
-        dealerQuery.setOperatorId(dealerPage.getInviteId());
-        return PlatformResult.success(userQueryService.dealerPage(dealerQuery).getRecords());
     }
 
     /**

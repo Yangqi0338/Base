@@ -34,6 +34,5 @@ public class RefundPassConsumer extends AbstractMessageMQPushConsumer<RefundPass
 //        userCountFacade.refundCount(refundCountReqList);
         // 修改待分润记录的结算状态
         // NOTE 应该还要判断非三方订单
-//        earningApi.alterEarningRecordState(message.getItem().get(0).getSkuOrderId(),2);
     }
 }

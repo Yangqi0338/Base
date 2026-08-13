@@ -165,7 +165,6 @@ public interface AccountRepository {
      *
      * @return 运营商账号列表查询结果
      */
-    OperatorListQueryVO operatorAccountListQuery();
 
     /**
      * 查询账号及其子账号的RPC列表

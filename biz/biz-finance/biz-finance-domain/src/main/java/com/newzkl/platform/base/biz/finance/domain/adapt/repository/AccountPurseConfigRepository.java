@@ -16,7 +16,6 @@ public interface AccountPurseConfigRepository {
      * @param accountId
      * @param radio
      */
-    void saveOperatorLeverConfig(Long accountId, Integer radio);
 
     /**
      * 查询运营商杠杆配置
@@ -24,7 +23,6 @@ public interface AccountPurseConfigRepository {
      * @param operatorId
      * @return
      */
-    Integer queryOperatorLever(Long operatorId);
 
     /**
      * 查询供应商配置/

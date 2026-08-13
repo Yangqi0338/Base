@@ -28,23 +28,6 @@ public class AccountPurseConfigRepositoryImpl implements AccountPurseConfigRepos
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOperatorLeverConfig(Long accountId, Integer radio) {
-        accountApi.leverSave(accountId, radio);
-        // 修改后清除缓存
-        RedisUtil.hDel(RedisEnum.Key.CONFIG_CACHE_PREFIX.getCode(), String.valueOf(accountId));
-    }
-
-    @Override
-    public Integer queryOperatorLever(Long operatorId) {
-        Integer lever = RedisUtil.hGet(RedisEnum.Key.CONFIG_CACHE_PREFIX.getCode(), operatorId);
-        if (lever == null) {
-            lever = accountApi.getLever(operatorId);
-            RedisUtil.hSet(RedisEnum.Key.CONFIG_CACHE_PREFIX.getCode(), String.valueOf(operatorId), String.valueOf(lever));
-        }
-        return lever;
-    }
-
-    @Override
     public ConfigSupplierVO querySupplierConfig() {
         // 替代实体表，直接使用dict中转
         return dictApi.querySupplierConfig();

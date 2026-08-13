@@ -63,7 +63,6 @@ public class RedisEnum {
         /** 供应商结算数据 */
         SUPPLIER_SETTLE_DATA_CACHE(ModuleEnum.FINANCE, "SUPPLIER_SETTLE_DATA_CACHE", "供应商结算数据"),
         /** 运营商杠杆等级 */
-        CONFIG_CACHE_PREFIX(ModuleEnum.FINANCE, "operatorLever", "运营商杠杆等级"),
         /** 等待分润金额, s = 账号id */
         WAIT_EARNING_AMOUNT(ModuleEnum.FINANCE, "waitEarningAmount:%s", "等待分润金额, s = 账号id"),
         /** 总分润金额 */

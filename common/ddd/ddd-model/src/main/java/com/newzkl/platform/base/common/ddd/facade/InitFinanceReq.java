@@ -45,5 +45,4 @@ public class InitFinanceReq implements Serializable {
     /**
      * 杠杆倍率
      */
-    private Integer leverageRatio;
 }

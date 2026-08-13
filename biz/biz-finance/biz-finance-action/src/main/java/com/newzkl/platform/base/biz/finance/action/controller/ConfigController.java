@@ -58,16 +58,6 @@ public class ConfigController {
     }
 
     /**
-     * 查询渠道商所属运营商是否为杠杆模式
-     *
-     * @return 大于 0 为杠杆模式
-     */
-    @PostMapping("/queryChannelUpOperatorLever")
-    public PlatformResult<Integer> queryChannelUpOperatorLever() {
-        return PlatformResult.success(accountPurseConfigDomain.queryOperatorLever(SecurityUtils.getOperatorId()));
-    }
-
-    /**
      * 保存供应商配置
      *
      * @param configSupplierVO 供应商配置

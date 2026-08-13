@@ -66,7 +66,6 @@ class CountSaleDomainImplTest {
     void editShouldUseGivenId() {
         when(countSaleRepository.edit(any())).thenReturn(1);
         CountSaleReq req = new CountSaleReq();
-        req.setTotalOrderAmount(Money.of(5000));
 
         int rows = countSaleDomain.edit(777L, req);
 
@@ -74,7 +73,6 @@ class CountSaleDomainImplTest {
         ArgumentCaptor<CountSaleVO> captor = ArgumentCaptor.forClass(CountSaleVO.class);
         verify(countSaleRepository).edit(captor.capture());
         assertEquals(777L, captor.getValue().getId());
-        assertEquals(Money.of(5000), captor.getValue().getTotalOrderAmount());
     }
 
     @Test

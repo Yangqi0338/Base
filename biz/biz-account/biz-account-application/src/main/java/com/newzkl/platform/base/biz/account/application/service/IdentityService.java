@@ -4,7 +4,6 @@ package com.newzkl.platform.base.biz.account.application.service;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.biz.account.model.req.OperatorReq;
 
 /**
  * @author muc_fang
@@ -49,7 +48,6 @@ public interface IdentityService {
      *
      * @param operatorCommand
      */
-    void operatorEdit(OperatorReq operatorCommand);
 
     /**
      * 查询服务费

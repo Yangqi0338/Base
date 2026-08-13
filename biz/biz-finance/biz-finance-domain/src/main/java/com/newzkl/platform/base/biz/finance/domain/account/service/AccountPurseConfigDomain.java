@@ -16,21 +16,7 @@ import java.util.List;
  */
 public interface AccountPurseConfigDomain {
 
-    /**
-     * 保存运营商杠杆配置
-     *
-     * @param accountId
-     * @param config
-     */
-    void saveOperatorLeverConfig(Long accountId, Integer config);
 
-    /**
-     * 查询运营商杠杆配置
-     *
-     * @param operatorId
-     * @return
-     */
-    Integer queryOperatorLever(Long operatorId);
 
     /**
      * 保存渠道商服务费配置

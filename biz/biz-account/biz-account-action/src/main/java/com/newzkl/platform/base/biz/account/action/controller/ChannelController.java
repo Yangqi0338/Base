@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.action.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.account.model.req.ServiceFeeConfigEdit;
 import com.newzkl.platform.base.biz.account.action.cmd.ChannelCmd;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
@@ -9,7 +10,6 @@ import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
-import com.newzkl.platform.base.biz.account.model.req.OperatorCmd;
 import com.newzkl.platform.base.biz.account.model.res.ChannelPageRes;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
@@ -141,7 +141,7 @@ public class ChannelController {
      * @return 空结果
      */
     @PostMapping("serviceFeeConfigEdit")
-    public PlatformResult<Void> serviceFeeConfigEdit(@RequestBody OperatorCmd.ServiceFeeConfigEdit serviceFeeConfigEdit) {
+    public PlatformResult<Void> serviceFeeConfigEdit(@RequestBody ServiceFeeConfigEdit serviceFeeConfigEdit) {
         identityService.serviceFeeConfigEdit(serviceFeeConfigEdit.getAccountId(), null);
         return PlatformResult.success();
     }

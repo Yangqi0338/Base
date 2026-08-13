@@ -87,11 +87,6 @@ public interface AccountLoginService {
     Long customeRegister(IdentityCustomSaveReq customSaveReq);
 
     /**
-     * 供应商通过运营商生成的注册链接进行注册
-     */
-    Long inviteSupplierRegister(IdentityCustomSaveReq customSaveReq, String host);
-
-    /**
      * 重置会员密码 第一步 验证短信
      *
      * <p>迁自旧 {@code IAccountDomain.resetPasswordSmsCode(ResetMemberCommand)}:

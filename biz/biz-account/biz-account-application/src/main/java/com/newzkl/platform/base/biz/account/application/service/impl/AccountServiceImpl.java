@@ -9,7 +9,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DistributionRandomInfo;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceEarningApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.MarketDistributionApi;
@@ -72,35 +71,11 @@ public class AccountServiceImpl implements AccountService {
     private final UserClientDomain userClientDomain;
     private final AccountAssembler accountAssembler;
 
-    private final FinanceEarningApi financeEarningApi;
     private final UserSocialApi userSocialApi;
     private final MarketDistributionApi marketDistributionApi;
     private final GoodsStoreApi goodsStoreApi;
 
 
-    @Override
-    public AppHomePageDataVO appHomePageData(Long accountId) {
-        CommonEnum.Client client = SecurityUtils.getClient();
-        IncomeQuery incomeReq = new IncomeQuery();
-        incomeReq.setAccountId(accountId);
-
-        List<RoleEnum.CompanyRole> roleList = RoleEnumUtil.findClientRoleList(client).collect(Collectors.toList());
-
-        incomeReq.setRoleList(roleList);
-        incomeReq.setConsumeType(EarningsEnum.ConsumeType.PICK_PACK);
-
-        AppHomePageDataVO resVO = new AppHomePageDataVO();
-        // 查收益
-        Map<EarningsEnum.ConsumeType, Integer> incomeMap = financeEarningApi.queryIncome(incomeReq);
-        resVO.setPackIncome(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.PICK_PACK, Integer.class, 0)));
-        // 查询直推用户
-        AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setInviteAccountId(accountId);
-        resVO.setDirectReferralUserCount(accountRepository.selectCount(accountQuery));
-        // 查询直推供应商
-        resVO.setSupplierCount(supplierRepository.selectCount(new SupplierQuery().setIndustryId(accountId)));
-        return resVO;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -139,86 +114,7 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    @Override
-    public AccountFinanceVO accountFinanceVO(CommonEnum.Client client, Long accountId) {
-        AccountFinanceVO resVO = new AccountFinanceVO();
 
-        // OPTIMIZE 保险起见, 获取当前端的所有角色去查询,以应对升级逻辑
-        List<RoleEnum.CompanyRole> roleList = RoleEnumUtil.findClientRoleList(client).collect(Collectors.toList());
-
-        // 查询实打实到账的收益
-        IncomeQuery incomeReq = new IncomeQuery();
-        incomeReq.setAccountId(accountId);
-        incomeReq.setRoleList(roleList);
-        incomeReq.setState(1);
-        incomeReq.setConsumeTypeList(CollUtil.newArrayList(
-                EarningsEnum.ConsumeType.PICK_PACK,
-                EarningsEnum.ConsumeType.DIVIDEND_BONUS,
-                EarningsEnum.ConsumeType.GOODS
-        ));
-        // 根据消费类型分组
-        Map<EarningsEnum.ConsumeType, Integer> incomeMap = financeEarningApi.queryIncome(incomeReq);
-        // 收益
-        resVO.setPackIncome(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.PICK_PACK, Integer.class, 0)));
-        // 分红
-        resVO.setDividendBonus(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.DIVIDEND_BONUS, Integer.class, 0)));
-        // 商品消费
-        resVO.setGoodsIncome(Money.of(MapUtil.get(incomeMap, EarningsEnum.ConsumeType.GOODS, Integer.class, 0)));
-
-        // 查待结算的收益
-        IncomeQuery settleIncomeReq = new IncomeQuery();
-        settleIncomeReq.setAccountId(accountId);
-        settleIncomeReq.setRoleList(roleList);
-        settleIncomeReq.setStateNot(1);
-        settleIncomeReq.setConsumeType(EarningsEnum.ConsumeType.GOODS);
-        Map<EarningsEnum.ConsumeType, Integer> settleIncomeMap = financeEarningApi.queryIncome(settleIncomeReq);
-        Integer goodSettleIncome = MapUtil.get(settleIncomeMap, EarningsEnum.ConsumeType.GOODS, Integer.class, 0);
-        resVO.setGoodsSettleIncome(Money.of(goodSettleIncome));
-
-        // 计算总收益
-        resVO.setTotalIncome(resVO.getGoodsIncome().add(resVO.getPackIncome()).add(resVO.getDividendBonus()));
-        resVO.setId(accountId);
-
-        return resVO;
-    }
-
-    @Override
-    public Page<AccountAwardUserVO> listOperatorUser(AccountAwardUserQuery req) {
-
-
-
-        QueryWrapper<AccountAwardUserVO> accountWrapper = new QueryWrapper<>();
-        accountWrapper.nested(StringUtils.isNotBlank(req.getName()), wrapper ->
-                wrapper.like("username", req.getName())
-                        .or()
-                        .like("realName", req.getName())
-                        .or()
-                        .like("nickname", req.getName())
-        );
-
-        accountWrapper.and(wrapper -> wrapper
-                .like("role_id_list", RoleEnum.CompanyRole.SELECTOR.getCode())
-                .or()
-                .like("role_id_list", RoleEnum.CompanyRole.DEALER.getCode())
-                .or()
-                .like("role_id_list", RoleEnum.CompanyRole.OPERATOR.getCode())).eq("state", 1);
-
-//        List<AccountAwardUserVO> list = accountDAO.selectList(accountWrapper);
-        List<AccountVO> list = accountRepository.accountList(new AccountQuery());
-        // List<AccountAwardUserVO> list = new ArrayList<>();
-        for (AccountVO entry : list) {
-//            // 有个数组，如果发现匹配任何一个-1、1004、1005、1006任何一个返回
-//            Long roleId = Arrays.stream(entry.getRoleIdList().split(","))
-//                    .map(String::trim)
-//                    .filter(str -> !str.isEmpty())
-//                    .map(Long::valueOf)
-//                    .filter(it -> RoleEnum.GuestCompanyRole.OPERATOR.getCode().equals(it) || RoleEnum.CompanyRole.findClientRoleIdList(CommonEnum.Client.OPERATOR).contains(it))
-//                    .findFirst()
-//                    .orElse(RoleEnum.GuestCompanyRole.OPERATOR.getCode());
-//            entry.setRoleName(RoleEnum.CompanyRole.getByCode(roleId).getValue());
-        }
-        return new Page<>(list.size(), req.getPageSize(), req.getPageNo(), true);
-    }
 
     @Override
     public Page<MemberAccountVO> pageAccount(AccountQuery query) {

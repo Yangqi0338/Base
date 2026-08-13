@@ -21,13 +21,6 @@ public interface FinanceConfigApi {
      */
     void saveChannelChargeConfig(ChargeConfigChannelReq req);
 
-    /**
-     * 保存运营商杠杆配置
-     *
-     * @param accountId      运营商账户ID
-     * @param leverageRatio  杠杆倍率
-     */
-    void saveOperatorLeverConfig(Long accountId, Integer leverageRatio);
 
     /**
      * 查询渠道商服务费配置

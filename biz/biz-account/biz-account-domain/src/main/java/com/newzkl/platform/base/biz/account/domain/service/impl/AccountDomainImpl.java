@@ -430,11 +430,7 @@ public class AccountDomainImpl implements AccountDomain {
                     roleVO.setRoleList(companyRoleList);
                     roleVO.setRoleName(companyRoleList.stream().map(RoleEnum.CompanyRole::getCodeStr).collect(Collectors.joining("、")));
                     roleVO.setClient(key);
-                    if (CommonEnum.Client.OPERATOR == roleVO.getClient()) {
-                        roleVO.setShowName("其他身份");
-                    } else {
-                        roleVO.setShowName(roleVO.getRoleName());
-                    }
+                    roleVO.setShowName(roleVO.getRoleName());
                     roleList.add(roleVO);
                 });
 
@@ -500,9 +496,6 @@ public class AccountDomainImpl implements AccountDomain {
                     SubAccountVO subAccountVO = accountAssembler.subStructure2AccountVO(subStructure);
                     resList.add(subAccountVO);
                     subAccountVO.setRole(role);
-                    subAccountVO.setOperatorCount((int) subList.stream().filter(it -> it.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCode().toString())).count());
-                    subAccountVO.setSelectorCount((int) subList.stream().filter(it -> it.getRoleIdList().contains(RoleEnum.CompanyRole.SELECTOR.getCode().toString())).count());
-                    subAccountVO.setDealerCount((int) subList.stream().filter(it -> it.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCode().toString())).count());
 
                     ChannelQuery channelQuery = new ChannelQuery();
                     channelQuery.setInvitedId(subAccountVO.getId());
@@ -519,23 +512,6 @@ public class AccountDomainImpl implements AccountDomain {
                     Object detail = AbsIdentityPolicySupport.getPolicy(role).detail(subAccountVO.getId());
                     if (detail != null) {
                         switch (role) {
-                            case OPERATOR:
-                                OperatorVO operatorDO = (OperatorVO) detail;
-                                TransferUtils.transfer(operatorDO, subAccountVO);
-                                subAccountVO.setTotalSupplierAmount(operatorDO.getOrderTotalAmount());
-                                Map<String, String> map = JSONUtil.toBean(operatorDO.getInfo(), Map.class);
-                                subAccountVO.setHeadImg(MapUtil.getStr(map, "logo"));
-                                break;
-                            case DEALER:
-                                DealerVO dealerDO = (DealerVO) detail;
-                                TransferUtils.transfer(dealerDO, subAccountVO);
-                                subAccountVO.setTotalSupplierAmount(dealerDO.getOrderTotalAmount());
-                                break;
-                            case SELECTOR:
-                                SelectorVO selectorDO = (SelectorVO) detail;
-                                TransferUtils.transfer(selectorDO, subAccountVO);
-                                subAccountVO.setTotalSupplierAmount(selectorDO.getOrderTotalAmount());
-                                break;
                             default:
                                 break;
                         }
@@ -557,20 +533,4 @@ public class AccountDomainImpl implements AccountDomain {
         return accountRepository.accountPage(accountQuery);
     }
 
-    @Override
-    public Page<AccountAwardUserVO> awardUserPage(AccountAwardUserQuery query) {
-        AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setSearch(query.getName());
-        accountQuery.setClient(CommonEnum.Client.OPERATOR);
-
-        Page<AccountAwardUserVO> page = accountRepository.pageObj(accountQuery, AccountAwardUserVO.class);
-        for (AccountAwardUserVO userVO : page.getRecords()) {
-            RoleEnum.CompanyRole companyRole = CollUtil.getFirst(
-                    RoleEnumUtil.getLevelUpEnumList(CommonEnum.Client.OPERATOR, userVO.getRoleIdList())
-            );
-            String roleName = Opt.ofNullable(companyRole).map(RoleEnum.CompanyRole::getValue).orElse("");
-            userVO.setRoleName(roleName);
-        }
-        return page;
-    }
 }

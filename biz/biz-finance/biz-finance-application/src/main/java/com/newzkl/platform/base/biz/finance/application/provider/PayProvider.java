@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.finance.application.provider;
 
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
-import com.newzkl.platform.base.biz.finance.domain.earnings.service.AccountContributeDomain;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.biz.finance.facade.PayFacade;
@@ -11,7 +10,6 @@ import com.newzkl.platform.base.common.ddd.facade.SupplierSettleReq;
 import com.newzkl.platform.base.common.ddd.facade.ChannelSettleReq;
 import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
-import com.newzkl.platform.base.biz.finance.model.earnings.req.AlterAccountContributeDataReq;
 import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
@@ -51,7 +49,6 @@ public class PayProvider implements PayFacade {
 
     private final OrderPayDomain orderPayDomain;
     private final AccountPurseDomain purseDomain;
-    private final AccountContributeDomain contributeDomain;
     private final AccountPurseConfigDomain purseConfigDomain;
 
     @Override
@@ -88,31 +85,6 @@ public class PayProvider implements PayFacade {
         subRecordReq.setAlterType(PurseEnum.PurseAlterType.ORDER_PAY);
         subRecordReq.setJoinRecordId(req.getOrderNo());
         boolean flag = purseDomain.subAmount(subRecordReq);
-        // 支付成功流程
-        if (flag) {
-            // 定义账户变动记录集合
-            List<AccountPurseAlterRecordVO> accountPurseAlterRecords = new ArrayList<>();
-            // 为渠道商余额支付时，所属运营商财务模式逻辑
-            if (isChannelPay){
-                Integer lever = purseConfigDomain.queryOperatorLever(req.getOperatorId());
-                // 杠杆值大于0时，为杠杆模式
-                if (lever > 0) {
-                    subRecordReq.setAccountId(req.getOperatorId());
-                    subRecordReq.setAccountType(PurseEnum.FinanceUser.OPERATOR);
-                    subRecordReq.setPurseType(PurseEnum.PurseType.PURCHASE);
-                    boolean operatorSubFlag = purseDomain.subAmount(subRecordReq);
-                    // 设置运营商支付结果
-                    balancePayResult.setOperatorPayState(operatorSubFlag);
-                } else {
-                    // 设置运营商支付结果
-                    balancePayResult.setOperatorPayState(true);
-                }
-                // 更新客户贡献数据
-                List<AlterAccountContributeDataReq> alterAccountContributeDataReqs = new ArrayList<>();
-                alterAccountContributeDataReqs.add(AlterAccountContributeDataReq.buildEarning(req.getAccountId(), 0L, PurseEnum.FinanceUser.CHANNEL, req.getMemberId(), req.getPayAmount()));
-                contributeDomain.alterAccountContribute(alterAccountContributeDataReqs);
-            }
-        }
         balancePayResult.setPayState(flag);
         return balancePayResult;
     }

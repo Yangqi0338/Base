@@ -9,7 +9,6 @@ import com.newzkl.platform.base.biz.account.model.res.AccountInfo;
 import com.newzkl.platform.base.biz.account.model.res.RoleVO;
 import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.res.SubAccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.AccountAwardUserVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureTreeVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
@@ -182,5 +181,4 @@ public interface AccountDomain {
      *
      * @return
      */
-    Page<AccountAwardUserVO> awardUserPage(AccountAwardUserQuery query);
 }

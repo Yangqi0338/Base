@@ -15,7 +15,6 @@ import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.constant.RoleErrorCode;
@@ -24,9 +23,7 @@ import com.newzkl.platform.base.biz.account.application.service.UserQueryService
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
-import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
-import com.newzkl.platform.base.biz.account.model.req.OperatorReq;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
@@ -55,7 +52,6 @@ public class IdentityServiceImpl implements IdentityService {
     private final AccountDomain accountDomain;
     private final GoodsStoreApi goodsStoreApi;
     private final FinanceConfigApi financeConfigApi;
-    private final OperatorClientDomain operatorDomain;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -103,20 +99,6 @@ public class IdentityServiceImpl implements IdentityService {
         req.setChannelId(accountId);
         req.setPlatformConfig(getTree(serviceFeeConfigVO.getItemList()));
 
-//        Long upOperatorId = channel.getUpOperatorId();
-        OperatorVO operatorVO = null;
-//        if (upOperatorId != null && upOperatorId != 0) {
-//            operatorVO = userQueryService.operatorVO(upOperatorId);
-//        }
-        List<AmountRateDTO> operatorConfigItemList = new ArrayList<>();
-        if (operatorVO != null) {
-            String operatorConfig = operatorVO.getServiceFeeConfigVO();
-            if (StrUtil.isNotBlank(operatorConfig)) {
-                ServiceFeeConfigVO operatorConfigObject = JSONObject.parseObject(operatorConfig, ServiceFeeConfigVO.class);
-                operatorConfigItemList = operatorConfigObject.getItemList();
-            }
-        }
-        req.setOperatorConfig(getTree(operatorConfigItemList));
         financeConfigApi.saveChannelChargeConfig(req);
     }
 
@@ -139,44 +121,6 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void operatorEdit(OperatorReq operatorEditReq) {
-        //修改
-        OperatorVO operatorVO = operatorDomain.operatorEdit(operatorEditReq);
-        Long id = operatorVO.getId();
-        if (OperatorEnum.Type.BRAND == operatorVO.getType()) {
-            // doCheck保证 这里只有机构->品牌的业务操作才能走进这里
-            // 找密码
-            AccountVO accountVO = accountDomain.account(CommonEnum.Client.OPERATOR, id);
-
-            // 新增渠道商
-//            CustomSaveReq customSaveReq = operatorAssembler.vo2IdentitySaveReq(operatorVO);
-            IdentityProxySaveReq customSaveReq = new IdentityProxySaveReq();
-
-
-            customSaveReq.setName(operatorVO.getName());
-            customSaveReq.setRegisterDomain(operatorVO.getDomain());
-            customSaveReq.setBodyType(AccountEnum.BodyType.COMPANY);
-            customSaveReq.setContactsWay(operatorVO.getPhone());
-            customSaveReq.setStoreName(operatorVO.getName());
-            customSaveReq.setContactsName(operatorVO.getName());
-            customSaveReq.setCompanyInfo(new IdentitySaveReq.CompanyInfo());
-            customSaveReq.setStorePermission(CommonEnum.YesOrNo.YES);
-            customSaveReq.setChannelType(ChannelEnum.ChannelType.STORE);
-            AbsIdentityPolicySupport.getPolicy(RoleEnum.CompanyRole.CHANNEL).proxyRegister(customSaveReq);
-
-            StoreRegisterReq storeRegisterReq = new StoreRegisterReq(id);
-            storeRegisterReq.setStoreName(operatorVO.getTypeForeignName());
-//            storeRegisterReq.setStoreType(FinanceProperties.storeFixCategory);
-            goodsStoreApi.openStore(storeRegisterReq);
-        }
-
-        //通知
-        if (operatorEditReq.getLeverageRatio() != null) {
-            financeConfigApi.saveOperatorLeverConfig(id, operatorEditReq.getLeverageRatio());
-        }
-    }
-
-    @Override
     public ServiceFeeConfigVO queryServiceFeeConfig(Long channelId) {
         ChannelServiceAmountRes channelConfigVO = financeConfigApi.queryChannelConfig(channelId);
         ServiceFeeConfigVO serviceFeeConfigVO = new ServiceFeeConfigVO();

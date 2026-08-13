@@ -9,7 +9,6 @@ import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuDetailVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuStateVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
-import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SupplierSpuStatisticsQuery;
 
 import java.util.List;
@@ -55,7 +54,6 @@ public interface SpuService {
      * @param spuQuery 商品查询 (type 为必填运营类型, accountId 由入口回填为登录运营商)
      * @return 商品分页; 无可见供应商时返回空页
      */
-    Page<SpuVO> operatorSpuPage(SpuQuery spuQuery);
 
     /**
      * 货盘选择商品

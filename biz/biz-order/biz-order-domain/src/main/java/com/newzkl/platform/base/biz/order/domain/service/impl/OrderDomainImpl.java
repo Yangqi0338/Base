@@ -805,19 +805,6 @@ public class OrderDomainImpl implements OrderDomain {
     }
 
     @Override
-    public IndexCountRes indexCount(TimeQuery timeQuery) {
-        // 迁移: 原 domain 直连 spuOrderDAO + ScmUtil(依赖 new-scm) 违依赖硬线,
-        // 时间切片补全 + DAO 统计下沉 infra, domain 直调 repository
-        IndexCountRes indexCountRes = new IndexCountRes();
-        List<GroupCountRes> newGroupCountRes = orderRepository.orderCountComplete(timeQuery);
-        indexCountRes.setGroupCountRes(newGroupCountRes);
-        SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        indexCountRes.setOrderCount(orderRepository.spuOrderCount(spuOrderQuery));
-        indexCountRes.setOrderAmount(orderRepository.spuOrderSumAmount(spuOrderQuery));
-        return indexCountRes;
-    }
-
-    @Override
     public Map<Long, List<DeliverVO>> orderDeliverInfo(Long spuOrderId) {
         // 迁移: 原 domain 直连 deliverDAO 违依赖硬线, 查询下沉 infra, domain 直调 repository
         List<DeliverVO> deliverVOS = orderRepository.deliverListBySpuOrderId(spuOrderId);

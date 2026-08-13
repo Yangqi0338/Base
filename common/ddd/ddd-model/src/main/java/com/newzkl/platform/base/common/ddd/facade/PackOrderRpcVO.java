@@ -1,7 +1,5 @@
-package com.newzkl.platform.base.biz.finance.model.earnings.vo;
+package com.newzkl.platform.base.common.ddd.facade;
 
-import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,7 +22,7 @@ public class PackOrderRpcVO implements Serializable {
     /**
      * 订单金额
      */
-    private Money amount;
+    private Integer amount;
     /**
      * 礼包等级
      */
@@ -32,7 +30,7 @@ public class PackOrderRpcVO implements Serializable {
     /**
      * 礼包类型
      */
-    private RoleEnum.CompanyRole packType;
+    private Integer packType;
     /**
      * 礼包名称
      */

@@ -61,8 +61,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OperatorApi operatorFacade;
-
     private final OrderDomain orderDomain;
 
     private final OrderRepository orderRepository;
@@ -237,40 +235,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return errorVO;
-    }
-
-    @Override
-    public Map<OrderEnum.State, Integer> spuOrderStateCountMap(SpuOrderQuery spuOrderQuery) {
-        ArrayList<OrderEnum.State> orderStateList = CollUtil.newArrayList(
-                OrderEnum.State.WAIT_DELIVERY,
-                OrderEnum.State.WAIT_RECEIVE,
-                OrderEnum.State.DOWN_RECEIVE,
-                OrderEnum.State.SUCCESS,
-                OrderEnum.State.CLOSE
-        );
-        spuOrderQuery.setOrderStateList(orderStateList);
-        Integer type = spuOrderQuery.getType();
-        // Q3 越权收敛: 原口径 searchSupplierIdList = 请求 ∪ 可见(UNION), 运营商传任意 supplierId 即可越权查非可见范围。
-        // 收敛为 可见 ∩ 请求(INTERSECT), 与 OrderController.appendSpuOrderQuery OPERATOR 分支口径一致:
-        // 有请求则可见范围按请求过滤; 无请求则用全部可见范围; 交集为空则不查(返回全 0)。
-        List<Long> supplierIdList = operatorFacade.supplierIdListByType(SecurityUtils.getAccountId(), type);
-        List<Long> searchSupplierIdList = Opt.ofNullable(spuOrderQuery.getSupplierIdList()).orElse(new ArrayList<>());
-        if (CollUtil.isNotEmpty(searchSupplierIdList)) {
-            supplierIdList = supplierIdList.stream().filter(searchSupplierIdList::contains).collect(Collectors.toList());
-        }
-        Map<OrderEnum.State, Integer> countMap = new HashMap<>();
-
-        if (CollUtil.isNotEmpty(supplierIdList)) {
-            spuOrderQuery.setSupplierIdList(supplierIdList);
-            countMap.putAll(orderRepository.stateCountMap(spuOrderQuery));
-        }
-
-        orderStateList.forEach(orderState -> {
-            if (!countMap.containsKey(orderState)) {
-                countMap.put(orderState, 0);
-            }
-        });
-        return countMap;
     }
 
     @Override

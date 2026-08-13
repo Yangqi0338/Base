@@ -1,12 +1,10 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
-import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountContributeRpcQuery;
 import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DeveloperInitReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceEarningApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
@@ -52,22 +50,9 @@ class CrossServiceApiDefaultImplTest {
         FinanceConfigApi api = new FinanceConfigApiImpl();
         assertDoesNotThrow(() -> api.saveChannelChargeConfig(new ChargeConfigChannelReq()));
         assertDoesNotThrow(() -> api.saveChannelChargeConfig(null));
-        assertDoesNotThrow(() -> api.saveOperatorLeverConfig(5501L, 3));
         assertNull(api.queryChannelNowServiceFee(5501L), "兜底服务费查询应返回 null");
     }
 
-    @Test
-    @DisplayName("FinanceEarningApi 兜底: 收益汇总返回空 Map, 收益贡献返回空 List")
-    void financeEarningApiReturnsEmptyCollections() {
-        FinanceEarningApi api = new FinanceEarningApiDefaultImpl();
-
-        assertNotNull(api.queryIncome(new IncomeQuery()), "收益汇总恒非 null");
-        assertTrue(api.queryIncome(new IncomeQuery()).isEmpty(), "兜底收益汇总应为空 Map");
-
-        assertNotNull(api.queryEarningContribute(new AccountContributeRpcQuery()), "收益贡献恒非 null");
-        assertTrue(api.queryEarningContribute(new AccountContributeRpcQuery()).isEmpty(),
-                "兜底收益贡献应为空 List");
-    }
 
     @Test
     @DisplayName("FinancePurseApi 兜底: 初始化钱包空实现, 查钱包返回空 List")

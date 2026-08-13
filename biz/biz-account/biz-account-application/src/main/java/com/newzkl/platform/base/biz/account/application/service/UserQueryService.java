@@ -84,13 +84,6 @@ public interface UserQueryService {
     Page<MemberVO> memberPage(MemberQuery memberQuery);
 
     List<SupplierDescVO> supplierDescVOList(List<Long> supplierIdList);
-    /**
-     * countSale分页
-     *
-     * @param countSaleQuery
-     * @return
-     */
-    Page<CountSaleVO> countSalePage(CountSaleQuery countSaleQuery);
 
     Page<ChannelVO> channelPage(ChannelQuery channelQuery);
 
@@ -110,33 +103,15 @@ public interface UserQueryService {
      */
     SupplierOutRes supplierOutVO(Long supplierId);
 
-    Page<SelectorSupplierVO> selectorSupplierVO(SupplierQuery supplierQuery);
-
     List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList);
 
     ChannelEarningsConfigVO serviceFeeConfigVO(Long channelId);
 
-    OperatorVO operatorVO(Long operatorId);
-
-    Page<OperatorVO> operatorPage(OperatorQuery operatorQuery);
-
-    DealerVO dealerVO(Long dealerId);
-
-    Page<DealerVO> dealerPage(DealerQuery dealerQuery);
-
-    SelectorVO selectorVO(Long selectorId);
-
-    Page<SelectorVO> selectorPage(SelectorQuery selectorQuery);
-
     UpIdRes channelUpId(Long accountId);
-
-    OperatorDomainInfo getOperatorDomainInfoBySub();
 
     IndexCountRes indexCount();
 
     String supplierRegistrationInvitationLink(String headHost);
-
-    OperatorVO getOperatorByDomain(String domain);
 
     /**
      * app账号详情
@@ -149,7 +124,6 @@ public interface UserQueryService {
     /**
      * 运营商供应商分页
      */
-    Page<SupplierVO> operatorSupplierPage(SupplierQuery supplierQuery);
 
     Page<SupplierRes> supplierPage(SupplierQuery query);
 }

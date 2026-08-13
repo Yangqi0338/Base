@@ -1,16 +1,15 @@
 package com.newzkl.platform.base.biz.finance.action.mq;
 
-import com.newzkl.platform.base.biz.finance.application.earnings.service.EarningService;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.OrderApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.PackOrderApi;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
-import com.newzkl.platform.base.biz.finance.model.earnings.req.EarningsPackExecReq;
-import com.newzkl.platform.base.biz.finance.model.earnings.vo.PackOrderRpcVO;
+
 import com.newzkl.platform.base.biz.finance.model.event.PaySuccessEvent;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.common.core.mq.infrastructure.annotation.MQConsumer;
 import com.newzkl.platform.base.common.core.mq.infrastructure.consumer.AbstractMessageMQPushConsumer;
 import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
+import com.newzkl.platform.base.common.ddd.facade.PackOrderRpcVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,6 @@ public class PaySuccessConsumer extends AbstractMessageMQPushConsumer<PaySuccess
     private PackOrderApi packOrderApi;
 
     @Autowired
-    private EarningService earningService;
-
-    @Autowired
     private OrderApi orderApi;
 
     @Override
@@ -48,15 +44,6 @@ public class PaySuccessConsumer extends AbstractMessageMQPushConsumer<PaySuccess
             log.info("查询订单信息 :" + orderNo);
             PackOrderRpcVO packOrderRpcVO = packOrderApi.packOrderVO(orderNo);
             Long accountId = packOrderRpcVO.getAccountId();
-
-            //发送分润消息
-            EarningsPackExecReq earningsExecReq = new EarningsPackExecReq();
-            earningsExecReq.setOrderNo(orderNo);
-            earningsExecReq.setTradeNo(tradeOrderInfoRes.getTradeNo());
-
-            log.info("发送分润消息");
-//            localMessageDomain.sendMessage(MQ.Tag.FINANCE_EARNINGS_EXEC, earningsExecReq);
-            earningService.doEarning(earningsExecReq);
 
             // 修正为账号升级判断
             log.info("账号升级判断: " + accountId + ":" + packOrderRpcVO.getPackLevel());

@@ -66,18 +66,6 @@ public class AccountOutRes extends BaseRes {
       * 渠道商信息
       */
      private ChannelOutRes channel;
-     /**
-      * 交易师信息
-      */
-     private DealerOutRes dealer;
-     /**
-      * 运营商信息
-      */
-     private OperatorOutRes operator;
-     /**
-      * 甄选师信息
-      */
-     private SelectorOutRes selector;
     /**
      * 员工信息
      */

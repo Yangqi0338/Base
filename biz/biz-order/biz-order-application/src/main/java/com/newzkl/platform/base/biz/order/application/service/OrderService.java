@@ -37,8 +37,6 @@ public interface OrderService {
 
     ExcelErrorVO splitDeliver(List<SplitDeliverExcelVO> lst);
 
-    Map<OrderEnum.State, Integer> spuOrderStateCountMap(SpuOrderQuery spuOrderQuery);
-
     /**
      * 超时关闭订单
      */

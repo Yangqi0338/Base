@@ -16,7 +16,6 @@ import com.newzkl.platform.base.biz.account.model.auth.req.ToggleClientReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.web.CodeUpdatePasswordCommand;
 import com.newzkl.platform.base.biz.account.model.auth.res.LoginRes;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.biz.account.model.req.AccountAwardUserQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountKeyQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountParentQuery;
@@ -38,7 +37,6 @@ import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.res.SubAccountVO;
 import com.newzkl.platform.base.biz.account.model.res.UserHomePageRes;
 import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
-import com.newzkl.platform.base.biz.account.model.vo.AccountAwardUserVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -161,21 +159,6 @@ public class AccountController {
     @PostMapping("/account/codeRegister")
     public PlatformResult<Long> codeRegister(@Validated @RequestBody IdentityCustomSaveReq customSaveReq) {
         return PlatformResult.success(accountLoginService.customeRegister(customSaveReq));
-    }
-
-    /**
-     * 供应商通过运营商生成的注册链接进行注册
-     *
-     * @param customSaveReq 注册请求
-     * @param request       HTTP 请求, 取 {@code X-Forwarder-Host} 定位运营商
-     * @return 账号ID
-     */
-    @PostMapping("/account/inviteSupplierRegister")
-    public PlatformResult<Long> inviteSupplierRegister(@Validated @RequestBody IdentityCustomSaveReq customSaveReq,
-                                                       HttpServletRequest request) {
-        String host = request.getHeader("X-Forwarder-Host");
-        log.info("X-Forwarder-Host:{}", host);
-        return PlatformResult.success(accountLoginService.inviteSupplierRegister(customSaveReq, host));
     }
 
     /**
@@ -413,10 +396,6 @@ public class AccountController {
      * @param query 奖金池用户查询
      * @return 奖金池用户分页
      */
-    @GetMapping("/account/listUser")
-    public PlatformResult<Page<AccountAwardUserVO>> listUser(@ModelAttribute AccountAwardUserQuery query) {
-        return PlatformResult.success(accountService.listOperatorUser(query));
-    }
 
     /**
      * 退出登录

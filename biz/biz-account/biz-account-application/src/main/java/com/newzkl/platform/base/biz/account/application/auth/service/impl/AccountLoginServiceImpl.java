@@ -30,7 +30,6 @@ import com.newzkl.platform.base.biz.account.model.res.LoginAccountRes;
 import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.OperatorVO;
 import com.newzkl.platform.base.biz.account.model.vo.ResetMemberVO;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.TLSSigAPIv2;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
@@ -460,23 +459,6 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             storeAccountCreateReq.setStoreId(753260854440005L);
         }
         return storeAccountCreateReq;
-    }
-
-    @Override
-    public Long inviteSupplierRegister(IdentityCustomSaveReq customSaveReq, String host) {
-        // 通过host查找对应的运营商
-        OperatorVO operatorByDomain = userQueryService.getOperatorByDomain(host);
-        if (operatorByDomain == null) {
-            throw new PlatformException(BaseErrorCode.PARAM, "域名错误，运营商不存在");
-        }
-        customSaveReq.setYqm(operatorByDomain.getYqm());
-        IdentityRegisterRes accountRegisterRes = AbsIdentityPolicySupport.getPolicy(RoleEnum.CompanyRole.SUPPLIER)
-                .customRegister(customSaveReq);
-
-        if (accountRegisterRes.getErrorCode() != null) {
-            throw new PlatformException(accountRegisterRes.getErrorCode());
-        }
-        return accountRegisterRes.getId();
     }
 
     @Override

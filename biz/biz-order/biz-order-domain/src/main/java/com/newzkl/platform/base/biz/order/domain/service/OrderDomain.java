@@ -158,13 +158,6 @@ public interface OrderDomain {
     List<SpuOrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
 
     void orderEdit(OrderDTO orderEdit);
-
-    /**
-     * 订单统计数据
-     * @param timeQuery
-     * @return
-     */
-    IndexCountRes indexCount(TimeQuery timeQuery);
     /**
      * SPU订单发货信息
      * @param spuOrderId

@@ -106,46 +106,6 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
     }
 
     @Override
-    public OperatorListQueryVO operatorAccountListQuery() {
-        AccountQuery query = new AccountQuery();
-        query.setState(AccountEnum.State.ENABLE);
-        query.setClient(CommonEnum.Client.OPERATOR);
-
-        // 根据条件查询 id 和 角色
-        Map<Long, String> accountIdRoleMap =
-                mapOneField(accountDAO, accountDAO.getLw(query), AccountDO::getId, AccountDO::getRoleIdList);
-
-        OperatorListQueryVO listQueryVO = new OperatorListQueryVO();
-        if (MapUtil.isEmpty(accountIdRoleMap)) {
-            return listQueryVO;
-        }
-        List<Long> guestList = new ArrayList<>();
-        listQueryVO.setGuestList(guestList);
-        List<Long> selectorList = new ArrayList<>();
-        listQueryVO.setSelectorList(selectorList);
-        List<Long> dealerList = new ArrayList<>();
-        listQueryVO.setDealerList(dealerList);
-        List<Long> operatorList = new ArrayList<>();
-        listQueryVO.setOperatorList(operatorList);
-        accountIdRoleMap.forEach((key, value) -> {
-            List<RoleEnum.CompanyRole> roleList = RoleEnumUtil.getOperatorLevelUpEnumList(value);
-            if (roleList.contains(RoleEnum.CompanyRole.OPERATOR_GUEST)) {
-                guestList.add(key);
-            }
-            if (roleList.contains(RoleEnum.CompanyRole.SELECTOR)) {
-                selectorList.add(key);
-            }
-            if (roleList.contains(RoleEnum.CompanyRole.DEALER)) {
-                dealerList.add(key);
-            }
-            if (roleList.contains(RoleEnum.CompanyRole.OPERATOR)) {
-                operatorList.add(key);
-            }
-        });
-        return listQueryVO;
-    }
-
-    @Override
     public List<AccountRPCResVO> accountAndSonAccountRpcList(List<Long> list) {
 
         if (CollectionUtil.isEmpty(list)) {

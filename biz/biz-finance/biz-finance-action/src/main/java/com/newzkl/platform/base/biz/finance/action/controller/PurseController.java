@@ -61,11 +61,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PurseController {
 
-    /**
-     * 金额分转元的除数
-     */
-    private static final BigDecimal HUNDRED = new BigDecimal("100");
-
     private final AccountPurseDomain accountPurseDomain;
     private final TripartitePurseDomain tripartitePurseDomain;
     private final WithdrawDomain withdrawDomain;

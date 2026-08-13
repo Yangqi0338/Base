@@ -5,12 +5,10 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
-import com.newzkl.platform.base.biz.goods.domain.adapt.api.OperatorApi;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.OperatorEnum;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
@@ -75,7 +73,6 @@ public class SpuServiceImpl implements SpuService {
 
     private final SpuDomain spuDomain;
     private final SpuRepository spuRepository;
-    private final OperatorApi operatorApi;
     private final GoodsQueryService goodsQueryService;
 
     /**
@@ -128,31 +125,6 @@ public class SpuServiceImpl implements SpuService {
     public SupplierSpuStatisticsVO supplierSpuStatistics(SupplierSpuStatisticsQuery query) {
         throw new UnsupportedOperationException(GAP
                 + "供应商商品统计需 user 域 supplierFacade#getSupplierVO 填充供应商主体信息, 且源端点已 @Deprecated");
-    }
-
-    /**
-     * 运营商查其可见供应商的商品分页
-     *
-     * <p>逐行迁移自 new-scm {@code GoodsQueryServiceImpl.operatorSpuPage}: 运营类型必填, 经
-     * {@code OperatorApi} 拿可见供应商 ID 列表 (跨域 biz-account), 为空则返空页, 否则收敛
-     * {@code supplierIdList} 后走既有商品分页。源 {@code accountIdList} 在 Base 对等字段为
-     * {@code supplierIdList}。</p>
-     *
-     * @param spuQuery 商品查询 (type 为必填运营类型)
-     * @return 商品分页; 无可见供应商时返回空页
-     */
-    @Override
-    public Page<SpuVO> operatorSpuPage(SpuQuery spuQuery) {
-        OperatorEnum.Type type = spuQuery.getType();
-        if (type == null) {
-            throw new PlatformException(BaseErrorCode.PARAM, "运营类型");
-        }
-        List<Long> supplierIdList = operatorApi.supplierIdListByType(SecurityUtils.getAccountId(), type.getCode());
-        if (CollUtil.isEmpty(supplierIdList)) {
-            return new Page<>();
-        }
-        spuQuery.setSupplierIdList(supplierIdList);
-        return spuDomain.querySpuPage(spuQuery);
     }
 
     /**

@@ -62,7 +62,6 @@ public interface AccountDAO extends BaseMapper<AccountDO> {
     List<AccountStructureVO> findScopeSubAccountStructure(@Param("accountId") Long accountId);
 
 
-    List<AccountAwardUserVO> selectAwardList(@Param("ew") QueryWrapper<AccountAwardUserVO> queryWrapper);
 
     List<AccountRPCResVO> selectAwardListByIdList(@Param(Constants.WRAPPER) QueryWrapper<AccountOutRes> queryWrapper);
 

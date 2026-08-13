@@ -14,7 +14,6 @@ import com.newzkl.platform.base.biz.account.application.service.UserQueryService
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
-import com.newzkl.platform.base.biz.account.domain.service.OperatorClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
@@ -43,7 +42,6 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
     private final SmsApi smsApi;
     private final UserQueryService roleQueryAppService;
     private final SupplierClientDomain supplierDomain;
-    private final OperatorClientDomain operatorDomain;
     private final AccountDomain accountDomain;
 
     @Override
@@ -107,7 +105,6 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
         financePurseApi.initFinance(initFinanceReq);
         //邀请成功通知
         if (inviteAccountId != null) {
-            operatorDomain.inviteSuccess(inviteAccountId, RoleEnum.CompanyRole.SUPPLIER, accountId);
         }
 
         return new IdentityRegisterRes(null, accountId);

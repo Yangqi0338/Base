@@ -24,7 +24,6 @@ import java.util.Set;
 @Mapper
 public interface SupplierDAO extends BaseMapper<SupplierDO> {
 
-    List<SelectorSupplierVO> listSelectorSupplierVOByQuery(@Param("query") SupplierQuery supplierQuery);
 
     List<SupplierRelationVO> supplierRelationVO(@Param("supplierIdList") List<Long> supplierIdList);
 
@@ -38,7 +37,6 @@ public interface SupplierDAO extends BaseMapper<SupplierDO> {
 
     String getSettlementConfig(@Param("id") Long accountId);
 
-    List<OperatorInviteCountVO> selectCountByInviteId(@Param("inviteIds") Set<Long> inviteIds);
 
     default BaseLambdaQueryWrapper<SupplierDO> getLw(SupplierQuery query) {
         return new BaseLambdaQueryWrapper<SupplierDO>()

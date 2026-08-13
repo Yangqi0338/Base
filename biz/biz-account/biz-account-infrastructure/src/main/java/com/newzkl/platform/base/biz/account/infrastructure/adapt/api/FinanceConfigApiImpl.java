@@ -30,11 +30,6 @@ public class FinanceConfigApiImpl implements FinanceConfigApi {
     }
 
     @Override
-    public void saveOperatorLeverConfig(Long accountId, Integer leverageRatio) {
-        // TODO[cross-service]: 远程 finance 保存运营商杠杆配置, 默认空实现
-    }
-
-    @Override
     public ChannelServiceAmountRes queryChannelConfig(Long channelId) {
         ChannelConfigRes channelConfigRes = accountFinanceConfigFacade.queryChannelConfig(channelId);
         return TransferUtils.transfer(channelConfigRes, ChannelServiceAmountRes.class);

@@ -35,15 +35,7 @@ public class AccountPurseConfigDomainImpl implements AccountPurseConfigDomain {
 
     private final ConfigChannelRepository channelConfigRepository;
 
-    @Override
-    public void saveOperatorLeverConfig(Long accountId, Integer config) {
-        accountPurseConfigRepository.saveOperatorLeverConfig(accountId, config);
-    }
 
-    @Override
-    public Integer queryOperatorLever(Long operatorId) {
-        return accountPurseConfigRepository.queryOperatorLever(operatorId);
-    }
 
     @Override
     public void saveChannelChargeConfig(ChargeConfigChannelReq req) {

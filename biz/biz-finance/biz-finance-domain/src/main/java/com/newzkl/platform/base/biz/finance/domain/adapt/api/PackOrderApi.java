@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 
-import com.newzkl.platform.base.biz.finance.model.earnings.vo.PackOrderRpcVO;
+import com.newzkl.platform.base.common.ddd.facade.PackOrderRpcVO;
 
 /**
  * 账户域跨服务出站端口 (outbound port)

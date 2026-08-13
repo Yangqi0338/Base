@@ -34,50 +34,6 @@ public class PurseServiceImpl implements PurseService {
 
     private final AccountApi accountFacade;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public PlatformResult<Boolean> platformToOperator(AmountDistributionReq req) {
-        Integer lever = accountPurseConfigDomain.queryOperatorLever(req.getAccountId());
-        if (lever == 0) {
-            return PlatformResult.fail(BaseErrorCode.NODATA);
-        }
-        // 1、分配实际采购金
-        AccountPurseAlterRecordReq recordReq = buildAccountPurseAlterRecord(req,
-                PurseEnum.PurseAlterType.PLATFORM_TO_OPERATOR,
-                PurseEnum.FinanceUser.OPERATOR, req.getAmount(),
-                PurseEnum.PurseType.PURCHASE
-        );
-        // 2、分配杠杆采购金
-        Money leverAmount = req.getAmount().multiply(lever);
-        AccountPurseAlterRecordReq recordReq1 = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.PLATFORM_TO_OPERATOR_LEVER,
-                PurseEnum.FinanceUser.OPERATOR, leverAmount, PurseEnum.PurseType.LEVERAGE_PURCHASE);
-        accountPurseService.addAmount(recordReq, recordReq1);
-        return PlatformResult.success();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public PlatformResult<Boolean> operatorToChannel(AmountDistributionReq req) {
-        UpIdRes upIdRes = accountFacade.upId(CommonEnum.Client.CHANNEL, req.getAccountId());
-        Integer lever = accountPurseConfigDomain.queryOperatorLever(SecurityUtils.getAccountId());
-        if (lever == 0 || !upIdRes.getOneId().equals(SecurityUtils.getAccountId())) {
-            return PlatformResult.fail(BaseErrorCode.NODATA);
-        }
-
-        // 运营商杠杆采购金变动记录
-        AccountPurseAlterRecordReq leverageRecordReq = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.OPERATOR_TO_CHANNEL,
-                PurseEnum.FinanceUser.OPERATOR, req.getAmount(), PurseEnum.PurseType.LEVERAGE_PURCHASE);
-        boolean flag = accountPurseService.subAmount(leverageRecordReq);
-        if (flag) {
-            // 2、分配实际采购金
-            AccountPurseAlterRecordReq channelRecordReq = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.OPERATOR_TO_CHANNEL,
-                    PurseEnum.FinanceUser.CHANNEL, req.getAmount(), PurseEnum.PurseType.PURCHASE);
-            accountPurseService.addAmount(channelRecordReq);
-        } else {
-            return PlatformResult.fail(FinanceErrorCode.AMOUNT_LESS);
-        }
-        return PlatformResult.success();
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
