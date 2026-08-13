@@ -30,6 +30,5 @@
         <module>biz-content</module>
         <module>biz-course</module>
         <module>biz-store</module>
-        <module>biz-social-bang</module>
     </modules>
 </project>
