@@ -2,16 +2,12 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
-import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
-import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
+import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
+import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
+import com.newzkl.platform.base.biz.account.model.vo.AccountStructureVO;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
-import com.newzkl.platform.base.biz.account.model.res.SubAccount;
-import com.newzkl.platform.base.biz.account.model.res.UpIdRes;
-import com.newzkl.platform.base.biz.account.model.res.UserCountRes;
-import com.newzkl.platform.base.biz.account.model.vo.*;
 
 import java.util.List;
 
@@ -89,28 +85,6 @@ public interface AccountRepository {
      * @return 账号数量
      */
     int accountCountByQuery(AccountQuery accountQuery);
-
-    /**
-     * 保存子账号
-     *
-     * @param subAccount 子账号实体
-     */
-    void subAccountSave(SubAccount subAccount);
-
-    /**
-     * 编辑子账号
-     *
-     * @param subAccount 子账号实体
-     */
-    void subAccountEdit(SubAccount subAccount);
-
-    /**
-     * 查询子账号
-     *
-     * @param id 子账号ID
-     * @return 子账号实体
-     */
-    SubAccount subAccount(Long id);
 
     /**
      * 根据查询条件查找账号ID

@@ -5,12 +5,11 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
+import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
@@ -106,16 +105,9 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
         res.setOneId(CollUtil.getLast(res.getUpId()));
 
         // 获取分润用户第一级角色ID
-        res.setDirectRoleId(UpIdRes.getLastEarningUserRoleId(res));
+//        res.setDirectRoleId(UpIdRes.getLastEarningUserRoleId(res));
         return res;
     }
-
-    /**
-     * 角色申请审批通知
-     *
-     * @param auditEvent
-     */
-    public abstract void roleApplyAuditEvent(AuditEvent auditEvent);
 
     /**
      * 邀请别人成功

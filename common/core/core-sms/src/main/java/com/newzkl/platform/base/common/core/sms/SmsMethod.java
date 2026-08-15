@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.common.core.sms;
 
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
+
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

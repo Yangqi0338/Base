@@ -52,11 +52,6 @@ public interface GoodsRelationDomain {
     Page<GoodsRelationListVO> appQueryMarketGoodList(GoodsListPageQuery req);
 
     /**
-     * 运营商查询二级市场
-     */
-    Page<GoodsRelationListVO> operatorQueryMarketGoodsList(MarketGoodsPageQuery req);
-
-    /**
      * 渠道商查询选品列表
      */
     Page<GoodsRelationListVO> channelQuerySelectGoodsList(MarketGoodsPageQuery req);
@@ -70,11 +65,6 @@ public interface GoodsRelationDomain {
      * 平台市场添加商品查询商品列表
      */
     Page<GoodsRelationListVO> platformQueryMarketNotAddGoodsList(PlatformQueryMarketNotAddGoodsReq req);
-
-    /**
-     * 运营商二级市场添加商品查询商品列表
-     */
-    Page<GoodsRelationListVO> operateQueryMarketNotAddGoodsList(PlatformQueryMarketNotAddGoodsReq req);
 
     /**
      * 渠道商选品查询市场商品

@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.content.domain.service.impl;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoCategoryRepository;
 import com.newzkl.platform.base.biz.content.domain.service.VideoCategoryDomain;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.biz.content.model.videocategory.entity.VideoCategory;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
@@ -77,7 +78,7 @@ public class VideoCategoryDomainImpl implements VideoCategoryDomain {
     }
 
     @Override
-    public List<VideoCategoryRes> getCategoryList(List<String> recommendGroups) {
+    public List<VideoCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
         return videoCategoryRepository.getCategoryList(recommendGroups);
     }
 

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class AccountRoleVO implements Serializable {
     /**
      * 角色 ID
      */
-    private Long roleId;
+    private RoleEnum.CompanyRole role;
 
     /**
      * 角色名称

@@ -123,17 +123,10 @@ public class MarketEnum {
     @AllArgsConstructor
     public enum User implements IEnum<Integer> {
         /**
-         * 运营商
-         */
-        OPERATOR(1, RoleEnum.CompanyRole.OPERATOR, "运营商"),
-        /**
          * 渠道商
          */
         CHANNEL(3, RoleEnum.CompanyRole.CHANNEL, "渠道商"),
-        /**
-         * 交易师
-         */
-        TRADERS(2, RoleEnum.CompanyRole.DEALER, "交易师");
+        ;
 
         @EnumValue
         @JsonValue
@@ -151,9 +144,9 @@ public class MarketEnum {
             return info;
         }
 
-        public static Integer accountTypeByRoleId(Long roleId) {
+        public static Integer accountTypeByRole(RoleEnum.CompanyRole role) {
             return Arrays.stream(values())
-                    .filter(it -> it.getRole().getCode().equals(roleId))
+                    .filter(it -> it.getRole() == role)
                     .findFirst()
                     .map(User::getType)
                     .orElse(null);

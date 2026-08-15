@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.order.application.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -63,7 +62,6 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public SpuOrderAggVO spuOrderAggVO(Long spuOrderId) {
         SpuOrderAggVO spuOrderAggVO = orderRepository.spuOrderAggVO(spuOrderId);
-        decorateChannelName(Collections.singletonList(spuOrderAggVO));
         //物流信息
         Map<Long, List<DeliverVO>> deliverMap = this.orderDeliverInfo(spuOrderId);
         this.buildDeliver(deliverMap, spuOrderAggVO);
@@ -125,28 +123,6 @@ public class QueryServiceImpl implements QueryService {
             spuOrderVO.setRemainTime(remainTime);
         }
         return spuOrderAggVO;
-    }
-
-    public void decorateChannelName(List<SpuOrderAggVO> spuOrderAggVOList) {
-        if (CollectionUtil.isEmpty(spuOrderAggVOList)) return;
-
-        List<Long> channelIdList = spuOrderAggVOList.stream().map(SpuOrderAggVO::getSpuOrderVO).map(SpuOrderVO::getChannelId).filter(Objects::nonNull).collect(Collectors.toList());
-        if (RoleEnum.CompanyRole.OPERATOR == SecurityUtils.getRole() && CollUtil.isNotEmpty(channelIdList)) {
-            // 查询渠道商
-            List<ChannelDTO> channelOutVOList = channelApi.channelList(channelIdList, null);
-
-            spuOrderAggVOList.forEach(spuOrderAggVO -> {
-                channelOutVOList.stream().filter(it -> it.getId().equals(spuOrderAggVO.getSpuOrderVO().getChannelId())).findFirst().ifPresent(channelOutVO -> {
-                    spuOrderAggVO.getSpuOrderVO().setChannelName(channelOutVO.getName());
-                    // 若邀请人非自己, 脱敏
-                    if (!channelOutVO.getUpOperatorId().equals(SecurityUtils.getAccountId())) {
-                        spuOrderAggVO.doDesensitized();
-                    }
-                });
-
-            });
-
-        }
     }
 
     @Override
@@ -274,7 +250,6 @@ public class QueryServiceImpl implements QueryService {
         }
         
         // ========== 6. 装饰渠道名称 + 转换分页返回 ==========
-        decorateChannelName(aggVOList);
         return spuOrderPage;
     }
     @Override

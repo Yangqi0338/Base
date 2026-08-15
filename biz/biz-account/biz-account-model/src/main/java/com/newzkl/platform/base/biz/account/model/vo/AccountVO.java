@@ -188,8 +188,4 @@ public class AccountVO extends BaseRes {
     public String getNewPassword(String rawPassword) {
         return new BCryptPasswordEncoder().encode(rawPassword);
     }
-
-    public boolean checkPassword(String password) {
-        return SecurityUtils.matchesPassword(password, this.password);
-    }
 }

@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.common.core.sms;
 
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
+
+
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 
 import java.util.List;
 

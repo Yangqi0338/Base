@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.query.ArticleC
 import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCategoryReq;
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -74,7 +75,7 @@ public class ArticleCategoryDomainImpl implements ArticleCategoryDomain {
     }
 
     @Override
-    public List<ArticleCategoryRes> getCategoryList(List<String> recommendGroups) {
+    public List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
         return articleCategoryRepository.getCategoryList(recommendGroups);
     }
 }

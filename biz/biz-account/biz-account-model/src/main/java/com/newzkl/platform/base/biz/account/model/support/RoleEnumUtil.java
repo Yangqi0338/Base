@@ -46,18 +46,6 @@ public final class RoleEnumUtil {
     }
 
     /**
-     * 获取运营商升级角色列表
-     *
-     * @param roleIdStr 角色ID串
-     * @return 角色列表
-     */
-    public static List<RoleEnum.CompanyRole> getOperatorLevelUpEnumList(String roleIdStr) {
-        return findClientRoleList(CommonEnum.Client.OPERATOR)
-                .filter(it -> roleIdStr.contains(it.getCodeStr()))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * 获取指定客户端命中 roleIdStr 的首个角色列表
      *
      * @param client    客户端

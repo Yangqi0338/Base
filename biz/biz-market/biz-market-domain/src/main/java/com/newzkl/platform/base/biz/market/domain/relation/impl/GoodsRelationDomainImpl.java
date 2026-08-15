@@ -109,14 +109,6 @@ public class GoodsRelationDomainImpl implements GoodsRelationDomain {
     }
 
     @Override
-    public Page<GoodsRelationListVO> operatorQueryMarketGoodsList(MarketGoodsPageQuery req) {
-        GoodsListPageQuery queryGoodsListReq = TransferUtils.transfer(req, GoodsListPageQuery::new);
-        queryGoodsListReq.setUserId(SecurityUtils.getAccountId());
-        queryGoodsListReq.setRelationType(GoodsRelationEnum.GoodsRelation.TWO_MARKET_GOODS.getRelationType());
-        return goodsRelationRepository.queryGoodsRelationList(queryGoodsListReq);
-    }
-
-    @Override
     public Page<GoodsRelationListVO> channelQuerySelectGoodsList(MarketGoodsPageQuery req) {
         GoodsListPageQuery queryGoodsListReq = TransferUtils.transfer(req, GoodsListPageQuery::new);
         queryGoodsListReq.setUserId(SecurityUtils.getAccountId());
@@ -132,11 +124,6 @@ public class GoodsRelationDomainImpl implements GoodsRelationDomain {
     @Override
     public Page<GoodsRelationListVO> platformQueryMarketNotAddGoodsList(PlatformQueryMarketNotAddGoodsReq req) {
         return goodsRelationRepository.platformQueryMarketNotAddGoodsList(req);
-    }
-
-    @Override
-    public Page<GoodsRelationListVO> operateQueryMarketNotAddGoodsList(PlatformQueryMarketNotAddGoodsReq req) {
-        return goodsRelationRepository.operateQueryMarketNotAddGoodsList(req);
     }
 
     @Override

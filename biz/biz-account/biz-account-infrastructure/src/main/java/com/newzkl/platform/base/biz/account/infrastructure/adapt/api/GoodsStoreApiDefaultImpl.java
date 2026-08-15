@@ -3,7 +3,6 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreAccountCreateReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRegisterReq;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,10 +25,5 @@ public class GoodsStoreApiDefaultImpl implements GoodsStoreApi {
     @Override
     public void createStoreAccount(StoreAccountCreateReq req) {
         // TODO[cross-service]: 远程 goods 建立门店账号关联, 默认空实现
-    }
-
-    @Override
-    public void openStore(StoreRegisterReq req) {
-        // TODO[cross-service]: 远程 goods 开店, 默认空实现
     }
 }

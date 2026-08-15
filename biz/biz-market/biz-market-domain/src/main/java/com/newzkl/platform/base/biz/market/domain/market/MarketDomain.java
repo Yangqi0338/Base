@@ -55,11 +55,6 @@ public interface MarketDomain {
     Long appChannelBindMarket(ClientBindMarketReq req);
 
     /**
-     * 交易师给渠道商绑定二级市场
-     */
-    Long channelBindTradersMarket(ClientBindMarketReq req);
-
-    /**
      * 解除绑定
      */
     void deBindMarket(Long id);

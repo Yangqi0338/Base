@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-utils</artifactId>
+            <artifactId>ddd-utils</artifactId>
         </dependency>
     </dependencies>
 </project>

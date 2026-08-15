@@ -22,8 +22,7 @@ import java.util.List;
  * 收货地址领域服务实现
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.domain.address.service.impl.ShipAddressDomainImpl}。
- * 旧实现的充血写法 (向实体回塞 repository 引用) 已去除; 旧 {@code SecurityUtils.getRole()}
- * 在中台通用层已不存在, 改用 {@link SecurityUtils#getRoleId}。</p>
+ * 旧实现的充血写法 (向实体回塞 repository 引用) 已去除; 旧 {@code SecurityUtils.getRole()}</p>
  *
  * @author KC
  */
@@ -40,12 +39,12 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         ShipAddressVO item = assembler.req2VO(req);
         item.setId(SnowflakeGenerator.getSnowflakeId());
         item.setAccountId(SecurityUtils.getAccountId());
-        item.setRoleId(SecurityUtils.getRoleId());
+        item.setRole(SecurityUtils.getRole());
 
         Long shipAddressId = shipAddressRepository.save(item);
         // 其他地址设为非默认
         if (isDefault(item.getIsDefault())) {
-            shipAddressRepository.setOtherNotDefault(item.getRoleId(), item.getAccountId(), shipAddressId);
+            shipAddressRepository.setOtherNotDefault(item.getRole(), item.getAccountId(), shipAddressId);
         }
         return shipAddressId;
     }
@@ -57,7 +56,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
         item.setId(id);
         // 其他地址设为非默认
         if (isDefault(item.getIsDefault())) {
-            shipAddressRepository.setOtherNotDefault(SecurityUtils.getRoleId(), SecurityUtils.getAccountId(), id);
+            shipAddressRepository.setOtherNotDefault(SecurityUtils.getRole(), SecurityUtils.getAccountId(), id);
         }
         return shipAddressRepository.edit(item);
     }
@@ -76,7 +75,7 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
     @Override
     public ShipAddressRes defaultShipAddress() {
         ShipAddressQuery query = new ShipAddressQuery();
-        query.setRoleId(SecurityUtils.getRoleId());
+        query.setRole(SecurityUtils.getRole());
         query.setAccountId(SecurityUtils.getAccountId());
         query.setIsDefault(CommonEnum.YesOrNo.YES.getCode());
         return assembler.vo2Res(shipAddressRepository.findByQuery(query));

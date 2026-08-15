@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoCategor
 import com.newzkl.platform.base.biz.content.infrastructure.dao.ContentVideoCategoryDAO;
 import com.newzkl.platform.base.biz.content.infrastructure.entity.VideoCategoryDO;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.videocategory.entity.VideoCategory;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.videocategory.req.VideoCategoryReq;
@@ -87,12 +88,12 @@ public class VideoCategoryRepositoryImpl implements VideoCategoryRepository {
     }
 
     @Override
-    public List<VideoCategoryRes> getCategoryList(List<String> recommendGroups) {
+    public List<VideoCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
         BaseLambdaQueryWrapper<VideoCategoryDO> queryWrapper = new BaseLambdaQueryWrapper<>();
         if (CollUtil.isNotEmpty(recommendGroups)) {
             // 推荐人群使用 or 条件拼接, 任一命中即返回
             queryWrapper.nested(w -> {
-                for (String group : recommendGroups) {
+                for (RecommendGroupEnum group : recommendGroups) {
                     w.or().like(VideoCategoryDO::getRecommendGroups, group);
                 }
             });

@@ -40,30 +40,4 @@ public class UpIdRes implements Serializable {
      * 多级RoleId
      */
     private List<String> pRoleIdList;
-
-    /**
-     * 获取层级关系的角色
-     * 不为空
-     */
-    public static List<RoleEnum.CompanyRole> getOperatorEarningRole(UpIdRes res) {
-        List<RoleEnum.CompanyRole> roleList = new ArrayList<>();
-        if (res == null) {
-            return roleList;
-        }
-        roleList.add(CollUtil.getFirst(RoleEnumUtil.getOperatorLevelUpEnumList(res.getRoleIdList())));
-        if (CollUtil.isNotEmpty(res.getPRoleIdList())) {
-            // 父id倒序
-            List<RoleEnum.CompanyRole> pCompanyRoleList = res.getPRoleIdList().stream().map(pRole ->
-                            CollUtil.getFirst(RoleEnumUtil.getOperatorLevelUpEnumList(res.getRoleIdList()))
-                    ).sorted(Comparator.comparingInt(RoleEnum.CompanyRole::getLevel).reversed())
-                    .collect(Collectors.toList());
-            roleList.addAll(pCompanyRoleList);
-        }
-
-        return roleList;
-    }
-
-    public static RoleEnum.CompanyRole getLastEarningUserRoleId(UpIdRes res) {
-        return CollUtil.getLast(getOperatorEarningRole(res).stream().filter(Objects::nonNull).collect(Collectors.toList()));
-    }
 }

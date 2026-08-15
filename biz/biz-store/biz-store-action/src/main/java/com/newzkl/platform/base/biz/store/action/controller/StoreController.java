@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.action.cmd.StoreCmd;
 import com.newzkl.platform.base.biz.store.application.service.StoreService;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.ChannelContactReq;
+import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayReq;
+import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayRes;
 import com.newzkl.platform.base.common.ddd.facade.ChannelStoreVO;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
 import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
@@ -13,6 +15,7 @@ import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -104,5 +107,19 @@ public class StoreController {
     @PostMapping("storeSearchPage")
     public PlatformResult<Page<StoreSearchRes>> storeSearchPage(@RequestBody StoreQuery storeQueryReq) {
         return PlatformResult.success(storeDomain.storeSearchPage(storeQueryReq));
+    }
+
+    /**
+     * 数智门店订单支付
+     *
+     * <p>迁移差异: 旧出参为 {@code PayBaseResult} 接口 (仅暴露 tradeNo / thirdTradeNo),
+     * 中台化后为避免账户域反依赖资金域模型, 改为端口侧等价出参 {@code StoreOrderPayRes}。</p>
+     *
+     * @param orderPay 订单支付入参
+     * @return 支付结果
+     */
+    @PostMapping("orderPay")
+    public PlatformResult<StoreOrderPayRes> orderPay(@RequestBody @Valid StoreOrderPayReq orderPay) {
+        return PlatformResult.success(storeService.orderPay(orderPay));
     }
 }

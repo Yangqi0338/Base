@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.content.domain.adapt.repository;
 
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.videocategory.entity.VideoCategory;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.videocategory.req.VideoCategoryReq;
@@ -85,7 +86,7 @@ public interface VideoCategoryRepository {
      * @param recommendGroups 推荐人群名称集合, 为空则不限
      * @return 视频分类出参集合
      */
-    List<VideoCategoryRes> getCategoryList(List<String> recommendGroups);
+    List<VideoCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups);
 
     /**
      * 查询启用分类的权重占比列表

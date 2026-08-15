@@ -58,7 +58,7 @@ public class SupplierController {
      */
     @PostMapping("supplierBaseEdit")
     public PlatformResult<Void> supplierEdit(@Validated @RequestBody SupplierReq edit) {
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(SecurityUtils.getRoleId())) {
+        if (RoleEnum.CompanyRole.SUPPLIER == SecurityUtils.getRole()) {
             edit.setId(SecurityUtils.getAccountId());
         }
         supplierClientDomain.supplierEdit(edit.getId(), edit);
@@ -196,31 +196,6 @@ public class SupplierController {
     }
 
     /**
-     * 甄选师查看供应商详情
-     *
-     * @param idListCommand 供应商ID入参
-     * @return 供应商对外视图
-     */
-    @PostMapping("selectorSupplierVO")
-    public PlatformResult<SupplierOutRes> selectorSupplierVO(@RequestBody IdListCommand idListCommand) {
-        return PlatformResult.success(userQueryService.supplierOutVO(CollUtil.getFirst(idListCommand.getIdList())));
-    }
-
-    /**
-     * 供应商修改上级甄选师
-     *
-     * <p>旧 {@code @Limit(code=1022, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
-     *
-     * @param command 上级甄选师修改入参
-     * @return 空结果
-     */
-    @PostMapping("supplierInviteIdEdit")
-    public PlatformResult<Void> supplierInviteIdEdit(@RequestBody SupplierCmd.SelectorInviteIdEdit command) {
-        supplierClientDomain.supplierInviteIdEdit(command.getId(), command.getInviteId());
-        return PlatformResult.success();
-    }
-
-    /**
      * 供应商描述信息
      *
      * @param command 供应商ID列表
@@ -230,13 +205,4 @@ public class SupplierController {
     public PlatformResult<List<SupplierDescVO>> supplierDescVOList(@RequestBody SupplierCmd.IDList command) {
         return PlatformResult.success(userQueryService.supplierDescVOList(command.getSupplierIdList()));
     }
-
-    /**
-     * 运营商的供应商分页
-     *
-     * <p>保留旧鉴权语义: 非运营商角色抛「无此服务」。</p>
-     *
-     * @param supplierQuery 供应商查询
-     * @return 供应商分页
-     */
 }

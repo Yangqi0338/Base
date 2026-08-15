@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RoleRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.RoleDAO;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.RoleDO;
-import com.newzkl.platform.base.biz.auth.model.role.dto.RoleDTO;
-import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
+
+import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;

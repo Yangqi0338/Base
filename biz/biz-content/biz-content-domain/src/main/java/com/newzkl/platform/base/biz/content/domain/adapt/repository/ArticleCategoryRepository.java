@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.query.ArticleC
 import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCategoryReq;
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 
 import java.util.List;
 
@@ -84,5 +85,5 @@ public interface ArticleCategoryRepository {
      * @param recommendGroups 推荐人群名称集合, 任一命中即返回
      * @return 文章分类出参集合
      */
-    List<ArticleCategoryRes> getCategoryList(List<String> recommendGroups);
+    List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups);
 }

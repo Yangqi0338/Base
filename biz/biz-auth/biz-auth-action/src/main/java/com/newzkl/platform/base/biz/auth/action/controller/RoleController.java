@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.action.cmd.AssignPermissionCommand;
 import com.newzkl.platform.base.biz.auth.action.cmd.BindAccountCommand;
 import com.newzkl.platform.base.biz.auth.domain.service.RoleDomain;
-import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
-import com.newzkl.platform.base.biz.auth.model.role.req.RoleReq;
-import com.newzkl.platform.base.biz.auth.model.role.vo.RoleVO;
+
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleReq;
+import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
@@ -27,7 +28,7 @@ import java.util.List;
  * @author KC
  */
 @RestController
-@RequestMapping("/admin/role")
+@RequestMapping("/role")
 @RequiredArgsConstructor
 @FuncPermission("角色管理")
 public class RoleController {

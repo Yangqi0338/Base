@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.account.domain.policy;
 
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
@@ -55,12 +54,6 @@ public abstract class AbsIdentityPolicy {
      * @return
      */
     public abstract IdentityRegisterRes proxyRegister(IdentityProxySaveReq proxySaveReq);
-
-    /**
-     * 角色申请审批通知
-     * @param auditEvent
-     */
-    public abstract void roleApplyAuditEvent(AuditEvent auditEvent);
 
     /**
      * 邀请别人成功

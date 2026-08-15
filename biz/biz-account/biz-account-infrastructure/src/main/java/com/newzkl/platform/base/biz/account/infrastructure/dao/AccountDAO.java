@@ -1,19 +1,20 @@
 package com.newzkl.platform.base.biz.account.infrastructure.dao;
-import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
-import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
-import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.AccountDO;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.SimpleAccountQuery;
 import com.newzkl.platform.base.biz.account.model.res.AccountOutRes;
 import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
-import com.newzkl.platform.base.biz.account.model.res.UserCountRes;
-import com.newzkl.platform.base.biz.account.model.vo.*;
+import com.newzkl.platform.base.biz.account.model.vo.AccountRPCResVO;
+import com.newzkl.platform.base.biz.account.model.vo.AccountStructureVO;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
+import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
+import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -53,8 +54,6 @@ public interface AccountDAO extends BaseMapper<AccountDO> {
 
     AccountDO accountByPidAndUserName(@Param("pid") Long pid, @Param("username") String username);
 
-    UserCountRes userCount();
-
     List<GroupCountRes> groupCount(@Param("query") TimeQuery timeQuery);
 
     List<SimpleAccountRes> simpleAccountPage(@Param("query") SimpleAccountQuery accountQuery);
@@ -66,8 +65,6 @@ public interface AccountDAO extends BaseMapper<AccountDO> {
     List<AccountRPCResVO> selectAwardListByIdList(@Param(Constants.WRAPPER) QueryWrapper<AccountOutRes> queryWrapper);
 
     List<Long> selectSonIdList(@Param("id") Long id);
-
-    List<AccountBillUserRpcVO> selectBillUserList(@Param(Constants.WRAPPER) QueryWrapper<AccountBillUserRpcVO> accountWrapper);
 
     /**
      * 根据账号查询账号

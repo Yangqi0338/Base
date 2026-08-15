@@ -47,19 +47,15 @@ public class RecommendGroupsCheckUtil {
      *
      * <p>渠道商仅见 {@code CHANNEL}, C端客户仅见 {@code C_CLIENT}, 其余角色见全部。</p>
      *
-     * @param roleId 角色ID, 取自登录态
+     * @param role 角色ID, 取自登录态
      * @return 可见推荐人群名称集合
      */
-    public static List<String> getRecommendGroups(Long roleId) {
-        if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
-            return Arrays.asList(RecommendGroupEnum.CHANNEL.name());
-        } else if (RoleEnum.CompanyRole.MEMBER.getCode().equals(roleId)) {
-            return Arrays.asList(RecommendGroupEnum.C_CLIENT.name());
+    public static List<RecommendGroupEnum> getRecommendGroups(RoleEnum.CompanyRole role) {
+        if (RoleEnum.CompanyRole.CHANNEL == role) {
+            return List.of(RecommendGroupEnum.CHANNEL);
+        } else if (RoleEnum.CompanyRole.MEMBER == role) {
+            return List.of(RecommendGroupEnum.C_CLIENT);
         }
-        List<String> all = new ArrayList<>();
-        for (RecommendGroupEnum item : RecommendGroupEnum.values()) {
-            all.add(item.name());
-        }
-        return all;
+        return Arrays.asList(RecommendGroupEnum.values());
     }
 }

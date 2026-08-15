@@ -22,16 +22,11 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface AccountAssembler extends BaseAssembler<AccountReq, AccountVO> {
-    AccountVO subAccountToDO(SubAccount subAccount);
-
-    SubAccount doToSubAccount(AccountVO accountDO);
 
     @Mappings({
             @Mapping(target = "yqm", ignore = true),
     })
     IdentitySaveReq do2SaveReq(AccountRes account);
-
-    SubAccountVO subStructure2AccountVO(AccountStructureTreeVO subStructure);
 
     AppAccountVO account2AppVO(AccountVO accountVO);
 

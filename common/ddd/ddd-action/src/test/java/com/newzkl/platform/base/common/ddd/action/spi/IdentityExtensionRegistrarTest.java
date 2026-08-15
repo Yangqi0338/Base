@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.ddd.action.spi;
 
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityImpl;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
@@ -90,7 +91,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /** 平台条件实现 {1,2}。 */
-    @IdentityImpl({1L, 2L})
+    @IdentityImpl({RoleEnum.CompanyRole.PLATFORM, RoleEnum.CompanyRole.EMP})
     static class PlatformFoo implements Foo {
         @Override
         public String tag() {
@@ -99,7 +100,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /** 渠道条件实现 {1002} (与平台不相交)。 */
-    @IdentityImpl(1002L)
+    @IdentityImpl(RoleEnum.CompanyRole.CHANNEL)
     static class ChannelFoo implements Foo {
         @Override
         public String tag() {
@@ -108,7 +109,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /** 与平台重叠实现 {2,3} (交集 {2})。 */
-    @IdentityImpl({2L, 3L})
+    @IdentityImpl({RoleEnum.CompanyRole.PLATFORM, RoleEnum.CompanyRole.EMP})
     static class OverlapFoo implements Foo {
         @Override
         public String tag() {

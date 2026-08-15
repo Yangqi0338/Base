@@ -43,46 +43,4 @@ public class UpIdRes implements Serializable {
      * 多级RoleId
      */
     private List<String> pRoleIdList;
-
-    /**
-     * 获取层级关系的角色
-     * 不为空
-     */
-    public static List<RoleEnum.CompanyRole> getOperatorEarningRole(UpIdRes res) {
-        List<RoleEnum.CompanyRole> roleList = new ArrayList<>();
-        if (res == null) {
-            return roleList;
-        }
-        roleList.add(CollUtil.getFirst(operatorLevelUpEnumList(res.getRoleIdList())));
-        if (CollUtil.isNotEmpty(res.getPRoleIdList())) {
-            // 父id倒序
-            List<RoleEnum.CompanyRole> pCompanyRoleList = res.getPRoleIdList().stream().map(pRole ->
-                            CollUtil.getFirst(operatorLevelUpEnumList(res.getRoleIdList()))
-                    ).sorted(Comparator.comparingInt(RoleEnum.CompanyRole::getLevel).reversed())
-                    .collect(Collectors.toList());
-            roleList.addAll(pCompanyRoleList);
-        }
-
-        return roleList;
-    }
-
-    /**
-     * 获取运营商端升级角色列表 (原 BizUtil.getOperatorLevelUpEnumList 内联)。
-     *
-     * @param roleIdStr 角色ID串
-     * @return 运营商端匹配角色列表 (永不为 null)
-     */
-    private static List<RoleEnum.CompanyRole> operatorLevelUpEnumList(String roleIdStr) {
-        if (roleIdStr == null) {
-            return new ArrayList<>();
-        }
-        return Stream.of(RoleEnum.CompanyRole.values())
-                .filter(it -> CommonEnum.Client.OPERATOR.equals(it.getClient()))
-                .filter(it -> roleIdStr.contains(it.getCodeStr()))
-                .collect(Collectors.toList());
-    }
-
-    public static RoleEnum.CompanyRole getLastEarningUserRoleId(UpIdRes res) {
-        return CollUtil.getLast(getOperatorEarningRole(res).stream().filter(Objects::nonNull).collect(Collectors.toList()));
-    }
 }

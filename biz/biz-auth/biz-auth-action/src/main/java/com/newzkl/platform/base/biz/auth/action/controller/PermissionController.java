@@ -26,7 +26,7 @@ import java.util.List;
  * @author KC
  */
 @RestController
-@RequestMapping("/admin/permission")
+@RequestMapping("/permission")
 @RequiredArgsConstructor
 @FuncPermission("权限管理")
 public class PermissionController {

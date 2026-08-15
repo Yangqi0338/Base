@@ -6,12 +6,13 @@ import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationReposit
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RoleRepository;
 import com.newzkl.platform.base.biz.auth.domain.service.RelationDomain;
 import com.newzkl.platform.base.biz.auth.domain.service.RoleDomain;
+import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleReq;
+import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
-import com.newzkl.platform.base.biz.auth.model.role.dto.RoleDTO;
-import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
-import com.newzkl.platform.base.biz.auth.model.role.req.RoleReq;
-import com.newzkl.platform.base.biz.auth.model.role.vo.RoleVO;
+
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;

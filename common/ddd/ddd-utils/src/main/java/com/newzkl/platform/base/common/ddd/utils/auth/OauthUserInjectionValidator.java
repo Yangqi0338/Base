@@ -47,7 +47,7 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
             CollUtil.addAll(annotatedElementList,resolveMethod(clazz));
         }
         Long accountId = SecurityUtils.getAccountId();
-        Long roleId = SecurityUtils.getRoleId();
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
         boolean valid = true;
         for (AnnotatedElement element : annotatedElementList) {
             if (element.isAnnotationPresent(OauthUserId.class)) {
@@ -67,15 +67,15 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
 
             if (element.isAnnotationPresent(OauthRole.class)) {
                 OauthRole roleMark = element.getAnnotation(OauthRole.class);
-                if (roleId == null) {
+                if (role == null) {
                     if (roleMark.required()) {
                         valid = false;
                     }
                 } else {
                     if (element instanceof Field field) {
-                        injectRole(bean, field, accountId);
+                        injectRole(bean, field, role);
                     }else if (element instanceof Method method) {
-                        injectRole(bean, method, accountId);
+                        injectRole(bean, method, role);
                     }
                 }
             }
@@ -84,14 +84,14 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
         return valid;
     }
 
-    private void injectRole(Object bean, Method method, Long roleId) {
+    private void injectRole(Object bean, Method method, RoleEnum.CompanyRole role) {
         try {
             Parameter parameter = method.getParameters()[0];
             Class<?> type = parameter.getType();
             if (Long.class.equals(type)) {
-                method.invoke(bean, roleId);
+                method.invoke(bean, role.getCode());
             } else if (RoleEnum.CompanyRole.class.equals(type)) {
-                method.invoke(bean, RoleEnum.CompanyRole.getByCode(roleId));
+                method.invoke(bean, role);
             }
         } catch (IllegalAccessException | InvocationTargetException ignored) {
             // 注入失败不阻断校验主流程
@@ -137,15 +137,15 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
      *
      * @param bean   宿主对象
      * @param field  目标字段
-     * @param roleId 角色ID
+     * @param role 角色ID
      */
-    private void injectRole(Object bean, Field field, Long roleId) {
+    private void injectRole(Object bean, Field field, RoleEnum.CompanyRole role) {
         try {
             Class<?> type = field.getType();
             if (Long.class.equals(type)) {
-                field.set(bean, roleId);
+                field.set(bean, role.getCode());
             } else if (RoleEnum.CompanyRole.class.equals(type)) {
-                field.set(bean, RoleEnum.CompanyRole.getByCode(roleId));
+                field.set(bean, role);
             }
         } catch (IllegalAccessException ignored) {
             // 注入失败不阻断校验主流程

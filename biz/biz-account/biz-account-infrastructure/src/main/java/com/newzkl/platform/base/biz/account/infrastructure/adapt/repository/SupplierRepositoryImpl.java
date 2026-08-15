@@ -1,18 +1,16 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
-// TODO[infra-sms gateway]: import ...support.SmsMethod; (SmsApi=Forest外部短信网关, 出域, 未迁)
-import com.newzkl.platform.base.biz.account.model.support.CodeReq;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.SupplierDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.SupplierDO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -78,11 +76,6 @@ public class SupplierRepositoryImpl extends RepositorySupport implements Supplie
     @Override
     public Page<SupplierAccountVO> pageListWithAccount(SupplierQuery query) {
         return supplierDAO.pageListWithAccount(RepositorySupport.page(query), supplierDAO.getJoinQw(query));
-    }
-
-    @Override
-    public void smsNotify(CodeReq codeReq) {
-        // TODO[infra-sms gateway]: SmsMethod.sendNotifyCode(codeReq);
     }
 
     @Override

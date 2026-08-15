@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.content.domain.adapt.repository;
 
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.video.entity.Video;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
@@ -99,7 +100,7 @@ public interface VideoRepository {
      *
      * @return 推荐人群名称集合
      */
-    List<String> currentRecommendGroups();
+    List<RecommendGroupEnum> currentRecommendGroups();
 
     /**
      * 点赞视频列表

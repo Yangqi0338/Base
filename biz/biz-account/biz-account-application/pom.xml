@@ -41,11 +41,6 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>biz-account-infrastructure</artifactId>
         </dependency>
-        <!-- 迁移补充: 编排层 sa-token 会话 (StpUtil / SaSession) -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot3-starter</artifactId>
-        </dependency>
         <!-- 迁移补充: 编排层使用 commons-lang3 / commons-collections4 -->
         <dependency>
             <groupId>org.apache.commons</groupId>

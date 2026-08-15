@@ -44,7 +44,7 @@ public class AutoFillFieldValueConfig implements MetaObjectHandler {
         Object creator = this.getFieldValByName("creator", metaObject);
         // 实体里主动指定了
         if (ObjectUtil.isEmpty(creator)) {
-            this.setFieldValByName("creator", SecurityUtils.getDefaultAccountId(), metaObject);
+            this.setFieldValByName("creator", SecurityUtils.getAccountId(), metaObject);
         }
         Object createTime = this.getFieldValByName("createTime", metaObject);
         if (ObjectUtil.isEmpty(createTime)) {
@@ -66,7 +66,7 @@ public class AutoFillFieldValueConfig implements MetaObjectHandler {
                 executor = new ExecutorDTO();
             }
 
-            executor.setUpdater(SecurityUtils.getDefaultAccountId());
+            executor.setUpdater(SecurityUtils.getAccountId());
             executor.setUpdaterName(SecurityUtils.getNickName());
             this.setFieldValByName("executor", JSONUtil.toJsonStr(executor), metaObject);
         }

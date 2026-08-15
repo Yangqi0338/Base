@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.facade.model;
 
 
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -55,7 +56,7 @@ public class ShipAddressOutVO extends BaseRes implements Serializable {
      /**
      * 角色类型Id 查询
      */
-     private Long roleId;
+     private RoleEnum.CompanyRole role;
      /**
       * 账号ID
       */

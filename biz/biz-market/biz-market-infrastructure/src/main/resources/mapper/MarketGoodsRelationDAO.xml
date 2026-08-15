@@ -167,24 +167,6 @@
         order by sp.create_time desc
     </select>
 
-    <!-- 运营商添加市场商品-查询未添加商品 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 operateQueryMarketNotAddGoodsList) -->
-    <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
-    <select id="operateQueryMarketNotAddGoodsList" resultMap="GoodsRelationListResultMap">
-        select mgrn.id, mgry.goods_id,mgry.sell_num,mgry.create_time,mgry.discount_rate,sp.sale_num,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,
-               sp.market_price,sp.max_profit
-        from market_bind mb
-         inner join market_goods_relation mgry on mb.market_id = mgry.market_id and mgry.relation_type = 1 and mgry.state = 1
-        inner join spu sp on mgry.goods_id = sp.id
-        left join market_goods_relation mgrn on mgry.goods_id = mgrn.goods_id and mgrn.user_id = #{req.accountId} and mgrn.relation_type = 2 and mgrn.market_id = #{req.marketId} and mgrn.state = 1
-        where mb.user_id = #{req.accountId}
-        and mb.state = 1
-        and mb.bind_type = 1
-        <if test="req.goodsName != null">
-            and sp.name like CONCAT('%',#{req.goodsName},'%')
-        </if>
-        order by mgry.create_time desc
-    </select>
-
     <!-- 渠道商市场未选商品列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 channelMarketGoodsList) -->
     <!-- Base DAO 方法名沿用 repository/service 层的 channelMarketNotSelectedGoodsList, 源 DAO id 为 channelMarketGoodsList -->
     <select id="channelMarketNotSelectedGoodsList"

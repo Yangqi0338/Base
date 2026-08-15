@@ -117,7 +117,7 @@ public class MarketController {
     @PostMapping("/queryMarketList/v2")
     public PlatformResult<Page<MarketVO>> queryMarketListV2(@RequestBody MarketPageQuery req) {
         req.setMarketLevel(2);
-        req.setSubBindType(MarketEnum.User.accountTypeByRoleId(SecurityUtils.getRoleId()));
+        req.setSubBindType(MarketEnum.User.accountTypeByRole(SecurityUtils.getRole()));
         if (req.getSubBindUser() == null) {
             req.setSubBindUser(SecurityUtils.getAccountId());
         }
@@ -133,20 +133,6 @@ public class MarketController {
     @PostMapping("/queryMarket/{marketId}")
     public PlatformResult<MarketVO> queryMarket(@PathVariable Long marketId) {
         return PlatformResult.success(marketDomain.queryMarket(marketId));
-    }
-
-    /**
-     * 保存一级市场
-     *
-     * @param req 市场请求
-     * @return 操作结果
-     */
-    @PostMapping("/saveOneLevelMarket")
-    public PlatformResult<Object> saveOneLevelMarket(@RequestBody MarketReq req) {
-        MarketDTO marketDTO = buildMarketDTO(req);
-        marketDTO.setMarketLevel(MarketEnum.Level.ONE.getLevel());
-        marketDomain.saveMarket(marketDTO);
-        return PlatformResult.success();
     }
 
     /**
@@ -169,41 +155,6 @@ public class MarketController {
     }
 
     /**
-     * 运营商绑定一级市场
-     *
-     * <p>行为差异: 旧 application 层绑定后另调 user 域
-     * {@code OperatorFacade#editOneMarketCount} 累加运营商一级市场计数;
-     * Base 侧 market 域无该出站端口, 计数未接线。</p>
-     *
-     * @param req 绑定请求
-     * @return 操作结果
-     */
-    @PostMapping("/operatorBindOneMarket")
-    public PlatformResult<Object> operatorBindOneMarket(@RequestBody ClientBindMarketReq req) {
-        req.setBindType(MarketEnum.User.OPERATOR.getType());
-        marketDomain.bindMarket(req);
-        marketDomain.alterMarketData(UpdateMarketDataReq.buildUpdateMarketDataReq(req.getMarketId(), MarketEnum.NumType.SUB_BIND_NUM, 1));
-        return PlatformResult.success();
-    }
-
-    /**
-     * 交易师绑定二级市场
-     *
-     * <p>行为差异: 旧 application 层绑定后另调 user 域
-     * {@code DealerFacade#editTwoMarketCount} 累加交易师二级市场计数;
-     * Base 侧 market 域无该出站端口, 计数未接线。</p>
-     *
-     * @param req 绑定请求
-     * @return 操作结果
-     */
-    @PostMapping("/tradersBindTwoMarket")
-    public PlatformResult<Object> tradersBindTwoMarket(@RequestBody ClientBindMarketReq req) {
-        req.setBindType(MarketEnum.User.TRADERS.getType());
-        marketDomain.bindMarket(req);
-        return PlatformResult.success();
-    }
-
-    /**
      * 移动APP渠道商绑定交易市场
      *
      * @param req 绑定请求
@@ -212,17 +163,6 @@ public class MarketController {
     @PostMapping("/appChannelBindMarket")
     public PlatformResult<Object> appChannelBindMarket(@RequestBody ClientBindMarketReq req) {
         return PlatformResult.success(marketDomain.appChannelBindMarket(req));
-    }
-
-    /**
-     * 交易师给渠道商绑定二级市场
-     *
-     * @param req 绑定请求
-     * @return 绑定ID
-     */
-    @PostMapping("/channelBindTradersMarket")
-    public PlatformResult<Object> channelBindTradersMarket(@RequestBody ClientBindMarketReq req) {
-        return PlatformResult.success(marketDomain.channelBindTradersMarket(req));
     }
 
     /**
@@ -277,13 +217,8 @@ public class MarketController {
         if (currentBindType != null) {
             return;
         }
-        Long roleId = SecurityUtils.getRoleId();
-        RoleEnum.CompanyRole role = RoleEnum.CompanyRole.getByCode(roleId);
-        if (role != null && CommonEnum.Client.OPERATOR == role.getClient()) {
-            bindTypeSetter.accept(MarketEnum.User.OPERATOR.getType());
-            return;
-        }
-        if (ObjectUtil.equals(RoleEnum.CompanyRole.CHANNEL.getCode(), roleId)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.CHANNEL == role) {
             bindTypeSetter.accept(MarketEnum.User.CHANNEL.getType());
         }
     }

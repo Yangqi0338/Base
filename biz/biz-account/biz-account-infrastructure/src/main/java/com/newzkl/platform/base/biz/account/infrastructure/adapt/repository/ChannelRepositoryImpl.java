@@ -2,14 +2,10 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.ChannelDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.ChannelDO;
-import com.newzkl.platform.base.biz.account.model.event.ChannelRegisterEvent;
-import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -64,12 +60,4 @@ public class ChannelRepositoryImpl extends RepositorySupport implements ChannelR
         return TransferUtils.transferPage(channelPage, ChannelVO.class);
     }
 
-    @Override
-    public void registerEvent(AccountRegisterRes account, String password) {
-        ChannelRegisterEvent channelRegisterEvent = new ChannelRegisterEvent();
-        channelRegisterEvent.setAccountId(account.getId());
-        channelRegisterEvent.setUsername(account.getUsername());
-        channelRegisterEvent.setPassword(password);
-        MQUtil.send(MQ.Tag.CHANNEL_REGISTER_EVENT, channelRegisterEvent);
-    }
 }

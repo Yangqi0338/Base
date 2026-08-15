@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.application.service.policy.identity;
 
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
@@ -95,12 +94,6 @@ public class MemberIdentityPolicy extends AbsIdentityPolicy {
         accountService.roleAddEvent(account, RoleEnum.CompanyRole.MEMBER, proxySaveReq.getPassword());
         return new IdentityRegisterRes(null, accountId);
     }
-
-    @Override
-    public void roleApplyAuditEvent(AuditEvent auditEvent) {
-
-    }
-
 
 
     @Override

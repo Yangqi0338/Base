@@ -1,8 +1,9 @@
 package com.newzkl.platform.base.biz.auth.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.auth.model.role.dto.RoleDTO;
-import com.newzkl.platform.base.biz.auth.model.role.req.RoleQuery;
+import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
+
 
 import java.util.Collection;
 import java.util.List;

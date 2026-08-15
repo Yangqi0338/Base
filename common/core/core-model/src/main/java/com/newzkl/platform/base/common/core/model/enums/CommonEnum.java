@@ -50,8 +50,8 @@ public class CommonEnum {
         ADMIN("admin", "平台端"),
         /** 后台端 */
         USER("user", "用户端"),
-        /** 运营商端 */
-        OPERATOR("operator", "运营商端"),
+        /** 服务商端 */
+        SERVICE("service", "服务商端"),
         /** 渠道商端 */
         CHANNEL("channel", "渠道商端"),
         /** 供应商端 */

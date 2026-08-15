@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.sms.SmsSendReq;
 import com.newzkl.platform.base.common.core.sms.SmsSender;
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

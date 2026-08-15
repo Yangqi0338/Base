@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.account.application.service.policy;
 
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicy;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
@@ -64,11 +63,6 @@ public class ChannelAccountPolicy extends AbsAccountPolicy {
     @Override
     public AccountRegisterRes proxyRegister(AccountProxySaveReq proxySaveReq) {
         return null;
-    }
-
-    @Override
-    public void roleApplyAuditEvent(AuditEvent auditEvent) {
-
     }
 
     @Override

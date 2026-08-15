@@ -42,7 +42,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     @Override
     public List<AccountPurseVO> queryAccountPurse(AccountPurseQuery req) {
         if (req.getAccountType() == null) {
-            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRoleId()));
+            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRole()));
         }
         return accountPurseRepository.queryAccountPurse(req);
     }
@@ -50,7 +50,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     @Override
     public AccountPurseVO queryAccountPurchasePurse(AccountPurseQuery req) {
         if (req.getAccountType() == null) {
-            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRoleId()));
+            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRole()));
         }
 
         AccountPurseVO accountPurseVO = accountPurseRepository.queryAccountPurchasePurse(req);

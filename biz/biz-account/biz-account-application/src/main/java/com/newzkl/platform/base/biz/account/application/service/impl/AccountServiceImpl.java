@@ -1,51 +1,30 @@
 package com.newzkl.platform.base.biz.account.application.service.impl;
-import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.DistributionRandomInfo;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.MarketDistributionApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.UserSocialApi;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
-import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
-import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
-import com.newzkl.platform.base.biz.account.model.req.*;
-import com.newzkl.platform.base.biz.account.model.res.AccountFinanceVO;
-import com.newzkl.platform.base.biz.account.model.res.AppHomePageDataVO;
-import com.newzkl.platform.base.biz.account.model.res.UserHomePageRes;
-import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.CustomSaveBatchReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
+import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
+import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,16 +43,6 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
     private final AccountAssembler accountAssembler;
-
-
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void batchCreateEmp(Long pid, List<SubProxySaveReq> subProxySaveReqList) {
-        for (SubProxySaveReq subProxySaveReq : subProxySaveReqList) {
-            accountDomain.proxySave(pid, subProxySaveReq);
-        }
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -4,13 +4,13 @@ import cn.dev33.satoken.stp.StpInterface;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.PermissionRepository;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RoleRepository;
-import com.newzkl.platform.base.biz.auth.domain.support.PermissionCacheKeys;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
-import com.newzkl.platform.base.biz.auth.model.role.dto.RoleDTO;
+import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,11 +35,12 @@ public class AccountPermissionStpInterface implements StpInterface {
     private final RelationRepository relationRepository;
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    public static final long TTL_SECONDS = 1800L;
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         long accountId = parseId(loginId);
-        String cacheKey = PermissionCacheKeys.accountPerm(accountId);
+        String cacheKey = RedisEnum.Key.ACCOUNT_PERM.getCode(accountId);
         List<String> cached = RedisUtil.get(cacheKey);
         if (cached != null) {
             return cached;
@@ -47,7 +48,7 @@ public class AccountPermissionStpInterface implements StpInterface {
 
         if (SecurityUtils.getRole() == RoleEnum.CompanyRole.PLATFORM) {
             List<String> wildcard = List.of("*");
-            RedisUtil.set(cacheKey, wildcard, PermissionCacheKeys.TTL_SECONDS, TimeUnit.SECONDS);
+            RedisUtil.set(cacheKey, wildcard, TTL_SECONDS, TimeUnit.SECONDS);
             return wildcard;
         }
 
@@ -55,20 +56,20 @@ public class AccountPermissionStpInterface implements StpInterface {
                 RelationEnum.Type.ACCOUNT_PERMISSION, List.of(accountId));
         Set<Long> permIds = rels.stream().map(PermissionRelationDTO::getTargetId).collect(Collectors.toSet());
         if (permIds.isEmpty()) {
-            RedisUtil.set(cacheKey, List.of(), PermissionCacheKeys.TTL_SECONDS, TimeUnit.SECONDS);
+            RedisUtil.set(cacheKey, List.of(), TTL_SECONDS, TimeUnit.SECONDS);
             return List.of();
         }
         List<String> codes = permissionRepository.listByIds(permIds).stream()
                 .map(PermissionDTO::getCode)
                 .toList();
-        RedisUtil.set(cacheKey, codes, PermissionCacheKeys.TTL_SECONDS, TimeUnit.SECONDS);
+        RedisUtil.set(cacheKey, codes, TTL_SECONDS, TimeUnit.SECONDS);
         return codes;
     }
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         long accountId = parseId(loginId);
-        String cacheKey = PermissionCacheKeys.accountRole(accountId);
+        String cacheKey = RedisEnum.Key.ACCOUNT_ROLE.getCode(accountId);
         List<String> cached = RedisUtil.get(cacheKey);
         if (cached != null) {
             return cached;
@@ -79,7 +80,7 @@ public class AccountPermissionStpInterface implements StpInterface {
         Set<Long> roleIds = rels.stream().map(PermissionRelationDTO::getTargetId).collect(Collectors.toSet());
         List<String> codes = roleRepository.listByIds(roleIds).stream()
                 .map(RoleDTO::getCode).toList();
-        RedisUtil.set(cacheKey, codes, PermissionCacheKeys.TTL_SECONDS, TimeUnit.SECONDS);
+        RedisUtil.set(cacheKey, codes, TTL_SECONDS, TimeUnit.SECONDS);
         return codes;
     }
 

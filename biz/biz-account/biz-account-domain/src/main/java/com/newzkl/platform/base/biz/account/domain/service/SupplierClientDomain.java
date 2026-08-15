@@ -76,14 +76,4 @@ public interface SupplierClientDomain {
      * @param industryIdList 待追加的行业ID列表
      */
     void addIndustry(Long id, List<Long> industryIdList);
-
-    /**
-     * 修改供应商的上级甄选师
-     *
-     * <p>迁移自旧聚合方法 {@code Supplier#supplierInviteIdEdit}, 仅更新 {@code invite_id} 一列。</p>
-     *
-     * @param id       供应商账号ID
-     * @param inviteId 上级甄选师账号ID
-     */
-    void supplierInviteIdEdit(Long id, Long inviteId);
 }

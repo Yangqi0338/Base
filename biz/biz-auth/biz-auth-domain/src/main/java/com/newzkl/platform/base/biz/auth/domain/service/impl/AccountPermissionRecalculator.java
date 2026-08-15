@@ -2,20 +2,16 @@ package com.newzkl.platform.base.biz.auth.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
-import com.newzkl.platform.base.biz.auth.domain.support.PermissionCacheKeys;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -75,7 +71,7 @@ public class AccountPermissionRecalculator {
         relationRepository.insertBatch(toInsert);
 
         for (Long id : accountIds) {
-            RedisUtil.del(PermissionCacheKeys.accountPerm(id), PermissionCacheKeys.accountRole(id));
+            RedisUtil.del(RedisEnum.Key.ACCOUNT_PERM.getCode(id), RedisEnum.Key.ACCOUNT_ROLE.getCode(id));
         }
         log.info("[recalc] done accountIds={} insert={}", accountIds, toInsert.size());
     }

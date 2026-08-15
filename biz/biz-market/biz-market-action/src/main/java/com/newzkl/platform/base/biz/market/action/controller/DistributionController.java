@@ -68,7 +68,7 @@ public class DistributionController {
      */
     @PostMapping("/queryDistributions")
     public PlatformResult<Page<DistributionGoodsListRes>> queryDistributions(@RequestBody DistributionsQuery req) {
-        if (SecurityUtils.getRoleId().equals(RoleEnum.CompanyRole.MEMBER.getCode())) {
+        if (SecurityUtils.getRole() == RoleEnum.CompanyRole.MEMBER) {
             req.setChannelId(SecurityUtils.getUpId());
         } else {
             if (req.getChannelId() == null) {

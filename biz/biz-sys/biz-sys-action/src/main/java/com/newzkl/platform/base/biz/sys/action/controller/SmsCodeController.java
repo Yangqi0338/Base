@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.sys.application.service.CodeService;
 import com.newzkl.platform.base.biz.sys.model.code.req.CodeReq;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -109,7 +109,7 @@ public class SmsCodeController {
         for (String s : sendVerificationCode.getPhone()) {
             CodeReq codeReq = new CodeReq();
             codeReq.setPhone(s);
-            codeReq.setType(SmsEnum.Type.SUPPLIER_REFUND_ADDRESS.getCode());
+//            codeReq.setType(SmsEnum.Type.SUPPLIER_REFUND_ADDRESS.getCode());
             codeService.sendNotifyCode(codeReq);
         }
         return PlatformResult.success();

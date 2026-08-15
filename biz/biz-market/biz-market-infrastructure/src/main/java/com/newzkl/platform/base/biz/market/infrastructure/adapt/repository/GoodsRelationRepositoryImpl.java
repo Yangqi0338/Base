@@ -105,11 +105,6 @@ public class GoodsRelationRepositoryImpl implements GoodsRelationRepository {
     }
 
     @Override
-    public Page<GoodsRelationListVO> operateQueryMarketNotAddGoodsList(PlatformQueryMarketNotAddGoodsReq req) {
-        return marketGoodsRelationDAO.operateQueryMarketNotAddGoodsList(RepositorySupport.page(req), req);
-    }
-
-    @Override
     public Page<GoodsRelationListVO> channelMarketNotSelectedGoodsList(PlatformQueryMarketNotAddGoodsReq req) {
         return marketGoodsRelationDAO.channelMarketNotSelectedGoodsList(RepositorySupport.page(req), req);
     }

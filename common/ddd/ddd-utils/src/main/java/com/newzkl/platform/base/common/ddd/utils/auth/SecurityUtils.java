@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.common.ddd.utils.auth;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
@@ -17,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * 权限获取工具类
  *
  * <p>迁移说明: 原 {@code getRole()} 依赖业务枚举 {@code RoleEnum.CompanyRole}，
- * 已随业务枚举下沉到业务层，通用层仅保留 {@link SecurityUtils#getRoleId}。</p>
+ * 已随业务枚举下沉到业务层</p>
  *
  * @author ruoyi
  */
@@ -43,51 +45,9 @@ public class SecurityUtils {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
-    public static Long getDefaultAccountId() {
-        String s = SecurityContextHolder.get(TokenConstants.DETAILS_ACCOUNT_ID, String.class);
-        return NumberUtil.parseLong(s, 0L);
-    }
-
     public static Long getAccountId() {
         String s = SecurityContextHolder.get(TokenConstants.DETAILS_ACCOUNT_ID, String.class);
         return NumberUtil.parseLong(s, null);
-    }
-
-    /**
-     * 获取当前员工ID
-     *
-     * <p>主账号无员工ID, 返回 {@code null}; 员工账号返回其员工ID。</p>
-     *
-     * @return 员工ID, 主账号或未设置时返回 null
-     */
-    public static Long getEmpId() {
-        String s = SecurityContextHolder.get(TokenConstants.DETAILS_EMP_ID, String.class);
-        if (StrUtil.isEmpty(s) || "null".equals(s)) {
-            return null;
-        }
-        return Long.parseLong(s);
-    }
-
-    /**
-     * 获取当前上级运营商ID
-     *
-     * @return 运营商ID, 未设置时返回 null
-     */
-    public static Long getOperatorId() {
-        String s = SecurityContextHolder.get(TokenConstants.DETAILS_OPERATOR_ID, String.class);
-        if (StrUtil.isEmpty(s) || "null".equals(s)) {
-            return null;
-        }
-        return Long.parseLong(s);
-    }
-
-    /**
-     * 获取当前 IM 用户账号
-     *
-     * @return IM 用户账号
-     */
-    public static String getImUserAccount() {
-        return SecurityContextHolder.get(TokenConstants.IM_USER_ACCOUNT, String.class);
     }
 
     public static Long getUpId() {
@@ -95,9 +55,20 @@ public class SecurityUtils {
         return Long.parseLong(s);
     }
 
+    public static CommonEnum.Client getRequestClient() {
+        // 先检查前端有没有指定Client
+        String client = SecurityContextHolder.get(TokenConstants.REQUEST_CLIENT, String.class);
+        return CommonEnum.Client.getByCode(client);
+    }
+
     public static CommonEnum.Client getClient() {
-        String s = SecurityContextHolder.get(TokenConstants.DETAILS_CLIENT, String.class);
-        return CommonEnum.Client.getByCode(s);
+        // 先检查前端有没有指定Client
+        CommonEnum.Client client = getRequestClient();
+        if (client == null) {
+            String clientList = SecurityContextHolder.get(TokenConstants.DETAILS_CLIENT, String.class);
+            client = CommonEnum.Client.getByCode(CollUtil.getFirst(StrUtil.split(clientList,',')));
+        }
+        return client;
     }
 
     public static String getUsername() {
@@ -110,27 +81,16 @@ public class SecurityUtils {
         return s;
     }
 
-    public static Long getRoleId() {
-        String role = SecurityContextHolder.get(TokenConstants.ROLE, String.class);
+    public static RoleEnum.CompanyRole getRole() {
+        String role = SecurityContextHolder.get(TokenConstants.DETAILS_ROLE, String.class);
         if (StrUtil.isBlank(role)) {
             return null;
         }
-        return Long.parseLong(role);
-    }
-
-    public static RoleEnum.CompanyRole getRole() {
-        return RoleEnum.CompanyRole.getByCode(getRoleId());
+        Long roleId = ArrayUtil.get(StrUtil.splitToLong(role, ','), 0);
+        return RoleEnum.CompanyRole.getByCode(roleId);
     }
 
     public static RequestInfo getRequestInfo() {
         return SecurityContextHolder.get(TokenConstants.REQUEST_INFO, RequestInfo.class);
-    }
-
-    public static String getSkipMode() {
-        String skipMode = SecurityContextHolder.get(TokenConstants.SKIP_MODE, String.class);
-        if (StrUtil.isEmpty(skipMode)) {
-            return "none";
-        }
-        return skipMode;
     }
 }

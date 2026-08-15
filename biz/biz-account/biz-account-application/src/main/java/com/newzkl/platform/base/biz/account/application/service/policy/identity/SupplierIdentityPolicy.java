@@ -1,32 +1,30 @@
 package com.newzkl.platform.base.biz.account.application.service.policy.identity;
 
 import cn.hutool.json.JSONUtil;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
-import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.SmsApi;
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author muc_fang
@@ -39,7 +37,6 @@ import org.springframework.stereotype.Component;
 public class SupplierIdentityPolicy extends AbsIdentityPolicy {
 
     private final FinancePurseApi financePurseApi;
-    private final SmsApi smsApi;
     private final UserQueryService roleQueryAppService;
     private final SupplierClientDomain supplierDomain;
     private final AccountDomain accountDomain;
@@ -69,18 +66,7 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
             if (accountId.equals(inviteAccountVO.getId())) {
                 throw new PlatformException(AccountErrorCode.PARAM_YQM);
             } else {
-//                log.info("邀请人身份ID：{}", inviteAccountVO.getSubRoleIdList());
-                if (!(inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.SELECTOR.getCodeStr()) ||
-                        inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCodeStr()) ||
-                        inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCodeStr()))) {
-                    throw new PlatformException(AccountErrorCode.NO_INVITE);
-                } //只有交易师、渠道商、运营商可邀请供应商
-               /* if(!(inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.SELECTOR.getCode().toString())|| inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCode().toString())) || inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCode().toString())){
-                    throw new PlatformException(AccountErrorCode.NO_INVITE);
-                }*/
-                else {
-                    inviteAccountId = inviteAccountVO.getId();
-                }
+                inviteAccountId = inviteAccountVO.getId();
             }
         }
         //注册角色
@@ -103,9 +89,6 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
             initFinanceReq.setParentId(0L);
         }
         financePurseApi.initFinance(initFinanceReq);
-        //邀请成功通知
-        if (inviteAccountId != null) {
-        }
 
         return new IdentityRegisterRes(null, accountId);
     }
@@ -125,64 +108,6 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
     @Transactional(rollbackFor = Exception.class)
     public IdentityRegisterRes proxyRegister(IdentityProxySaveReq proxySaveReq) {
         throw new PlatformException(BaseErrorCode.CUSTOM, "供应商不支持代理注册");
-    }
-
-
-
-    /**
-     * 角色申请审核事件回调。
-     *
-     * <p>迁移说明: 角色申请审核业务已下线({@code AuditRoleApplyVO} 模型删除),
-     * 原实现依赖该模型解析审批数据、驱动供应商审核通过/失败与短信通知,
-     * 故整体注释保留。保留 {@code @Override} 与方法签名, 以满足抽象方法契约;
-     * 待新审批链路接入后重写。</p>
-     *
-     * @param auditEvent 审批事件
-     * @author KC
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void roleApplyAuditEvent(AuditEvent auditEvent) {
-        // 角色申请审核业务已下线, 原实现依赖已删除的 AuditRoleApplyVO 模型, 整体注释保留:
-//        Integer state = auditEvent.getState();
-//        Long accountId = auditEvent.getAccountId();
-//        String data = auditEvent.getData();
-//        AuditRoleApplyVO auditRoleApplyDataVO = JSON.parseObject(data, AuditRoleApplyVO.class);
-//        AccountVO accountVO = accountDomain.account(null, accountId);
-//        //成功处理
-//        if (AuditEnum.State.SUCCESS.getCode().equals(state)) {
-//            String companyInfo = auditRoleApplyDataVO.getCompanyInfo();
-//            String nameAuthInfo = auditRoleApplyDataVO.getNameAuthInfo();
-//            //创建角色
-//            supplierDomain.auditPass(accountVO, companyInfo);
-//            //个人账号处理
-//            if (StringUtils.isNotEmpty(nameAuthInfo)) {
-//                NameAuthVO nameAuthVO = JSONObject.parseObject(nameAuthInfo, NameAuthVO.class);
-//                accountDomain.nameAuthSuccess(accountId, nameAuthVO);
-//            }
-//            //角色计数
-////            roleDomain.addCount(auditRoleApplyDataVO.getRoleId().longValue());
-//        } else if (AuditEnum.State.FAIL.getCode().equals(state)) {
-//            supplierDomain.auditFail(accountId, auditEvent.getLastRefuseReason());
-//        } else {
-//            log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
-//            throw new PlatformException(BaseErrorCode.PARAM);
-//        }
-//        //发送短信
-//        CodeReq codeReq = new CodeReq();
-//        codeReq.setPhone(auditRoleApplyDataVO.getRegisterPhone());
-//        if (AuditEnum.State.SUCCESS.getCode().equals(state)) {
-//            codeReq.setType(SmsEnum.Type.SUPPLIER_AUDIT_SUCCESS);
-//            smsApi.sendCode(codeReq);
-//        } else if (AuditEnum.State.FAIL.getCode().equals(state)) {
-//            RoleEnum.CompanyRole companyRole = auditRoleApplyDataVO.getRole();
-//            codeReq.setType(SmsEnum.Type.SUPPLIER_AUDIT_FAIL);
-//            //codeReq.setParams(Arrays.asList(companyRole.getValue(), auditEvent.getLastRefuseReason()));
-//            smsApi.sendCode(codeReq);
-//        } else {
-//            log.error("用户消费(审批:保证金缴纳)事件: 无法识别消息的审批状态");
-//            throw new PlatformException(BaseErrorCode.PARAM);
-//        }
     }
 
 

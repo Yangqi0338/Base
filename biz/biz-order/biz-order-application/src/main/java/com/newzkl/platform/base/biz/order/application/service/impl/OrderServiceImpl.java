@@ -273,15 +273,11 @@ public class OrderServiceImpl implements OrderService {
             OrderDTO order = orderAgg.getOrder();
             BalancePayReq balancePayReq = getBalancePayReq(order);
             BalancePayResult balancePayResult = payApi.balancePay(balancePayReq);
-            if(BooleanUtil.isTrue(balancePayResult.isOperatorPayState())){
-                allPaySuccess(orderAgg);
+            if(BooleanUtil.isTrue(balancePayResult.isPayState())) {
+                // 迁移: 原聚合根方法 orderAgg.channelPaySuccess(localMessageFacade, orderRepository) 平展到 application(去聚合根)
+                channelPaySuccess(orderAgg);
             }else {
-                if(BooleanUtil.isTrue(balancePayResult.isPayState())) {
-                    // 迁移: 原聚合根方法 orderAgg.channelPaySuccess(localMessageFacade, orderRepository) 平展到 application(去聚合根)
-                    channelPaySuccess(orderAgg);
-                }else {
-                    ThrowsException.exception(BaseErrorCode.CUSTOM, "支付失败");
-                }
+                ThrowsException.exception(BaseErrorCode.CUSTOM, "支付失败");
             }
         }else {
             //支付成功
@@ -299,22 +295,10 @@ public class OrderServiceImpl implements OrderService {
             //扣减余额
             BalancePayReq balancePayReq = getBalancePayReq(orderAgg.getOrder());
             BalancePayResult balancePayResult = payApi.balancePay(balancePayReq);
-            if (BooleanUtil.isTrue(balancePayResult.isOperatorPayState())) {
-                allPaySuccess(orderAgg);
-                if (Objects.isNull(SecurityUtils.getAccountId())){
-                    localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.CHANNEL_WAIT_PAY,OrderEnum.State.SENDING,RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
-                }else {
-                    localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.CHANNEL_WAIT_PAY,OrderEnum.State.SENDING,SecurityUtils.getAccountId(),SecurityUtils.getRole());
-                }
+            if (BooleanUtil.isTrue(balancePayResult.isPayState())) {
+                channelPaySuccess(orderAgg);
             } else {
-                if (RoleEnum.CompanyRole.OPERATOR == SecurityUtils.getRole()) {
-                    ThrowsException.exception(OrderErrorCode.AMOUNT_LESS);
-                }
-                if (BooleanUtil.isTrue(balancePayResult.isPayState())) {
-                    channelPaySuccess(orderAgg);
-                } else {
-                    ThrowsException.exception(OrderErrorCode.AMOUNT_LESS);
-                }
+                ThrowsException.exception(OrderErrorCode.AMOUNT_LESS);
             }
         }
     }

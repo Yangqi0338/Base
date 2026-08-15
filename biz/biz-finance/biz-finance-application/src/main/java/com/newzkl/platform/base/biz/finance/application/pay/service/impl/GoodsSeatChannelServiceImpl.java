@@ -102,7 +102,6 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
             // 采购金抵扣: 即时结算成功
             BalancePayResult payResult = new BalancePayResult();
             payResult.setPayState(true);
-            payResult.setOperatorPayState(true);
             res = payResult;
 
             purchaseRecordService.seatPackageSaveOrUpdate(saveCommand);

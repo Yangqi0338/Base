@@ -105,7 +105,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             }
         }
 
-        if (accountType == PurseEnum.FinanceUser.PICK || accountType == PurseEnum.FinanceUser.TRADERS) {
+
             ConfigWithdrawVO configWithdrawVO = withdrawDomain.defaultWithdrawConfig();
             if (configWithdrawVO.getWithdraw() != null) {
                 Money restrict = configWithdrawVO.getWithdraw().getMinAmount();
@@ -113,7 +113,7 @@ public class WithdrawServiceImpl implements WithdrawService {
                     return;
                 }
             }
-        }
+
         // 1、扣减收益余额
         AccountPurseAlterRecordReq recordReq = buildAccountPurseAlterRecord(req);
         boolean flag = accountPurseService.subAmount(recordReq);

@@ -162,8 +162,8 @@ public class SpuCategoryServiceImpl implements SpuCategoryService {
      */
     @Override
     public List<SpuCategoryVO> categoryList(SpuCategoryQuery categoryQuery) {
-        Long roleId = SecurityUtils.getRoleId();
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.SUPPLIER == role) {
             log.warn(GAP + "供应商分类列表未按所属行业过滤, 缺 user 域 supplierFacade 取行业列表能力");
         }
         return fillSpuNum(spuCategoryRepository.categoryList(categoryQuery));

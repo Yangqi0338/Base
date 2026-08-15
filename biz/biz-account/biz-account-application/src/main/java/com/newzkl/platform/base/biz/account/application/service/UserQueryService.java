@@ -74,18 +74,6 @@ public interface UserQueryService {
 
     SupplierVO supplierVO(Long supplierId);
 
-    /**
-     * 供应商对外视图
-     *
-     * <p>迁移自旧 {@code IUserQueryService#supplierOutVO}, 供甄选师查看供应商详情用。
-     * 旧实现逐字段手工拷贝 {@code SupplierVO} 到 {@code SupplierOutVO}, 中台化后同名字段整体转换。</p>
-     *
-     * @param supplierId 供应商账号ID
-     * @return 供应商对外视图, 无则 null
-     * @author KC
-     */
-    SupplierOutRes supplierOutVO(Long supplierId);
-
     List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList);
 
     ChannelEarningsConfigVO serviceFeeConfigVO(Long channelId);

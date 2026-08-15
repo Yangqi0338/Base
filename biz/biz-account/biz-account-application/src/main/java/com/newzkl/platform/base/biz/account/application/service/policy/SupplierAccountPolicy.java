@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.account.application.service.policy;
 
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicy;
@@ -47,12 +46,7 @@ public class SupplierAccountPolicy extends AbsAccountPolicy {
         return null;
     }
 
-    @Override
-    public void roleApplyAuditEvent(AuditEvent auditEvent) {
-
-    }
-
-    @Override
+	@Override
     public void inviteSuccess(AccountVO account, AccountRes inviteAccount, Object roleObj) {
 
     }

@@ -122,20 +122,6 @@ public class EarningsEnum implements Serializable {
     @AllArgsConstructor
     @Getter
     public enum EarningType {
-        /** 甄选师礼包 */
-        PICK_PACK_SELECTOR(ConsumeType.PICK_PACK, Type.SELECTOR, PurseEnum.FinanceUser.PICK, "甄选师礼包"),
-        /** 交易师礼包 */
-        PICK_PACK_TRADE_PERSON(ConsumeType.PICK_PACK, Type.TRADE_PERSON, PurseEnum.FinanceUser.TRADERS, "交易师礼包"),
-        /** 运营商礼包 */
-        PICK_PACK_OPERATE(ConsumeType.PICK_PACK, Type.OPERATE, PurseEnum.FinanceUser.OPERATOR, "运营商礼包"),
-        /** 商品甄选师分润 */
-        GOODS_SELECTOR(ConsumeType.GOODS, Type.SELECTOR, PurseEnum.FinanceUser.PICK, "商品甄选师分润"),
-        /** 商品交易师分润 */
-        GOODS_TRADE_PERSON(ConsumeType.GOODS, Type.TRADE_PERSON, PurseEnum.FinanceUser.TRADERS, "商品交易师分润"),
-        /** 商品运营商服务费 */
-        GOODS_OPERATE(ConsumeType.GOODS, Type.OPERATE, PurseEnum.FinanceUser.OPERATOR, "商品运营商服务费"),
-        /** 奖金池分红 */
-        AWARD_DIVIDEND(ConsumeType.DIVIDEND_BONUS, Type.AWARD, null, "奖金池分红"),
         /** 商品渠道商分润 */
         GOODS_CHANNEL(ConsumeType.GOODS, Type.CHANNEL, PurseEnum.FinanceUser.CHANNEL, "商品渠道商分润"),
         ;
@@ -170,14 +156,6 @@ public class EarningsEnum implements Serializable {
     @AllArgsConstructor
     @Getter
     public enum Type {
-        /** 甄选师分润 */
-        SELECTOR(1, "甄选师分润"),
-        /** 交易师分润 */
-        TRADE_PERSON(2, "交易师分润"),
-        /** 运营商服务费 */
-        OPERATE(3, "运营商服务费"),
-        /** 分红 */
-        AWARD(4, "分红"),
         /** 渠道商分润 */
         CHANNEL(5, "渠道商分润"),
         ;

@@ -1,32 +1,33 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 // TODO[infra-auth satoken]: import cn.dev33.satoken.stp.StpUtil; (登出属 auth 基础设施)
+
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.sms.enums.SmsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
+import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberImportExcelVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
-import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.common.core.utils.spring.TransactionUtils;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
+import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,7 +53,7 @@ public class UserClientDomainImpl implements UserClientDomain {
 
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
-    private final TransactionUtils transactionUtils;
+
     private final AccountAssembler accountAssembler;
 
 
@@ -168,7 +169,7 @@ public class UserClientDomainImpl implements UserClientDomain {
         RoleEnum.CompanyRole MEMBER_ROLE_CODE = RoleEnum.CompanyRole.MEMBER;
         BCryptPasswordEncoder PWD_ENCODER = new BCryptPasswordEncoder();
         // 事务包裹核心更新逻辑
-        transactionUtils.executeWithoutResult(() -> {
+//        transactionUtils.executeWithoutResult(() -> {
             boolean isMemberUpdated = false;
             boolean isAccountUpdated = false;
 
@@ -203,7 +204,7 @@ public class UserClientDomainImpl implements UserClientDomain {
 //                        throw new PlatformException(AccountErrorCode.NO_EXIST);
 //                    }
                     // 旧密码校验
-                    boolean checkPassword = account.checkPassword(command.getOldPassword());
+                    boolean checkPassword = SecurityUtils.matchesPassword(command.getOldPassword(), account.getPassword());
                     if (!checkPassword) {
                         throw new PlatformException(AccountErrorCode.PASSWORD);
                     }
@@ -222,7 +223,7 @@ public class UserClientDomainImpl implements UserClientDomain {
             }
             log.info("用户信息更新事务执行成功，accountId: {}, member更新: {}, account更新: {}",
                     accountId, isMemberUpdated, isAccountUpdated);
-        });
+//        });
 //        localMessageFacade.sendMessage(Tag.IM_UPDATE_USER_ACCOUNT_EVENT,
 //                new ImCreateUserAccountObj().setUserAccount(member.getUserAccount())
 //                        .setPhone(command.getNewPassword())

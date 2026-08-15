@@ -49,24 +49,6 @@ public class MarketGoodsController {
     private final MarketDomain marketDomain;
 
     /**
-     * 一级市场添加商品
-     *
-     * <p>沿用旧语义: 未加入一级市场的商品统一按二级市场商品 ({@code relationType=2}) 落库,
-     * {@code userId} 固定为 0。</p>
-     *
-     * @param req 保存商品关系请求
-     * @return 操作结果
-     */
-    @PostMapping("/saveOneMarketGoodsRelation")
-    public PlatformResult<Object> saveOneMarketGoodsRelation(@RequestBody SaveGoodsRelationReq req) {
-        req.setUserId(0L);
-        req.setRelationType(2);
-        goodsRelationDomain.saveGoodsRelation(req);
-        marketDomain.alterMarketData(UpdateMarketDataReq.buildUpdateMarketDataReq(req.getMarketId(), MarketEnum.NumType.GOODS_NUM, req.getGoodsIds().size()));
-        return PlatformResult.success();
-    }
-
-    /**
      * 二级市场添加商品
      *
      * @param req 保存商品关系请求
@@ -114,17 +96,6 @@ public class MarketGoodsController {
     }
 
     /**
-     * 运营商查询二级市场
-     *
-     * @param req 查询条件
-     * @return 市场商品列表
-     */
-    @PostMapping("/operatorQueryMarketGoodsList")
-    public PlatformResult<Page<GoodsRelationListVO>> operatorQueryMarketGoodsList(@RequestBody MarketGoodsPageQuery req) {
-        return PlatformResult.success(goodsRelationDomain.operatorQueryMarketGoodsList(req));
-    }
-
-    /**
      * 查询客户绑定市场商品关系列表
      *
      * @param req 查询条件
@@ -149,18 +120,6 @@ public class MarketGoodsController {
     public PlatformResult<Page<GoodsRelationListVO>> platformQueryMarketNotAddGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
         req.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(goodsRelationDomain.platformQueryMarketNotAddGoodsList(req));
-    }
-
-    /**
-     * 运营商二级市场添加商品查询商品列表
-     *
-     * @param req 查询条件
-     * @return 商品列表
-     */
-    @PostMapping("/operateQueryMarketNotAddGoodsList")
-    public PlatformResult<Page<GoodsRelationListVO>> operateQueryMarketNotAddGoodsList(@RequestBody PlatformQueryMarketNotAddGoodsReq req) {
-        req.setAccountId(SecurityUtils.getAccountId());
-        return PlatformResult.success(goodsRelationDomain.operateQueryMarketNotAddGoodsList(req));
     }
 
     /**

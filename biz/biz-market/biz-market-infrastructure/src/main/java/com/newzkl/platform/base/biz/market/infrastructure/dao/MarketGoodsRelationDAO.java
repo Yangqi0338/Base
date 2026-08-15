@@ -43,8 +43,6 @@ public interface MarketGoodsRelationDAO extends BaseMapper<MarketGoodsRelationDO
      */
     Page<GoodsRelationListVO> platformQueryMarketNotAddGoodsList(Page<?> page, @Param("req") PlatformQueryMarketNotAddGoodsReq req);
 
-    Page<GoodsRelationListVO> operateQueryMarketNotAddGoodsList(Page<?> page, @Param("req") PlatformQueryMarketNotAddGoodsReq req);
-
     Page<GoodsRelationListVO> channelMarketNotSelectedGoodsList(Page<?> page, @Param("req") PlatformQueryMarketNotAddGoodsReq req);
 
     Page<GoodsRelationListVO> channelDistributionSelectedGoodsList(Page<?> page, @Param("req") PlatformQueryMarketNotAddGoodsReq query);

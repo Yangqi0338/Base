@@ -40,14 +40,6 @@ public class RoleEnum {
         SUPPLIER(1001L, "供应商", CommonEnum.Client.SUPPLIER),
         /** 渠道商 */
         CHANNEL(1002L, "渠道商", CommonEnum.Client.CHANNEL),
-        /** 运营商 */
-        OPERATOR(1004L, "运营商", CommonEnum.Client.OPERATOR, 3),
-        /** 交易师 */
-        DEALER(1005L, "交易师", CommonEnum.Client.OPERATOR, 2),
-        /** 甄选师 */
-        SELECTOR(1006L, "甄选师", CommonEnum.Client.OPERATOR, 1),
-        /** 游客 */
-        OPERATOR_GUEST(-1L, "游客", CommonEnum.Client.OPERATOR, 0),
 
         ;
 

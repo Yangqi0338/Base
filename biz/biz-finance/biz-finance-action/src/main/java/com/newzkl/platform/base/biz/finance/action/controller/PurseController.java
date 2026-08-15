@@ -202,8 +202,7 @@ public class PurseController {
     @PostMapping("/queryWithdrawAmount")
     public PlatformResult<WithdrawAmountVO> queryWithdrawAmount(@RequestBody AccountPurseQuery req) {
         Long accountId = Opt.ofNullable(req.getAccountId()).orElseGet(SecurityUtils::getAccountId);
-        RoleEnum.CompanyRole role = RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId());
-        return PlatformResult.success(withdrawDomain.queryWithdrawAmount(role, accountId));
+        return PlatformResult.success(withdrawDomain.queryWithdrawAmount(SecurityUtils.getRole(), accountId));
     }
 
     /**
@@ -233,7 +232,7 @@ public class PurseController {
     private void fillAccountScope(AccountPurseAlterRecordQuery req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
-            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRoleId()));
+            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRole()));
         }
     }
 

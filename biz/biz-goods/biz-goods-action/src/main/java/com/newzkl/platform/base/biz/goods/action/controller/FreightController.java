@@ -49,9 +49,9 @@ public class FreightController {
         if (freightTemplateReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        Long roleId = SecurityUtils.getRoleId();
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)
-                || RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.SUPPLIER == role
+                || RoleEnum.CompanyRole.CHANNEL == role) {
             freightTemplateReq.setAccountId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(freightDomain.freightTemplateSave(freightTemplateReq));
@@ -67,7 +67,7 @@ public class FreightController {
      */
     @PostMapping("freightTemplateDelete")
     public PlatformResult<Void> freightTemplateDelete(@RequestBody CommonCmd.IdList idList) {
-        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())
+        if (RoleEnum.CompanyRole.PLATFORM != SecurityUtils.getRole()
                 && idList.getIdList().contains(SYSTEM_TEMPLATE_ID)) {
             ThrowsException.exception(BaseErrorCode.CUSTOM, "无法删除系统运费模板");
         }
@@ -88,7 +88,7 @@ public class FreightController {
         if (freightTemplateReq.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())
+        if (RoleEnum.CompanyRole.PLATFORM != SecurityUtils.getRole()
                 && freightTemplateReq.getId() == SYSTEM_TEMPLATE_ID) {
             ThrowsException.exception(BaseErrorCode.CUSTOM, "无法修改系统运费模板");
         }
@@ -117,9 +117,9 @@ public class FreightController {
      */
     @PostMapping("freightTemplatePage")
     public PlatformResult<Page<FreightTemplateVO>> freightTemplatePageVOList(@RequestBody FreightTemplateQuery freightTemplateQuery) {
-        Long roleId = SecurityUtils.getRoleId();
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(roleId)
-                || RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.SUPPLIER == role
+                || RoleEnum.CompanyRole.CHANNEL == role) {
             freightTemplateQuery.setAccountIdAndAdmin(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(freightDomain.freightTemplatePage(freightTemplateQuery));

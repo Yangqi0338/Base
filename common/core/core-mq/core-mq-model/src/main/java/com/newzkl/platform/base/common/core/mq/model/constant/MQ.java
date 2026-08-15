@@ -70,11 +70,7 @@ public interface MQ {
          */
         String MEMBER_PAY_SUCCESS_EVENT = "member:pay:success:event";
         String MEMBER_PAY_SUCCESS_EVENT_MESSAGE = "member-pay-success-event-message";
-        /**
-         * 渠道商:注册通知
-         */
-        String CHANNEL_REGISTER_EVENT = "channel:register:success:event";
-        String CHANNEL_REGISTER_EVENT_MESSAGE = "channel-register-success-event-message";
+
         String MODEL_SHOP_SYNC_HANDLE = "modelShopSyncHandle";
         String MODEL_SHOP_SYNC_HANDLE_MESSAGE = "modelShopSyncHandle-message";
         String ORDER_SYNC_HANDLE = "orderSyncHandle";

@@ -1,21 +1,16 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.biz.account.model.auth.req.AccountSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.AccountInfo;
-import com.newzkl.platform.base.biz.account.model.res.RoleVO;
 import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
-import com.newzkl.platform.base.biz.account.model.res.SubAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureTreeVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.NameAuthVO;
-import com.newzkl.platform.base.biz.account.model.auth.req.AccountSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.CodeUpdatePasswordReq;
-
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -43,34 +38,11 @@ public interface AccountDomain {
     AccountInfo accountInfo(AccountQuery query);
 
     /**
-     * 修改密码
-     *
-     * @param codeUpdatePasswordCommand 修改密码命令
-     */
-    void editPassword(CodeUpdatePasswordReq codeUpdatePasswordCommand);
-
-    /**
      * 修改基本信息
      *
      * @param req 账号基本信息请求
      */
     boolean accountEdit(AccountReq req);
-
-    /**
-     * 修改账号名称
-     *
-     * @param codeUpdateUsernameReq 修改用户名命令
-     */
-    void editUsername(CodeUpdateUsernameReq codeUpdateUsernameReq);
-
-    /**
-     * 子账号修改基本信息
-     *
-     * @param pid        父账号ID
-     * @param accountId  子账号ID
-     * @param subEditReq 子账号编辑请求
-     */
-    void subEditBase(Long pid, Long accountId, SubEditReq subEditReq);
 
     /**
      * 账号删除
@@ -122,31 +94,11 @@ public interface AccountDomain {
     AccountVO customSave(AccountSaveReq customSaveReq);
 
     /**
-     * 代理注册
-     *
-     * @param proxySaveReq
-     */
-    AccountVO proxySave(Long pid, SubProxySaveReq proxySaveReq);
-
-    /**
      * 查询账号列表
      *
      * @param query
      */
     List<AccountVO> accountList(AccountQuery query);
-
-    /**
-     * 查询一个用户有几个角色
-     *
-     * @param client
-     * @param accountId
-     */
-    List<RoleVO> accountRoleList(Long accountId, CommonEnum.Client client);
-
-    /**
-     * 下级账号列表
-     */
-    List<SubAccountVO> subAccountList(AccountParentQuery query);
 
     Page<SimpleAccountRes> simpleAccountPage(SimpleAccountQuery accountQuery);
 

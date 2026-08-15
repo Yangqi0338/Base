@@ -98,7 +98,7 @@ public class StoreCategoryController {
      */
     @PostMapping("/queryList")
     public PlatformResult<List<StoreCategoryRes>> queryList(@RequestBody StoreCategoryQuery query) {
-        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
+        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
             query.addDescSortField("create_time");
         } else {
             query.addSortField("`index`");
@@ -115,7 +115,7 @@ public class StoreCategoryController {
      */
     @PostMapping("/queryPage")
     public PlatformResult<Page<StoreCategoryRes>> queryPage(@RequestBody StoreCategoryQuery query) {
-        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
+        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
             query.addDescSortField("create_time");
         } else {
             query.addSortField("`index`");

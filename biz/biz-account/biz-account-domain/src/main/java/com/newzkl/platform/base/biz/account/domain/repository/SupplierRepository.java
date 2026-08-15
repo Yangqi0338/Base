@@ -2,11 +2,10 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.model.support.CodeReq;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 
 import java.util.List;
 
@@ -43,8 +42,6 @@ public interface SupplierRepository {
      * 带账户信息的分页列表
      */
     Page<SupplierAccountVO> pageListWithAccount(SupplierQuery query);
-
-    void smsNotify(CodeReq codeReq);
 
     String getSettlementConfig(Long accountId);
 

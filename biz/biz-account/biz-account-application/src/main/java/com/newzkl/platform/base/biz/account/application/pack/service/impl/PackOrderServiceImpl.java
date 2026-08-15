@@ -4,13 +4,15 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import com.newzkl.platform.base.biz.account.application.pack.service.PackOrderService;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PackUpCheckCommand;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PayApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PayResultDTO;
 import com.newzkl.platform.base.biz.account.domain.pack.entity.PackOrder;
+import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
+import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.account.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.account.domain.service.PackOrderDomain;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
 import com.newzkl.platform.base.biz.account.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
@@ -23,7 +25,6 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
@@ -71,8 +72,9 @@ public class PackOrderServiceImpl implements PackOrderService {
     private final PackGoodsDomain packGoodsDomain;
 
     private final PackOrderDomain packOrderDomain;
+    private final AccountDomain accountDomain;
 
-    private final AccountApi accountApi;
+    private final LevelDomain levelDomain;
 
     private final PayApi payApi;
 
@@ -92,7 +94,7 @@ public class PackOrderServiceImpl implements PackOrderService {
         checkCommand.setAmount(packGoods.getAmount());
         checkCommand.setLevel(packGoods.getLevel());
         checkCommand.setType(packGoods.getType());
-        Integer checkState = accountApi.packUpCheck(checkCommand);
+        Integer checkState = levelDomain.packUpCheck(checkCommand);
         if (checkState != null && checkState == -1) {
             throw new PlatformException(PackOrderErrorCode.ALREADY_LEVEL);
         }
@@ -163,7 +165,8 @@ public class PackOrderServiceImpl implements PackOrderService {
             accountId = orderRes.getAccountId();
         }
 
-        AccountGroupVO accountInfo = accountApi.accountInfo(accountId);
+        // TODO
+        AccountVO accountInfo = accountDomain.account(null,accountId);
 
         OrderPayReq apiPayReq = new OrderPayReq();
         apiPayReq.setOrderNo(orderId);

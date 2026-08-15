@@ -14,9 +14,4 @@ public class BalancePayResult implements PayBaseResult {
      * 支付状态
      */
     private boolean payState;
-
-    /**
-     * 运营商支付状态
-     */
-    private boolean operatorPayState;
 }

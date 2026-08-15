@@ -232,18 +232,6 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public SupplierOutRes supplierOutVO(Long supplierId) {
-        SupplierVO supplierVO = supplierClientDomain.supplier(supplierId);
-        if (supplierVO == null) {
-            return null;
-        }
-        return TransferUtils.transfer(supplierVO, SupplierOutRes::new);
-    }
-
-    
-
-
-    @Override
     public List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList) {
         if (ObjectUtil.isEmpty(supplierIdList)) {
             return new ArrayList<>();
@@ -259,7 +247,7 @@ public class UserQueryServiceImpl implements UserQueryService {
         Long id = query.getAccountId();
         AccountVO accountVO = accountDomain.account(client, id);
         AppAccountVO appAccountVO = accountAssembler.account2AppVO(accountVO);
-        appAccountVO.setRole(RoleEnum.CompanyRole.getByCode(SecurityUtils.getRoleId()));
+        appAccountVO.setRole(SecurityUtils.getRole());
 
         // 获取channel角色表里的storePermission
 //        CommonEnum.YesOrNo storePermission = channelDAO.hasStore(id);

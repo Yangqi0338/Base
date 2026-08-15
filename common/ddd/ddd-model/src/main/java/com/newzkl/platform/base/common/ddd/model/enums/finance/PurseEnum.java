@@ -31,12 +31,6 @@ public class PurseEnum implements Serializable {
         SUPPLIER(1, RoleEnum.CompanyRole.SUPPLIER),
         /** 渠道商 */
         CHANNEL(2, RoleEnum.CompanyRole.CHANNEL),
-        /** 运营商 */
-        OPERATOR(4, RoleEnum.CompanyRole.OPERATOR),
-        /** 交易师 */
-        TRADERS(5, RoleEnum.CompanyRole.DEALER),
-        /** 甄选师 */
-        PICK(6, RoleEnum.CompanyRole.SELECTOR),
         ;
 
         @EnumValue
@@ -44,23 +38,9 @@ public class PurseEnum implements Serializable {
         private final Integer type;
         private final RoleEnum.CompanyRole role;
 
-        public static FinanceUser getByType(Integer type) {
-            return Stream.of(FinanceUser.values())
-                    .filter(extension -> extension.getType().equals(type))
-                    .findFirst()
-                    .orElse(null);
-        }
-
         public static FinanceUser getByRole(RoleEnum.CompanyRole role) {
             return Arrays.stream(values())
                     .filter(it -> it.getRole() == role)
-                    .findFirst()
-                    .orElse(null);
-        }
-
-        public static FinanceUser getByRole(Long roleId) {
-            return Arrays.stream(values())
-                    .filter(it -> it.getRole().getCode().equals(roleId))
                     .findFirst()
                     .orElse(null);
         }

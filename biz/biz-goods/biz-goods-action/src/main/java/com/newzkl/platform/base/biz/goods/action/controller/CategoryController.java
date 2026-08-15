@@ -48,10 +48,10 @@ public class CategoryController {
         if (categoryReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        Long roleId = SecurityUtils.getRoleId();
-        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(roleId)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.PLATFORM == role) {
             categoryReq.setAccountId(0L);
-        } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(roleId)) {
+        } else if (RoleEnum.CompanyRole.CHANNEL == role) {
             categoryReq.setAccountId(SecurityUtils.getAccountId());
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);

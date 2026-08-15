@@ -1,31 +1,17 @@
 package com.newzkl.platform.base.biz.account.application.service.policy.identity;
 
 import cn.hutool.json.JSONUtil;
-import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.DeveloperInitReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
-import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.OpenapiDeveloperApi;
-import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
-import com.newzkl.platform.base.biz.account.model.event.AuditEvent;
-import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
+import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelCustomSaveReq;
@@ -33,18 +19,25 @@ import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.res.UpIdRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
-import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
+import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
+import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -114,14 +107,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         if (inviteAccountVO != null) {
             if (accountId.equals(inviteAccountVO.getId())) {
                 throw new PlatformException(AccountErrorCode.PARAM_YQM);
-            } else {
-//                log.info("邀请人身份ID：{}", inviteAccountVO.getSubRoleIdList());
-                if (!(inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.DEALER.getCodeStr()) ||
-                        inviteAccountVO.getRoleIdList().contains(RoleEnum.CompanyRole.OPERATOR.getCodeStr()))) {
-                    throw new PlatformException(AccountErrorCode.NO_INVITE);
-                }
             }
-            // 交易师和运营商可以各自招募
             account.setPidList(BizUtil.getPidList(inviteAccountVO.getPidList(), inviteAccountVO.getId()));
             account.setPRoleList(BizUtil.getPRoleList(inviteAccountVO.getPRoleList(), inviteAccountVO.getRoleIdList()));
 
@@ -129,7 +115,7 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
 
             UpIdRes res = new UpIdRes();
             res.setRoleIdList(inviteAccountVO.getRoleIdList());
-            inviteRole = UpIdRes.getLastEarningUserRoleId(res);
+//            inviteRole = UpIdRes.getLastEarningUserRoleId(res);
         } //else {
         //dealerId = CommonEnum.COMPANY_DEALER_ID;
         // operatorId = CommonEnum.COMPANY_OPERATOR_ID;
@@ -170,13 +156,6 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
 
         //账号添加角色 (inviteAccount是在运营商体系下的,这里不能设置 TODO)
         accountService.roleAddEvent(account, RoleEnum.CompanyRole.CHANNEL, customSaveReq.getPassword());
-        //统计变更
-        if (!isRegisterOnce) {
-            // 修改直属上级的邀请渠道商人数
-            if (RoleEnum.CompanyRole.DEALER == inviteRole) {
-            } else if (RoleEnum.CompanyRole.OPERATOR == inviteRole) {
-            }
-        }
         //初始化财务
         if (!isRegisterOnce) {
             InitFinanceReq initFinanceReq = new InitFinanceReq();
@@ -202,9 +181,6 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
             AbsIdentityPolicySupport.getPolicy(RoleEnum.CompanyRole.MEMBER.getCode()).customRegister(memberInitReq);
         }
 
-        //注册通知
-        channelRepository.registerEvent(account, customSaveReq.getPassword());
-
         //同步im
         return new IdentityRegisterRes(null, accountId, developerInitReq.getAppId(), developerInitReq.getSecret());
     }
@@ -222,11 +198,6 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
     @Override
     public IdentityRegisterRes proxyRegister(IdentityProxySaveReq proxySaveReq) {
         throw new PlatformException(BaseErrorCode.CUSTOM, "渠道商不支持代理注册");
-    }
-
-    @Override
-    public void roleApplyAuditEvent(AuditEvent auditEvent) {
-
     }
 
     @Override

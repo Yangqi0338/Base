@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -66,7 +67,7 @@ public class ShipAddressDO extends BaseDO {
      * 角色类型 ID
      */
     @Index
-    private Long roleId;
+    private RoleEnum.CompanyRole role;
 
     /**
      * 账号 ID

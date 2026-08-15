@@ -35,4 +35,5 @@ public class PurseAmountRes implements Serializable {
     /**
      * 总额度
      */
+    private Integer totalEarnings;
 }

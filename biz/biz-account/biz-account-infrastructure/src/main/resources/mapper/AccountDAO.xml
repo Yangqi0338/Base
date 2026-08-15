@@ -68,17 +68,6 @@
         and t.del_flag = 0
     </select>
 
-    <!-- dealer/operator/selector 源侧即无 state 过滤, Base 三表亦无 state 列, 保持源语义仅补 del_flag -->
-    <select id="userCount" resultType="com.newzkl.platform.base.biz.account.model.res.UserCountRes">
-        SELECT
-        (SELECT count(id) from account where state != 0 and del_flag = 0 ) as account_count,
-        (SELECT count(id) from supplier where state != 0 and del_flag = 0 ) as supplier_count,
-        (SELECT count(id) from channel where state != 0 and del_flag = 0 ) as channel_count,
-        (SELECT count(id) from dealer where del_flag = 0 ) as dealer_count,
-        (SELECT count(id) from operator where del_flag = 0 ) as operator_count,
-        (SELECT count(id) from selector where del_flag = 0 ) as selector_count;
-    </select>
-
     <select id="groupCount" resultType="com.newzkl.platform.base.common.ddd.model.res.GroupCountRes">
         select
         <if test="query.groupType == 0">
@@ -139,11 +128,6 @@
     <select id="selectSonIdList" resultType="java.lang.Long">
         select id from account where pid_list like concat(#{id,jdbcType=BIGINT},'%')
         and del_flag = 0
-    </select>
-
-    <select id="selectBillUserList" resultType="com.newzkl.platform.base.biz.account.model.vo.AccountBillUserRpcVO">
-        select id, real_name, nickname, username, role_id_list from account
-        ${ew.customSqlSegment}
     </select>
 
     <select id="selectByUserAccount" resultType="com.newzkl.platform.base.biz.account.infrastructure.entity.AccountDO">

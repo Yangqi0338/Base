@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.PackUpCheckCommand;
 import com.newzkl.platform.base.biz.account.domain.repository.LevelRepository;
 import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.account.domain.service.PackGoodsDomain;
@@ -112,6 +113,11 @@ public class LevelDomainImpl implements LevelDomain {
         info.setLevel(res.getLevel());
         info.setType(res.getType() == null ? null : RoleEnum.CompanyRole.getByCode(res.getType().longValue()));
         return info;
+    }
+
+    @Override
+    public Integer packUpCheck(PackUpCheckCommand checkCommand) {
+        return 0;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.service;
 
+import com.newzkl.platform.base.biz.account.domain.adapt.api.PackUpCheckCommand;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
 import com.newzkl.platform.base.biz.account.model.level.res.LevelRes;
@@ -68,4 +69,6 @@ public interface LevelDomain {
      * @return 礼包商品信息, 端口未接线时返回 null
      */
     PackGoodsInfo levelPack(Integer roleId);
+
+	Integer packUpCheck(PackUpCheckCommand checkCommand);
 }

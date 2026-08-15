@@ -119,6 +119,6 @@ public class VideoCategoryController {
     @GetMapping("/list")
     public PlatformResult<List<VideoCategoryRes>> getCategoryList() {
         return PlatformResult.success(videoCategoryDomain.getCategoryList(
-                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRoleId())));
+                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())));
     }
 }

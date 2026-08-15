@@ -13,6 +13,7 @@ import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
 import com.newzkl.platform.base.biz.account.model.res.ChannelPageRes;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -52,11 +53,11 @@ public class ChannelController {
      */
     @PostMapping("/channelEdit")
     public PlatformResult<Void> channelEdit(@Validated @RequestBody ChannelReq req) {
-        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(SecurityUtils.getRoleId())) {
+        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
             if (req.getId() == null) {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
-        } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(SecurityUtils.getRoleId())) {
+        } else if (RoleEnum.CompanyRole.CHANNEL == SecurityUtils.getRole()) {
             req.setId(SecurityUtils.getAccountId());
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -89,12 +90,11 @@ public class ChannelController {
      */
     @PostMapping("channelListVO")
     public PlatformResult<Page<ChannelVO>> channelPage(@RequestBody ChannelQuery channelQuery) {
-        Long role = SecurityUtils.getRoleId();
-        if (RoleEnum.CompanyRole.PLATFORM.getCode().equals(role)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        CommonEnum.Client client = SecurityUtils.getClient();
+        if (RoleEnum.CompanyRole.PLATFORM == role) {
             channelQuery.setStateOver(ChannelEnum.State.DESTORY);
-        } else if (!RoleEnum.CompanyRole.DEALER.getCode().equals(role)
-                && !RoleEnum.CompanyRole.OPERATOR.getCode().equals(role)
-                && !RoleEnum.CompanyRole.OPERATOR_GUEST.getCode().equals(role)) {
+        } else if (CommonEnum.Client.SERVICE != client) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
         return PlatformResult.success(userQueryService.channelPage(channelQuery));

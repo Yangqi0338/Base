@@ -108,6 +108,6 @@ public class ArticleCategoryController {
     @PostMapping("/list")
     public PlatformResult<List<ArticleCategoryRes>> getCategoryList(@RequestBody RecommendGroupReq req) {
         return PlatformResult.success(articleCategoryDomain.getCategoryList(
-                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRoleId())));
+                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())));
     }
 }

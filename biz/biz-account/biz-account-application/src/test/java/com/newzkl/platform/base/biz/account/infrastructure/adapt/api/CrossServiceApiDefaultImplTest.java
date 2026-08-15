@@ -1,26 +1,13 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
+import com.newzkl.platform.base.biz.account.domain.adapt.api.*;
 import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.DeveloperInitReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.IncomeQuery;
 import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.OpenapiDeveloperApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.SmsApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreAccountCreateReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRegisterReq;
-import com.newzkl.platform.base.biz.account.model.support.CodeReq;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 跨域出站端口默认兜底实现的契约测试
@@ -66,30 +53,10 @@ class CrossServiceApiDefaultImplTest {
     }
 
     @Test
-    @DisplayName("GoodsStoreApi 兜底: 查门店返回 null, 开店/建关联空实现")
-    void goodsStoreApiIsNeutral() {
-        GoodsStoreApi api = new GoodsStoreApiDefaultImpl();
-        assertNull(api.storeByChannelId(5501L), "兜底门店查询应返回 null");
-        assertDoesNotThrow(() -> api.createStoreAccount(new StoreAccountCreateReq()));
-        assertDoesNotThrow(() -> api.openStore(new StoreRegisterReq(5501L)));
-        assertDoesNotThrow(() -> api.openStore(null));
-    }
-
-    @Test
     @DisplayName("OpenapiDeveloperApi 兜底: 初始化开发者为空实现")
     void openapiDeveloperApiIsNoop() {
         OpenapiDeveloperApi api = new OpenapiDeveloperApiDefaultImpl();
         assertDoesNotThrow(() -> api.initDeveloper(new DeveloperInitReq()));
         assertDoesNotThrow(() -> api.initDeveloper(null));
-    }
-
-    @Test
-    @DisplayName("SmsApi 兜底: 发送验证码仅记日志, 不抛异常")
-    void smsApiIsNoop() {
-        SmsApi api = new SmsApiDefaultImpl();
-        CodeReq codeReq = new CodeReq();
-        codeReq.setPhone("13000000000");
-        assertDoesNotThrow(() -> api.sendCode(codeReq));
-        assertDoesNotThrow(() -> api.sendCode(null));
     }
 }

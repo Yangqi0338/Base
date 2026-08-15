@@ -24,11 +24,4 @@ public interface GoodsStoreApi {
      * @param req 关联入参
      */
     void createStoreAccount(StoreAccountCreateReq req);
-
-    /**
-     * 开店
-     *
-     * @param req 开店入参
-     */
-    void openStore(StoreRegisterReq req);
 }

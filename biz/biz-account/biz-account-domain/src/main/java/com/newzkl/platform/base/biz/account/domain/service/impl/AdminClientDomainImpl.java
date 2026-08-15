@@ -111,13 +111,13 @@ public class AdminClientDomainImpl implements AdminClientDomain {
         account.setPassword(account.getNewPassword(req.getPassword()));
         accountRepository.accountSave(account);
 
-        EmpVO emp = new EmpVO();
-        emp.setId(accountId);
-        emp.setType(AuthEnum.EmpType.SIMPLE);
-        if (req.getRoleId() != null) {
-            emp.setJobIdList(String.valueOf(req.getRoleId()));
-        }
-        empRepository.save(emp);
+//        EmpVO emp = new EmpVO();
+//        emp.setId(accountId);
+//        emp.setType(AuthEnum.EmpType.SIMPLE);
+//        if (req.getRoleId() != null) {
+//            emp.setJobIdList(String.valueOf(req.getRoleId()));
+//        }
+//        empRepository.save(emp);
     }
 
     @Override
@@ -140,12 +140,12 @@ public class AdminClientDomainImpl implements AdminClientDomain {
         if (accountRepository.accountEdit(account, null)) {
             count++;
         }
-        if (empCreateReq.getRoleId() != null) {
-            EmpVO emp = new EmpVO();
-            emp.setId(id);
-            emp.setJobIdList(String.valueOf(empCreateReq.getRoleId()));
-            count += empRepository.edit(emp);
-        }
+//        if (empCreateReq.getRoleId() != null) {
+//            EmpVO emp = new EmpVO();
+//            emp.setId(id);
+//            emp.setJobIdList(String.valueOf(empCreateReq.getRoleId()));
+//            count += empRepository.edit(emp);
+//        }
         return count;
     }
 

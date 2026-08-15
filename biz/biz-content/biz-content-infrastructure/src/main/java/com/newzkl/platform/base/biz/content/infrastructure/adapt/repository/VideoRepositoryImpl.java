@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoReposit
 import com.newzkl.platform.base.biz.content.infrastructure.dao.ContentVideoDAO;
 import com.newzkl.platform.base.biz.content.infrastructure.entity.VideoDO;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.video.entity.Video;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
@@ -149,10 +150,10 @@ public class VideoRepositoryImpl implements VideoRepository {
     }
 
     @Override
-    public List<String> currentRecommendGroups() {
+    public List<RecommendGroupEnum> currentRecommendGroups() {
         // 旧 domain: RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())
         // 贴 Base 范本改用 getRoleId(), 语义一致(角色ID)
-        return RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRoleId());
+        return RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole());
     }
 
     @Override

@@ -244,21 +244,13 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         }
         List<Long> distinct = merged.stream().distinct().collect(Collectors.toList());
         // 保留旧限制: 供应商本人操作时受最大行业数约束, 平台角色不限
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(SecurityUtils.getRoleId())
+        if (RoleEnum.CompanyRole.SUPPLIER == SecurityUtils.getRole()
                 && distinct.size() > MAX_INDUSTRY_NUM) {
             throw new PlatformException(SupplierErrorCode.OVER_INDUSTRY);
         }
         SupplierVO item = new SupplierVO();
         item.setId(id);
         item.setIndustryIdList(CollUtil.join(distinct, ","));
-        supplierRepository.supplierEdit(item);
-    }
-
-    @Override
-    public void supplierInviteIdEdit(Long id, Long inviteId) {
-        SupplierVO item = new SupplierVO();
-        item.setId(id);
-        item.setInviteId(inviteId);
         supplierRepository.supplierEdit(item);
     }
 

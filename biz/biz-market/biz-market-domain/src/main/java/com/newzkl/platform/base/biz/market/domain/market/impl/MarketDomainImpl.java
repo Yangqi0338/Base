@@ -86,17 +86,6 @@ public class MarketDomainImpl implements MarketDomain {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long channelBindTradersMarket(ClientBindMarketReq req) {
-        req.setBindType(MarketEnum.User.CHANNEL.getType());
-        req.setUserId(req.getUserId());
-
-        // 更新市场统计数据
-        marketRepository.alterMarketData(UpdateMarketDataReq.buildUpdateMarketDataReq(req.getMarketId(), MarketEnum.NumType.SUB_BIND_NUM, 1));
-        return this.bindMarket(req);
-    }
-
-    @Override
     public void deBindMarket(Long id) {
         marketRepository.deBindMarket(id);
     }

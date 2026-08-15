@@ -118,8 +118,8 @@ public class PurchaseRecordController {
      */
     @PostMapping("/queryPage")
     public PlatformResult<Page<PurchaseRecordVO>> queryPage(@RequestBody @Valid PurchaseRecordQuery query) {
-        Long role = SecurityUtils.getRoleId();
-        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(role)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.PLATFORM != role) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(purchaseRecordDomain.queryPage(query));
@@ -141,8 +141,8 @@ public class PurchaseRecordController {
      */
     @PostMapping("/goodsSeatPurchaseRecordExport")
     public void goodsSeatPurchaseRecordExport(@RequestBody @Valid PurchaseRecordQuery query) throws IOException {
-        Long role = SecurityUtils.getRoleId();
-        if (!RoleEnum.CompanyRole.PLATFORM.getCode().equals(role)) {
+        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        if (RoleEnum.CompanyRole.PLATFORM != role) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
         query.setAccountId(null);

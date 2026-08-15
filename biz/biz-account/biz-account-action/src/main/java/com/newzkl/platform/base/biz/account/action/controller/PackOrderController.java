@@ -101,9 +101,9 @@ public class PackOrderController {
     @PostMapping("packOrderPage")
     public PlatformResult<Page<PackOrderRes>> packOrderPage(@RequestBody PackOrderQuery query) {
         RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SELECTOR == role) {
-            query.setAccountId(SecurityUtils.getAccountId());
-        } else if (RoleEnum.CompanyRole.PLATFORM != role) {
+//        if (RoleEnum.CompanyRole.SELECTOR == role) {
+//            query.setAccountId(SecurityUtils.getAccountId());
+        if (RoleEnum.CompanyRole.PLATFORM != role) {
             throw new PlatformException(BaseErrorCode.NOT_SERVICE);
         }
         return PlatformResult.success(packOrderDomain.packOrderVOList(query));

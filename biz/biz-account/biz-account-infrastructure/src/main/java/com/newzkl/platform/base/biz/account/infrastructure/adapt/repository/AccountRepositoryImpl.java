@@ -1,44 +1,34 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
-import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
-import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Opt;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
-// TODO[infra-sms gateway]: import ...support.SmsMethod; (SmsApi=Forest外部短信网关, 出域, 未迁)
-import com.newzkl.platform.base.biz.account.model.support.VerificationCodeReq;
-import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
-import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.biz.account.model.support.UserProperties;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.AccountDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.AccountDO;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
-import com.newzkl.platform.base.biz.account.model.req.SubStructureReq;
-import com.newzkl.platform.base.biz.account.model.res.AccountOutRes;
-import com.newzkl.platform.base.biz.account.model.res.SubAccount;
-import com.newzkl.platform.base.biz.account.model.res.UpIdRes;
-import com.newzkl.platform.base.biz.account.model.res.UserCountRes;
-import com.newzkl.platform.base.biz.account.model.vo.*;
-import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.biz.account.model.req.ChildStructureReq;
+import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
+import com.newzkl.platform.base.biz.account.model.vo.AccountStructureVO;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
+import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+
+// TODO[infra-sms gateway]: import ...support.SmsMethod; (SmsApi=Forest外部短信网关, 出域, 未迁)
 
 /**
  * @author muc_fang
@@ -87,7 +77,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
     @Override
     public List<AccountStructureVO> findScopeSubAccountStructure(Long accountId) {
-        SubStructureReq req = new SubStructureReq();
+        ChildStructureReq req = new ChildStructureReq();
         req.setPid(accountId);
         return accountDAO.findScopeSubAccountStructure(accountId);
     }
@@ -185,26 +175,9 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
     }
 
     @Override
-    public void subAccountSave(SubAccount subAccount) {
-//        accountDAO.insert(accountAssembler.subAccountToDO(subAccount));
-    }
-
-    @Override
-    public void subAccountEdit(SubAccount subAccount) {
-//        accountDAO.updateByPrimaryKeySelective(accountAssembler.subAccountToDO(subAccount));
-    }
-
-    @Override
-    public SubAccount subAccount(Long id) {
-        AccountDO accountDO = accountDAO.selectById(id);
-//        return accountAssembler.doToSubAccount(accountDO);
-        return null;
-    }
-
-    @Override
     public void verificationCode(VerificationCodeReq verificationCodeReq) {
         // 若是测试且为通行验证码就直接放行
-        if (SecurityContextHolder.isDev() && UserProperties.isPassSmsCode(verificationCodeReq.getCode())) {
+        if (SecurityContextHolder.isDev()) {
             return;
         }
         // TODO[infra-sms gateway]: boolean isRight = SmsMethod.verificationCode(verificationCodeReq);
