@@ -153,5 +153,8 @@ public interface MQ {
          * @ext 触发各实例 ScanJob reload (BROADCASTING)
          */
         String JOB_CONTEXT_CLEAR = "JOB_CONTEXT_CLEAR";
+
+        String BI_TRIGGER_EVENT = "bi:trigger";
+        String BI_TRIGGER_EVENT_MESSAGE = "bi-trigger-message";
     }
 }
