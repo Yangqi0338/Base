@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.auth.infrastructure.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionRelationDO;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -23,7 +23,7 @@ public interface PermissionRelationDAO extends BaseMapper<PermissionRelationDO> 
      * @param sourceIds 源对象ID集合
      * @return 查询包装器
      */
-    default BaseLambdaQueryWrapper<PermissionRelationDO> getLw(RelationEnum.Type type, Collection<Long> sourceIds) {
+    default BaseLambdaQueryWrapper<PermissionRelationDO> getLw(PermissionEnum.RelationType type, Collection<Long> sourceIds) {
         return new BaseLambdaQueryWrapper<PermissionRelationDO>()
                 .notNullEq(PermissionRelationDO::getType, type)
                 .notEmptyIn(PermissionRelationDO::getSourceId, sourceIds);
@@ -36,7 +36,7 @@ public interface PermissionRelationDAO extends BaseMapper<PermissionRelationDO> 
      * @param targetIds 目标对象ID集合
      * @return 查询包装器
      */
-    default BaseLambdaQueryWrapper<PermissionRelationDO> getLwByTarget(RelationEnum.Type type, Collection<Long> targetIds) {
+    default BaseLambdaQueryWrapper<PermissionRelationDO> getLwByTarget(PermissionEnum.RelationType type, Collection<Long> targetIds) {
         return new BaseLambdaQueryWrapper<PermissionRelationDO>()
                 .notNullEq(PermissionRelationDO::getType, type)
                 .notEmptyIn(PermissionRelationDO::getTargetId, targetIds);

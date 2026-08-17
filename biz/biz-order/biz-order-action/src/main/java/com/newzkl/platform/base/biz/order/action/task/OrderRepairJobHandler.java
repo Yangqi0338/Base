@@ -19,7 +19,7 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
@@ -91,12 +91,12 @@ public class OrderRepairJobHandler {
             if(settlementConfigRpcVO == null){
                 ThrowsException.exception(BaseErrorCode.PARAM, "供应商结算配置异常");
             }
-            if(SettleType.ORDER_SUCCESS == settlementConfigRpcVO.getOrderType()){
+            if(EarningsEnum.SettleType.ORDER_SUCCESS == settlementConfigRpcVO.getOrderType()){
                 if(Collections.singletonList(OrderEnum.State.SUCCESS).contains(skuOrder.getOrderState())){
                     waitSettlementOrder.add(skuOrder);
                     waitSettlementOrderId.add(skuOrder.getId());
                 }
-            }else if(SettleType.RECEIVE == settlementConfigRpcVO.getOrderType()){
+            }else if(EarningsEnum.SettleType.RECEIVE == settlementConfigRpcVO.getOrderType()){
                 if(Arrays.asList(OrderEnum.State.DOWN_RECEIVE, OrderEnum.State.SUCCESS).contains(skuOrder.getOrderState())){
                     waitSettlementOrder.add(skuOrder);
                     waitSettlementOrderId.add(skuOrder.getId());
@@ -117,7 +117,7 @@ public class OrderRepairJobHandler {
                 v.setSkuCount(c.getCount());
                 v.setType(0);
             });
-            settleDomain.settleOrderWaitSave(commandList,SettleType.ORDER_SUCCESS);
+            settleDomain.settleOrderWaitSave(commandList, EarningsEnum.SettleType.ORDER_SUCCESS);
         }
     }
     /**
@@ -150,7 +150,7 @@ public class OrderRepairJobHandler {
                 //ThrowsException.exception(BaseErrorCode.PARAM, "供应商结算配置异常");
                 continue;
             }
-            if(SettleType.RECEIVE == settlementConfigVO.getOrderType()){
+            if(EarningsEnum.SettleType.RECEIVE == settlementConfigVO.getOrderType()){
                 if(CommonEnum.YesOrNo.NO == skuOrderVO.getSettleSendState()){
                     waitSettlementOrder.add(skuOrderVO);
                     waitSettlementOrderId.add(skuOrderVO.getId());
@@ -166,7 +166,7 @@ public class OrderRepairJobHandler {
             v.setSkuCount(c.getCount());
             v.setType(0);
         });
-        settleDomain.settleOrderWaitSave(commandList,SettleType.ORDER_SUCCESS);
+        settleDomain.settleOrderWaitSave(commandList, EarningsEnum.SettleType.ORDER_SUCCESS);
         //修改结算状态
         if(ObjectUtil.isNotEmpty(waitSettlementOrderId)){
             SkuOrderQuery skuQuery = new SkuOrderQuery();

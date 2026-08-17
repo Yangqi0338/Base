@@ -5,7 +5,6 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import lombok.Data;
 
@@ -68,10 +67,6 @@ public class SupplierVO extends BaseRes {
      */
     private Money shouldPromisePayAmount;
     /**
-     * 主体类型 (查询)
-     */
-    private AccountEnum.BodyType bodyType;
-    /**
      * 审批拒绝原因
      */
     private String auditRefuseReason;
@@ -131,10 +126,6 @@ public class SupplierVO extends BaseRes {
      * 联表:实名认证信息 : 格式:NameAuthVO
      */
     private String nameAuthVO;
-    /**
-     * 联表:实名认证审批状态
-     */
-    private CommonEnum.YesOrNo nameAuthAuditState;
     /**
      * 联表:邀请码
      */

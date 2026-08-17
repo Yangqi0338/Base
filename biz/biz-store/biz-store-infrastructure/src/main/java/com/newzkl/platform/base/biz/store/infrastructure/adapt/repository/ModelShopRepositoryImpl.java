@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaUpdateWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
-import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
 import com.newzkl.platform.base.biz.store.model.template.req.AuditModelShopReq;
@@ -18,6 +17,7 @@ import com.newzkl.platform.base.biz.store.infrastructure.entity.ModelShopDO;
 import com.newzkl.platform.base.biz.store.infrastructure.entity.ModelShopUseRecordDO;
 import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDataDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -89,20 +89,10 @@ public class ModelShopRepositoryImpl extends RepositorySupport implements ModelS
         );
     }
 
-    /**
-     * 新增使用门店数
-     */
-    @Override
-    public void updateUseStoreNum(String styleCode, Integer num) {
-        modelShopDAO.update(new LambdaUpdateWrapper<ModelShopDO>()
-                .setSql("use_store_num = use_store_num + (" + num + ")")
-                .eq(ModelShopDO::getStyleCode, styleCode));
-    }
-
     @Override
     public void updateModelShopData(ModelShopDataDTO dto) {
         BaseLambdaUpdateWrapper<ModelShopDO> wrapper = new BaseLambdaUpdateWrapper<>();
-        if (ObjectUtil.equals(ModeShopOrderType.PAY.name(), dto.getType())) {
+        if (ObjectUtil.equals(StoreStyleEnum.ModeShopOrderType.PAY.name(), dto.getType())) {
             wrapper.setSql("total_pay_amount = total_pay_amount + " + dto.getAmount())
                     .setSql("total_pay_num = total_pay_num + 1");
         }else {

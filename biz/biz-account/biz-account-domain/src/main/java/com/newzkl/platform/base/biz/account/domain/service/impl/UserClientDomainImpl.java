@@ -14,7 +14,6 @@ import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberImportExcelVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
@@ -24,7 +23,7 @@ import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -86,11 +85,6 @@ public class UserClientDomainImpl implements UserClientDomain {
     @Override
     public MemberVO member(Long memberId) {
         return memberRepository.member(memberId);
-    }
-
-    @Override
-    public void sendTencentCreateUserMsg(ImCreateUserAccountObj entity) {
-        memberRepository.sendTencentCreateUserMsg(entity);
     }
 
     @Override
@@ -223,13 +217,6 @@ public class UserClientDomainImpl implements UserClientDomain {
             }
             log.info("用户信息更新事务执行成功，accountId: {}, member更新: {}, account更新: {}",
                     accountId, isMemberUpdated, isAccountUpdated);
-//        });
-//        localMessageFacade.sendMessage(Tag.IM_UPDATE_USER_ACCOUNT_EVENT,
-//                new ImCreateUserAccountObj().setUserAccount(member.getUserAccount())
-//                        .setPhone(command.getNewPassword())
-//                        .setNickname(command.getNickname())
-//                        .setHeadImg(command.getHeadImg()),
-//                ImCreateUserAccountObj.class.getCanonicalName());
         log.info("用户信息更新完成，accountId: {}", accountId);
     }
 

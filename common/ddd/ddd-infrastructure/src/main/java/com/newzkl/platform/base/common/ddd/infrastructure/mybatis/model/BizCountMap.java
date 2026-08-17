@@ -2,6 +2,8 @@ package com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,4 +37,18 @@ public class BizCountMap extends ArrayList<Map<String, Object>> implements Seria
         return MapUtil.getInt(map, COUNT + row, 0);
     }
 
+    public BizCountMap camelKeyCountMap(){
+        this.forEach((map)-> {
+            map.forEach((k,v)-> {
+                if (!StrUtil.containsIgnoreCase(k,"count")) {
+                    MapUtil.renameKey(map, k, StrUtil.toCamelCase(k));
+                }
+            });
+        });
+        return this;
+    }
+
+    public <T> List<T> toList(Class<T> clazz){
+        return TransferUtils.transfers(this, clazz);
+    }
 }

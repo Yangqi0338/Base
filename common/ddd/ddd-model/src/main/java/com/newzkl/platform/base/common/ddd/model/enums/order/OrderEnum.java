@@ -134,45 +134,4 @@ public class OrderEnum {
                     .orElse(null);
         }
     }
-
-    @Getter
-    @AllArgsConstructor
-    public enum PayType implements IEnum<Integer> {
-
-        Direct(0, "直接"),
-        WX(1, "微信"),
-        ALIPAY(2, "支付宝"),
-        PURCHASE(3, "采购金"),
-        CDK(4, "兑换码"),
-        ;
-
-        @EnumValue
-        @JsonValue
-        private final Integer code;
-        private final String value;
-
-        public static PayType getByCode(Integer code) {
-            return Stream.of(PayType.values())
-                    .filter(extension -> extension.getCode().equals(code))
-                    .findFirst()
-                    .orElse(null);
-        }
-    }
-
-    /**
-     * 购买方式
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum BuyMode implements IEnum<Integer> {
-        ACTIVATE(0, "激活"),
-        SELF_BUYING(1, "自购"),
-        ;
-
-        @EnumValue
-        @JsonValue
-        private final Integer code;
-        private final String value;
-
-    }
 }

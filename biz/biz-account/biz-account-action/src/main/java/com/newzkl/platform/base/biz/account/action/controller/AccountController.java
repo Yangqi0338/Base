@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -100,8 +100,7 @@ public class AccountController {
     /**
      * 账号列表
      *
-     * <p>保留旧前置改写语义: {@code accountType} 为主账号时把 {@code mainAccountId} 钉为
-     * {@link AccountEnum#MAIN_ACCOUNT_PID}; 平台角色额外把 {@code stateOver} 钉为
+     * <p>保留旧前置改写语义: 平台角色把 {@code stateOver} 钉为
      * {@link AccountEnum.State#DESTROY}, 即平台可见含已销毁账号。</p>
      *
      * <p>迁移补充: 旧 {@code @EnableIdParse}(ID 明文/密文互转切面)未迁入 Base, 出参 ID 不再脱敏。</p>
@@ -113,9 +112,6 @@ public class AccountController {
     @Deprecated
     @PostMapping("/account/accountPage")
     public PlatformResult<Page<AccountVO>> accountPage(@RequestBody AccountQuery accountQuery) {
-        if (AccountEnum.SubUserType.MAIN == accountQuery.getAccountType()) {
-            accountQuery.setMainAccountId(AccountEnum.MAIN_ACCOUNT_PID);
-        }
         if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
             accountQuery.setStateOver(AccountEnum.State.DESTROY);
         }

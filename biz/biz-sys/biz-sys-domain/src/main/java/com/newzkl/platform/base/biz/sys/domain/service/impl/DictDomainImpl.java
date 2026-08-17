@@ -32,13 +32,18 @@ public class DictDomainImpl implements DictDomain {
     }
 
     @Override
+    public DictRes dictVOByCode(Long code) {
+        return dictRepository.dictVOByCode(code);
+    }
+
+    @Override
     public List<DictRes> dictList(DictQuery dictQuery) {
         return dictRepository.dictList(dictQuery);
     }
 
     @Override
-    public String nextCode(Long id) {
-        DictRes dictRes = dictRepository.dictVOLock(id);
+    public String nextCode(Long code) {
+        DictRes dictRes = dictRepository.dictVOByCodeLock(code);
         String value;
         if (dictRes == null || dictRes.getValue() == null) {
             value = "1";
@@ -46,7 +51,7 @@ public class DictDomainImpl implements DictDomain {
             value = Long.toString(Long.parseLong(dictRes.getValue()) + 1);
         }
         DictReq dict = new DictReq();
-        dict.setId(id);
+        dict.setCode(code);
         dict.setValue(value);
         dictRepository.dictSave(toVO(dict));
         return value;
@@ -61,6 +66,7 @@ public class DictDomainImpl implements DictDomain {
     private DictRes toVO(DictReq req) {
         DictRes vo = new DictRes();
         vo.setId(req.getId());
+        vo.setCode(req.getCode());
         vo.setValue(req.getValue());
         vo.setDesc(req.getDesc());
         return vo;

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.domain.service;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 
 public interface ThirdPartyGoodsDomain {
 
@@ -18,6 +18,6 @@ public interface ThirdPartyGoodsDomain {
      * @param requestStatus 请求状态
      * @param errorMessage  错误信息 可空
      */
-    void recordAction(PlatformTypeEnum platformType, String outSpuId, String interfaceName,
+    void recordAction(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String outSpuId, String interfaceName,
                       String requestJson, String responseJson, CommonEnum.RequestStatusEnum requestStatus, String errorMessage);
 }

@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.auth.model.oauth.res.LoginRes;
 import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;

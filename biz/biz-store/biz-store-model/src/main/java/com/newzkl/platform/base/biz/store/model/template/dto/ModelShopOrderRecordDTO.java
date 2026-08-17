@@ -1,11 +1,9 @@
 package com.newzkl.platform.base.biz.store.model.template.dto;
 
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * 样板店订单记录实体类
@@ -27,7 +25,7 @@ public class ModelShopOrderRecordDTO extends BaseDTO {
     /**
      * 订单类型
      */
-    private ModeShopOrderType type;
+    private StoreStyleEnum.ModeShopOrderType type;
 
     /**
      * 金额

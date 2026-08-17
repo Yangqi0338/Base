@@ -20,7 +20,7 @@ import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.common.ddd.model.constant.RoleErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

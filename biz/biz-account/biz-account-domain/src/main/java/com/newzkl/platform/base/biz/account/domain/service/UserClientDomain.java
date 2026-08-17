@@ -5,7 +5,6 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,8 +25,6 @@ public interface UserClientDomain {
     void memberEdit(List<EditColumnVO> editColumnList, Long id);
 
     MemberVO member(Long memberId);
-
-    void sendTencentCreateUserMsg(ImCreateUserAccountObj entity);
 
     /**
      * 模糊查询

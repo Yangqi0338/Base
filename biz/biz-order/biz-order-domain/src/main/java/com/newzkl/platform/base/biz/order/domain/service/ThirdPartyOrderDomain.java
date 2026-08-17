@@ -3,11 +3,11 @@ package com.newzkl.platform.base.biz.order.domain.service;
 
 import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 
 public interface ThirdPartyOrderDomain {
 
-    ThirdPartyOrderRecordDTO createRecord(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, Object requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus, String errorMessage);
+    ThirdPartyOrderRecordDTO createRecord(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, Object requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus, String errorMessage);
 
     /**
      * 记录一次三方动作(下单/补偿等) 追加式动作日志 每次调用落一行 不做按业务订单号去重
@@ -24,6 +24,6 @@ public interface ThirdPartyOrderDomain {
      * @param requestStatus 请求状态
      * @param errorMessage  错误信息 可空
      */
-    void recordAction(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, String thirdOrderNo,
+    void recordAction(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, String thirdOrderNo,
                       String requestJson, String responseJson, CommonEnum.RequestStatusEnum requestStatus, String errorMessage);
 }

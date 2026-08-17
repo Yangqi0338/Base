@@ -14,6 +14,11 @@ import lombok.EqualsAndHashCode;
 public class DictRes extends BaseRes {
 
     /**
+     * 字典业务键
+     */
+    private Long code;
+
+    /**
      * 字典值
      */
     private String value;

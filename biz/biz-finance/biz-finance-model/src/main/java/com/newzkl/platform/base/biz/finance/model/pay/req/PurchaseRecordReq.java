@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.req;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
@@ -58,7 +59,7 @@ public class PurchaseRecordReq extends BaseRes {
     /**
      * 支付方式
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 支付状态

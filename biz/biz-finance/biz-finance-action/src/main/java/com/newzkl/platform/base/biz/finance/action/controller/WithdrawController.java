@@ -9,7 +9,6 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyAuditReq
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.TripartiteWithdrawRecordQuery;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -47,28 +46,6 @@ public class WithdrawController {
 
     private final WithdrawDomain withdrawDomain;
     private final WithdrawService withdrawService;
-
-    /**
-     * 查询提现配置
-     *
-     * @return 提现配置
-     */
-    @PostMapping("/queryWithdrawConfig")
-    public PlatformResult<ConfigWithdrawVO> queryWithdrawConfig() {
-        return PlatformResult.success(withdrawDomain.defaultWithdrawConfig());
-    }
-
-    /**
-     * 更新提现配置
-     *
-     * @param saveCommand 提现配置
-     * @return 成功结果
-     */
-    @PostMapping("/alterWithdrawConfig")
-    public PlatformResult<Boolean> alterWithdrawConfig(@RequestBody ConfigWithdrawVO saveCommand) {
-        withdrawDomain.alterWithdrawConfig(saveCommand);
-        return PlatformResult.success();
-    }
 
     /**
      * 转出申请

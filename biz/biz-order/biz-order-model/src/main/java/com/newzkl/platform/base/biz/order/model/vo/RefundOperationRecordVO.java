@@ -1,9 +1,8 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -69,7 +68,7 @@ public class RefundOperationRecordVO implements Serializable {
     /**
      * 操作类型
      */
-    private RefundOperateTypeEnum operationType;
+    private com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum operationType;
 
     /**
      * 操作内容描述

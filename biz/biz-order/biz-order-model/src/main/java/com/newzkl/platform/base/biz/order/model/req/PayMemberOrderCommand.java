@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;
@@ -20,5 +20,5 @@ public class PayMemberOrderCommand {
      * 支付类型
      */
     @NotNull(message = "paymentType不能为空")
-    private OrderEnum.PayType paymentType;
+    private PaymentEnum.PayType paymentType;
 }

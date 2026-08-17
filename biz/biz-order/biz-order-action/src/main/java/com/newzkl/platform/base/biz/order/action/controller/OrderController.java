@@ -1,7 +1,5 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Opt;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,12 +16,11 @@ import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +31,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 交易-订单

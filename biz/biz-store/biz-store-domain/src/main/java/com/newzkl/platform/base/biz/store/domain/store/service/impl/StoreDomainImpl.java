@@ -13,7 +13,6 @@ import com.newzkl.platform.base.biz.store.domain.store.repository.StoreRepositor
 import com.newzkl.platform.base.biz.store.domain.store.repository.StoreStyleRepository;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreCategoryDomain;
 import com.newzkl.platform.base.biz.store.domain.store.service.StoreDomain;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +49,6 @@ public class StoreDomainImpl implements StoreDomain {
                 v.setMerchantId(c.getId());
                 v.setChannelId(c.getId());
             }
-            v.setCustomNumber(0);
-            v.setSelectionNumber(0);
-            v.setDealerNumber(0);
-            // 成交金额初始 0 元 (Money)
-            v.setDealerAmount(Money.ZERO);
             v.setLogo("https://zztp.zzxyg88.com/stores/storeLogo.png");
         });
         // 新建默认模板

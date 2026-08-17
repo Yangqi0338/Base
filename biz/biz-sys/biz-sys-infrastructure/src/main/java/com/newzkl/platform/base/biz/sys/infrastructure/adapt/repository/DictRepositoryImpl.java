@@ -32,6 +32,15 @@ public class DictRepositoryImpl implements DictRepository {
     @Transactional(rollbackFor = Exception.class)
     public Long dictSave(DictRes dict) {
         DictDO dictDO = TransferUtils.transfer(dict, DictDO::new);
+        // id 缺省而 code 存在时, 按业务键 code 定位既有行(实现 code 与物理主键解耦):
+        // 命中则复用其 id 更新, 否则新增(id 由雪花生成)
+        if (dictDO.getId() == null && dictDO.getCode() != null) {
+            DictDO exist = dictDAO.selectOne(new BaseLambdaQueryWrapper<DictDO>()
+                    .eq(DictDO::getCode, dictDO.getCode()));
+            if (exist != null) {
+                dictDO.setId(exist.getId());
+            }
+        }
         dictDAO.insertOrUpdate(dictDO);
         return dictDO.getId();
     }
@@ -54,6 +63,13 @@ public class DictRepositoryImpl implements DictRepository {
     }
 
     @Override
+    public DictRes dictVOByCode(Long code) {
+        DictDO dictDO = dictDAO.selectOne(new BaseLambdaQueryWrapper<DictDO>()
+                .eq(DictDO::getCode, code));
+        return TransferUtils.transfer(dictDO, DictRes::new);
+    }
+
+    @Override
     public List<DictRes> dictList(DictQuery dictQuery) {
         Page<DictDO> page = dictDAO.selectPage(RepositorySupport.page(dictQuery), dictDAO.getLw(dictQuery));
         return TransferUtils.transfers(page.getRecords(), DictRes::new);
@@ -63,6 +79,14 @@ public class DictRepositoryImpl implements DictRepository {
     public DictRes dictVOLock(Long id) {
         DictDO dictDO = dictDAO.selectOne(new BaseLambdaQueryWrapper<DictDO>()
                 .eq(DictDO::getId, id)
+                .last("for update"));
+        return TransferUtils.transfer(dictDO, DictRes::new);
+    }
+
+    @Override
+    public DictRes dictVOByCodeLock(Long code) {
+        DictDO dictDO = dictDAO.selectOne(new BaseLambdaQueryWrapper<DictDO>()
+                .eq(DictDO::getCode, code)
                 .last("for update"));
         return TransferUtils.transfer(dictDO, DictRes::new);
     }

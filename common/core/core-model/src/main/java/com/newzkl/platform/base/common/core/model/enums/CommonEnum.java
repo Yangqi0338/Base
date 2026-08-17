@@ -51,7 +51,7 @@ public class CommonEnum {
         /** 后台端 */
         USER("user", "用户端"),
         /** 服务商端 */
-        SERVICE("service", "服务商端"),
+        PARTNER("partner", "服务商端"),
         /** 渠道商端 */
         CHANNEL("channel", "渠道商端"),
         /** 供应商端 */

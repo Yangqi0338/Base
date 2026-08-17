@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.query;
 
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

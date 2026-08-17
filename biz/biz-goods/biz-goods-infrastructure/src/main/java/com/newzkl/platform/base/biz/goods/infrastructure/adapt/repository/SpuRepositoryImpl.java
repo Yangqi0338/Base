@@ -90,7 +90,15 @@ public class SpuRepositoryImpl implements SpuRepository {
      * SpuDO 与 DTO/VO 之间类型不一致、需显式转换的属性
      */
     private static final String[] SPU_ENUM_PROPS =
-            {"goodsType", "state", "deliverTimeType", "auditState", "specType"};
+            {"state", "deliverTimeType", "auditState"};
+
+    /**
+     * SpuDO 上已删除、下沉到 expand JSON 的属性 (拷贝时排除, 由 expand 单独承载)
+     */
+    private static final String[] SPU_EXPAND_PROPS =
+            {"categoryName", "brandName", "accountName",
+             "marketPriceBegan", "marketPriceEnd", "salePriceBegan", "salePriceEnd",
+             "supplierPriceBegan", "supplierPriceEnd"};
 
     private final SpuDAO spuDAO;
     private final SkuDAO skuDAO;
@@ -117,11 +125,10 @@ public class SpuRepositoryImpl implements SpuRepository {
             return null;
         }
         return TransferUtils.transfer(spuDO, SpuDTO::new, (s, d) -> {
-            d.setGoodsType(s.getGoodsType() == null ? null : s.getGoodsType().getCode());
             d.setState(s.getState() == null ? null : s.getState().getCode());
             d.setDeliverTimeType(s.getDeliverTimeType() == null ? null : s.getDeliverTimeType().getCode());
             d.setAuditState(s.getAuditState() == null ? null : s.getAuditState().getCode());
-            d.setSpecType(s.getSpecType() == null ? null : s.getSpecType().name());
+            expandToDto(s.getExpand(), d);
         }, ignoring(SPU_ENUM_PROPS));
     }
 
@@ -186,19 +193,6 @@ public class SpuRepositoryImpl implements SpuRepository {
         LambdaUpdateWrapper<SpuDO> wrapper = new LambdaUpdateWrapper<>();
         wrapper.set(SpuDO::getState, stateOf(state)).in(SpuDO::getId, spuIdList);
         return spuDAO.update(null, wrapper);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void spuSelectorNumAdd(List<Long> spuIdList, Integer num) {
-        if (CollUtil.isEmpty(spuIdList) || num == null) {
-            return;
-        }
-        LambdaUpdateWrapper<SpuDO> wrapper = new LambdaUpdateWrapper<>();
-        // num 为 Integer, 拼接不存在注入面
-        wrapper.setSql("selection_num = IFNULL(selection_num, 0) + " + num)
-                .in(SpuDO::getId, spuIdList);
-        spuDAO.update(null, wrapper);
     }
 
     @Override
@@ -437,17 +431,13 @@ public class SpuRepositoryImpl implements SpuRepository {
                 .notEmptyIn(SpuDO::getState, query.getStateList())
                 .notEmptyIn(SpuDO::getAuditState, query.getAuditStateList())
                 .notEmptyLike(SpuDO::getName, query.getName())
-                .notEmptyLike(SpuDO::getTitle, query.getTitle())
-                .notEmptyLike(SpuDO::getAccountName, query.getAccountName());
-        wrapper.notEmptyEq(SpuDO::getGoodsType, saleTypeOf(query.getGoodsType()))
-                .notEmptyEq(SpuDO::getDeliverTimeType, query.getDeliverTimeType())
+                .notEmptyLike(SpuDO::getTitle, query.getTitle());
+        wrapper.notEmptyEq(SpuDO::getDeliverTimeType, query.getDeliverTimeType())
                 .notEmptyEq(SpuDO::getChannelType, query.getChannelType())
-                .notEmptyEq(SpuDO::getSpecType, query.getSpecType())
                 .notEmptyEq(SpuDO::getRole, query.getRole())
                 .notEmptyEq(SpuDO::getBrandId, query.getBrandId())
                 .notEmptyEq(SpuDO::getFreightTemplateId, query.getFreightTemplateId())
                 .notEmptyEq(SpuDO::getOutSpuId, query.getOutSpuId())
-                .notEmptyEq(SpuDO::getMinPricingNum, query.getMinPricingNum())
                 // 价格列已 Money 化, 区间入参 (SpuQuery 分 Integer) 显式 Money.of(分) 后 doBetween
                 .doBetween(SpuDO::getSupplyPrice, moneyBound(query.getSupplyPriceStart()), moneyBound(query.getSupplyPriceEnd()))
                 .doBetween(SpuDO::getSalePrice, moneyBound(query.getSalePriceStart()), moneyBound(query.getSalePriceEnd()))
@@ -516,12 +506,11 @@ public class SpuRepositoryImpl implements SpuRepository {
      */
     private SpuDO toSpuDO(SpuDTO dto) {
         return TransferUtils.transfer(dto, SpuDO::new, (s, d) -> {
-            d.setGoodsType(saleTypeOf(s.getGoodsType()));
             d.setState(stateOf(s.getState()));
             d.setDeliverTimeType(deliverTimeTypeOf(s.getDeliverTimeType()));
             d.setAuditState(AuditEnum.State.getByCode(s.getAuditState()));
-            d.setSpecType(specTypeOf(s.getSpecType()));
-        }, ignoring(SPU_ENUM_PROPS));
+            d.setExpand(dtoToExpand(s));
+        }, ignoring(ignoringSpuDo()));
     }
 
     /**
@@ -532,11 +521,10 @@ public class SpuRepositoryImpl implements SpuRepository {
      */
     private SpuVO toSpuVO(SpuDO spuDO) {
         return TransferUtils.transfer(spuDO, SpuVO::new, (s, v) -> {
-            v.setGoodsType(s.getGoodsType() == null ? null : s.getGoodsType().getCode());
             v.setState(s.getState() == null ? null : s.getState().getCode());
             v.setDeliverTimeType(s.getDeliverTimeType() == null ? null : s.getDeliverTimeType().getCode());
             v.setAuditState(s.getAuditState() == null ? null : s.getAuditState().getCode());
-            v.setSpecType(s.getSpecType() == null ? null : s.getSpecType().name());
+            expandToVo(s.getExpand(), v);
         }, ignoring(SPU_ENUM_PROPS));
     }
 
@@ -606,6 +594,83 @@ public class SpuRepositoryImpl implements SpuRepository {
     }
 
     /**
+     * SpuDTO 转 SpuDO 时需排除的属性 (枚举显式转 + 下沉 expand 的字段)
+     *
+     * @return 需排除的属性名数组
+     */
+    private static String[] ignoringSpuDo() {
+        String[] merged = new String[SPU_ENUM_PROPS.length + SPU_EXPAND_PROPS.length];
+        System.arraycopy(SPU_ENUM_PROPS, 0, merged, 0, SPU_ENUM_PROPS.length);
+        System.arraycopy(SPU_EXPAND_PROPS, 0, merged, SPU_ENUM_PROPS.length, SPU_EXPAND_PROPS.length);
+        return merged;
+    }
+
+    /**
+     * 将 SpuDTO 的下沉字段序列化为 expand JSON
+     *
+     * <p>价格 begin/end 由 SKU 聚合而来, 加冗余 name 字段, 统一落 expand JSON 列, 不再各占 SpuDO 独立列。
+     * 全为 null 时返回 null, 避免落库空 JSON。</p>
+     *
+     * @param dto SPU 操作对象
+     * @return expand JSON 字符串, 无有效字段时 null
+     */
+    private static String dtoToExpand(SpuDTO dto) {
+        com.alibaba.fastjson2.JSONObject json = new com.alibaba.fastjson2.JSONObject();
+        json.put("categoryName", dto.getCategoryName());
+        json.put("brandName", dto.getBrandName());
+        json.put("accountName", dto.getAccountName());
+        json.put("marketPriceBegan", dto.getMarketPriceBegan());
+        json.put("marketPriceEnd", dto.getMarketPriceEnd());
+        json.put("salePriceBegan", dto.getSalePriceBegan());
+        json.put("salePriceEnd", dto.getSalePriceEnd());
+        json.put("supplierPriceBegan", dto.getSupplierPriceBegan());
+        json.put("supplierPriceEnd", dto.getSupplierPriceEnd());
+        return json.values().stream().allMatch(Objects::isNull) ? null : json.toJSONString();
+    }
+
+    /**
+     * 从 expand JSON 回填 SpuDTO 的下沉字段
+     *
+     * @param expand expand JSON 字符串
+     * @param dto    待回填的 SPU 操作对象
+     */
+    private static void expandToDto(String expand, SpuDTO dto) {
+        if (expand == null || expand.isBlank()) {
+            return;
+        }
+        com.alibaba.fastjson2.JSONObject json = com.alibaba.fastjson2.JSON.parseObject(expand);
+        dto.setCategoryName(json.getString("categoryName"));
+        dto.setBrandName(json.getString("brandName"));
+        dto.setAccountName(json.getString("accountName"));
+        dto.setMarketPriceBegan(json.getObject("marketPriceBegan", Money.class));
+        dto.setMarketPriceEnd(json.getObject("marketPriceEnd", Money.class));
+        dto.setSalePriceBegan(json.getObject("salePriceBegan", Money.class));
+        dto.setSalePriceEnd(json.getObject("salePriceEnd", Money.class));
+        dto.setSupplierPriceBegan(json.getObject("supplierPriceBegan", Money.class));
+        dto.setSupplierPriceEnd(json.getObject("supplierPriceEnd", Money.class));
+    }
+
+    /**
+     * 从 expand JSON 回填 SpuVO 的下沉字段
+     *
+     * @param expand expand JSON 字符串
+     * @param vo     待回填的 SPU 视图对象
+     */
+    private static void expandToVo(String expand, SpuVO vo) {
+        if (expand == null || expand.isBlank()) {
+            return;
+        }
+        com.alibaba.fastjson2.JSONObject json = com.alibaba.fastjson2.JSON.parseObject(expand);
+        vo.setAccountName(json.getString("accountName"));
+        vo.setMarketPriceBegan(json.getObject("marketPriceBegan", Money.class));
+        vo.setMarketPriceEnd(json.getObject("marketPriceEnd", Money.class));
+        vo.setSalePriceBegan(json.getObject("salePriceBegan", Money.class));
+        vo.setSalePriceEnd(json.getObject("salePriceEnd", Money.class));
+        vo.setSupplierPriceBegan(json.getObject("supplierPriceBegan", Money.class));
+        vo.setSupplierPriceEnd(json.getObject("supplierPriceEnd", Money.class));
+    }
+
+    /**
      * 分区间边界 (Integer 分) 显式升 Money, null 保持 null 以便 doBetween 跳过该侧条件
      *
      * @param cent 分, 可为 null
@@ -628,24 +693,6 @@ public class SpuRepositoryImpl implements SpuRepository {
         for (SpuEnum.State state : SpuEnum.State.values()) {
             if (state.getCode().equals(code)) {
                 return state;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * code 转商品类型枚举
-     *
-     * @param code 商品类型码
-     * @return 商品类型枚举, 无匹配返回 null
-     */
-    private static SpuEnum.SaleType saleTypeOf(Integer code) {
-        if (code == null) {
-            return null;
-        }
-        for (SpuEnum.SaleType saleType : SpuEnum.SaleType.values()) {
-            if (saleType.getCode().equals(code)) {
-                return saleType;
             }
         }
         return null;
@@ -687,25 +734,5 @@ public class SpuRepositoryImpl implements SpuRepository {
         return null;
     }
 
-    /**
-     * 名称转规格类型枚举
-     *
-     * <p>DTO/VO 侧的 specType 存的是枚举 name (见 {@code SpuDomainImpl.setSpecType}),
-     * 而非 code。</p>
-     *
-     * @param name 规格类型枚举名
-     * @return 规格类型枚举, 无匹配返回 null
-     */
-    private static SpuEnum.SpecType specTypeOf(String name) {
-        if (name == null || name.isBlank()) {
-            return null;
-        }
-        for (SpuEnum.SpecType type : SpuEnum.SpecType.values()) {
-            if (type.name().equals(name)) {
-                return type;
-            }
-        }
-        return null;
-    }
 }
 

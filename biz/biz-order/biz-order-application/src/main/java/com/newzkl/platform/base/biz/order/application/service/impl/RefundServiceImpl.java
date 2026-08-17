@@ -24,11 +24,10 @@ import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +66,7 @@ public class RefundServiceImpl implements RefundService {
         RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
         RefundDTO refund = refundCreateRes.getRefund();
         // 发送协商记录
-        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.LAUNCH_REFUND);
 //        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
         //如果是派发中订单, 售后自动通过
         if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
@@ -104,7 +103,7 @@ public class RefundServiceImpl implements RefundService {
         RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
         RefundDTO refund = refundCreateRes.getRefund();
         // 发送协商记录
-        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.LAUNCH_REFUND);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.LAUNCH_REFUND);
 //        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
         //如果是派发中订单, 售后自动通过
         if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
@@ -120,17 +119,17 @@ public class RefundServiceImpl implements RefundService {
         if(CommonEnum.YesOrNo.YES == execute){
             refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.SUPPLIER);
 
-            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE: RefundOperateTypeEnum.SUPPLIER_AGREE;
+            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_AGREE;
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), refundOperateTypeEnum);
         }else {refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.SUPPLIER, "");
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), RefundOperateTypeEnum.SUPPLIER_REFUSE);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_REFUSE);
         }
 
         //售后通过处理
         if(refundAuditRes.isRefundPass()){
             doRefundPassForChannel(refundAuditRes);
-            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS:RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS, RefundOperateTypeEnum.REFUND_MONEY_SUCCESS);
+            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS);
         }
         RefundDTO refund = refundAuditRes.getRefund();
 
@@ -154,11 +153,11 @@ public class RefundServiceImpl implements RefundService {
         RefundAuditRes refundAuditRes = null;
         if(CommonEnum.YesOrNo.YES == execute){
             refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.CHANNEL);
-            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE:RefundOperateTypeEnum.CHANNEL_AGREE;
+            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_AGREE;
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refundOperateTypeEnum);
         }else {
             refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.CHANNEL, reason);
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), RefundOperateTypeEnum.CHANNEL_REFUSE);
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_REFUSE);
         }
 
         //售后通过处理
@@ -172,7 +171,7 @@ public class RefundServiceImpl implements RefundService {
             }else {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
-            RefundOperateTypeEnum refundOperateTypeEnum = isAudit?RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS:RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
+            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS,  refundOperateTypeEnum);
         }
     }
@@ -289,6 +288,6 @@ public class RefundServiceImpl implements RefundService {
             doRefundPassForChannel(refundAuditRes);
         }
         RefundDTO refund = refundAuditRes.getRefund();
-        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.RECEIVE_WAIT, refund.getRefundState(), RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.RECEIVE_WAIT, refund.getRefundState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
     }
 }

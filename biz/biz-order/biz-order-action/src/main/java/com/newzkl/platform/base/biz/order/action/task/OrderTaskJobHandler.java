@@ -27,7 +27,6 @@ import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
@@ -215,7 +214,7 @@ public class OrderTaskJobHandler {
                 refundService.supplierAudit(refundVO.getId(), CommonEnum.YesOrNo.YES, true);
             }else if(RefundEnum.State.RECEIVE_WAIT == refundVO.getRefundState()){
                 refundDomain.confirmRefundFreight(refundVO.getId());
-                localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.RECEIVE_WAIT, RefundEnum.State.RECEIVE_WAIT, RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
+                localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.RECEIVE_WAIT, RefundEnum.State.RECEIVE_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);
             }
         }
         log.info("自动售后同意");
@@ -254,7 +253,7 @@ public class OrderTaskJobHandler {
             refundEdit.setFreightExt(freightExt);
             refundRepository.updateState(refundEdit, refundVO.getId(), refundVO.getOrderType(), refundVO.getRefundState(), RefundEnum.State.CLOSE, refundVO.getChannelId());
             refundDomain.skuOrderEditForRefundClose(refundVO.getSpuOrderId(), refundVO.getItem());
-            localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, RefundOperateTypeEnum.BUYER_TIMEOUT_CLOSE);
+            localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.BUYER_TIMEOUT_CLOSE);
             log.info("当前售后单（商家拒绝）超时自动关闭：{}",refundVO.getId());
         }
 

@@ -2,8 +2,7 @@ package com.newzkl.platform.base.biz.account.application.service;
 
 
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
-import com.newzkl.platform.base.biz.account.model.vo.PromiseFlowVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 /**
  * @author muc_fang

@@ -1,14 +1,11 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.repository;
 
-import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.infrastructure.dao.MemberDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.MemberDO;
 import com.newzkl.platform.base.biz.account.model.req.MemberQuery;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -83,11 +80,6 @@ public class MemberRepositoryImpl implements MemberRepository {
         query.setNickname(nickname);
         List<MemberDO> memberVOS = memberDAO.selectList(memberDAO.getLw(query));
         return TransferUtils.transfers(memberVOS, MemberVO.class);
-    }
-
-    @Override
-    public void sendTencentCreateUserMsg(ImCreateUserAccountObj entity) {
-        MQUtil.send(MQ.Tag.IM_CREAT_USER_ACCOUNT_EVENT, entity);
     }
 
 }

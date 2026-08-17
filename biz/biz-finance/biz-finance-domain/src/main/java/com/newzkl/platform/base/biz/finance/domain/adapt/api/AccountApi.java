@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 /**
  * 账户域跨服务出站端口 (outbound port)

@@ -62,11 +62,6 @@ public class ModelShopRes {
     private String createName;
 
     /**
-     * 使用门店数
-     */
-    private Integer useStoreNum;
-
-    /**
      * 来源模板code
      */
     private String sourceCode;

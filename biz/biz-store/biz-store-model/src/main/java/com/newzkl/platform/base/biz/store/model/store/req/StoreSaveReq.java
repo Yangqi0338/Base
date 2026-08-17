@@ -26,18 +26,6 @@ public class StoreSaveReq {
      */
     private String address;
     /**
-     * 经度
-     */
-    private Double longitude;
-    /**
-     * 纬度
-     */
-    private Double latitude;
-    /**
-     * 管理员ID
-     */
-    private Long managerId;
-    /**
      * 模板ID
      */
     private Long templateId;
@@ -49,10 +37,6 @@ public class StoreSaveReq {
      * 是否是样板店
      */
     private Integer isModelShop;
-    /**
-     * 售后地址
-     */
-    private String refundAddress;
     /**
      * 门店类型
      */

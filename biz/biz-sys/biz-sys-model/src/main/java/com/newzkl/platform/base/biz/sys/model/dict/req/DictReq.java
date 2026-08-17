@@ -20,6 +20,10 @@ public class DictReq {
      */
     private Long id;
     /**
+     * 字典业务键
+     */
+    private Long code;
+    /**
      * 字典值
      */
     private String value;

@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 /**

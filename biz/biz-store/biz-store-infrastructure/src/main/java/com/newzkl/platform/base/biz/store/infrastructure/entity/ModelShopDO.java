@@ -6,13 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
-import org.dromara.mpe.autofill.annotation.JsonSerializable;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 样板店
@@ -39,27 +34,6 @@ public class ModelShopDO extends BaseDO {
     private String modelDescription;
 
     /**
-     * 运营商id
-     */
-    @Index
-    private Long operatorId;
-
-    /**
-     * 分润配置
-     */
-    @JsonSerializable
-    private String earningConfig;
-
-    /**
-     * 渠道商收益
-     */
-    private Money channelEarning;
-
-    /**
-     * 总收益
-     */
-
-    /**
      * 审核状态
      */
     @Index
@@ -75,31 +49,6 @@ public class ModelShopDO extends BaseDO {
      */
     @Index
     private String styleCode;
-
-    /**
-     * 使用门店数
-     */
-    private Integer useStoreNum;
-
-    /**
-     * 累计使用门店数
-     */
-
-    /**
-     * 累计下单金额
-     */
-
-    /**
-     * 累计下单数
-     */
-
-    /**
-     * 累计支付金额
-     */
-
-    /**
-     * 累计支付订单数
-     */
 
     /**
      * 状态:0正常，1已禁用

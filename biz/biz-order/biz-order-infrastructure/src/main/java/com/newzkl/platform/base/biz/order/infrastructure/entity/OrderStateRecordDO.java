@@ -3,14 +3,12 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.OldColumnName;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
-
-import java.time.LocalDateTime;
 
 /**
  * 订单状态记录表 DO

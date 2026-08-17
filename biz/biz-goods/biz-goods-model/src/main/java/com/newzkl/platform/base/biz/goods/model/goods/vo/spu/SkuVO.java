@@ -22,10 +22,6 @@ public class SkuVO extends BaseRes {
      */
      private String img;
      /**
-     * 条形码
-     */
-     private String barCode;
-     /**
      * 名称
      */
      @NotEmpty
@@ -39,14 +35,6 @@ public class SkuVO extends BaseRes {
       * 补偿字段. 设计初应将 saleAttribute字段 设计为字符串
       */
      private String saleAttributeJson;
-     /**
-     * 重量(千克)
-     */
-     private Double weight;
-     /**
-     * 体积(m3)
-     */
-     private Double volume;
      /**
      * spuId (查询)
      */

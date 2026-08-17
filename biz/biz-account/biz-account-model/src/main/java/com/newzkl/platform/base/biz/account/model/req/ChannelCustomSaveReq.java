@@ -1,8 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,11 +43,6 @@ public class ChannelCustomSaveReq implements Serializable {
     private String headImg;
 
     /**
-     * 主体类型
-     */
-    private AccountEnum.BodyType bodyType;
-
-    /**
      * 联系方式
      */
     private String contactsWay;
@@ -72,11 +65,6 @@ public class ChannelCustomSaveReq implements Serializable {
      * 营业执照
      */
     private String license;
-
-    /**
-     * 渠道商类型
-     */
-    private ChannelEnum.ChannelType channelType;
 
     /**
      * 数字门店权限

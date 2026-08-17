@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.application.goods.ext.impl;
 
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.ext.SpuQueryExt;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityImpl;
 import lombok.RequiredArgsConstructor;

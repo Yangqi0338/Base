@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayServi
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.FinanceErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
@@ -92,7 +92,7 @@ class PayOrderControllerTest {
         assertEquals(10000, req.getPayAmount().getCent());
         assertEquals(ACCOUNT_ID, req.getAccountId());
         assertEquals(ACCOUNT_NAME, req.getAccountName());
-        assertEquals(OrderEnum.PayType.WX, req.getPayType());
+        assertEquals(PaymentEnum.PayType.WX, req.getPayType());
         assertEquals("采购金", req.getGoodsInfo());
         assertEquals("{\"level\":1}", req.getOrderInfo());
     }
@@ -105,7 +105,7 @@ class PayOrderControllerTest {
 
         payOrderController.channelRecharge(500, 2);
 
-        assertEquals(OrderEnum.PayType.ALIPAY, captureOrderPayReq().getPayType());
+        assertEquals(PaymentEnum.PayType.ALIPAY, captureOrderPayReq().getPayType());
     }
 
     @Test

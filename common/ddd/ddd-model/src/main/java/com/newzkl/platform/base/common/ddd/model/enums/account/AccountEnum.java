@@ -13,46 +13,7 @@ import lombok.Getter;
 @Data
 public class AccountEnum {
 
-    public static final Long MAIN_ACCOUNT_PID = 0L;
     public static final String USER_DEFAULT_PASSWORD = "123456";
-
-    /**
-     * 子用户类型
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum SubUserType implements IEnum<Integer> {
-        /**
-         * 主账号
-         */
-        MAIN(0, "主账号"),
-        /** 子账号 */
-        ACCOUNT(1, "子账号"),
-        /** 子客户 */
-        MEMBER(2, "子客户"),
-        ;
-        @EnumValue
-        @JsonValue
-        private final Integer code;
-        private final String value;
-    }
-
-    /**
-     * 主体类型
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum BodyType implements IEnum<Integer> {
-        /** 企业 */
-        COMPANY(0, "企业"),
-        /** 个人 */
-        PERSON(1, "个人"),
-        ;
-        @EnumValue
-        @JsonValue
-        private final Integer code;
-        private final String value;
-    }
 
     /**
      * 账号状态
@@ -103,28 +64,4 @@ public class AccountEnum {
         }
     }
 
-    /**
-     * 账号状态
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum ImSyncState implements IEnum<Integer> {
-        /**
-         * 未同步
-         */
-        INIT(0, "未同步"),
-        /**
-         * 已同步
-         */
-        SYNC(1, "已同步"),
-        /**
-         * 同步失败
-         */
-        FAIL(2, "同步失败"),
-        ;
-        @EnumValue
-        @JsonValue
-        private final Integer code;
-        private final String value;
-    }
 }

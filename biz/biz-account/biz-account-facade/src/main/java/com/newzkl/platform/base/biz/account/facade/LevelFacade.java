@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.account.facade;
 import com.newzkl.platform.base.common.ddd.facade.ConditionCommand;
 import com.newzkl.platform.base.common.ddd.facade.LevelRpcVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 /**
  * @author muc_fang

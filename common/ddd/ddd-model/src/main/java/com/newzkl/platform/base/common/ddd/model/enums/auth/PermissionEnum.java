@@ -15,9 +15,6 @@ import lombok.Getter;
  */
 public final class PermissionEnum {
 
-    private PermissionEnum() {
-    }
-
     /**
      * 权限类型
      */
@@ -28,6 +25,44 @@ public final class PermissionEnum {
         MENU("MENU", "菜单"),
         /** 功能 */
         FUNC("FUNC", "功能"),
+        ;
+
+        @EnumValue
+        @JsonValue
+        private final String code;
+        private final String value;
+    }
+
+    /**
+     * 关系类型
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum RelationType implements IEnum<String> {
+        /** 账号-角色 */
+        ACCOUNT_ROLE("ACCOUNT_ROLE", "账号-角色"),
+        /** 角色-权限 */
+        ROLE_PERMISSION("ROLE_PERMISSION", "角色-权限"),
+        /** 账号-权限 */
+        ACCOUNT_PERMISSION("ACCOUNT_PERMISSION", "账号-权限"),
+        ;
+
+        @EnumValue
+        @JsonValue
+        private final String code;
+        private final String value;
+    }
+
+    /**
+     * 账号-权限来源
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum Source implements IEnum<String> {
+        /** 角色派生 */
+        ROLE_DERIVED("ROLE_DERIVED", "角色派生"),
+        /** 直接授权 */
+        DIRECT("DIRECT", "直接授权"),
         ;
 
         @EnumValue

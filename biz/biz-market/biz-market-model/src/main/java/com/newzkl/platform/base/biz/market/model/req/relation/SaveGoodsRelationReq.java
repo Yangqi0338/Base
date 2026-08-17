@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.req.relation;
 
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class SaveGoodsRelationReq {
     /**
      * 关联关系
      */
-    private Integer relationType;
+    private GoodsRelationEnum.GoodsRelation relationType;
 
     /**
      * 业务用户id

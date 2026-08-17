@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
@@ -28,23 +27,10 @@ public class StoreDO extends BaseDO {
 	 */
 	private String address;
 	/**
-	 * 经度
-	 */
-	private Double longitude;
-	/**
-	 * 纬度
-	 */
-	private Double latitude;
-	/**
 	 * 渠道商ID
 	 */
     @Index
 	private Long channelId;
-	/**
-	 * 管理员ID
-	 */
-    @Index
-	private Long managerId;
 	/**
 	 * 样板店ID
 	 */
@@ -54,30 +40,6 @@ public class StoreDO extends BaseDO {
 	 * 是否是样板店
 	 */
 	private Integer isModelShop;
-	/**
-	 * 售后地址
-	 */
-	private String refundAddress;
-	/**
-	 * 选品数量
-	 */
-	private Integer selectionNumber;
-	/**
-	 * 自营商品数量
-	 */
-	private Integer customNumber;
-	/**
-	 * 成交笔数
-	 */
-	private Integer dealerNumber;
-	/**
-	 * 成交金额
-	 */
-	private Money dealerAmount;
-
-    /**
-     * 总客户数
-     */
 
     /**
      * 样式code

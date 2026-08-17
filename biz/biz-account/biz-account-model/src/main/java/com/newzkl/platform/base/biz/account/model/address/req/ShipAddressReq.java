@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.address.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

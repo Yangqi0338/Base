@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.market.model.dto.relation;
 
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ public class MarketGoodsRelationDTO implements Serializable {
     /**
      * 关系类型：  1：一级市场商品  2：二级市场商品  3：市场选品商品
      */
-    private Integer relationType;
+    private GoodsRelationEnum.GoodsRelation relationType;
     /**
      * 用户id   0：为平台   >0:为客户
      */

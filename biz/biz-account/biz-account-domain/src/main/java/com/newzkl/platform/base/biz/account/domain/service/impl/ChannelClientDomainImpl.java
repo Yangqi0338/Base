@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;

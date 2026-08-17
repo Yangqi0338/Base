@@ -6,13 +6,10 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
-
-import java.time.LocalDateTime;
 
 /**
  * 售后操作记录表 DO
@@ -67,7 +64,7 @@ public class RefundOperationRecordDO extends BaseDO {
     /**
      * 操作类型
      */
-    private RefundOperateTypeEnum operationType;
+    private com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum operationType;
 
     /**
      * 操作内容描述

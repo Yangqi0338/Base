@@ -36,18 +36,6 @@ public class StoreAccountDO extends BaseDO {
     private Long channelId;
 
     /**
-     * 支付笔数
-     */
-
-    /**
-     * 支付金额
-     */
-
-    /**
-     * 进店总数
-     */
-
-    /**
      * 最后进店时间
      */
     private LocalDateTime lastViewTime;

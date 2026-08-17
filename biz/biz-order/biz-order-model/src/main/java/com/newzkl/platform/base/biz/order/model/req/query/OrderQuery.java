@@ -28,10 +28,6 @@ public class OrderQuery extends BizPageQuery {
      */
     private Integer goodsType;
     /**
-     * 运营商ID
-     */
-    private Long operatorId;
-    /**
     * 渠道商ID 查询
     */
     private Long channelId;

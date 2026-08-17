@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 
 /**
@@ -27,18 +26,4 @@ public interface DictApi {
      * 查询全局供应商配置
      */
     ChannelConfigVO defaultChannelConfig();
-
-    /**
-     * 查询默认提现配置
-     *
-     * @return
-     */
-    ConfigWithdrawVO defaultWithdrawConfig();
-
-    /**
-     * 更新提现配置
-     *
-     * @return
-     */
-    void alterWithdrawConfig(ConfigWithdrawVO incomeWithdraw);
 }

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class ChannelPurchaseGoodsSeatReq implements Serializable {
      * 支付方式
      */
     @NotNull(message = "支付方式不能为空")
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 席位套餐id

@@ -13,7 +13,7 @@ import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -169,7 +169,7 @@ public class SkuOrderDTO extends BaseDTO {
     /**
      * 结算节点
      */
-    private SettleType settleOrderType;
+    private EarningsEnum.SettleType settleOrderType;
     /**
      * 总服务费 : 渠道商应付
      */

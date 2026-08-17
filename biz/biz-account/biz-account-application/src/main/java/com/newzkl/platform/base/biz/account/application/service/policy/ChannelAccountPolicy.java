@@ -43,9 +43,6 @@ public class ChannelAccountPolicy extends AbsAccountPolicy {
         req.setUsername(req.getUserAccount());
         AccountVO account = super.doRegisterAccount(req);
 
-        if (!account.isOld()) {
-            super.sendTencentImMsg(account);
-        }
         return accountAssembler.vo2RegisterRes(account);
     }
 

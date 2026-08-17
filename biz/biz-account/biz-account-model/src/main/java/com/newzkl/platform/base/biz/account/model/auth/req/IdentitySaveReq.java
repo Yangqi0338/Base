@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.account.model.auth.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -76,14 +75,6 @@ public class IdentitySaveReq extends AccountSaveReq {
      * <p>迁移说明: 原 {@code CustomSaveReq#registerDomain}, 类型不变。</p>
      */
     private String registerDomain;
-
-    /**
-     * 渠道商类型
-     *
-     * <p>迁移说明: 原 {@code CustomSaveReq#channelType} 为 {@code String}, 此处按新模型规范
-     * 改用枚举 {@code ChannelEnum.ChannelType}, 与 {@code ChannelCustomSaveReq#channelType} 对齐。</p>
-     */
-    private ChannelEnum.ChannelType channelType;
 
     /**
      * 企业实名信息

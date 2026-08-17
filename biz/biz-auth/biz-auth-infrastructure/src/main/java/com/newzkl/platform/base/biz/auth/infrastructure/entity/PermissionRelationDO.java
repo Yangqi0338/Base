@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.auth.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +29,7 @@ public class PermissionRelationDO extends BaseDO {
     /**
      * 关系类型
      */
-    private RelationEnum.Type type;
+    private PermissionEnum.RelationType type;
 
     /**
      * 源对象ID
@@ -46,5 +46,5 @@ public class PermissionRelationDO extends BaseDO {
     /**
      * 关系来源
      */
-    private RelationEnum.Source source;
+    private PermissionEnum.Source source;
 }

@@ -29,9 +29,7 @@ public interface OrderDAO extends BaseMapper<OrderDO> {
     default BaseLambdaQueryWrapper<OrderDO> getLw(OrderQuery orderQuery) {
         BaseLambdaQueryWrapper<OrderDO> wrapper = new BaseLambdaQueryWrapper<OrderDO>()
                 .notEmptyIn(OrderDO::getId, orderQuery.getIdList())
-                .notEmptyIn(OrderDO::getAccountId, orderQuery.getAccountIdList())
                 .notEmptyEq(OrderDO::getOrderType, orderQuery.getOrderType())
-                .notEmptyEq(OrderDO::getOperatorId, orderQuery.getOperatorId())
                 .notEmptyEq(OrderDO::getChannelId, orderQuery.getChannelId())
                 .notEmptyEq(OrderDO::getMemberId, orderQuery.getMemberId())
                 .notEmptyIn(OrderDO::getOutOrderNo, orderQuery.getOutOrderNoList())

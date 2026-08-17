@@ -2,28 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SkuDAO">
 
-    <!-- 按 SKU 聚合出 SPU 冗余统计列 (迁移自 new-scm SkuDAO.xml 的 countSkuById) -->
-    <select id="countSkuById"
-            resultType="com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO">
-        select
-        min(t2.market_price) as market_price,
-        min(t2.supply_price) as supply_price,
-        min(t2.sale_price) as sale_price,
-        min(t2.unit_price) as unit_price,
-        max(t2.market_price - t2.sale_price) as max_profit,
-        min(t2.market_price) as market_price_began,
-        max(t2.market_price) as market_price_end,
-        min(t2.sale_price) as sale_price_began,
-        max(t2.sale_price) as sale_price_end,
-        min(t2.unit_price) as unit_price_began,
-        max(t2.unit_price) as unit_price_end,
-        min(t2.supply_price) as supplier_price_began,
-        max(t2.supply_price) as supplier_price_end,
-        min(t2.weight) as min_pricing_num
-        from sku t2 where t2.spu_id = #{spuId,jdbcType=BIGINT}
-        group by t2.spu_id
-    </select>
-
     <!-- 订单商品信息: storeId 为空走渠道选品(market_goods_relation), 非空走门店铺货(store_distribution)
          (迁移自 new-scm SkuDAO.xml 的 queryOrderGoodsInfoVOList) -->
     <select id="queryOrderGoodsInfoVOList"
@@ -32,8 +10,6 @@
         t.id AS sku_id,
         t.`img` ,
         t.`name` ,
-        t.`weight` ,
-        t.`volume` ,
         t.`spu_id` ,
         t.`supply_price` ,
         t.`sale_attribute` as sale_attribute_json,
@@ -93,8 +69,6 @@
         t.id AS sku_id,
         t.`img` ,
         t.`name` ,
-        t.`weight` ,
-        t.`volume` ,
         t.`spu_id` ,
         t.`supply_price` ,
         t.`sale_attribute` as sale_attribute_json,

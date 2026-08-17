@@ -5,17 +5,12 @@ import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ThirdPartyOrderRepository;
 import com.newzkl.platform.base.biz.order.domain.service.ThirdPartyOrderDomain;
 import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
-import com.newzkl.platform.base.biz.order.model.req.query.ThirdPartyOrderRecordQuery;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author sijiwang
@@ -32,9 +27,9 @@ public class ThirdPartyOrderDomainImpl implements ThirdPartyOrderDomain {
      */
     @Override
     @Transactional
-    public ThirdPartyOrderRecordDTO createRecord(PlatformTypeEnum platformType, String bizOrderNo,
-                                                     String interfaceName, Object requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus,
-                                                     String errorMessage) {
+    public ThirdPartyOrderRecordDTO createRecord(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo,
+                                                 String interfaceName, Object requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus,
+                                                 String errorMessage) {
 
         ThirdPartyOrderRecordDTO existing = orderRepository.findRecordByBizOrderNo(bizOrderNo);
         if (existing != null) {
@@ -52,7 +47,7 @@ public class ThirdPartyOrderDomainImpl implements ThirdPartyOrderDomain {
      */
     @Override
     @Transactional
-    public void recordAction(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, String thirdOrderNo,
+    public void recordAction(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo, String interfaceName, String thirdOrderNo,
                              String requestJson, String responseJson, CommonEnum.RequestStatusEnum requestStatus, String errorMessage) {
         ThirdPartyOrderRecordDTO record = ThirdPartyOrderRecordDTO
             .init(platformType, bizOrderNo, interfaceName, requestJson, responseJson, requestStatus, errorMessage);

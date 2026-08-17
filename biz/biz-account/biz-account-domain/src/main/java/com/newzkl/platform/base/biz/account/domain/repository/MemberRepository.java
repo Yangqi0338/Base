@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
 
 import java.util.List;
 
@@ -35,5 +34,4 @@ public interface MemberRepository {
      */
     List<MemberVO> queryMember(String nickname);
 
-    void sendTencentCreateUserMsg(ImCreateUserAccountObj entity);
 }

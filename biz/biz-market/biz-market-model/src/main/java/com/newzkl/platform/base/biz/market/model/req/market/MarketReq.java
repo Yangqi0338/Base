@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.req.market;
 
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import lombok.Data;
 
 /**
@@ -35,7 +36,7 @@ public class MarketReq {
 
     /**
      * 市场类型
-     * @see com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum
+     * @see MarketEnum.MarketTypeEnum
      */
     private String marketType;
 

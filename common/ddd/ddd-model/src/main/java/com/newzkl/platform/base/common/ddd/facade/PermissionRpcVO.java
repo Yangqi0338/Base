@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.facade;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;

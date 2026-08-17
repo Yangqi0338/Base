@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.store.model.store.query.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;

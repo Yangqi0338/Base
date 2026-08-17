@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.pack.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -29,5 +29,5 @@ public class PackOrderPayReq implements Serializable {
     /**
      * 支付方式
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 }

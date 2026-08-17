@@ -15,7 +15,6 @@ import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuRollOutRes;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.CommitInfoExt;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -104,15 +103,6 @@ public class WithdrawServiceImpl implements WithdrawService {
                 return;
             }
         }
-
-
-            ConfigWithdrawVO configWithdrawVO = withdrawDomain.defaultWithdrawConfig();
-            if (configWithdrawVO.getWithdraw() != null) {
-                Money restrict = configWithdrawVO.getWithdraw().getMinAmount();
-                if (restrict.greaterThanZero() && req.getAmount().smallerThan(restrict)) {
-                    return;
-                }
-            }
 
         // 1、扣减收益余额
         AccountPurseAlterRecordReq recordReq = buildAccountPurseAlterRecord(req);

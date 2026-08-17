@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.facade.model.thirdparty;
 
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class ThirdPartyGoodsRecordDTO extends BaseDTO {
     /**
      * 平台类型枚举
      */
-    private PlatformTypeEnum platformType;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 
     /**
      * 外部商品(SPU)ID 第三方平台的商品唯一标识
@@ -72,7 +72,7 @@ public class ThirdPartyGoodsRecordDTO extends BaseDTO {
      * @param errorMessage  错误信息 可空
      * @return 初始化完成的 {@link ThirdPartyGoodsRecordDTO} 实例
      */
-    public static ThirdPartyGoodsRecordDTO init(PlatformTypeEnum platformType, String outSpuId, String interfaceName,
+    public static ThirdPartyGoodsRecordDTO init(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String outSpuId, String interfaceName,
                                                 String requestJson, String responseJson, CommonEnum.RequestStatusEnum requestStatus, String errorMessage) {
         ThirdPartyGoodsRecordDTO request = new ThirdPartyGoodsRecordDTO();
         request.setPlatformType(platformType);

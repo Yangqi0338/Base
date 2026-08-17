@@ -59,8 +59,6 @@ public class ChannelPageRes extends BaseRes {
 
     /**
      * 渠道商类型
-     *
-     * @see ChannelEnum.ChannelType
      */
     private String channelType;
 

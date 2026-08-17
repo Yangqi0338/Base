@@ -34,7 +34,7 @@ import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
@@ -444,7 +444,7 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public SettleType settleOrderType(Long supplierId) {
+    public EarningsEnum.SettleType settleOrderType(Long supplierId) {
         return supplierApi.settleOrderType(supplierId);
     }
 

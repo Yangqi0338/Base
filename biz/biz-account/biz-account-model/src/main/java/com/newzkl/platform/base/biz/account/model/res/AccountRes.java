@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
@@ -16,10 +15,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class AccountRes extends BaseRes {
-    /**
-     * 主账号id
-     */
-    private Long mainAccountId;
     /**
      * 账号注销时间
      */
@@ -75,17 +70,9 @@ public class AccountRes extends BaseRes {
      * 下级数量
      */
     /**
-     * 子用户类型
-     */
-    private AccountEnum.SubUserType subUserType;
-    /**
      * 帐号状态
      */
     private AccountEnum.State state;
-    /**
-     * 实名认证审批状态
-     */
-    private AuditEnum.State nameAuthAuditState;
     /**
      * 邀请码
      */
@@ -114,10 +101,6 @@ public class AccountRes extends BaseRes {
      * IM账号
      */
     private String userAccount;
-    /**
-     * IM同步状态
-     */
-    private AccountEnum.ImSyncState imSyncStatus;
     /**
      * 手机号
      */

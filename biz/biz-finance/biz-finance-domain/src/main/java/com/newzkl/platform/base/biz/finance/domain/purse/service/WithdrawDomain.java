@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.finance.domain.purse.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 import java.util.List;
 
@@ -14,20 +14,6 @@ import java.util.List;
  * @date 2023/12/23 13:55
  */
 public interface WithdrawDomain {
-
-    /**
-     * 查询运营商默认提现配置
-     *
-     * @return
-     */
-    ConfigWithdrawVO defaultWithdrawConfig();
-
-    /**
-     * 更新提现配置
-     *
-     * @return
-     */
-    void alterWithdrawConfig(ConfigWithdrawVO saveCommand);
 
     /**
      * 转出申请
@@ -77,15 +63,6 @@ public interface WithdrawDomain {
      * @return
      */
     boolean alterRollOutTripartiteState(Long applyId, Integer tripartiteState, String tripartiteTradeNo);
-
-    /**
-     * 保存提现记录
-     *
-     * @param accountId
-     * @param amount
-     * @return
-     */
-    Long saveAccountWithdraw(Long accountId, Integer amount);
 
     /**
      * 更新提现状态

@@ -2,9 +2,8 @@ package com.newzkl.platform.base.biz.order.model.dto;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.Data;
 
 /**
@@ -60,7 +59,7 @@ public class RefundOperationRecordDTO extends BaseDTO {
     /**
      * 操作类型
      */
-    private RefundOperateTypeEnum operationType;
+    private com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum operationType;
 
     /**
      * 操作内容描述

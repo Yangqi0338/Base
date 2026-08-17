@@ -30,7 +30,6 @@ public interface StoreDAO extends BaseMapper<StoreDO> {
         wrapper.notNullEq(StoreDO::getId, storeDO.getId());
         wrapper.notNullEq(StoreDO::getChannelId, storeDO.getChannelId());
         wrapper.notEmptyLike(StoreDO::getName, storeDO.getName());
-        wrapper.notNullEq(StoreDO::getManagerId, storeDO.getManagerId());
         wrapper.notNullEq(StoreDO::getStyleCode, storeDO.getStyleCode());
         wrapper.notNullEq(StoreDO::getModelShopId, storeDO.getModelShopId());
         wrapper.notNullEq(StoreDO::getIsModelShop, storeDO.getIsModelShop());

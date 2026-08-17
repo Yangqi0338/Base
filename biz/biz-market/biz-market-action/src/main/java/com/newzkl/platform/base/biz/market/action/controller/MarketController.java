@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.market.action.controller;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.domain.market.MarketDomain;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
@@ -12,16 +11,13 @@ import com.newzkl.platform.base.biz.market.model.req.market.BindMarketListReq;
 import com.newzkl.platform.base.biz.market.model.req.market.ClientBindMarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
-import com.newzkl.platform.base.biz.market.model.req.market.UpdateMarketDataReq;
 import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketGoodsVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.BindMarketVO;
-import com.newzkl.platform.base.biz.market.model.vo.market.MarketGoodsCategoryVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketUserVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

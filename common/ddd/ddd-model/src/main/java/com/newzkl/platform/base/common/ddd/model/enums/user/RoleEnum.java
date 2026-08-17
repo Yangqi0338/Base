@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.common.ddd.model.enums;
+package com.newzkl.platform.base.common.ddd.model.enums.user;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,7 +8,6 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -136,51 +135,6 @@ public class RoleEnum {
     }
 
     /**
-     * 游客公司角色枚举
-     *
-     * <p>各端未登录/游客态的占位角色，编码为负数。</p>
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum GuestCompanyRole {
-        /** 运营商端游客 */
-        OPERATOR(-1L, "游客"),
-        /** 平台端游客 */
-        ADMIN(-2L, "游客"),
-        /** 市场端游客 */
-        MARKET(-3L, "游客"),
-        /** 用户端游客 */
-        USER(-4L, "游客"),
-        /** 供应商端游客 */
-        SUPPLIER(-5L, "游客"),
-        /** 渠道商端游客 */
-        CHANNEL(-6L, "游客"),
-        ;
-        private final Long code;
-        private final String value;
-
-        /**
-         * 根据客户端类型查找游客角色
-         *
-         * @param client 客户端类型
-         * @return 匹配的游客角色，未匹配返回 null
-         */
-        public static GuestCompanyRole findByClient(CommonEnum.Client client) {
-            return Arrays.stream(values()).filter(item -> item.name().equals(client.name())).findFirst().orElse(null);
-        }
-
-        /**
-         * 判断角色编码是否为游客
-         *
-         * @param roleId 角色编码
-         * @return 是否游客
-         */
-        public static boolean isGuest(Long roleId) {
-            return Arrays.stream(GuestCompanyRole.values()).anyMatch(it -> it.getCode().equals(roleId));
-        }
-    }
-
-    /**
      * 角色状态
      */
     @Getter
@@ -195,87 +149,8 @@ public class RoleEnum {
         /** 已入驻 */
         IN(2, "已入驻"),
         ;
-        private Integer code;
-        private String value;
-    }
-
-    /**
-     * 可结算节点
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum OrderType {
-        /** 订单完成 */
-        ORDER_SUCCESS(0, "订单完成"),
-        /** 收货完成 */
-        RECEIVE(1, "收货完成"),
-        ;
-        private Integer code;
-        private String value;
-
-        public static OrderType getByCode(Integer code) {
-            return Stream.of(OrderType.values())
-                    .filter(it -> it.getCode().equals(code))
-                    .findFirst()
-                    .orElse(null);
-        }
-    }
-
-    /**
-     * 结算周期类型
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum DataType {
-        /** 每月固定 */
-        MONTH_ONLY(0, "每月固定"),
-        /** 商品审核完成 */
-        GOODS_AUDIT(1, "商品审核完成"),
-        ;
-        private Integer code;
-        private String value;
-    }
-
-    /**
-     * 开关
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum Switch {
-        /** 关 */
-        OFF(0, "禁用,无效,否,减少,初始"),
-        /** 开 */
-        ON(1, "启用,有效,是,增加,修改"),
-        ;
-        private Integer code;
-        private String value;
-
-        /**
-         * 根据编码获取枚举
-         *
-         * @param code 编码
-         * @return 匹配的枚举
-         */
-        public static Switch getByCode(Integer code) {
-            return Stream.of(Switch.values())
-                    .filter(extension -> extension.getCode().equals(code))
-                    .findFirst()
-                    .orElse(null);
-        }
-
-        /**
-         * 取反
-         *
-         * @param code 编码
-         * @return 取反后的枚举
-         */
-        public static Switch reverse(Integer code) {
-            Switch aSwitch = getByCode(code);
-            if (aSwitch == null) {
-                return null;
-            }
-            return aSwitch == ON ? OFF : ON;
-        }
+        private final Integer code;
+        private final String value;
     }
 }
 

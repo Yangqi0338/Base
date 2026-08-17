@@ -34,4 +34,24 @@ public class OrderSnapVO {
      * 外部商品
      */
     private List<OrderSkuVO> outGoods;
+
+    /**
+     * 用户昵称
+     */
+    private String nickname;
+
+    /**
+     * 账号
+     */
+    private String username;
+
+    /**
+     * 门店名称
+     */
+    private String storeName;
+
+    /**
+     * 门店头像
+     */
+    private String storeHead;
 }

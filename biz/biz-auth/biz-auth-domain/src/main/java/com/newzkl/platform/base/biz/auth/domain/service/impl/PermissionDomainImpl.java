@@ -5,7 +5,6 @@ import com.newzkl.platform.base.biz.auth.domain.adapt.repository.PermissionRepos
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.domain.service.PermissionDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionListDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
@@ -161,13 +160,13 @@ public class PermissionDomainImpl implements PermissionDomain {
             throw new PlatformException(BaseErrorCode.NODATA, "权限");
         }
         List<Long> roleIds = relationRepository
-                .listByTarget(RelationEnum.Type.ROLE_PERMISSION, List.of(permissionId))
+                .listByTarget(PermissionEnum.RelationType.ROLE_PERMISSION, List.of(permissionId))
                 .stream().map(PermissionRelationDTO::getSourceId).distinct().toList();
         if (roleIds.isEmpty()) {
             return 0;
         }
         Set<Long> accountIds = relationRepository
-                .listByTarget(RelationEnum.Type.ACCOUNT_ROLE, roleIds)
+                .listByTarget(PermissionEnum.RelationType.ACCOUNT_ROLE, roleIds)
                 .stream().map(PermissionRelationDTO::getSourceId).collect(Collectors.toSet());
         if (accountIds.isEmpty()) {
             return 0;
@@ -202,11 +201,11 @@ public class PermissionDomainImpl implements PermissionDomain {
         if (!orphanIds.isEmpty()) {
             permissionRepository.softDeleteByIds(orphanIds);
             List<Long> affectedRoles = relationRepository
-                    .listByTarget(RelationEnum.Type.ROLE_PERMISSION, orphanIds).stream()
+                    .listByTarget(PermissionEnum.RelationType.ROLE_PERMISSION, orphanIds).stream()
                     .map(PermissionRelationDTO::getSourceId).distinct().toList();
             if (!affectedRoles.isEmpty()) {
                 List<Long> affectedAccounts = relationRepository
-                        .listByTarget(RelationEnum.Type.ACCOUNT_ROLE, affectedRoles).stream()
+                        .listByTarget(PermissionEnum.RelationType.ACCOUNT_ROLE, affectedRoles).stream()
                         .map(PermissionRelationDTO::getSourceId).distinct().toList();
                 if (!affectedAccounts.isEmpty()) {
                     recalculator.recalc(affectedAccounts);

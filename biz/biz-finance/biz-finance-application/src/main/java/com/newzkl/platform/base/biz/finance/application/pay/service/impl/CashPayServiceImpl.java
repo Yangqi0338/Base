@@ -24,9 +24,9 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.PayEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -178,8 +178,8 @@ public class CashPayServiceImpl implements CashPayService {
         // HuiFu 边界: Money → 分 Integer
         huiFuPayReq.setPayAmount((int) req.getPayAmount().getCent());
         huiFuPayReq.setTradeType(switch (req.getPayType()) {
-            case WX -> PayEnum.HuiFuTradeType.T_NATIVE;
-            case ALIPAY -> PayEnum.HuiFuTradeType.A_NATIVE;
+            case WX -> HuifuEnum.HuiFuTradeType.T_NATIVE;
+            case ALIPAY -> HuifuEnum.HuiFuTradeType.A_NATIVE;
             default -> throw new PlatformException(BaseErrorCode.PARAM);
         });
         return huiFuPayReq;

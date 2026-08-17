@@ -60,11 +60,6 @@ public interface ModelShopRepository {
     ModelShopDTO queryByStyleCode(String styleCode);
 
     /**
-     * 新增使用门店数
-     */
-    void updateUseStoreNum(String styleCode, Integer num);
-
-    /**
      * 修改样板店数据
      */
     void updateModelShopData(ModelShopDataDTO dto);

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.entity.ThirdPartyGoodsR
 import com.newzkl.platform.base.biz.goods.model.biz.req.query.ThirdPartyGoodsRecordQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +32,7 @@ public class ThirdPartyGoodsRepositoryImpl implements ThirdPartyGoodsRepository 
     }
 
     @Override
-    public List<ThirdPartyGoodsRecordDTO> findByStatus(PlatformTypeEnum platformType, CommonEnum.RequestStatusEnum status, String interfaceName) {
+    public List<ThirdPartyGoodsRecordDTO> findByStatus(ThirdPartyOrderEnum.PlatformTypeEnum platformType, CommonEnum.RequestStatusEnum status, String interfaceName) {
         ThirdPartyGoodsRecordQuery query = ThirdPartyGoodsRecordQuery.builder()
                 .platformType(platformType)
                 .requestStatus(status)

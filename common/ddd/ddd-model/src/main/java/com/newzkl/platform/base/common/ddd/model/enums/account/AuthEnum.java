@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.model.enums.account;
 
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

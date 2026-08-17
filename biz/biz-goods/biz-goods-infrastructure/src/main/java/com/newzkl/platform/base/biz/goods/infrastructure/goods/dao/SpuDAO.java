@@ -66,9 +66,6 @@ public interface SpuDAO extends BaseMapper<SpuDO> {
         // title 模糊查询
         wrapper.like(StringUtils.isNotBlank(query.getTitle()), "title", query.getTitle());
 
-        // goodsType 条件
-        wrapper.eq(query.getGoodsType() != null, "goods_type", query.getGoodsType());
-
         // brandId 条件
         wrapper.eq(query.getBrandId() != null, "brand_id", query.getBrandId());
 
@@ -83,9 +80,6 @@ public interface SpuDAO extends BaseMapper<SpuDO> {
 
         // accountId 条件
         wrapper.eq(query.getAccountId() != null, "account_id", query.getAccountId());
-
-        // accountName 模糊查询
-        wrapper.like(StringUtils.isNotBlank(query.getAccountName()), "account_name", query.getAccountName());
 
         // categoryIdList 条件
         wrapper.in(CollectionUtils.isNotEmpty(query.getCategoryIdList()), "category_id", query.getCategoryIdList());
@@ -107,12 +101,6 @@ public interface SpuDAO extends BaseMapper<SpuDO> {
 
         // outSpuId 条件
         wrapper.eq(StringUtils.isNotBlank(query.getOutSpuId()), "out_spu_id", query.getOutSpuId());
-
-        // specType 条件
-        wrapper.eq(query.getSpecType() != null, "spec_type", query.getSpecType());
-
-        // minPricingNum 条件
-        wrapper.eq(query.getMinPricingNum() != null, "min_pricing_num", query.getMinPricingNum());
 
         return wrapper;
     }

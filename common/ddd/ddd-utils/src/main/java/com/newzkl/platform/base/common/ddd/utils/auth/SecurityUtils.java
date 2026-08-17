@@ -8,7 +8,7 @@ import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.RequestInfo;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;

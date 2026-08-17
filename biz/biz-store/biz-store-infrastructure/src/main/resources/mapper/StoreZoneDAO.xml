@@ -7,8 +7,6 @@
         <result column="zone_code" property="zoneCode" />
         <result column="zone_name" property="zoneName" />
         <result column="zone_subtitle" property="zoneSubtitle" />
-        <result column="goods_num" property="goodsNum" />
-        <result column="order_num" property="orderNum" />
         <result column="zone_describe" property="zoneDescribe" />
         <result column="state" property="state" />
         <result column="create_id" property="createId" />
@@ -18,7 +16,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, zone_code, zone_name, zone_subtitle, goods_num, order_num, zone_describe, state,
+        id, zone_code, zone_name, zone_subtitle, zone_describe, state,
         create_id, create_name, create_time, update_time
     </sql>
 

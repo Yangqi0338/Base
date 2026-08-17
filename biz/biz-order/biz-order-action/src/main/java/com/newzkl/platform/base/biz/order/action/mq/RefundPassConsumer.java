@@ -6,15 +6,8 @@ import com.newzkl.platform.base.common.core.mq.infrastructure.annotation.MQConsu
 import com.newzkl.platform.base.common.core.mq.infrastructure.consumer.AbstractMessageMQPushConsumer;
 
 import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
-import com.newzkl.platform.base.common.ddd.facade.SaleCountDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

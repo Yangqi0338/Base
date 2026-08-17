@@ -35,11 +35,10 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.model.constant.RefundErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -528,7 +527,7 @@ public class RefundDomainImpl implements RefundDomain {
 //            refundRepository.yytSubmitRefundFreight(refund);
         }
 
-        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.FREIGHT_WAIT, RefundEnum.State.RECEIVE_WAIT, RefundOperateTypeEnum.BUYER_RETURN_GOODS);
+        localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.FREIGHT_WAIT, RefundEnum.State.RECEIVE_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.BUYER_RETURN_GOODS);
     }
 
     private LocalDateTime calculateStoreAutoTime() {
@@ -552,7 +551,7 @@ public class RefundDomainImpl implements RefundDomain {
         RefundDTO refund = refundRepository.refund(refundId);
         // todo 和 产品 确认 拒绝
         refundRepository.updateStateWithFrom(refund.getOrderType(), refundId, RefundEnum.State.RECEIVE_WAIT, RefundEnum.State.REFUSE, refund.getChannelId());
-        localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.REFUSE, RefundOperateTypeEnum.SUPPLIER_REFUSE_RECEIPT);
+        localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.REFUSE, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_REFUSE_RECEIPT);
     }
 
     @Override
@@ -569,8 +568,8 @@ public class RefundDomainImpl implements RefundDomain {
         if(SpuEnum.ChannelType.OUT == refund.getSpuChannelType()){
 //            refundRepository.yytRefundCancel(refund);
         }
-        RefundOperateTypeEnum refundOperateTypeEnum = SecurityUtils.getClient() == CommonEnum.Client.CHANNEL
-                ? RefundOperateTypeEnum.CHANNEL_CANCEL_REFUND : RefundOperateTypeEnum.MEMBER_CANCEL_REFUND;
+        com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = SecurityUtils.getClient() == CommonEnum.Client.CHANNEL
+                ? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_CANCEL_REFUND : com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.MEMBER_CANCEL_REFUND;
         localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.CLOSE, refundOperateTypeEnum);
     }
 

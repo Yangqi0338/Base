@@ -4,14 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,10 +24,6 @@ import java.util.List;
  */
 @Data
 public class AccountVO extends BaseRes {
-    /**
-     * 主账号id
-     */
-    private Long mainAccountId;
     /**
      * 父ID
      */
@@ -46,10 +40,6 @@ public class AccountVO extends BaseRes {
      * 三方账户id
      */
     protected String tripartiteAccountId;
-    /**
-     * 子用户类型
-     */
-    private AccountEnum.SubUserType subUserType;
     /**
      * 层级关系
      */
@@ -94,10 +84,6 @@ public class AccountVO extends BaseRes {
      */
     private LocalDateTime lastLoginTime;
     /**
-     * 实名认证审批状态
-     */
-    private AuditEnum.State nameAuthAuditState;
-    /**
      * 邀请人账号ID
      * NOTE 仅邀请动作会赋值, 大部分情况等同于pid
      */
@@ -123,10 +109,6 @@ public class AccountVO extends BaseRes {
      */
     private String userAccount;
     /**
-     * IM同步状态
-     */
-    private AccountEnum.ImSyncState imSyncStatus;
-    /**
      * 手机号
      */
     private String phone;
@@ -143,23 +125,15 @@ public class AccountVO extends BaseRes {
      * @param registerRole  要注册的角色
      * @param username      用户名
      * @param password      密码
-     * @param mainAccountId 父ID
      * @param state         状态
      * @return
      */
-    public AccountVO init(List<RoleEnum.CompanyRole> registerRole, String username, String password, Long mainAccountId, AccountEnum.State state) {
+    public AccountVO init(List<RoleEnum.CompanyRole> registerRole, String username, String password, AccountEnum.State state) {
         if (CollUtil.isEmpty(registerRole)) {
             throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
         }
         this.username = username;
         this.password = password;
-
-        // 没有主账号自身就是主账号
-        this.subUserType = AccountEnum.SubUserType.ACCOUNT;
-        this.mainAccountId = Opt.ofNullable(mainAccountId).orElseGet(() -> {
-            this.subUserType = AccountEnum.SubUserType.MAIN;
-            return AccountEnum.MAIN_ACCOUNT_PID;
-        });
 
         //默认是启动状态
         this.state = Opt.ofNullable(state).orElse(AccountEnum.State.ENABLE);
@@ -179,9 +153,6 @@ public class AccountVO extends BaseRes {
         this.client = CollUtil.getFirst(clientList);
         //设置邀请码
         this.yqm = BizUtil.generate6code();
-
-        //默认实名认证审批状态
-        this.nameAuthAuditState = AuditEnum.State.CUSTOM;
         return this;
     }
 

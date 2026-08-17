@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelation
 import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -53,7 +53,7 @@ public class AccountPermissionStpInterface implements StpInterface {
         }
 
         List<PermissionRelationDTO> rels = relationRepository.listBySource(
-                RelationEnum.Type.ACCOUNT_PERMISSION, List.of(accountId));
+                PermissionEnum.RelationType.ACCOUNT_PERMISSION, List.of(accountId));
         Set<Long> permIds = rels.stream().map(PermissionRelationDTO::getTargetId).collect(Collectors.toSet());
         if (permIds.isEmpty()) {
             RedisUtil.set(cacheKey, List.of(), TTL_SECONDS, TimeUnit.SECONDS);
@@ -76,7 +76,7 @@ public class AccountPermissionStpInterface implements StpInterface {
         }
 
         List<PermissionRelationDTO> rels = relationRepository.listBySource(
-                RelationEnum.Type.ACCOUNT_ROLE, List.of(accountId));
+                PermissionEnum.RelationType.ACCOUNT_ROLE, List.of(accountId));
         Set<Long> roleIds = rels.stream().map(PermissionRelationDTO::getTargetId).collect(Collectors.toSet());
         List<String> codes = roleRepository.listByIds(roleIds).stream()
                 .map(RoleDTO::getCode).toList();

@@ -2,9 +2,9 @@ package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
@@ -36,7 +36,7 @@ public class PromiseFlowVO extends BaseRes {
     /**
      * 支付方式
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
     /**
      * 支付凭证
      */

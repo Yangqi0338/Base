@@ -21,21 +21,9 @@ public class SkuDO extends BaseDO {
 	 */
 	private String img;
 	/**
-	 * 条形码
-	 */
-	private String barCode;
-	/**
 	 * 名称
 	 */
 	private String name;
-	/**
-	 * 重量(千克)
-	 */
-	private Double weight;
-	/**
-	 * 体积(m3)
-	 */
-	private Double volume;
 	/**
 	 * spuId
 	 * @ext 查询

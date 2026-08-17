@@ -19,10 +19,6 @@ import java.util.List;
  */
 @Data
 public class AccountOutRes extends BaseRes {
-     /**
-      * 主账号id
-      */
-     private Long mainAccountId;
     /**
      * 父ID (查询)
      */
@@ -115,11 +111,6 @@ public class AccountOutRes extends BaseRes {
      * 账号
      */
     private String userAccount;
-
-    /**
-     * IM同步状态
-     */
-    private AccountEnum.ImSyncState imSyncStatus;
 
     /**
      * 头像

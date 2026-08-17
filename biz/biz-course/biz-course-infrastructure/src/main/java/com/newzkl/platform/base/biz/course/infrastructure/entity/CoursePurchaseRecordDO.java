@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -69,7 +69,7 @@ public class CoursePurchaseRecordDO extends BaseDO {
      * 支付方式
      * @ext 1-微信支付, 2-支付宝支付
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 第三方支付流水号

@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.account.facade.SupplierFacade;
@@ -11,7 +10,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.ReceiveAddressOutVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.facade.SupplierOutVO;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.extern.slf4j.Slf4j;
 import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class SupplierApiImpl implements SupplierApi {
     }
 
     @Override
-    public SettleType settleOrderType(Long supplierId) {
+    public EarningsEnum.SettleType settleOrderType(Long supplierId) {
         SettlementConfigOutVO settlementConfigOutVO = CollUtil.getFirst(settlementConfigBatch(CollUtil.newArrayList(supplierId)));
         return settlementConfigOutVO == null ? null : settlementConfigOutVO.getOrderType();
     }

@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationReposit
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,16 +40,16 @@ public class AccountPermissionRecalculator {
             return;
         }
 
-        relationRepository.deleteBySource(RelationEnum.Type.ACCOUNT_PERMISSION, accountIds);
+        relationRepository.deleteBySource(PermissionEnum.RelationType.ACCOUNT_PERMISSION, accountIds);
 
         Map<Long, List<Long>> accRoles = relationRepository
-                .listBySource(RelationEnum.Type.ACCOUNT_ROLE, accountIds).stream()
+                .listBySource(PermissionEnum.RelationType.ACCOUNT_ROLE, accountIds).stream()
                 .collect(Collectors.groupingBy(PermissionRelationDTO::getSourceId,
                         Collectors.mapping(PermissionRelationDTO::getTargetId, Collectors.toList())));
 
         Set<Long> roleIds = accRoles.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
         Map<Long, List<Long>> rolePerms = relationRepository
-                .listBySource(RelationEnum.Type.ROLE_PERMISSION, roleIds).stream()
+                .listBySource(PermissionEnum.RelationType.ROLE_PERMISSION, roleIds).stream()
                 .collect(Collectors.groupingBy(PermissionRelationDTO::getSourceId,
                         Collectors.mapping(PermissionRelationDTO::getTargetId, Collectors.toList())));
 
@@ -61,10 +61,10 @@ public class AccountPermissionRecalculator {
                     .collect(Collectors.toSet());
             for (Long permId : perms) {
                 PermissionRelationDTO d = new PermissionRelationDTO();
-                d.setType(RelationEnum.Type.ACCOUNT_PERMISSION);
+                d.setType(PermissionEnum.RelationType.ACCOUNT_PERMISSION);
                 d.setSourceId(accountId);
                 d.setTargetId(permId);
-                d.setSource(RelationEnum.Source.ROLE_DERIVED);
+                d.setSource(PermissionEnum.Source.ROLE_DERIVED);
                 toInsert.add(d);
             }
         }

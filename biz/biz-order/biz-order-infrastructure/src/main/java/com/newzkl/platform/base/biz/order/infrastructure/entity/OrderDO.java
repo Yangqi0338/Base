@@ -7,8 +7,9 @@ import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -47,19 +48,19 @@ public class OrderDO extends BaseDO {
      * 外部平台来源
      * @ext 三方单来源, 非外部单为 null
      */
-    private PlatformTypeEnum platformType;
-
-    /**
-     * 运营商ID
-     */
-    @Index
-    private Long operatorId;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 
     /**
      * 渠道商ID
      */
     @Index
     private Long channelId;
+
+    /**
+     * spuId
+     * @ext String 冗余, 为多 spu 下单兼容 (当前仅单 spu)
+     */
+    private String spuId;
 
     /**
      * 收货信息
@@ -91,17 +92,7 @@ public class OrderDO extends BaseDO {
      * 选品运费
      */
     private Money freightAmount;
-    
-    /**
-     * 自营运费
-     */
-    private Money customFreightAmount;
-    
-    /**
-     * 优惠金额
-     */
-    private Money discountAmount;
-    
+
     /**
      * 服务费: 渠道商应付
      */
@@ -142,7 +133,7 @@ public class OrderDO extends BaseDO {
     /**
      * 支付方式
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 订单状态流转日志
@@ -169,28 +160,12 @@ public class OrderDO extends BaseDO {
     private Long memberId;
 
     /**
-     * 账号id(account.id)
+     * 关闭时间
      */
-    @Index
-    private Long accountId;
-    
-    /**
-     * 支付流水
-     */
-    private String payFlow;
-    
-    /**
-     * 购买方式
-     */
-    private OrderEnum.BuyMode buyMode;
+    private LocalDateTime closeTime;
 
     /**
-     * 用户名
+     * 是否有售后
      */
-    private String nickname;
-    
-    /**
-     * 账号
-     */
-    private String username;
+    private CommonEnum.YesOrNo refund;
 }

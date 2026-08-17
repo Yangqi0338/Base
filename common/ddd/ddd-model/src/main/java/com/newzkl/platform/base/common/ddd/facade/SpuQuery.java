@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

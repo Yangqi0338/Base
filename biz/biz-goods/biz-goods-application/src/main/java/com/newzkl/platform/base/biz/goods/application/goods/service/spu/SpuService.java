@@ -60,10 +60,6 @@ public interface SpuService {
      */
     Long palletSelectGoods(SpuVO spuVO);
 
-    /**
-     * 商品选品数量增加
-     */
-    void spuSelectorNumAdd(List<Long> spuIdList, Integer num);
 
     /**
      * 验证供应商商品

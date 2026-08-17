@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryV
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;

@@ -9,9 +9,10 @@ import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -42,7 +43,7 @@ public class OrderDTO extends BaseDTO {
 	/**
 	 * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部单为 null
 	 */
-	private PlatformTypeEnum platformType;
+	private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 	/**
 	 * 收货信息值对象
 	 */
@@ -95,7 +96,7 @@ public class OrderDTO extends BaseDTO {
 	 * 支付时间
 	 */
 	private LocalDateTime payTime;
-	private OrderEnum.PayType payType;
+	private PaymentEnum.PayType payType;
 	/**
 	 * 订单状态流转日志,逗号隔开
 	 */

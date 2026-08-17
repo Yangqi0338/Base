@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,10 +17,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class AccountReq extends BaseReq {
-    /**
-     * 主账号id
-     */
-    private String mainAccountId;
     /**
      * 登录账号
      */
@@ -38,10 +34,6 @@ public class AccountReq extends BaseReq {
      */
     @Pattern(regexp = PatternUtil.MOBILE, message = "手机号格式错误")
     private String phone;
-    /**
-     * 账号类型
-     */
-    private AccountEnum.SubUserType accountType;
     /**
      * 头像
      */

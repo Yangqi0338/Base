@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,7 +15,7 @@ public class SettlementConfigVO implements Serializable {
     /**
      * 可结算节点:
      */
-    private SettleType orderType;
+    private EarningsEnum.SettleType orderType;
     /**
      * 结算周期类型:
      */

@@ -29,7 +29,7 @@ import com.newzkl.platform.base.common.ddd.model.constant.SupplierErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

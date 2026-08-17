@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

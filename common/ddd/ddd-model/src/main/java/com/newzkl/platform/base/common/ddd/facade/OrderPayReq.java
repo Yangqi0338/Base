@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -70,7 +70,7 @@ public class OrderPayReq implements Serializable {
     /**
      * 支付方式
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 支付单号

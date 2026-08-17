@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.model.permission.dto;
 
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import lombok.Data;
 
 /**
@@ -15,7 +15,7 @@ public class PermissionRelationDTO {
     private Long id;
 
     /** 关系类型 */
-    private RelationEnum.Type type;
+    private PermissionEnum.RelationType type;
 
     /** 源对象ID */
     private Long sourceId;
@@ -24,5 +24,5 @@ public class PermissionRelationDTO {
     private Long targetId;
 
     /** 关系来源 */
-    private RelationEnum.Source source;
+    private PermissionEnum.Source source;
 }

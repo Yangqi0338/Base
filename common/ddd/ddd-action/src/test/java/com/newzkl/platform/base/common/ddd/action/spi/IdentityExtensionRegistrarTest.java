@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.action.spi;
 
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityImpl;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 

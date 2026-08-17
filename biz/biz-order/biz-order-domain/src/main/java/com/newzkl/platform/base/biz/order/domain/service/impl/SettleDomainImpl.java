@@ -27,9 +27,9 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -287,7 +287,7 @@ public class SettleDomainImpl implements SettleDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void settleOrderWaitSave(List<SettleOrderWaitCommand> settleOrderWaitCommandList, SettleType settleType) {
+    public void settleOrderWaitSave(List<SettleOrderWaitCommand> settleOrderWaitCommandList, EarningsEnum.SettleType settleType) {
         List<SettleOrderWait> settleOrderWaitList = new ArrayList<>();
         for (SettleOrderWaitCommand skuOrderVO : settleOrderWaitCommandList) {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
@@ -303,7 +303,7 @@ public class SettleDomainImpl implements SettleDomain {
             settleOrderWait.setSkuCount(skuOrderVO.getSkuCount());
             settleOrderWait.setRefundId(skuOrderVO.getRefundId());
             // settleType == COMPLETE_DELAY(2): 订单完成后 N 天结算, N 取供应商 orderTypeDay
-            if(SettleType.COMPLETE_DELAY == settleType){
+            if(EarningsEnum.SettleType.COMPLETE_DELAY == settleType){
                 // 迁移: 原 domain 直连 new-scm ScmDateUtil.dayNumForStamp(违跨服务域), 内联结算时间戳(当前毫秒 + N 天)
                 Integer settleDayNum = settleRepository.querySupplierSettleConfig(skuOrderVO.getSupplierId());
                 Long time = System.currentTimeMillis() + settleDayNum * 86400000L;
@@ -323,7 +323,7 @@ public class SettleDomainImpl implements SettleDomain {
     }
 
     @Override
-    public void freightSettleOrderWaitSave(List<FreightSettleOrderWaitCommand> freightSettleOrderWaitCommands, SettleType settleOrderType) {
+    public void freightSettleOrderWaitSave(List<FreightSettleOrderWaitCommand> freightSettleOrderWaitCommands, EarningsEnum.SettleType settleOrderType) {
         List<SettleOrderWait> settleOrderWaitList = new ArrayList<>();
         for (FreightSettleOrderWaitCommand item : freightSettleOrderWaitCommands) {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
@@ -336,7 +336,7 @@ public class SettleDomainImpl implements SettleDomain {
             settleOrderWait.setSpuId(item.getSpuId());
             settleOrderWait.setOrderMoney(item.getAmount());
             settleOrderWait.setSkuCount(1);
-            if (SettleType.COMPLETE_DELAY == settleOrderType){
+            if (EarningsEnum.SettleType.COMPLETE_DELAY == settleOrderType){
                 settleOrderWait.setSettleTimeNode(-1L);
             }else {
                 settleOrderWait.setSettleTimeNode(0L);

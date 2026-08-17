@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.model.vo;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

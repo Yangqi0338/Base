@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.Data;
 
@@ -12,10 +11,6 @@ import lombok.Data;
  */
 @Data
 public class ChannelOutRes extends BaseRes {
-    /**
-     * 主体类型 (查询)
-     */
-    private AccountEnum.BodyType bodyType;
     /**
      * 状态 (查询)
      */

@@ -16,12 +16,9 @@ import java.util.stream.Stream;
 public class GoodsRelationEnum {
 
 
+    @AllArgsConstructor
+    @Getter
     public enum GoodsRelation implements IEnum<Integer> {
-        /**
-         * 一级市场-商品
-         */
-        ONE_MARKET_GOODS(1, "一级市场-商品"),
-
         /** 二市场-商品 */
         TWO_MARKET_GOODS(2, "二市场-商品"),
 
@@ -30,39 +27,8 @@ public class GoodsRelationEnum {
 
         @EnumValue
         @JsonValue
-        private Integer relationType;
-        private String info;
-
-        GoodsRelation(Integer relationType, String info) {
-            this.relationType = relationType;
-            this.info = info;
-        }
-
-        public Integer getRelationType() {
-            return relationType;
-        }
-
-        public void setRelationType(Integer relationType) {
-            this.relationType = relationType;
-        }
-
-        public String getInfo() {
-            return info;
-        }
-
-        public void setInfo(String info) {
-            this.info = info;
-        }
-
-        @Override
-        public Integer getCode() {
-            return relationType;
-        }
-
-        @Override
-        public String getValue() {
-            return info;
-        }
+        private Integer code;
+        private String value;
     }
 
     @Getter

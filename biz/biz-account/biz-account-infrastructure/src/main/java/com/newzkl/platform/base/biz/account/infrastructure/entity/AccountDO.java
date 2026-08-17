@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
@@ -37,10 +36,6 @@ public class AccountDO extends BaseDO {
     @PrimaryKey
     private CommonEnum.Client client;
     /**
-     * 主账号id
-     */
-    private Long mainAccountId;
-    /**
      * 父ID
      */
     @Index
@@ -64,10 +59,6 @@ public class AccountDO extends BaseDO {
     @Index
     private String username;
     /**
-     * 子用户类型
-     */
-    private AccountEnum.SubUserType subUserType;
-    /**
      * 真实姓名
      */
     @OldColumnName("realname")
@@ -84,10 +75,6 @@ public class AccountDO extends BaseDO {
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
-    /**
-     * 实名认证审批状态
-     */
-    private AuditEnum.State nameAuthAuditState;
     /**
      * 子账号数量
      */
@@ -117,12 +104,6 @@ public class AccountDO extends BaseDO {
      * @ext tencent IM 用
      */
     private String userAccount;
-    /**
-     * IM同步状态
-     * @ext 0-未同步, 1-已同步, 2-同步失败
-     */
-    private Integer imSyncStatus;
-
     /**
      * 头像
      */

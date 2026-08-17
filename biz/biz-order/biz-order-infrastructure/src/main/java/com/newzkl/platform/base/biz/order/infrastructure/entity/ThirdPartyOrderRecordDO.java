@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -23,7 +23,7 @@ public class ThirdPartyOrderRecordDO extends BaseDO {
     /**
      * 平台类型
      */
-    private PlatformTypeEnum platformType;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 
     /**
      * 业务订单号

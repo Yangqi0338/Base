@@ -15,6 +15,7 @@ import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.ItemInfo;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.PkgInfo;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
@@ -41,9 +42,9 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.domain.utils.COrderStateMachine;
 import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyStateMapping;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -285,7 +286,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
         // 3. 三方状态码映射为我方状态码
         Integer thirdPartyCode = callbackRequest.getOrderStatusCode();
-        OrderEnum.State ourCode = ThirdPartyStateMapping.getOurCodeByThirdPartyCode(thirdPartyCode);
+        OrderEnum.State ourCode = ThirdPartyOrderEnum.ThirdPartyStateMapping.getOurCodeByThirdPartyCode(thirdPartyCode);
         if (ourCode == null) {
             log.warn("三方状态码映射失败，三方码：{}，订单ID：{}", thirdPartyCode, orderDTO.getId());
             return false;
@@ -322,6 +323,12 @@ public class OrderFacadeImpl implements OrderFacade {
         log.info("订单状态更新成功，订单ID：{}，{}→{}", orderDTO.getId(), currentState.getValue(), validatedTarget.getValue());
         return true;
     }
+
+    @Override
+    public OrderPayInfoRes queryPayInfoByOrderId(Long orderId) {
+        return null;
+    }
+
     /**
      * 会订货发货：外部SKU反查内部SKU, 按回调数量构建发货命令
      *

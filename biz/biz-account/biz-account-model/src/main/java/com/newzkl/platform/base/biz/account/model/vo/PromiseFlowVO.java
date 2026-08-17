@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;

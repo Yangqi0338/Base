@@ -18,7 +18,7 @@ import java.util.Map;
  * @author KC
  */
 @Slf4j
-@MQConsumer(consumerGroup = MQ.Tag.EARNING_MESSAGE, tag = MQ.Tag.EARNING)
+@MQConsumer(consumerGroup = MQ.Tag.SETTLE_MESSAGE, tag = MQ.Tag.SETTLE)
 public class SettleSkuOrderEarningsConsumer extends AbstractMessageMQPushConsumer<SkuOrderWaitEarningVO> {
 
     @Autowired

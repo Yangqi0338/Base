@@ -28,11 +28,12 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
 import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
-import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -277,8 +278,8 @@ public class CommitOrderImpl implements CommitOrder {
         ModelShopOutVO modelShopDataDTO = new ModelShopOutVO();
         modelShopDataDTO.setStoreId(consumerPaymentCommand.getStoreId());
         modelShopDataDTO.setAmount(order.getOrderAgg().getOrder().getGoodsAmount());
-        modelShopDataDTO.setType(ModeShopOrderType.ORDER);
-        localMessageApi.sendModelShopMessage(modelShopDataDTO);
+        modelShopDataDTO.setType(StoreStyleEnum.ModeShopOrderType.ORDER);
+//        localMessageApi.sendModelShopMessage(modelShopDataDTO);
         localMessageApi.orderExpireClose(order.getOrderAgg().getOrder().getId());
         return order.getOrderAgg();
     }
@@ -297,8 +298,8 @@ public class CommitOrderImpl implements CommitOrder {
         ModelShopOutVO modelShopDataDTO = new ModelShopOutVO();
         modelShopDataDTO.setStoreId(order.getStoreId());
         modelShopDataDTO.setAmount(order.getGoodsAmount());
-        modelShopDataDTO.setType(ModeShopOrderType.PAY);
-        localMessageApi.sendModelShopMessage(modelShopDataDTO);
+        modelShopDataDTO.setType(StoreStyleEnum.ModeShopOrderType.PAY);
+//        localMessageApi.sendModelShopMessage(modelShopDataDTO);
         // 调用支付API
         PayBaseResult payBaseResult = orderPayApi.orderPay(orderPayReq);
         orderDomain.batchUpdateOrderState(Collections.singletonList(order.getId()), OrderEnum.State.NEW, OrderEnum.State.MEMBER_WAIT_PAY, null);
@@ -353,7 +354,7 @@ public class CommitOrderImpl implements CommitOrder {
     }
 
     // 订单支付请求构建方法
-    private OrderPayReq buildOrderPayReq(OrderDTO order, OrderEnum.PayType payType) {
+    private OrderPayReq buildOrderPayReq(OrderDTO order, PaymentEnum.PayType payType) {
         OrderPayReq orderPayReq = new OrderPayReq();
         orderPayReq.setOrderNo(order.getId());
         orderPayReq.setConsumeType(EarningsEnum.ConsumeType.GOODS);

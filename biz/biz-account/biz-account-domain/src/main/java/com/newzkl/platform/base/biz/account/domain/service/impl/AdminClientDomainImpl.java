@@ -5,13 +5,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AuthEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.EmpRepository;
@@ -85,7 +84,6 @@ public class AdminClientDomainImpl implements AdminClientDomain {
         }
         AccountQuery existQuery = new AccountQuery();
         existQuery.setUsername(username);
-        existQuery.setMainAccountId(parentAccount.getId());
         existQuery.setClient(client);
         if (accountRepository.selectCount(existQuery) > 0) {
             throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
@@ -106,7 +104,7 @@ public class AdminClientDomainImpl implements AdminClientDomain {
 
         Long accountId = SnowflakeGenerator.getSnowflakeId();
         AccountVO account = new AccountVO();
-        account.init(roleList, username, null, parentAccount.getId(), null);
+        account.init(roleList, username, null, null);
         account.setId(accountId);
         account.setPassword(account.getNewPassword(req.getPassword()));
         accountRepository.accountSave(account);
@@ -197,7 +195,6 @@ public class AdminClientDomainImpl implements AdminClientDomain {
 
             AccountQuery accountQuery = new AccountQuery();
             accountQuery.setUsername(username);
-            accountQuery.setMainAccountId(accountId);
             accountQuery.setClient(client);
             long count = accountRepository.selectCount(accountQuery);
             if (count > 0) {

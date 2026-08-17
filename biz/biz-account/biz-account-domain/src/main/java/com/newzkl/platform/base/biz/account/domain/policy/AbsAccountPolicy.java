@@ -5,28 +5,25 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.redis.RedisEnum;
-import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
-import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
+import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
+import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.auth.req.AccountProxySaveReq;
+import com.newzkl.platform.base.biz.account.model.auth.req.AccountSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
 import com.newzkl.platform.base.biz.account.model.res.AccountRes;
 import com.newzkl.platform.base.biz.account.model.res.UpIdRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.ImCreateUserAccountObj;
-import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
-import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.AccountProxySaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.AccountSaveReq;
-// TODO[cross-domain relation]: import relation.req.AccountLevelUpReq;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
+import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +32,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+// TODO[cross-domain relation]: import relation.req.AccountLevelUpReq;
 
 /**
  * 账号策略
@@ -53,8 +52,6 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
     protected AccountAssembler accountAssembler;
     @Autowired
     protected AccountRepository accountRepository;
-    @Autowired
-    protected UserClientDomain userClientDomain;
 
 
     /**
@@ -217,18 +214,5 @@ public abstract class AbsAccountPolicy extends AbsAccountPolicySupport {
 
     public void remove(Long id) {
 
-    }
-
-    /**
-     * 账号维度
-     * 发送腾讯im用户创建消息
-     */
-    protected void sendTencentImMsg(AccountVO account) {
-        ImCreateUserAccountObj imEntity = new ImCreateUserAccountObj().setUserAccount(account.getUserAccount())
-                .setNickname(account.getNickname())
-                .setHeadImg(account.getHead())
-                .setPhone(account.getPhone());
-
-        userClientDomain.sendTencentCreateUserMsg(imEntity);
     }
 }

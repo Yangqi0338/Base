@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,20 +1,13 @@
 package com.newzkl.platform.base.biz.store.application.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayRes;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.biz.store.application.service.StoreService;
@@ -104,7 +97,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreOrderPayRes orderPay(StoreOrderPayReq storeOrderPayReq) {
-        OrderEnum.PayType payType = storeOrderPayReq.getPayType();
+        PaymentEnum.PayType payType = storeOrderPayReq.getPayType();
         Long accountId = storeOrderPayReq.getAccountId();
         StoreOrderPayReq.StoreInfo storeInfo = storeOrderPayReq.getStoreInfo();
 

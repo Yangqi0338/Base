@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.store.query;
 
 import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 

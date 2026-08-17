@@ -3,11 +3,7 @@ package com.newzkl.platform.base.biz.store.model.template.dto;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author 样板店
@@ -31,25 +27,6 @@ public class ModelShopDTO extends BaseDTO {
     private String modelDescription;
 
     /**
-     * 运营商id
-     */
-    private Long operatorId;
-
-    /**
-     * 分润配置
-     */
-    private String earningConfig;
-
-    /**
-     * 渠道商收益
-     */
-    private Money channelEarning;
-
-    /**
-     * 总收益
-     */
-
-    /**
      * 审核状态
      */
     private  AuditEnum.State auditState;
@@ -63,31 +40,6 @@ public class ModelShopDTO extends BaseDTO {
      * 样式code
      */
     private String styleCode;
-
-    /**
-     * 使用门店数
-     */
-    private Integer useStoreNum;
-
-    /**
-     * 累计使用门店数
-     */
-
-    /**
-     * 累计下单金额
-     */
-
-    /**
-     * 累计下单数
-     */
-
-    /**
-     * 累计支付金额
-     */
-
-    /**
-     * 累计支付订单数
-     */
 
     /**
      * 状态

@@ -41,20 +41,4 @@ public class ChannelEnum {
         private final String value;
     }
 
-    /**
-     * 渠道商类型
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum ChannelType {
-        /**
-         * 分销
-         */
-        DISTRIBUTION(0, "分销"),
-        /** 门店 */
-        STORE(1, "门店"),
-        ;
-        private final Integer code;
-        private final String value;
-    }
 }

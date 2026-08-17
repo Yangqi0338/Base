@@ -17,7 +17,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -94,7 +94,7 @@ public class ChannelController {
         CommonEnum.Client client = SecurityUtils.getClient();
         if (RoleEnum.CompanyRole.PLATFORM == role) {
             channelQuery.setStateOver(ChannelEnum.State.DESTORY);
-        } else if (CommonEnum.Client.SERVICE != client) {
+        } else if (CommonEnum.Client.PARTNER != client) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
         return PlatformResult.success(userQueryService.channelPage(channelQuery));

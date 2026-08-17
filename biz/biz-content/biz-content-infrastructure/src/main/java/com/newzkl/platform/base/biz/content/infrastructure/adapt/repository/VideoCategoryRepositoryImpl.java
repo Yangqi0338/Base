@@ -89,15 +89,8 @@ public class VideoCategoryRepositoryImpl implements VideoCategoryRepository {
 
     @Override
     public List<VideoCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
-        BaseLambdaQueryWrapper<VideoCategoryDO> queryWrapper = new BaseLambdaQueryWrapper<>();
-        if (CollUtil.isNotEmpty(recommendGroups)) {
-            // 推荐人群使用 or 条件拼接, 任一命中即返回
-            queryWrapper.nested(w -> {
-                for (RecommendGroupEnum group : recommendGroups) {
-                    w.or().like(VideoCategoryDO::getRecommendGroups, group);
-                }
-            });
-        }
+        BaseLambdaQueryWrapper<VideoCategoryDO> queryWrapper = new BaseLambdaQueryWrapper<VideoCategoryDO>();
+        queryWrapper.likeList(VideoCategoryDO::getRecommendGroups, recommendGroups);
         queryWrapper.eq(VideoCategoryDO::getIsEnabled, 1)
                 .orderByAsc(VideoCategoryDO::getSort)
                 .orderByDesc(VideoCategoryDO::getCreateTime);

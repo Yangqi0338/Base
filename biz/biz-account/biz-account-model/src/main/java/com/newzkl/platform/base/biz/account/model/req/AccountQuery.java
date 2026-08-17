@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.model.req;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,14 +19,6 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class AccountQuery extends BizPageQuery {
-    /**
-     * 账号类型
-     */
-    private AccountEnum.SubUserType accountType;
-    /**
-     * 主账号id
-     */
-    private Long mainAccountId;
     /**
      * 父ID (查询)
      */

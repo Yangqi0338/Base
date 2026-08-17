@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.market.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -64,5 +64,5 @@ public class MarketDO extends BaseDO {
     /**
      * 市场类型
      */
-    private MarketTypeEnum marketType;
+    private MarketEnum.MarketTypeEnum marketType;
 }

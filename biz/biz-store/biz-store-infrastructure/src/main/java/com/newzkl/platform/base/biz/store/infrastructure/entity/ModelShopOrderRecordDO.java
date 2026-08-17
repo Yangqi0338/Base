@@ -1,15 +1,11 @@
 package com.newzkl.platform.base.biz.store.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
-
-import java.time.LocalDateTime;
 
 /**
  * 样板店订单记录
@@ -34,7 +30,7 @@ public class ModelShopOrderRecordDO extends BaseDO {
     /**
      * 订单类型
      */
-    private ModeShopOrderType type;
+    private StoreStyleEnum.ModeShopOrderType type;
 
     /**
      * 金额

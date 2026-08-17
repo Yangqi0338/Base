@@ -2,8 +2,7 @@ package com.newzkl.platform.base.biz.order.model.res;
 
 
 import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
-import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -29,5 +28,5 @@ public class CompleteSkuOrderRes {
     /**
      * 结算类型
      */
-    private SettleType settleType;
+    private EarningsEnum.SettleType settleType;
 }

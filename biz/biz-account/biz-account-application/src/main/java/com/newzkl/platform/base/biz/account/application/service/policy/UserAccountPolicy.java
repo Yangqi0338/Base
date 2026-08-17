@@ -36,9 +36,6 @@ public class UserAccountPolicy extends AbsAccountPolicy {
         buildSaveReq(req);
         AccountVO account = super.doRegisterAccount(req);
 
-        if (!account.isOld()) {
-            super.sendTencentImMsg(account);
-        }
         return accountAssembler.vo2RegisterRes(account);
     }
 

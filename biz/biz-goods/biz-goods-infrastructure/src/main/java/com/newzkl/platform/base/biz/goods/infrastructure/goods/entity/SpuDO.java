@@ -5,14 +5,14 @@ import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import jakarta.validation.constraints.Size;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.autotable.annotation.OldColumnName;
 import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 /**
 * spu
@@ -52,10 +52,6 @@ public class SpuDO extends BaseDO {
     @ColumnType(value = MysqlTypeConstant.TEXT)
 	private String detail;
 	/**
-	 * 商品类型
-	 */
-    private SpuEnum.SaleType goodsType;
-	/**
 	 * 账号ID
 	 */
     @Index
@@ -66,18 +62,10 @@ public class SpuDO extends BaseDO {
     @Index
 	private Long categoryId;
 	/**
-	 * 所属平台分类名称完整
-	 */
-	private String categoryName;
-	/**
 	 * 品牌id
 	 */
     @Index
 	private Long brandId;
-	/**
-	 * 品牌名称
-	 */
-	private String brandName;
 	/**
 	 * 运费模板id
 	 */
@@ -100,14 +88,6 @@ public class SpuDO extends BaseDO {
 	 * 编码
 	 */
 	private String code;
-	/**
-	 * 供应商销售金额
-	 */
-	private Money supplierSaleAmount;
-	/**
-	 * 账号名称
-	 */
-	private String accountName;
 	/**
 	 * 市场价
 	 */
@@ -133,18 +113,6 @@ public class SpuDO extends BaseDO {
      */
     private Integer virtualSaleNum;
 	/**
-	 * 选品数量
-	 */
-	private Integer selectionNum;
-	/**
-	 * 平台销售额
-	 */
-	private Money adminSaleAmount;
-	/**
-	 * 渠道商销售额
-	 */
-	private Money channelSaleAmount;
-	/**
 	 * 渠道类型
 	 */
     private SpuEnum.ChannelType channelType;
@@ -157,42 +125,6 @@ public class SpuDO extends BaseDO {
 	 */
     @OldColumnName("role_id")
     private RoleEnum.CompanyRole role;
-	/**
-	 * 最大利润
-	 */
-	private Money maxProfit;
-	/**
-	 * 市场价起始
-	 */
-	private Money marketPriceBegan;
-	/**
-	 * 市场价结束
-	 */
-	private Money marketPriceEnd;
-	/**
-	 * 销售价起始
-	 */
-	private Money salePriceBegan;
-	/**
-	 * 销售价结束
-	 */
-	private Money salePriceEnd;
-	/**
-	 * 成交数量
-	 */
-	private Integer dealNum;
-	/**
-	 * 售后数量
-	 */
-	private Integer refundNum;
-	/**
-	 * 供货价起始
-	 */
-	private Money supplierPriceBegan;
-	/**
-	 * 供货价结束
-	 */
-	private Money supplierPriceEnd;
 	/**
 	 * 审批状态
 	 */
@@ -212,21 +144,10 @@ public class SpuDO extends BaseDO {
 	 */
 	private Integer outState;
 
-	/**
-	 * 销售区域
-	 */
-	private String limitArea;
     /**
-     * 规格类型
+     * 扩展字段
+     * @ext JSON, 存 categoryName/brandName/accountName/marketPriceBegan/marketPriceEnd/salePriceBegan/salePriceEnd/supplierPriceBegan/supplierPriceEnd
      */
-    private SpuEnum.SpecType specType;
-    /**
-     * 最小计价数
-     */
-    private Double minPricingNum;
-    /**
-     * 供应商ID
-     */
-    @Index
-    private Long supplierId;
+    @JsonSerializable
+    private String expand;
 }

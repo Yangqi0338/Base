@@ -1,15 +1,12 @@
 package com.newzkl.platform.base.biz.account.application.provider;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.newzkl.platform.base.biz.account.domain.policy.AbsAccountPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.req.AccountRegisterRes;
-import com.newzkl.platform.base.biz.account.model.req.ChannelCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
@@ -18,9 +15,8 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

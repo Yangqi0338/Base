@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.goods.domain.adapt.repository.ThirdPartyGood
 import com.newzkl.platform.base.biz.goods.domain.service.ThirdPartyGoodsDomain;
 import com.newzkl.platform.base.biz.goods.facade.model.thirdparty.ThirdPartyGoodsRecordDTO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class ThirdPartyGoodsDomainImpl implements ThirdPartyGoodsDomain {
 
     @Override
     @Transactional
-    public void recordAction(PlatformTypeEnum platformType, String outSpuId, String interfaceName,
+    public void recordAction(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String outSpuId, String interfaceName,
                              String requestJson, String responseJson, CommonEnum.RequestStatusEnum requestStatus, String errorMessage) {
         ThirdPartyGoodsRecordDTO record = ThirdPartyGoodsRecordDTO
                 .init(platformType, outSpuId, interfaceName, requestJson, responseJson, requestStatus, errorMessage);

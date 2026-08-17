@@ -2,8 +2,10 @@ package com.newzkl.platform.base.common.core.model.money;
 
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONString;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -22,7 +24,12 @@ import java.util.Currency;
  * @ext null
  * @ext immutable, 返回新值
  */
+@NoArgsConstructor
 public class Money extends cn.hutool.core.math.Money implements JSONString {
+
+    public Money(Long cent) {
+        this.setCent(Opt.ofNullable(cent).orElse(0L));
+    }
 
     /**
      * NULL sentinel — 表示「未设置」, 与 ZERO (0 元) 区分

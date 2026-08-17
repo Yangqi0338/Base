@@ -8,14 +8,11 @@ import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCmd;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
-import com.newzkl.platform.base.biz.account.model.res.SupplierOutRes;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 用户-供应商

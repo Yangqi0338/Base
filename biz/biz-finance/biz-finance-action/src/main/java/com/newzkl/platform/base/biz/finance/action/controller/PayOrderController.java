@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayServi
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.FinanceErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.RechargeOrderInfo;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
@@ -107,7 +107,7 @@ public class PayOrderController {
         req.setPayAmount(Money.of(amount));
         req.setAccountId(SecurityUtils.getAccountId());
         req.setAccountName(SecurityUtils.getUsername());
-        req.setPayType(OrderEnum.PayType.getByCode(payType));
+        req.setPayType(PaymentEnum.PayType.getByCode(payType));
         return req;
     }
 }

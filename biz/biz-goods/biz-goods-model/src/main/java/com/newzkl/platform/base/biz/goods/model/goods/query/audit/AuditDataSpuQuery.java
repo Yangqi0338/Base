@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.model.goods.query.audit;
 
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;

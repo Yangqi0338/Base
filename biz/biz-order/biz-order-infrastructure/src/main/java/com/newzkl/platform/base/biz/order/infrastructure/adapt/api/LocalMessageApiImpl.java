@@ -20,12 +20,10 @@ import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -57,11 +55,6 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
-    public void sendModelShopMessage(ModelShopOutVO modelShopOutVO) {
-        MQUtil.send(MQ.Tag.COUNT_MODEL_SHOP_AMOUNT_EVENT, modelShopOutVO);
-    }
-
-    @Override
     public void sendRefundPassMessage(RefundDTO refund) {
         MQUtil.send(MQ.Tag.REFUND_PASS, TransferUtils.transfer(refund, RefundPassEvent.class));
     }
@@ -73,7 +66,7 @@ public class LocalMessageApiImpl implements LocalMessageApi {
 
     @Override
     public void wakeUpEarningMessage(Long skuOrderId) {
-        String outKey = MQ.Tag.EARNING + skuOrderId;
+        String outKey = MQ.Tag.SETTLE + skuOrderId;
         localMessageRepository.localMessageCanConsumeEditByOutKey(CommonEnum.YesOrNo.YES, outKey);
     }
 
@@ -111,7 +104,7 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
-    public void sendRefundOperationRecord(RefundDTO refund, RefundEnum.State from, RefundEnum.State to, RefundOperateTypeEnum refundOperateTypeEnum) {
+    public void sendRefundOperationRecord(RefundDTO refund, RefundEnum.State from, RefundEnum.State to, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum) {
         try {
             String operationContent = refundOperateTypeEnum.getDesc();
             // 1. 组装消息对象（封装所有重复的参数赋值逻辑）
@@ -130,7 +123,7 @@ public class LocalMessageApiImpl implements LocalMessageApi {
      * 构建售后操作记录消息对象（核心封装）
      */
     private RefundOperationRecordRPC buildRefundOperationRecordRPC(RefundDTO refund, RefundEnum.State beforeState,
-                                                                   RefundEnum.State afterState, String operationContent, RefundOperateTypeEnum operationType) {
+                                                                   RefundEnum.State afterState, String operationContent, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum operationType) {
         RefundOperationRecordRPC recordRPC = new RefundOperationRecordRPC();
         // 基础订单/售后单信息
         recordRPC.setSpuOrderId(refund.getSpuOrderId());
@@ -170,15 +163,6 @@ public class LocalMessageApiImpl implements LocalMessageApi {
      */
     private String buildReason(RefundDTO refund) {
         return refund.getReason() + " : " + refund.getRemark();
-    }
-
-    @Override
-    public void storeAccountPay(Long storeId, Long accountId, Money payAmount) {
-        StoreAccountPayCommand command = new StoreAccountPayCommand();
-        command.setStoreId(storeId);
-        command.setAccountId(accountId);
-        command.setPayAmount(payAmount);
-        MQUtil.send(MQ.Tag.STORE_ACCOUNT_PAY_EVENT, command);
     }
 
     /**

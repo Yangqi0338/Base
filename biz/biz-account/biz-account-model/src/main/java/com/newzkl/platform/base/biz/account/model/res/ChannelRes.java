@@ -2,8 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -146,8 +145,6 @@ public class ChannelRes implements Serializable {
 
     /**
      * 渠道商类型
-     *
-     * @see ChannelEnum.ChannelType
      */
     private String channelType;
 

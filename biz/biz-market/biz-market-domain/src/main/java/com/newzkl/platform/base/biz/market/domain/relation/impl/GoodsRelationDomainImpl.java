@@ -58,15 +58,15 @@ public class GoodsRelationDomainImpl implements GoodsRelationDomain {
                 marketGoodsRelation.setUserId(req.getUserId());
                 marketGoodsRelation.setCreateTime(now);
                 marketGoodsRelation.setDiscountRate(req.getDiscountRate());
-                if (req.getRelationType() == 2){
+                if (req.getRelationType() == GoodsRelationEnum.GoodsRelation.TWO_MARKET_GOODS){
                     marketGoodsRelation.setGoodsInfo(JSONUtil.toJsonStr(req.getGoodsInfoVO()));
                 }
-                if(req.getRelationType() == 3){
+                if(req.getRelationType() == GoodsRelationEnum.GoodsRelation.SELECT_GOODS){
                     //补充商品信息
                     GoodsRelationQueryDTO goodsRelation = new GoodsRelationQueryDTO();
                     goodsRelation.setMarketId(req.getMarketId());
                     goodsRelation.setGoodsId(x);
-                    goodsRelation.setRelationType(GoodsRelationEnum.GoodsRelation.TWO_MARKET_GOODS.getRelationType());
+                    goodsRelation.setRelationType(GoodsRelationEnum.GoodsRelation.TWO_MARKET_GOODS);
                     List<MarketGoodsRelationDTO> dtoList = goodsRelationRepository.queryGoodsRelationListByDTO(goodsRelation);
                     if(CollectionUtil.isNotEmpty(dtoList)) {
                         marketGoodsRelation.setGoodsInfo(dtoList.get(0).getGoodsInfo());
@@ -112,7 +112,7 @@ public class GoodsRelationDomainImpl implements GoodsRelationDomain {
     public Page<GoodsRelationListVO> channelQuerySelectGoodsList(MarketGoodsPageQuery req) {
         GoodsListPageQuery queryGoodsListReq = TransferUtils.transfer(req, GoodsListPageQuery::new);
         queryGoodsListReq.setUserId(SecurityUtils.getAccountId());
-        queryGoodsListReq.setRelationType(GoodsRelationEnum.GoodsRelation.SELECT_GOODS.getRelationType());
+        queryGoodsListReq.setRelationType(GoodsRelationEnum.GoodsRelation.SELECT_GOODS.getCode());
         return goodsRelationRepository.queryGoodsRelationList(queryGoodsListReq);
     }
 
@@ -156,7 +156,7 @@ public class GoodsRelationDomainImpl implements GoodsRelationDomain {
         GoodsRelationQueryDTO query = new GoodsRelationQueryDTO();
         query.setUserId(accountId);
         query.setGoodsId(goodsId);
-        query.setRelationType(3);
+        query.setRelationType(GoodsRelationEnum.GoodsRelation.SELECT_GOODS);
         List<MarketGoodsRelationDTO> list = queryGoodsRelationListByDTO(query);
         if (list == null || list.isEmpty()) {
             return;

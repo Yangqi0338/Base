@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.model.relation.res;
 
 import com.newzkl.platform.base.biz.user.model.relation.vo.ConditionCalVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.PermissionVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.Condition;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;

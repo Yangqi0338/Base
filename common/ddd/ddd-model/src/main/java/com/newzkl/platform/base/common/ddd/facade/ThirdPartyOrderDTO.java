@@ -4,7 +4,7 @@ package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ public class ThirdPartyOrderDTO extends BaseDTO {
     /**
      * 平台类型枚举
      */
-    private PlatformTypeEnum platformType;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
     
     /**
      * 业务订单号 系统内部生成的唯一订单标识，用于追踪和关联订单在本系统中的所有操作。
@@ -81,7 +81,7 @@ public class ThirdPartyOrderDTO extends BaseDTO {
      * @param errorMessage 错误信息 (初始创建时可能为null)
      * @return 一个初始化完成的 {@link ThirdPartyOrderDTO} 实例
      */
-    public static ThirdPartyOrderDTO init(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName,
+    public static ThirdPartyOrderDTO init(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo, String interfaceName,
                                           String requestJson, String responseJson, CommonEnum.RequestStatusEnum requestStatus, String errorMessage) {
         ThirdPartyOrderDTO request = new ThirdPartyOrderDTO();
         request.setPlatformType(platformType);

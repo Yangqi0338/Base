@@ -39,6 +39,14 @@ public class QuerySupport {
      * */
     private List<String> field;
 
+    /**
+     * 根据内部枚举类和编码获取真实排序字段名
+     *
+     * @param <E>      枚举类型（必须实现SortField）
+     * @param innerClz 内部枚举类
+     * @param code     排序字段编码
+     * @return 真实字段名，无匹配返回编码字符串
+     */
     private static <E extends Enum<E> & SortField> String getRealFieldByCode(Class<?> innerClz, Integer code) {
         Class<E> clazz = (Class<E>) innerClz;
         SortField instance = EnumUtil.getBy(clazz, (enumInstance) -> {
@@ -52,6 +60,12 @@ public class QuerySupport {
         return Opt.ofNullable(instance).map(it -> it.getField(code)).orElse(code + "");
     }
 
+    /**
+     * 初始化默认排序字段
+     * @ext 当sortField为空时才设置
+     * @param field  排序字段名
+     * @param isDesc 是否降序
+     */
     public void initSortField(String field, boolean isDesc) {
         if (CollUtil.isNotEmpty(sortField)) {
             return;
@@ -63,6 +77,11 @@ public class QuerySupport {
         }
     }
 
+    /**
+     * 设置排序字段列表
+     * @ext 追加方式，每个字段单独解析
+     * @param sortField 排序字段列表
+     */
     public void setSortField(List<String> sortField) {
         if (CollUtil.isEmpty(sortField)) return;
         if (this.sortField == null) {
@@ -71,6 +90,11 @@ public class QuerySupport {
         sortField.forEach(this::doAddSortField);
     }
 
+    /**
+     * 内部方法：将单个排序字段添加到列表
+     * @ext 自动解析枚举编码
+     * @param field 排序字段名或枚举编码
+     */
     private void doAddSortField(String field) {
         if (StrUtil.isBlank(field)) return;
         if (NumberUtil.isNumber(field)) {
@@ -90,23 +114,52 @@ public class QuerySupport {
         sortField.add(field);
     }
 
+    /**
+     * 添加降序排序字段
+     *
+     * @param field 排序字段名
+     */
     public void addDescSortField(String field) {
         addSortField(field, true);
     }
+    public <T> void addDescSortField(Function<T,?> function) {
+        addSortField(LambdaUtil.getFieldName(function::apply), true);
+    }
 
+    /**
+     * 添加升序排序字段
+     *
+     * @param field 排序字段名
+     */
     public void addSortField(String field) {
         addSortField(field, false);
     }
 
+    /**
+     * 添加排序字段，可指定排序方向
+     *
+     * @param field  排序字段名
+     * @param isDesc 是否降序
+     */
     public void addSortField(String field, boolean isDesc) {
         this.sortField = add(this.sortField, field);
         this.sortMode = add(this.sortMode, isDesc ? "DESC" : "ASC");
     }
 
+    /**
+     * 添加分组字段
+     *
+     * @param fields 分组字段名
+     */
     public void addGroupField(String... fields) {
         this.groupField = add(this.groupField, fields);
     }
 
+    /**
+     * 添加分组字段
+     *
+     * @param fields 分组字段名
+     */
     @SafeVarargs
     public final <T> void addGroupField(Function<T, ?>... functions) {
         this.groupField = addFunc(this.groupField, functions);
@@ -130,7 +183,7 @@ public class QuerySupport {
             list = new ArrayList<>();
         }
         for (Function<T, ?> function : functions) {
-            String fieldName = StrUtil.toUnderlineCase(LambdaUtil.getFieldName((it) -> function.apply(null)));
+            String fieldName = StrUtil.toUnderlineCase(LambdaUtil.getFieldName(function::apply));
             list.add(fieldName);
         }
         return list;
@@ -146,13 +199,31 @@ public class QuerySupport {
 
     @SafeVarargs
     public final <T> void addField(Function<T, ?>... functions) {
-        if (ArrayUtil.isEmpty(functions)) return;
-        if (this.field == null) {
-            this.field = CollUtil.newArrayList();
-        }
         for (Function<T, ?> function : functions) {
-            String fieldName = StrUtil.toUnderlineCase(LambdaUtil.getFieldName((it) -> function.apply(null)));
-            this.field.add(fieldName);
+            String fieldName = StrUtil.toUnderlineCase(LambdaUtil.getFieldName(function::apply));
+            this.field = add(this.field, fieldName);
+        }
+    }
+
+    /**
+     * 添加sum字段
+     * @ext 字符串数组
+     * @param fields 字段名数组
+     */
+    public void addSumField(String... fields) {
+        for (String field : fields) {
+            if (!StrUtil.containsIgnoreCase(field, "SUM")) {
+                field = String.format("SUM(%s) AS %s",field, field);
+            }
+            this.field = add(this.field, field);
+        }
+    }
+
+    @SafeVarargs
+    public final <T> void addSumField(Function<T, ?>... functions) {
+        for (Function<T, ?> function : functions) {
+            String fieldName = StrUtil.toUnderlineCase(LambdaUtil.getFieldName(function::apply));
+            this.field = add(this.field, fieldName);
         }
     }
 
@@ -192,20 +263,34 @@ public class QuerySupport {
         StrJoiner fieldSQL = new StrJoiner(", ", "", "");
         fieldSQL.setEmptyResult("");
 
-        if (CollUtil.isNotEmpty(field)) {
-            field.forEach(fieldSQL::append);
-        }
-
+        int size = 0;
         if (CollUtil.isNotEmpty(groupField)) {
             if (!groupField.contains(getCountField())) {
                 addCountField();
             }
-            for (int i = 0; i < groupField.size(); i++) {
+
+            size = groupField.size();
+            for (int i = 0; i < size; i++) {
                 String field = groupField.get(i);
                 fieldSQL.append(String.format("%s AS count%s", field, i));
             }
         }
+
+        if (CollUtil.isNotEmpty(this.field)) {
+            for (String field : this.field) {
+                if (!StrUtil.containsIgnoreCase(field, "AS")) {
+                    fieldSQL.append(String.format("%s AS count%s", field, size++));
+                }
+            }
+        }
         return fieldSQL.toString();
+    }
+
+    /**
+     * field只允许下划线
+     */
+    public static String formatField(String source) {
+        return StrUtil.toUnderlineCase(source);
     }
 
     public void buildFieldSQL(Class<?> resClazz) {

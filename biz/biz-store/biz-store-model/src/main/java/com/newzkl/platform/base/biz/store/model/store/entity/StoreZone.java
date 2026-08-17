@@ -28,17 +28,7 @@ public class StoreZone {
      * 专区副标题
      */
     private String zoneSubtitle;
-    
-    /**
-     * 商品个数
-     */
-    private Integer goodsNum;
-    
-    /**
-     * 订单个数
-     */
-    private Integer orderNum;
-    
+
     /**
      * 描述
      */

@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.PayEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
@@ -100,7 +100,7 @@ class CashPayServiceImplTest {
         HuiFuPayRes cached = new HuiFuPayRes();
         redisUtil.when(() -> RedisUtil.get("orderPayCache:" + ORDER_NO)).thenReturn(cached);
 
-        HuiFuPayRes result = cashPayService.orderPay(req(OrderEnum.PayType.WX));
+        HuiFuPayRes result = cashPayService.orderPay(req(PaymentEnum.PayType.WX));
 
         assertSame(cached, result);
         verify(orderPayDomain, never()).saveOrderPayRecord(any(), any());
@@ -117,7 +117,7 @@ class CashPayServiceImplTest {
         payRes.setTripartiteNo("HF20260726001");
         huiFuMethod.when(() -> HuiFuMethod.pay(any())).thenReturn(payRes);
 
-        HuiFuPayRes result = cashPayService.orderPay(req(OrderEnum.PayType.WX));
+        HuiFuPayRes result = cashPayService.orderPay(req(PaymentEnum.PayType.WX));
 
         assertSame(payRes, result);
         verify(orderPayDomain).resetTripartiteTradeNo(TRADE_NO, "HF20260726001");
@@ -134,7 +134,7 @@ class CashPayServiceImplTest {
         payRes.setTradeNo(TRADE_NO);
         huiFuMethod.when(() -> HuiFuMethod.pay(any())).thenReturn(payRes);
 
-        cashPayService.orderPay(req(OrderEnum.PayType.WX));
+        cashPayService.orderPay(req(PaymentEnum.PayType.WX));
 
         verify(orderPayDomain, never()).resetTripartiteTradeNo(anyLong(), anyString());
     }
@@ -147,13 +147,13 @@ class CashPayServiceImplTest {
         payRes.setTradeNo(TRADE_NO);
         huiFuMethod.when(() -> HuiFuMethod.pay(any())).thenReturn(payRes);
 
-        cashPayService.orderPay(req(OrderEnum.PayType.WX));
-        assertEquals(PayEnum.HuiFuTradeType.T_NATIVE, captureHuiFuReq().getTradeType());
+        cashPayService.orderPay(req(PaymentEnum.PayType.WX));
+        assertEquals(HuifuEnum.HuiFuTradeType.T_NATIVE, captureHuiFuReq().getTradeType());
 
         huiFuMethod.clearInvocations();
-        cashPayService.orderPay(req(OrderEnum.PayType.ALIPAY));
+        cashPayService.orderPay(req(PaymentEnum.PayType.ALIPAY));
         HuiFuPayReq alipayReq = captureHuiFuReq();
-        assertEquals(PayEnum.HuiFuTradeType.A_NATIVE, alipayReq.getTradeType());
+        assertEquals(HuifuEnum.HuiFuTradeType.A_NATIVE, alipayReq.getTradeType());
         assertEquals(TRADE_NO, alipayReq.getTradeNo());
         assertEquals(10000, alipayReq.getPayAmount());
     }
@@ -164,7 +164,7 @@ class CashPayServiceImplTest {
         when(orderPayDomain.saveOrderPayRecord(any(), eq(null))).thenReturn(TRADE_NO);
 
         PlatformException ex = assertThrows(PlatformException.class,
-                () -> cashPayService.orderPay(req(OrderEnum.PayType.PURCHASE)));
+                () -> cashPayService.orderPay(req(PaymentEnum.PayType.PURCHASE)));
 
         assertTrue(ex.equalsCode(BaseErrorCode.PARAM));
         huiFuMethod.verifyNoInteractions();
@@ -177,7 +177,7 @@ class CashPayServiceImplTest {
         return captor.getValue();
     }
 
-    private OrderPayReq req(OrderEnum.PayType payType) {
+    private OrderPayReq req(PaymentEnum.PayType payType) {
         OrderPayReq req = new OrderPayReq();
         req.setOrderNo(ORDER_NO);
         req.setConsumeType(EarningsEnum.ConsumeType.RECHARGE);

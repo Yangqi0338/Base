@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.content.infrastructure.adapt.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.ArticleCategoryRepository;
@@ -11,6 +12,7 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCat
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
@@ -82,16 +84,11 @@ public class ArticleCategoryRepositoryImpl implements ArticleCategoryRepository 
 
     @Override
     public List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
-        BaseLambdaQueryWrapper<ArticleCategoryDO> queryWrapper = new BaseLambdaQueryWrapper<>();
-        // 推荐人群使用 or 条件拼接, 任一命中即返回
-        queryWrapper.nested(w -> {
-            for (RecommendGroupEnum group : recommendGroups) {
-                w.or().like(ArticleCategoryDO::getRecommendGroups, group);
-            }
-        });
-        queryWrapper.eq(ArticleCategoryDO::getIsEnabled, 1)
+        LambdaQueryWrapper<ArticleCategoryDO> queryWrapper = new BaseLambdaQueryWrapper<ArticleCategoryDO>()
+                .likeList(ArticleCategoryDO::getRecommendGroups, recommendGroups)
+                .notEmptyEq(ArticleCategoryDO::getIsEnabled, CommonEnum.YesOrNo.YES)
                 .orderByAsc(ArticleCategoryDO::getSort)
-                .orderByDesc(ArticleCategoryDO::getCreateTime);
+                .orderByDesc(ArticleCategoryDO::getId);
         return TransferUtils.transfers(contentArticleCategoryDAO.selectList(queryWrapper), ArticleCategoryRes::new);
     }
 }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.req.relation;
 
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 
@@ -44,7 +45,7 @@ public class PlatformQueryMarketNotAddGoodsReq extends PageQuery {
     /**
      * 市场类型
      *
-     * @ext GENERAL-普通市场，SPECIAL-专区; 候选枚举 {@link com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum}
+     * @ext GENERAL-普通市场，SPECIAL-专区; 候选枚举 {@link MarketEnum.MarketTypeEnum}
      */
     private String marketType;
     /**

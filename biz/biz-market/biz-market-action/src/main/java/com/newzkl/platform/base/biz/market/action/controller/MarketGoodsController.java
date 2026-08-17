@@ -57,7 +57,7 @@ public class MarketGoodsController {
     @PostMapping("/saveTwoMarketGoodsRelation")
     public PlatformResult<Object> saveTwoMarketGoodsRelation(@RequestBody SaveGoodsRelationReq req) {
         req.setUserId(0L);
-        req.setRelationType(2);
+        req.setRelationType(GoodsRelationEnum.GoodsRelation.TWO_MARKET_GOODS);
         goodsRelationDomain.saveGoodsRelation(req);
         marketDomain.alterMarketData(UpdateMarketDataReq.buildUpdateMarketDataReq(req.getMarketId(), MarketEnum.NumType.GOODS_NUM, req.getGoodsIds().size()));
         return PlatformResult.success();
@@ -78,7 +78,7 @@ public class MarketGoodsController {
     @PostMapping("/saveMarketGoodsSelectRelation")
     public PlatformResult<Object> saveMarketGoodsSelectRelation(@RequestBody SaveGoodsRelationReq req) {
         req.setUserId(SecurityUtils.getAccountId());
-        req.setRelationType(GoodsRelationEnum.GoodsRelation.SELECT_GOODS.getRelationType());
+        req.setRelationType(GoodsRelationEnum.GoodsRelation.SELECT_GOODS);
         assertGoodsNotSelected(req);
         goodsRelationDomain.saveGoodsRelation(req);
         return PlatformResult.success();

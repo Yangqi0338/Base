@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.res.AccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.AccountProxySaveReq;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

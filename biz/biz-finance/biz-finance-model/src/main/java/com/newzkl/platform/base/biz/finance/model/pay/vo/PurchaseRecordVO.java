@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -61,7 +62,7 @@ public class PurchaseRecordVO extends BaseRes {
     /**
      * 支付方式
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 支付状态

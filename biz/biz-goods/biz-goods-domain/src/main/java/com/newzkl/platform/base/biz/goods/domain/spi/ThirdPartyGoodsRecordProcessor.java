@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.goods.domain.service.ThirdPartyGoodsDomain;
 import com.newzkl.platform.base.common.ddd.domain.Processor;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyGoodsResult;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -44,7 +44,7 @@ public class ThirdPartyGoodsRecordProcessor extends Processor implements ThirdPa
      * @return 同步结果 无匹配策略时返回 null
      */
     @Override
-    public ThirdPartyGoodsResult sync(PlatformTypeEnum platformType, String outSpuId, String itemJson) {
+    public ThirdPartyGoodsResult sync(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String outSpuId, String itemJson) {
         if (platformType == null) {
             log.warn("商品同步平台类型为空 跳过派发 outSpuId={}", outSpuId);
             return null;
@@ -84,7 +84,7 @@ public class ThirdPartyGoodsRecordProcessor extends Processor implements ThirdPa
     /**
      * 从 strategyProvider 中选出 supports(platformType) 命中的首个策略
      */
-    private ThirdPartyGoodsStrategy matchStrategy(PlatformTypeEnum platformType) {
+    private ThirdPartyGoodsStrategy matchStrategy(ThirdPartyOrderEnum.PlatformTypeEnum platformType) {
         return strategyProvider.stream()
                 .filter(s -> s.supports(platformType))
                 .findFirst()
@@ -96,7 +96,7 @@ public class ThirdPartyGoodsRecordProcessor extends Processor implements ThirdPa
      *
      * <p>存储失败仅记日志不抛出 不影响三方商品同步主流程</p>
      */
-    private void storeRecord(PlatformTypeEnum platformType, String outSpuId,
+    private void storeRecord(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String outSpuId,
                              ThirdPartyGoodsResult result, CommonEnum.RequestStatusEnum status, String errorMessage) {
         try {
             String requestJson = result == null ? null : result.getGoodsReq();

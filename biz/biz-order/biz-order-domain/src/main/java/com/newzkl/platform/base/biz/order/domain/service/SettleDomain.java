@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleRecordItemVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleRecordVO;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +56,7 @@ public interface SettleDomain {
      * @param settleOrderWaitCommandList
      * @param settleType
      */
-    void settleOrderWaitSave(List<SettleOrderWaitCommand> settleOrderWaitCommandList, SettleType settleType);
+    void settleOrderWaitSave(List<SettleOrderWaitCommand> settleOrderWaitCommandList, EarningsEnum.SettleType settleType);
     /**
      * 结算商品信息表-值对象列表
      * @param settleGoodsQuery
@@ -67,7 +67,7 @@ public interface SettleDomain {
      * 待结算运费记录创建
      * @param asList
      */
-    void freightSettleOrderWaitSave(List<FreightSettleOrderWaitCommand> asList, SettleType settleOrderType);
+    void freightSettleOrderWaitSave(List<FreightSettleOrderWaitCommand> asList, EarningsEnum.SettleType settleOrderType);
 
     /**
      * 关闭待结算单

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.action.auth;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

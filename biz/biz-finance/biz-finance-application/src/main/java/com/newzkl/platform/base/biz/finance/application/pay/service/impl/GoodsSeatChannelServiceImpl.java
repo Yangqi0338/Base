@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseC
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.StorePackageApi;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
@@ -61,7 +62,7 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
     public PayBaseResult channelPurchaseGoodsSeat(ChannelPurchaseGoodsSeatReq req) {
         Long channelId = req.getChannelId();
         Long seatPackageId = req.getSeatPackageId();
-        OrderEnum.PayType payType = req.getPayType();
+        PaymentEnum.PayType payType = req.getPayType();
         Integer purchaseNum = req.getPurchaseNum();
 
         if (seatPackageId != null && seatPackageId != 0L) {
@@ -98,7 +99,7 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
 
         PurchaseRecordReq saveCommand = buildPurchaseRecordSaveCommand(totalFee, req);
         PayBaseResult res;
-        if (OrderEnum.PayType.PURCHASE == payType) {
+        if (PaymentEnum.PayType.PURCHASE == payType) {
             // 采购金抵扣: 即时结算成功
             BalancePayResult payResult = new BalancePayResult();
             payResult.setPayState(true);

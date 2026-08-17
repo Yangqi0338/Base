@@ -5,12 +5,9 @@ import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
-import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 
 import java.util.List;
 
@@ -33,7 +30,6 @@ public interface LocalMessageApi {
      * @param messageClass   消息内容类全限定名
      */
     void sendMessage(String tag, Object messageContent, String messageClass);
-    void sendModelShopMessage(ModelShopOutVO modelShopOutVO);
 
     void sendRefundPassMessage(RefundDTO refund);
 
@@ -54,12 +50,7 @@ public interface LocalMessageApi {
 
     void deliverNotify(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId);
 
-    void sendRefundOperationRecord(RefundDTO refundVO, RefundEnum.State from, RefundEnum.State to, RefundOperateTypeEnum refundOperateTypeEnum);
-
-    /**
-     * 门店用户支付消息
-     */
-    void storeAccountPay(Long storeId, Long accountId, Money memberAmount);
+    void sendRefundOperationRecord(RefundDTO refundVO, RefundEnum.State from, RefundEnum.State to, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum);
 
     void paySuccessNotify(OrderAgg orderAgg);
 

@@ -5,7 +5,6 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
@@ -68,10 +67,6 @@ public class SupplierDO extends BaseDO {
      * @ext Money, 落库 BIGINT 分
      */
     private Money shouldPromisePayAmount;
-    /**
-     * 主体类型
-     */
-    private AccountEnum.BodyType bodyType;
     /**
      * 审批拒绝原因
      */

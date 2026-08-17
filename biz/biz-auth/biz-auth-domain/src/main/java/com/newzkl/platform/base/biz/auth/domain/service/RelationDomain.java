@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.domain.service;
 
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +19,7 @@ public interface RelationDomain {
      * @param sourceId  源对象ID
      * @param targetIds 目标对象ID集合
      */
-    void replace(RelationEnum.Type type, Long sourceId, Collection<Long> targetIds);
+    void replace(PermissionEnum.RelationType type, Long sourceId, Collection<Long> targetIds);
 
     /**
      * 列出源对象关联的目标ID
@@ -28,7 +28,7 @@ public interface RelationDomain {
      * @param sourceId 源对象ID
      * @return 目标ID列表
      */
-    List<Long> listTargetIds(RelationEnum.Type type, Long sourceId);
+    List<Long> listTargetIds(PermissionEnum.RelationType type, Long sourceId);
 
     /**
      * 列出目标对象关联的源ID
@@ -37,5 +37,5 @@ public interface RelationDomain {
      * @param targetId 目标对象ID
      * @return 源ID列表
      */
-    List<Long> listSourceIds(RelationEnum.Type type, Long targetId);
+    List<Long> listSourceIds(PermissionEnum.RelationType type, Long targetId);
 }

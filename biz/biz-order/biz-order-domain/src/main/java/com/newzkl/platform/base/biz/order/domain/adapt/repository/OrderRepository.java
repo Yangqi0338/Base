@@ -16,7 +16,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
@@ -191,7 +191,7 @@ public interface OrderRepository {
 
     List<SkuOrderVO> querySkuOrderByOrderId(Long orderId, List<Long> skuIdList);
 
-    SettleType settleOrderType(Long supplierId);
+    EarningsEnum.SettleType settleOrderType(Long supplierId);
 
     void updateOrderShip(Long orderId, ShipVO shipVo);
 

@@ -42,6 +42,14 @@ public interface DictRepository {
     DictRes dictVO(Long id);
 
     /**
+     * 按业务键读取字典
+     *
+     * @param code 字典业务键
+     * @return 字典视图对象
+     */
+    DictRes dictVOByCode(Long code);
+
+    /**
      * 字典列表 (分页在实现内部执行)
      *
      * @param dictQuery 字典查询
@@ -56,4 +64,12 @@ public interface DictRepository {
      * @return 字典视图对象
      */
     DictRes dictVOLock(Long id);
+
+    /**
+     * 按业务键加锁读取字典 (行锁, 用于序列自增)
+     *
+     * @param code 字典业务键
+     * @return 字典视图对象
+     */
+    DictRes dictVOByCodeLock(Long code);
 }

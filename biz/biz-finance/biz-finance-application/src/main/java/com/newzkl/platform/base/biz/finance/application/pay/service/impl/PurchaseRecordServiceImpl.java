@@ -10,8 +10,8 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.SeatPackageOrderInfo;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.constant.FinanceErrorCode;
@@ -53,13 +53,13 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         Money payAmount = saveCommand.getPayAmount();
         SeatPackageOrderInfo orderInfo = JSONUtil.toBean(saveCommand.getOrderInfo(), SeatPackageOrderInfo.class);
         Integer purchaseNum = orderInfo.getPurchaseNum();
-        OrderEnum.PayType payMode = saveCommand.getPayType();
+        PaymentEnum.PayType payMode = saveCommand.getPayType();
         if (purchaseNum == null || purchaseNum <= 0) {
             throw new PlatformException(FinanceErrorCode.STATE_ERROR);
         }
 
         // 若是采购金抵扣
-        if (OrderEnum.PayType.PURCHASE == payMode) {
+        if (PaymentEnum.PayType.PURCHASE == payMode) {
             // 减少采购金额度
             AccountPurseAlterRecordReq recordReq = buildChannelOperatorPurseAlterRecord(accountId, tradeNo, payAmount);
             boolean subSuccess = accountPurseService.subAmount(recordReq);

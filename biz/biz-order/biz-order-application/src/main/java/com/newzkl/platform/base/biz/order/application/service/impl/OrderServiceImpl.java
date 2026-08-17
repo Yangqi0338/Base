@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.order.application.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -27,6 +26,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
@@ -35,8 +35,7 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -49,7 +48,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author muc_fang
@@ -87,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
                 v.setSkuCount(c.getCount());
                 v.setType(0);
             });
-            settleDomain.settleOrderWaitSave(commandList,SettleType.ORDER_SUCCESS);
+            settleDomain.settleOrderWaitSave(commandList, EarningsEnum.SettleType.ORDER_SUCCESS);
         }
     }
     @Override
@@ -357,7 +355,7 @@ public class OrderServiceImpl implements OrderService {
             }
 
             //门店用户支付
-            localMessageApi.storeAccountPay(order.getStoreId(), order.getAccountId(), order.getMemberAmount());
+//            localMessageApi.storeAccountPay(order.getStoreId(), order.getAccountId(), order.getMemberAmount());
 
             orderRepository.batchUpdateSpuOrderStateByOrderId(Arrays.asList(order.getId()), null, OrderEnum.State.SENDING, null);
             orderRepository.batchUpdateSkuOrderStateByOrderId(Arrays.asList(order.getId()), null, OrderEnum.State.SENDING);

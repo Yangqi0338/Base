@@ -1,13 +1,11 @@
 package com.newzkl.platform.base.common.ddd.utils.auth;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserInjection;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -15,7 +13,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

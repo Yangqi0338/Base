@@ -56,7 +56,7 @@ public class ConfigController {
      */
     @PostMapping("/orderGet")
     public PlatformResult<OrderConfigVO> orderGet() {
-        DictRes dictRes = dictDomain.dictVO(DictEnum.Key.ORDER_CONFIG.getCode());
+        DictRes dictRes = dictDomain.dictVOByCode(DictEnum.Key.ORDER_CONFIG.getCode());
         if (dictRes == null || StrUtil.isEmpty(dictRes.getValue())) {
             return PlatformResult.success(new OrderConfigVO());
         }
@@ -72,7 +72,7 @@ public class ConfigController {
     @PostMapping("/orderSet")
     public PlatformResult<Void> orderSet(@RequestBody OrderConfigVO orderConfigVO) {
         DictReq dictReq = new DictReq();
-        dictReq.setId(DictEnum.Key.ORDER_CONFIG.getCode());
+        dictReq.setCode(DictEnum.Key.ORDER_CONFIG.getCode());
         dictReq.setValue(JSONUtil.toJsonStr(orderConfigVO));
         dictDomain.dictSave(dictReq);
         return PlatformResult.success();
@@ -85,7 +85,7 @@ public class ConfigController {
      */
     @PostMapping("/appGet")
     public PlatformResult<List<AppConfigVO>> appGet() {
-        DictRes dictRes = dictDomain.dictVO(DictEnum.Key.APP_CONFIG.getCode());
+        DictRes dictRes = dictDomain.dictVOByCode(DictEnum.Key.APP_CONFIG.getCode());
         if (dictRes == null || StrUtil.isEmpty(dictRes.getValue())) {
             return PlatformResult.success(new ArrayList<>());
         }
@@ -102,7 +102,7 @@ public class ConfigController {
      */
     @PostMapping("/appSet")
     public PlatformResult<Void> appSet(@RequestBody AppConfigVO appConfigVO) {
-        DictRes dictRes = dictDomain.dictVO(DictEnum.Key.APP_CONFIG.getCode());
+        DictRes dictRes = dictDomain.dictVOByCode(DictEnum.Key.APP_CONFIG.getCode());
         ThrowsException.isNull(dictRes, BaseErrorCode.NODATA, "应用配置");
 
         List<AppConfigVO> appConfigList = JSONUtil.toList(dictRes.getValue(), AppConfigVO.class);
@@ -134,7 +134,7 @@ public class ConfigController {
     @PostMapping("/channelConfigSet")
     public PlatformResult<Void> channelConfigSet(@RequestBody ChannelConfigVO orderConfigVO) {
         DictReq dictReq = new DictReq();
-        dictReq.setId(DictEnum.Key.CHANNEL_CONFIG.getCode());
+        dictReq.setCode(DictEnum.Key.CHANNEL_CONFIG.getCode());
         dictReq.setValue(JSONUtil.toJsonStr(orderConfigVO));
         dictDomain.dictSave(dictReq);
         return PlatformResult.success();
@@ -147,7 +147,7 @@ public class ConfigController {
      */
     @PostMapping("/channelConfigGet")
     public PlatformResult<ChannelConfigVO> channelConfigGet() {
-        DictRes dictRes = dictDomain.dictVO(DictEnum.Key.CHANNEL_CONFIG.getCode());
+        DictRes dictRes = dictDomain.dictVOByCode(DictEnum.Key.CHANNEL_CONFIG.getCode());
         if (dictRes == null || StrUtil.isEmpty(dictRes.getValue())) {
             return PlatformResult.success(new ChannelConfigVO());
         }

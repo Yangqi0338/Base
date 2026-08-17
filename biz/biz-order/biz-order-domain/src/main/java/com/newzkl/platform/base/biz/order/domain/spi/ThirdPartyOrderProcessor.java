@@ -9,10 +9,9 @@ import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
 import com.newzkl.platform.base.common.ddd.domain.Processor;
-import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderDTO;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -64,7 +63,7 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
      */
     @Override
     public ThirdPartyOrderResult create(List<OrderSkuVO> outGoods, OrderDTO order) {
-        PlatformTypeEnum platformType = resolvePlatformType(order, outGoods);
+        ThirdPartyOrderEnum.PlatformTypeEnum platformType = resolvePlatformType(order, outGoods);
         if (platformType == null) {
             log.info("订单非三方单或平台来源为空 跳过三方下单派发 orderId={}", order == null ? null : order.getId());
             return null;
@@ -142,7 +141,7 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
     /**
      * 解析订单外部平台 优先取订单级 platformType 缺失时回退到 outGoods 首个非空商品级 platformType
      */
-    private PlatformTypeEnum resolvePlatformType(OrderDTO order, List<OrderSkuVO> outGoods) {
+    private ThirdPartyOrderEnum.PlatformTypeEnum resolvePlatformType(OrderDTO order, List<OrderSkuVO> outGoods) {
         if (order != null && order.getPlatformType() != null) {
             return order.getPlatformType();
         }
@@ -159,7 +158,7 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
     /**
      * 从 strategyProvider 中选出 supports(platformType) 命中的首个策略
      */
-    private ThirdPartyOrderStrategy matchStrategy(PlatformTypeEnum platformType) {
+    private ThirdPartyOrderStrategy matchStrategy(ThirdPartyOrderEnum.PlatformTypeEnum platformType) {
         return strategyProvider.stream()
                 .filter(s -> s.supports(platformType))
                 .findFirst()
@@ -178,7 +177,7 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
      * @param status        请求状态
      * @param errorMessage  错误信息 可空
      */
-    private void storeRecord(PlatformTypeEnum platformType, String bizOrderNo, String interfaceName,
+    private void storeRecord(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo, String interfaceName,
                              ThirdPartyOrderResult result, CommonEnum.RequestStatusEnum status, String errorMessage) {
         try {
             String requestJson = result == null ? null : result.getOrderReq();

@@ -28,7 +28,7 @@ import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
@@ -138,11 +138,9 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         channelCustomSaveReq.setUpOperatorId(inviteId);
         channelCustomSaveReq.setCompanyInfo(JSONUtil.toJsonStr(customSaveReq.getCompanyInfo()));
         channelCustomSaveReq.setContactsName(customSaveReq.getContactsName());
-        channelCustomSaveReq.setBodyType(customSaveReq.getBodyType());
         channelCustomSaveReq.setContactsWay(customSaveReq.getContactsWay());
         channelCustomSaveReq.setStoreName(customSaveReq.getStoreName());
         channelCustomSaveReq.setLicense(customSaveReq.getLicense());
-        channelCustomSaveReq.setChannelType(customSaveReq.getChannelType());
         channelCustomSaveReq.setStorePermission(customSaveReq.getStorePermission());
         channelDomain.channelCustomSave(channelCustomSaveReq);
 

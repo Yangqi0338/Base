@@ -433,11 +433,6 @@ public class SpuDomainImpl implements SpuDomain {
         return spuRepository.querySpuAttributePage(spuAttributeQuery);
     }
 
-    @Override
-    public void spuSelectorNumAdd(List<Long> spuIdList, Integer num) {
-        spuRepository.spuSelectorNumAdd(spuIdList,num);
-    }
-
     /**
      * 解析并收集SKU价格信息
      */
@@ -683,7 +678,6 @@ public class SpuDomainImpl implements SpuDomain {
         Money maxSalePrice = null;
         Money minUnitPrice = null;
         Money maxProfit = null;
-        Double minWeight = null;
 
         // 单次遍历收集所有统计数据
         for (SkuDTO skuDTO : skuDTOList) {
@@ -716,10 +710,6 @@ public class SpuDomainImpl implements SpuDomain {
                 maxProfit = maxMoney(maxProfit, profit);
             }
 
-            // 最小重量统计
-            if (skuDTO.getWeight() != null) {
-                minWeight = (minWeight == null) ? skuDTO.getWeight() : Math.min(minWeight, skuDTO.getWeight());
-            }
         }
 
         // 设置SPU统计信息
@@ -737,7 +727,6 @@ public class SpuDomainImpl implements SpuDomain {
 
         spu.setUnitPrice(minUnitPrice);
         spu.setMaxProfit(maxProfit);
-        spu.setMinPricingNum(minWeight);
     }
 
     /**

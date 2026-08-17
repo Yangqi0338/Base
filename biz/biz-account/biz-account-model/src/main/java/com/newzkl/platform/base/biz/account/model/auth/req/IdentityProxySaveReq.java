@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.account.model.auth.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.Data;
 
 /**
@@ -16,12 +15,5 @@ public class IdentityProxySaveReq extends IdentitySaveReq {
      * 注册域名
      */
     private String registerDomain;
-
-    /**
-     * 渠道商类型
-     *
-     * @see ChannelEnum.ChannelType
-     */
-    private ChannelEnum.ChannelType channelType;
 
 }

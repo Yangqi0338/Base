@@ -30,7 +30,6 @@ public interface ModelShopDAO extends BaseMapper<ModelShopDO> {
         wrapper.notNullEq(ModelShopDO::getId, query.getId());
         wrapper.notNullEq(ModelShopDO::getChannelId, query.getChannelId());
         wrapper.notEmptyLike(ModelShopDO::getModelShopName, query.getModelShopName());
-        wrapper.notNullEq(ModelShopDO::getOperatorId, query.getOperatorId());
         wrapper.notNullEq(ModelShopDO::getChannelId, query.getChannelId());
         wrapper.notNullEq(ModelShopDO::getAuditState, query.getAuditState());
         wrapper.notEmptyEq(ModelShopDO::getStyleCode, query.getStyleCode());

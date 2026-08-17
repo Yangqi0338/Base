@@ -27,6 +27,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
@@ -37,13 +38,10 @@ import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.common.ddd.model.constant.DeliverErrorCode;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
-import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -116,7 +114,7 @@ public class OrderDomainImpl implements OrderDomain {
             }
 
             // 迁移: 原 redisClient.getCacheObjectAuto 缓存下沉 infra, domain 直调 repository
-            SettleType settleOrderType = orderRepository.settleOrderType(orderGoodsInfoVO.getSupplierId());
+            EarningsEnum.SettleType settleOrderType = orderRepository.settleOrderType(orderGoodsInfoVO.getSupplierId());
             skuOrderList.add(buildSkuOrder(orderGoodsInfoVO,spuOrderIdMap.get(spuId),orderId,channelNowServiceFee,earningsConfigRpcVO,settleOrderType,now));
         }
         //根据sku订单
@@ -149,9 +147,9 @@ public class OrderDomainImpl implements OrderDomain {
         order.setOrderSnapVO(orderSnapVO);
         order.setOrderState(state);
         order.setStoreId(memberOrderCreateCommand.getStoreId());
-        order.setAccountId(memberOrderCreateCommand.getAccountId());
-        order.setUserName(memberOrderCreateCommand.getUserName());
-        order.setNickname(memberOrderCreateCommand.getNickName());
+        order.setMemberId(memberOrderCreateCommand.getAccountId());
+        orderSnapVO.setUsername(memberOrderCreateCommand.getUserName());
+        orderSnapVO.setNickname(memberOrderCreateCommand.getNickName());
         order.setCreateTime(now);
         //组装交易单聚合
         OrderAgg orderAgg = new OrderAgg();
@@ -306,14 +304,14 @@ public class OrderDomainImpl implements OrderDomain {
             List<SkuOrderDTO> skuOrderVOList = orderRepository.skuOrderList(skuOrderQuery).getRecords();
             //准备结算信息
             for (SkuOrderDTO skuOrderVO : skuOrderVOList) {
-                SettleType settleOrderType = skuOrderVO.getSettleOrderType();
+                EarningsEnum.SettleType settleOrderType = skuOrderVO.getSettleOrderType();
                 if(settleOrderType == null){
                     settleOrderType = orderRepository.settleOrderType(skuOrderVO.getSupplierId());
                 }
                 if(settleOrderType == null) {
                     ThrowsException.exception(BaseErrorCode.PARAM, "供应商结算配置异常");
                 }
-                if(SettleType.RECEIVE == settleOrderType){
+                if(EarningsEnum.SettleType.RECEIVE == settleOrderType){
                     if(CommonEnum.YesOrNo.NO == skuOrderVO.getSettleSendState()){
                         waitSettlementOrder.add(skuOrderVO);
                         waitSettlementOrderId.add(skuOrderVO.getId());
@@ -350,14 +348,14 @@ public class OrderDomainImpl implements OrderDomain {
         // 2. 结算与分润
         List<Long> waitSettlementOrderId = new ArrayList<>();
         List<SkuOrderDTO> waitSettlementOrder = new ArrayList<>();
-        SettleType settleType = null;
+        EarningsEnum.SettleType settleType = null;
         if(SpuEnum.ChannelType.SELECTION == spuOrder.getSpuChannelType()){
             SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
             skuOrderQuery.setIdList(skuOrderIdList);
             List<SkuOrderDTO> skuOrderVOList = orderRepository.skuOrderList(skuOrderQuery).getRecords();
             //准备结算信息
             for (SkuOrderDTO skuOrderVO : skuOrderVOList) {
-                SettleType settleOrderType = skuOrderVO.getSettleOrderType();
+                EarningsEnum.SettleType settleOrderType = skuOrderVO.getSettleOrderType();
                 if(settleOrderType == null){
                     settleOrderType = orderRepository.settleOrderType(skuOrderVO.getSupplierId());
                 }
@@ -365,7 +363,7 @@ public class OrderDomainImpl implements OrderDomain {
                     ThrowsException.exception(BaseErrorCode.PARAM, "供应商结算配置异常");
                 }
                 settleType = settleOrderType;
-                if(SettleType.ORDER_SUCCESS == settleOrderType || SettleType.COMPLETE_DELAY == settleOrderType){
+                if(EarningsEnum.SettleType.ORDER_SUCCESS == settleOrderType || EarningsEnum.SettleType.COMPLETE_DELAY == settleOrderType){
                     if(CommonEnum.YesOrNo.NO == skuOrderVO.getSettleSendState()){
                         waitSettlementOrder.add(skuOrderVO);
                         waitSettlementOrderId.add(skuOrderVO.getId());
@@ -576,7 +574,7 @@ public class OrderDomainImpl implements OrderDomain {
 
     private SkuOrderDTO buildSkuOrder(OrderGoodsInfoVO orderGoodsInfoVO, Long spuOrderId, Long orderId,
                                       ChannelNowServiceFeeRes channelNowServiceFee,
-                                      EarningsConfigRpcVO earningsConfigRpcVO, SettleType settleOrderType, LocalDateTime time){
+                                      EarningsConfigRpcVO earningsConfigRpcVO, EarningsEnum.SettleType settleOrderType, LocalDateTime time){
 
         SkuOrderDTO skuOrder = new SkuOrderDTO();
         skuOrder.setFreightAmount(Money.ZERO);
@@ -937,7 +935,7 @@ public class OrderDomainImpl implements OrderDomain {
                 spuOrderIdMap.put(spuId, spuOrderId);
             }
             // 迁移(Q2): settleOrderType 缓存移交 infra(@Cacheable), domain 直调 repository
-            SettleType settleOrderType = orderRepository.settleOrderType(orderGoodsInfoVO.getSupplierId());
+            EarningsEnum.SettleType settleOrderType = orderRepository.settleOrderType(orderGoodsInfoVO.getSupplierId());
             skuOrderList.add(buildSkuOrder(orderGoodsInfoVO,spuOrderIdMap.get(spuId),orderId,channelNowServiceFee,earningsConfigRpcVO,settleOrderType,now));
         }
         //根据sku订单
@@ -971,9 +969,9 @@ public class OrderDomainImpl implements OrderDomain {
         order.setOrderSnapVO(orderSnapVO);
         order.setOrderState(OrderEnum.State.NEW);
         order.setStoreId(goodsInfo.get(0).getStoreId());
-        order.setAccountId(SecurityUtils.getAccountId());
-        order.setUserName(SecurityUtils.getUsername());
-        order.setNickname(SecurityUtils.getNickName());
+        order.setMemberId(SecurityUtils.getAccountId());
+        orderSnapVO.setUsername(SecurityUtils.getUsername());
+        orderSnapVO.setNickname(SecurityUtils.getNickName());
         order.setCreateTime(now);
         //组装交易单聚合
         OrderAgg orderAgg = new OrderAgg();
@@ -993,7 +991,7 @@ public class OrderDomainImpl implements OrderDomain {
 
     private SkuOrderDTO buildSkuOrder(StoreDistributionDetailRpcVO orderGoodsInfoVO, Long spuOrderId, Long orderId,
                                       ChannelNowServiceFeeRes channelNowServiceFee,
-                                      EarningsConfigRpcVO earningsConfigRpcVO, SettleType settleOrderType, LocalDateTime time){
+                                      EarningsConfigRpcVO earningsConfigRpcVO, EarningsEnum.SettleType settleOrderType, LocalDateTime time){
 
         SkuOrderDTO skuOrder = new SkuOrderDTO();
         skuOrder.setFreightAmount(Money.ZERO);

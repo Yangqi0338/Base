@@ -156,11 +156,6 @@ public interface SpuDomain {
     Page<SpuAttributeVO> querySpuAttributePage(SpuAttributeQuery spuAttributeQuery);
 
     /**
-     * 商品选品数量增加
-     */
-    void spuSelectorNumAdd(List<Long> spuIdList, Integer num);
-
-    /**
      * 分类保存
      *
      * @return

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.finance;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -55,27 +55,6 @@ public class EarningsEnum implements Serializable {
                     .findFirst()
                     .orElse(null);
         }
-    }
-
-    /**
-     * 贡献类型
-     */
-    @AllArgsConstructor
-    @Getter
-    public enum ContributeType {
-        /** 消费 */
-        AMOUNT(1, "消费"),
-        /** 分润 */
-        EARNING(2, "分润"),
-        /** 服务费 */
-        SERVICE_AMOUNT(3, "服务费"),
-
-        ;
-
-        @EnumValue
-        @JsonValue
-        private final Integer type;
-        private final String info;
     }
 
     /**
@@ -163,5 +142,55 @@ public class EarningsEnum implements Serializable {
         @JsonValue
         private final Integer type;
         private final String info;
+    }
+
+    /**
+     * 供应商结算节点类型
+     *
+     * @author KC
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum SettleType {
+        /** 订单完成即结算 */
+        ORDER_SUCCESS(0, "订单完成"),
+        /** 收货完成即结算 */
+        RECEIVE(1, "收货完成"),
+        /** 订单完成后 N 天结算, N 取 periodSetConfig.orderTypeDay */
+        COMPLETE_DELAY(2, "订单完成后N天结算"),
+        ;
+
+        @JsonValue
+        @EnumValue
+        private final Integer code;
+        private final String value;
+
+        /**
+         * 根据编码获取枚举
+         *
+         * @param code 编码
+         * @return 匹配的枚举, 未匹配返回 null
+         */
+        public static SettleType getByCode(Integer code) {
+            return Stream.of(SettleType.values())
+                    .filter(it -> it.getCode().equals(code))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+
+    /**
+     * 结算周期类型
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum DataType {
+        /** 每月固定 */
+        MONTH_ONLY(0, "每月固定"),
+        /** 商品审核完成 */
+        GOODS_AUDIT(1, "商品审核完成"),
+        ;
+        private Integer code;
+        private String value;
     }
 }

@@ -24,8 +24,6 @@ public class DictEnum {
         SUPPLIER_CONFIG(1004L, "供应商配置"),
         /** 全局渠道商服务费 */
         CHANNEL_SERVICE_FEE(1005L, "全局渠道商服务费"),
-        /** 运营商提现配置 */
-        OPERATOR_WITHDRAW_CONFIG(1006L, "运营商提现配置"),
         /** 运营商配置 */
         OPERATOR_CONFIG(1007L, "运营商配置"),
         /** 腾信IM配置 */

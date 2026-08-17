@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.store.req;
 
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
-import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ public class StoreOrderPayReq implements Serializable {
     /**
      * 支付方式 (旧 {@code OrderEnum.PayType} 码值)
      */
-    private OrderEnum.PayType payType;
+    private PaymentEnum.PayType payType;
 
     /**
      * 下单账号ID

@@ -6,6 +6,7 @@ package com.newzkl.platform.base.biz.order.facade;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
@@ -111,4 +112,6 @@ public interface OrderFacade {
      * @return 处理成功返回 {@code true}, 否则 {@code false}
      */
     boolean handleStatusCallback(OrderCallbackRequest callbackRequest);
+
+    OrderPayInfoRes queryPayInfoByOrderId(Long orderId);
 }

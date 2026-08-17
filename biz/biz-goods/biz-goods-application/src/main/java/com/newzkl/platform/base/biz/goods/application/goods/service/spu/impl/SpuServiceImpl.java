@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.goods.application.goods.service.spu.impl;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
@@ -27,11 +26,9 @@ import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SupplierSpuStatisticsQuery;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -148,18 +145,6 @@ public class SpuServiceImpl implements SpuService {
         spuDTO.setRoleId(RoleEnum.CompanyRole.PLATFORM.getCode());
         spuDTO.setRole(RoleEnum.CompanyRole.PLATFORM);
         return spuDomain.spuPreSave(spuDTO);
-    }
-
-    /**
-     * 商品选品数量增加
-     *
-     * @param spuIdList 商品主键列表
-     * @param num       增量
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void spuSelectorNumAdd(List<Long> spuIdList, Integer num) {
-        spuDomain.spuSelectorNumAdd(spuIdList, num);
     }
 
     /**

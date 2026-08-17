@@ -18,7 +18,7 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import lombok.RequiredArgsConstructor;

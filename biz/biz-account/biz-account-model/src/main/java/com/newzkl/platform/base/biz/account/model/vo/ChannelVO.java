@@ -5,9 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
@@ -54,10 +53,6 @@ public class ChannelVO extends BaseRes {
      * 非改名, 无法靠字段映射兼容, 需按枚举 code 改读</p>
      */
     private RoleEnum.CompanyRole role;
-    /**
-     * 主体类型 (查询)
-     */
-    private AccountEnum.BodyType bodyType;
     /**
      * 状态 (查询)
      */
@@ -161,10 +156,6 @@ public class ChannelVO extends BaseRes {
      */
     private String nameAuthVO;
     /**
-     * 联表:实名认证审批状态
-     */
-    private AuditEnum.State nameAuthAuditState;
-    /**
      * 联表:邀请码
      */
     private String yqm;
@@ -202,10 +193,6 @@ public class ChannelVO extends BaseRes {
      * 联系方式
      */
     private String contactsWay;
-    /**
-     * 渠道商类型
-     */
-    private ChannelEnum.ChannelType channelType;
     /**
      * 连表: 三方账户权限
      */

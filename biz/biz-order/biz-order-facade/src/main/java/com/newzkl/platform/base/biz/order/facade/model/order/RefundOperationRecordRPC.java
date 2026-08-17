@@ -1,9 +1,8 @@
 package com.newzkl.platform.base.biz.order.facade.model.order;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.RefundOperateTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -65,7 +64,7 @@ public class RefundOperationRecordRPC implements Serializable {
     /**
      * 操作类型（0=发起退款申请，1=审核通过，2=审核拒绝，3=提交物流信息，4=确认收货，5=退款完成，6=关闭售后，7=平台介入）
      */
-    private RefundOperateTypeEnum operationType;
+    private com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum operationType;
 
     /**
      * 操作内容描述

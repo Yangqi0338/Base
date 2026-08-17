@@ -299,9 +299,4 @@ public class ModelShopDomainImpl implements ModelShopDomain {
             modelShopOrderRecordRepository.create(TransferUtils.transfer(dto, ModelShopOrderRecordDTO::new));
         }
     }
-
-    @Override
-    public void updateUseStoreNum(String styleCode, Integer num) {
-        modelShopRepository.updateUseStoreNum(styleCode, num);
-    }
 }

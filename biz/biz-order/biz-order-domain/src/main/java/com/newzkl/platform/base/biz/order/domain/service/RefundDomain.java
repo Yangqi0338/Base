@@ -1,9 +1,7 @@
 package com.newzkl.platform.base.biz.order.domain.service;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundFreightAddressVO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
@@ -11,7 +9,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 import java.util.List;
 

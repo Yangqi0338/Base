@@ -12,11 +12,9 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.AlterWithdrawStateRe
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyAuditReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.TripartiteWithdrawRecordQuery;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.biz.finance.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,18 +35,6 @@ public class WithdrawRepositoryImpl implements WithdrawRepository {
     private final AccountPurseRollOutDAO rollOutDAO;
 
     private final AccountWithdrawRecordDAO accountWithdrawRecordDAO;
-
-    private final DictApi dictApi;
-
-    @Override
-    public ConfigWithdrawVO defaultWithdrawConfig() {
-        return dictApi.defaultWithdrawConfig();
-    }
-
-    @Override
-    public void alterWithdrawConfig(ConfigWithdrawVO withdrawVO) {
-        dictApi.alterWithdrawConfig(withdrawVO);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -87,14 +73,6 @@ public class WithdrawRepositoryImpl implements WithdrawRepository {
     @Transactional(rollbackFor = Exception.class)
     public boolean alterRollOutTripartiteState(Long applyId, Integer tripartiteState, String tripartiteTradeNo) {
         return rollOutDAO.alterRollOutTripartiteState(applyId, tripartiteState, tripartiteTradeNo) == 1;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long saveAccountWithdraw(WithdrawRecordVO req) {
-        AccountWithdrawRecordDO accountWithdrawRecord = TransferUtils.transfer(req, AccountWithdrawRecordDO::new);
-        accountWithdrawRecordDAO.insert(accountWithdrawRecord);
-        return accountWithdrawRecord.getId();
     }
 
     @Override

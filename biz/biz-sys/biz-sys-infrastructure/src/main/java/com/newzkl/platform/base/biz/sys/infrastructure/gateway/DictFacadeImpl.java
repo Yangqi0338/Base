@@ -24,8 +24,8 @@ public class DictFacadeImpl implements IDictFacade {
     private final DictRepository dictRepository;
 
     @Override
-    public String get(Long id) {
-        DictRes dictRes = dictRepository.dictVO(id);
+    public String get(Long code) {
+        DictRes dictRes = dictRepository.dictVOByCode(code);
         if(dictRes == null){
             return null;
         }
@@ -33,9 +33,9 @@ public class DictFacadeImpl implements IDictFacade {
     }
 
     @Override
-    public void set(Long id, String value) {
+    public void set(Long code, String value) {
         DictRes dictRes = new DictRes();
-        dictRes.setId(id);
+        dictRes.setCode(code);
         dictRes.setValue(value);
         dictRepository.dictSave(dictRes);
     }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.Data;
 
@@ -22,10 +21,6 @@ public class ChannelDO extends BaseDO {
      */
     private String name;
     /**
-     * 主体类型
-     */
-    private AccountEnum.BodyType bodyType;
-    /**
      * 状态
      */
     private ChannelEnum.State state;
@@ -42,9 +37,6 @@ public class ChannelDO extends BaseDO {
      */
     @TableField(exist = false)
     private String platformNowValue;
-    /**
-     * 市场数量
-     */
     /**
      * 数字门店权限
      */
@@ -73,9 +65,4 @@ public class ChannelDO extends BaseDO {
      * 店铺名称
      */
     private String storeName;
-    /**
-     * 渠道商类型
-     */
-    private ChannelEnum.ChannelType channelType;
-
 }

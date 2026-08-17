@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

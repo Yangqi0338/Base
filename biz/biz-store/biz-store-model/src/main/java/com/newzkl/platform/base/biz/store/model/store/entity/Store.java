@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.store.model.store.entity;
 
-import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
 /**
@@ -26,14 +25,6 @@ public class Store{
      */
     private String address;
     /**
-     * 经度
-     */
-    private Double longitude;
-    /**
-     * 纬度
-     */
-    private Double latitude;
-    /**
      * 渠道商ID
      */
     private Long channelId;
@@ -42,10 +33,6 @@ public class Store{
      */
     private Long merchantId;
     /**
-     * 管理员ID
-     */
-    private Long managerId;
-    /**
      * 样板店ID
      */
     private Long modelShopId;
@@ -53,30 +40,6 @@ public class Store{
      * 是否是样板店
      */
     private Integer isModelShop;
-    /**
-     * 售后地址
-     */
-    private String refundAddress;
-    /**
-     * 选品数量
-     */
-    private Integer selectionNumber;
-    /**
-     * 自营商品数量
-     */
-    private Integer customNumber;
-    /**
-     * 成交笔数
-     */
-    private Integer dealerNumber;
-    /**
-     * 成交金额 (Money, 落库 BIGINT 分)
-     */
-    private Money dealerAmount;
-
-    /**
-     * 总客户数
-     */
 
     /**
      * 样式code

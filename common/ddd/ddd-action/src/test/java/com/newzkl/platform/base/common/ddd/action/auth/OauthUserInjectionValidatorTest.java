@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.OauthUserInjectionValidator;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +47,7 @@ class OauthUserInjectionValidatorTest {
             SecurityContextHolder.set(TokenConstants.DETAILS_ACCOUNT_ID, String.valueOf(accountId));
         }
         if (roleId != null) {
-            SecurityContextHolder.set(TokenConstants.ROLE, String.valueOf(roleId));
+            SecurityContextHolder.set(TokenConstants.DETAILS_ROLE, String.valueOf(roleId));
         }
     }
 

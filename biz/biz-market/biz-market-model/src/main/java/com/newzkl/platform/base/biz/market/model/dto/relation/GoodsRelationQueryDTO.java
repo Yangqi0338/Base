@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.dto.relation;
 
+import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -44,7 +45,7 @@ public class GoodsRelationQueryDTO extends PageQuery {
     /**
      * 关系类型：  1：一级市场商品  2：二级市场商品  3：市场选品商品
      */
-    private Integer relationType;
+    private GoodsRelationEnum.GoodsRelation relationType;
 
     private Integer bindType;
     /**

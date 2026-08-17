@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.PermissionRelationDAO;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionRelationDO;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class RelationRepositoryImpl implements RelationRepository {
     }
 
     @Override
-    public void deleteBySource(RelationEnum.Type type, Collection<Long> sourceIds) {
+    public void deleteBySource(PermissionEnum.RelationType type, Collection<Long> sourceIds) {
         if (CollUtil.isEmpty(sourceIds)) {
             return;
         }
@@ -43,7 +43,7 @@ public class RelationRepositoryImpl implements RelationRepository {
     }
 
     @Override
-    public void deleteByTarget(RelationEnum.Type type, Collection<Long> targetIds) {
+    public void deleteByTarget(PermissionEnum.RelationType type, Collection<Long> targetIds) {
         if (CollUtil.isEmpty(targetIds)) {
             return;
         }
@@ -51,7 +51,7 @@ public class RelationRepositoryImpl implements RelationRepository {
     }
 
     @Override
-    public List<PermissionRelationDTO> listBySource(RelationEnum.Type type, Collection<Long> sourceIds) {
+    public List<PermissionRelationDTO> listBySource(PermissionEnum.RelationType type, Collection<Long> sourceIds) {
         if (CollUtil.isEmpty(sourceIds)) {
             return List.of();
         }
@@ -60,7 +60,7 @@ public class RelationRepositoryImpl implements RelationRepository {
     }
 
     @Override
-    public List<PermissionRelationDTO> listByTarget(RelationEnum.Type type, Collection<Long> targetIds) {
+    public List<PermissionRelationDTO> listByTarget(PermissionEnum.RelationType type, Collection<Long> targetIds) {
         if (CollUtil.isEmpty(targetIds)) {
             return List.of();
         }

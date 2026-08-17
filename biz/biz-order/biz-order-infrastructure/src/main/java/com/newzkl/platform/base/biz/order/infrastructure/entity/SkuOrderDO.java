@@ -5,9 +5,8 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
-import com.newzkl.platform.base.common.ddd.model.enums.SettleType;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -169,7 +168,7 @@ public class SkuOrderDO extends BaseDO {
     /**
      * 结算节点
      */
-    private SettleType settleOrderType;
+    private EarningsEnum.SettleType settleOrderType;
     /**
      * 结算发送状态
      */

@@ -34,7 +34,6 @@ public interface AccountDAO extends BaseMapper<AccountDO> {
                 .notEmptyLike(AccountDO::getNickname, query.getNickname())
                 .notEmptyIn(AccountDO::getInviteAccountId, query.getInviteAccountIdList())
                 .notEmptyEq(AccountDO::getPid, query.getPid())
-                .notEmptyEq(AccountDO::getMainAccountId, query.getMainAccountId())
                 .notEmptyIn(AccountDO::getUsername, query.getUsernameList())
                 .notEmptyLike(AccountDO::getUsername, query.getUsername())
                 .notEmptyLike(AccountDO::getRealName, query.getRealName())

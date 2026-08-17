@@ -22,7 +22,7 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import jakarta.validation.constraints.NotNull;
@@ -204,7 +204,7 @@ public class AccountDomainImpl implements AccountDomain {
     public AccountVO customSave(AccountSaveReq customSaveReq) {
         AccountVO account = new AccountVO();
         account.init(Collections.singletonList(customSaveReq.getRole()), customSaveReq.getUsername(), customSaveReq.getPassword(),
-                null, customSaveReq.getState());
+                customSaveReq.getState());
 
         // 同步pid和inviteId的主次数据关系
         account.setPhone(customSaveReq.getPhone());

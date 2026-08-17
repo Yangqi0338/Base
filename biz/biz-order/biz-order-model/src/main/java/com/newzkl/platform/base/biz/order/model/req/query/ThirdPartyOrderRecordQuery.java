@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.req.query;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +34,7 @@ public class ThirdPartyOrderRecordQuery extends PageQuery {
     /**
      * 平台类型
      */
-    private PlatformTypeEnum platformType;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 
     /**
      * 请求状态

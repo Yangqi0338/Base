@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.biz.req.query;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -25,7 +25,7 @@ public class ThirdPartyGoodsRecordQuery {
     /**
      * 平台类型
      */
-    private PlatformTypeEnum platformType;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 
     /**
      * 请求状态

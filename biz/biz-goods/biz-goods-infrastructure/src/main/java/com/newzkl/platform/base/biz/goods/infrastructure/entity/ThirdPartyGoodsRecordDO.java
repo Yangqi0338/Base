@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
@@ -18,7 +18,7 @@ public class ThirdPartyGoodsRecordDO extends BaseDO {
     /**
      * 平台类型
      */
-    private PlatformTypeEnum platformType;
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 
     /**
      * 外部商品(SPU)ID

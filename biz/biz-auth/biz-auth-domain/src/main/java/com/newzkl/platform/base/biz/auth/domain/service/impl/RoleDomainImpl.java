@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleReq;
 import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.RelationEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -71,9 +71,9 @@ public class RoleDomainImpl implements RoleDomain {
         if (dto == null) {
             return;
         }
-        List<Long> affectedAccountIds = relationDomain.listSourceIds(RelationEnum.Type.ACCOUNT_ROLE, id);
-        relationRepository.deleteByTarget(RelationEnum.Type.ACCOUNT_ROLE, List.of(id));
-        relationRepository.deleteBySource(RelationEnum.Type.ROLE_PERMISSION, List.of(id));
+        List<Long> affectedAccountIds = relationDomain.listSourceIds(PermissionEnum.RelationType.ACCOUNT_ROLE, id);
+        relationRepository.deleteByTarget(PermissionEnum.RelationType.ACCOUNT_ROLE, List.of(id));
+        relationRepository.deleteBySource(PermissionEnum.RelationType.ROLE_PERMISSION, List.of(id));
         roleRepository.deleteById(id);
         recalculator.recalc(affectedAccountIds);
     }
@@ -85,8 +85,8 @@ public class RoleDomainImpl implements RoleDomain {
             return null;
         }
         RoleVO vo = TransferUtils.transfer(dto, RoleVO::new);
-        List<Long> accountIds = relationDomain.listSourceIds(RelationEnum.Type.ACCOUNT_ROLE, id);
-        List<Long> permIds = relationDomain.listTargetIds(RelationEnum.Type.ROLE_PERMISSION, id);
+        List<Long> accountIds = relationDomain.listSourceIds(PermissionEnum.RelationType.ACCOUNT_ROLE, id);
+        List<Long> permIds = relationDomain.listTargetIds(PermissionEnum.RelationType.ROLE_PERMISSION, id);
         vo.setAccountIds(accountIds);
         vo.setPermissionIds(permIds);
         vo.setAccountCount(accountIds.size());
@@ -101,8 +101,8 @@ public class RoleDomainImpl implements RoleDomain {
         Page<RoleVO> voPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
         List<RoleVO> records = page.getRecords().stream().map(d -> {
             RoleVO vo = TransferUtils.transfer(d, RoleVO::new);
-            vo.setAccountCount(relationDomain.listSourceIds(RelationEnum.Type.ACCOUNT_ROLE, d.getId()).size());
-            vo.setPermissionCount(relationDomain.listTargetIds(RelationEnum.Type.ROLE_PERMISSION, d.getId()).size());
+            vo.setAccountCount(relationDomain.listSourceIds(PermissionEnum.RelationType.ACCOUNT_ROLE, d.getId()).size());
+            vo.setPermissionCount(relationDomain.listTargetIds(PermissionEnum.RelationType.ROLE_PERMISSION, d.getId()).size());
             return vo;
         }).toList();
         voPage.setRecords(records);
@@ -121,19 +121,19 @@ public class RoleDomainImpl implements RoleDomain {
         if (role == null) {
             throw new PlatformException(BaseErrorCode.NODATA, "角色");
         }
-        Set<Long> oldBound = new HashSet<>(relationDomain.listSourceIds(RelationEnum.Type.ACCOUNT_ROLE, roleId));
+        Set<Long> oldBound = new HashSet<>(relationDomain.listSourceIds(PermissionEnum.RelationType.ACCOUNT_ROLE, roleId));
         Set<Long> newBound = accountIds == null ? new HashSet<>() : new HashSet<>(accountIds);
         Set<Long> affected = new HashSet<>(oldBound);
         affected.addAll(newBound);
 
-        relationRepository.deleteByTarget(RelationEnum.Type.ACCOUNT_ROLE, List.of(roleId));
+        relationRepository.deleteByTarget(PermissionEnum.RelationType.ACCOUNT_ROLE, List.of(roleId));
         if (CollUtil.isNotEmpty(newBound)) {
             List<PermissionRelationDTO> toInsert = newBound.stream().distinct().map(aid -> {
                 PermissionRelationDTO d = new PermissionRelationDTO();
-                d.setType(RelationEnum.Type.ACCOUNT_ROLE);
+                d.setType(PermissionEnum.RelationType.ACCOUNT_ROLE);
                 d.setSourceId(aid);
                 d.setTargetId(roleId);
-                d.setSource(RelationEnum.Source.DIRECT);
+                d.setSource(PermissionEnum.Source.DIRECT);
                 return d;
             }).toList();
             relationRepository.insertBatch(toInsert);
@@ -144,8 +144,8 @@ public class RoleDomainImpl implements RoleDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void assignPermissions(Long roleId, Collection<Long> permissionIds) {
-        relationDomain.replace(RelationEnum.Type.ROLE_PERMISSION, roleId, permissionIds);
-        List<Long> affected = relationDomain.listSourceIds(RelationEnum.Type.ACCOUNT_ROLE, roleId);
+        relationDomain.replace(PermissionEnum.RelationType.ROLE_PERMISSION, roleId, permissionIds);
+        List<Long> affected = relationDomain.listSourceIds(PermissionEnum.RelationType.ACCOUNT_ROLE, roleId);
         recalculator.recalc(affected);
     }
 }

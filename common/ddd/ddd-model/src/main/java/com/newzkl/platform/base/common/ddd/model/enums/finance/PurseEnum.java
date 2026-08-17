@@ -2,13 +2,12 @@ package com.newzkl.platform.base.common.ddd.model.enums.finance;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 /**
  * @author niu
@@ -54,18 +53,12 @@ public class PurseEnum implements Serializable {
     public enum PurseType {
         /** 总账户 */
         TOTAL(0, false, "总账户"),
-        /** 礼包返利账户 */
-        PACK_INCOME(10, true, "礼包返利账户"),
         /** 商品分润账户 */
         GOODS_INCOME(11, true, "商品分润账户"),
-        /** 分红奖账户 */
-        AWARD_INCOME(12, true, "分红奖账户"),
         /** 商品货款结余账户 */
         SUPPLIER_INCOME(13, true, true, "商品货款结余账户"),
         /** 采购金账户 */
         PURCHASE(2, true, "采购金账户"),
-        /** 杠杆采购金账户 */
-        LEVERAGE_PURCHASE(20, false, "杠杆采购金账户"),
         /** 保证金账户 */
         PROMISE(3, true, "保证金账户"),
         /** 营销账户 */
@@ -118,12 +111,6 @@ public class PurseEnum implements Serializable {
         SUPPLIER_SETTLE(5, "渠道商订单结算"),
         /** 分润 */
         EARNING(6, "分润"),
-        /** 平台给运营商分配采购金 */
-        PLATFORM_TO_OPERATOR(7, "平台给运营商分配采购金"),
-        /** 平台给运营商分配杠杆采购金 */
-        PLATFORM_TO_OPERATOR_LEVER(8, "平台给运营商分配杠杆采购金"),
-        /** 运营商给渠道商分配采购金 */
-        OPERATOR_TO_CHANNEL(9, "运营商给渠道商分配采购金"),
         /**
          * 供应商订单结算补充保证金
          */

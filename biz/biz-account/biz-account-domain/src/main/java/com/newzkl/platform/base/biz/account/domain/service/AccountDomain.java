@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureTreeVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.ModeShopOrderType;
+import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -30,6 +30,6 @@ public class ModelShopOutVO implements Serializable {
     /**
      * 类型
      */
-    private ModeShopOrderType type;
+    private StoreStyleEnum.ModeShopOrderType type;
 
 }

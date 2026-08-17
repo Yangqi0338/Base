@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressQuery;
 import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 import java.util.List;
 

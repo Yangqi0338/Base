@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.store.model.store.res;
 
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -27,14 +26,6 @@ public class StoreRes extends BaseRes {
      */
      private String address;
      /**
-     * 经度
-     */
-     private Double longitude;
-     /**
-     * 纬度
-     */
-     private Double latitude;
-     /**
      * 渠道商ID
      */
      private Long channelId;
@@ -42,10 +33,6 @@ public class StoreRes extends BaseRes {
       * 商户ID
       */
      private Long merchantId;
-     /**
-     * 管理员ID
-     */
-     private Long managerId;
      /**
       * 模板ID
       */
@@ -58,26 +45,6 @@ public class StoreRes extends BaseRes {
       * 是否是样板店
       */
      private Integer isModelShop;
-     /**
-     * 售后地址
-     */
-     private String refundAddress;
-     /**
-     * 选品数量
-     */
-     private Integer selectionNumber;
-     /**
-     * 自营商品数量
-     */
-     private Integer customNumber;
-     /**
-     * 成交笔数
-     */
-     private Integer dealerNumber;
-     /**
-     * 成交金额, 采购金余额 (Money, 落库 BIGINT 分)
-     */
-     private Money dealerAmount;
 
     /**
      * 门店ID

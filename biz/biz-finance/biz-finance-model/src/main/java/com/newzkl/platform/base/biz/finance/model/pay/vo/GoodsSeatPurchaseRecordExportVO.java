@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.pay.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
@@ -37,7 +38,7 @@ public class GoodsSeatPurchaseRecordExportVO {
     /**
      * 支付方式
      *
-     * @see OrderEnum.PayType
+     * @see PaymentEnum.PayType
      */
     @ExcelProperty("支付方式")
     private String payType;

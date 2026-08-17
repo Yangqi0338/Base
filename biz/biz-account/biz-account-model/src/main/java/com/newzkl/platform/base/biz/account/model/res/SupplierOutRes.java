@@ -4,7 +4,6 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import lombok.Data;
 
@@ -53,10 +52,6 @@ public class SupplierOutRes extends BaseRes {
       * 0 即时 1 延迟
       */
      private Integer promisePayConfig;
-     /**
-     * 主体类型 (查询)
-     */
-     private AccountEnum.BodyType bodyType;
      /**
      * 审批拒绝原因
      */

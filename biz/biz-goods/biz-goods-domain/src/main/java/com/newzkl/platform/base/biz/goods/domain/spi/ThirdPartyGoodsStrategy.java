@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.domain.spi;
 
 import com.newzkl.platform.base.common.ddd.domain.StrategyNullableProcessor;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyGoodsResult;
-import com.newzkl.platform.base.common.ddd.model.enums.order.PlatformTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 
 /**
  * 第三方商品同步策略接口(封装不同第三方的商品同步逻辑)
@@ -20,5 +20,5 @@ public interface ThirdPartyGoodsStrategy extends StrategyNullableProcessor {
      * @param itemJson     第三方推送的商品数据 JSON
      * @return 同步结果适配
      */
-    ThirdPartyGoodsResult sync(PlatformTypeEnum platformType, String outSpuId, String itemJson);
+    ThirdPartyGoodsResult sync(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String outSpuId, String itemJson);
 }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SkuDO;
-import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
@@ -30,8 +29,6 @@ public interface SkuDAO extends BaseMapper<SkuDO> {
     List<OrderGoodsInfoVO> queryOrderGoodsInfoVOList(@Param("list") List<GoodsVO> goods, @Param("channelId")Long channelId, @Param("storeId")Long storeId);
 
     List<OrderGoodsInfoVO> queryOrderSkuInfoVOList(@Param("skuIdList") List<Long> skuIdList);
-
-    SpuDO countSkuById(@Param("spuId") Long spuId);
 
     default QueryWrapper<SkuDO> buildQueryWrapper(SkuQuery query) {
         QueryWrapper<SkuDO> wrapper = new QueryWrapper<>();

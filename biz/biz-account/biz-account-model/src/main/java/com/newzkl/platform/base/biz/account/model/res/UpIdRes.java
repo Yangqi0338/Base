@@ -1,17 +1,10 @@
 package com.newzkl.platform.base.biz.account.model.res;
-import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
-import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
-import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author muc_fang

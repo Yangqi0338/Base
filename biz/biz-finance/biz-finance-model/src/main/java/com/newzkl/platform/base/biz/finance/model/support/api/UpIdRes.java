@@ -1,17 +1,10 @@
 package com.newzkl.platform.base.biz.finance.model.support.api;
 
-import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 上级链路结果 (跨域 user 结构降级为 finance 本地 DTO)

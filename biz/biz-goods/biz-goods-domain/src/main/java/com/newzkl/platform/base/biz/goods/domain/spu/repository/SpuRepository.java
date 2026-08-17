@@ -219,6 +219,4 @@ public interface SpuRepository {
      */
     GoodsCountVO goodsCountVO(Long supplierId);
 
-    void spuSelectorNumAdd(List<Long> spuIdList, Integer num);
-
 }

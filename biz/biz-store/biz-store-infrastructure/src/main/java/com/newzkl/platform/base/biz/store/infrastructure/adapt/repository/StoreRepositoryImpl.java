@@ -121,7 +121,6 @@ public class StoreRepositoryImpl implements StoreRepository {
                 .notEmptyEq(StoreDO::getId, store.getId())
                 .notEmptyEq(StoreDO::getName, store.getName())
                 .notEmptyEq(StoreDO::getChannelId, store.getChannelId())
-                .notEmptyEq(StoreDO::getManagerId, store.getManagerId())
                 .notEmptyEq(StoreDO::getModelShopId, store.getModelShopId())
 //                .notEmptyEq(StoreDO::getCategoryId, store.getType())
                 .notEmptyEq(StoreDO::getIsModelShop, store.getIsModelShop())

@@ -44,11 +44,6 @@ public interface ModelShopDomain {
     Page<ModelShopRes> queryModelShopPage(ModelShopQuery req);
 
     /**
-     * 修改使用门店数
-     */
-    void updateUseStoreNum(String styleCode, Integer num);
-
-    /**
      * 修改样板店数据
      */
     void updateModelShopData(ModelShopDataDTO dto);

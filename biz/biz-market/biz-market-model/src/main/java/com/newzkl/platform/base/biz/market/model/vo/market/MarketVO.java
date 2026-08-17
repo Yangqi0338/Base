@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.vo.market;
 
 
-import com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
@@ -76,14 +76,14 @@ public class MarketVO {
     private LocalDateTime createTime;
 
     /**
-     * 市场类型  {@code com.newzkl.platform.base.common.ddd.model.enums.market.MarketTypeEnum}
+     * 市场类型  {@code com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum.MarketTypeEnum}
      * GENERAL-普通市场，SPECIAL-专区市场
      */
     private String marketType;
 
 
     public String getMarketTypeDesc() {
-        return MarketTypeEnum.getByCode(marketType);
+        return MarketEnum.MarketTypeEnum.getByCode(marketType);
     }
 
 }

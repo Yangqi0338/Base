@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.biz.store.model.store.entity.SeatPackage;
 import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;

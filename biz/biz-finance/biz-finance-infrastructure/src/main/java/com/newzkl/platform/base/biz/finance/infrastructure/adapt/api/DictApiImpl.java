@@ -3,8 +3,6 @@ package com.newzkl.platform.base.biz.finance.infrastructure.adapt.api;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.DictApi;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.ConfigWithdrawVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawConfig;
 import com.newzkl.platform.base.biz.sys.facade.IDictFacade;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
@@ -64,20 +62,4 @@ public class DictApiImpl implements DictApi {
         return channelConfigVO;
     }
 
-    @Override
-    public ConfigWithdrawVO defaultWithdrawConfig() {
-        String value = dictFacade.get(DictEnum.Key.OPERATOR_WITHDRAW_CONFIG.getCode());
-        ConfigWithdrawVO configWithdrawVO = JSONUtil.toBean(value, ConfigWithdrawVO.class);
-        if (configWithdrawVO == null) {
-            configWithdrawVO = new ConfigWithdrawVO();
-            configWithdrawVO.setOrderEarningRatio(0);
-            configWithdrawVO.setWithdraw(new WithdrawConfig().init());
-        }
-        return configWithdrawVO;
-    }
-
-    @Override
-    public void alterWithdrawConfig(ConfigWithdrawVO incomeWithdraw) {
-        dictFacade.set(DictEnum.Key.OPERATOR_WITHDRAW_CONFIG.getCode(), JSONUtil.toJsonStr(incomeWithdraw));
-    }
 }
