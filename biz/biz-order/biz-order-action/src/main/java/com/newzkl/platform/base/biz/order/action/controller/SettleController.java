@@ -12,7 +12,7 @@ import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
@@ -74,7 +74,7 @@ public class SettleController {
      * @return
      */
     @PostMapping("settleRecordVO")
-    public PlatformResult<SettleRecordVO> settleRecordVO(@RequestBody IdListCommand idObj) {
+    public PlatformResult<SettleRecordVO> settleRecordVO(@RequestBody IdCommand idObj) {
         return PlatformResult.success(settleDomain.settleRecordVO(idObj.getId()));
     }
     /**

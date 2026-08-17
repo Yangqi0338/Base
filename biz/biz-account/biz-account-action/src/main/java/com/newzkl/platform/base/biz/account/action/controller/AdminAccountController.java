@@ -13,7 +13,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +77,7 @@ public class AdminAccountController {
      * @return 空结果
      */
     @PostMapping("delete")
-    public PlatformResult<Void> delete(@Validated @RequestBody IdListCommand idList) {
+    public PlatformResult<Void> delete(@Validated @RequestBody IdCommand idList) {
         accountDomain.accountDelete(idList.getIdList());
         return PlatformResult.success();
     }
@@ -112,7 +112,7 @@ public class AdminAccountController {
      * @return 账号详情
      */
     @PostMapping("detail")
-    public PlatformResult<AdminAccountRes> detail(@RequestBody(required = false) IdListCommand idList) {
+    public PlatformResult<AdminAccountRes> detail(@RequestBody(required = false) IdCommand idList) {
         Long accountId = (idList == null || idList.getId() == null)
                 ? SecurityUtils.getAccountId()
                 : idList.getId();

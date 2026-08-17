@@ -14,7 +14,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +77,7 @@ public class PackOrderController {
      * @return 订单ID
      */
     @PostMapping("packOrderSubmit")
-    public PlatformResult<Long> packOrderSubmit(@Valid @RequestBody IdListCommand idListCommand) {
+    public PlatformResult<Long> packOrderSubmit(@Valid @RequestBody IdCommand idListCommand) {
         return PlatformResult.success(packOrderService.packOrderSubmit(idListCommand.getId()));
     }
 

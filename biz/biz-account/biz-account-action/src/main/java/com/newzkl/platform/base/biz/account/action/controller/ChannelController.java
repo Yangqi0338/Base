@@ -19,7 +19,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -153,7 +153,7 @@ public class ChannelController {
      * @return 服务费配置
      */
     @PostMapping("/queryServiceFeeConfig")
-    public PlatformResult<ServiceFeeConfigVO> queryServiceFeeConfig(@RequestBody @Valid IdListCommand idListCommand) {
+    public PlatformResult<ServiceFeeConfigVO> queryServiceFeeConfig(@RequestBody @Valid IdCommand idListCommand) {
         return PlatformResult.success(identityService.queryServiceFeeConfig(CollUtil.getFirst(idListCommand.getIdList())));
     }
 

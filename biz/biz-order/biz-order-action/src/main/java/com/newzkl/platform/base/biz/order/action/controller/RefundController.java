@@ -16,7 +16,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -55,7 +55,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("memberCancelRefund")
-    public PlatformResult<Void> memberCancelRefund(@Validated @RequestBody IdListCommand idObj) {
+    public PlatformResult<Void> memberCancelRefund(@Validated @RequestBody IdCommand idObj) {
         refundDomain.stopAudit(RoleEnum.CompanyRole.MEMBER, SecurityUtils.getAccountId(), idObj.getId());
         return PlatformResult.success();
     }
@@ -95,7 +95,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("supplierConfirmRefundFreight")
-    public PlatformResult<Void> supplierConfirmRefundFreight(@Validated @RequestBody IdListCommand idObj) {
+    public PlatformResult<Void> supplierConfirmRefundFreight(@Validated @RequestBody IdCommand idObj) {
         refundService.supplierConfirmRefundFreight(idObj.getId());
         return PlatformResult.success();
     }
@@ -105,7 +105,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("supplierRefuseRefundFreight")
-    public PlatformResult<Void> supplierRefuseRefundFreight(@Validated @RequestBody IdListCommand idObj) {
+    public PlatformResult<Void> supplierRefuseRefundFreight(@Validated @RequestBody IdCommand idObj) {
         refundDomain.refuseRefundFreight(idObj.getId());
         return PlatformResult.success();
     }

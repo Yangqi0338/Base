@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -155,7 +155,7 @@ public class CourseChapterController {
      * @return 是否成功
      */
     @PostMapping("/batchDelete")
-    public PlatformResult<Boolean> batchDelete(@Validated @RequestBody IdListCommand idListCommand) {
+    public PlatformResult<Boolean> batchDelete(@Validated @RequestBody IdCommand idListCommand) {
         return PlatformResult.success(courseChapterDomain.batchDelete(idListCommand.getIdList()));
     }
 

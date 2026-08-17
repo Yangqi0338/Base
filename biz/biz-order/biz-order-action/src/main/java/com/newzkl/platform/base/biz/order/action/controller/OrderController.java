@@ -18,7 +18,7 @@ import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -132,7 +132,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("memberConfirmOrder")
-    public PlatformResult<Void> memberConfirmOrder(@Validated @RequestBody IdListCommand idObj) {
+    public PlatformResult<Void> memberConfirmOrder(@Validated @RequestBody IdCommand idObj) {
         orderDomain.receiveSkuOrder(idObj.getId(), null);
         return PlatformResult.success();
     }
@@ -143,7 +143,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("createOrderAgain")
-    public PlatformResult<OrderCreateRes> createOrderAgain(@Validated @RequestBody IdListCommand idObj) {
+    public PlatformResult<OrderCreateRes> createOrderAgain(@Validated @RequestBody IdCommand idObj) {
         return PlatformResult.success(commitOrder.createOrderAgain(idObj.getIdList()));
     }
 
@@ -153,7 +153,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("channelCancelOrder")
-    public PlatformResult<Void> channelCancelOrder(@Validated @RequestBody IdListCommand idObj) {
+    public PlatformResult<Void> channelCancelOrder(@Validated @RequestBody IdCommand idObj) {
         orderDomain.channelCancelOrder(idObj.getId(),"门店主动取消订单" );
         return PlatformResult.success();
     }
@@ -191,7 +191,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("orderBalancePay")
-    public PlatformResult<Void> orderBalancePay(@RequestBody IdListCommand idObj) {
+    public PlatformResult<Void> orderBalancePay(@RequestBody IdCommand idObj) {
         if (RoleEnum.CompanyRole.CHANNEL == SecurityUtils.getRole()) {
             orderService.orderBalancePay(idObj.getIdList().toArray(new Long[0]));
         }

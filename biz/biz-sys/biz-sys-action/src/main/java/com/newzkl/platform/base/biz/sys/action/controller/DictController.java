@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.sys.model.dictitem.res.DictItemRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +98,7 @@ public class DictController {
      * @return 空结果
      */
     @PostMapping("dictItemDelete")
-    public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdListCommand idList) {
+    public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdCommand idList) {
         dictItemDomain.itemDelete(idList.getIdList());
         return PlatformResult.success();
     }

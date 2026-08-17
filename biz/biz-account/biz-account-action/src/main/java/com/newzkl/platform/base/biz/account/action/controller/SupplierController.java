@@ -13,7 +13,7 @@ import com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -138,7 +138,7 @@ public class SupplierController {
      * @return 账期配置
      */
     @PostMapping("/periodInfo")
-    public PlatformResult<String> periodInfo(@RequestBody IdListCommand idListCommand) {
+    public PlatformResult<String> periodInfo(@RequestBody IdCommand idListCommand) {
         Long id = CollUtil.getFirst(idListCommand.getIdList());
         if (id == null) {
             id = SecurityUtils.getAccountId();
@@ -167,7 +167,7 @@ public class SupplierController {
      * @return 应付保证金金额
      */
     @PostMapping("/shouldPromisePayAmountInfo")
-    public PlatformResult<Integer> shouldPromisePayAmountInfo(@RequestBody IdListCommand idListCommand) {
+    public PlatformResult<Integer> shouldPromisePayAmountInfo(@RequestBody IdCommand idListCommand) {
         Long id = CollUtil.getFirst(idListCommand.getIdList());
         Money amount = userQueryService.supplierVO(id).getShouldPromisePayAmount();
         return PlatformResult.success(amount == null ? null : (int) amount.getCent());

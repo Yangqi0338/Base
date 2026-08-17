@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.account.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.account.model.pack.query.PackGoodsQuery;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackGoodsCommand;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackGoodsRes;
-import com.newzkl.platform.base.common.ddd.model.req.IdListCommand;
+import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class PackGoodsController {
      * @return 空结果
      */
     @PostMapping("packGoodsDelete")
-    public PlatformResult<Void> packGoodsDelete(@Valid @RequestBody IdListCommand idListCommand) {
+    public PlatformResult<Void> packGoodsDelete(@Valid @RequestBody IdCommand idListCommand) {
         packGoodsDomain.packGoodsDelete(idListCommand.getIdList());
         return PlatformResult.success();
     }
