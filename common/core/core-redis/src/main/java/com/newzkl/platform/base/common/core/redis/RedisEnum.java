@@ -129,6 +129,34 @@ public class RedisEnum {
         /** 短信验证码存储 Hash 大 key (field = 手机号) */
         SMS_CODE_HASH(ModuleEnum.COMMON, "SMS:", "短信验证码存储 Hash 大 key"),
 
+        /* ============ BI 统计缓存 ============ */
+        /** 首页实时概况缓存 */
+        BI_OVERVIEW(ModuleEnum.COMMON, "bi:overview:", "首页实时概况缓存"),
+        /** 首页待办缓存 */
+        BI_TODO(ModuleEnum.COMMON, "bi:todo:", "首页待办缓存"),
+        /** 商品中心缓存 */
+        BI_PRODUCT(ModuleEnum.COMMON, "bi:product:", "商品中心缓存"),
+        /** 会员中心缓存 */
+        BI_MEMBER(ModuleEnum.COMMON, "bi:member:", "会员中心缓存"),
+        /** 月度GMV趋势缓存 */
+        BI_MONTH_GMV(ModuleEnum.COMMON, "bi:monthGmv:", "月度GMV趋势缓存"),
+        /** 品类占比缓存 */
+        BI_CATEGORY(ModuleEnum.COMMON, "bi:category:", "品类占比缓存"),
+        /** 门店管理缓存 */
+        BI_STORE(ModuleEnum.COMMON, "bi:store:", "门店管理缓存"),
+        /** 财务结算缓存 */
+        BI_FINANCE(ModuleEnum.COMMON, "bi:finance:", "财务结算缓存"),
+        /** 知链存证缓存 */
+        BI_EVIDENCE(ModuleEnum.COMMON, "bi:evidence:", "知链存证缓存"),
+        /** 供应商管理缓存 */
+        BI_SUPPLIER(ModuleEnum.COMMON, "bi:supplier:", "供应商管理缓存"),
+        /** 支付中心缓存 */
+        BI_PAYMENT(ModuleEnum.COMMON, "bi:payment:", "支付中心缓存"),
+        /** 商品排行缓存 */
+        BI_RANK_GOODS(ModuleEnum.COMMON, "bi:rank:goods:", "商品排行缓存"),
+        /** 店铺排行缓存 */
+        BI_RANK_STORE(ModuleEnum.COMMON, "bi:rank:store:", "店铺排行缓存"),
+
         EMPTY(ModuleEnum.COMMON, "", ""),
         UN_PERMISSION_KEY_PREFIX(ModuleEnum.COMMON, "gateway:un_permission:", ""),
         INTERFACE_KEY_PREFIX(ModuleEnum.COMMON, "interface:list:", ""),
