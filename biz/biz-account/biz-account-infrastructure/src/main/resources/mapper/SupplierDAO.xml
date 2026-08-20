@@ -53,20 +53,6 @@
         </if>
     </sql>
 
-    <!-- 甄选师查看供应商列表; Base 无 goods_*/role_name/name_auth_info 列, 对应 VO 字段落 null -->
-    <select id="listSelectorSupplierVOByQuery" resultType="com.newzkl.platform.base.biz.account.model.vo.SelectorSupplierVO">
-        select
-        t.`id`,t.`body_type`,a.`username`,t.`name`,t.`state`,t.`audit_state`,t.`company_info`,t.`promise_pay_state`,t.`promise_pay_amount`,t.`create_time`,t.`update_time`,t.`promise_pay_audit_state`,t.`period_set_state`,t.`period_set_config`,t.`should_promise_pay_amount`,t.`audit_refuse_reason`,t.`industry_id_list`,t.`receive_address`,t.`in_time`
-        , a.role_id_list, a.real_name
-        from supplier t
-        left join account a on t.id = a.id
-        <where>
-            t.del_flag = 0
-            <include refid="selectorWhere"></include>
-        </where>
-        ORDER BY t.`create_time` desc
-    </select>
-
     <!-- 源取 supplier.invite_id, Base 该列已收敛 account.invite_account_id -->
     <select id="supplierRelationVO" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierRelationVO">
         select t.id, a.invite_account_id as up_selector_id
@@ -125,20 +111,6 @@
     <select id="getSettlementConfig" resultType="java.lang.String">
         select settlement_config_v_o from supplier
         where id = #{id,jdbcType=BIGINT} and del_flag = 0
-    </select>
-
-    <!-- 源按 supplier.invite_id 分组, Base 改按 account.invite_account_id -->
-    <select id="selectCountByInviteId" resultType="com.newzkl.platform.base.biz.account.model.vo.OperatorInviteCountVO">
-        select
-        a.`invite_account_id` as invite_id, count(t.`id`) as 'inviteCount'
-        from supplier t
-        left join account a on t.id = a.id
-        where t.del_flag = 0
-        and a.`invite_account_id` in
-        <foreach item="item" collection="inviteIds" separator="," close=")" open="(">
-            #{item,jdbcType=BIGINT}
-        </foreach>
-        group by a.`invite_account_id`
     </select>
 
     <!-- BizCountMap 合计, supplier alias t, account alias a, 与 getJoinQw 约定一致 -->

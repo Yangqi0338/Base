@@ -7,6 +7,7 @@ import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,10 @@ public class FeiShuMessageSendUtil {
 
     private static String feishuWarnWebhook;
 
-    private static Boolean feishuTrackingSwitch;
+    private static Boolean feishuTrackingSwitch = false;
+
+    @Getter
+    private static List<String> excludeKeyword;
 
     /**
      * 向飞书机器人发送文本消息
@@ -252,8 +256,14 @@ public class FeiShuMessageSendUtil {
         FeiShuMessageSendUtil.feishuWarnWebhook = feishuWarnWebhook;
     }
 
-    @Value("${feishu.tracking.switch:false}")
+    @Value("${feishu.tracking.switch}")
     public void setFeishuTrackingSwitch(Boolean feishuTrackingSwitch) {
         FeiShuMessageSendUtil.feishuTrackingSwitch = feishuTrackingSwitch;
     }
+
+    @Value("${feishu.tracking.excludeKeyword:}")
+    public void setExcludeKeyword(List<String> excludeKeyword) {
+        FeiShuMessageSendUtil.excludeKeyword = excludeKeyword;
+    }
+
 }

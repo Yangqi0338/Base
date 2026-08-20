@@ -23,7 +23,6 @@ import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
 import com.newzkl.platform.base.common.core.redis.utils.SmsMethod;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
@@ -34,6 +33,7 @@ import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.AuthEnum;
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -71,6 +70,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         AuthEnum.Type type = loginReq.getType();
         log.info("开始密码登录流程，查询用户名|手机号：{}", username);
 
+        // 登录与注册为两个独立端口, 登录不存在直接抛 NO_EXIST, 不回退注册(注册有事务, 登录无)
         AccountRpcVO account = findAccount(loginReq);
 
         companyRole = findRole(companyRole, account);
@@ -108,32 +108,38 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         // 通常必须传入username和client，不可能会有多条账号数据
         AccountRpcVO targetAccount = accountApi.account(loginReq.getClient(), loginReq.getUsername());
 
-        // 移除掉用户侧注销且超过24的账号 (不在SQL做是因为效率问题)
-        if (targetAccount != null && targetAccount.getState() == AccountEnum.State.DISABLE && targetAccount.getClient() == AccountEnum.Client.USER) {
-            if (targetAccount.getCancelTime() == null || LocalDateTime.now().minusDays(1).isAfter(targetAccount.getCancelTime())) {
-                targetAccount = null;
-            }
-        }
-
         // 若无可用账号
         if (targetAccount == null) {
             log.error("登录失败：不存在有效账号");
             throw new PlatformException(AccountErrorCode.NO_EXIST);
         }
-        else if (targetAccount.getState() == AccountEnum.State.DISABLE) {
-            // 停用状态自动启用
-            log.info("{}对应的账号{}为停用状态，自动启用", loginReq.getUsername(), targetAccount.getId());
-            // login不做事务, 失败下次再登录即可
+        // 封禁校验(登录/注册一致)
+        assertNotBlocked(targetAccount, "登录");
+        // 已注销账号登录自动恢复为正常(login无事务, 失败下次再登录即可)
+        if (targetAccount.getState() == AccountEnum.State.DESTROY) {
+            log.info("{}对应的账号{}为已注销状态，登录自动恢复", loginReq.getUsername(), targetAccount.getId());
             targetAccount.setState(AccountEnum.State.ENABLE);
+            targetAccount.setCancelTime(null);
 //            accountApi.accountEdit(targetAccount, null);
-        }
-        else if (targetAccount.getState() == AccountEnum.State.DESTROY) {
-            // 禁用状态报错
-            log.error("登录失败：{}对应的账号{}已被平台禁用", loginReq.getUsername(), targetAccount.getId());
-            throw new PlatformException(AccountErrorCode.IN_BLOCKLIST, "登录");
         }
 
         return targetAccount;
+    }
+
+    /**
+     * 校验账号未被平台封禁, 封禁则抛 {@link AccountErrorCode#IN_BLOCKLIST}
+     *
+     * <p>登录与注册对 DESTROY/ENABLE 的期望相反(登录要账号存在、注册要账号不存在),
+     * 二者状态判断中仅封禁校验语义完全一致, 故只抽取该部分为共享方法</p>
+     *
+     * @param account 账号
+     * @param scene   场景描述(登录/注册), 作为异常补充信息
+     */
+    private void assertNotBlocked(AccountRpcVO account, String scene) {
+        if (account.getState() == AccountEnum.State.DISABLE) {
+            log.error("{}失败：账号{}已被平台封禁", scene, account.getId());
+            throw new PlatformException(AccountErrorCode.IN_BLOCKLIST, scene);
+        }
     }
 
     @Override
@@ -264,33 +270,22 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         }
 
         AccountRpcVO existAccount = accountApi.account(client, username);
-        // 移除掉用户侧注销且超过24的账号
-        if (existAccount != null && existAccount.getState() == AccountEnum.State.DISABLE && existAccount.getClient() == AccountEnum.Client.USER) {
-            if (existAccount.getCancelTime() == null || LocalDateTime.now().minusDays(1).isAfter(existAccount.getCancelTime())) {
-                existAccount = null;
-            }
-        }
 
         IdentityRegisterRpcReq registerRpcReq = TransferUtils.transfer(req, IdentityRegisterRpcReq.class);
-        // 如果有账号
+        // 是否首次注册: 无同名账号即首次; DESTROY(注销未回收)复用原 id 覆盖注册非首次
         boolean isRegisterOnce = true;
         if (existAccount != null) {
-            try {
-                if (existAccount.getState() == AccountEnum.State.ENABLE) {
-                    throw new PlatformException(AccountErrorCode.EXIST_USERNAME, "注册");
-                } else if (existAccount.getState() == AccountEnum.State.DISABLE) {
-                    // 禁用状态报错
-                    log.error("{}对应的账号{}已被平台禁用", username, existAccount.getId());
-                    throw new PlatformException(AccountErrorCode.IN_BLOCKLIST, "注册");
-                }
-            }catch (Exception e) {
-                if (req.getLogin() != Boolean.TRUE) {
-                    throw e;
-                }
+            // 封禁校验(登录/注册一致), 封禁不可复用
+            assertNotBlocked(existAccount, "注册");
+            if (existAccount.getState() == AccountEnum.State.ENABLE) {
+                throw new PlatformException(AccountErrorCode.EXIST_USERNAME, "注册");
             }
             registerRpcReq.setId(existAccount.getId());
+            registerRpcReq.setPid(existAccount.getId());
             isRegisterOnce = false;
         }
+
+        registerRpcReq.setRegisterOnce(isRegisterOnce);
 
         // 短信验证
         AuthEnum.Type type = req.getType();
@@ -316,12 +311,18 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             if (inviteAccount == null || inviteAccount.getId().equals(registerRpcReq.getId())) {
                 throw new PlatformException(AccountErrorCode.PARAM_YQM);
             }
+            // 若已经注册且有邀请人，不能再被邀请
+            if (!isRegisterOnce && existAccount.getInviteAccountId() != null) {
+                throw new PlatformException(AccountErrorCode.PARAM_YQM);
+            }
             Long inviteAccountId = inviteAccount.getId();
             log.info("邀请人信息：{}", JSONUtil.toJsonStr(inviteAccount));
             registerRpcReq.setInviteAccountId(inviteAccountId);
-            // 同客户端,
-            if (req.getPid() == null && inviteAccount.getClient() == client) {
+            // 邀请人与自己同客户端，同客户端
+            if (registerRpcReq.getPid() == null && inviteAccount.getClient() == client) {
                 registerRpcReq.setPid(inviteAccountId);
+                registerRpcReq.setPidList(BizUtil.getPidList(inviteAccount.getPidList(), inviteAccountId));
+                registerRpcReq.setPIdentityList(BizUtil.getPIdentityList(inviteAccount.getPIdentityList(), inviteAccount.getIdentityList()));
             }
         }
 
@@ -339,6 +340,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
                         IdentityRegisterRpcReq memberRegisterRpcReq = TransferUtils.transfer(registerRpcReq, IdentityRegisterRpcReq.class);
                         memberRegisterRpcReq.setClient(memberClient);
                         memberRegisterRpcReq.setIdentity(memberClient.getDefaultIdentity());
+                        memberRegisterRpcReq.setRegisterOnce(true);
                         registerRpcReqList.add(memberRegisterRpcReq);
                     }
                 }

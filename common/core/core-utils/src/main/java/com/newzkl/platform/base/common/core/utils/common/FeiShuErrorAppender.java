@@ -5,6 +5,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -67,6 +68,11 @@ public class FeiShuErrorAppender extends UnsynchronizedAppenderBase<ILoggingEven
         }
 
         if (!event.getLevel().isGreaterOrEqual(Level.ERROR)) {
+            return;
+        }
+
+        // 过滤排除关键词（可选）
+        if (CollUtil.contains(FeiShuMessageSendUtil.getExcludeKeyword(), keyword -> event.getMessage().contains(keyword))) {
             return;
         }
 

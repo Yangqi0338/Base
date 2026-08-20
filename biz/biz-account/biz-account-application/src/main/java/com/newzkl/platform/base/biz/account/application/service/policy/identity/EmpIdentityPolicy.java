@@ -27,7 +27,8 @@ public class EmpIdentityPolicy extends AbsIdentityPolicy {
 
     @Override
     public IdentityRegisterRes customRegister(IdentityCustomSaveReq customSaveReq) {
-        return null;
+        // 员工角色无额外初始化, 直接返回成功
+        return new IdentityRegisterRes(null, customSaveReq.getId());
     }
 
     @Override

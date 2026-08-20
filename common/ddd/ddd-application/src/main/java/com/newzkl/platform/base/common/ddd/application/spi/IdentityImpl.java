@@ -24,10 +24,10 @@ public @interface IdentityImpl {
     /**
      * 命中的身份条件集
      *
-     * <p>取值为 {@code CompanyRole} 的 code 集合; 空数组表示 catch-all 兜底实现 (匹配所有未被其它实现命中的身份),
-     * 每个扩展点至多允许一个 catch-all。</p>
+     * <p>不命名为 {@code value}: 本注解元标注 {@code Component}, Spring {@code AnnotationBeanNameGenerator}
+     * 会读取 {@code value} 属性当作 bean 名 (要求 String), 而此处为枚举数组, 会导致启动期类型不匹配崩溃。</p>
      *
      * @return 身份 code 数组, 空数组为兜底
      */
-    AccountEnum.Identity[] value() default {};
+    AccountEnum.Identity[] identities() default {};
 }

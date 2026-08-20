@@ -85,5 +85,11 @@ public interface AccountDomain {
 
     Page<AccountVO> accountPage(AccountQuery accountQuery);
 
-    void register(IdentityRegisterRpcReq req);
+    /**
+     * 账号注册(保存 account + 初始化财务)
+     *
+     * @param req 注册请求
+     * @return 已保存的账号(含回填的 id)
+     */
+    AccountVO register(IdentityRegisterRpcReq req);
 }

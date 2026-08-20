@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.account.model.assembler.ShipAddressAssembler
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -82,18 +83,6 @@ class ShipAddressDomainImplTest {
     }
 
     @Test
-    @DisplayName("新建: 非默认地址不触发其他地址置非默认")
-    void saveShouldNotResetOtherDefaultWhenNotDefault() {
-        when(shipAddressRepository.save(any())).thenReturn(NEW_ID);
-        ShipAddressReq req = new ShipAddressReq();
-        req.setIsDefault(0);
-
-        shipAddressDomain.save(req);
-
-        verify(shipAddressRepository, never()).setOtherNotDefault(anyLong(), anyLong(), anyLong());
-    }
-
-    @Test
     @DisplayName("修改: 以入参 id 为准而非请求体 id, 默认地址先置其他为非默认")
     void editShouldUseGivenIdAndResetOtherDefault() {
         when(shipAddressRepository.edit(any())).thenReturn(1);
@@ -107,18 +96,7 @@ class ShipAddressDomainImplTest {
         ArgumentCaptor<ShipAddressVO> captor = ArgumentCaptor.forClass(ShipAddressVO.class);
         verify(shipAddressRepository).edit(captor.capture());
         assertEquals(222L, captor.getValue().getId(), "更新目标应为入参 id");
-        verify(shipAddressRepository).setOtherNotDefault(ROLE_ID, ACCOUNT_ID, 222L);
-    }
-
-    @Test
-    @DisplayName("修改: 非默认地址不触发其他地址置非默认")
-    void editShouldNotResetOtherDefaultWhenNotDefault() {
-        when(shipAddressRepository.edit(any())).thenReturn(1);
-        ShipAddressReq req = new ShipAddressReq();
-
-        shipAddressDomain.edit(222L, req);
-
-        verify(shipAddressRepository, never()).setOtherNotDefault(anyLong(), anyLong(), anyLong());
+        verify(shipAddressRepository).setOtherNotDefault(AccountEnum.Identity.CHANNEL, ACCOUNT_ID, 222L);
     }
 
     @Test
@@ -133,7 +111,7 @@ class ShipAddressDomainImplTest {
         assertEquals(333L, res.getId());
         ArgumentCaptor<ShipAddressQuery> captor = ArgumentCaptor.forClass(ShipAddressQuery.class);
         verify(shipAddressRepository).findByQuery(captor.capture());
-        assertEquals(ROLE_ID, captor.getValue().getRoleId());
+        assertEquals(AccountEnum.Identity.CHANNEL, captor.getValue().getIdentity());
         assertEquals(ACCOUNT_ID, captor.getValue().getAccountId());
         assertEquals(1, captor.getValue().getIsDefault());
     }

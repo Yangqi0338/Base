@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -104,7 +105,7 @@ public class UserClientDomainImpl implements UserClientDomain {
         codeReq.setType(SmsEnum.Type.IM_DEL);
         accountRepository.verificationCode(codeReq);
 
-        account.setState(AccountEnum.State.DISABLE);
+        account.setState(AccountEnum.State.DESTROY);
         account.setCancelTime(LocalDateTime.now());
         accountRepository.accountEdit(account, null);
 
@@ -275,5 +276,22 @@ public class UserClientDomainImpl implements UserClientDomain {
             log.error("会员批量导入异常", e);
             throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "导入失败：" + e.getMessage());
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int recycleCanceledMember() {
+        AccountQuery query = new AccountQuery();
+        LocalDateTime expireBefore = LocalDateTime.now().minusDays(1);
+        query.setState(AccountEnum.State.DESTROY);
+        query.setCancelTime(expireBefore);
+        List<Long> idList = accountRepository.findIdList(query);
+        int size = idList.size();
+        if (size > 0) {
+            log.info("回收已注销用户账号{}", idList);
+            accountRepository.accountDelete(idList);
+            log.info("回收已注销用户账号完成，过期界限: {}, 删除行数: {}", expireBefore, size);
+        }
+        return size;
     }
 }

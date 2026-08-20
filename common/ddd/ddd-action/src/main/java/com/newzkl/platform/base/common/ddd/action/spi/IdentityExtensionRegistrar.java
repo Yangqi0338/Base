@@ -56,7 +56,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
             if (anno == null) {
                 continue;
             }
-            AccountEnum.Identity[] condition = anno.value();
+            AccountEnum.Identity[] condition = anno.identities();
             for (Class<?> ext : resolveExtensionInterfaces(beanClass)) {
                 grouped.computeIfAbsent(ext, k -> new ArrayList<>())
                         .add(new ImplDescriptor(bean, beanClass, condition));

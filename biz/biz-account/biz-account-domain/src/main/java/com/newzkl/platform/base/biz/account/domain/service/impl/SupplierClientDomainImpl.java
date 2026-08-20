@@ -64,21 +64,14 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         if (req.getId() == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
-        SupplierVO item = TransferUtils.transfer(req, SupplierVO::new, (c, v) -> {
-            v.setGoodsDealCount(0);
-            v.setGoodsNotSaleCount(0);
-            v.setGoodsOnSaleCount(0);
-            v.setGoodsSaleAmount(Money.ZERO);
-            v.setGoodsSaleCount(0);
-            v.setGoodsTotalCount(0);
-        });
+        SupplierVO item = TransferUtils.transfer(req, SupplierVO::new);
         item.setState(SupplierEnum.State.INIT);
         item.setAuditState(AuditEnum.State.CUSTOM);
         item.setPromisePayState(CommonEnum.YesOrNo.NO);
         item.setPromisePayAuditState(AuditEnum.State.CUSTOM);
         item.setPeriodSetState(CommonEnum.YesOrNo.NO);
         // 前期固定5000
-//        item.setShouldPromisePayAmount(500000);
+        item.setShouldPromisePayAmount(Money.of("5000"));
         item.setPromisePayConfig(0);
         return supplierRepository.supplierSave(item);
     }

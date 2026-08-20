@@ -55,4 +55,11 @@ public interface UserClientDomain {
      * @return 导入结果
      */
     EasyExcelErrorVO adminImportAccount(MultipartFile file);
+
+    /**
+     * 回收已注销超过24h宽限期的用户账号(物理删除, 释放 username 唯一索引)
+     *
+     * @return 删除行数
+     */
+    int recycleCanceledMember();
 }

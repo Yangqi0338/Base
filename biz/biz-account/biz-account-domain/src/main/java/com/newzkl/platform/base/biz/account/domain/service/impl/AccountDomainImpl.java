@@ -1,10 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
@@ -19,26 +15,19 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountStructureTreeVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
-import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author muc_fang
@@ -160,22 +149,25 @@ public class AccountDomainImpl implements AccountDomain {
     }
 
     @Override
-    public void register(IdentityRegisterRpcReq req) {
+    public AccountVO register(IdentityRegisterRpcReq req) {
         // 保存account
         AccountVO accountVO = new AccountVO();
         accountVO.init(CollUtil.newArrayList(req.getIdentity()), req.getUsername(),req.getPassword(), AccountEnum.State.ENABLE);
         accountVO.setPid(req.getPid());
-//        accountVO.setPidList();
-//        accountVO.setPRoleList();
-//        accountVO.setNickname();
+        // 层级链: 上游按父账号已拼接好(末尾含分隔符), 无父账号时由 accountRepository.accountSave 兜底构建
+        accountVO.setPidList(req.getPidList());
+        accountVO.setPRoleList(req.getPIdentityList());
+        accountVO.setNickname(req.getNickname());
         accountVO.setInviteAccountId(req.getInviteAccountId());
-//        accountVO.setHead();
+        accountVO.setHead(req.getHead());
         accountVO.setPhone(req.getPhone());
         accountVO.setId(req.getId());
         Long accountId = accountRepository.accountSave(accountVO);
+        accountVO.setId(accountId);
 
         //初始化财务
         purseApi.initFinance(accountId, req.getUsername(), PurseEnum.User.getByRole(req.getIdentity()));
+        return accountVO;
     }
 
 }

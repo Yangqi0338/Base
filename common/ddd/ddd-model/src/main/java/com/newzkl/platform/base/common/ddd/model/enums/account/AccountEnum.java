@@ -23,10 +23,10 @@ public class AccountEnum {
     @Getter
     @AllArgsConstructor
     public enum State implements IEnum<Integer> {
-        /** 已销毁 */
-        DESTROY(-1, "已销毁"),
-        /** 禁用,冻结 */
-        DISABLE(0, "禁用,冻结"),
+        /** 已注销: 用户主动注销, 记 cancelTime; 24h 内重新登录可恢复正常, 超时被回收后可重新注册 */
+        DESTROY(-1, "已注销"),
+        /** 已封禁: 平台拉黑, 不可登录/注册 */
+        DISABLE(0, "已封禁"),
         /** 正常 */
         ENABLE(1, "正常"),
         ;

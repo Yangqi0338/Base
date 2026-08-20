@@ -508,68 +508,6 @@
                 <artifactId>biz-store-action</artifactId>
                 <version>${base.revision}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-model</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-facade</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-domain</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-application</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-infrastructure</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-social-bang-action</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-notify-model</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-notify-facade</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-notify-domain</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-notify-application</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-notify-infrastructure</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.newzkl.platform.Base</groupId>
-                <artifactId>biz-notify-action</artifactId>
-                <version>${base.revision}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

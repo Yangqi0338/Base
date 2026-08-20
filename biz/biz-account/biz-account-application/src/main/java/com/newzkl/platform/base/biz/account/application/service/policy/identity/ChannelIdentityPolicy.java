@@ -62,18 +62,20 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         channelCustomSaveReq.setStorePermission(customSaveReq.getStorePermission());
         channelDomain.channelCustomSave(channelCustomSaveReq);
 
-        //初始化财务
-//        if(!isRegisterOnce){
-            purseApi.initFinance(accountId,customSaveReq.getUsername(),PurseEnum.User.CHANNEL);
-
-            //初始化开发者账号
+        IdentityRegisterRes registerRes = new IdentityRegisterRes(null, accountId);
+        // 开发者账号初始化仅首次注册执行, 复用注销账号覆盖注册时跳过
+        if (customSaveReq.isRegisterOnce()) {
+            String appId = String.valueOf(SnowflakeGenerator.getSnowflakeId());
+            String secret = BizUtil.generateCode(32);
             DeveloperInitReq developerInitReq = new DeveloperInitReq();
             developerInitReq.setAccountId(accountId);
-            developerInitReq.setAppId(String.valueOf(SnowflakeGenerator.getSnowflakeId()));
-            developerInitReq.setSecret(BizUtil.generateCode(32));
+            developerInitReq.setAppId(appId);
+            developerInitReq.setSecret(secret);
             developerApi.initDeveloper(developerInitReq);
-//        }
-        return null;
+            registerRes.setAppId(appId);
+            registerRes.setSecret(secret);
+        }
+        return registerRes;
     }
 
     @Override

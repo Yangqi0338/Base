@@ -40,7 +40,7 @@ public class MemberIdentityPolicy extends AbsIdentityPolicy {
         memberCommand.setChannelId(accountId);
         userDomain.memberSave(memberCommand);
 
-        return null;
+        return new IdentityRegisterRes(null, accountId);
     }
 
     @Override

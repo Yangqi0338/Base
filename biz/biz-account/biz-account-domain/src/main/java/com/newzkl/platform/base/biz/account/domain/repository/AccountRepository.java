@@ -105,7 +105,7 @@ public interface AccountRepository {
      * 注销角色
      *
      * @param accountVO      账号
-     * @param role 注销角色
+     * @param identity 注销角色
      */
     boolean destroy(AccountVO accountVO, AccountEnum.Identity identity);
 

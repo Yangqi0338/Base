@@ -91,7 +91,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /** 平台条件实现 {1,2}。 */
-    @IdentityImpl({AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
+    @IdentityImpl(identities = {AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
     static class PlatformFoo implements Foo {
         @Override
         public String tag() {
@@ -100,7 +100,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /** 渠道条件实现 {1002} (与平台不相交)。 */
-    @IdentityImpl(AccountEnum.Identity.CHANNEL)
+    @IdentityImpl(identities = AccountEnum.Identity.CHANNEL)
     static class ChannelFoo implements Foo {
         @Override
         public String tag() {
@@ -109,7 +109,7 @@ class IdentityExtensionRegistrarTest {
     }
 
     /** 与平台重叠实现 {2,3} (交集 {2})。 */
-    @IdentityImpl({AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
+    @IdentityImpl(identities = {AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
     static class OverlapFoo implements Foo {
         @Override
         public String tag() {

@@ -15,7 +15,6 @@ import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
 import com.newzkl.platform.base.common.core.redis.utils.SmsMethod;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
@@ -25,9 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
-// TODO[infra-sms gateway]: import ...support.SmsMethod; (SmsApi=Forest外部短信网关, 出域, 未迁)
 
 /**
  * @author muc_fang
@@ -68,6 +66,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         if (StrUtil.isBlank(newRoleIdStr)) {
             accountVO.setUsername(accountVO.getId().toString());
             accountVO.setState(AccountEnum.State.DESTROY);
+            accountVO.setCancelTime(LocalDateTime.now());
         } else {
             accountVO.setIdentityList(newRoleIdStr);
         }

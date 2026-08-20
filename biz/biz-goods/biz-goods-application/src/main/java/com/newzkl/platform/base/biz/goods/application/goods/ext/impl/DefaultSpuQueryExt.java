@@ -15,15 +15,9 @@ import lombok.RequiredArgsConstructor;
  *
  * @author KC
  */
-@IdentityImpl({AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
+@IdentityImpl(identities = {AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
 @RequiredArgsConstructor
 public class DefaultSpuQueryExt implements SpuQueryExt {
-
-    static {
-        assert AccountEnum.Identity.PLATFORM.getCode() == 1L
-                && AccountEnum.Identity.EMP.getCode() == 2L
-                : "CompanyRole PLATFORM/EMP code 与注解条件不一致";
-    }
 
     private final GoodsQueryService goodsQueryService;
 

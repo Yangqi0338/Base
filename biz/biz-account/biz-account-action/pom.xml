@@ -26,6 +26,10 @@
             <artifactId>ddd-action</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.newzkl.platform.Base.core</groupId>
+            <artifactId>core-job-infrastructure</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
         </dependency>

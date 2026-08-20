@@ -114,14 +114,26 @@ public class AccountFacadeProvider implements AccountFacade {
 
     @Override
     public AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq) {
-        registerRpcReq.forEach(req -> {
-            accountDomain.register(req);
-            IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
-            AbsIdentityPolicySupport.getPolicy(req.getIdentity())
-                    .customRegister(saveReq);
-        });
+        AccountRpcVO mainAccount = null;
+        for (int i = 0; i < registerRpcReq.size(); i++) {
+            IdentityRegisterRpcReq req = registerRpcReq.get(i);
+            // 保存 account
+            AccountVO account = accountDomain.register(req);
 
-        return null;
+            // 角色初始化: 组装身份初始化参数并分发到对应角色策略
+            IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
+            saveReq.setId(account.getId());
+            saveReq.setNickname(req.getNickname());
+            saveReq.setHeadImg(req.getHead());
+            saveReq.setRegisterOnce(req.isRegisterOnce());
+            AbsIdentityPolicySupport.getPolicy(req.getIdentity()).customRegister(saveReq);
+
+            // 首个为主角色账号, 回传供上游注册后登录
+            if (i == 0) {
+                mainAccount = TransferUtils.transfer(account, AccountRpcVO::new);
+            }
+        }
+        return mainAccount;
     }
 
     @Override

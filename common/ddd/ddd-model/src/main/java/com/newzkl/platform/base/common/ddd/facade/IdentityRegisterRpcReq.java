@@ -1,1 +1,66 @@
-package com.newzkl.platform.base.common.ddd.facade;import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;import com.newzkl.platform.base.common.ddd.model.req.BaseReq;import lombok.Data;import lombok.EqualsAndHashCode;/** * @author sijiwang */@EqualsAndHashCode(callSuper = true)@Datapublic class IdentityRegisterRpcReq extends BaseReq {    /**     * 所属端     */    private AccountEnum.Client client;    /**     * 父ID     */    private Long pid;    /**     * 登录名称     */    private String username;    /**     * 密码     */    private String password;    /**     * 邀请人ID     */    private Long inviteAccountId;    /**     * 角色ID集合     */    private AccountEnum.Identity identity;    /**     * 手机号     */    private String phone;    /**     * 是否旧     */    private boolean old = false;}
+package com.newzkl.platform.base.common.ddd.facade;
+
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * @author sijiwang
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class IdentityRegisterRpcReq extends BaseReq {
+    /**
+     * 所属端
+     */
+    private AccountEnum.Client client;
+    /**
+     * 父ID
+     */
+    private Long pid;
+    /**
+     * 登录名称
+     */
+    private String username;
+    /**
+     * 密码
+     */
+    private String password;
+    /**
+     * 邀请人ID
+     */
+    private Long inviteAccountId;
+    /**
+     * 角色ID集合
+     */
+    private AccountEnum.Identity identity;
+    /**
+     * 手机号
+     */
+    private String phone;
+    /**
+     * 层级关系(逗号拼接的祖先账号id链, 末尾含 ','), 注册时若账号已存在需与原值拼接
+     */
+    private String pidList;
+    /**
+     * 父层级角色关系(逗号拼接的祖先角色链, 末尾含 ','), 注册时若账号已存在需与原值拼接
+     */
+    private String pIdentityList;
+    /**
+     * 昵称
+     */
+    private String nickname;
+    /**
+     * 头像
+     */
+    private String head;
+    /**
+     * 是否首次注册此角色(true: 全新注册, 执行仅首次的初始化; false: 复用已注销账号 id 覆盖注册)
+     */
+    private boolean registerOnce = true;
+    /**
+     * 是否旧
+     */
+    private boolean old = false;
+}

@@ -93,7 +93,7 @@ class OauthUserInjectionValidatorTest {
         assertTrue(validator.isValid(bean, null));
         assertEquals(AccountEnum.Identity.SUPPLIER.getCode(), bean.getRoleId());
         assertEquals(String.valueOf(AccountEnum.Identity.SUPPLIER.getCode()), bean.getRoleIdStr());
-        assertEquals(AccountEnum.Identity.SUPPLIER, bean.getRole());
+        assertEquals(AccountEnum.Identity.SUPPLIER, bean.getIdentity());
     }
 
     /**
@@ -103,7 +103,7 @@ class OauthUserInjectionValidatorTest {
     void failsWhenRoleRequiredButNoRole() {
         RoleReq bean = new RoleReq();
         assertFalse(validator.isValid(bean, null));
-        assertNull(bean.getRole());
+        assertNull(bean.getIdentity());
     }
 
     /**

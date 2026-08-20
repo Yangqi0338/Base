@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -81,6 +82,11 @@ public class AccountQuery extends BizPageQuery {
      * 端
      */
     private AccountEnum.Client client;
+
+    /**
+     * 取消时间
+     */
+    private LocalDateTime cancelTime;
 
     /**
      * 设置单个邀请人账号ID (内部包装为列表)

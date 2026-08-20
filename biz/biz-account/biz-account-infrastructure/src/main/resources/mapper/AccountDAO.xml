@@ -115,16 +115,6 @@
         where t.del_flag = 0
     </select>
 
-    <select id="selectAwardList" resultType="com.newzkl.platform.base.biz.account.model.vo.AccountAwardUserVO">
-        select id, username, nickname, real_name, role_id_list from account
-        ${ew.customSqlSegment}
-    </select>
-
-    <select id="selectAwardListByIdList" resultType="com.newzkl.platform.base.biz.account.model.vo.AccountRPCResVO">
-        select id, real_name, nickname, username, role_id_list, phone, head from account
-        ${ew.customSqlSegment}
-    </select>
-
     <select id="selectSonIdList" resultType="java.lang.Long">
         select id from account where pid_list like concat(#{id,jdbcType=BIGINT},'%')
         and del_flag = 0

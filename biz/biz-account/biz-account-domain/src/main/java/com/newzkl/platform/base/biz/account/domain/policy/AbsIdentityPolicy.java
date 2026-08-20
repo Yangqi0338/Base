@@ -1,22 +1,11 @@
 package com.newzkl.platform.base.biz.account.domain.policy;
 
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
-// TODO[cross-domain relation]: import com.zkl.scm.user.domain.relation.service.ILevelDomain; (relation biz, 迁 biz-user)
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
-import com.newzkl.platform.base.biz.account.model.vo.AccountStructureTreeVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
-import com.newzkl.platform.base.biz.account.model.assembler.IdentityAssembler;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
-// TODO[cross-domain relation]: relation.req.AccountLevelUpReq/ConditionReq/TeamUserCountReq, relation.res.PackGoodsInfo, relation.vo.LevelVO (迁 biz-user)
-import org.springframework.beans.factory.annotation.Autowired;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @author muc_fang

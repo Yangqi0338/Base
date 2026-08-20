@@ -18,6 +18,7 @@ import com.newzkl.platform.base.common.ddd.model.res.GroupCountRes;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,6 +45,7 @@ public interface AccountDAO extends BaseMapper<AccountDO> {
                 .likeList(AccountDO::getIdentityList, query.getIdentityList())
                 .notEmptyEq(AccountDO::getYqm, query.getYqm())
                 .notEmptyEq(AccountDO::getClient, query.getClient())
+                .notEmptyGe(AccountDO::getCancelTime, query.getCancelTime())
                 ;
     }
 
@@ -56,10 +58,6 @@ public interface AccountDAO extends BaseMapper<AccountDO> {
     List<SimpleAccountRes> simpleAccountPage(@Param("query") SimpleAccountQuery accountQuery);
 
     List<AccountStructureVO> findScopeSubAccountStructure(@Param("accountId") Long accountId);
-
-
-
-    List<AccountRPCResVO> selectAwardListByIdList(@Param(Constants.WRAPPER) QueryWrapper<AccountOutRes> queryWrapper);
 
     List<Long> selectSonIdList(@Param("id") Long id);
 
