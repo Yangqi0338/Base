@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.AssertTrue;
@@ -47,7 +46,7 @@ public class AdminRegisterIdentityReq {
      * 角色
      */
     @NotNull(message = "角色不能为空")
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 后台角色id列表
      */

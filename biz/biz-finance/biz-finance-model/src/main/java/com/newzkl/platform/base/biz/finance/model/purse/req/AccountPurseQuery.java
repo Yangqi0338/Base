@@ -20,18 +20,18 @@ public class AccountPurseQuery extends BizPageQuery {
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账户类型
      */
-    private List<PurseEnum.PurseType> purseTypeList;
+    private List<PurseEnum.Type> purseTypeList;
 
-    public PurseEnum.PurseType getPurseType() {
+    public PurseEnum.Type getPurseType() {
         return CollUtil.getFirst(purseTypeList);
     }
 
-    public void setPurseType(PurseEnum.PurseType purseType) {
+    public void setPurseType(PurseEnum.Type purseType) {
         this.purseTypeList = doWrapperList(purseTypeList, purseType);
     }
 }

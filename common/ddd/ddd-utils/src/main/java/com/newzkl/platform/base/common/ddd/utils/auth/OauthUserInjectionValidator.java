@@ -2,10 +2,10 @@ package com.newzkl.platform.base.common.ddd.utils.auth;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
+import com.newzkl.platform.base.common.ddd.model.auth.OauthIdentity;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserInjection;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 登录用户注入校验器
  *
- * <p>类级校验触发时扫描宿主对象带 {@link OauthUserId}/{@link OauthRole} 的字段, 取当前登录
+ * <p>类级校验触发时扫描宿主对象带 {@link OauthUserId}/{@link OauthIdentity} 的字段, 取当前登录
  * 用户ID/角色回填。{@code @OauthUserId} 字段支持 {@code Long}/{@code String};
  * {@code @OauthRole} 字段支持 {@code Long}/{@code String}(角色ID)与 {@code RoleEnum.CompanyRole}(枚举)。
  * 必填却未登录时判校验失败, 否则跳过。</p>
@@ -44,7 +44,7 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
             CollUtil.addAll(annotatedElementList,resolveMethod(clazz));
         }
         Long accountId = SecurityUtils.getAccountId();
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
         boolean valid = true;
         for (AnnotatedElement element : annotatedElementList) {
             if (element.isAnnotationPresent(OauthUserId.class)) {
@@ -62,17 +62,17 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
                 }
             }
 
-            if (element.isAnnotationPresent(OauthRole.class)) {
-                OauthRole roleMark = element.getAnnotation(OauthRole.class);
-                if (role == null) {
+            if (element.isAnnotationPresent(OauthIdentity.class)) {
+                OauthIdentity roleMark = element.getAnnotation(OauthIdentity.class);
+                if (identity == null) {
                     if (roleMark.required()) {
                         valid = false;
                     }
                 } else {
                     if (element instanceof Field field) {
-                        injectRole(bean, field, role);
+                        injectRole(bean, field, identity);
                     }else if (element instanceof Method method) {
-                        injectRole(bean, method, role);
+                        injectRole(bean, method, identity);
                     }
                 }
             }
@@ -81,14 +81,14 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
         return valid;
     }
 
-    private void injectRole(Object bean, Method method, RoleEnum.CompanyRole role) {
+    private void injectRole(Object bean, Method method, AccountEnum.Identity identity) {
         try {
             Parameter parameter = method.getParameters()[0];
             Class<?> type = parameter.getType();
             if (Long.class.equals(type)) {
-                method.invoke(bean, role.getCode());
-            } else if (RoleEnum.CompanyRole.class.equals(type)) {
-                method.invoke(bean, role);
+                method.invoke(bean, identity.getCode());
+            } else if (AccountEnum.Identity.class.equals(type)) {
+                method.invoke(bean, identity);
             }
         } catch (IllegalAccessException | InvocationTargetException ignored) {
             // 注入失败不阻断校验主流程
@@ -136,13 +136,13 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
      * @param field  目标字段
      * @param role 角色ID
      */
-    private void injectRole(Object bean, Field field, RoleEnum.CompanyRole role) {
+    private void injectRole(Object bean, Field field, AccountEnum.Identity identity) {
         try {
             Class<?> type = field.getType();
             if (Long.class.equals(type)) {
-                field.set(bean, role.getCode());
-            } else if (RoleEnum.CompanyRole.class.equals(type)) {
-                field.set(bean, role);
+                field.set(bean, identity.getCode());
+            } else if (AccountEnum.Identity.class.equals(type)) {
+                field.set(bean, identity);
             }
         } catch (IllegalAccessException ignored) {
             // 注入失败不阻断校验主流程
@@ -150,7 +150,7 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
     }
 
     /**
-     * 解析类(含父类链)带 {@link OauthUserId}/{@link OauthRole} 的字段, 结果缓存
+     * 解析类(含父类链)带 {@link OauthUserId}/{@link OauthIdentity} 的字段, 结果缓存
      *
      * @param clazz 宿主类
      * @return 标注字段列表, 无则空列表
@@ -167,10 +167,10 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
      * 字段是否带任一注入标记
      *
      * @param field 字段
-     * @return 是否带 {@link OauthUserId} 或 {@link OauthRole}
+     * @return 是否带 {@link OauthUserId} 或 {@link OauthIdentity}
      */
     private boolean isMarked(Field field) {
-        for (Class<? extends Annotation> mark : List.of(OauthUserId.class, OauthRole.class)) {
+        for (Class<? extends Annotation> mark : List.of(OauthUserId.class, OauthIdentity.class)) {
             if (field.isAnnotationPresent(mark)) {
                 return true;
             }
@@ -179,7 +179,7 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
     }
 
     private boolean isMarked(Method method) {
-        for (Class<? extends Annotation> mark : List.of(OauthUserId.class, OauthRole.class)) {
+        for (Class<? extends Annotation> mark : List.of(OauthUserId.class, OauthIdentity.class)) {
             if (method.isAnnotationPresent(mark) && method.getParameterCount() == 1) {
                 return true;
             }

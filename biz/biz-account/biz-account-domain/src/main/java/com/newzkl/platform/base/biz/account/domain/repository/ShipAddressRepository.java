@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressQuery;
 import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.List;
 
@@ -72,5 +72,5 @@ public interface ShipAddressRepository {
      * @param accountId     账号 ID
      * @param shipAddressId 保留为默认的地址 ID
      */
-    void setOtherNotDefault(RoleEnum.CompanyRole role, Long accountId, Long shipAddressId);
+    void setOtherNotDefault(AccountEnum.Identity identity, Long accountId, Long shipAddressId);
 }

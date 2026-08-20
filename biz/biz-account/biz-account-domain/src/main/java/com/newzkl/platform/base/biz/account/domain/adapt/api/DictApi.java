@@ -1,6 +1,9 @@
 package com.newzkl.platform.base.biz.account.domain.adapt.api;
 
-import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
+
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * 字典出站端口 (outbound port)
@@ -12,14 +15,6 @@ import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
  */
 public interface DictApi {
 
-    /**
-     * 按字典键取值
-     *
-     * @param code 字典键
-     * @return 字典值, 无则 null
-     */
-    String get(Long code);
-
-	TencentImConfig getTencentImConfig();
+    TreeMap<Integer, Double> getChannelServiceFee();
 
 }

@@ -16,10 +16,10 @@ public class BillOrderAwardQuery extends BizPageQuery {
     /**
      * 角色
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 账户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 }

@@ -1,59 +1,87 @@
 package com.newzkl.platform.base.common.core.sms;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Opt;
+import cn.hutool.json.JSONUtil;
+
 
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Collections;
+
 
 /**
- * 短信静态门面
- *
- * <p>参 adopt-chicken {@code SmsMethod} 范式: 给拿不到容器注入的调用点 (静态工具、枚举、
- * 非 Bean 上下文) 一条发送通路。能注入的地方优先直接注 {@code SmsSender}。</p>
- *
- * <p>只负责发送, 不做持久化, 不做限频 —— 限频属业务策略, 由调用方 (如验证码控制器) 决定。</p>
- *
- * @author KC
+ * 短信发送工具类，仅负责发送消息，无持久化存储
  */
+@Slf4j
 @Component
 public class SmsMethod {
 
     /**
-     * 发送端口, 由容器回填
+     * 联麓短信API客户端
      */
-    private static SmsSender sender;
+    private static SmsApi api;
 
     /**
-     * 按显式模板号发送
-     *
-     * @param req 发送入参 (需已填好 {@code templateId})
-     * @return 三方受理成功返回 {@code true}
+     * 发送短信
+     * @ext 联麓平台
+     * @param codeReq 短信发送请求
+     * @return 发送成功返回 true，否则返回 false
      */
-    public static boolean send(SmsSendReq req) {
-        return sender.send(req);
+    public static boolean sendCode(CodeReq codeReq) {
+        SmsEnum.Type smsType = codeReq.getType();
+        try {
+            codeReq.setTemplateId(smsType.getTemplateId());
+            return sendCodeLianLu(codeReq);
+        } catch (Exception e) {
+            throw new PlatformException(BaseErrorCode.CUSTOM, e.getMessage());
+        }
     }
 
     /**
-     * 按短信类型发送 (模板号由类型自动取)
+     * 通过联麓平台发送短信验证码或通知
      *
-     * @param type   短信类型
-     * @param phone  接收手机号
-     * @param params 模板变量, 可为 {@code null}
-     * @return 三方受理成功返回 {@code true}
+     * @param codeReq 短信发送请求
+     * @return 发送成功返回 true，否则返回 false
      */
-    public static boolean send(SmsEnum.Type type, String phone, List<String> params) {
-        return sender.send(type, phone, params);
+    private static boolean sendCodeLianLu(CodeReq codeReq) {
+        SmsReq.LianLuSendMsgReq sendMsgReq = new SmsReq.LianLuSendMsgReq();
+        sendMsgReq.setTemplateId(codeReq.getTemplateId());
+        sendMsgReq.setPhoneNumberSet(Collections.singletonList(codeReq.getPhone()));
+        sendMsgReq.setType(SmsConfig.LianLuSmsConfig.Type);
+        if (CollUtil.isNotEmpty(codeReq.getParams())) {
+            sendMsgReq.setTemplateParamSet(codeReq.getParams());
+        }
+        SmsRes.LianLuSendMsgRes res;
+        try {
+            res = api.lianLuSendMsg(sendMsgReq);
+        } catch (Exception e) {
+            log.error("短信发送失败，异常信息为：{}, {}",
+                    e.getMessage(),
+                    JSONUtil.toJsonStr(sendMsgReq));
+            return false;
+        }
+        if (res == null || !res.isSuccess()) {
+            log.error("短信发送失败，异常信息为：{}, {}",
+                    Opt.ofNullable(res).map(SmsRes.LianLuSendMsgRes::getMessage).orElse(""),
+                    JSONUtil.toJsonStr(sendMsgReq));
+            return false;
+        }
+        return true;
     }
 
     /**
-     * 回填发送端口
+     * 注入联麓短信API客户端
      *
-     * @param smsSender 短信发送端口
+     * @param smsApi 短信API客户端
      */
     @Autowired(required = false)
-    public void setSender(SmsSender smsSender) {
-        SmsMethod.sender = smsSender;
+    public void setSmsApi(SmsApi smsApi) {
+        SmsMethod.api = smsApi;
     }
 }

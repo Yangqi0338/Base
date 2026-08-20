@@ -21,7 +21,7 @@ public class BatchAccountPurseQuery {
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 收益统计口径

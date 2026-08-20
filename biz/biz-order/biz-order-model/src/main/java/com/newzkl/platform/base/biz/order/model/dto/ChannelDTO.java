@@ -3,7 +3,6 @@ package com.newzkl.platform.base.biz.order.model.dto;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -26,7 +25,7 @@ public class ChannelDTO implements Serializable {
     /** 上级运营商ID。 */
     private Long upOperatorId;
     /** 角色ID。 */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /** 主体类型 (查询)。 */
     private Integer bodyType;
     /** 状态 (查询)。 */

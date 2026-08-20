@@ -8,27 +8,25 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.ConditionCommand;
 import com.newzkl.platform.base.common.ddd.facade.LevelRpcVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@DubboService
 public class LevelFacadeProvider implements LevelFacade {
 
     @Autowired
     private LevelDomain levelDomain;
 
-    private LevelRpcVO levelVO(RoleEnum.CompanyRole role, Integer level) {
+    private LevelRpcVO levelVO(AccountEnum.Identity identity, Integer level) {
         LevelQuery levelQuery = new LevelQuery();
-        levelQuery.setType(role.getCode());
+        levelQuery.setType(identity);
         levelQuery.setValue(level);
         LevelRes levelVO = levelDomain.findByQuery(levelQuery);
         LevelRpcVO levelRpcVO = TransferUtils.transfer(levelVO, LevelRpcVO.class);
-        levelRpcVO.getPermission().setRole(role);
+        levelRpcVO.getPermission().setIdentity(identity);
         return levelRpcVO;
     }
 
@@ -43,7 +41,7 @@ public class LevelFacadeProvider implements LevelFacade {
     }
 
     @Override
-    public PermissionRpcVO levelPermissionVO(RoleEnum.CompanyRole role, Integer level) {
-        return levelVO(role, level).getPermission();
+    public PermissionRpcVO levelPermissionVO(AccountEnum.Identity identity, Integer level) {
+        return levelVO(identity, level).getPermission();
     }
 }

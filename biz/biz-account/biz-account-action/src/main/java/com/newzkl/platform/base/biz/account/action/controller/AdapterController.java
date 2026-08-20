@@ -4,13 +4,11 @@ import com.newzkl.platform.base.biz.account.action.cmd.CountCmd;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
-import com.newzkl.platform.base.biz.account.model.res.AccountOutRes;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -65,9 +63,9 @@ public class AdapterController {
      */
     @PostMapping("/count/userAccount")
     public PlatformResult<?> userAccount(@RequestBody CountCmd.UserAccount userAccount) {
-        if (RoleEnum.CompanyRole.SUPPLIER.getCode().equals(userAccount.getRoleId())) {
+        if (AccountEnum.Identity.SUPPLIER == userAccount.getIdentity()) {
             return PlatformResult.success(userQueryService.supplierVO(userAccount.getAccountId()));
-        } else if (RoleEnum.CompanyRole.CHANNEL.getCode().equals(userAccount.getRoleId())) {
+        } else if (AccountEnum.Identity.CHANNEL == userAccount.getIdentity()) {
             return PlatformResult.success(channelClientDomain.channel(userAccount.getAccountId()));
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -87,14 +85,4 @@ public class AdapterController {
         return PlatformResult.success(userQueryService.channelPage(channelQuery).getRecords());
     }
 
-    /**
-     * 账号详情
-     *
-     * @param id 账号ID入参
-     * @return 账号外部视图
-     */
-    @PostMapping("/count/accountDetail")
-    public PlatformResult<AccountOutRes> accountDetail(@RequestBody CountCmd.ID id) {
-        return PlatformResult.success(userQueryService.accountOutVO(SecurityUtils.getClient(), id.getAccountId()));
-    }
 }

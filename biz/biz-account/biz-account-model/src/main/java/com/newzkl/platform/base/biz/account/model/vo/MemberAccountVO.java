@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,15 +12,11 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-public class MemberAccountVO {
+public class MemberAccountVO extends BaseRes {
     /**
-     * 会员ID
+     * 账号
      */
-    private Long id;
-    /**
-     * 会员账号
-     */
-    private String userAccount;
+    private String username;
     /**
      * 会员头像
      */
@@ -47,13 +44,9 @@ public class MemberAccountVO {
     /**
      * 会员账号
      */
-    private String pUserAccount;
+    private String pUsername;
     /**
      * 会员昵称
      */
     private String pNickname;
-    /**
-     * 建群数量
-     */
-    private Integer groupNum;
 }

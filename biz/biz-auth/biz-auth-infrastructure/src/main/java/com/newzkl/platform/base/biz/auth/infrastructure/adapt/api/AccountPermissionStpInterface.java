@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelation
 import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class AccountPermissionStpInterface implements StpInterface {
             return cached;
         }
 
-        if (SecurityUtils.getRole() == RoleEnum.CompanyRole.PLATFORM) {
+        if (SecurityUtils.getIdentity() == AccountEnum.Identity.PLATFORM) {
             List<String> wildcard = List.of("*");
             RedisUtil.set(cacheKey, wildcard, TTL_SECONDS, TimeUnit.SECONDS);
             return wildcard;

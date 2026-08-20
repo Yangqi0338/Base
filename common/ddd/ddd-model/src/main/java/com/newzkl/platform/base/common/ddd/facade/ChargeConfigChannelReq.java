@@ -33,17 +33,7 @@ public class ChargeConfigChannelReq implements Serializable {
     private Double platformNowValue;
 
     /**
-     * 运营商当前服务费率
-     */
-    private Double operatorNowValue;
-
-    /**
      * 平台阶梯配置: 金额 -> 费率
      */
     private TreeMap<Integer, Double> platformConfig;
-
-    /**
-     * 运营商阶梯配置: 金额 -> 费率
-     */
-    private TreeMap<Integer, Double> operatorConfig;
 }

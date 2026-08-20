@@ -42,7 +42,7 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.domain.utils.COrderStateMachine;
 import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
@@ -227,7 +227,7 @@ public class OrderFacadeImpl implements OrderFacade {
             SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
             spuOrderQuery.setOrderId(orderId);
             List<SpuOrderVO> spuOrders = orderDomain.spuOrderPage(spuOrderQuery).getRecords();
-            localMessageApi.sendOrderNewRecordEvent(TransferUtils.transfers(spuOrders, SpuOrderDTO.class), OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            localMessageApi.sendOrderNewRecordEvent(TransferUtils.transfers(spuOrders, SpuOrderDTO.class), OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
         });
     }
 

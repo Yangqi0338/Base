@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.domain.policy;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class AbsIdentityPolicySupport implements InitializingBean, ApplicationContextAware {
 
-    private static final Map<RoleEnum.CompanyRole, AbsIdentityPolicy> POLICY_MAP = new HashMap<>();
+    private static final Map<AccountEnum.Identity, AbsIdentityPolicy> POLICY_MAP = new HashMap<>();
 
     private ApplicationContext appContext;
 
@@ -29,11 +29,11 @@ public class AbsIdentityPolicySupport implements InitializingBean, ApplicationCo
      * @return 类型对应的处理器
      */
     public static AbsIdentityPolicy getPolicy(Long roleId) {
-        return POLICY_MAP.get(RoleEnum.CompanyRole.getByCode(roleId));
+        return POLICY_MAP.get(AccountEnum.Identity.getByCode(roleId));
     }
 
-    public static AbsIdentityPolicy getPolicy(RoleEnum.CompanyRole role) {
-        return POLICY_MAP.get(role);
+    public static AbsIdentityPolicy getPolicy(AccountEnum.Identity identity) {
+        return POLICY_MAP.get(identity);
     }
 
     @Override

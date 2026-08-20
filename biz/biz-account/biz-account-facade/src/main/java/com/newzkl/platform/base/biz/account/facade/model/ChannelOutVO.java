@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.facade.model;
 
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -26,7 +26,7 @@ public class ChannelOutVO extends BaseRes implements java.io.Serializable{
      /**
      * 角色ID
      */
-     private RoleEnum.CompanyRole role;
+     private AccountEnum.Identity identity;
      /**
      * 主体类型 (查询)
      */

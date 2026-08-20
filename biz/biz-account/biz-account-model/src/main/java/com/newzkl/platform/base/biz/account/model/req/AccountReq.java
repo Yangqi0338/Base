@@ -2,12 +2,13 @@ package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 账号
@@ -58,6 +59,10 @@ public class AccountReq extends BaseReq {
      * 父角色列表
      */
     private String pRoleList;
+    /**
+     * 上次登录时间
+     */
+    private LocalDateTime lastLoginTime;
 
     /* -------------------------- 角色相关 -------------------------- */
 
@@ -65,7 +70,7 @@ public class AccountReq extends BaseReq {
      * 角色
      */
     @NotNull(message = "角色不能为空")
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 后台角色id
      */

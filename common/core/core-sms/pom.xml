@@ -22,6 +22,10 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-utils</artifactId>
+        </dependency>
         <!-- 通道适配用 HttpUtil / DigestUtil / JSONUtil -->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -49,6 +53,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-spring-boot3-starter</artifactId>
         </dependency>
     </dependencies>
 </project>

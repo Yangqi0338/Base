@@ -2,9 +2,9 @@ package com.newzkl.platform.base.biz.finance.model.account.vo;
 
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class BillOrderAwardVO extends BaseRes {
     /**
      * 角色id
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 账号id
@@ -40,12 +40,12 @@ public class BillOrderAwardVO extends BaseRes {
     /**
      * 钱包类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 账户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 金额

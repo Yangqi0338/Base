@@ -37,8 +37,8 @@ public class PurseServiceImpl implements PurseService {
         Money amount = req.getAmount();
         try {
             // 增加收益账户余额
-            AccountPurseAlterRecordReq channelRecordReq = buildAccountPurseAlterRecord(req, PurseEnum.PurseAlterType.CHANNEL_SYNC_DOWNSTREAM,
-                    PurseEnum.FinanceUser.CHANNEL, amount, PurseEnum.PurseType.PURCHASE);
+            AccountPurseAlterRecordReq channelRecordReq = buildAccountPurseAlterRecord(req, PurseEnum.AlterType.CHANNEL_SYNC_DOWNSTREAM,
+                    PurseEnum.User.CHANNEL, amount, PurseEnum.Type.PURCHASE);
             accountPurseService.addAmount(channelRecordReq);
             // 渠道商采购金充值后，更新服务费 (阈值比较按分, Money → int 分)
             accountPurseConfigDomain.alterChannelNowChargeConfig(accountId, (int) amount.getCent());
@@ -49,10 +49,10 @@ public class PurseServiceImpl implements PurseService {
     }
 
     private AccountPurseAlterRecordReq buildAccountPurseAlterRecord(AmountDistributionReq distributionReq,
-                                                                    PurseEnum.PurseAlterType alterType,
-                                                                    PurseEnum.FinanceUser accountType,
+                                                                    PurseEnum.AlterType alterType,
+                                                                    PurseEnum.User accountType,
                                                                     Money amount,
-                                                                    PurseEnum.PurseType purseType) {
+                                                                    PurseEnum.Type purseType) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(distributionReq.getAccountId());
         req.setPurseType(purseType);

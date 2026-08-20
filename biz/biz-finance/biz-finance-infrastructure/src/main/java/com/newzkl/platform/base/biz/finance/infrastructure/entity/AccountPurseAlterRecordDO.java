@@ -27,13 +27,13 @@ public class AccountPurseAlterRecordDO extends BaseDO {
      * 客户类型
      */
     @Index
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账户类型
      */
     @Index
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 分润修改类型
@@ -44,7 +44,7 @@ public class AccountPurseAlterRecordDO extends BaseDO {
      * 变动类型
      */
     @Index
-    private PurseEnum.PurseAlterType alterType;
+    private PurseEnum.AlterType alterType;
 
     /**
      * 金额

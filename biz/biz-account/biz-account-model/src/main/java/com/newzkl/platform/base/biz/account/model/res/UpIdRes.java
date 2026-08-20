@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,7 +24,7 @@ public class UpIdRes implements Serializable {
     /**
      * 直属上级RoleId
      */
-    private RoleEnum.CompanyRole directRoleId;
+    private AccountEnum.Identity directRoleId;
     /**
      * 多级上级ID
      */

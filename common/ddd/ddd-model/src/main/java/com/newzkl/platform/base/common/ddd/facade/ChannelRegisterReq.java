@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -18,7 +18,7 @@ public class ChannelRegisterReq implements Serializable {
 
     private Long accountId;
 
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     private CommonEnum.YesOrNo storePermission;
 

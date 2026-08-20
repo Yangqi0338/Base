@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.core.utils.common;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -69,7 +70,7 @@ public class TransferUtils {
             return null;
         }
         D d = supplier.get();
-        cn.hutool.core.bean.BeanUtil.copyProperties(s, d, copyOptions);
+        BeanUtil.copyProperties(s, d, copyOptions);
         if (biConsumer != null) {
             biConsumer.accept(s, d);
         }

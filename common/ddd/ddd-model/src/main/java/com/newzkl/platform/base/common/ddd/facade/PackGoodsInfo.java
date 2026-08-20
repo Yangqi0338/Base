@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -23,6 +23,6 @@ public class PackGoodsInfo extends BaseRes {
     /**
      * 礼包类型
      */
-    private RoleEnum.CompanyRole type;
+    private AccountEnum.Identity type;
 
 }

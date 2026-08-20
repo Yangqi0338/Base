@@ -14,11 +14,11 @@ import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -192,7 +192,7 @@ public class OrderController {
      */
     @PostMapping("orderBalancePay")
     public PlatformResult<Void> orderBalancePay(@RequestBody IdCommand idObj) {
-        if (RoleEnum.CompanyRole.CHANNEL == SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()) {
             orderService.orderBalancePay(idObj.getIdList().toArray(new Long[0]));
         }
         return PlatformResult.success();
@@ -231,15 +231,15 @@ public class OrderController {
 
     private boolean appendSpuOrderQuery(SpuOrderQuery spuOrderQuery) {
         Long accountId = SecurityUtils.getAccountId();
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.CHANNEL == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.CHANNEL == identity) {
             spuOrderQuery.setChannelId(accountId);
             if(OrderEnum.OrderType.MEMBER == spuOrderQuery.getOrderType() && spuOrderQuery.getStoreId() == null){
                 spuOrderQuery.setStoreId(accountId);
             }
-        } else if (RoleEnum.CompanyRole.PLATFORM == role) {
+        } else if (AccountEnum.Identity.PLATFORM == identity) {
             spuOrderQuery.setSpuChannelType(null);
-        } else if (RoleEnum.CompanyRole.SUPPLIER == role) {
+        } else if (AccountEnum.Identity.SUPPLIER == identity) {
             spuOrderQuery.setSupplierId(accountId);
             spuOrderQuery.setOrderStateList(Arrays.asList(
                     OrderEnum.State.WAIT_DELIVERY,
@@ -248,7 +248,7 @@ public class OrderController {
                     OrderEnum.State.SUCCESS,
                     OrderEnum.State.CLOSE
             ));
-        } else if (RoleEnum.CompanyRole.MEMBER == role) {
+        } else if (AccountEnum.Identity.MEMBER == identity) {
             spuOrderQuery.setMemberId(accountId);
 
         }

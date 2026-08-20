@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 
 import lombok.Data;
 
@@ -35,12 +35,12 @@ public class AppAccountVO extends BaseRes {
     /**
      * ALL: 角色id
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * ALL: 角色名
      */
-    public String getRoleName() {
-        return role == null ? null : role.getValue();
+    public String getIdentityName() {
+        return identity == null ? null : identity.getValue();
     }
     /**
      * 运营商侧: 提货积分

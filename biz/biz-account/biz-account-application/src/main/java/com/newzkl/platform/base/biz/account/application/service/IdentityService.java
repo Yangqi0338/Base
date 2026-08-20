@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.application.service;
 
 
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 /**
  * @author muc_fang
@@ -17,7 +17,7 @@ public interface IdentityService {
      * @param accountId 账号 ID
      * @param role      申请角色
      */
-    void updateAuditState(Long accountId, RoleEnum.CompanyRole role);
+    void updateAuditState(Long accountId, AccountEnum.Identity identity);
 
 //    /**
 //     * 提交保证金缴纳流水
@@ -33,20 +33,6 @@ public interface IdentityService {
      * @param serviceFeeConfigVO
      */
     void serviceFeeConfigEdit(Long accountId, ServiceFeeConfigVO serviceFeeConfigVO);
-
-    /**
-     * 渠道商上级交易师修改
-     *
-     * @param channelId
-     * @param dealerId
-     */
-    void channelUpEdit(Long channelId, Long dealerId);
-
-    /**
-     * 运营商修改
-     *
-     * @param operatorCommand
-     */
 
     /**
      * 查询服务费

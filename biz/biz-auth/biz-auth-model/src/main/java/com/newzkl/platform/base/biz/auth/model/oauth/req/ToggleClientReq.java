@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.auth.model.oauth.req;
 
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ public class ToggleClientReq {
      * 端
      */
     @NotNull(message = "端不能为空")
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
 
     /**
      * 账号id

@@ -75,7 +75,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
         AccountPurseVO accountPurseVO = TransferUtils.transfer(entity, AccountPurseVO::new);
         AccountGroupVO account = accountApi.account(
-                entity.getAccountType().getRole().getClient(),
+                entity.getAccountType().getIdentity().getClient(),
                 SecurityUtils.getAccountId());
         if (ObjectUtil.isNotNull(account)) {
             accountPurseVO.setHeadImg(account.getHead());
@@ -141,7 +141,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
             // 非总账号且要增加总账户资金
             // QuerySupport#add 在 list 为 null 时是在**新 list** 上追加并返回, 不改原对象,
             // 丢返回值会让 TOTAL 静默丢失, 必须赋回
-            query.setPurseTypeList(query.add(query.getPurseTypeList(), PurseEnum.PurseType.TOTAL));
+            query.setPurseTypeList(query.add(query.getPurseTypeList(), PurseEnum.Type.TOTAL));
         }
 
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
@@ -158,7 +158,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
         if (isSubTotalPurse) {
             // 非总账号且要增加总账户资金
             // 同 addAccountPurseAmount: QuerySupport#add 对 null list 返回新 list, 丢返回值即静默丢 TOTAL
-            query.setPurseTypeList(query.add(query.getPurseTypeList(), PurseEnum.PurseType.TOTAL));
+            query.setPurseTypeList(query.add(query.getPurseTypeList(), PurseEnum.Type.TOTAL));
         }
 
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
@@ -210,8 +210,8 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
         }
         data = new TotalSupplierSettleDataRes();
         // DAO 返回分 Integer, 包成 Money
-        data.setTotalSettle(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.PurseAlterType.SUPPLIER_SETTLE.getType())));
-        data.setSellAfter(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.PurseAlterType.SELL_AFTER.getType())));
+        data.setTotalSettle(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.AlterType.SUPPLIER_SETTLE.getType())));
+        data.setSellAfter(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.AlterType.SELL_AFTER.getType())));
         RedisUtil.set(key, data, 5L, TimeUnit.MINUTES);
         return data;
     }

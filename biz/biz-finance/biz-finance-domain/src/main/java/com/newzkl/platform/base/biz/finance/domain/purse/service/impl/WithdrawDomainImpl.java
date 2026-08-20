@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
 import com.newzkl.platform.base.biz.finance.model.assembler.AccountPurseRollOutAssembler;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +81,7 @@ public class WithdrawDomainImpl implements WithdrawDomain {
     }
 
     @Override
-    public WithdrawAmountVO queryWithdrawAmount(RoleEnum.CompanyRole role, Long accountId) {
+    public WithdrawAmountVO queryWithdrawAmount(AccountEnum.Identity identity, Long accountId) {
         RollOutApplyQuery req = new RollOutApplyQuery();
 
         return null;

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.query;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ public class LevelQuery extends BizPageQuery {
     /**
      * 角色类型
      */
-    private RoleEnum.CompanyRole type;
+    private AccountEnum.Identity type;
     /**
      * 等级值
      */

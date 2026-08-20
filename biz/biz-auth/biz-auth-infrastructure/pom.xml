@@ -35,10 +35,20 @@
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-boot3-starter</artifactId>
         </dependency>
-        <!-- AccountPermissionStpInterface 用 SecurityUtils.getRole() 判平台管理员 -->
+        <!-- AccountPermissionStpInterface 用 SecurityUtils.getIdentity() 判平台管理员 -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>ddd-utils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>biz-account-facade</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-sms</artifactId>
         </dependency>
     </dependencies>
 </project>

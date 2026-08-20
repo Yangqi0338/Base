@@ -12,7 +12,7 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseDomain;
 import com.newzkl.platform.base.biz.course.domain.service.CoursePurchaseRecordDomain;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
 import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
-import com.newzkl.platform.base.common.ddd.model.enums.course.PurchasePayStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.course.CourseEnum;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 import com.newzkl.platform.base.biz.course.model.purchase.req.CoursePurchaseReq;
 import com.newzkl.platform.base.biz.course.model.purchase.res.CoursePurchaseCreateRes;
@@ -87,7 +87,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             CoursePurchaseRecord exist =
                     coursePurchaseRecordRepository.findSuccessByUserIdAndCourseId(req.getUserId(), req.getCourseId());
             if (exist != null) {
-                ThrowsException.isTrue(PurchasePayStateEnum.SUCCESS.getCode().equals(exist.getPayState()),
+                ThrowsException.isTrue(CourseEnum.PurchasePayStateEnum.SUCCESS.getCode().equals(exist.getPayState()),
                         BaseErrorCode.REPEAT, "");
             }
 
@@ -101,7 +101,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             record.setPayPrice(sellCent);
             record.setPayType(req.getPayType());
             record.setPayState(sellCent == 0
-                    ? PurchasePayStateEnum.SUCCESS.getCode() : PurchasePayStateEnum.PENDING.getCode());
+                    ? CourseEnum.PurchasePayStateEnum.SUCCESS.getCode() : CourseEnum.PurchasePayStateEnum.PENDING.getCode());
 
             if (sellCent != 0) {
                 OrderPayCommand command = new OrderPayCommand();
@@ -160,7 +160,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
     public void paySuccess(Long orderNo, String payNo) {
         CoursePurchaseRecord record = coursePurchaseRecordRepository.findByOrderNo(orderNo);
         ThrowsException.isNull(record, BaseErrorCode.NODATA, "订单");
-        coursePurchaseRecordRepository.updatePayState(orderNo, PurchasePayStateEnum.SUCCESS.getCode(), payNo);
+        coursePurchaseRecordRepository.updatePayState(orderNo, CourseEnum.PurchasePayStateEnum.SUCCESS.getCode(), payNo);
         courseDomain.addPurchaseCount(record.getCourseId());
     }
 
@@ -238,7 +238,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
     private CoursePurchaseCreateRes toCreateRes(CoursePurchaseRecord record, String courseTitle) {
         CoursePurchaseCreateRes res = TransferUtils.transfer(record, CoursePurchaseCreateRes::new);
         res.setCourseTitle(courseTitle);
-        res.setPayStateDesc(PurchasePayStateEnum.descOf(record.getPayState()));
+        res.setPayStateDesc(CourseEnum.PurchasePayStateEnum.descOf(record.getPayState()));
         return res;
     }
 

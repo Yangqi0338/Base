@@ -24,13 +24,13 @@ public class BalancePayReq implements Serializable {
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账户类型
      * @ext 渠道商不用传, 运营商传采购账户
      */
-    private PurseEnum.PurseType purseType = PurseEnum.PurseType.PURCHASE;
+    private PurseEnum.Type purseType = PurseEnum.Type.PURCHASE;
 
     /**
      * 支付金额

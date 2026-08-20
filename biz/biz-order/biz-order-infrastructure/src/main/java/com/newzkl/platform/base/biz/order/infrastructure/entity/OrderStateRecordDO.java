@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 import org.dromara.autotable.annotation.Index;
@@ -59,7 +59,7 @@ public class OrderStateRecordDO extends BaseDO {
      * 操作人角色
      */
     @OldColumnName("operatorRoleId")
-    private RoleEnum.CompanyRole operatorRole;
+    private AccountEnum.Identity operatorRole;
 
     /**
      * 拓展字段

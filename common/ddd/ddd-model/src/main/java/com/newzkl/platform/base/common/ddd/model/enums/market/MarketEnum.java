@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.market;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.newzkl.platform.base.common.core.model.enums.IEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -125,13 +125,13 @@ public class MarketEnum {
         /**
          * 渠道商
          */
-        CHANNEL(3, RoleEnum.CompanyRole.CHANNEL, "渠道商"),
+        CHANNEL(3, AccountEnum.Identity.CHANNEL, "渠道商"),
         ;
 
         @EnumValue
         @JsonValue
         private final Integer type;
-        private final RoleEnum.CompanyRole role;
+        private final AccountEnum.Identity identity;
         private final String info;
 
         @Override
@@ -144,9 +144,9 @@ public class MarketEnum {
             return info;
         }
 
-        public static Integer accountTypeByRole(RoleEnum.CompanyRole role) {
+        public static Integer accountTypeByRole(AccountEnum.Identity identity) {
             return Arrays.stream(values())
-                    .filter(it -> it.getRole() == role)
+                    .filter(it -> it.getIdentity() == identity)
                     .findFirst()
                     .map(User::getType)
                     .orElse(null);

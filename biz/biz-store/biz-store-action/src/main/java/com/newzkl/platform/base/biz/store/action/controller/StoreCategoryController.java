@@ -6,9 +6,9 @@ import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveC
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.query.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +98,7 @@ public class StoreCategoryController {
      */
     @PostMapping("/queryList")
     public PlatformResult<List<StoreCategoryRes>> queryList(@RequestBody StoreCategoryQuery query) {
-        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()) {
             query.addDescSortField("create_time");
         } else {
             query.addSortField("`index`");
@@ -115,7 +115,7 @@ public class StoreCategoryController {
      */
     @PostMapping("/queryPage")
     public PlatformResult<Page<StoreCategoryRes>> queryPage(@RequestBody StoreCategoryQuery query) {
-        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()) {
             query.addDescSortField("create_time");
         } else {
             query.addSortField("`index`");

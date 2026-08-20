@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,7 +23,7 @@ public class AccountAddAmountReq implements Serializable {
     /**
      * 角色id
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 商品金额

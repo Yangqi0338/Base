@@ -6,6 +6,8 @@ import com.newzkl.platform.base.biz.finance.facade.AccountConfigFacade;
 import com.newzkl.platform.base.biz.finance.facade.model.ChannelConfigRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
@@ -26,5 +28,11 @@ public class AccountConfigProvider implements AccountConfigFacade {
     public ChannelConfigRes queryChannelConfig(Long channelId) {
         ConfigChannelVO channelConfigVO = configChannelRepository.queryChannelConfig(channelId);
         return BeanUtil.copyProperties(channelConfigVO, ChannelConfigRes.class);
+    }
+
+    @Override
+    public void saveChannelChargeConfig(ChargeConfigChannelReq req) {
+        ConfigChannelVO channelVO = TransferUtils.transfer(req, ConfigChannelVO.class);
+        configChannelRepository.saveChannelConfig(channelVO);
     }
 }

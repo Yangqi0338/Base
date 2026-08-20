@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface RefundDomain {
      * @param role
      * @return
      */
-    RefundAuditRes agreeAudit(Long refundId, RoleEnum.CompanyRole role);
+    RefundAuditRes agreeAudit(Long refundId, AccountEnum.Identity identity);
     /**
      * 拒绝售后 api接口用
      * @param refundId
@@ -40,14 +40,14 @@ public interface RefundDomain {
      * @param reason
      * @return
      */
-    RefundAuditRes refuseAudit(Long refundId, RoleEnum.CompanyRole role, String reason);
+    RefundAuditRes refuseAudit(Long refundId, AccountEnum.Identity identity, String reason);
     /**
      * 同意售后 给平台用
      * @param refundId
      * @param role
      * @return
      */
-    RefundAuditRes agreeAuditV2(Long refundId, RoleEnum.CompanyRole role);
+    RefundAuditRes agreeAuditV2(Long refundId, AccountEnum.Identity identity);
     /**
      * 确认收货
      * @param refundId
@@ -69,7 +69,7 @@ public interface RefundDomain {
      * @param accountId 用户ID
      * @param refundId 售后ID
      */
-    void stopAudit(RoleEnum.CompanyRole role, Long accountId, Long refundId);
+    void stopAudit(AccountEnum.Identity identity, Long accountId, Long refundId);
 
     /**
      * 售后关闭修改订单

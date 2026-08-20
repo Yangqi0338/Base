@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.order.model.dto;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.Data;
 
@@ -33,7 +33,7 @@ public class RefundOperationRecordDTO extends BaseDTO {
     /**
      * 操作方角色编码
      */
-    private RoleEnum.CompanyRole operatorRoleCode;
+    private AccountEnum.Identity operatorRoleCode;
 
     /**
      * 操作方客户端类型

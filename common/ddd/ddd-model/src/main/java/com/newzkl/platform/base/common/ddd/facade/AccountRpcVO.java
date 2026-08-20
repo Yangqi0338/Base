@@ -21,7 +21,7 @@ public class AccountRpcVO extends BaseRes {
     /**
      * 父ID
      */
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
     /**
      * 账号注销时间
      */
@@ -73,9 +73,9 @@ public class AccountRpcVO extends BaseRes {
      */
     private Long inviteAccountId;
     /**
-     * 角色ID集合
+     * 身份集合
      */
-    private String roleIdList;
+    private String identityList;
     /**
      * 邀请码
      */
@@ -88,4 +88,5 @@ public class AccountRpcVO extends BaseRes {
      * 手机号
      */
     private String phone;
+    private Boolean old;
 }

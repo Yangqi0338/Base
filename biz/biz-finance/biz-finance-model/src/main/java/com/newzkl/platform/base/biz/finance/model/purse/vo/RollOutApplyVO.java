@@ -29,12 +29,12 @@ public class RollOutApplyVO extends BaseRes {
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 转出申请账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 申请金额

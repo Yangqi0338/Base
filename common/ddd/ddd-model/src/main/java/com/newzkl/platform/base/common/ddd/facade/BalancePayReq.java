@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,7 +22,7 @@ public class BalancePayReq implements Serializable {
     /**
      * 客户类型码
      */
-    private FinanceEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 钱包类型码 (渠道商不用传, 运营商传 1)

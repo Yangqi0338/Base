@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.store.model.store.entity.SeatPackage;
 import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
@@ -51,7 +51,7 @@ public class SeatPackageRepositoryImpl extends ServiceImpl<SeatPackageDAO, SeatP
 
         LambdaQueryWrapper<SeatPackageDO> wrapper = new LambdaQueryWrapper<SeatPackageDO>()
                 .eq(req.getState() != null, SeatPackageDO::getState, req.getState())
-                .orderByAsc(RoleEnum.CompanyRole.PLATFORM != req.getRole(), SeatPackageDO::getSeatNum);
+                .orderByAsc(AccountEnum.Identity.PLATFORM != req.getIdentity(), SeatPackageDO::getSeatNum);
 
         // 多字段模糊查询
         if (StrUtil.isNotBlank(req.getSearchContent())) {

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ChannelRepository {
 
-    Long channelSave(ChannelVO channel);
+    Boolean save(ChannelVO channel);
 
     int channelEdit(ChannelVO channel);
 

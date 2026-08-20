@@ -5,7 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.adapt.repository.CoursePurchas
 import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.infrastructure.dao.CoursePurchaseRecordDAO;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CoursePurchaseRecordDO;
-import com.newzkl.platform.base.common.ddd.model.enums.course.PurchasePayStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.course.CourseEnum;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
@@ -58,7 +58,7 @@ public class CoursePurchaseRecordRepositoryImpl implements CoursePurchaseRecordR
         BaseLambdaQueryWrapper<CoursePurchaseRecordDO> wrapper = new BaseLambdaQueryWrapper<CoursePurchaseRecordDO>()
                 .notNullEq(CoursePurchaseRecordDO::getUserId, userId)
                 .notNullEq(CoursePurchaseRecordDO::getCourseId, courseId)
-                .notNullEq(CoursePurchaseRecordDO::getPayState, PurchasePayStateEnum.SUCCESS.getCode());
+                .notNullEq(CoursePurchaseRecordDO::getPayState, CourseEnum.PurchasePayStateEnum.SUCCESS.getCode());
         return TransferUtils.transfer(
                 coursePurchaseRecordDAO.selectOne(wrapper.last("limit 1")), CoursePurchaseRecord::new);
     }

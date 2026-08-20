@@ -53,7 +53,7 @@ public class AccountTripartitePurseQuery extends PageQuery {
     /**
      * 类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 等级

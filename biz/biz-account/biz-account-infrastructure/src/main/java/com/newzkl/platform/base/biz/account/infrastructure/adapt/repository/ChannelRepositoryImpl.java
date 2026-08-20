@@ -26,10 +26,11 @@ public class ChannelRepositoryImpl extends RepositorySupport implements ChannelR
     private final ChannelDAO channelDAO;
 
     @Override
-    public Long channelSave(ChannelVO channel) {
+    public Boolean save(ChannelVO channel) {
         ChannelDO channelDO = TransferUtils.transfer(channel, ChannelDO.class);
-        channelDAO.insert(channelDO);
-        return channelDO.getId();
+        boolean res = channelDAO.insertOrUpdate(channelDO);
+        channel.setId(channelDO.getId());
+        return res;
     }
 
     @Override

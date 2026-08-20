@@ -1,10 +1,10 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import cn.hutool.core.collection.CollUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,7 +30,7 @@ public class SpuQuery extends BizPageQuery implements Serializable {
     /**
      * 关联类型
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 关联类型

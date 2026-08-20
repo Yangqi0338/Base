@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
-import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
+import com.newzkl.platform.base.common.core.model.check.CheckCommand;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

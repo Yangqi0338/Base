@@ -3,8 +3,6 @@ package com.newzkl.platform.base.biz.auth.model.assembler;
 
 
 import com.newzkl.platform.base.biz.auth.model.oauth.dto.AccountLoginLogDTO;
-import com.newzkl.platform.base.biz.auth.model.oauth.req.CodeLoginRegisterReq;
-import com.newzkl.platform.base.biz.auth.model.oauth.req.LoginReq;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.AccountLoginLogRes;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.LoginAccountRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountRpcVO;
@@ -28,8 +26,4 @@ public interface LoginAssembler {
     LoginAccountRes vo2LoginRes(AccountRpcVO account);
 
     AccountLoginLogRes loginLogVO2Res(AccountLoginLogDTO it);
-
-    LoginReq codeLoginRegisterReq2LoginReq(CodeLoginRegisterReq codeLoginRegisterReq);
-
-//    IdentityCustomSaveReq codeLoginRegisterReq2SaveReq(CodeLoginRegisterReq codeLoginReq);
 }

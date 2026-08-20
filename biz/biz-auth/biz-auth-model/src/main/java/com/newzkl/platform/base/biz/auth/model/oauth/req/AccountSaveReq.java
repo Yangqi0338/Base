@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.auth.model.oauth.req;
 
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.constant.PatternConstant;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
@@ -19,7 +18,7 @@ public class AccountSaveReq {
     /**
      * 注册角色
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 手机号
      */

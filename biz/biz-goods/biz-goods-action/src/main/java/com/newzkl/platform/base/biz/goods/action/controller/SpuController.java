@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.action.cmd.SpuCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
@@ -23,7 +24,6 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,15 +78,15 @@ public class SpuController {
         if (spuDTO.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity) {
             for (SkuDTO skuDTO : spuDTO.getSkuList()) {
                 if (skuDTO.getSupplyPrice() == null || skuDTO.getSupplyPrice().isNull()) {
                     ThrowsException.exception(BaseErrorCode.PARAM, "缺少供货价");
                 }
             }
             spuDTO.setChannelType(SpuEnum.ChannelType.SELECTION);
-        } else if (RoleEnum.CompanyRole.CHANNEL == role) {
+        } else if (AccountEnum.Identity.CHANNEL == identity) {
             for (SkuDTO skuDTO : spuDTO.getSkuList()) {
                 if (skuDTO.getSalePrice() == null || skuDTO.getSalePrice().isNull()) {
                     ThrowsException.exception(BaseErrorCode.PARAM, "缺少销售价");
@@ -96,7 +96,7 @@ public class SpuController {
         } else {
             ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
         }
-        spuDTO.setRole(role);
+        spuDTO.setIdentity(identity);
         spuDTO.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(spuDomain.spuCreate(spuDTO));
     }
@@ -126,10 +126,10 @@ public class SpuController {
         if (spuDTO.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity) {
             spuDTO.setState(null);
-        } else if (RoleEnum.CompanyRole.CHANNEL != role) {
+        } else if (AccountEnum.Identity.CHANNEL != identity) {
             ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
         }
         spuDomain.spuPreUpdate(spuDTO);
@@ -146,10 +146,10 @@ public class SpuController {
      */
     @PostMapping("spuDelete")
     public PlatformResult<Void> spuDelete(@RequestBody CommonCmd.IdList idList) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity) {
             spuDomain.spuDelete(idList.getIdList());
-        } else if (RoleEnum.CompanyRole.PLATFORM == role) {
+        } else if (AccountEnum.Identity.PLATFORM == identity) {
             ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
         }
         return PlatformResult.success();
@@ -170,7 +170,7 @@ public class SpuController {
         SpuQuery spuQuery = new SpuQuery();
         spuQuery.setId(id);
         SpuVO spu = spuDomain.voByQuery(spuQuery);
-        if (RoleEnum.CompanyRole.SUPPLIER != SecurityUtils.getRole() && spu != null) {
+        if (AccountEnum.Identity.SUPPLIER != SecurityUtils.getIdentity() && spu != null) {
             spu.doDesensitized();
         }
         return PlatformResult.success(spu);
@@ -186,12 +186,12 @@ public class SpuController {
      */
     @PostMapping("spuPage")
     public PlatformResult<Page<SpuVO>> spuPageVOList(@RequestBody SpuQuery spuQuery) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role
-                || RoleEnum.CompanyRole.CHANNEL == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity
+                || AccountEnum.Identity.CHANNEL == identity) {
             spuQuery.setAccountId(SecurityUtils.getAccountId());
         }
-        spuQuery.setRole(role);
+        spuQuery.setIdentity(identity);
         return PlatformResult.success(spuDomain.querySpuPage(spuQuery));
     }
 
@@ -255,7 +255,7 @@ public class SpuController {
      */
     @PostMapping("/palletSelectGoods")
     public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
-        if (RoleEnum.CompanyRole.PLATFORM != SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.PLATFORM != SecurityUtils.getIdentity()) {
             ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
         }
         spuVO.setChannelType(SpuEnum.ChannelType.OUT);
@@ -309,8 +309,8 @@ public class SpuController {
      */
     @PostMapping("spuCount")
     public PlatformResult<Page<SpuVO>> spuCount(@RequestBody SpuQuery spuQuery) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity) {
             spuQuery.setAccountId(SecurityUtils.getAccountId());
         } else {
             ThrowsException.exception(BaseErrorCode.NOT_SERVICE);

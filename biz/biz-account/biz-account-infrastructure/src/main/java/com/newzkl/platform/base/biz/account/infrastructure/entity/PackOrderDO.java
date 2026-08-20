@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackEnum;
 import com.newzkl.platform.base.biz.account.model.pack.vo.PackGoodsVO;
 import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -48,7 +48,7 @@ public class PackOrderDO extends BaseDO {
     /**
      * 礼包类型
      */
-    private RoleEnum.CompanyRole packType;
+    private AccountEnum.Identity packType;
 
     /**
      * 礼包等级
@@ -95,5 +95,5 @@ public class PackOrderDO extends BaseDO {
      * 订单状态
      */
     @Index
-    private PackOrderStateEnum state;
+    private PackEnum.PackOrderStateEnum state;
 }

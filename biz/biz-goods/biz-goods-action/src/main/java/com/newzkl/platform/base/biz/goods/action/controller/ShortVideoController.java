@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuer
 import com.newzkl.platform.base.biz.goods.model.goods.req.video.ShortVideoReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.video.ShortVideoVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
+import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

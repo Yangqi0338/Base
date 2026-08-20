@@ -26,6 +26,14 @@
             <artifactId>redisson-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>core-sms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newzkl.platform.Base</groupId>
+            <artifactId>ddd-model</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2-extension-spring6</artifactId>
         </dependency>

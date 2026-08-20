@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -21,7 +21,7 @@ public class EmpCreateReq {
     private String password;
     /** 岗位ID */
     @NotNull(message = "roleId?")
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /** 企业角色ID */
     private List<Long> companyRoleId;
 }

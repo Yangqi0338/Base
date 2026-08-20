@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AuthEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,5 +18,5 @@ public class EmpDO extends BaseDO {
     /**
      * 类型
      */
-    private AuthEnum.EmpType type;
+    private AccountEnum.EmpType type;
 }

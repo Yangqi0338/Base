@@ -19,17 +19,16 @@ import com.newzkl.platform.base.biz.order.model.req.query.SettleOrderWaitQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordItemQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SettleRecordQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
-import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -381,10 +380,10 @@ public class SettleDomainImpl implements SettleDomain {
      * @return
      */
     public static LocalDateTime getNextSettleTime(DateTime currentSettleTime, Integer settlementTimeType, Integer settlementTimeDay) {
-        if (RoleEnum.DataType.MONTH_ONLY.getCode().equals(settlementTimeType)) { // 按月结算 (MONTH_ONLY) ，得到下个月的第 settlementTimeDay 天的 0 点。
+        if (EarningsEnum.DataType.MONTH_ONLY.getCode().equals(settlementTimeType)) { // 按月结算 (MONTH_ONLY) ，得到下个月的第 settlementTimeDay 天的 0 点。
             Date nextMonthDayStartTimeStamp = getNextMonthDayStartTimeStamp(settlementTimeDay);
             return DateUtil.toLocalDateTime(nextMonthDayStartTimeStamp);
-        } else if (RoleEnum.DataType.GOODS_AUDIT.getCode().equals(settlementTimeType)) {
+        } else if (EarningsEnum.DataType.GOODS_AUDIT.getCode().equals(settlementTimeType)) {
             Date date = startDayNumForStamp(currentSettleTime, settlementTimeDay); //以当前结算时间为基准，向后推 settlementTimeDay 天（通常是 N 天后的开始时间）。返回该日期的 LocalDateTime。
             return DateUtil.toLocalDateTime(date); // 典型场景：审核通过后“X 天后结算”，比如配置 settlementTimeDay = 7，表示审核 7 天后进入结算。
         } else {
@@ -393,9 +392,9 @@ public class SettleDomainImpl implements SettleDomain {
     }
 
     public static Integer getDataNumber(Integer dataType, String dataOne, String dataTow) {
-        if (RoleEnum.DataType.MONTH_ONLY.getCode().equals(dataType)) {
+        if (EarningsEnum.DataType.MONTH_ONLY.getCode().equals(dataType)) {
             return Integer.parseInt(dataOne);
-        } else if (RoleEnum.DataType.GOODS_AUDIT.getCode().equals(dataType)) {
+        } else if (EarningsEnum.DataType.GOODS_AUDIT.getCode().equals(dataType)) {
             return Integer.parseInt(dataTow);
         } else {
             throw new PlatformException(BaseErrorCode.PARAM, "供应商的结算配置错误");

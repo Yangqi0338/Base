@@ -30,7 +30,7 @@ public class EarningContributeRpcVO implements Serializable {
     /**
      * 资金账户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账户名称

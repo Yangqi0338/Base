@@ -11,9 +11,9 @@ import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +54,7 @@ public class SupplierController {
      */
     @PostMapping("supplierBaseEdit")
     public PlatformResult<Void> supplierEdit(@Validated @RequestBody SupplierReq edit) {
-        if (RoleEnum.CompanyRole.SUPPLIER == SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.SUPPLIER == SecurityUtils.getIdentity()) {
             edit.setId(SecurityUtils.getAccountId());
         }
         supplierClientDomain.supplierEdit(edit.getId(), edit);

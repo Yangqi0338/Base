@@ -30,12 +30,11 @@ import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.model.constant.RefundErrorCode;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -153,7 +152,7 @@ public class RefundDomainImpl implements RefundDomain {
         //初始化售后单 supplierDomain.supplier(edit.getId())
         RefundDTO refund = new RefundDTO();
         refund.init(refundCommand, orderAggVO, skuRefundResMap, freightAmount);
-        refund.setRefundState(getRefundInitState(refundCommand.getRole(), spuOrderVO.getSpuChannelType()));
+        refund.setRefundState(getRefundInitState(refundCommand.getIdentity(), spuOrderVO.getSpuChannelType()));
         refund.setFromOrderState(orderAggVO.getSpuOrderVO().getOrderState());
 
         // 补充拓展信息
@@ -202,9 +201,9 @@ public class RefundDomainImpl implements RefundDomain {
         return refundCreateRes;
     }
 
-    public static RefundEnum.State getRefundInitState(RoleEnum.CompanyRole createRole, SpuEnum.ChannelType spuBelowType) {
+    public static RefundEnum.State getRefundInitState(AccountEnum.Identity createRole, SpuEnum.ChannelType spuBelowType) {
         //客户申请
-        if(RoleEnum.CompanyRole.MEMBER == createRole){
+        if(AccountEnum.Identity.MEMBER == createRole){
             //自营
             if(SpuEnum.ChannelType.CUSTOM == spuBelowType){
                 return RefundEnum.State.CHANNEL_WAIT;
@@ -219,7 +218,7 @@ public class RefundDomainImpl implements RefundDomain {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
             //渠道商申请
-        }else if(RoleEnum.CompanyRole.CHANNEL == createRole) {
+        }else if(AccountEnum.Identity.CHANNEL == createRole) {
             //自营
             if(SpuEnum.ChannelType.CUSTOM == spuBelowType){
                 ThrowsException.exception(BaseErrorCode.PARAM);
@@ -239,9 +238,9 @@ public class RefundDomainImpl implements RefundDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RefundAuditRes agreeAudit(Long refundId, RoleEnum.CompanyRole role) {
+    public RefundAuditRes agreeAudit(Long refundId, AccountEnum.Identity identity) {
 
-        log.info("开始执行售后审核通过操作，refundId: {}, role: {}", refundId, role);
+        log.info("开始执行售后审核通过操作，refundId: {}, role: {}", refundId, identity);
         boolean refundPass = false;
         List<Long> skuOrderIdList = new ArrayList<>();
         //查询售后单
@@ -363,7 +362,7 @@ public class RefundDomainImpl implements RefundDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RefundAuditRes refuseAudit(Long refundId, RoleEnum.CompanyRole role, String reason) {
+    public RefundAuditRes refuseAudit(Long refundId, AccountEnum.Identity identity, String reason) {
         //查询售后单
         RefundDTO refund = refundRepository.refund(refundId);
         //状态检查
@@ -382,9 +381,9 @@ public class RefundDomainImpl implements RefundDomain {
     }
 
     @Override
-    public RefundAuditRes agreeAuditV2(Long refundId, RoleEnum.CompanyRole role) {
+    public RefundAuditRes agreeAuditV2(Long refundId, AccountEnum.Identity identity) {
 
-        log.info("开始执行售后审核通过操作，refundId: {}, role: {}", refundId, role);
+        log.info("开始执行售后审核通过操作，refundId: {}, role: {}", refundId, identity);
         boolean refundPass = false;
         List<Long> skuOrderIdList = new ArrayList<>();
         //查询售后单
@@ -447,7 +446,7 @@ public class RefundDomainImpl implements RefundDomain {
             }else if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
                 log.info("商品渠道为【选品】，设置下一步状态为【待提交物流】，refundId: {}", refundId);
                 //供应商审核
-                if(RoleEnum.CompanyRole.SUPPLIER == role){
+                if(AccountEnum.Identity.SUPPLIER == identity){
                     nextState = RefundEnum.State.FREIGHT_WAIT;
                 //渠道商审核
                 }else {
@@ -457,7 +456,7 @@ public class RefundDomainImpl implements RefundDomain {
             }else if(SpuEnum.ChannelType.OUT == refund.getSpuChannelType()){
                 log.info("商品渠道为【外部商品】，refundId: {}", refundId);
                 //渠道商审核
-                if(RoleEnum.CompanyRole.CHANNEL == role){
+                if(AccountEnum.Identity.CHANNEL == identity){
                     nextState = RefundEnum.State.SUPPLIER_WAIT;
 //                    refundRepository.yytRefundCreate(refund);
                 }else {
@@ -556,7 +555,7 @@ public class RefundDomainImpl implements RefundDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void stopAudit(RoleEnum.CompanyRole role, Long accountId, Long refundId) {
+    public void stopAudit(AccountEnum.Identity identity, Long accountId, Long refundId) {
         RefundDTO refund = refundRepository.refund(refundId);
         if (Objects.isNull(refund)){
             refund = refundRepository.refundBySpuOrderId(refundId);
@@ -568,7 +567,7 @@ public class RefundDomainImpl implements RefundDomain {
         if(SpuEnum.ChannelType.OUT == refund.getSpuChannelType()){
 //            refundRepository.yytRefundCancel(refund);
         }
-        com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = SecurityUtils.getClient() == CommonEnum.Client.CHANNEL
+        com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = SecurityUtils.getClient() == AccountEnum.Client.CHANNEL
                 ? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_CANCEL_REFUND : com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.MEMBER_CANCEL_REFUND;
         localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.CLOSE, refundOperateTypeEnum);
     }

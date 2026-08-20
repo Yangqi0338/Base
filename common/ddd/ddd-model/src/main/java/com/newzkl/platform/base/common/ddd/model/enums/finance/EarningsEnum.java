@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.finance;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -102,12 +102,12 @@ public class EarningsEnum implements Serializable {
     @Getter
     public enum EarningType {
         /** 商品渠道商分润 */
-        GOODS_CHANNEL(ConsumeType.GOODS, Type.CHANNEL, PurseEnum.FinanceUser.CHANNEL, "商品渠道商分润"),
+        GOODS_CHANNEL(ConsumeType.GOODS, Type.CHANNEL, PurseEnum.User.CHANNEL, "商品渠道商分润"),
         ;
 
         private final ConsumeType consumeType;
         private final Type type;
-        private final PurseEnum.FinanceUser user;
+        private final PurseEnum.User user;
         private final String value;
 
         public static EarningType getByRole(ConsumeType consumeType, Type type) {
@@ -117,16 +117,16 @@ public class EarningsEnum implements Serializable {
                     .orElse(null);
         }
 
-        public static EarningType getByRole(ConsumeType consumeType, RoleEnum.CompanyRole role) {
+        public static EarningType getByRole(ConsumeType consumeType, AccountEnum.Identity identity) {
             return Arrays.stream(values())
-                    .filter(it -> it.getConsumeType() == consumeType && (it.getUser() == null || it.getUser().getRole() == role))
+                    .filter(it -> it.getConsumeType() == consumeType && (it.getUser() == null || it.getUser().getIdentity() == identity))
                     .findFirst()
                     .orElse(null);
         }
 
-        public static EarningType getByRole(ConsumeType consumeType, PurseEnum.FinanceUser role) {
+        public static EarningType getByUser(ConsumeType consumeType, PurseEnum.User user) {
             return Arrays.stream(values())
-                    .filter(it -> it.getConsumeType() == consumeType && it.getUser() == role)
+                    .filter(it -> it.getConsumeType() == consumeType && it.getUser() == user)
                     .findFirst()
                     .orElse(null);
         }

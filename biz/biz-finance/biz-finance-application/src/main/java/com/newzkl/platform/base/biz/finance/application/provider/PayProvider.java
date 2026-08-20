@@ -11,10 +11,8 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelSettleReq;
 import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.common.core.model.enums.CacheKey;
-import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
@@ -23,17 +21,13 @@ import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
 import com.newzkl.platform.base.common.ddd.facade.BalancePayResult;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.redisson.api.RLock;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,14 +69,14 @@ public class PayProvider implements PayFacade {
     @Transactional(rollbackFor = Exception.class)
     public BalancePayResult balancePay(BalancePayReq req) {
         // 是否渠道商支付
-        boolean isChannelPay = req.getAccountType().getType().equals(FinanceEnum.FinanceUser.CHANNEL.getType());
+        boolean isChannelPay = req.getAccountType() == PurseEnum.User.CHANNEL;
         // 定义接口返回对象，返回支付状态
         BalancePayResult balancePayResult = new BalancePayResult();
         // 扣减账户余额 支付金额+服务费
         Money subTotalAmount = req.getPayAmount();
         AccountPurseAlterRecordReq subRecordReq = TransferUtils.transfer(req,AccountPurseAlterRecordReq.class);
         subRecordReq.setAmount(subTotalAmount);
-        subRecordReq.setAlterType(PurseEnum.PurseAlterType.ORDER_PAY);
+        subRecordReq.setAlterType(PurseEnum.AlterType.ORDER_PAY);
         subRecordReq.setJoinRecordId(req.getOrderNo());
         boolean flag = purseDomain.subAmount(subRecordReq);
         balancePayResult.setPayState(flag);
@@ -114,11 +108,11 @@ public class PayProvider implements PayFacade {
         if (req.getRefundAmount().greaterThanZero()) {
             // 渠道商退款
             AccountPurseAlterRecordReq recordReq = TransferUtils.transfer(req, AccountPurseAlterRecordReq.class);
-            recordReq.setAccountType(PurseEnum.FinanceUser.CHANNEL);
-            recordReq.setPurseType(PurseEnum.PurseType.PURCHASE);
+            recordReq.setAccountType(PurseEnum.User.CHANNEL);
+            recordReq.setPurseType(PurseEnum.Type.PURCHASE);
             recordReq.setAmount(req.getRefundAmount());
             recordReq.setJoinRecordId(req.getOrderNo());
-            recordReq.setAlterType(PurseEnum.PurseAlterType.SELL_AFTER);
+            recordReq.setAlterType(PurseEnum.AlterType.SELL_AFTER);
             purseDomain.addAmount(recordReq);
         }
 
@@ -129,11 +123,11 @@ public class PayProvider implements PayFacade {
     @Transactional(rollbackFor = Exception.class)
     public void channelSettle(ChannelSettleReq req) {
         AccountPurseAlterRecordReq recordReq = TransferUtils.transfer(req, AccountPurseAlterRecordReq.class);
-        recordReq.setAccountType(PurseEnum.FinanceUser.CHANNEL);
-        recordReq.setPurseType(PurseEnum.PurseType.GOODS_INCOME);
+        recordReq.setAccountType(PurseEnum.User.CHANNEL);
+        recordReq.setPurseType(PurseEnum.Type.GOODS_INCOME);
         recordReq.setAmount(req.getSettleAmount());
         recordReq.setJoinRecordId(req.getJoinSettleOrderNo());
-        recordReq.setAlterType(PurseEnum.PurseAlterType.CHANNEL_SETTLE);
+        recordReq.setAlterType(PurseEnum.AlterType.CHANNEL_SETTLE);
         purseDomain.addAmount(recordReq);
     }
 
@@ -145,23 +139,23 @@ public class PayProvider implements PayFacade {
         ConfigSupplierVO supplierConfigVO = purseConfigDomain.querySupplierConfig();
         // 如果保证金扣除比例大于0，则进行扣除
         AccountPurseAlterRecordReq recordReq = TransferUtils.transfer(req, AccountPurseAlterRecordReq.class);
-        recordReq.setAccountType(PurseEnum.FinanceUser.SUPPLIER);
+        recordReq.setAccountType(PurseEnum.User.SUPPLIER);
         if(supplierConfigVO.getDepositSettleSub() > 0){
             supplierDeposit = req.getSettleAmount().multiply(supplierConfigVO.getDepositSettleSub())
                     .divide(Money.HUNDRED);
             // 将计算出的保证金存入保证金账户（类型为1）
-            recordReq.setPurseType(PurseEnum.PurseType.PROMISE);
+            recordReq.setPurseType(PurseEnum.Type.PROMISE);
             recordReq.setAmount(req.getSettleAmount());
             recordReq.setJoinRecordId(req.getJoinSettleOrderNo());
-            recordReq.setAlterType(PurseEnum.PurseAlterType.SUPPLIER_SETTLE);
+            recordReq.setAlterType(PurseEnum.AlterType.SUPPLIER_SETTLE);
 
             purseDomain.addAmount(recordReq);
-            recordReq.setAlterType(PurseEnum.PurseAlterType.SUPPLIER_SETTLE_SUB_DEPOSIT);
-            recordReq.setPurseType(PurseEnum.PurseType.TOTAL);
+            recordReq.setAlterType(PurseEnum.AlterType.SUPPLIER_SETTLE_SUB_DEPOSIT);
+            recordReq.setPurseType(PurseEnum.Type.TOTAL);
             purseDomain.addAmount(recordReq);
         }
         recordReq.setAmount(req.getSettleAmount().subtract(supplierDeposit));
-        recordReq.setPurseType(PurseEnum.PurseType.TOTAL);
+        recordReq.setPurseType(PurseEnum.Type.TOTAL);
         purseDomain.addAmount(recordReq);
     }
 

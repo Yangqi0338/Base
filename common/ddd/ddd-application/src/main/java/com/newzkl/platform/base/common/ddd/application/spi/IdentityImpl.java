@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.common.ddd.application.spi;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;
@@ -29,5 +29,5 @@ public @interface IdentityImpl {
      *
      * @return 身份 code 数组, 空数组为兜底
      */
-    RoleEnum.CompanyRole[] value() default {};
+    AccountEnum.Identity[] value() default {};
 }

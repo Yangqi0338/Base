@@ -9,7 +9,7 @@ import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 
-import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -37,7 +37,7 @@ public class EasyExcelUtil {
             protected String validate(Integer rowNum, T data) {
                 String result = validateFunc.apply(data, rowNum);
                 if (StrUtil.isBlank(result)) {
-                    String validateStr = BizUtil.getValidateStr(data, ";");
+                    String validateStr = CommonUtil.getValidateStr(data, ";");
                     if (StrUtil.isBlank(validateStr)) {
                         return getMessage(rowNum, validateStr);
                     }

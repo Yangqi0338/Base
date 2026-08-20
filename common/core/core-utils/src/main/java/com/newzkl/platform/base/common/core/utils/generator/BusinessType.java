@@ -20,7 +20,6 @@ public enum BusinessType {
     SEAT_PACKAGE("SEP", "席位套餐"),
     /* 订单 */
     ORDER("O", "普通订单", new SnowflakeGenerator()),
-    ORDER_SPU("OSP", "普通SPU订单", new SnowflakeGenerator()),
     ORDER_SKU("OSK", "普通SKU订单", new SnowflakeGenerator()),
     ORDER_RECHARGE("OR", "充值订单", new SnowflakeGenerator()),
     ORDER_SEAT_PACKAGE("OSEP", "席位订单", new SnowflakeGenerator()),
@@ -30,12 +29,9 @@ public enum BusinessType {
     /* 课程 */
     COURSE_CATEGORY("CC", "课程分类"),
     COURSE("C", "课程"),
-    /* 任务 */
-    TASK_CODE("T", "任务码"),
     /* 用户 */
     USER_DEFAULT_AVATAR("", "默认头像", new AvatarGenerator()),
     USER_DEFAULT_NAME("", "默认用户名", new UserNameGenerator()),
-    IM_USER_ACCOUNT("C", "腾讯IM账号", null),
     ;
 
 

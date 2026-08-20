@@ -10,12 +10,15 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.*;
+import cn.hutool.extra.validation.ValidationUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
+import jakarta.validation.ConstraintViolation;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -704,5 +707,21 @@ public class CommonUtil {
 
         System.err.println("无法找到源文件: " + clazz.getName());
         return false;
+    }
+
+    public static void validate(Object req, Class<?>... groups) {
+        Set<ConstraintViolation<Object>> validate = ValidationUtil.validate(req, groups);
+        if (CollUtil.isNotEmpty(validate)) {
+            throw new PlatformException(BaseErrorCode.PARAM.getCode(), validate.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";\n")));
+        }
+    }
+
+    public static String getValidateStr(Object req, String joinStr, Class<?>... groups) {
+        joinStr = Optional.ofNullable(joinStr).orElse(";\n");
+        Set<ConstraintViolation<Object>> validate = ValidationUtil.validate(req, groups);
+        if (CollUtil.isNotEmpty(validate)) {
+            return validate.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(joinStr));
+        }
+        return "";
     }
 }

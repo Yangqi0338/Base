@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.Data;
 
@@ -42,7 +42,7 @@ public class RefundOperationRecordVO implements Serializable {
     /**
      * 操作方角色编码
      */
-    private RoleEnum.CompanyRole operatorRoleCode;
+    private AccountEnum.Identity operatorRoleCode;
 
     /**
      * 操作方客户端类型

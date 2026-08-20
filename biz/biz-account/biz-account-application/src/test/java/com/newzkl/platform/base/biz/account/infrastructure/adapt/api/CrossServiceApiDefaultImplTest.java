@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.*;
 import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
-import com.newzkl.platform.base.common.ddd.facade.InitFinanceReq;
+import com.newzkl.platform.base.biz.finance.facade.model.InitFinanceReq;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ class CrossServiceApiDefaultImplTest {
     @Test
     @DisplayName("FinancePurseApi 兜底: 初始化钱包空实现, 查钱包返回空 List")
     void financePurseApiReturnsEmptyList() {
-        FinancePurseApi api = new FinancePurseApiDefaultImpl();
+        PurseApi api = new PurseApiImpl();
         assertDoesNotThrow(() -> api.initFinance(new InitFinanceReq()));
         assertDoesNotThrow(() -> api.initFinance(null));
 
@@ -55,7 +55,7 @@ class CrossServiceApiDefaultImplTest {
     @Test
     @DisplayName("OpenapiDeveloperApi 兜底: 初始化开发者为空实现")
     void openapiDeveloperApiIsNoop() {
-        OpenapiDeveloperApi api = new OpenapiDeveloperApiDefaultImpl();
+        DeveloperApi api = new OpenapiDeveloperApiDefaultImpl();
         assertDoesNotThrow(() -> api.initDeveloper(new DeveloperInitReq()));
         assertDoesNotThrow(() -> api.initDeveloper(null));
     }

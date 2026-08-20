@@ -5,7 +5,6 @@ import com.newzkl.platform.base.biz.account.application.service.UserQueryService
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.CancelMemberReq;
 import com.newzkl.platform.base.biz.account.model.req.MemberInfoReq;
-import com.newzkl.platform.base.biz.account.model.req.UpdateMemberInfoCommand;
 import com.newzkl.platform.base.biz.account.model.res.AccountOutRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -38,31 +37,6 @@ public class ConsumerInfoController {
 
     private final UserClientDomain userClientDomain;
     private final UserQueryService userQueryService;
-
-    /**
-     * 消费者修改账号信息
-     *
-     * @param updateMemberInfoCommand 会员信息修改命令
-     * @return 空结果
-     */
-    @PostMapping("/updateMemberInfo")
-    public PlatformResult<Void> updateMemberInfo(@Validated @RequestBody UpdateMemberInfoCommand updateMemberInfoCommand) {
-        userClientDomain.updateMemberInfo(SecurityUtils.getAccountId(), updateMemberInfoCommand);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 账号详情
-     *
-     * <p>迁移补充: 旧 {@code accountOutVO(accountId)} 中台化后签名带端类型,
-     * 此处补当前登录端, 出参对象为 {@code AccountOutRes}。</p>
-     *
-     * @return 账号外部视图
-     */
-    @PostMapping("/detail")
-    public PlatformResult<AccountOutRes> account() {
-        return PlatformResult.success(userQueryService.accountOutVO(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
-    }
 
     /**
      * 查用户信息

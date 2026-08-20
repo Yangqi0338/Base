@@ -3,8 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.AccountApi;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +32,12 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public AccountGroupVO accountInfo(Long accountId) {
-        return accountFacade.accountInfo(CommonEnum.Client.USER, accountId);
+        return accountFacade.accountInfo(AccountEnum.Client.USER, accountId);
     }
 
     @Override
     public AccountGroupVO channelInfo(Long accountId) {
-        return accountFacade.accountInfo(CommonEnum.Client.CHANNEL, accountId);
+        return accountFacade.accountInfo(AccountEnum.Client.CHANNEL, accountId);
     }
 
 

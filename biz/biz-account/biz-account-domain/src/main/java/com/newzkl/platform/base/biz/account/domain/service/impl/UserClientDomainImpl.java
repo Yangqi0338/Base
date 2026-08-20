@@ -8,22 +8,21 @@ import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
+import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
-import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberImportExcelVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
@@ -88,15 +87,10 @@ public class UserClientDomainImpl implements UserClientDomain {
     }
 
     @Override
-    public List<MemberVO> queryMember(String nickname) {
-        return memberRepository.queryMember(nickname);
-    }
-
-    @Override
     public void cancelMember(Long accountId, CancelMemberReq req) {
         log.info("注销c端用户， 入参: {}", req);
         AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setClient(CommonEnum.Client.USER);
+        accountQuery.setClient(AccountEnum.Client.USER);
         accountQuery.setId(accountId);
         AccountVO account = accountRepository.account(accountQuery);
         if (Objects.isNull(account)) {
@@ -160,7 +154,7 @@ public class UserClientDomainImpl implements UserClientDomain {
                 throw new PlatformException(AccountErrorCode.PARAM_ERROR, "验证码手机号和已绑定手机号不一致！");
             }
         }
-        RoleEnum.CompanyRole MEMBER_ROLE_CODE = RoleEnum.CompanyRole.MEMBER;
+        AccountEnum.Identity MEMBER_ROLE_CODE = AccountEnum.Identity.MEMBER;
         BCryptPasswordEncoder PWD_ENCODER = new BCryptPasswordEncoder();
         // 事务包裹核心更新逻辑
 //        transactionUtils.executeWithoutResult(() -> {
@@ -223,9 +217,9 @@ public class UserClientDomainImpl implements UserClientDomain {
     @Override
     public IdentityRegisterRes adminCreateMember(AdminRegisterIdentityReq req) {
         //  构建注册参数并执行会员注册
-        RoleEnum.CompanyRole role = RoleEnum.CompanyRole.MEMBER;
+        AccountEnum.Identity identity = AccountEnum.Identity.MEMBER;
         IdentityProxySaveReq memberRegisterReq = accountAssembler.adminRegisterReq2ProxyRegisterReq(req);
-        memberRegisterReq.setRole(role);
+        memberRegisterReq.setIdentity(identity);
 
         // 用上级账号查询id（非邀请人）
         if (StrUtil.isNotBlank(req.getSuperiorAccount())) {
@@ -236,7 +230,7 @@ public class UserClientDomainImpl implements UserClientDomain {
                 throw new PlatformException(BaseErrorCode.NODATA, "上级账号");
             }
             // 若上级和当前不是同客户端，则视为邀请人
-            if (account.getClient() != role.getClient()) {
+            if (account.getClient() != identity.getClient()) {
                 memberRegisterReq.setInviteId(account.getId());
             } else {
                 memberRegisterReq.setPid(account.getId());
@@ -244,8 +238,8 @@ public class UserClientDomainImpl implements UserClientDomain {
         }
 
         // proxyRegister TODO 缺少code验证
-        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(memberRegisterReq.getRole())
-                .proxyRegister(memberRegisterReq);
+        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(memberRegisterReq.getIdentity())
+                .customRegister(new IdentityCustomSaveReq());
 
         // 注册失败则抛出异常，成功则重新执行登录
         if (registerRes.getErrorCode() != null) {

@@ -7,7 +7,6 @@ import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySuppo
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
-import com.newzkl.platform.base.biz.account.model.auth.req.CustomSaveBatchReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
@@ -15,16 +14,13 @@ import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,19 +40,6 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountAssembler accountAssembler;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void customSaveBatch(List<CustomSaveBatchReq> customSaveBatchReqList) {
-        for (CustomSaveBatchReq customSaveBatchReq : customSaveBatchReqList) {
-            IdentityCustomSaveReq customSaveReq = TransferUtils.transfer(customSaveBatchReq, IdentityCustomSaveReq::new);
-            for (Long roleId : customSaveBatchReq.getRoleIdList()) {
-//                customSaveReq.setRoleId(roleId);
-                AbsIdentityPolicySupport.getPolicy(roleId).customRegister(customSaveReq);
-            }
-        }
-    }
-
-
 
     @Override
     public Page<MemberAccountVO> pageAccount(AccountQuery query) {
@@ -65,11 +48,6 @@ public class AccountServiceImpl implements AccountService {
             return new Page<>();
         }
         List<AccountVO> accountVOList = accountPage.getRecords();
-
-        List<String> userAccounts = accountVOList.stream()
-                .map(AccountVO::getUserAccount)
-                .filter(ObjectUtils::isNotEmpty)
-                .collect(Collectors.toList());
 
         Map<String, Integer> groupCountMap = new HashMap<>();
 //        if (CollectionUtils.isNotEmpty(userAccounts)) {
@@ -91,20 +69,18 @@ public class AccountServiceImpl implements AccountService {
         List<MemberAccountVO> memberAccountVOList = accountVOList.stream().map(accountVO -> {
             MemberAccountVO memberVO = new MemberAccountVO();
             memberVO.setId(accountVO.getId());
-            memberVO.setUserAccount(accountVO.getUserAccount());
             memberVO.setHead(accountVO.getHead());
             memberVO.setNickname(accountVO.getNickname());
             memberVO.setState(accountVO.getState());
             memberVO.setCreateTime(accountVO.getCreateTime());
             memberVO.setPhone(accountVO.getPhone());
-            memberVO.setGroupNum(groupCountMap.getOrDefault(accountVO.getUserAccount(), 0));
 
             Long pid = accountVO.getPid();
             if (ObjectUtils.isNotEmpty(pid) && pid != 0) {
                 AccountVO parentAccount = parentAccountMap.get(pid);
                 if (ObjectUtils.isNotEmpty(parentAccount)) {
                     memberVO.setPid(parentAccount.getId());
-                    memberVO.setPUserAccount(parentAccount.getUserAccount());
+                    memberVO.setPUsername(parentAccount.getUsername());
                     memberVO.setPNickname(parentAccount.getNickname());
                 }
             }
@@ -140,7 +116,7 @@ public class AccountServiceImpl implements AccountService {
     public Long identityCreate(AdminRegisterIdentityReq req) {
         //  构建注册参数并执行会员注册
         IdentityProxySaveReq memberRegisterReq = accountAssembler.adminRegisterReq2ProxyRegisterReq(req);
-        RoleEnum.CompanyRole role = req.getRole();
+        AccountEnum.Identity identity = req.getIdentity();
 
         // 用上级账号查询id（非邀请人）
         if (StrUtil.isNotBlank(req.getSuperiorAccount())) {
@@ -151,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new PlatformException(BaseErrorCode.NODATA, "上级账号");
             }
             // 若上级和当前不是同客户端，则视为邀请人
-            if (account.getClient() != role.getClient()) {
+            if (account.getClient() != identity.getClient()) {
                 memberRegisterReq.setInviteId(account.getId());
             } else {
                 memberRegisterReq.setPid(account.getId());
@@ -159,8 +135,8 @@ public class AccountServiceImpl implements AccountService {
         }
 
         // 代理注册
-        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(memberRegisterReq.getRole())
-                .proxyRegister(memberRegisterReq);
+        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(memberRegisterReq.getIdentity())
+                .customRegister(new IdentityCustomSaveReq());
 
         // 注册失败则抛出异常，成功则重新执行登录
         if (registerRes.getErrorCode() != null) {

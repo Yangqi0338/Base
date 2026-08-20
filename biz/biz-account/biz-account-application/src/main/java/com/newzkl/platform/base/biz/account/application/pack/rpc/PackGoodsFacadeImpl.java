@@ -8,7 +8,6 @@ import com.newzkl.platform.base.biz.account.model.pack.req.PackGoodsCommand;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
  *
  * @author KC
  */
-@DubboService
 @Component
 @RequiredArgsConstructor
 public class PackGoodsFacadeImpl implements PackGoodsFacade {

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.address.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -71,7 +71,7 @@ public class ShipAddressReq extends BaseReq {
     /**
      * 角色类型 ID (领域层按登录态回填)
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 账号 ID (领域层按登录态回填)

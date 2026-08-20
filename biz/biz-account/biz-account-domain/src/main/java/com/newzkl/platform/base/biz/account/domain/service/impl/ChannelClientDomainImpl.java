@@ -2,12 +2,10 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
@@ -40,19 +38,17 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
         if (customSaveReq.getId() == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
         }
-        ChannelVO item = TransferUtils.transfer(customSaveReq, ChannelVO::new, (c, v) -> {
-            v.setDealerEarnings(Money.ZERO);
-        });
-        item.setRole(RoleEnum.CompanyRole.CHANNEL);
+        ChannelVO item = TransferUtils.transfer(customSaveReq, ChannelVO::new);
+        item.setIdentity(AccountEnum.Identity.CHANNEL);
         item.setState(ChannelEnum.State.APPLY);
         item.setAuditState(AuditEnum.State.SUCCESS);
-        Long aLong = channelRepository.channelSave(item);
-        return aLong;
+        channelRepository.save(item);
+        return item.getId();
     }
 
     @Override
-    public int channelEdit(ChannelReq channelReq) {
-        return channelRepository.channelEdit(channelAssembler.req2VO(channelReq));
+    public Boolean channelEdit(ChannelReq channelReq) {
+        return channelRepository.save(channelAssembler.req2VO(channelReq));
     }
 
     @Override
@@ -74,14 +70,14 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
     }
 
     @Override
-    public int updateChannel(ChannelUpdateReq channelUpdateReq) {
-        return channelRepository.channelEdit(channelAssembler.updateReq2VO(channelUpdateReq));
+    public Boolean updateChannel(ChannelUpdateReq channelUpdateReq) {
+        return channelRepository.save(channelAssembler.updateReq2VO(channelUpdateReq));
     }
 
     @Override
     public Page<ChannelVO> channelPageList(ChannelQuery channelQuery) {
         IdentityAccountQuery identityAccountQuery = channelAssembler.query2IdentityQuery(channelQuery);
-        List<Long> accountIdList = this.findIdByQuery(CommonEnum.Client.CHANNEL, identityAccountQuery);
+        List<Long> accountIdList = this.findIdByQuery(AccountEnum.Client.CHANNEL, identityAccountQuery);
         CollUtil.addAll(accountIdList, channelQuery.getIdList());
         channelQuery.setIdList(accountIdList);
         return channelRepository.pageList(channelQuery);

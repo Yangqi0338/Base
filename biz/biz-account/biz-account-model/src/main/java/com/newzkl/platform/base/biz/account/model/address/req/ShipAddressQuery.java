@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.address.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +20,7 @@ public class ShipAddressQuery extends BizPageQuery {
     /**
      * 角色类型 ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 是否默认

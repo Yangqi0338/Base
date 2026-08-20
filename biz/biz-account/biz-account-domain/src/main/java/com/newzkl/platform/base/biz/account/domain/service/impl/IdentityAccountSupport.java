@@ -1,11 +1,11 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.IdentityAccountQuery;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class IdentityAccountSupport {
     @Autowired
     private AccountAssembler accountAssembler;
 
-    protected List<Long> findIdByQuery(CommonEnum.Client client, IdentityAccountQuery identityAccountQuery) {
+    protected List<Long> findIdByQuery(AccountEnum.Client client, IdentityAccountQuery identityAccountQuery) {
         AccountQuery query = accountAssembler.identityQuery2Query(identityAccountQuery);
         query.setClient(client);
         List<Long> idList = new ArrayList<>();

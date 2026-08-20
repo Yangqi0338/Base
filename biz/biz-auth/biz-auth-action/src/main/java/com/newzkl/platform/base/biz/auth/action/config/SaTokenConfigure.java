@@ -12,8 +12,8 @@ import cn.dev33.satoken.util.SaResult;
 import cn.hutool.core.util.StrUtil;
 
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +63,7 @@ public class SaTokenConfigure {
                     }
                     //登录检查
                     StpUtil.checkLogin();
-                    CommonEnum.Client client = SecurityUtils.getRequestClient();
+                    AccountEnum.Client client = SecurityUtils.getRequestClient();
                     if(client == null){
                         throw new RuntimeException("非法请求");
                     }

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.content.model.util;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,13 +46,13 @@ public class RecommendGroupsCheckUtil {
      *
      * <p>渠道商仅见 {@code CHANNEL}, C端客户仅见 {@code C_CLIENT}, 其余角色见全部。</p>
      *
-     * @param role 角色ID, 取自登录态
+     * @param identity 身份id, 取自登录态
      * @return 可见推荐人群名称集合
      */
-    public static List<RecommendGroupEnum> getRecommendGroups(RoleEnum.CompanyRole role) {
-        if (RoleEnum.CompanyRole.CHANNEL == role) {
+    public static List<RecommendGroupEnum> getRecommendGroups(AccountEnum.Identity identity) {
+        if (AccountEnum.Identity.CHANNEL == identity) {
             return List.of(RecommendGroupEnum.CHANNEL);
-        } else if (RoleEnum.CompanyRole.MEMBER == role) {
+        } else if (AccountEnum.Identity.MEMBER == identity) {
             return List.of(RecommendGroupEnum.C_CLIENT);
         }
         return Arrays.asList(RecommendGroupEnum.values());

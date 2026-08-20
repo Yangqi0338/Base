@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.account.model.req.cmd.AdminDisableAccountCommand;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -15,6 +15,6 @@ public class AdminDisableAccountReq extends AdminDisableAccountCommand {
     /**
      * 归属端
      */
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
 
 }

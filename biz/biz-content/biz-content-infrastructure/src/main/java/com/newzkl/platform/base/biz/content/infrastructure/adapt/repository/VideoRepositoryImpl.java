@@ -15,11 +15,11 @@ import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -91,7 +91,7 @@ public class VideoRepositoryImpl implements VideoRepository {
     @Override
     public List<VideoRes> listVideoResForMember(VideoQuery query) {
         // 旧 domain 层: C端角色(MEMBER)仅可见 isVisible=1, 角色判断下沉至此
-        if (RoleEnum.CompanyRole.MEMBER.equals(SecurityUtils.getRole())) {
+        if (AccountEnum.Identity.MEMBER.equals(SecurityUtils.getIdentity())) {
             query.setIsVisible(1);
         }
         // 旧: buildLikeNumAndSharesNum 填充点赞/分享数(跨域降级, 暂不填充)
@@ -140,7 +140,7 @@ public class VideoRepositoryImpl implements VideoRepository {
     @Override
     public Video getVideoByIdForView(Long id) {
         // 旧 domain 层: C端角色(MEMBER)访问不可见视频抛异常, 角色判断下沉至此
-        boolean isVisibleHack = RoleEnum.CompanyRole.MEMBER.equals(SecurityUtils.getRole());
+        boolean isVisibleHack = AccountEnum.Identity.MEMBER.equals(SecurityUtils.getIdentity());
         VideoDO videoDO = contentVideoDAO.selectById(id);
         // 旧: CommonEnum.Switch.OFF.getCode() 判不可见, Base 无 CommonEnum.Switch, 用字面量 0
         if (videoDO == null || (isVisibleHack && Integer.valueOf(0).equals(videoDO.getIsVisible()))) {
@@ -151,9 +151,9 @@ public class VideoRepositoryImpl implements VideoRepository {
 
     @Override
     public List<RecommendGroupEnum> currentRecommendGroups() {
-        // 旧 domain: RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())
+        // 旧 domain: RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity())
         // 贴 Base 范本改用 getRoleId(), 语义一致(角色ID)
-        return RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole());
+        return RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.req.query;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
@@ -32,5 +32,5 @@ public class RefundOperationRecordQuery extends BizPageQuery {
      * 操作方角色编码
      * @ext 前端传数字 code, Jackson 经 RoleEnum.CompanyRole 的 @JsonValue 反序列化为枚举
      */
-    private RoleEnum.CompanyRole operatorRoleCode;
+    private AccountEnum.Identity operatorRoleCode;
 }

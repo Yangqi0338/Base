@@ -12,20 +12,6 @@ import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 public interface PurseService {
 
     /**
-     * 平台给运营商分配采购金
-     *
-     * @param req 分配请求
-     * @return 处理结果
-     */
-
-    /**
-     * 运营商给渠道商分配采购金
-     *
-     * @param req 分配请求
-     * @return 处理结果
-     */
-
-    /**
      * 渠道商自同步采购金
      *
      * @param req 分配请求

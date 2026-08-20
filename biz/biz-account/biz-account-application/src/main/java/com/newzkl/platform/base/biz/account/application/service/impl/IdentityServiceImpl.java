@@ -20,7 +20,7 @@ import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.common.ddd.model.constant.RoleErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,14 +48,14 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateAuditState(Long accountId, RoleEnum.CompanyRole role) {
+    public void updateAuditState(Long accountId, AccountEnum.Identity identity) {
         IdentityCustomSaveReq req = new IdentityCustomSaveReq();
         // 角色只能是[渠道商|供应商]
-        if (!CollUtil.newArrayList(RoleEnum.CompanyRole.CHANNEL, RoleEnum.CompanyRole.SUPPLIER).contains(role)) {
+        if (!CollUtil.newArrayList(AccountEnum.Identity.CHANNEL, AccountEnum.Identity.SUPPLIER).contains(identity)) {
             throw new PlatformException(RoleErrorCode.WARN_ROLE);
         }
 
-        AbsIdentityPolicySupport.getPolicy(role).customRegister(req);
+        AbsIdentityPolicySupport.getPolicy(identity).customRegister(req);
     }
 
 //    @Override
@@ -77,31 +77,22 @@ public class IdentityServiceImpl implements IdentityService {
 ////        AuditAccountVO auditAccountVO = new AuditAccountVO();
 ////        auditAccountVO.setAccountId(SecurityUtils.getAccountId());
 ////        auditAccountVO.setUsername(SecurityUtils.getUsername());
-////        auditAccountVO.setRoleId(SecurityUtils.getRole());
+////        auditAccountVO.setRoleId(SecurityUtils.getIdentity());
 ////        Long flowId = auditFacade.submitPromiseFlow(AuditEnum.TemplateType.PROMISE_FLOW.getCode(), auditAccountVO, auditDataPromiseFlowVO);
 //        supplierDomain.promiseFlowSubmitAuditSuccess(accountId);
 ////        return flowId;
 //        return null;
 //    }
 
+    // FIXME 这整个端口应该搬移到Finance
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void serviceFeeConfigEdit(Long accountId, ServiceFeeConfigVO serviceFeeConfigVO) {
-        ChannelVO channel = channelDomain.channel(accountId);
         ChargeConfigChannelReq req = new ChargeConfigChannelReq();
         req.setChannelId(accountId);
         req.setPlatformConfig(getTree(serviceFeeConfigVO.getItemList()));
 
         financeConfigApi.saveChannelChargeConfig(req);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void channelUpEdit(Long channelId, Long dealerId) {
-        ChannelVO channel = channelDomain.channel(channelId);
-//        dealerDomain.dealerEdit(Collections.singletonList(new EditColumnVO("invite_channel_number", -1)), channel.getUpDealerId());
-//        dealerDomain.dealerEdit(Collections.singletonList(new EditColumnVO("invite_channel_number", 1)), dealerId);
-//        channel.channelUpEdit(dealerId);
     }
 
     private TreeMap<Integer, Double> getTree(List<AmountRateDTO> itemList) {

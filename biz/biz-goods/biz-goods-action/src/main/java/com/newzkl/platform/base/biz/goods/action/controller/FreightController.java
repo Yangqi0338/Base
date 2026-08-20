@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.freight.FreightTemplat
 import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreightTemplateVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -49,9 +49,9 @@ public class FreightController {
         if (freightTemplateReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role
-                || RoleEnum.CompanyRole.CHANNEL == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity
+                || AccountEnum.Identity.CHANNEL == identity) {
             freightTemplateReq.setAccountId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(freightDomain.freightTemplateSave(freightTemplateReq));
@@ -67,7 +67,7 @@ public class FreightController {
      */
     @PostMapping("freightTemplateDelete")
     public PlatformResult<Void> freightTemplateDelete(@RequestBody CommonCmd.IdList idList) {
-        if (RoleEnum.CompanyRole.PLATFORM != SecurityUtils.getRole()
+        if (AccountEnum.Identity.PLATFORM != SecurityUtils.getIdentity()
                 && idList.getIdList().contains(SYSTEM_TEMPLATE_ID)) {
             ThrowsException.exception(BaseErrorCode.CUSTOM, "无法删除系统运费模板");
         }
@@ -88,7 +88,7 @@ public class FreightController {
         if (freightTemplateReq.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        if (RoleEnum.CompanyRole.PLATFORM != SecurityUtils.getRole()
+        if (AccountEnum.Identity.PLATFORM != SecurityUtils.getIdentity()
                 && freightTemplateReq.getId() == SYSTEM_TEMPLATE_ID) {
             ThrowsException.exception(BaseErrorCode.CUSTOM, "无法修改系统运费模板");
         }
@@ -117,9 +117,9 @@ public class FreightController {
      */
     @PostMapping("freightTemplatePage")
     public PlatformResult<Page<FreightTemplateVO>> freightTemplatePageVOList(@RequestBody FreightTemplateQuery freightTemplateQuery) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role
-                || RoleEnum.CompanyRole.CHANNEL == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity
+                || AccountEnum.Identity.CHANNEL == identity) {
             freightTemplateQuery.setAccountIdAndAdmin(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(freightDomain.freightTemplatePage(freightTemplateQuery));

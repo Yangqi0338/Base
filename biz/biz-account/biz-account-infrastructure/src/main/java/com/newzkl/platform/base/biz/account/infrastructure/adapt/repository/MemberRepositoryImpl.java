@@ -74,12 +74,4 @@ public class MemberRepositoryImpl implements MemberRepository {
         return TransferUtils.transfers(memberVOS, MemberVO.class);
     }
 
-    @Override
-    public List<MemberVO> queryMember(String nickname) {
-        MemberQuery query = new MemberQuery();
-        query.setNickname(nickname);
-        List<MemberDO> memberVOS = memberDAO.selectList(memberDAO.getLw(query));
-        return TransferUtils.transfers(memberVOS, MemberVO.class);
-    }
-
 }

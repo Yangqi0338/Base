@@ -108,5 +108,5 @@ public class AccountRes extends BaseRes {
     /**
      * 归属端
      */
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
 }

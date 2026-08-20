@@ -24,12 +24,12 @@ public class AccountPurseAlterRecordReq implements Serializable {
     /**
      * 账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 金额
@@ -39,7 +39,7 @@ public class AccountPurseAlterRecordReq implements Serializable {
     /**
      * 账号修改类型
      */
-    private PurseEnum.PurseAlterType alterType;
+    private PurseEnum.AlterType alterType;
 
     /**
      * 关联记录id

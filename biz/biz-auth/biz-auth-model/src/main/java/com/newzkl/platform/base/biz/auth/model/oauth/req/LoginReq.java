@@ -1,9 +1,8 @@
 package com.newzkl.platform.base.biz.auth.model.oauth.req;
 
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.AuthEnum;
 import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,19 +35,19 @@ public class LoginReq {
     /**
      * 注册角色
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 端
      */
     @NotNull(message = "登录端不能为空")
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
 
     /**
      * 登录类型
      */
     @NotNull(message = "登录类型不能为空")
-    private AccountEnum.LoginType type;
+    private AuthEnum.Type type;
 
     /**
      * 校验密码登录时密码是否为空
@@ -57,7 +56,7 @@ public class LoginReq {
      */
     @AssertFalse(message = "密码不能为空")
     public boolean isPasswordBlank() {
-        return type == AccountEnum.LoginType.PASSWORD && StrUtil.isBlank(password);
+        return type == AuthEnum.Type.PASSWORD && StrUtil.isBlank(password);
     }
 
     /**
@@ -67,7 +66,7 @@ public class LoginReq {
      */
     @AssertFalse(message = "验证码不能为空")
     public boolean isCodeBlank() {
-        return type == AccountEnum.LoginType.CODE && StrUtil.isBlank(code);
+        return type == AuthEnum.Type.CODE && StrUtil.isBlank(code);
     }
 
 }

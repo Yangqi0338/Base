@@ -98,7 +98,7 @@ public class ArticleCategoryController {
     /**
      * 获取分类列表
      *
-     * <p>推荐人群由当前登录角色换算, 旧 {@code SecurityUtils.getRole()} 换为
+     * <p>推荐人群由当前登录角色换算, 旧 {@code SecurityUtils.getIdentity()} 换为
      * {@code SecurityUtils.getRoleId()}(两者同为角色ID语义)。入参 {@code req} 旧实现同样未使用,
      * 为保持前端契约(POST 带 body)原样保留。</p>
      *
@@ -108,6 +108,6 @@ public class ArticleCategoryController {
     @PostMapping("/list")
     public PlatformResult<List<ArticleCategoryRes>> getCategoryList(@RequestBody RecommendGroupReq req) {
         return PlatformResult.success(articleCategoryDomain.getCategoryList(
-                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())));
+                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity())));
     }
 }

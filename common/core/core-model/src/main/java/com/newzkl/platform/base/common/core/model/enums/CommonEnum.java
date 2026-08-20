@@ -41,37 +41,6 @@ public class CommonEnum {
     }
 
     /**
-     * 客户端
-     */
-    @Getter
-    @AllArgsConstructor
-    public enum Client implements IEnum<String> {
-        /** 平台端 */
-        ADMIN("admin", "平台端"),
-        /** 后台端 */
-        USER("user", "用户端"),
-        /** 服务商端 */
-        PARTNER("partner", "服务商端"),
-        /** 渠道商端 */
-        CHANNEL("channel", "渠道商端"),
-        /** 供应商端 */
-        SUPPLIER("supplier", "供应商端"),
-        ;
-
-        @EnumValue
-        @JsonValue
-        private final String code;
-        private final String value;
-
-        public static CommonEnum.Client getByCode(String code) {
-            return Stream.of(CommonEnum.Client.values())
-                    .filter(extension -> extension.getCode().equalsIgnoreCase(code))
-                    .findFirst()
-                    .orElse(null);
-        }
-    }
-
-    /**
      * 系统类型
      */
     @Getter

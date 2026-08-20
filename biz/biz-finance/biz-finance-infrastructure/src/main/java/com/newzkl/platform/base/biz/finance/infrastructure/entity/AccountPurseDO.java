@@ -31,13 +31,13 @@ public class AccountPurseDO extends BaseDO {
      * 账户类型
      */
     @Index
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 客户类型
      */
     @Index
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 收益

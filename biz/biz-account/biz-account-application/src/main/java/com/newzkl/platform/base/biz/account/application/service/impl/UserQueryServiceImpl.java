@@ -5,13 +5,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinancePurseApi;
+import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseAmountRes;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
@@ -57,21 +57,21 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final ChannelAssembler channelAssembler;
     private final EmpAssembler empAssembler;
 
-    private final FinancePurseApi financePurseApi;
+    private final PurseApi financePurseApi;
     private final GoodsStoreApi goodsStoreApi;
 
     @Override
-    public AccountOutRes accountOutVO(CommonEnum.Client client, Long id) {
+    public AccountOutRes accountOutVO(AccountEnum.Client client, Long id) {
         //查询账号
         AccountVO accountVO = accountDomain.account(client, id);
         AccountOutRes accountOutVO = accountAssembler.vo2OutRes(accountVO);
 
         //设置角色信息
-        String roleIdList = accountVO.getRoleIdList();
-        List<RoleEnum.CompanyRole> companyRoleList = RoleEnumUtil.getLevelUpEnumList(client, roleIdList);
-        for (RoleEnum.CompanyRole role : companyRoleList) {
-            Object identityVO = userIdentityDetail(id, role);
-            switch (role) {
+        String roleIdList = accountVO.getIdentityList();
+        List<AccountEnum.Identity> companyRoleList = RoleEnumUtil.getLevelUpEnumList(client, roleIdList);
+        for (AccountEnum.Identity identity : companyRoleList) {
+            Object identityVO = userIdentityDetail(id, identity);
+            switch (identity) {
                 case EMP:
                     accountOutVO.setEmp(empAssembler.vo2OutRes((EmpVO) identityVO));
                     break;
@@ -110,8 +110,8 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public Object userIdentityDetail(Long id, RoleEnum.CompanyRole role) {
-        return AbsIdentityPolicySupport.getPolicy(role).detail(id);
+    public Object userIdentityDetail(Long id, AccountEnum.Identity identity) {
+        return AbsIdentityPolicySupport.getPolicy(identity).detail(id);
     }
 
     @Override
@@ -133,7 +133,8 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public Page<MemberVO> memberPage(MemberQuery memberQuery) {
-        List<MemberVO> memberVO = userDomain.queryMember(null);
+        // FIXME domian没有page查询，上层也不应该调用service，应直接调用domain
+//        List<MemberVO> memberVO = userDomain.queryMember(null);
         return new Page<>();
     }
 
@@ -168,15 +169,15 @@ public class UserQueryServiceImpl implements UserQueryService {
         // 客户账户查询对象
         AccountPurseReq accountPurseReq = new AccountPurseReq();
         accountPurseReq.setAccountIdList(channelList);
-        accountPurseReq.setAccountType(PurseEnum.FinanceUser.CHANNEL.getType());
+        accountPurseReq.setAccountType(PurseEnum.User.CHANNEL.getType());
 
         //查询采购金
-        accountPurseReq.setPurseType(PurseEnum.PurseType.PURCHASE.getType());
+        accountPurseReq.setPurseType(PurseEnum.Type.PURCHASE.getType());
         List<PurseAmountRes> purseAmountResList = financePurseApi.queryPurse(accountPurseReq);
         Map<Long, PurseAmountRes> purseAmountMap = purseAmountResList.stream().collect(Collectors.toMap(PurseAmountRes::getAccountId, Function.identity()));
 
         //查询商品位
-        accountPurseReq.setPurseType(PurseEnum.PurseType.GOODS_SEAT.getType());
+        accountPurseReq.setPurseType(PurseEnum.Type.GOODS_SEAT.getType());
         List<PurseAmountRes> goodsSeatList = financePurseApi.queryPurse(accountPurseReq);
         Map<Long, PurseAmountRes> goodsSeatMap = goodsSeatList.stream().collect(Collectors.toMap(PurseAmountRes::getAccountId, Function.identity()));
 
@@ -236,16 +237,16 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public AppAccountVO appVO(AccountKeyQuery query) {
-        CommonEnum.Client client = query.getClient();
+        AccountEnum.Client client = query.getClient();
         Long id = query.getAccountId();
         AccountVO accountVO = accountDomain.account(client, id);
         AppAccountVO appAccountVO = accountAssembler.account2AppVO(accountVO);
-        appAccountVO.setRole(SecurityUtils.getRole());
+        appAccountVO.setIdentity(SecurityUtils.getIdentity());
 
         // 获取channel角色表里的storePermission
 //        CommonEnum.YesOrNo storePermission = channelDAO.hasStore(id);
 //        appAccountVO.setHasStore(CommonEnum.YesOrNo.YES == storePermission);
-        appAccountVO.setHasChannel(accountVO.getRoleIdList().contains(RoleEnum.CompanyRole.CHANNEL.getCode() + ""));
+        appAccountVO.setHasChannel(accountVO.getIdentityList().contains(AccountEnum.Identity.CHANNEL.getCode() + ""));
         switch (client) {
             default:
                 break;
@@ -257,7 +258,7 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public Page<SupplierRes> supplierPage(SupplierQuery supplierQuery) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
 
         Page<SupplierRes> page = supplierClientDomain.supplierPage(supplierQuery);
 

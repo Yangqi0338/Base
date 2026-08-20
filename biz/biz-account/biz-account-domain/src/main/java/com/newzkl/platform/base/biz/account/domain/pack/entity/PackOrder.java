@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.domain.pack.entity;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
-import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackEnum;
 import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderDeliverCommand;
@@ -123,7 +123,7 @@ public class PackOrder implements Serializable {
                 .mapToInt(Integer::intValue)
                 .sum();
         this.shipVO = shipAddressVO == null ? null : JSON.toJSONString(shipAddressVO);
-        this.state = PackOrderStateEnum.WAIT_PAY.getCode();
+        this.state = PackEnum.PackOrderStateEnum.WAIT_PAY.getCode();
         PackGoodsRes first = packGoodsList.get(0);
         this.packLevel = first.getLevel();
         this.packType = first.getType();
@@ -148,11 +148,11 @@ public class PackOrder implements Serializable {
      * @param command 发货入参
      */
     public void packOrderDeliver(PackOrderDeliverCommand command) {
-        if (!checkState(Collections.singletonList(PackOrderStateEnum.WAIT_DELIVERY.getCode()))) {
+        if (!checkState(Collections.singletonList(PackEnum.PackOrderStateEnum.WAIT_DELIVERY.getCode()))) {
             throw new PlatformException(PackOrderErrorCode.ORDER_TIME_OUT);
         }
         this.freightCode = command.getFreightCode();
         this.freightCompany = command.getFreightCompany();
-        this.state = PackOrderStateEnum.SUCCESS.getCode();
+        this.state = PackEnum.PackOrderStateEnum.SUCCESS.getCode();
     }
 }

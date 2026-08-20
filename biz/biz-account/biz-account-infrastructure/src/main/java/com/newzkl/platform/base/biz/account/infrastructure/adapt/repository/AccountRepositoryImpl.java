@@ -8,17 +8,16 @@ import com.newzkl.platform.base.biz.account.infrastructure.dao.AccountDAO;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.AccountDO;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.ChildStructureReq;
-import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
+import com.newzkl.platform.base.common.core.redis.utils.SmsMethod;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import lombok.RequiredArgsConstructor;
@@ -54,11 +53,11 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean destroy(AccountVO accountVO, RoleEnum.CompanyRole role) {
+    public boolean destroy(AccountVO accountVO, AccountEnum.Identity identity) {
         // 移除角色
-        String roleIdStr = accountVO.getRoleIdList();
+        String roleIdStr = accountVO.getIdentityList();
         List<String> roleIdList = StrUtil.split(roleIdStr, ",");
-        CollUtil.removeAny(roleIdList, role.getCodeStr());
+        CollUtil.removeAny(roleIdList, identity.getCodeStr());
 
         // 若新旧一样,说明没角色可移除
         String newRoleIdStr = CollUtil.join(roleIdList, ",");
@@ -70,7 +69,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
             accountVO.setUsername(accountVO.getId().toString());
             accountVO.setState(AccountEnum.State.DESTROY);
         } else {
-            accountVO.setRoleIdList(newRoleIdStr);
+            accountVO.setIdentityList(newRoleIdStr);
         }
         return accountEdit(accountVO, null);
     }
@@ -97,16 +96,17 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
 
     @Override
-    public boolean accountSave(AccountVO account) {
+    public Long accountSave(AccountVO account) {
         if (account.getPid() == null || account.getPid() == 0) {
             // 根据不为空的pid构建关联的pidList和pRoleList
             if (StrUtil.isBlank(account.getPidList()) || StrUtil.isBlank(account.getPRoleList())) {
                 account.setPidList(BizUtil.getPidList(account.getPidList(), account.getId()));
-                account.setPRoleList(BizUtil.getPRoleList(account.getPRoleList(), account.getRoleIdList()));
+                account.setPRoleList(BizUtil.getPIdentityList(account.getPRoleList(), account.getIdentityList()));
             }
         }
-
-        return accountDAO.insert(TransferUtils.transfer(account, AccountDO::new)) > 0;
+        AccountDO entity = TransferUtils.transfer(account, AccountDO::new);
+        accountDAO.insert(entity);
+        return entity.getId();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
     }
 
     @Override
-    public AccountVO account(CommonEnum.Client client, Long id) {
+    public AccountVO account(AccountEnum.Client client, Long id) {
         AccountQuery query = new AccountQuery();
         query.setClient(client);
         query.setId(id);
@@ -176,12 +176,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
     @Override
     public void verificationCode(VerificationCodeReq verificationCodeReq) {
-        // 若是测试且为通行验证码就直接放行
-        if (SecurityContextHolder.isDev()) {
-            return;
-        }
-        // TODO[infra-sms gateway]: boolean isRight = SmsMethod.verificationCode(verificationCodeReq);
-        boolean isRight = true;
+        boolean isRight = SmsMethod.verificationCode(verificationCodeReq);
         if (!isRight) {
             throw new PlatformException(AccountErrorCode.CODE_ERROR);
         }

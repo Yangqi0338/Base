@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.facade;
 
 
 import com.newzkl.platform.base.biz.finance.facade.model.ChannelConfigRes;
+import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 
 /**
  * @author niu
@@ -18,4 +19,5 @@ public interface AccountConfigFacade {
      */
     ChannelConfigRes queryChannelConfig(Long channelId);
 
+    void saveChannelChargeConfig(ChargeConfigChannelReq req);
 }

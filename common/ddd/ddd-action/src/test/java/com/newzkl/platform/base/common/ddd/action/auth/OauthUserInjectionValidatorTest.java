@@ -2,9 +2,9 @@ package com.newzkl.platform.base.common.ddd.action.auth;
 
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
-import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
+import com.newzkl.platform.base.common.ddd.model.auth.OauthIdentity;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.OauthUserInjectionValidator;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +47,7 @@ class OauthUserInjectionValidatorTest {
             SecurityContextHolder.set(TokenConstants.DETAILS_ACCOUNT_ID, String.valueOf(accountId));
         }
         if (roleId != null) {
-            SecurityContextHolder.set(TokenConstants.DETAILS_ROLE, String.valueOf(roleId));
+            SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, String.valueOf(roleId));
         }
     }
 
@@ -88,12 +88,12 @@ class OauthUserInjectionValidatorTest {
      */
     @Test
     void injectsRoleWhenLoggedIn() {
-        login(1001L, RoleEnum.CompanyRole.SUPPLIER.getCode());
+        login(1001L, AccountEnum.Identity.SUPPLIER.getCode());
         RoleReq bean = new RoleReq();
         assertTrue(validator.isValid(bean, null));
-        assertEquals(RoleEnum.CompanyRole.SUPPLIER.getCode(), bean.getRoleId());
-        assertEquals(String.valueOf(RoleEnum.CompanyRole.SUPPLIER.getCode()), bean.getRoleIdStr());
-        assertEquals(RoleEnum.CompanyRole.SUPPLIER, bean.getRole());
+        assertEquals(AccountEnum.Identity.SUPPLIER.getCode(), bean.getRoleId());
+        assertEquals(String.valueOf(AccountEnum.Identity.SUPPLIER.getCode()), bean.getRoleIdStr());
+        assertEquals(AccountEnum.Identity.SUPPLIER, bean.getRole());
     }
 
     /**
@@ -150,19 +150,19 @@ class OauthUserInjectionValidatorTest {
         /**
          * 角色ID
          */
-        @OauthRole
+        @OauthIdentity
         private Long roleId;
 
         /**
          * 角色ID字符串
          */
-        @OauthRole
+        @OauthIdentity
         private String roleIdStr;
 
         /**
          * 角色枚举
          */
-        @OauthRole
-        private RoleEnum.CompanyRole role;
+        @OauthIdentity
+        private AccountEnum.Identity identity;
     }
 }

@@ -13,10 +13,10 @@ import com.newzkl.platform.base.biz.order.model.vo.RefundOperationRecordVO;
 import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -45,7 +45,7 @@ public class RefundController {
      */
     @PostMapping("refundCreate")
     public PlatformResult<Long> refundCreate(@Validated @RequestBody RefundCommand refundCommand) {
-        refundCommand.setRole(RoleEnum.CompanyRole.MEMBER);
+        refundCommand.setIdentity(AccountEnum.Identity.MEMBER);
         Long refundId = refundService.refundCreate(refundCommand);
         return PlatformResult.success(refundId);
     }
@@ -56,7 +56,7 @@ public class RefundController {
      */
     @PostMapping("memberCancelRefund")
     public PlatformResult<Void> memberCancelRefund(@Validated @RequestBody IdCommand idObj) {
-        refundDomain.stopAudit(RoleEnum.CompanyRole.MEMBER, SecurityUtils.getAccountId(), idObj.getId());
+        refundDomain.stopAudit(AccountEnum.Identity.MEMBER, SecurityUtils.getAccountId(), idObj.getId());
         return PlatformResult.success();
     }
     /**
@@ -133,14 +133,14 @@ public class RefundController {
     }
 
     private static void appendRefundQuery(RefundQuery refundQuery) {
-        if(RoleEnum.CompanyRole.CHANNEL == SecurityUtils.getRole()){
+        if(AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()){
             refundQuery.setChannelId(SecurityUtils.getAccountId());
-        }else if(RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()){
+        }else if(AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()){
 
-        }else if(RoleEnum.CompanyRole.SUPPLIER == SecurityUtils.getRole()){
+        }else if(AccountEnum.Identity.SUPPLIER == SecurityUtils.getIdentity()){
             refundQuery.setSupplierId(SecurityUtils.getAccountId());
             refundQuery.setFromOrderStateNot(Collections.singletonList(OrderEnum.State.SENDING));
-        }else if(RoleEnum.CompanyRole.MEMBER == SecurityUtils.getRole()){
+        }else if(AccountEnum.Identity.MEMBER == SecurityUtils.getIdentity()){
             refundQuery.setMemberId(SecurityUtils.getAccountId());
         }else {
             ThrowsException.exception(BaseErrorCode.NOT_SERVICE);

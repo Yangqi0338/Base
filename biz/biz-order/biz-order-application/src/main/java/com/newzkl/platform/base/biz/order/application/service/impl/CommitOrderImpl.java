@@ -308,7 +308,7 @@ public class CommitOrderImpl implements CommitOrder {
         orderUpdate.setPayTime(LocalDateTime.now());
         orderUpdate.setPayType(command.getPaymentType());
         orderDomain.orderEdit(orderUpdate);
-        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.NEW,OrderEnum.State.MEMBER_WAIT_PAY,SecurityUtils.getAccountId(),SecurityUtils.getRole());
+        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.NEW,OrderEnum.State.MEMBER_WAIT_PAY,SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
 
         return payBaseResult;
     }

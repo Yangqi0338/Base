@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -13,7 +13,7 @@ import lombok.Data;
 public class WithdrawAmountVO {
 
     /** 角色 */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 客户id

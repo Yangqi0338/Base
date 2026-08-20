@@ -95,8 +95,8 @@ public class WithdrawServiceImpl implements WithdrawService {
             throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
         }
         // 根据角色code获取客户类型
-        PurseEnum.FinanceUser accountType = req.getAccountType();
-        if (accountType == PurseEnum.FinanceUser.SUPPLIER) {
+        PurseEnum.User accountType = req.getAccountType();
+        if (accountType == PurseEnum.User.SUPPLIER) {
             // limitAmount 为分 Integer 门槛
             Integer restrict = accountApi.limitAmount(SecurityUtils.getAccountId());
             if (restrict > 0 && req.getAmount().smallerThan(Money.of(restrict))) {
@@ -125,7 +125,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         req.setAccountId(SecurityUtils.getAccountId());
         req.setPurseType(rollOutApplyVO.getPurseType());
         req.setAccountType(rollOutApplyVO.getAccountType());
-        req.setAlterType(PurseEnum.PurseAlterType.ROLL_OUT);
+        req.setAlterType(PurseEnum.AlterType.ROLL_OUT);
         req.setAmount(rollOutApplyVO.getAmount());
         return req;
     }
@@ -135,7 +135,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         req.setAccountId(rollOutApplyVO.getAccountId());
         req.setPurseType(rollOutApplyVO.getPurseType());
         req.setAccountType(rollOutApplyVO.getAccountType());
-        req.setAlterType(PurseEnum.PurseAlterType.ROLL_OUT_REFUSE);
+        req.setAlterType(PurseEnum.AlterType.ROLL_OUT_REFUSE);
         req.setAmount(rollOutApplyVO.getApplyAmount());
         req.setJoinRecordId(rollOutApplyVO.getId());
         return req;
@@ -143,8 +143,8 @@ public class WithdrawServiceImpl implements WithdrawService {
 
     private void checkRollOutApply(RollOutApplyReq req, ChannelConfigVO channelConfigVO) {
         // 判断是否为渠道商且提现实为总余额
-        if (req.getAccountType() == PurseEnum.FinanceUser.CHANNEL &&
-                req.getPurseType() == PurseEnum.PurseType.GOODS_INCOME) {
+        if (req.getAccountType() == PurseEnum.User.CHANNEL &&
+                req.getPurseType() == PurseEnum.Type.GOODS_INCOME) {
             //校验最小提现金额
             if (channelConfigVO.getMinimumWithdrawalAmount().greaterThan(req.getAmount())) {
                 throw new PlatformException(FinanceErrorCode.LESS_THAN_MINIMUM_WITHDRAWAL_AMOUNT);

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.auth.model.oauth.req.*;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.AccountLoginLogRes;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.LoginRes;
 import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.List;
 
@@ -50,14 +50,11 @@ public interface AccountLoginService {
     Page<AccountLoginLogRes> accountLoginLogPage(AccountLoginLogQuery accountLoginLogQuery);
 
     /**
-     * 登录注册 集成
-     *
-     * @param codeLoginRegisterReq
-     * @return
+     * 注册(默认注册后自动登录)
+     * @param customSaveReq 注册请求
+     * @return 登录结果(login=false 时 token 为空)
      */
-    LoginRes loginRegister(CodeLoginRegisterReq codeLoginRegisterReq);
-
-    Long customeRegister(IdentityCustomSaveReq customSaveReq);
+    LoginRes register(AccountEnum.Client client, IdentityCustomSaveReq customSaveReq);
 
     /**
      * 修改密码
@@ -79,5 +76,5 @@ public interface AccountLoginService {
      * @param client
      * @param accountId
      */
-    List<RoleVO> accountRoleList(Long accountId, CommonEnum.Client client);
+    List<RoleVO> accountRoleList(Long accountId, AccountEnum.Client client);
 }

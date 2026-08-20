@@ -42,7 +42,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     @Override
     public List<AccountPurseVO> queryAccountPurse(AccountPurseQuery req) {
         if (req.getAccountType() == null) {
-            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRole()));
+            req.setAccountType(PurseEnum.User.getByRole(SecurityUtils.getIdentity()));
         }
         return accountPurseRepository.queryAccountPurse(req);
     }
@@ -50,7 +50,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     @Override
     public AccountPurseVO queryAccountPurchasePurse(AccountPurseQuery req) {
         if (req.getAccountType() == null) {
-            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRole()));
+            req.setAccountType(PurseEnum.User.getByRole(SecurityUtils.getIdentity()));
         }
 
         AccountPurseVO accountPurseVO = accountPurseRepository.queryAccountPurchasePurse(req);
@@ -114,7 +114,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
 
         List<AccountPurseAlterRecordVO> recordVOList = new ArrayList<>();
         for (AccountPurseAlterRecordReq req : reqs) {
-            PurseEnum.PurseType purseType = req.getPurseType();
+            PurseEnum.Type purseType = req.getPurseType();
             // 动账作用域三要素缺一不可: 任一为空都会让 getLw 少拼一个 WHERE 条件, 扩大动账范围
             if (req.getAccountId() == null || req.getAccountType() == null || purseType == null) {
                 throw new IllegalArgumentException(

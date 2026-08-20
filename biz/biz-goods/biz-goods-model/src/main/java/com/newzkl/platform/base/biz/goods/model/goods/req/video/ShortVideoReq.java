@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.video;
 
-import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
+import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

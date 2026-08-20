@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.user.model.relation.res;
 
 import com.newzkl.platform.base.biz.user.model.relation.vo.ConditionCalVO;
 import com.newzkl.platform.base.biz.user.model.relation.vo.PermissionVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.res.condition.Condition;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
@@ -20,7 +20,7 @@ public class LevelRes extends BaseRes implements Condition {
     /**
      * 业务类型 0 甄选师
      */
-    private RoleEnum.CompanyRole type;
+    private AccountEnum.Identity type;
     /**
      * 是否开启
      */

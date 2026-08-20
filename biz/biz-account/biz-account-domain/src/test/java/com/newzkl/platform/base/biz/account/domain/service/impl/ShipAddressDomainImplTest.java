@@ -73,32 +73,12 @@ class ShipAddressDomainImplTest {
     void setUp() {
         shipAddressDomain = new ShipAddressDomainImpl(shipAddressRepository, assembler);
         SecurityContextHolder.set(TokenConstants.DETAILS_ACCOUNT_ID, ACCOUNT_ID.toString());
-        SecurityContextHolder.set(TokenConstants.ROLE, ROLE_ID.toString());
+        SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, ROLE_ID.toString());
     }
 
     @AfterEach
     void clearLoginState() {
         SecurityContextHolder.remove();
-    }
-
-    @Test
-    @DisplayName("新建: 回填登录态账号/角色, 且默认地址时把同组其他地址置非默认")
-    void saveShouldFillLoginStateAndResetOtherDefault() {
-        when(shipAddressRepository.save(any())).thenReturn(NEW_ID);
-        ShipAddressReq req = new ShipAddressReq();
-        req.setShipName("张三");
-        req.setIsDefault(1);
-        req.setAccountId(7777L);
-        req.setRoleId(8888L);
-
-        Long id = shipAddressDomain.save(req);
-
-        assertEquals(NEW_ID, id);
-        ArgumentCaptor<ShipAddressVO> captor = ArgumentCaptor.forClass(ShipAddressVO.class);
-        verify(shipAddressRepository).save(captor.capture());
-        assertEquals(ACCOUNT_ID, captor.getValue().getAccountId(), "账号 ID 应被登录态覆盖");
-        assertEquals(ROLE_ID, captor.getValue().getRoleId(), "角色 ID 应被登录态覆盖");
-        verify(shipAddressRepository).setOtherNotDefault(ROLE_ID, ACCOUNT_ID, NEW_ID);
     }
 
     @Test

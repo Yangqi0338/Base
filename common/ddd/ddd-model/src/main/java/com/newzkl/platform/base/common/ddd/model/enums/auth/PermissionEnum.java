@@ -70,4 +70,5 @@ public final class PermissionEnum {
         private final String code;
         private final String value;
     }
+
 }

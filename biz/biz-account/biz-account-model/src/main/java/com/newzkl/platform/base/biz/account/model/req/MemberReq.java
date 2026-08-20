@@ -43,15 +43,6 @@ public class MemberReq extends BaseReq {
      */
     private String wxId;
     /**
-     * 统计：成交笔数
-     */
-    private Integer countDealNumber;
-    /**
-     * 统计：成交金额
-     * @ext Money, 落库 BIGINT 分
-     */
-    private Money countDealAmount;
-    /**
      * 渠道商ID
      */
     private Long channelId;

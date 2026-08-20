@@ -3,11 +3,10 @@ package com.newzkl.platform.base.biz.account.domain.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
-import com.newzkl.platform.base.common.core.sms.VerificationCodeReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public interface AccountRepository {
      *
      * @param account 账号实体
      */
-    boolean accountSave(AccountVO account);
+    Long accountSave(AccountVO account);
 
     /**
      * 删除账号
@@ -46,7 +45,7 @@ public interface AccountRepository {
      * @param id 账号ID
      * @return 账号VO
      */
-    AccountVO account(CommonEnum.Client client, Long id);
+    AccountVO account(AccountEnum.Client client, Long id);
 
     /**
      * 查询账号
@@ -108,7 +107,7 @@ public interface AccountRepository {
      * @param accountVO      账号
      * @param role 注销角色
      */
-    boolean destroy(AccountVO accountVO, RoleEnum.CompanyRole role);
+    boolean destroy(AccountVO accountVO, AccountEnum.Identity identity);
 
     /**
      * 根据账号ID查询范围内子账号结构

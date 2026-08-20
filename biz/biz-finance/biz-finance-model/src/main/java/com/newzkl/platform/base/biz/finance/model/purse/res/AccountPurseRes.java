@@ -36,12 +36,12 @@ public class AccountPurseRes {
     /**
      * 账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 客户类型, 取值见 {@code PurseEnum.FinanceUser} (1 进账 2 出账)
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 收益

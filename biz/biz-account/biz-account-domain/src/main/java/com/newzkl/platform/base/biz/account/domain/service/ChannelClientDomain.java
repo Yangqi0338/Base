@@ -19,7 +19,7 @@ public interface ChannelClientDomain {
 
     Long channelCustomSave(ChannelCustomSaveReq customSaveReq);
 
-    int channelEdit(ChannelReq channelReq);
+    Boolean channelEdit(ChannelReq channelReq);
 
     int channelDelete(List<Long> channelIdList);
 
@@ -30,7 +30,7 @@ public interface ChannelClientDomain {
     /**
      * 修改渠道商
      */
-    int updateChannel(ChannelUpdateReq channelCreateReq);
+    Boolean updateChannel(ChannelUpdateReq channelCreateReq);
 
     Page<ChannelVO> channelPageList(ChannelQuery channelQuery);
 

@@ -1,11 +1,10 @@
 package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 
 import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 /**
  * 账户域跨服务出站端口 (outbound port)
@@ -24,7 +23,7 @@ public interface AccountApi {
      * @param accountId 账户ID
      * @return 账户基础信息, 无则 null
      */
-    AccountGroupVO account(CommonEnum.Client client, Long accountId);
+    AccountGroupVO account(AccountEnum.Client client, Long accountId);
 
     /**
      * 获取账户多级上级链路
@@ -33,7 +32,7 @@ public interface AccountApi {
      * @param accountId 账户ID
      * @return 上级链路结果
      */
-    UpIdRes upId(CommonEnum.Client client, Long accountId);
+    UpIdRes upId(AccountEnum.Client client, Long accountId);
 
     /**
      * 增加账户提货积分
@@ -79,5 +78,5 @@ public interface AccountApi {
      * @param level 甄选师等级
      * @return
      */
-    PermissionRpcVO levelPermissionVO(RoleEnum.CompanyRole role, Integer level);
+    PermissionRpcVO levelPermissionVO(AccountEnum.Identity identity, Integer level);
 }

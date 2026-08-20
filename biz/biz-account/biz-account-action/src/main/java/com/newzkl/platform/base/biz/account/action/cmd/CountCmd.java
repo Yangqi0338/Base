@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.action.cmd;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.BIEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -25,10 +26,10 @@ public class CountCmd {
     public static class UserAccount implements Serializable {
 
         /**
-         * 角色 ID
+         * 身份
          */
         @NotNull
-        private Long roleId;
+        private AccountEnum.Identity identity;
 
         /**
          * 账号 ID

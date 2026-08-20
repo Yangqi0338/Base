@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.dto;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
@@ -65,7 +65,7 @@ public class OrderStateRecordEntity {
     /**
      * 操作人角色
      */
-    private RoleEnum.CompanyRole operatorRoleId;
+    private AccountEnum.Identity operatorRoleId;
 
     /**
      * 角色描述（如：C端客户、系统、平台管理员）

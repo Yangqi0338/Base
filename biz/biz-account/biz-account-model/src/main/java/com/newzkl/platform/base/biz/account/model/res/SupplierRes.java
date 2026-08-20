@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class SupplierRes extends BaseRes {
     /**
      * 角色 ID（等值于 {@code RoleEnum.CompanyRole.SUPPLIER.getCode()}，供前端统一处理）
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 角色名称
      */

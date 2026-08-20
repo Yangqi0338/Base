@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class SupplierAccountVO extends BaseRes {
     /**
      * 角色ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 角色名称
      */

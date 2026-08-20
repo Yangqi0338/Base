@@ -4,12 +4,11 @@ import com.newzkl.platform.base.biz.account.facade.AccountFacade;
 import com.newzkl.platform.base.biz.account.facade.LevelFacade;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.finance.model.support.api.UpIdRes;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,12 +29,12 @@ public class AccountApiImpl implements AccountApi {
     private LevelFacade levelFacade;
 
     @Override
-    public AccountGroupVO account(CommonEnum.Client client, Long accountId) {
+    public AccountGroupVO account(AccountEnum.Client client, Long accountId) {
         return accountFacade.accountInfo(client, accountId);
     }
 
     @Override
-    public UpIdRes upId(CommonEnum.Client client, Long accountId) {
+    public UpIdRes upId(AccountEnum.Client client, Long accountId) {
         // TODO[cross-service]: 远程 user 上级链路查询, 默认返回空对象
         return null;
     }
@@ -56,7 +55,7 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public PermissionRpcVO levelPermissionVO(RoleEnum.CompanyRole role, Integer level) {
-        return levelFacade.levelPermissionVO(role, level);
+    public PermissionRpcVO levelPermissionVO(AccountEnum.Identity identity, Integer level) {
+        return levelFacade.levelPermissionVO(identity, level);
     }
 }

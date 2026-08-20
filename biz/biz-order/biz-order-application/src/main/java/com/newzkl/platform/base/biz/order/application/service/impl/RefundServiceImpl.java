@@ -24,7 +24,7 @@ import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
 import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -117,11 +117,11 @@ public class RefundServiceImpl implements RefundService {
         //审核
         RefundAuditRes refundAuditRes = null;
         if(CommonEnum.YesOrNo.YES == execute){
-            refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.SUPPLIER);
+            refundAuditRes = refundDomain.agreeAuditV2(refundId, AccountEnum.Identity.SUPPLIER);
 
             com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_AGREE;
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), refundOperateTypeEnum);
-        }else {refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.SUPPLIER, "");
+        }else {refundAuditRes = refundDomain.refuseAudit(refundId, AccountEnum.Identity.SUPPLIER, "");
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_REFUSE);
         }
 
@@ -152,11 +152,11 @@ public class RefundServiceImpl implements RefundService {
         //审核
         RefundAuditRes refundAuditRes = null;
         if(CommonEnum.YesOrNo.YES == execute){
-            refundAuditRes = refundDomain.agreeAuditV2(refundId, RoleEnum.CompanyRole.CHANNEL);
+            refundAuditRes = refundDomain.agreeAuditV2(refundId, AccountEnum.Identity.CHANNEL);
             com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_AGREE;
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refundOperateTypeEnum);
         }else {
-            refundAuditRes = refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.CHANNEL, reason);
+            refundAuditRes = refundDomain.refuseAudit(refundId, AccountEnum.Identity.CHANNEL, reason);
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_REFUSE);
         }
 

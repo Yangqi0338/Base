@@ -17,7 +17,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -241,6 +241,6 @@ class LevelDomainImplTest {
         assertEquals(PACK_GOODS_ID, info.getId());
         assertEquals(199, info.getAmount());
         assertEquals(1, info.getLevel());
-        assertEquals(RoleEnum.CompanyRole.CHANNEL, info.getType());
+        assertEquals(AccountEnum.Identity.CHANNEL, info.getType());
     }
 }

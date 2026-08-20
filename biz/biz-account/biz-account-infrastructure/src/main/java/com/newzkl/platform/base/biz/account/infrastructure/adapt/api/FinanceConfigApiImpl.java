@@ -22,22 +22,22 @@ import org.springframework.stereotype.Component;
 public class FinanceConfigApiImpl implements FinanceConfigApi {
 
     @RpcReference
-    private AccountConfigFacade accountFinanceConfigFacade;
+    private AccountConfigFacade purseConfigFacade;
 
     @Override
     public void saveChannelChargeConfig(ChargeConfigChannelReq req) {
-        // TODO[cross-service]: 远程 finance 保存渠道商充值配置, 默认空实现
+        purseConfigFacade.saveChannelChargeConfig(req);
     }
 
     @Override
     public ChannelServiceAmountRes queryChannelConfig(Long channelId) {
-        ChannelConfigRes channelConfigRes = accountFinanceConfigFacade.queryChannelConfig(channelId);
+        ChannelConfigRes channelConfigRes = purseConfigFacade.queryChannelConfig(channelId);
         return TransferUtils.transfer(channelConfigRes, ChannelServiceAmountRes.class);
     }
 
     @Override
     public ChannelNowServiceFeeRes queryChannelNowServiceFee(Long channelId) {
-        ChannelConfigRes channelConfigRes = accountFinanceConfigFacade.queryChannelConfig(channelId);
+        ChannelConfigRes channelConfigRes = purseConfigFacade.queryChannelConfig(channelId);
         return new ChannelNowServiceFeeRes(channelId, channelConfigRes.getPlatformNowValue(), channelConfigRes.getOperatorNowValue());
     }
 }

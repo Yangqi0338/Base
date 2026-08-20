@@ -4,7 +4,7 @@ import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,29 +26,29 @@ class IdentityDispatcherTest {
     @Test
     void resolveHitsMatchingImplByRoleId() {
         IdentityDispatcher dispatcher = new IdentityDispatcher();
-        dispatcher.register(Greeter.class, (Greeter) () -> "platform", new RoleEnum.CompanyRole[]{RoleEnum.CompanyRole.PLATFORM, RoleEnum.CompanyRole.EMP});
-        dispatcher.register(Greeter.class, (Greeter) () -> "channel", new RoleEnum.CompanyRole[]{RoleEnum.CompanyRole.CHANNEL});
+        dispatcher.register(Greeter.class, (Greeter) () -> "platform", new AccountEnum.Identity[]{AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP});
+        dispatcher.register(Greeter.class, (Greeter) () -> "channel", new AccountEnum.Identity[]{AccountEnum.Identity.CHANNEL});
 
-        SecurityContextHolder.set(TokenConstants.DETAILS_ROLE, "1002");
+        SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, "1002");
         assertEquals("channel", dispatcher.resolve(Greeter.class).hi());
     }
 
     @Test
     void resolveFallsBackToCatchAllWhenNoConditionMatches() {
         IdentityDispatcher dispatcher = new IdentityDispatcher();
-        dispatcher.register(Greeter.class, (Greeter) () -> "platform", new RoleEnum.CompanyRole[]{RoleEnum.CompanyRole.PLATFORM, RoleEnum.CompanyRole.EMP});
-        dispatcher.register(Greeter.class, (Greeter) () -> "fallback", new RoleEnum.CompanyRole[]{});
+        dispatcher.register(Greeter.class, (Greeter) () -> "platform", new AccountEnum.Identity[]{AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP});
+        dispatcher.register(Greeter.class, (Greeter) () -> "fallback", new AccountEnum.Identity[]{});
 
-        SecurityContextHolder.set(TokenConstants.DETAILS_ROLE, "1001");
+        SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, "1001");
         assertEquals("fallback", dispatcher.resolve(Greeter.class).hi());
     }
 
     @Test
     void resolveThrowsWhenNoMatchAndNoCatchAll() {
         IdentityDispatcher dispatcher = new IdentityDispatcher();
-        dispatcher.register(Greeter.class, (Greeter) () -> "platform", new RoleEnum.CompanyRole[]{RoleEnum.CompanyRole.PLATFORM, RoleEnum.CompanyRole.EMP});
+        dispatcher.register(Greeter.class, (Greeter) () -> "platform", new AccountEnum.Identity[]{AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP});
 
-        SecurityContextHolder.set(TokenConstants.DETAILS_ROLE, "1001");
+        SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, "1001");
         Greeter proxy = dispatcher.resolve(Greeter.class);
         PlatformException ex = assertThrows(PlatformException.class, proxy::hi);
         assertEquals("1010", ex.getCode());

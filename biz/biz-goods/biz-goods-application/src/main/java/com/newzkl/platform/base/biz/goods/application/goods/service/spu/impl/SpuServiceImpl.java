@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuServi
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
@@ -28,7 +29,6 @@ import com.newzkl.platform.base.common.ddd.facade.SupplierSpuStatisticsQuery;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -142,8 +142,7 @@ public class SpuServiceImpl implements SpuService {
             throw new PlatformException(SpuErrorCode.EXISTS);
         }
         SpuDTO spuDTO = TransferUtils.transfer(spuVO, SpuDTO::new);
-        spuDTO.setRoleId(RoleEnum.CompanyRole.PLATFORM.getCode());
-        spuDTO.setRole(RoleEnum.CompanyRole.PLATFORM);
+        spuDTO.setIdentity(AccountEnum.Identity.PLATFORM);
         return spuDomain.spuPreSave(spuDTO);
     }
 

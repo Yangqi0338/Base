@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.user.model.relation.res.condition;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.LevelEnum;
 import com.newzkl.platform.base.biz.user.model.relation.req.ConditionReq;
 import com.newzkl.platform.base.biz.user.model.relation.req.TeamUserCountReq;
@@ -32,7 +33,7 @@ public class TeamNoDirectCondition implements Condition {
     /**
      * 角色
      */
-    private List<Long> role;
+    private List<AccountEnum.Identity> identity;
 
     @Override
     public double isMeet(ConditionReq conditionCommand) {
@@ -44,7 +45,7 @@ public class TeamNoDirectCondition implements Condition {
 
         List<TeamUserCountReq> teamAddList = teamAddMap.getOrDefault(LevelEnum.AmountConditionScope.NOT_DIRECT.getCode(), CollUtil.newArrayList());
         countParam += teamAddList.stream()
-                .filter(it -> it.getType() != null && role.contains(it.getType()))
+                .filter(it -> it.getType() != null && identity.contains(it.getType()))
                 .filter(it -> it.getLevel() != null && level.contains(it.getLevel()))
                 .mapToInt(TeamUserCountReq::getCount).sum();
 

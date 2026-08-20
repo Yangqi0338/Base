@@ -434,7 +434,7 @@ public class SpuRepositoryImpl implements SpuRepository {
                 .notEmptyLike(SpuDO::getTitle, query.getTitle());
         wrapper.notEmptyEq(SpuDO::getDeliverTimeType, query.getDeliverTimeType())
                 .notEmptyEq(SpuDO::getChannelType, query.getChannelType())
-                .notEmptyEq(SpuDO::getRole, query.getRole())
+                .notEmptyEq(SpuDO::getIdentity, query.getIdentity())
                 .notEmptyEq(SpuDO::getBrandId, query.getBrandId())
                 .notEmptyEq(SpuDO::getFreightTemplateId, query.getFreightTemplateId())
                 .notEmptyEq(SpuDO::getOutSpuId, query.getOutSpuId())

@@ -1,8 +1,7 @@
 package com.newzkl.platform.base.biz.account.application.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.*;
 import com.newzkl.platform.base.biz.account.model.vo.*;
@@ -23,7 +22,7 @@ public interface UserQueryService {
      * @param userId
      * @return
      */
-    AccountOutRes accountOutVO(CommonEnum.Client client, Long userId);
+    AccountOutRes accountOutVO(AccountEnum.Client client, Long userId);
 
     /**
      * 账号外部视图
@@ -40,7 +39,7 @@ public interface UserQueryService {
      * @param role
      * @return
      */
-    Object userIdentityDetail(Long id, RoleEnum.CompanyRole role);
+    Object userIdentityDetail(Long id, AccountEnum.Identity identity);
 
     /**
      * 账号视图 by 邀请码

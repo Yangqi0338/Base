@@ -13,13 +13,12 @@ import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
 import com.newzkl.platform.base.biz.account.model.res.ChannelPageRes;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,11 +52,11 @@ public class ChannelController {
      */
     @PostMapping("/channelEdit")
     public PlatformResult<Void> channelEdit(@Validated @RequestBody ChannelReq req) {
-        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()) {
             if (req.getId() == null) {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
-        } else if (RoleEnum.CompanyRole.CHANNEL == SecurityUtils.getRole()) {
+        } else if (AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()) {
             req.setId(SecurityUtils.getAccountId());
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -81,20 +80,16 @@ public class ChannelController {
     /**
      * 渠道商分页
      *
-     * <p>保留旧角色分流校验: 平台端排除已注销; 交易师 / 运营商 / 运营商游客按本人归属过滤; 其余角色抛参数异常。
-     * 迁移补充: 中台 {@code ChannelQuery} 无 {@code upOperatorId} 筛选字段, 归属过滤未能表达,
-     * 见迁移报告「数据隔离降级」。</p>
-     *
      * @param channelQuery 渠道商查询
      * @return 渠道商分页
      */
     @PostMapping("channelListVO")
     public PlatformResult<Page<ChannelVO>> channelPage(@RequestBody ChannelQuery channelQuery) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        CommonEnum.Client client = SecurityUtils.getClient();
-        if (RoleEnum.CompanyRole.PLATFORM == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        AccountEnum.Client client = SecurityUtils.getClient();
+        if (AccountEnum.Identity.PLATFORM == identity) {
             channelQuery.setStateOver(ChannelEnum.State.DESTORY);
-        } else if (CommonEnum.Client.PARTNER != client) {
+        } else if (AccountEnum.Client.PARTNER != client) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
         return PlatformResult.success(userQueryService.channelPage(channelQuery));
@@ -114,20 +109,6 @@ public class ChannelController {
             return PlatformResult.success(new Page<>());
         }
         return PlatformResult.success(userQueryService.channelPage(channelQuery));
-    }
-
-    /**
-     * 渠道商上级交易师修改
-     *
-     * <p>旧 {@code @Limit(code=1023, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
-     *
-     * @param command 上级交易师修改入参
-     * @return 空结果
-     */
-    @PostMapping("channelUpEdit")
-    public PlatformResult<Void> channelUpEdit(@Validated @RequestBody ChannelCmd.ChannelUpEdit command) {
-        identityService.channelUpEdit(command.getChannelId(), command.getDealerId());
-        return PlatformResult.success();
     }
 
     /**

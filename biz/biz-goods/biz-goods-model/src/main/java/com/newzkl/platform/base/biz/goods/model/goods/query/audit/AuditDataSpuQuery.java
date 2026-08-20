@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.goods.model.goods.query.audit;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -34,7 +34,7 @@ public class AuditDataSpuQuery extends PageQuery implements Serializable {
     /**
      * 发起人企业角色ID (查询)
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 审批状态
      */

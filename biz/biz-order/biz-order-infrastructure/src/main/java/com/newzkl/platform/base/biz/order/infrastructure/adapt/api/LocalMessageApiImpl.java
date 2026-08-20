@@ -3,14 +3,12 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
-import com.newzkl.platform.base.biz.order.domain.adapt.api.StoreAccountPayCommand;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationRecordRPC;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiDeliverEvent;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
@@ -18,10 +16,10 @@ import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +69,7 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
-    public void sendOrderNewRecordEvent(List<SpuOrderDTO> spuOrderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, RoleEnum.CompanyRole operatorRoleId) {
+    public void sendOrderNewRecordEvent(List<SpuOrderDTO> spuOrderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, AccountEnum.Identity operatorRoleId) {
         spuOrderList.forEach(spuOrder -> {
             OrderStateRecordRPC orderStateRecordRPC = new OrderStateRecordRPC();
             orderStateRecordRPC.setOrderId(spuOrder.getOrderId());
@@ -147,12 +145,12 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     private void fillOperatorInfo(RefundOperationRecordRPC recordRPC) {
         if (ObjectUtil.isNull(SecurityUtils.getAccountId())){
             recordRPC.setOperatorId(0L);
-            recordRPC.setOperatorRoleCode(RoleEnum.CompanyRole.PLATFORM);
-            recordRPC.setOperatorClient(CommonEnum.Client.ADMIN.getCode());
+            recordRPC.setOperatorRoleCode(AccountEnum.Identity.PLATFORM);
+            recordRPC.setOperatorClient(AccountEnum.Client.ADMIN.getCode());
             recordRPC.setOperatorName("系统");
         }else {
             recordRPC.setOperatorId(SecurityUtils.getAccountId());
-            recordRPC.setOperatorRoleCode(SecurityUtils.getRole());
+            recordRPC.setOperatorRoleCode(SecurityUtils.getIdentity());
             recordRPC.setOperatorClient(SecurityUtils.getClient().name());
             recordRPC.setOperatorName(SecurityUtils.getUsername());
         }

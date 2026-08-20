@@ -19,7 +19,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,7 +111,7 @@ public class LevelDomainImpl implements LevelDomain {
         info.setId(res.getId());
         info.setAmount(res.getAmount());
         info.setLevel(res.getLevel());
-        info.setType(res.getType() == null ? null : RoleEnum.CompanyRole.getByCode(res.getType().longValue()));
+        info.setType(res.getType() == null ? null : AccountEnum.Identity.getByCode(res.getType().longValue()));
         return info;
     }
 

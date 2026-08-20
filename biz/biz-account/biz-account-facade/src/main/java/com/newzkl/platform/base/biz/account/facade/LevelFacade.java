@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.account.facade;
 import com.newzkl.platform.base.common.ddd.facade.ConditionCommand;
 import com.newzkl.platform.base.common.ddd.facade.LevelRpcVO;
 import com.newzkl.platform.base.common.ddd.facade.PermissionRpcVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 /**
  * @author muc_fang
@@ -34,5 +34,5 @@ public interface LevelFacade {
      * @param level 甄选师等级
      * @return
      */
-    PermissionRpcVO levelPermissionVO(RoleEnum.CompanyRole role, Integer level);
+    PermissionRpcVO levelPermissionVO(AccountEnum.Identity identity, Integer level);
 }

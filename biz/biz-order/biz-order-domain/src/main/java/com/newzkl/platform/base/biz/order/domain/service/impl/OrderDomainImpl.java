@@ -27,6 +27,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -38,7 +39,6 @@ import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
 import com.newzkl.platform.base.common.ddd.model.constant.DeliverErrorCode;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
@@ -187,7 +187,7 @@ public class OrderDomainImpl implements OrderDomain {
 
         orderIdList.forEach(id ->{
             OrderAgg orderAgg = orderAgg(id);
-            localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.SENDING,OrderEnum.State.WAIT_DELIVERY,RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.SENDING,OrderEnum.State.WAIT_DELIVERY, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
         });
     }
 
@@ -330,9 +330,9 @@ public class OrderDomainImpl implements OrderDomain {
         // 3 触发订单状态同步
         tripSpuOrderChange(null, null, skuOrderIdList);
         if (Objects.isNull(SecurityUtils.getAccountId())){
-            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.DOWN_RECEIVE,RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.DOWN_RECEIVE, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
         }else {
-            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.DOWN_RECEIVE,SecurityUtils.getAccountId(),SecurityUtils.getRole());
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.DOWN_RECEIVE,SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
         }
 
         return new ReceiveSkuOrderRes(waitSettlementOrderId, TransferUtils.transfers(waitSettlementOrder, SkuOrderVO.class));
@@ -393,9 +393,9 @@ public class OrderDomainImpl implements OrderDomain {
         // 3 触发订单状态同步
         tripSpuOrderChange(null, null, skuOrderIdList);
         if (Objects.isNull(SecurityUtils.getAccountId())){
-            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.SUCCESS,RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.SUCCESS, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
         }else {
-            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.SUCCESS,SecurityUtils.getAccountId(),SecurityUtils.getRole());
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.SUCCESS,SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
         }
 
         return new CompleteSkuOrderRes(waitSettlementOrderId, waitSettlementOrder,settleType);
@@ -429,7 +429,7 @@ public class OrderDomainImpl implements OrderDomain {
 
         SpuOrderDTO spuOrder = new SpuOrderDTO();
         BeanUtils.copyProperties(spuOrderAggVO.getSpuOrderVO(), spuOrder);
-        localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.CLOSE,SecurityUtils.getAccountId(),SecurityUtils.getRole());
+        localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.CLOSE,SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
     }
 
     @Override
@@ -470,9 +470,9 @@ public class OrderDomainImpl implements OrderDomain {
         SpuOrderDTO spuOrder = new SpuOrderDTO();
         BeanUtils.copyProperties(spuOrderAggVO.getSpuOrderVO(), spuOrder);
         if (Objects.isNull(SecurityUtils.getAccountId())){
-            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(), OrderEnum.State.CLOSE, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(), OrderEnum.State.CLOSE, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
         }else {
-            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(), OrderEnum.State.CLOSE, SecurityUtils.getAccountId(), SecurityUtils.getRole());
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(), OrderEnum.State.CLOSE, SecurityUtils.getAccountId(), SecurityUtils.getIdentity());
         }
     }
 

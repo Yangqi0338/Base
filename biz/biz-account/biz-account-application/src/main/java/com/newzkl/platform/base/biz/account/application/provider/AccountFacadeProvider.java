@@ -1,29 +1,30 @@
 package com.newzkl.platform.base.biz.account.application.provider;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
-import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
+import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
+import com.newzkl.platform.base.biz.account.facade.model.AccountRpcQuery;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
+import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
-import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.facade.AccountRpcVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,8 +32,8 @@ import java.util.stream.Collectors;
 public class AccountFacadeProvider implements AccountFacade {
 
     private final AccountRepository accountRepository;
+    private final AccountDomain accountDomain;
     private final ChannelClientDomain channelDomain;
-    private final MemberRepository memberRepository;
 
     @Override
     public List<AccountGroupVO> listAccountByIds(List<Long> accountIdList) {
@@ -42,11 +43,10 @@ public class AccountFacadeProvider implements AccountFacade {
 
     @Override
     public List<Long> queryMember(String nickname) {
-        List<MemberVO> memberVOS = memberRepository.queryMember(nickname);
-        if (CollectionUtil.isNotEmpty(memberVOS)){
-            return memberVOS.stream().map(MemberVO::getId).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        AccountQuery query = new AccountQuery();
+        query.setNickname(nickname);
+        query.setClient(AccountEnum.Client.USER);
+        return accountRepository.findIdList(query);
     }
 
     @Override
@@ -57,31 +57,31 @@ public class AccountFacadeProvider implements AccountFacade {
         }
         AccountGroupVO accountGroupVO = new AccountGroupVO();
         accountGroupVO.setId(account.getId());
-        return accountGroupVO.setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
+        return accountGroupVO.setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
     }
 
     @Override
-    public AccountGroupVO accountInfo(CommonEnum.Client client, Long id) {
+    public AccountGroupVO accountInfo(AccountEnum.Client client, Long id) {
         AccountVO account = accountRepository.account(client,id);
         if (account == null) {
             return null;
         }
         AccountGroupVO accountGroupVO = new AccountGroupVO();
         accountGroupVO.setId(account.getId());
-        return new AccountGroupVO().setUserAccount(account.getUserAccount()).setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
+        return new AccountGroupVO().setNickname(account.getNickname()).setPhone(account.getPhone()).setHead(account.getHead());
 
     }
 
     @Override
     public boolean registerChannel(ChannelRegisterReq req) {
         Long accountId = req.getAccountId();
-        RoleEnum.CompanyRole role = req.getRole();
+        AccountEnum.Identity identity = req.getIdentity();
         CommonEnum.YesOrNo storePermission = req.getStorePermission();
         String phone = req.getContactPhone();
         String contactName = req.getContactName();
         String storeName = req.getStoreName();
 
-        if (RoleEnum.CompanyRole.CHANNEL == role) {
+        if (AccountEnum.Identity.CHANNEL == identity) {
             ChannelReq channelReq = new ChannelReq();
             channelReq.setState(ChannelEnum.State.OPEN);
             channelReq.setStorePermission(storePermission);
@@ -89,21 +89,44 @@ public class AccountFacadeProvider implements AccountFacade {
             channelReq.setStoreName(storeName);
             channelReq.setContactsWay(phone);
 
-            return channelDomain.channelEdit(channelReq) > 0;
+            return channelDomain.channelEdit(channelReq);
         } else {
-            AccountVO accountVO = accountRepository.account(role.getClient(), accountId);
+            AccountVO accountVO = accountRepository.account(identity.getClient(), accountId);
             IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
-            saveReq.setUsername(accountVO.getUsername());
             saveReq.setHeadImg(accountVO.getHead());
             saveReq.setContactsWay(phone);
-            saveReq.setName(accountVO.getRealName());
+            saveReq.setName(accountVO.getRealname());
             saveReq.setStoreName(storeName);
             saveReq.setContactsName(contactName);
 //        saveReq.setChannelType();
             saveReq.setStorePermission(storePermission);
-            IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(role)
+            IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(identity)
                     .customRegister(saveReq);
             return registerRes.isSuccess();
         }
+    }
+
+    @Override
+    public AccountRpcVO accountInfo(AccountRpcQuery query) {
+        AccountVO account = accountRepository.account(TransferUtils.transfer(query, AccountQuery::new));
+        return TransferUtils.transfer(account, AccountRpcVO::new);
+    }
+
+    @Override
+    public AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq) {
+        registerRpcReq.forEach(req -> {
+            accountDomain.register(req);
+            IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
+            AbsIdentityPolicySupport.getPolicy(req.getIdentity())
+                    .customRegister(saveReq);
+        });
+
+        return null;
+    }
+
+    @Override
+    public boolean accountEdit(AccountRpcVO rpcVO) {
+        AccountReq req = TransferUtils.transfer(rpcVO, AccountReq.class);
+        return accountDomain.accountEdit(req);
     }
 }

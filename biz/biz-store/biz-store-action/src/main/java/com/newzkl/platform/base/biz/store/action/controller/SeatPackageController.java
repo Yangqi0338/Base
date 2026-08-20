@@ -9,8 +9,8 @@ import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class SeatPackageController {
      */
     @PostMapping("/seatPackagePage")
     public PlatformResult<Page<SeatPackageRes>> seatPackagePage(@Validated @RequestBody SeatPackageQuery req) {
-        req.setRole(SecurityUtils.getRole());
+        req.setIdentity(SecurityUtils.getIdentity());
         return PlatformResult.success(seatPackageDomain.seatPackagePage(req));
     }
 
@@ -59,7 +59,7 @@ public class SeatPackageController {
      * @return 渠道商席位套餐详情
      */
     @PostMapping("seatPackageStoreVO")
-    @RoleLimit({RoleEnum.CompanyRole.CHANNEL})
+    @RoleLimit({AccountEnum.Identity.CHANNEL})
     public PlatformResult<SeatPackageChannelRes> seatPackageStoreVO() {
         Long accountId = SecurityUtils.getAccountId();
         return PlatformResult.success(seatPackageService.seatPackageStoreVO(accountId));

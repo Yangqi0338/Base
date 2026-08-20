@@ -13,11 +13,11 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.biz.vo.CategoryLayerVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiCategoryVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -162,8 +162,8 @@ public class SpuCategoryServiceImpl implements SpuCategoryService {
      */
     @Override
     public List<SpuCategoryVO> categoryList(SpuCategoryQuery categoryQuery) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.SUPPLIER == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.SUPPLIER == identity) {
             log.warn(GAP + "供应商分类列表未按所属行业过滤, 缺 user 域 supplierFacade 取行业列表能力");
         }
         return fillSpuNum(spuCategoryRepository.categoryList(categoryQuery));

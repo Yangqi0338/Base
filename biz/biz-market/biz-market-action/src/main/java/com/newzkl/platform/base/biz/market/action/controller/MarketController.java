@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.market.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.domain.market.MarketDomain;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.biz.market.model.query.market.AppBindMarketGoodsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.market.ChannelMarketPageQuery;
@@ -17,7 +18,6 @@ import com.newzkl.platform.base.biz.market.model.vo.market.BindMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketUserVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketVO;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,7 +113,7 @@ public class MarketController {
     @PostMapping("/queryMarketList/v2")
     public PlatformResult<Page<MarketVO>> queryMarketListV2(@RequestBody MarketPageQuery req) {
         req.setMarketLevel(2);
-        req.setSubBindType(MarketEnum.User.accountTypeByRole(SecurityUtils.getRole()));
+        req.setSubBindType(MarketEnum.User.accountTypeByRole(SecurityUtils.getIdentity()));
         if (req.getSubBindUser() == null) {
             req.setSubBindUser(SecurityUtils.getAccountId());
         }
@@ -213,8 +213,8 @@ public class MarketController {
         if (currentBindType != null) {
             return;
         }
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.CHANNEL == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.CHANNEL == identity) {
             bindTypeSetter.accept(MarketEnum.User.CHANNEL.getType());
         }
     }

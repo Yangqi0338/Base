@@ -41,16 +41,16 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
         ConfigSupplierVO supplierConfigVO = accountPurseConfigDomain.querySupplierConfig();
         Integer totalFee = req.getPurchaseNum() * supplierConfigVO.getSkuSpaceFee();
         // 扣供应商营销金 (非总账户、可负均 false)
-        AccountPurseQuery subQuery = buildQuery(req.getSupplierId(), PurseEnum.PurseType.MARKETING);
+        AccountPurseQuery subQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.MARKETING);
         if (accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(totalFee), false, false, false) == 1) {
             // 扣减成功才增加商品位额度
-            AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.PurseType.GOODS_SEAT);
+            AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT);
             accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(req.getPurchaseNum()), true, false);
             List<AccountPurseAlterRecordVO> records = new ArrayList<>();
-            records.add(buildRecord(req.getSupplierId(), PurseEnum.PurseType.MARKETING, Money.of(totalFee),
-                    EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.PurseAlterType.GOODS_POSITION_BUY, 0L));
-            records.add(buildRecord(req.getSupplierId(), PurseEnum.PurseType.GOODS_SEAT, Money.of(req.getPurchaseNum()),
-                    EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.PurseAlterType.GOODS_POSITION_BUY, null));
+            records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.MARKETING, Money.of(totalFee),
+                    EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.AlterType.GOODS_POSITION_BUY, 0L));
+            records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT, Money.of(req.getPurchaseNum()),
+                    EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.AlterType.GOODS_POSITION_BUY, null));
             accountPurseRepository.saveAccountPurseAlterRecord(records);
             return true;
         }
@@ -60,22 +60,22 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void platformGiftGoodsSeat(SupplierPurchaseGoodsSeatReq req) {
-        AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.PurseType.GOODS_SEAT);
+        AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT);
         accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(req.getPurchaseNum()), true, false);
         List<AccountPurseAlterRecordVO> records = new ArrayList<>();
-        records.add(buildRecord(req.getSupplierId(), PurseEnum.PurseType.GOODS_SEAT, Money.of(req.getPurchaseNum()),
-                EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.PurseAlterType.PLATFORM_GIFT_GOODS_SEAT, null));
+        records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT, Money.of(req.getPurchaseNum()),
+                EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.AlterType.PLATFORM_GIFT_GOODS_SEAT, null));
         accountPurseRepository.saveAccountPurseAlterRecord(records);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId) {
-        AccountPurseQuery subQuery = buildQuery(supplierId, PurseEnum.PurseType.GOODS_SEAT);
+        AccountPurseQuery subQuery = buildQuery(supplierId, PurseEnum.Type.GOODS_SEAT);
         accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(1), false, false, false);
         List<AccountPurseAlterRecordVO> records = new ArrayList<>();
-        records.add(buildRecord(supplierId, PurseEnum.PurseType.GOODS_SEAT, Money.of(1),
-                EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.PurseAlterType.SUPPLIER_GOODS_POSITION_SUB, spuId));
+        records.add(buildRecord(supplierId, PurseEnum.Type.GOODS_SEAT, Money.of(1),
+                EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.AlterType.SUPPLIER_GOODS_POSITION_SUB, spuId));
         accountPurseRepository.saveAccountPurseAlterRecord(records);
     }
 
@@ -86,10 +86,10 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
      * @param purseType 账户类型
      * @return 动账查询
      */
-    private AccountPurseQuery buildQuery(Long supplierId, PurseEnum.PurseType purseType) {
+    private AccountPurseQuery buildQuery(Long supplierId, PurseEnum.Type purseType) {
         AccountPurseQuery query = new AccountPurseQuery();
         query.setAccountId(supplierId);
-        query.setAccountType(PurseEnum.FinanceUser.SUPPLIER);
+        query.setAccountType(PurseEnum.User.SUPPLIER);
         query.setPurseType(purseType);
         return query;
     }
@@ -105,13 +105,13 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
      * @param joinRecordId 关联记录 id
      * @return 变动记录
      */
-    private AccountPurseAlterRecordVO buildRecord(Long accountId, PurseEnum.PurseType purseType, Money amount,
+    private AccountPurseAlterRecordVO buildRecord(Long accountId, PurseEnum.Type purseType, Money amount,
                                                   EarningsEnum.PurseAlterTypeEnum earningAlterType,
-                                                  PurseEnum.PurseAlterType alterType, Long joinRecordId) {
+                                                  PurseEnum.AlterType alterType, Long joinRecordId) {
         AccountPurseAlterRecordVO record = new AccountPurseAlterRecordVO();
         record.setId(SnowflakeGenerator.getSnowflakeId());
         record.setAccountId(accountId);
-        record.setAccountType(PurseEnum.FinanceUser.SUPPLIER);
+        record.setAccountType(PurseEnum.User.SUPPLIER);
         record.setPurseType(purseType);
         record.setAmount(amount);
         record.setEarningAlterType(earningAlterType);

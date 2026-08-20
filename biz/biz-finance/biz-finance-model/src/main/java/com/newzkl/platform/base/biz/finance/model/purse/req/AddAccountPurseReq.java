@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 
 /**
@@ -11,10 +12,7 @@ import lombok.Data;
  * @date 2023/12/18 15:12
  */
 @Data
-public class AddAccountPurseReq {
-    /** 主键ID */
-    private Long id;
-
+public class AddAccountPurseReq extends BaseReq {
     /**
      * 客户id
      */
@@ -28,7 +26,7 @@ public class AddAccountPurseReq {
     /**
      * 账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 初始账户金额
@@ -38,5 +36,5 @@ public class AddAccountPurseReq {
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 }

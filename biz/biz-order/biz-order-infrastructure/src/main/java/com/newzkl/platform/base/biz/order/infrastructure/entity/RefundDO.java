@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -36,7 +36,7 @@ public class RefundDO extends BaseDO {
     /**
      * 申请人角色
      */
-    private RoleEnum.CompanyRole createRole;
+    private AccountEnum.Identity createRole;
     /**
      * 订单类型
      */

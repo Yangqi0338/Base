@@ -25,7 +25,7 @@ public interface AccountShipAddressDAO extends BaseMapper<ShipAddressDO> {
     default BaseLambdaQueryWrapper<ShipAddressDO> getLw(ShipAddressQuery query) {
         BaseLambdaQueryWrapper<ShipAddressDO> wrapper = new BaseLambdaQueryWrapper<ShipAddressDO>()
                 .notEmptyIn(ShipAddressDO::getId, query.getIdList())
-                .notNullEq(ShipAddressDO::getRole, query.getRole())
+                .notNullEq(ShipAddressDO::getIdentity, query.getIdentity())
                 .notNullEq(ShipAddressDO::getAccountId, query.getAccountId())
                 .notNullEq(ShipAddressDO::getIsDefault, query.getIsDefault());
         wrapper.orderByDesc(ShipAddressDO::getIsDefault)

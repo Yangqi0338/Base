@@ -41,6 +41,8 @@ public class SmsEnum {
         IM_DEL("1021", "3", "70389217", 1),
         /** 供应商注册验证码 */
         SUPPLIER_REGISTER_CODE("2000", "3", "70315215", 1),
+        /** 通知供应商添加售后退货地址 */
+        SUPPLIER_REFUND_ADDRESS("1017","通知供应商添加售后退货地址","496b7c8b13354d9c98e97ab75d91db4d",2),
         ;
         /**
          * 类型编码
@@ -48,17 +50,14 @@ public class SmsEnum {
         @EnumValue
         @JsonValue
         private final String code;
-
         /**
          * 类型描述
          */
         private final String value;
-
         /**
          * 三方短信模板号
          */
         private final String templateId;
-
         /**
          * 1 验证码 2 通知
          */

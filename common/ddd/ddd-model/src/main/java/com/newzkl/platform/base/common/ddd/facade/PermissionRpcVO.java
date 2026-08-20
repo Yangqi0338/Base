@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.facade;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,7 +24,7 @@ public class PermissionRpcVO implements Serializable {
     /**
      * 角色ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 直推奖配置

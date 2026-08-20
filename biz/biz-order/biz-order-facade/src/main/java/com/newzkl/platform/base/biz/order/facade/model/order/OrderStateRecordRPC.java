@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.facade.model.order;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
@@ -67,7 +67,7 @@ public class OrderStateRecordRPC implements Serializable {
     /**
      * 操作人角色ID
      */
-    private RoleEnum.CompanyRole operatorRoleId;
+    private AccountEnum.Identity operatorRoleId;
 
     /**
      * 角色描述

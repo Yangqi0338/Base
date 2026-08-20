@@ -97,7 +97,7 @@ public interface SpuDAO extends BaseMapper<SpuDO> {
         wrapper.eq(query.getChannelType() != null, "channel_type", query.getChannelType());
 
         // roleId 条件
-        wrapper.eq(query.getRole() != null, "role", query.getRole());
+        wrapper.eq(query.getIdentity() != null, "role", query.getIdentity());
 
         // outSpuId 条件
         wrapper.eq(StringUtils.isNotBlank(query.getOutSpuId()), "out_spu_id", query.getOutSpuId());

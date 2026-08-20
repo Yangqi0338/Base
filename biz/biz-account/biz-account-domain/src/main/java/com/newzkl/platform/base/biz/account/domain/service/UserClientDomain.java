@@ -27,14 +27,6 @@ public interface UserClientDomain {
     MemberVO member(Long memberId);
 
     /**
-     * 模糊查询
-     *
-     * @param nickname
-     * @return
-     */
-    List<MemberVO> queryMember(String nickname);
-
-    /**
      * 注销会员
      * @param accountId
      * @param command

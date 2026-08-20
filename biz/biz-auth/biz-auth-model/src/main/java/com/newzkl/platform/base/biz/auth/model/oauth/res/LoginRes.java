@@ -1,8 +1,7 @@
 package com.newzkl.platform.base.biz.auth.model.oauth.res;
 
 
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -24,9 +23,9 @@ public class LoginRes {
     /**
      * 客户端
      */
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
     /**
      * 角色
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 }

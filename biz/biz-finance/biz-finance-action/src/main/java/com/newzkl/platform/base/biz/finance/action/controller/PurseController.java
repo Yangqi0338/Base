@@ -200,7 +200,7 @@ public class PurseController {
     @PostMapping("/queryWithdrawAmount")
     public PlatformResult<WithdrawAmountVO> queryWithdrawAmount(@RequestBody AccountPurseQuery req) {
         Long accountId = Opt.ofNullable(req.getAccountId()).orElseGet(SecurityUtils::getAccountId);
-        return PlatformResult.success(withdrawDomain.queryWithdrawAmount(SecurityUtils.getRole(), accountId));
+        return PlatformResult.success(withdrawDomain.queryWithdrawAmount(SecurityUtils.getIdentity(), accountId));
     }
 
     /**
@@ -230,7 +230,7 @@ public class PurseController {
     private void fillAccountScope(AccountPurseAlterRecordQuery req) {
         if (req.getAccountId() == null) {
             req.setAccountId(SecurityUtils.getAccountId());
-            req.setAccountType(PurseEnum.FinanceUser.getByRole(SecurityUtils.getRole()));
+            req.setAccountType(PurseEnum.User.getByRole(SecurityUtils.getIdentity()));
         }
     }
 
@@ -240,8 +240,8 @@ public class PurseController {
      * @param alterType 变动类型
      * @return 变动类型描述
      */
-    private String alterTypeInfo(PurseEnum.PurseAlterType alterType) {
-        return Opt.ofNullable(alterType).map(PurseEnum.PurseAlterType::getInfo).orElse("");
+    private String alterTypeInfo(PurseEnum.AlterType alterType) {
+        return Opt.ofNullable(alterType).map(PurseEnum.AlterType::getInfo).orElse("");
     }
 
     /**

@@ -34,13 +34,13 @@ public class AccountPurseRollOutDO extends BaseDO {
      * 客户类型
      */
     @Index
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账户类型
      */
     @Index
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 申请金额

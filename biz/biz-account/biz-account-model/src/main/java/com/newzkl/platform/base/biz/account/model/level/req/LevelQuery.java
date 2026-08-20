@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.level.req;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,9 +18,9 @@ import lombok.EqualsAndHashCode;
 public class LevelQuery extends BizPageQuery {
 
     /**
-     * 类型 (角色 ID)
+     * 身份
      */
-    private Long type;
+    private AccountEnum.Identity type;
 
     /**
      * 等级值

@@ -13,7 +13,8 @@ import com.newzkl.platform.base.biz.account.domain.service.LevelDomain;
 import com.newzkl.platform.base.biz.account.domain.service.PackGoodsDomain;
 import com.newzkl.platform.base.biz.account.domain.service.PackOrderDomain;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackEnum;
 import com.newzkl.platform.base.biz.account.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderPayReq;
@@ -27,7 +28,6 @@ import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -106,7 +106,7 @@ public class PackOrderServiceImpl implements PackOrderService {
         if (command.isMustSingle()) {
             PackOrderQuery query = new PackOrderQuery();
             query.setAccountId(SecurityUtils.getAccountId());
-            query.setState(PackOrderStateEnum.WAIT_PAY.getCode());
+            query.setState(PackEnum.PackOrderStateEnum.WAIT_PAY.getCode());
             query.setPackId(packId);
             query.setCreateTimeGreater(DateUtil.offset(DateUtil.date(), DateField.MINUTE, -SINGLE_DEDUP_MINUTES).toLocalDateTime());
             query.resetQuerySingle();
@@ -173,7 +173,7 @@ public class PackOrderServiceImpl implements PackOrderService {
         apiPayReq.setConsumeType(EarningsEnum.ConsumeType.PICK_PACK);
         apiPayReq.setOrderAmount(amount);
         apiPayReq.setPayAmount(amount);
-        RoleEnum.CompanyRole companyRole = packType == null ? null : RoleEnum.CompanyRole.getByCode(packType.longValue());
+        AccountEnum.Identity companyRole = packType == null ? null : AccountEnum.Identity.getByCode(packType.longValue());
         apiPayReq.setOrderInfo((companyRole == null ? "" : companyRole.getValue()) + "礼包");
         apiPayReq.setGoodsInfo(String.format("等级: %s, 名称:%s", packLevel, levelName));
         apiPayReq.setAccountId(accountId);

@@ -9,9 +9,9 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -48,10 +48,10 @@ public class CategoryController {
         if (categoryReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.PLATFORM == role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.PLATFORM == identity) {
             categoryReq.setAccountId(0L);
-        } else if (RoleEnum.CompanyRole.CHANNEL == role) {
+        } else if (AccountEnum.Identity.CHANNEL == identity) {
             categoryReq.setAccountId(SecurityUtils.getAccountId());
         } else {
             ThrowsException.exception(BaseErrorCode.PARAM);

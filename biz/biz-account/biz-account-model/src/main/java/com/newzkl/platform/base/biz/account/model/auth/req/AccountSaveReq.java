@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.account.model.auth.req;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.constant.PatternConstant;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -15,11 +15,11 @@ import lombok.Data;
  * @date 2024/2/22 11:22
  */
 @Data
-public class AccountSaveReq {
+public class AccountSaveReq extends BaseReq {
     /**
      * 注册角色
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 用户账号
      */

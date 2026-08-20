@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -84,7 +84,7 @@ public class ShipAddressRpcVO implements Serializable {
     /**
      * 角色关联ID（如门店ID/企业ID）
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 是否删除：0-未删除 1-已删除（逻辑删除）
      */

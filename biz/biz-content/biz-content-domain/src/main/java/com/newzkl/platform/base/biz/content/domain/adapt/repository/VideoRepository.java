@@ -95,7 +95,7 @@ public interface VideoRepository {
     /**
      * 取当前登录角色对应的推荐人群集合
      *
-     * <p>迁移自旧 domain 层 {@code RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())}。
+     * <p>迁移自旧 domain 层 {@code RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity())}。
      * 因 domain 层不依赖 SecurityUtils, 下沉至此。</p>
      *
      * @return 推荐人群名称集合

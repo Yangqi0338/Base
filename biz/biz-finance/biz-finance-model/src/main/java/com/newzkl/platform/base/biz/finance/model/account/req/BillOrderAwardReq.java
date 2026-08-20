@@ -3,9 +3,9 @@ package com.newzkl.platform.base.biz.finance.model.account.req;
 
 import cn.hutool.core.lang.Opt;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 
 /**
@@ -17,7 +17,7 @@ public class BillOrderAwardReq extends BaseRes {
     /**
      * 角色ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 账户ID
      */
@@ -29,11 +29,11 @@ public class BillOrderAwardReq extends BaseRes {
     /**
      * 账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
     /**
      * 账户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
     /**
      * 金额
      */
@@ -43,13 +43,9 @@ public class BillOrderAwardReq extends BaseRes {
      */
     private Long spuId;
     /**
-     * 订单数
+     * 身份名称
      */
-
-    /**
-     * 角色名称
-     */
-    public String getRoleName() {
-        return Opt.ofNullable(role).map(RoleEnum.CompanyRole::getValue).orElse(null);
+    public String getIdentityName() {
+        return Opt.ofNullable(identity).map(AccountEnum.Identity::getValue).orElse(null);
     }
 }

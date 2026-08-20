@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.finance;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,25 +21,23 @@ public class PurseEnum implements Serializable {
      */
     @Getter
     @AllArgsConstructor
-    public enum FinanceUser {
-        /**
-         * C端用户
-         */
-        C_CLIENT(0, RoleEnum.CompanyRole.MEMBER),
+    public enum User {
+        /** 会员 */
+        MEMBER(0, AccountEnum.Identity.MEMBER),
         /** 供应商 */
-        SUPPLIER(1, RoleEnum.CompanyRole.SUPPLIER),
+        SUPPLIER(1, AccountEnum.Identity.SUPPLIER),
         /** 渠道商 */
-        CHANNEL(2, RoleEnum.CompanyRole.CHANNEL),
+        CHANNEL(2, AccountEnum.Identity.CHANNEL),
         ;
 
         @EnumValue
         @JsonValue
         private final Integer type;
-        private final RoleEnum.CompanyRole role;
+        private final AccountEnum.Identity identity;
 
-        public static FinanceUser getByRole(RoleEnum.CompanyRole role) {
+        public static User getByRole(AccountEnum.Identity identity) {
             return Arrays.stream(values())
-                    .filter(it -> it.getRole() == role)
+                    .filter(it -> it.getIdentity() == identity)
                     .findFirst()
                     .orElse(null);
         }
@@ -50,7 +48,7 @@ public class PurseEnum implements Serializable {
      */
     @Getter
     @AllArgsConstructor
-    public enum PurseType {
+    public enum Type {
         /** 总账户 */
         TOTAL(0, false, "总账户"),
         /** 商品分润账户 */
@@ -78,14 +76,14 @@ public class PurseEnum implements Serializable {
         private final boolean isNegative;
         private final String info;
 
-        public static PurseType findByType(Integer type) {
+        public static Type findByType(Integer type) {
             return Arrays.stream(values())
                     .filter(extension -> extension.getType().equals(type))
                     .findFirst()
                     .orElse(null);
         }
 
-        PurseType(Integer type, boolean totalRelation, String info) {
+        Type(Integer type, boolean totalRelation, String info) {
             this.type = type;
             this.info = info;
             this.totalRelation = totalRelation;
@@ -98,7 +96,7 @@ public class PurseEnum implements Serializable {
      */
     @Getter
     @AllArgsConstructor
-    public enum PurseAlterType {
+    public enum AlterType {
         /** 转出 */
         ROLL_OUT(1, "转出"),
         /** 订单支付 */
@@ -154,7 +152,7 @@ public class PurseEnum implements Serializable {
         /**
          * 通过code获取枚举实例
          */
-        public static PurseAlterType getByType(Integer type) {
+        public static AlterType getByType(Integer type) {
             return Arrays.stream(values())
                     .filter(item -> item.getType().equals(type))
                     .findFirst()

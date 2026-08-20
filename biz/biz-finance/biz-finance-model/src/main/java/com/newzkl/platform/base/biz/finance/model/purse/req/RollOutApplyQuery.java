@@ -3,7 +3,6 @@ package com.newzkl.platform.base.biz.finance.model.purse.req;
 
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
-import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import jakarta.validation.constraints.NotNull;
@@ -23,13 +22,13 @@ public class RollOutApplyQuery extends BizPageQuery {
     /**
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账户类型
      */
     @NotNull
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 申请时间左

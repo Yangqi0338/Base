@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
@@ -29,7 +30,6 @@ import com.newzkl.platform.base.common.ddd.model.constant.SupplierErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -244,7 +244,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         }
         List<Long> distinct = merged.stream().distinct().collect(Collectors.toList());
         // 保留旧限制: 供应商本人操作时受最大行业数约束, 平台角色不限
-        if (RoleEnum.CompanyRole.SUPPLIER == SecurityUtils.getRole()
+        if (AccountEnum.Identity.SUPPLIER == SecurityUtils.getIdentity()
                 && distinct.size() > MAX_INDUSTRY_NUM) {
             throw new PlatformException(SupplierErrorCode.OVER_INDUSTRY);
         }

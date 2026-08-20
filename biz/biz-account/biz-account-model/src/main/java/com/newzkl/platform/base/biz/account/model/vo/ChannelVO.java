@@ -2,11 +2,11 @@ package com.newzkl.platform.base.biz.account.model.vo;
 
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
@@ -52,7 +52,7 @@ public class ChannelVO extends BaseRes {
      * 本仓塌缩为单个枚举。前端 {@code roleId} / {@code roleName} 读法失效 ——
      * 非改名, 无法靠字段映射兼容, 需按枚举 code 改读</p>
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 状态 (查询)
      */
@@ -89,13 +89,6 @@ public class ChannelVO extends BaseRes {
      * 服务费配置
      */
     private String serviceFeeConfigVO;
-    /**
-     * 交易师收益 (Money, 落库 BIGINT 分)
-     */
-    private Money dealerEarnings;
-    /**
-     * 市场数量
-     */
     /**
      * 营业执照
      */

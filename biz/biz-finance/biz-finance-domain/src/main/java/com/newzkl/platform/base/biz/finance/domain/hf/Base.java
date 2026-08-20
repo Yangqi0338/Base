@@ -2,8 +2,8 @@ package com.newzkl.platform.base.biz.finance.domain.hf;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.newzkl.platform.base.common.ddd.model.check.CheckCommand;
-import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
+import com.newzkl.platform.base.common.core.model.check.CheckCommand;
+import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

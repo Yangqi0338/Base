@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req.cmd;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class AccountCmd {
         /**
          * 客户类型
          */
-        private RoleEnum.CompanyRole role;
+        private AccountEnum.Identity identity;
 
         /**
          * 无需子账户传null

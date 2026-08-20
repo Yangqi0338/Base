@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.vo;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -79,5 +79,5 @@ public class ShipAddressVO {
     /**
      * 角色关联ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 }

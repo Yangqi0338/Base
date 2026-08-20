@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchR
 import com.newzkl.platform.base.biz.course.model.watch.req.CourseChapterWatchRecordReq;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRecordRes;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.req.IdCommand;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

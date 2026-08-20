@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.action.spi;
 
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class IdentityDispatcher {
      * @param impl      实现实例
      * @param condition 命中身份 code 集, 空为 catch-all
      */
-    public void register(Class<?> ext, Object impl, RoleEnum.CompanyRole[] condition) {
+    public void register(Class<?> ext, Object impl, AccountEnum.Identity[] condition) {
         registry.computeIfAbsent(ext, k -> new ArrayList<>())
                 .add(new ImplHolder(impl, condition));
     }
@@ -90,7 +90,7 @@ public class IdentityDispatcher {
      * @return 命中实现实例
      * @throws PlatformException 无任何命中且无 catch-all 时抛出
      */
-    private Object selectImpl(Class<?> ext, RoleEnum.CompanyRole role) {
+    private Object selectImpl(Class<?> ext, AccountEnum.Identity identity) {
         List<ImplHolder> holders = registry.get(ext);
         ImplHolder catchAll = null;
         if (holders != null) {
@@ -99,7 +99,7 @@ public class IdentityDispatcher {
                     catchAll = holder;
                     continue;
                 }
-                if (holder.matches(role)) {
+                if (holder.matches(identity)) {
                     return holder.impl();
                 }
             }
@@ -108,7 +108,7 @@ public class IdentityDispatcher {
             }
         }
         throw new PlatformException(BaseErrorCode.NO_AUTH.getCode(),
-                "该请求不支持当前身份[" + role + "]");
+                "该请求不支持当前身份[" + identity + "]");
     }
 
     /**
@@ -129,8 +129,8 @@ public class IdentityDispatcher {
             if (Object.class.equals(method.getDeclaringClass())) {
                 return handleObjectMethod(proxy, method, args);
             }
-            RoleEnum.CompanyRole role = SecurityUtils.getRole();
-            Object impl = selectImpl(ext, role);
+            AccountEnum.Identity identity = SecurityUtils.getIdentity();
+            Object impl = selectImpl(ext, identity);
             try {
                 return method.invoke(impl, args);
             } catch (InvocationTargetException e) {
@@ -166,7 +166,7 @@ public class IdentityDispatcher {
      * @param impl      实现实例
      * @param condition 命中身份 code 集, 空为 catch-all
      */
-    public record ImplHolder(Object impl, RoleEnum.CompanyRole[] condition) {
+    public record ImplHolder(Object impl, AccountEnum.Identity[] condition) {
 
         /**
          * 是否为 catch-all 兜底实现
@@ -180,12 +180,12 @@ public class IdentityDispatcher {
         /**
          * 条件是否命中给定身份
          *
-         * @param role 身份 code
+         * @param identity 身份
          * @return 命中返回 {@code true}
          */
-        public boolean matches(RoleEnum.CompanyRole role) {
-            for (RoleEnum.CompanyRole c : condition) {
-                if (c == role) {
+        public boolean matches(AccountEnum.Identity identity) {
+            for (AccountEnum.Identity c : condition) {
+                if (c == identity) {
                     return true;
                 }
             }

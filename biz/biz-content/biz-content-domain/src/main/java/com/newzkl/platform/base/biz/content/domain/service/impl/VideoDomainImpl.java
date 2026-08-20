@@ -149,7 +149,7 @@ public class VideoDomainImpl implements VideoDomain {
 
     @Override
     public List<RecommendVideoVO> getRecommendList() {
-        // 获取所有的视频分类(旧传 SecurityUtils.getRole(), 角色->推荐人群下沉至仓储 currentRecommendGroups)
+        // 获取所有的视频分类(旧传 SecurityUtils.getIdentity(), 角色->推荐人群下沉至仓储 currentRecommendGroups)
         List<VideoCategoryRes> categoryList = videoCategoryRepository.getCategoryList(
                 videoRepository.currentRecommendGroups());
 

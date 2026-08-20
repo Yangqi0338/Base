@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -89,7 +89,7 @@ public class ShipAddressAddReq {
      * 角色关联ID
      * @ext 可选
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 操作人
      * @ext 系统自动填充

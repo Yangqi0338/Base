@@ -9,11 +9,11 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.extra.validation.ValidationUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.res.PlatformTreeNode;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.newzkl.platform.base.common.core.model.money.Money;
@@ -23,7 +23,6 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.IgnoreStrJoiner;
 
-import jakarta.validation.ConstraintViolation;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -35,7 +34,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 通用业务工具类
@@ -565,30 +563,17 @@ public class BizUtil {
     }
 
     /**
-     * 替换父账号角色
-     */
-    public static String replacePRoleList(String pidList, Long accountId, String pRoleList, String newRole) {
-        int index = CollUtil.indexOf(StrUtil.split(pidList, ","), (it) -> it.equals(accountId + ""));
-        if (index == -1) {
-            return pRoleList;
-        }
-        String[] split = pRoleList.split(";");
-        ArrayUtil.replace(split, index, newRole + ",");
-        return StrUtil.join(";", split);
-    }
-
-    /**
      * 拼接父账号角色
      */
-    public static String getPRoleList(String pRoleList, String roleIdList) {
-        return concatParentAccountStr(pRoleList, roleIdList) + ";";
+    public static String getPIdentityList(String pIdentityList, String identityList) {
+        return concatParentAccountStr(pIdentityList, identityList) + ";";
     }
 
     /**
      * 拼接角色列表
      */
-    public static String getRoleList(String roleList, Long roleId) {
-        return concatParentAccountStr(roleList, roleId + "");
+    public static String getIdentityList(String identityList, AccountEnum.Identity identity) {
+        return concatParentAccountStr(identityList, identity + "");
     }
 
     /**
@@ -629,34 +614,5 @@ public class BizUtil {
         Class<T> clazz = (Class<T>) obj.getClass();
         T bean = SpringUtil.getBean(clazz);
         return function.apply(bean);
-    }
-
-    public static void validate(Object req, Class<?>... groups) {
-        Set<ConstraintViolation<Object>> validate = ValidationUtil.validate(req, groups);
-        if (CollUtil.isNotEmpty(validate)) {
-            throw new PlatformException(BaseErrorCode.PARAM.getCode(), validate.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";\n")));
-        }
-    }
-
-    public static String getValidateStr(Object req, String joinStr, Class<?>... groups) {
-        joinStr = Optional.ofNullable(joinStr).orElse(";\n");
-        Set<ConstraintViolation<Object>> validate = ValidationUtil.validate(req, groups);
-        if (CollUtil.isNotEmpty(validate)) {
-            return validate.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(joinStr));
-        }
-        return "";
-    }
-
-    /**
-     * 主次数据同步（不做赋值）
-     *
-     * @param majorData     主数据
-     * @param secondaryData 次数据
-     * @return 同步后的一对值
-     */
-    public static Pair<String, String> majorDataSync(Object majorData, Object secondaryData) {
-        String majorDataStr = majorData == null ? "" : majorData.toString();
-        String secondaryDataStr = secondaryData == null ? "" : secondaryData.toString();
-        return Pair.of(StrUtil.blankToDefault(majorDataStr, secondaryDataStr), StrUtil.blankToDefault(secondaryDataStr, majorDataStr));
     }
 }

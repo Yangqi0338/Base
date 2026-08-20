@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,7 +19,7 @@ public class TeamUserCountReq implements Serializable {
     /**
      * 角色id
      */
-    private RoleEnum.CompanyRole type;
+    private AccountEnum.Identity type;
     /**
      * 数量
      */

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.store.model.store.query;
 
-import com.newzkl.platform.base.common.ddd.model.auth.OauthRole;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.auth.OauthIdentity;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 
@@ -26,7 +26,7 @@ public class SeatPackageQuery extends PageQuery {
     /**
      * 角色
      */
-    @OauthRole
-    private RoleEnum.CompanyRole role;
+    @OauthIdentity
+    private AccountEnum.Identity identity;
 
 }

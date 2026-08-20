@@ -86,9 +86,9 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
     private AccountPurseAlterRecordReq buildChannelOperatorPurseAlterRecord(Long accountId, Long tradeNo, Money totalFee) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(accountId);
-        req.setPurseType(PurseEnum.PurseType.PURCHASE);
-        req.setAccountType(PurseEnum.FinanceUser.CHANNEL);
-        req.setAlterType(PurseEnum.PurseAlterType.GOODS_POSITION_BUY);
+        req.setPurseType(PurseEnum.Type.PURCHASE);
+        req.setAccountType(PurseEnum.User.CHANNEL);
+        req.setAlterType(PurseEnum.AlterType.GOODS_POSITION_BUY);
         req.setAmount(totalFee);
         req.setJoinRecordId(tradeNo);
         return req;
@@ -100,9 +100,9 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
     private AccountPurseAlterRecordReq buildChannelGoodsSeatAlterRecord(Long accountId, Long tradeNo, Integer num) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(accountId);
-        req.setPurseType(PurseEnum.PurseType.GOODS_SEAT);
-        req.setAccountType(PurseEnum.FinanceUser.CHANNEL);
-        req.setAlterType(PurseEnum.PurseAlterType.GOODS_POSITION_BUY);
+        req.setPurseType(PurseEnum.Type.GOODS_SEAT);
+        req.setAccountType(PurseEnum.User.CHANNEL);
+        req.setAlterType(PurseEnum.AlterType.GOODS_POSITION_BUY);
         // num 为席位数量, 存入 Money 型 amount 字段 (按分数值等值存放)
         req.setAmount(Money.of(num));
         req.setJoinRecordId(tradeNo);

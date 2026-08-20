@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.req;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.facade.PackGoodsInfo;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
@@ -40,7 +40,7 @@ public class ConditionReq extends BaseReq {
     /**
      * 角色id
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 升级账号id

@@ -18,22 +18,14 @@ public class ChannelEnum {
     @Getter
     @AllArgsConstructor
     public enum State {
-        /**
-         * 已注销
-         */
+        /** 已注销 */
         DESTORY(-1, "已注销"),
-        /**
-         * 申请中
-         */
+        /** 申请中 */
         APPLY(0, "申请中"),
-        /**
-         * 已开通
-         */
-        OPEN(1, "已开通"),
-        /**
-         * 已入驻
-         */
-        IN(2, "已入驻"),
+        /** 已入驻 */
+        IN(1, "已入驻"),
+        /** 已开通 */
+        OPEN(2, "已开通"),
         ;
         @EnumValue
         @JsonValue

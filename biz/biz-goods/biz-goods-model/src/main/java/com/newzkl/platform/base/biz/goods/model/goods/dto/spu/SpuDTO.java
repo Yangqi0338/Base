@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.goods.model.goods.dto.spu;
 
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class SpuDTO {
     /**
      * 角色ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
     /**
      * 商品类型 0:实物商品 1:课程 2:服务 (查询)
      */
@@ -206,10 +206,6 @@ public class SpuDTO {
      * 最大利润 (Money, 落库 BIGINT 分)
      */
     private Money maxProfit;
-    /**
-     * 角色ID
-     */
-    private Long roleId;
     /**
      * 供应商ID
      */

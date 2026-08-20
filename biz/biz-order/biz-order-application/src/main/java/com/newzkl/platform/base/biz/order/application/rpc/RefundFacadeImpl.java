@@ -26,7 +26,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.RefundErrorCode;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
@@ -74,7 +74,7 @@ public class RefundFacadeImpl implements RefundFacade {
                 refundCommand.setImages(refundSubmitReq.getImages());
                 refundCommand.setOrderId(orderIdList.get(0));
                 refundCommand.setSpuOrderId(spuOrderId);
-                refundCommand.setRole(RoleEnum.CompanyRole.CHANNEL);
+                refundCommand.setIdentity(AccountEnum.Identity.CHANNEL);
                 refundCommand.setRefundItemCommandList(TransferUtils.transfers(refundSubmitReq.getSkuList(), new Function<ApiRefundSubmitGoodsReq, RefundItemCommand>() {
                     @Override
                     public RefundItemCommand apply(ApiRefundSubmitGoodsReq apiRefundSubmitGoodsReq) {
@@ -91,17 +91,17 @@ public class RefundFacadeImpl implements RefundFacade {
 
     @Override
     public void apiStop(Long accountId, Long refundId) {
-        refundDomain.stopAudit(RoleEnum.CompanyRole.CHANNEL, accountId, refundId);
+        refundDomain.stopAudit(AccountEnum.Identity.CHANNEL, accountId, refundId);
     }
 
     @Override
     public void apiPass(Long accountId, Long refundId) {
-        refundDomain.agreeAudit(refundId, RoleEnum.CompanyRole.CHANNEL);
+        refundDomain.agreeAudit(refundId, AccountEnum.Identity.CHANNEL);
     }
 
     @Override
     public void apiRefuse(Long accountId, Long refundId) {
-        refundDomain.refuseAudit(refundId, RoleEnum.CompanyRole.CHANNEL, "");
+        refundDomain.refuseAudit(refundId, AccountEnum.Identity.CHANNEL, "");
     }
 
     @Override

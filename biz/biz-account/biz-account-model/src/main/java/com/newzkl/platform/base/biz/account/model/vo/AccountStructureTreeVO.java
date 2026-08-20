@@ -7,9 +7,8 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import lombok.Data;
 
@@ -21,10 +20,9 @@ import java.util.*;
 @Data
 public class AccountStructureTreeVO extends AccountStructureVO {
     /**
-     * 角色id
-     *
+     * 身份
      */
-    private String roleIdList;
+    private String identityList;
     /**
      * 父id
      *
@@ -52,9 +50,9 @@ public class AccountStructureTreeVO extends AccountStructureVO {
 
     /** 子账号数量映射 */
     @JsonIgnore
-    private Map<RoleEnum.CompanyRole, Integer> subAccountCountMap;
+    private Map<AccountEnum.Identity, Integer> subAccountCountMap;
 
-    public static List<AccountStructureTreeVO> buildTotalCount(CommonEnum.Client client, List<AccountStructureTreeVO> accountSubStructureVOList) {
+    public static List<AccountStructureTreeVO> buildTotalCount(AccountEnum.Client client, List<AccountStructureTreeVO> accountSubStructureVOList) {
         accountSubStructureVOList.forEach(it -> it.buildTotalCount(client));
         return accountSubStructureVOList;
     }
@@ -118,7 +116,7 @@ public class AccountStructureTreeVO extends AccountStructureVO {
         return buildTree(0L, accountSubStructureVOList);
     }
 
-    public void buildTotalCount(CommonEnum.Client client) {
+    public void buildTotalCount(AccountEnum.Client client) {
         this.subAccountCountMap = new HashMap<>();
         if (CollUtil.isNotEmpty(children)) {
             children.forEach(subAccount -> {
@@ -126,22 +124,22 @@ public class AccountStructureTreeVO extends AccountStructureVO {
                     subAccount.buildTotalCount(client);
                 }
                 if (MapUtil.isNotEmpty(subAccount.getSubAccountCountMap())) {
-                    RoleEnum.CompanyRole role = Opt.ofNullable(CollUtil.getLast(RoleEnumUtil.getLevelUpEnumList(client, subAccount.getRoleIdList())))
+                    AccountEnum.Identity identity = Opt.ofNullable(CollUtil.getLast(RoleEnumUtil.getLevelUpEnumList(client, subAccount.getIdentityList())))
                             .orElse(
-                                    RoleEnum.CompanyRole.getByCode(
+                                    AccountEnum.Identity.getByCode(
                                             NumberUtil.parseLong(
                                                     CollUtil.getLast(
-                                                            StrUtil.split(subAccount.getRoleIdList(), ",")
+                                                            StrUtil.split(subAccount.getIdentityList(), ",")
                                                     ))));
 
-                    subAccountCountMap.compute(role, (k, v) -> v == null ? 1 : v + 1);
+                    subAccountCountMap.compute(identity, (k, v) -> v == null ? 1 : v + 1);
                 }
             });
         }
     }
 
-    public List<AccountStructureTreeVO> getChildren(CommonEnum.Client client) {
-        List<AccountStructureTreeVO> accountSubStructureVOList = CollUtil.isNotEmpty(RoleEnumUtil.getLevelUpEnumList(client, roleIdList)) ?
+    public List<AccountStructureTreeVO> getChildren(AccountEnum.Client client) {
+        List<AccountStructureTreeVO> accountSubStructureVOList = CollUtil.isNotEmpty(RoleEnumUtil.getLevelUpEnumList(client, identityList)) ?
                 CollUtil.newArrayList(this) : new ArrayList<>();
         if (CollUtil.isNotEmpty(children)) {
             children.forEach(subAccount -> {

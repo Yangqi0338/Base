@@ -26,7 +26,9 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
@@ -35,8 +37,6 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
 import com.newzkl.platform.base.common.ddd.model.constant.OrderErrorCode;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.FinanceEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -172,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
         }
         SpuOrderDTO spuOrder = new SpuOrderDTO();
         BeanUtils.copyProperties(spuOrderVO, spuOrder);
-        localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.WAIT_RECEIVE, SecurityUtils.getAccountId(),SecurityUtils.getRole());
+        localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(spuOrder), spuOrder.getOrderState(),OrderEnum.State.WAIT_RECEIVE, SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
     }
 
     @Override
@@ -262,7 +262,7 @@ public class OrderServiceImpl implements OrderService {
         spuOrderExt.setCancelReason("超时未支付关闭");
         spuOrderExt.setCloseReason("买家超时未支付订单关闭");
         orderDomain.batchUpdateOrderState(Collections.singletonList(order.getId()), order.getOrderState(), OrderEnum.State.CLOSE, JSONObject.toJSONString(spuOrderExt));
-        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), order.getOrderState(), OrderEnum.State.CLOSE, RoleEnum.CompanyRole.PLATFORM.getCode(),RoleEnum.CompanyRole.PLATFORM);
+        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), order.getOrderState(), OrderEnum.State.CLOSE, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
     }
 
     public void doMemberPaySuccess(OrderAgg orderAgg) {
@@ -442,25 +442,11 @@ public class OrderServiceImpl implements OrderService {
         BalancePayReq balancePayReq = new BalancePayReq();
         balancePayReq.setAccountId(order.getChannelId());
         balancePayReq.setMemberId(order.getMemberId());
-        balancePayReq.setAccountType(FinanceEnum.FinanceUser.CHANNEL);
+        balancePayReq.setAccountType(PurseEnum.User.CHANNEL);
         balancePayReq.setPayAmount(order.getTotalAmount());
         balancePayReq.setGoodsAmount(order.getGoodsAmount());
         balancePayReq.setOrderNo(order.getId());
         balancePayReq.setOperatorId(order.getOperatorId());
-        balancePayReq.setOrderInfo("交易单信息:" + JSONObject.toJSONString(order));
-        return balancePayReq;
-    }
-
-    private BalancePayReq getOperatorBalancePayReq(OrderDTO order) {
-        BalancePayReq balancePayReq = new BalancePayReq();
-        balancePayReq.setAccountId(order.getOperatorId());
-        balancePayReq.setOperatorId(order.getOperatorId());
-        balancePayReq.setMemberId(order.getMemberId());
-        balancePayReq.setAccountType(FinanceEnum.FinanceUser.OPERATOR);
-        balancePayReq.setPayAmount(order.getTotalAmount());
-        balancePayReq.setGoodsAmount(order.getGoodsAmount());
-        balancePayReq.setOrderNo(order.getId());
-        balancePayReq.setPurseType(FinanceEnum.PurseType.PURCHASE.getType());
         balancePayReq.setOrderInfo("交易单信息:" + JSONObject.toJSONString(order));
         return balancePayReq;
     }

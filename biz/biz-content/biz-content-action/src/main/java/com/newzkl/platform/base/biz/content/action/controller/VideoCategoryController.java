@@ -111,7 +111,7 @@ public class VideoCategoryController {
     /**
      * 获取分类列表
      *
-     * <p>推荐人群由当前登录角色换算, 旧 {@code SecurityUtils.getRole()} 换为
+     * <p>推荐人群由当前登录角色换算, 旧 {@code SecurityUtils.getIdentity()} 换为
      * {@code SecurityUtils.getRoleId()}(两者同为角色ID语义)。</p>
      *
      * @return 分类列表
@@ -119,6 +119,6 @@ public class VideoCategoryController {
     @GetMapping("/list")
     public PlatformResult<List<VideoCategoryRes>> getCategoryList() {
         return PlatformResult.success(videoCategoryDomain.getCategoryList(
-                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getRole())));
+                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity())));
     }
 }

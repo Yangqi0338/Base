@@ -1,12 +1,11 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
@@ -39,12 +38,12 @@ public class RefundOperationRecordDO extends BaseDO {
     /**
      * 操作方角色编码
      */
-    private RoleEnum.CompanyRole operatorRoleCode;
+    private AccountEnum.Identity operatorRoleCode;
 
     /**
      * 操作方客户端类型
      */
-    private CommonEnum.Client operatorClient;
+    private AccountEnum.Client operatorClient;
 
     /**
      * 操作方名称

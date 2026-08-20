@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -40,5 +40,5 @@ public class AccountInfo implements Serializable {
     /*** 创建时间*/
     private LocalDateTime createTime;
     /*** 所属端*/
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
 }

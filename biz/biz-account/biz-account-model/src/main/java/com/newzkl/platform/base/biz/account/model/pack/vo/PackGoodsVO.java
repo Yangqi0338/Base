@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.account.model.pack.vo;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -19,7 +19,7 @@ public class PackGoodsVO {
     /**
      * 类型
      */
-    private RoleEnum.CompanyRole type;
+    private AccountEnum.Identity type;
 
     /**
      * 礼包等级

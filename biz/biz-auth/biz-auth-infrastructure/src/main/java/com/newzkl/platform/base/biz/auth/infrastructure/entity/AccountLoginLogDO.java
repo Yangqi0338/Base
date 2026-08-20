@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.auth.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseIdDO;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.auth.AuthEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,7 +29,7 @@ public class AccountLoginLogDO extends BaseIdDO {
     /**
      * 登录方式
      */
-    private AccountEnum.LoginType loginType;
+    private AuthEnum.Type loginType;
     /**
      * 登录IP
      */

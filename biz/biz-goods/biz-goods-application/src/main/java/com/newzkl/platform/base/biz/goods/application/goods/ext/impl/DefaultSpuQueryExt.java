@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.goods.application.goods.ext.impl;
 
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.ext.SpuQueryExt;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityImpl;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +15,13 @@ import lombok.RequiredArgsConstructor;
  *
  * @author KC
  */
-@IdentityImpl({RoleEnum.CompanyRole.PLATFORM, RoleEnum.CompanyRole.EMP})
+@IdentityImpl({AccountEnum.Identity.PLATFORM, AccountEnum.Identity.EMP})
 @RequiredArgsConstructor
 public class DefaultSpuQueryExt implements SpuQueryExt {
 
     static {
-        assert RoleEnum.CompanyRole.PLATFORM.getCode() == 1L
-                && RoleEnum.CompanyRole.EMP.getCode() == 2L
+        assert AccountEnum.Identity.PLATFORM.getCode() == 1L
+                && AccountEnum.Identity.EMP.getCode() == 2L
                 : "CompanyRole PLATFORM/EMP code 与注解条件不一致";
     }
 

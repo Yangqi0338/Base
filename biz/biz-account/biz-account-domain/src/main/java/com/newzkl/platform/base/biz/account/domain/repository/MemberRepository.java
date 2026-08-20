@@ -26,12 +26,4 @@ public interface MemberRepository {
 
     List<MemberVO> selectMemberByAccountIdList(List<Long> accountIdList);
 
-    /**
-     * 模糊查询
-     *
-     * @param nickname
-     * @return
-     */
-    List<MemberVO> queryMember(String nickname);
-
 }

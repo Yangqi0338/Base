@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.address.vo;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -65,7 +65,7 @@ public class ShipAddressVO extends BaseRes {
     /**
      * 角色类型 ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 
     /**
      * 账号 ID

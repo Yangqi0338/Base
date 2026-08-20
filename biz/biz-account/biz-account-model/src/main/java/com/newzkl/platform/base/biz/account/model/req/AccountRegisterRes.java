@@ -35,13 +35,13 @@ public class AccountRegisterRes {
      */
     private String pidList;
     /**
-     * 账号角色ID列表
+     * 账号身份列表
      */
-    private String roleIdList;
+    private String identityList;
     /**
-     * 父账号角色ID列表
+     * 父账号身份列表
      */
-    private String pRoleList;
+    private String pIdentityList;
 
 
     public boolean isSuccess() {

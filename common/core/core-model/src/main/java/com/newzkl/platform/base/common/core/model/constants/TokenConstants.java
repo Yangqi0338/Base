@@ -30,7 +30,15 @@ public interface TokenConstants {
     /**
      * 请求头标识
      */
+    String DETAILS_IDENTITY = "identityList";
+    /**
+     * 角色列表
+     */
     String DETAILS_ROLE = "roleList";
+    /**
+     * 功能权限列表
+     */
+    String DETAILS_FUNC = "funcList";
     /**
      * TOKEN: 用户ID字段
      */

@@ -1,13 +1,15 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.DictApi;
-import com.newzkl.platform.base.biz.account.model.vo.tencent.TencentImConfig;
 import com.newzkl.platform.base.biz.sys.facade.IDictFacade;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * {@code DictApi} 默认兜底实现
@@ -24,17 +26,18 @@ public class DictApiImpl implements DictApi {
     private IDictFacade dictFacade;
 
     @Override
-    public String get(Long code) {
-        // TODO[cross-service]: 远程字典查询, 默认 null
-        return null;
+    public TreeMap<Integer, Double> getChannelServiceFee() {
+        String dictOpenStr = dictFacade.get(DictEnum.Key.CHANNEL_SERVICE_FEE.getCode());
+        List<AmountRateDTO> list = JSONUtil.parseArray(dictOpenStr).toList(AmountRateDTO.class);
+        return getTree(list);
     }
 
-    @Override
-    public TencentImConfig getTencentImConfig() {
-        String value = dictFacade.get(DictEnum.Key.TENCENT_IM_CONFIG.getCode());
-        if (StrUtil.isNotBlank(value)) {
-            return JSONUtil.toBean(value, TencentImConfig.class);
+    private TreeMap<Integer, Double> getTree(List<AmountRateDTO> itemList) {
+        TreeMap<Integer, Double> treeMap = new TreeMap<Integer, Double>();
+        for (AmountRateDTO amountRateDTO : itemList) {
+            treeMap.put(amountRateDTO.getAmount(), amountRateDTO.getRate());
         }
-        return new TencentImConfig();
+        return treeMap;
     }
+
 }

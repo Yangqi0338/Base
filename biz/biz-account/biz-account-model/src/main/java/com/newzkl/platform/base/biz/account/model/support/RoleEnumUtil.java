@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.support;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,8 +25,8 @@ public final class RoleEnumUtil {
      * @param client 客户端
      * @return 角色流
      */
-    public static Stream<RoleEnum.CompanyRole> findClientRoleList(CommonEnum.Client client) {
-        return java.util.Arrays.stream(RoleEnum.CompanyRole.values())
+    public static Stream<AccountEnum.Identity> findClientRoleList(AccountEnum.Client client) {
+        return java.util.Arrays.stream(AccountEnum.Identity.values())
                 .filter(it -> it.getClient().equals(client));
     }
 
@@ -38,10 +37,10 @@ public final class RoleEnumUtil {
      * @param roleIdStr 角色ID串
      * @return 角色列表
      */
-    public static List<RoleEnum.CompanyRole> getLevelUpEnumList(CommonEnum.Client client, String roleIdStr) {
+    public static List<AccountEnum.Identity> getLevelUpEnumList(AccountEnum.Client client, String roleIdStr) {
         return findClientRoleList(client)
                 .filter(it -> roleIdStr.contains(it.getCodeStr()))
-                .sorted(Comparator.comparingInt(RoleEnum.CompanyRole::getLevel))
+                .sorted(Comparator.comparingInt(AccountEnum.Identity::getLevel))
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +51,7 @@ public final class RoleEnumUtil {
      * @param roleIdStr 角色ID串
      * @return 角色列表
      */
-    public static List<RoleEnum.CompanyRole> getFirstEnumList(CommonEnum.Client client, String roleIdStr) {
+    public static List<AccountEnum.Identity> getFirstEnumList(AccountEnum.Client client, String roleIdStr) {
         return findClientRoleList(client)
                 .filter(it -> roleIdStr.contains(it.getCodeStr()))
                 .collect(Collectors.toList());
@@ -64,9 +63,9 @@ public final class RoleEnumUtil {
      * @param client 客户端
      * @return 角色ID列表
      */
-    public static List<Long> findClientRoleIdList(CommonEnum.Client client) {
+    public static List<Long> findClientRoleIdList(AccountEnum.Client client) {
         return findClientRoleList(client)
-                .map(RoleEnum.CompanyRole::getCode)
+                .map(AccountEnum.Identity::getCode)
                 .collect(Collectors.toList());
     }
 
@@ -77,10 +76,10 @@ public final class RoleEnumUtil {
      * @param startRole 起始角色
      * @return 角色列表
      */
-    public static List<RoleEnum.CompanyRole> getLevelEnumList(CommonEnum.Client client, RoleEnum.CompanyRole startRole) {
+    public static List<AccountEnum.Identity> getLevelEnumList(AccountEnum.Client client, AccountEnum.Identity startRole) {
         return findClientRoleList(client)
                 .filter(it -> startRole == null || it.getLevel() > startRole.getLevel())
-                .sorted(Comparator.comparingInt(RoleEnum.CompanyRole::getLevel))
+                .sorted(Comparator.comparingInt(AccountEnum.Identity::getLevel))
                 .collect(Collectors.toList());
     }
 }

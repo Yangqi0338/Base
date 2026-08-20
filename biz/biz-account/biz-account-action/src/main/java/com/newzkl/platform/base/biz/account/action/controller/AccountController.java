@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -54,11 +54,15 @@ public class AccountController {
     /**
      * 账号详情
      *
+     * <p>合并自旧 {@code AdapterController#accountDetail}: 按传入账号 ID 查详情,
+     * 端类型取当前登录端。</p>
+     *
+     * @param idCommand 账号 ID 入参
      * @return 账号外部视图
      */
     @PostMapping("/account/accountDetail")
-    public PlatformResult<AccountOutRes> account() {
-        return PlatformResult.success(userQueryService.accountOutVO(SecurityUtils.getClient(), SecurityUtils.getAccountId()));
+    public PlatformResult<AccountOutRes> account(@Validated @RequestBody IdCommand idCommand) {
+        return PlatformResult.success(userQueryService.accountOutVO(SecurityUtils.getClient(), idCommand.getId()));
     }
 
     /**
@@ -112,7 +116,7 @@ public class AccountController {
     @Deprecated
     @PostMapping("/account/accountPage")
     public PlatformResult<Page<AccountVO>> accountPage(@RequestBody AccountQuery accountQuery) {
-        if (RoleEnum.CompanyRole.PLATFORM == SecurityUtils.getRole()) {
+        if (AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()) {
             accountQuery.setStateOver(AccountEnum.State.DESTROY);
         }
         return PlatformResult.success(accountDomain.accountPage(accountQuery));

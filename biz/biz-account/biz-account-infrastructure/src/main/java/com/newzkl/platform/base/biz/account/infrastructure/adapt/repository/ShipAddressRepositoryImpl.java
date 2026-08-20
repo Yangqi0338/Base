@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,10 +72,10 @@ public class ShipAddressRepositoryImpl implements ShipAddressRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void setOtherNotDefault(RoleEnum.CompanyRole role, Long accountId, Long shipAddressId) {
+    public void setOtherNotDefault(AccountEnum.Identity identity, Long accountId, Long shipAddressId) {
         LambdaUpdateWrapper<ShipAddressDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(ShipAddressDO::getIsDefault, CommonEnum.YesOrNo.NO.getCode())
-                .eq(ShipAddressDO::getRole, role)
+                .eq(ShipAddressDO::getIdentity, identity)
                 .eq(ShipAddressDO::getAccountId, accountId)
                 .ne(ShipAddressDO::getId, shipAddressId);
         shipAddressDAO.update(null, updateWrapper);

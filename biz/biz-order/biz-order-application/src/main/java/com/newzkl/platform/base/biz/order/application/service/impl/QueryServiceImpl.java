@@ -19,10 +19,10 @@ import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -150,11 +150,11 @@ public class QueryServiceImpl implements QueryService {
         String storeAccount = spuOrderQuery.getStoreAccount();
         if (StrUtil.isNotBlank(storeAccount)) {
             AccountGroupVO accountGroup = accountApi.selectByUserAccount(storeAccount);
-            RoleEnum.CompanyRole role = SecurityUtils.getRole();
-            if (RoleEnum.CompanyRole.CHANNEL == role) {
+            AccountEnum.Identity identity = SecurityUtils.getIdentity();
+            if (AccountEnum.Identity.CHANNEL == identity) {
                 Optional.ofNullable(accountGroup)
                         .ifPresent(ag -> spuOrderQuery.setMemberIdList(Collections.singletonList(ag.getId())));
-            }else if (RoleEnum.CompanyRole.MEMBER == role){
+            }else if (AccountEnum.Identity.MEMBER == identity){
                 Optional.ofNullable(accountGroup)
                         .ifPresent(ag -> spuOrderQuery.setChannelIdList(Collections.singletonList(ag.getId())));
             }

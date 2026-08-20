@@ -44,5 +44,5 @@ public class SellAfterRefundReq implements Serializable {
     /**
      * 账户变动类型
      */
-    private PurseEnum.PurseAlterType alterType = PurseEnum.PurseAlterType.SELL_AFTER;
+    private PurseEnum.AlterType alterType = PurseEnum.AlterType.SELL_AFTER;
 }

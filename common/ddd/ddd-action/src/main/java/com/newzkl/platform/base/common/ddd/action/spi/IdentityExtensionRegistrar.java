@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.action.spi;
 
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityExtension;
 import com.newzkl.platform.base.common.ddd.application.spi.IdentityImpl;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
@@ -56,7 +56,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
             if (anno == null) {
                 continue;
             }
-            RoleEnum.CompanyRole[] condition = anno.value();
+            AccountEnum.Identity[] condition = anno.value();
             for (Class<?> ext : resolveExtensionInterfaces(beanClass)) {
                 grouped.computeIfAbsent(ext, k -> new ArrayList<>())
                         .add(new ImplDescriptor(bean, beanClass, condition));
@@ -116,7 +116,7 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
                             "扩展点 %s 存在多个 catch-all 兜底实现: %s 与 %s",
                             ext.getName(), a.implClass().getName(), b.implClass().getName()));
                 }
-                List<RoleEnum.CompanyRole> overlap = intersection(a.condition(), b.condition());
+                List<AccountEnum.Identity> overlap = intersection(a.condition(), b.condition());
                 if (!overlap.isEmpty()) {
                     throw new IllegalStateException(String.format(
                             "扩展点 %s 身份条件重叠: %s%s ∩ %s%s = %s",
@@ -136,13 +136,13 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
      * @param y 条件集 y
      * @return 交集 code 列表, 无交集为空列表
      */
-    private List<RoleEnum.CompanyRole> intersection(RoleEnum.CompanyRole[] x, RoleEnum.CompanyRole[] y) {
-        List<RoleEnum.CompanyRole> overlap = new ArrayList<>();
+    private List<AccountEnum.Identity> intersection(AccountEnum.Identity[] x, AccountEnum.Identity[] y) {
+        List<AccountEnum.Identity> overlap = new ArrayList<>();
         if (x == null || y == null) {
             return overlap;
         }
-        for (RoleEnum.CompanyRole a : x) {
-            for (RoleEnum.CompanyRole b : y) {
+        for (AccountEnum.Identity a : x) {
+            for (AccountEnum.Identity b : y) {
                 if (a == b && !overlap.contains(a)) {
                     overlap.add(a);
                 }
@@ -158,6 +158,6 @@ public class IdentityExtensionRegistrar implements SmartInitializingSingleton, A
      * @param implClass 实现类 (已解包 AOP 代理)
      * @param condition 身份条件集
      */
-    private record ImplDescriptor(Object bean, Class<?> implClass, RoleEnum.CompanyRole[] condition) {
+    private record ImplDescriptor(Object bean, Class<?> implClass, AccountEnum.Identity[] condition) {
     }
 }

@@ -49,7 +49,7 @@
     </sql>
 
     <!-- BizCountMap 合计, 与 biz-goods SpuDAO.countByCondition 同模式 -->
-    <select id="countByCondition" resultType="java.util.Map">
+    <select id="countByCondition" resultType="com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap">
         select
         ${query.fieldSQL}
         from account t

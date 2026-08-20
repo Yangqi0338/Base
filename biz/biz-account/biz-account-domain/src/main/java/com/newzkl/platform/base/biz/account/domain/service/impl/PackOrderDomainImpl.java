@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.repository.PackOrderRepository;
 import com.newzkl.platform.base.biz.account.domain.pack.entity.PackOrder;
 import com.newzkl.platform.base.biz.account.domain.service.PackOrderDomain;
-import com.newzkl.platform.base.common.ddd.model.enums.account.PackOrderStateEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PackEnum;
 import com.newzkl.platform.base.biz.account.model.pack.query.PackOrderQuery;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderDeliverCommand;
@@ -71,9 +71,9 @@ public class PackOrderDomainImpl implements PackOrderDomain {
             throw new PlatformException(BaseErrorCode.NODATA, "礼包订单");
         }
         Integer state = packOrder.getState();
-        if (Objects.equals(PackOrderStateEnum.SUCCESS.getCode(), state)
-                || Objects.equals(PackOrderStateEnum.DOWN_RECEIVE.getCode(), state)
-                || Objects.equals(PackOrderStateEnum.WAIT_RECEIVE.getCode(), state)) {
+        if (Objects.equals(PackEnum.PackOrderStateEnum.SUCCESS.getCode(), state)
+                || Objects.equals(PackEnum.PackOrderStateEnum.DOWN_RECEIVE.getCode(), state)
+                || Objects.equals(PackEnum.PackOrderStateEnum.WAIT_RECEIVE.getCode(), state)) {
             packOrder.setFreightCompany(command.getFreightCompany());
             packOrder.setFreightCode(command.getFreightCode());
         } else {
@@ -86,14 +86,14 @@ public class PackOrderDomainImpl implements PackOrderDomain {
     @Transactional(rollbackFor = Exception.class)
     public void paySuccess(Long orderId) {
         packOrderRepository.updateState(Collections.singletonList(orderId),
-                PackOrderStateEnum.WAIT_PAY.getCode(), PackOrderStateEnum.WAIT_DELIVERY.getCode());
+                PackEnum.PackOrderStateEnum.WAIT_PAY.getCode(), PackEnum.PackOrderStateEnum.WAIT_DELIVERY.getCode());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void payTimeOut(List<Long> idList) {
         packOrderRepository.updateState(idList,
-                PackOrderStateEnum.WAIT_PAY.getCode(), PackOrderStateEnum.CLOSE.getCode());
+                PackEnum.PackOrderStateEnum.WAIT_PAY.getCode(), PackEnum.PackOrderStateEnum.CLOSE.getCode());
     }
 
     @Override

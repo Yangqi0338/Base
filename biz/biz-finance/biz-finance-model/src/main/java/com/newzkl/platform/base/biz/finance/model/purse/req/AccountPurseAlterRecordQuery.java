@@ -19,7 +19,7 @@ public class AccountPurseAlterRecordQuery extends BizPageQuery {
     /**
      * 账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 变动类型
@@ -30,19 +30,19 @@ public class AccountPurseAlterRecordQuery extends BizPageQuery {
      * 客户类型
      * @ext 个人不传, 平台传
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 变动业务类型列表
      */
-    private List<PurseEnum.PurseAlterType> alterTypeList;
+    private List<PurseEnum.AlterType> alterTypeList;
 
     /**
      * 分组维度
      */
     private Integer groupDimension;
 
-    public void setAlterType(PurseEnum.PurseAlterType alterType) {
+    public void setAlterType(PurseEnum.AlterType alterType) {
         this.alterTypeList = doWrapperList(alterTypeList, alterType);
     }
 }

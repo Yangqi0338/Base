@@ -2,7 +2,7 @@ package com.newzkl.platform.base.common.ddd.model.req;
 
 
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserInjection;
-import com.newzkl.platform.base.common.ddd.model.check.UpdateCommand;
+import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

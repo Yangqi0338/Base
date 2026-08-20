@@ -62,13 +62,6 @@ public class IdentitySaveReq extends AccountSaveReq {
     private Double serviceRate;
 
     /**
-     * 注册来源域名
-     *
-     * <p>迁移说明: 原 {@code CustomSaveReq#registerDomain}, 类型不变。</p>
-     */
-    private String registerDomain;
-
-    /**
      * 企业实名信息
      */
     @Data

@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.finance.domain.purse.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.List;
 
@@ -101,7 +101,7 @@ public interface WithdrawDomain {
      * @param role
      * @param accountId
      */
-    WithdrawAmountVO queryWithdrawAmount(RoleEnum.CompanyRole role, Long accountId);
+    WithdrawAmountVO queryWithdrawAmount(AccountEnum.Identity identity, Long accountId);
 
     /**
      * 提现申请记录导出

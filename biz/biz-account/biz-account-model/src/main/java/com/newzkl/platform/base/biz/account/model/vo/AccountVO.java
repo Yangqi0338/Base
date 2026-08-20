@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
@@ -47,7 +46,7 @@ public class AccountVO extends BaseRes {
     /**
      * 真实姓名
      */
-    private String realName;
+    private String realname;
     /**
      * 父层级角色关系
      */
@@ -62,19 +61,9 @@ public class AccountVO extends BaseRes {
      */
     private String nickname;
     /**
-     * 实名认证信息
-     */
-    private String nameAuthInfo;
-    /**
      * 密码
      */
     private String password;
-    /**
-     * 子账号数量
-     */
-    /**
-     * 下级数量
-     */
     /**
      * 帐号状态
      */
@@ -91,7 +80,7 @@ public class AccountVO extends BaseRes {
     /**
      * 角色ID集合
      */
-    private String roleIdList;
+    private String identityList;
     /**
      * 邀请码
      */
@@ -101,25 +90,13 @@ public class AccountVO extends BaseRes {
      */
     private String head;
     /**
-     * 是否旧账号
-     */
-    private boolean old;
-    /**
-     * IM账号
-     */
-    private String userAccount;
-    /**
      * 手机号
      */
     private String phone;
     /**
      * 归属端
      */
-    private CommonEnum.Client client;
-    /**
-     * 头像（平台账号端使用，与 head 语义一致）
-     */
-    private String face;
+    private AccountEnum.Client client;
 
     /**
      * @param registerRole  要注册的角色
@@ -128,25 +105,25 @@ public class AccountVO extends BaseRes {
      * @param state         状态
      * @return
      */
-    public AccountVO init(List<RoleEnum.CompanyRole> registerRole, String username, String password, AccountEnum.State state) {
+    public AccountVO init(List<AccountEnum.Identity> registerRole, String username, String password, AccountEnum.State state) {
         if (CollUtil.isEmpty(registerRole)) {
             throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
         }
         this.username = username;
-        this.password = password;
+        this.password = new BCryptPasswordEncoder().encode(password);
 
         //默认是启动状态
         this.state = Opt.ofNullable(state).orElse(AccountEnum.State.ENABLE);
         // 设置角色ID
-        for (RoleEnum.CompanyRole role : registerRole) {
-            if (!StrUtil.contains(this.roleIdList, role.getCodeStr())) {
-                this.roleIdList = IgnoreStrJoiner.of()
-                        .append(this.roleIdList)
-                        .append(role.getCodeStr())
+        for (AccountEnum.Identity identity : registerRole) {
+            if (!StrUtil.contains(this.identityList, identity.getCodeStr())) {
+                this.identityList = IgnoreStrJoiner.of()
+                        .append(this.identityList)
+                        .append(identity.getCodeStr())
                         .toString();
             }
         }
-        List<CommonEnum.Client> clientList = registerRole.stream().map(RoleEnum.CompanyRole::getClient).distinct().toList();
+        List<AccountEnum.Client> clientList = registerRole.stream().map(AccountEnum.Identity::getClient).distinct().toList();
         if (clientList.size() > 1) {
             throw new PlatformException(AccountErrorCode.PARAM_ERROR, "不支持多端角色同时注册");
         }

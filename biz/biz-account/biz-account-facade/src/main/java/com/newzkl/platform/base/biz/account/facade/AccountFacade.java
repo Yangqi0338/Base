@@ -1,9 +1,11 @@
 package com.newzkl.platform.base.biz.account.facade;
 
+import com.newzkl.platform.base.biz.account.facade.model.AccountRpcQuery;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.facade.AccountRpcVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
-import com.newzkl.platform.base.common.ddd.model.vo.AccountInfoVO;
+import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.List;
 
@@ -33,7 +35,13 @@ public interface AccountFacade {
      * @param id
      * @return
      */
-    AccountGroupVO accountInfo(CommonEnum.Client client, Long id);
+    AccountGroupVO accountInfo(AccountEnum.Client client, Long id);
 
     boolean registerChannel(ChannelRegisterReq req);
+
+    AccountRpcVO accountInfo(AccountRpcQuery query);
+
+    AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq);
+
+    boolean accountEdit(AccountRpcVO rpcVO);
 }

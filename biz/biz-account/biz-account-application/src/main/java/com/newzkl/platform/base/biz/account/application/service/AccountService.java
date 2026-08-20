@@ -1,13 +1,10 @@
 package com.newzkl.platform.base.biz.account.application.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.model.auth.req.CustomSaveBatchReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.AdminDisableAccountReq;
 import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
-
-import java.util.List;
 
 /**
  * @author muc_fang
@@ -16,12 +13,7 @@ import java.util.List;
  */
 public interface AccountService {
 
-    /**
-     * 批量进行个人注册
-     *
-     * @param customSaveBatchReqList
-     */
-    void customSaveBatch(List<CustomSaveBatchReq> customSaveBatchReqList);
+
     /**
      * 分页查询会员账号
      *

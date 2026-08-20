@@ -24,7 +24,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
@@ -77,9 +77,9 @@ public class CashPayServiceImpl implements CashPayService {
                 case RECHARGE:
                     // 2、增加账户余额 + 变动记录修改
                     AccountPurseAlterRecordReq recharge = buildAccountPurseAlterRecord(tradeOrder,
-                            PurseEnum.FinanceUser.CHANNEL,
-                            PurseEnum.PurseType.PURCHASE,
-                            PurseEnum.PurseAlterType.RECHARGE);
+                            PurseEnum.User.CHANNEL,
+                            PurseEnum.Type.PURCHASE,
+                            PurseEnum.AlterType.RECHARGE);
                     accountPurseService.addAmount(recharge);
                     // 3、渠道商采购金充值后，更新服务费
                     accountPurseConfigService.alterChannelNowChargeConfig(accountId, (int) tradeOrder.getPayAmount().getCent());
@@ -87,9 +87,9 @@ public class CashPayServiceImpl implements CashPayService {
                 case SUPPLIER_RECHARGE:
                     // 2、增加收益余额 + 变动记录修改
                     AccountPurseAlterRecordReq supplierRecharge = buildAccountPurseAlterRecord(tradeOrder,
-                            PurseEnum.FinanceUser.SUPPLIER,
-                            PurseEnum.PurseType.MARKETING,
-                            PurseEnum.PurseAlterType.SUPPLIER_OPERATOR_RECHARGE);
+                            PurseEnum.User.SUPPLIER,
+                            PurseEnum.Type.MARKETING,
+                            PurseEnum.AlterType.SUPPLIER_OPERATOR_RECHARGE);
                     accountPurseService.addAmount(supplierRecharge);
                     break;
                 case GOODS_SEAT:
@@ -111,9 +111,9 @@ public class CashPayServiceImpl implements CashPayService {
                     // 创建渠道商
                     ChannelRegisterReq req = new ChannelRegisterReq();
                     req.setAccountId(accountId);
-                    req.setRole(storeOrderInfo.getIsChannel() != Boolean.TRUE
-                            ? RoleEnum.CompanyRole.MEMBER
-                            : RoleEnum.CompanyRole.CHANNEL);
+                    req.setIdentity(storeOrderInfo.getIsChannel() != Boolean.TRUE
+                            ? AccountEnum.Identity.MEMBER
+                            : AccountEnum.Identity.CHANNEL);
                     req.setStorePermission(CommonEnum.YesOrNo.YES);
                     req.setContactName(storeOrderInfo.getContactName());
                     req.setStoreName(storeName);
@@ -186,9 +186,9 @@ public class CashPayServiceImpl implements CashPayService {
     }
 
     private AccountPurseAlterRecordReq buildAccountPurseAlterRecord(TradeOrderInfoRes tradeOrder,
-                                                                    PurseEnum.FinanceUser accountType,
-                                                                    PurseEnum.PurseType purseType,
-                                                                    PurseEnum.PurseAlterType alterType) {
+                                                                    PurseEnum.User accountType,
+                                                                    PurseEnum.Type purseType,
+                                                                    PurseEnum.AlterType alterType) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(tradeOrder.getAccountId());
         req.setPurseType(purseType);

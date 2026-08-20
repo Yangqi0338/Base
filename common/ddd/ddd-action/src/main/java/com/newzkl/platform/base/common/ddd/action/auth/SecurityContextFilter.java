@@ -42,7 +42,7 @@ public class SecurityContextFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String ip = SecurityUtils.getHeader(servletRequest, "X-Real-IP");
         SecurityContextHolder.set(TokenConstants.REQUEST_INFO, new RequestInfo(DateUtil.toLocalDateTime(new Date()), ip));
-        SecurityContextHolder.set(TokenConstants.REQUEST_CLIENT, SecurityUtils.getHeader(servletRequest, TokenConstants.DETAILS_CLIENT));
+        SecurityContextHolder.set(TokenConstants.REQUEST_CLIENT, SecurityUtils.getHeader(servletRequest, TokenConstants.REQUEST_CLIENT));
         try {
             String token = getToken(servletRequest);
             try {
@@ -53,7 +53,8 @@ public class SecurityContextFilter implements Filter {
                     SecurityContextHolder.set(TokenConstants.DETAILS_NICKNAME, StpUtil.getExtra(token, TokenConstants.DETAILS_NICKNAME));
                     SecurityContextHolder.set(TokenConstants.DETAILS_COMPANY_ROLE, StpUtil.getExtra(token, TokenConstants.DETAILS_COMPANY_ROLE));
                     SecurityContextHolder.set(TokenConstants.DETAILS_UP_ID, String.valueOf(StpUtil.getExtra(token, TokenConstants.DETAILS_UP_ID)));
-                    SecurityContextHolder.set(TokenConstants.DETAILS_ROLE, String.valueOf(StpUtil.getExtra(token, TokenConstants.DETAILS_ROLE)));
+                    SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, String.valueOf(StpUtil.getExtra(token, TokenConstants.DETAILS_IDENTITY)));
+                    SecurityContextHolder.set(TokenConstants.DETAILS_IDENTITY, String.valueOf(StpUtil.getExtra(token, TokenConstants.DETAILS_IDENTITY)));
                 }
             } catch (Exception e) {
                 log.warn("子服务Token解析异常, token:{}", token);

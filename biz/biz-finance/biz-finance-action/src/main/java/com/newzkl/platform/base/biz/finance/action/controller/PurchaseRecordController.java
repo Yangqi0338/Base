@@ -2,7 +2,7 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.GoodsSeatPurchaseRecordExportVO;
@@ -115,8 +115,8 @@ public class PurchaseRecordController {
      */
     @PostMapping("/queryPage")
     public PlatformResult<Page<PurchaseRecordVO>> queryPage(@RequestBody @Valid PurchaseRecordQuery query) {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.PLATFORM != role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.PLATFORM != identity) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(purchaseRecordDomain.queryPage(query));
@@ -138,8 +138,8 @@ public class PurchaseRecordController {
      */
     @PostMapping("/goodsSeatPurchaseRecordExport")
     public void goodsSeatPurchaseRecordExport(@RequestBody @Valid PurchaseRecordQuery query) throws IOException {
-        RoleEnum.CompanyRole role = SecurityUtils.getRole();
-        if (RoleEnum.CompanyRole.PLATFORM != role) {
+        AccountEnum.Identity identity = SecurityUtils.getIdentity();
+        if (AccountEnum.Identity.PLATFORM != identity) {
             query.setAccountId(SecurityUtils.getAccountId());
         }
         query.setAccountId(null);

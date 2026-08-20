@@ -6,12 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCode;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.autotable.annotation.Index;
-import org.dromara.autotable.annotation.OldColumnName;
-import org.dromara.autotable.annotation.PrimaryKey;
+import org.dromara.autotable.annotation.*;
+import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 
 import java.time.LocalDateTime;
 
@@ -34,7 +35,7 @@ public class AccountDO extends BaseDO {
      * 所属端
      */
     @PrimaryKey
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
     /**
      * 父ID
      */
@@ -52,6 +53,7 @@ public class AccountDO extends BaseDO {
     /**
      * 昵称
      */
+    @BusinessCode(value = BusinessType.USER_DEFAULT_NAME)
     private String nickname;
     /**
      * 登录名称
@@ -76,12 +78,6 @@ public class AccountDO extends BaseDO {
      */
     private LocalDateTime lastLoginTime;
     /**
-     * 子账号数量
-     */
-    /**
-     * 下级数量
-     */
-    /**
      * 邀请人ID
      */
     @Index
@@ -89,7 +85,7 @@ public class AccountDO extends BaseDO {
     /**
      * 角色ID集合
      */
-    private String roleIdList;
+    private String identityList;
     /**
      * 邀请码
      */
@@ -100,13 +96,9 @@ public class AccountDO extends BaseDO {
     @Index
     private String phone;
     /**
-     * 账号
-     * @ext tencent IM 用
-     */
-    private String userAccount;
-    /**
      * 头像
      */
+    @BusinessCode(value = BusinessType.USER_DEFAULT_AVATAR)
     private String head;
 
     /**

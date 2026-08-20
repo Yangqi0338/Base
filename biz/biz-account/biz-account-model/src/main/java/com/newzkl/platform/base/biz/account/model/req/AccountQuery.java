@@ -1,9 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -82,7 +80,7 @@ public class AccountQuery extends BizPageQuery {
     /**
      * 端
      */
-    private CommonEnum.Client client;
+    private AccountEnum.Client client;
 
     /**
      * 设置单个邀请人账号ID (内部包装为列表)
@@ -105,10 +103,7 @@ public class AccountQuery extends BizPageQuery {
     /**
      * 角色列表
      */
-    private List<RoleEnum.CompanyRole> roleList;
+    private List<AccountEnum.Identity> identityList;
 
-    /**
-     * 角色
-     */
-    private RoleEnum.CompanyRole role;
+
 }

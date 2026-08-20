@@ -25,19 +25,19 @@ public class AccountPurseAlterRecordVO extends BaseRes {
     /**
      * 账户类型
      */
-    private PurseEnum.PurseType purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 1 进账 2 出账 财务用户类型
      * 客户类型
      */
-    private PurseEnum.FinanceUser accountType;
+    private PurseEnum.User accountType;
 
     /**
      * 账号修改类型  1 进账 2 出账
      *
      */
-    private PurseEnum.PurseAlterType alterType;
+    private PurseEnum.AlterType alterType;
 
     /**
      * 分润修改类型  1 进账 2 出账

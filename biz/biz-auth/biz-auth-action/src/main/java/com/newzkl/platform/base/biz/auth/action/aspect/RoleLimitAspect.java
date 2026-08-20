@@ -1,12 +1,11 @@
 package com.newzkl.platform.base.biz.auth.action.aspect;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -38,12 +37,12 @@ public class RoleLimitAspect {
      */
     @Around("@within(roleLimit) || @annotation(roleLimit)")
     public Object check(ProceedingJoinPoint pjp, RoleLimit roleLimit) throws Throwable {
-        RoleEnum.CompanyRole[] allowed = roleLimit.value();
-        CommonEnum.Client[] clientAllowed = roleLimit.client();
+        AccountEnum.Identity[] allowed = roleLimit.value();
+        AccountEnum.Client[] clientAllowed = roleLimit.client();
         if (ArrayUtil.isEmpty(allowed) && ArrayUtil.isEmpty(clientAllowed)) {
             return pjp.proceed();
         }
-        RoleEnum.CompanyRole current = SecurityUtils.getRole();
+        AccountEnum.Identity current = SecurityUtils.getIdentity();
         if (current != null) {
             if (ArrayUtil.contains(allowed, current)) {
                 return pjp.proceed();

@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.common.ddd.action.auth;
 
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,12 +24,12 @@ public @interface RoleLimit {
      *
      * @return 角色数组, 默认空 (不限制)
      */
-    RoleEnum.CompanyRole[] value() default {};
+    AccountEnum.Identity[] value() default {};
 
     /**
      * 允许访问的端集合
      *
      * @return 角色数组, 默认空 (不限制)
      */
-    CommonEnum.Client[] client() default {};
+    AccountEnum.Client[] client() default {};
 }

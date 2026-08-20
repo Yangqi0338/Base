@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.user.model.relation.res;
 
-import com.newzkl.platform.base.common.ddd.model.enums.user.RoleEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -80,5 +80,5 @@ public class ShipAddressRes extends BaseRes {
     /**
      * 角色关联ID
      */
-    private RoleEnum.CompanyRole role;
+    private AccountEnum.Identity identity;
 }
