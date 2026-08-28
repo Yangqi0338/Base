@@ -41,6 +41,16 @@ public interface AccountFacade {
 
     AccountRpcVO accountInfo(AccountRpcQuery query);
 
+    /**
+     * 按凭证查全部端账号
+     *
+     * <p>client 为空时不限端, 同一 username 可能存在多端账号, 全部返回供登录侧按端优先级择主</p>
+     *
+     * @param query 查询条件 (username | client)
+     * @return 账号列表
+     */
+    List<AccountRpcVO> accountInfoList(AccountRpcQuery query);
+
     AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq);
 
     boolean accountEdit(AccountRpcVO rpcVO);

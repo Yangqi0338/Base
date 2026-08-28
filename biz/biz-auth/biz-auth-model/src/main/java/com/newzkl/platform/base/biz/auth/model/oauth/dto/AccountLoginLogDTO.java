@@ -5,7 +5,7 @@ package com.newzkl.platform.base.biz.auth.model.oauth.dto;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 
 import com.newzkl.platform.base.common.ddd.model.enums.auth.AuthEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.Data;
 
 import java.time.LocalDateTime;

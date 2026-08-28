@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,14 +20,15 @@ import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
+import com.newzkl.platform.base.biz.account.model.res.SupplierAuditRes;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
-import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
+import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.SupplierAssembler;
 import com.newzkl.platform.base.common.ddd.model.constant.SupplierErrorCode;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -102,21 +102,47 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void auditPass(AccountVO accountVO, String companyInfo) {
-        //从companyInfo取出行业ID并赋值
-        JSONObject jsonObject = JSONObject.parseObject(companyInfo);
-        if (jsonObject == null) {
+    public void supplierSubmitAudit(Long accountId, CompanyInfoVO companyInfo) {
+        if (accountId == null) {
+            throw new PlatformException(BaseErrorCode.PARAM, "账号ID不能为空");
+        }
+        SupplierVO current = supplierRepository.supplier(accountId);
+        if (current == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "供应商");
+        }
+        // 幂等: 仅初始态可提交, 已在审/已入驻不允许重复提交
+        // (登录回填的 supplierState 取自 state, 故提交后同步推进 state)
+        if (current.getState() != SupplierEnum.State.INIT) {
+            throw new PlatformException(SupplierErrorCode.AUDIT_STATE);
+        }
+        SupplierVO item = new SupplierVO();
+        item.setId(accountId);
+        item.setCompanyInfo(companyInfo);
+        item.setState(SupplierEnum.State.AUDITING);
+        item.setAuditState(AuditEnum.State.AUDITING);
+        supplierRepository.supplierEdit(item);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void supplierAuditPass(Long accountId) {
+        SupplierVO current = supplierRepository.supplier(accountId);
+        if (current == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "供应商");
+        }
+        // 仅审核中的供应商可通过, 防越态/重复通过
+        if (current.getState() != SupplierEnum.State.AUDITING) {
+            throw new PlatformException(SupplierErrorCode.AUDIT_STATE);
+        }
+        CompanyInfoVO companyInfo = current.getCompanyInfo();
+        if (companyInfo == null) {
             throw new PlatformException(BaseErrorCode.PARAM, "companyInfo不能为空");
         }
-        String manageIndustryIdListString = jsonObject.getString("manageIndustryIdList");
-        List<String> manageIndustryIdList = JSONUtil.toList(manageIndustryIdListString, String.class);
-        JSONArray companyAreaCode = jsonObject.getJSONArray("companyAreaCode");
         //组装数据
         SupplierVO supplier = new SupplierVO();
-        supplier.setId(accountVO.getId());
-        supplier.setName(jsonObject.getString("companyName"));
-//        supplier.setCompanyAreaCode(StrUtil.toString(CollUtil.getLast(companyAreaCode)));
-        supplier.setIndustryIdList(BizUtil.stringListToString(manageIndustryIdList));
+        supplier.setId(accountId);
+        supplier.setName(companyInfo.getCompanyName());
+        supplier.setIndustryIdList(companyInfo.getManageIndustryIdList());
         supplier.setState(SupplierEnum.State.NORMAL);
         supplier.setAuditState(AuditEnum.State.SUCCESS);
         supplier.setCompanyInfo(companyInfo);
@@ -126,9 +152,20 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void auditFail(Long accountId, String lastRefuseReason) {
+        SupplierVO current = supplierRepository.supplier(accountId);
+        if (current == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "供应商");
+        }
+        // 仅审核中的供应商可拒绝
+        if (current.getState() != SupplierEnum.State.AUDITING) {
+            throw new PlatformException(SupplierErrorCode.AUDIT_STATE);
+        }
         SupplierVO supplier = new SupplierVO();
         supplier.setId(accountId);
+        // 退回初始态以允许重新提交 (submit 判 state==INIT), auditState=FAIL 保留拒绝痕迹
+        supplier.setState(SupplierEnum.State.INIT);
         supplier.setAuditState(AuditEnum.State.FAIL);
         supplier.setAuditRefuseReason(lastRefuseReason);
         supplierRepository.supplierEdit(supplier);
@@ -142,36 +179,28 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         supplierRepository.supplierEdit(supplier);
     }
 
-//    @Override
-//    @Transactional(rollbackFor = Exception.class)
-//    public void promisePayAuditSuccess(PromiseFlowVO promiseFlowVO) {
-//        SupplierRes oldSupplier = supplierRepository.supplier(promiseFlowVO.getAccountId());
-//        // 幂等
-//        if (oldSupplier.getPromisePayState() == CommonEnum.YesOrNo.YES) {
-//            return;
-//        }
-//        //修改供应商
-//        SupplierRes supplier = new SupplierRes();
-//        if (promiseFlowVO.getAccountId() == null) {
-//            throw new PlatformException(BaseErrorCode.PARAM, "account_id");
-//        }
-//        supplier.setId(promiseFlowVO.getAccountId());
-//        supplier.setState(2);
-//        supplier.setPromisePayState(CommonEnum.YesOrNo.YES);
-//        supplier.setPromisePayAuditState(AuditEnum.State.SUCCESS.getCode());
-//        supplier.setPromisePayAmount(promiseFlowVO.getAmount());
-//        supplierRepository.supplierEdit(supplier); // 设置 state=2、promisePayState=ON、promisePayAuditState=SUCCESS、promisePayAmount=审核通过金额。
-//        //保存保证金缴纳流水
-//        PromiseFlow promiseFlow = SupplierUtil.promiseFlowVO2promiseFlow(promiseFlowVO);
-//        promiseFlow.setId(SnowflakeIdAble.getSnowflakeId());
-//        supplierRepository.promiseFlowSave(promiseFlow); // 保存保证金缴纳流水
-//        //短信通知
-//        CodeReq codeReq = new CodeReq();
-//        codeReq.setType(SmsEnum.Type.PROMISE_SUCCESS.getCode());
-//        codeReq.setPhone(mobile);
-//        CodeReq codeReq = SupplierUtil.getPromisePayAuditSuccessNotifyReq(oldSupplier.getUsername()); //发送短信通知供应商
-//        supplierRepository.smsNotify(codeReq);
-//    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void promisePayAuditSuccess(Long accountId, Money promisePayAmount) {
+        SupplierVO oldSupplier = supplierRepository.supplier(accountId);
+        if (oldSupplier == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "供应商");
+        }
+        // 幂等: 已缴纳保证金则直接返回, 防重复入账
+        if (oldSupplier.getPromisePayState() == CommonEnum.YesOrNo.YES) {
+            return;
+        }
+        // 置已入驻 + 保证金已缴 + 保证金审核通过 + 实缴金额
+        // (保证金流水与余额充值由 finance 域负责, 此处只改 account 主数据)
+        SupplierVO supplier = new SupplierVO();
+        supplier.setId(accountId);
+        supplier.setState(SupplierEnum.State.NORMAL);
+        supplier.setPromisePayState(CommonEnum.YesOrNo.YES);
+        supplier.setPromisePayAuditState(AuditEnum.State.SUCCESS);
+        supplier.setPromisePayAmount(promisePayAmount);
+        supplierRepository.supplierEdit(supplier);
+        // 短信通知供应商保证金审核通过: 见 rebuild/docs/planning/deferred-issues.md 短信通道
+    }
 
     @Override
     public void promisePayAuditFail(Long accountId, String lastRefuseReason) {
@@ -200,6 +229,21 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 
         // 查account数据
         return TransferUtils.transferPage(supplierPageList, supplierAssembler::accountVO2Res);
+    }
+
+    @Override
+    public Page<SupplierAuditRes> supplierAuditPage(SupplierQuery supplierQuery) {
+        Page<SupplierAccountVO> supplierPageList = supplierRepository.pageListWithAccount(supplierQuery);
+        return TransferUtils.transferPage(supplierPageList, SupplierAuditRes.class);
+    }
+
+    @Override
+    public SupplierAuditRes supplierAuditDetail(Long supplierId) {
+        SupplierVO supplier = supplierRepository.supplier(supplierId);
+        if (supplier == null) {
+            return null;
+        }
+        return TransferUtils.transfer(supplier, SupplierAuditRes.class);
     }
 
     @Override

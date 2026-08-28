@@ -76,3 +76,8 @@ app-test/
 
 # IDE 插件本地配置
 .apifox-helper.properties
+
+**/**/**/src/main/resources/rebel.xml
+**/**/src/main/resources/rebel.xml
+**/src/main/resources/rebel.xml
+src/main/resources/rebel.xml

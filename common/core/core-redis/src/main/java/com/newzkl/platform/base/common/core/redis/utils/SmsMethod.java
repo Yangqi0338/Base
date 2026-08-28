@@ -9,6 +9,7 @@ import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
 import com.newzkl.platform.base.common.core.sms.SmsConfig;
+import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.properties.UserProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,8 @@ public class SmsMethod extends com.newzkl.platform.base.common.core.sms.SmsMetho
     }
 
     public static boolean checkCode(SmsEnum.Type type, String code){
-        return !(SecurityContextHolder.isDev() || type.getSignType() == 1 || UserProperties.isPassSmsCode(code));
+        // 消息类型为验证码且未通过全局通行码校验
+        return type.getSignType() == 1 && !UserProperties.isPassSmsCode(code);
     }
 
     /**
@@ -69,6 +71,9 @@ public class SmsMethod extends com.newzkl.platform.base.common.core.sms.SmsMetho
      */
     public static boolean verificationCode(VerificationCodeReq req) {
         if (checkCode(req.getType(), req.getCode())) {
+            if (!PatternUtil.isChinaPhone(req.getPhone())) {
+                return false;
+            }
             String sendCode = RedisUtil.hGet(RedisEnum.Key.SMS.getCode(req.getType()), req.getPhone());
             return req.getCode().equals(sendCode);
         }

@@ -6,8 +6,9 @@ import com.newzkl.platform.base.biz.store.model.store.command.StoreCategorySaveC
 import com.newzkl.platform.base.biz.store.model.store.entity.StoreCategory;
 import com.newzkl.platform.base.biz.store.model.store.query.StoreCategoryQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreCategoryRes;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.groups.Default;
@@ -37,6 +38,7 @@ import java.util.List;
 @RequestMapping("/storeCategory")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("门店分类")
 public class StoreCategoryController {
 
     private final StoreCategoryDomain storeCategoryDomain;
@@ -60,6 +62,7 @@ public class StoreCategoryController {
      * @return 新增结果
      */
     @PostMapping("/add")
+    @FuncPermission("新增门店分类")
     public PlatformResult<Long> add(@Validated @RequestBody StoreCategorySaveCommand saveCommand) {
         Long id = storeCategoryDomain.add(saveCommand);
         return PlatformResult.success(id);
@@ -72,6 +75,7 @@ public class StoreCategoryController {
      * @return 编辑结果
      */
     @PutMapping("/edit")
+    @FuncPermission("编辑门店分类")
     public PlatformResult<Void> edit(
             @Validated({UpdateCommand.class, Default.class}) @RequestBody StoreCategorySaveCommand saveCommand) {
         storeCategoryDomain.edit(saveCommand);
@@ -85,6 +89,7 @@ public class StoreCategoryController {
      * @return 删除结果
      */
     @DeleteMapping("/del/{id}")
+    @FuncPermission("删除门店分类")
     public PlatformResult<Void> del(@PathVariable Long id) {
         storeCategoryDomain.del(id);
         return PlatformResult.success();

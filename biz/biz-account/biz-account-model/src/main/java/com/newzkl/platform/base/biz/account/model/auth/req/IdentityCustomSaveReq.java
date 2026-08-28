@@ -35,7 +35,14 @@ public class IdentityCustomSaveReq extends BaseReq {
     /**
      * 头像
      */
-    private String headImg;
+    private String head;
+
+    /**
+     * 角色 id 集合
+     *
+     * <p>供各身份策略建号后绑定账号-角色, 空集视为不绑定</p>
+     */
+    private java.util.List<Long> roleIdList;
 
     /**
      * 渠道商名称

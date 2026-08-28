@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.store.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.store.application.service.SeatPackageService;
 import com.newzkl.platform.base.biz.store.domain.store.service.SeatPackageDomain;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageCreateReq;
 import com.newzkl.platform.base.biz.store.model.store.query.SeatPackageQuery;
@@ -10,7 +11,7 @@ import com.newzkl.platform.base.biz.store.model.store.req.SeatPackageUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageChannelRes;
 import com.newzkl.platform.base.biz.store.model.store.res.SeatPackageRes;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/seatPackage")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("席位套餐")
 public class SeatPackageController {
 
     private final SeatPackageDomain seatPackageDomain;
@@ -72,6 +74,7 @@ public class SeatPackageController {
      * @return 成功结果
      */
     @PostMapping("/create")
+    @FuncPermission("新增席位套餐")
     public PlatformResult<Void> create(@Validated @RequestBody SeatPackageCreateReq req) {
         seatPackageDomain.create(req);
         return PlatformResult.success();
@@ -84,6 +87,7 @@ public class SeatPackageController {
      * @return 成功结果
      */
     @PostMapping("/update")
+    @FuncPermission("修改席位套餐")
     public PlatformResult<Void> update(@Validated @RequestBody SeatPackageUpdateReq req) {
         seatPackageDomain.update(req);
         return PlatformResult.success();

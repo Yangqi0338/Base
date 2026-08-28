@@ -12,7 +12,8 @@ import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("payOrder")
 @RequiredArgsConstructor
+@FuncPermission("支付订单")
 public class PayOrderController {
 
     /**
@@ -57,6 +59,7 @@ public class PayOrderController {
      * @param payMethod 支付方式 1:微信 2:支付宝
      * @return 汇付支付结果
      */
+    @FuncPermission("渠道商充值采购金")
     @PostMapping("/channelRecharge/{amount}/{payMethod}")
     public PlatformResult<HuiFuPayRes> channelRecharge(@PathVariable("amount") Integer amount,
                                                   @PathVariable("payMethod") Integer payMethod) {
@@ -81,6 +84,7 @@ public class PayOrderController {
      * @param payType        支付方式 1:微信 2:支付宝
      * @return 汇付支付结果
      */
+    @FuncPermission("供应商充值运营账户")
     @PostMapping("/supplierRecharge/{rechargeAmount}/{payType}")
     public PlatformResult<HuiFuPayRes> supplierRecharge(@PathVariable("rechargeAmount") Integer rechargeAmount,
                                                    @PathVariable("payType") Integer payType) {

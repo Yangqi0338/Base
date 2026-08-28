@@ -15,11 +15,12 @@ import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/sale/order")
+@FuncPermission("订单管理")
 public class OrderController {
 
     @Autowired
@@ -51,14 +53,13 @@ public class OrderController {
     @Autowired
     private CommitOrder commitOrder;
 
-    @Autowired
-
     /**
      * C端下单
      * @param orderCreate
      * @return
      */
     @PostMapping("memberCreateOrder")
+    @FuncPermission("C端下单")
     public PlatformResult<OrderCreateRes> memberCreateOrder(@Validated @RequestBody OrderCmd.OrderCreate orderCreate) {
         MemberOrderCreateCommand memberOrderCreateCommand = Optional.ofNullable(orderCreate.getMemberOrderCreateCommand()).orElse(new MemberOrderCreateCommand());
         memberOrderCreateCommand.setAccountId(SecurityUtils.getAccountId());
@@ -86,6 +87,7 @@ public class OrderController {
      * @return 支付结果
      */
     @PostMapping("commitMemberPayment")
+    @FuncPermission("提交订单")
     public PlatformResult<OrderAgg> commitMemberPrePayOrder(@RequestBody @Validated CommitMemberOrderCommand command) {
         command.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(commitOrder.commitMemberPrePayOrder(command));
@@ -99,6 +101,7 @@ public class OrderController {
      * @return 支付结果
      */
     @PostMapping("memberPayment")
+    @FuncPermission("C端支付")
     public PlatformResult<PayBaseResult> consumerPayment(@RequestBody @Validated PayMemberOrderCommand command) {
 
         return PlatformResult.success(commitOrder.memberPayOrder(command));
@@ -111,6 +114,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("changeOrderShip")
+    @FuncPermission("变更收货地址")
     public PlatformResult<Boolean> changeOrderShip(@RequestBody @Validated OrderShipCommand command) {
         command.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(commitOrder.changeOrderShip(command));
@@ -122,6 +126,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("memberCancelOrder")
+    @FuncPermission("C端取消订单")
     public PlatformResult<Void> memberCancelOrder(@Validated @RequestBody MemberCancelOrderCommand idObj) {
         orderDomain.memberCancelOrder(idObj.getId(), idObj.getCancelReason());
         return PlatformResult.success();
@@ -132,6 +137,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("memberConfirmOrder")
+    @FuncPermission("C端确认收货")
     public PlatformResult<Void> memberConfirmOrder(@Validated @RequestBody IdCommand idObj) {
         orderDomain.receiveSkuOrder(idObj.getId(), null);
         return PlatformResult.success();
@@ -143,6 +149,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("createOrderAgain")
+    @FuncPermission("再来一单")
     public PlatformResult<OrderCreateRes> createOrderAgain(@Validated @RequestBody IdCommand idObj) {
         return PlatformResult.success(commitOrder.createOrderAgain(idObj.getIdList()));
     }
@@ -153,6 +160,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("channelCancelOrder")
+    @FuncPermission("渠道商取消交易单")
     public PlatformResult<Void> channelCancelOrder(@Validated @RequestBody IdCommand idObj) {
         orderDomain.channelCancelOrder(idObj.getId(),"门店主动取消订单" );
         return PlatformResult.success();
@@ -191,6 +199,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("orderBalancePay")
+    @FuncPermission("交易单余额支付")
     public PlatformResult<Void> orderBalancePay(@RequestBody IdCommand idObj) {
         if (AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()) {
             orderService.orderBalancePay(idObj.getIdList().toArray(new Long[0]));

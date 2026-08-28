@@ -5,6 +5,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -114,7 +115,7 @@ public class SkuOrderDO extends BaseDO {
     /**
      * sku销售属性
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String skuSaleAttribute;
     /**
      * sku名称

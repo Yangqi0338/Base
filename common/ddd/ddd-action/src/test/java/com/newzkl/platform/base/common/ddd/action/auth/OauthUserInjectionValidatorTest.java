@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthIdentity;
 import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.OauthUserInjectionValidator;
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserInjectionValidator;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.AfterEach;

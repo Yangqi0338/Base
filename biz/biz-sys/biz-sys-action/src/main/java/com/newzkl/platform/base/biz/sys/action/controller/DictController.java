@@ -11,6 +11,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/dict")
 @RequiredArgsConstructor
+@FuncPermission("字典管理")
 public class DictController {
 
     private final DictDomain dictDomain;
@@ -48,6 +50,7 @@ public class DictController {
      * @return 空结果
      */
     @PostMapping("dictSave")
+    @FuncPermission("字典保存")
     public PlatformResult<Void> dictSave(@RequestBody DictReq dictReq) {
         if (dictReq.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -76,6 +79,7 @@ public class DictController {
      * @return 条目 id
      */
     @PostMapping("dictItemSave")
+    @FuncPermission("字典条目保存")
     public PlatformResult<Long> dictItemSave(@Validated({UpdateCommand.class, Default.class}) @RequestBody DictItemReq req) {
         return PlatformResult.success(dictItemDomain.itemSave(req));
     }
@@ -98,6 +102,7 @@ public class DictController {
      * @return 空结果
      */
     @PostMapping("dictItemDelete")
+    @FuncPermission("字典条目删除")
     public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdCommand idList) {
         dictItemDomain.itemDelete(idList.getIdList());
         return PlatformResult.success();

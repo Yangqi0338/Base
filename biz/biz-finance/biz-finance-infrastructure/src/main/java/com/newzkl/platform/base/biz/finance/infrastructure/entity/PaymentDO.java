@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
@@ -72,13 +73,13 @@ public class PaymentDO extends BaseDO {
     /**
      * 订单信息
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String orderInfo;
 
     /**
      * 收款方信息
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String payeeInfo;
 
     /**

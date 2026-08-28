@@ -27,11 +27,14 @@ public interface UserClientDomain {
     MemberVO member(Long memberId);
 
     /**
-     * 注销会员
-     * @param accountId
-     * @param command
+     * 注销账号
+     *
+     * <p>仅将 account 状态置为注销, 身份表 (member/channel/...) 数据保留。</p>
+     *
+     * @param accountId 账号 ID
+     * @param command   注销命令
      */
-    void cancelMember(Long accountId, CancelMemberReq command);
+    void cancelAccount(Long accountId, CancelMemberReq command);
 
     /**
      * 修改会员信息

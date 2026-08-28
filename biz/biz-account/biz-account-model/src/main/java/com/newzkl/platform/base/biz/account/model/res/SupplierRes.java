@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
+import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
@@ -48,7 +49,7 @@ public class SupplierRes extends BaseRes {
     /**
      * 企业信息
      */
-    private String companyInfo;
+    private CompanyInfoVO companyInfo;
     /**
      * 是否缴纳保证金 (查询)
      */

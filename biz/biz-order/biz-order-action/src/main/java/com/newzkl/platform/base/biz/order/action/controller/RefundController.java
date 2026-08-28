@@ -14,10 +14,11 @@ import com.newzkl.platform.base.biz.order.model.vo.RefundVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sale/refund")
+@FuncPermission("售后管理")
 public class RefundController {
 
     @Autowired
@@ -44,6 +46,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("refundCreate")
+    @FuncPermission("C端创建售后")
     public PlatformResult<Long> refundCreate(@Validated @RequestBody RefundCommand refundCommand) {
         refundCommand.setIdentity(AccountEnum.Identity.MEMBER);
         Long refundId = refundService.refundCreate(refundCommand);
@@ -55,6 +58,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("memberCancelRefund")
+    @FuncPermission("C端取消售后")
     public PlatformResult<Void> memberCancelRefund(@Validated @RequestBody IdCommand idObj) {
         refundDomain.stopAudit(AccountEnum.Identity.MEMBER, SecurityUtils.getAccountId(), idObj.getId());
         return PlatformResult.success();
@@ -65,6 +69,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("channelAudit")
+    @FuncPermission("渠道商审核售后单")
     public PlatformResult<Void> channelAudit(@Validated @RequestBody RefundCmd.Audit audit) {
         refundService.channelAudit(audit.getRefundId(),audit.getSpuOrderId() , audit.getExecute(), audit.getReason(), false);
         return PlatformResult.success();
@@ -75,6 +80,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("supplierAudit")
+    @FuncPermission("供应商审核售后单")
     public PlatformResult<Void> supplierAudit(@Validated @RequestBody RefundCmd.Audit audit) {
         refundService.supplierAudit(audit.getRefundId(), audit.getExecute(), false);
         return PlatformResult.success();
@@ -85,6 +91,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("submitRefundFreight")
+    @FuncPermission("提交退货物流")
     public PlatformResult<Void> submitRefundFreight(@Validated @RequestBody RefundFreightVO refundFreightVO) {
         refundDomain.submitRefundFreight(refundFreightVO);
         return PlatformResult.success();
@@ -95,6 +102,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("supplierConfirmRefundFreight")
+    @FuncPermission("供应商确认收货")
     public PlatformResult<Void> supplierConfirmRefundFreight(@Validated @RequestBody IdCommand idObj) {
         refundService.supplierConfirmRefundFreight(idObj.getId());
         return PlatformResult.success();
@@ -105,6 +113,7 @@ public class RefundController {
      * @return
      */
     @PostMapping("supplierRefuseRefundFreight")
+    @FuncPermission("供应商拒绝收货")
     public PlatformResult<Void> supplierRefuseRefundFreight(@Validated @RequestBody IdCommand idObj) {
         refundDomain.refuseRefundFreight(idObj.getId());
         return PlatformResult.success();

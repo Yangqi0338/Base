@@ -31,6 +31,10 @@ public class AccountReq extends BaseReq {
      */
     private String nickname;
     /**
+     * 真实姓名
+     */
+    private String realname;
+    /**
      * 手机号 (查询)
      */
     @Pattern(regexp = PatternUtil.MOBILE, message = "手机号格式错误")

@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationReposit
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
  * <p>account → ACCOUNT_ROLE → role → ROLE_PERMISSION → permission, 重建 ACCOUNT_PERMISSION 派生表并驱逐 Redis 缓存,
  * 软删权限由 @TableLogic 自动过滤, 无需手工判 deleted。</p>
  *
+ * <p>端隔离: 派生关系与 Redis 缓存 key 均带 client, 保证各端账号权限互不串扰</p>
+ *
  * @author KC
  */
 @Slf4j
@@ -30,49 +33,55 @@ public class AccountPermissionRecalculator {
     private final RelationRepository relationRepository;
 
     /**
-     * 重算账号集合的派生权限
+     * 重算某端账号集合的派生权限
      *
+     * @param client     所属端
      * @param accountIds 账号ID集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public void recalc(Collection<Long> accountIds) {
+    public void recalc(AccountEnum.Client client, Collection<Long> accountIds) {
         if (CollUtil.isEmpty(accountIds)) {
             return;
         }
 
-        relationRepository.deleteBySource(PermissionEnum.RelationType.ACCOUNT_PERMISSION, accountIds);
+        List<String> accountKeys = accountIds.stream().map(String::valueOf).toList();
+        relationRepository.deleteBySource(client, PermissionEnum.RelationType.ACCOUNT_PERMISSION, accountKeys);
 
-        Map<Long, List<Long>> accRoles = relationRepository
-                .listBySource(PermissionEnum.RelationType.ACCOUNT_ROLE, accountIds).stream()
-                .collect(Collectors.groupingBy(PermissionRelationDTO::getSourceId,
-                        Collectors.mapping(PermissionRelationDTO::getTargetId, Collectors.toList())));
+        // account(id 字符串) → role(code): source=accountId, target=roleCode
+        Map<String, List<String>> accRoles = relationRepository
+                .listBySource(client, PermissionEnum.RelationType.ACCOUNT_ROLE, accountKeys).stream()
+                .collect(Collectors.groupingBy(PermissionRelationDTO::getSource,
+                        Collectors.mapping(PermissionRelationDTO::getTarget, Collectors.toList())));
 
-        Set<Long> roleIds = accRoles.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-        Map<Long, List<Long>> rolePerms = relationRepository
-                .listBySource(PermissionEnum.RelationType.ROLE_PERMISSION, roleIds).stream()
-                .collect(Collectors.groupingBy(PermissionRelationDTO::getSourceId,
-                        Collectors.mapping(PermissionRelationDTO::getTargetId, Collectors.toList())));
+        // role(code) → permission(id 字符串): source=roleCode, target=permId
+        Set<String> roleCodes = accRoles.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+        Map<String, List<String>> rolePerms = relationRepository
+                .listBySource(client, PermissionEnum.RelationType.ROLE_PERMISSION, roleCodes).stream()
+                .collect(Collectors.groupingBy(PermissionRelationDTO::getSource,
+                        Collectors.mapping(PermissionRelationDTO::getTarget, Collectors.toList())));
 
         List<PermissionRelationDTO> toInsert = new ArrayList<>();
-        for (Map.Entry<Long, List<Long>> e : accRoles.entrySet()) {
-            Long accountId = e.getKey();
-            Set<Long> perms = e.getValue().stream()
-                    .flatMap(roleId -> rolePerms.getOrDefault(roleId, List.of()).stream())
+        for (Map.Entry<String, List<String>> e : accRoles.entrySet()) {
+            String accountKey = e.getKey();
+            Set<String> perms = e.getValue().stream()
+                    .flatMap(roleCode -> rolePerms.getOrDefault(roleCode, List.of()).stream())
                     .collect(Collectors.toSet());
-            for (Long permId : perms) {
+            for (String permKey : perms) {
                 PermissionRelationDTO d = new PermissionRelationDTO();
+                d.setClient(client);
                 d.setType(PermissionEnum.RelationType.ACCOUNT_PERMISSION);
-                d.setSourceId(accountId);
-                d.setTargetId(permId);
-                d.setSource(PermissionEnum.Source.ROLE_DERIVED);
+                d.setSource(accountKey);
+                d.setTarget(permKey);
+                d.setOrigin(PermissionEnum.Source.ROLE_DERIVED);
                 toInsert.add(d);
             }
         }
         relationRepository.insertBatch(toInsert);
 
+        String clientCode = client.getCode();
         for (Long id : accountIds) {
-            RedisUtil.del(RedisEnum.Key.ACCOUNT_PERM.getCode(id), RedisEnum.Key.ACCOUNT_ROLE.getCode(id));
+            RedisUtil.del(RedisEnum.Key.ACCOUNT_PERM.getCode(clientCode, id), RedisEnum.Key.ACCOUNT_ROLE.getCode(clientCode, id));
         }
-        log.info("[recalc] done accountIds={} insert={}", accountIds, toInsert.size());
+        log.info("[recalc] done client={} accountIds={} insert={}", clientCode, accountIds, toInsert.size());
     }
 }

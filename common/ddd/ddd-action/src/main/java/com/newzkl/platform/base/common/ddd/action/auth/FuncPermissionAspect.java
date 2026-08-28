@@ -29,6 +29,11 @@ import java.util.List;
 public class FuncPermissionAspect {
 
     /**
+     * 调试期禁用开关, true 时切面直接放行, 不做任何权限校验
+     */
+    private static final boolean DISABLED = true;
+
+    /**
      * 环绕通知: 校验当前登录者是否具备目标功能码
      *
      * @param pjp 连接点
@@ -38,6 +43,10 @@ public class FuncPermissionAspect {
     @Around("@within(com.newzkl.platform.base.common.ddd.action.auth.FuncPermission) "
             + "|| @annotation(com.newzkl.platform.base.common.ddd.action.auth.FuncPermission)")
     public Object check(ProceedingJoinPoint pjp) throws Throwable {
+        // TODO 调试期临时禁用功能权限鉴权, 注解全保留, 调试完成删此直返恢复校验
+        if (DISABLED) {
+            return pjp.proceed();
+        }
         MethodSignature ms = (MethodSignature) pjp.getSignature();
         Method method = ms.getMethod();
         Class<?> targetClass = ClassUtils.getUserClass(pjp.getTarget().getClass());
@@ -49,9 +58,29 @@ public class FuncPermissionAspect {
 
         List<String> perms = StpUtil.getPermissionList();
         if (perms == null || (!perms.contains("*") && !perms.contains(code))) {
-            throw new NotPermissionException(code, StpUtil.getLoginType());
+            // 抛出功能显示名而非 code, 供全局异常处理器直出可读文案
+            throw new NotPermissionException(resolveName(method, targetClass), StpUtil.getLoginType());
         }
         return pjp.proceed();
+    }
+
+    /**
+     * 解析功能显示名, 方法级注解优先于类级, 缺省降级方法名/类简名
+     *
+     * @param method      目标方法
+     * @param targetClass 目标类
+     * @return 功能显示名
+     */
+    private String resolveName(Method method, Class<?> targetClass) {
+        FuncPermission m = method.getAnnotation(FuncPermission.class);
+        if (m != null) {
+            return m.value().isEmpty() ? method.getName() : m.value();
+        }
+        FuncPermission c = targetClass.getAnnotation(FuncPermission.class);
+        if (c != null) {
+            return c.value().isEmpty() ? targetClass.getSimpleName() : c.value();
+        }
+        return method.getName();
     }
 
     /**

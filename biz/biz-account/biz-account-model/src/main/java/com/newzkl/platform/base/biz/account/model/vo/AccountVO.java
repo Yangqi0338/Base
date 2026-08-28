@@ -97,6 +97,10 @@ public class AccountVO extends BaseRes {
      * 归属端
      */
     private AccountEnum.Client client;
+    /**
+     * 角色id列表
+     */
+    private List<Long> roleIdList;
 
     /**
      * @param registerRole  要注册的角色
@@ -110,7 +114,9 @@ public class AccountVO extends BaseRes {
             throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
         }
         this.username = username;
-        this.password = new BCryptPasswordEncoder().encode(password);
+        if (StrUtil.isNotBlank(password)) {
+            this.password = new BCryptPasswordEncoder().encode(password);
+        }
 
         //默认是启动状态
         this.state = Opt.ofNullable(state).orElse(AccountEnum.State.ENABLE);

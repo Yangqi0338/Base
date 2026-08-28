@@ -1,5 +1,10 @@
 package com.newzkl.platform.base.biz.auth.domain.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.auth.model.permission.req.PermissionQuery;
+import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
+import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleRes;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionListDTO;
@@ -52,7 +57,7 @@ public interface PermissionDomain {
      * @param type 权限类型
      * @return 权限树
      */
-    List<PermissionTreeVO> tree(PermissionEnum.Type type);
+    List<PermissionTreeVO> tree(AccountEnum.Client client, PermissionEnum.Type type);
 
     /**
      * 批量导入菜单
@@ -81,6 +86,14 @@ public interface PermissionDomain {
      * @return 同步结果统计
      */
     SyncResult syncFunc(List<PermissionDTO> classNodes);
+
+    /**
+     * 分页查询
+     *
+     * @param query 查询条件
+     * @return 分页结果
+     */
+    Page<PermissionVO> page(PermissionQuery query);
 
     /**
      * 功能同步结果

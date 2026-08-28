@@ -8,6 +8,7 @@ import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -43,22 +44,24 @@ public class AccountEnum {
     @AllArgsConstructor
     public enum Client implements IEnum<String> {
         /** 平台端 */
-        ADMIN("admin", "平台端", Identity.EMP),
+        ADMIN("admin", "平台端", 2L),
         /** 后台端 */
-        USER("user", "用户端", Identity.MEMBER),
+        USER("user", "用户端", 1000L),
         /** 服务商端 */
-        PARTNER("partner", "服务商端", Identity.PARTNER),
+        PARTNER("partner", "服务商端",1003L),
         /** 渠道商端 */
-        CHANNEL("channel", "渠道商端", Identity.CHANNEL),
+        CHANNEL("channel", "渠道商端", 1002L),
         /** 供应商端 */
-        SUPPLIER("supplier", "供应商端", Identity.SUPPLIER),
+        SUPPLIER("supplier", "供应商端", 1001L),
+        /** 脉脉通渠道商端 */
+        MMT_CHANNEL("mmt_channel", "脉脉通渠道商端", 1004L),
         ;
 
         @EnumValue
         @JsonValue
         private final String code;
         private final String value;
-        private final Identity defaultIdentity;
+        private final Long defaultIdentityCode;
 
         public static AccountEnum.Client getByCode(String code) {
             return Stream.of(values())
@@ -73,7 +76,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum Identity {
+    public enum Identity implements IEnum<Long> {
         /**
          * 平台管理员
          */
@@ -88,6 +91,8 @@ public class AccountEnum {
         CHANNEL(1002L, "渠道商", Client.CHANNEL),
         /** 服务商 */
         PARTNER(1003L, "服务商", Client.PARTNER),
+        /** 脉脉通渠道商 */
+        MMT_CHANNEL(1004L, "脉脉通渠道商", Client.MMT_CHANNEL),
 
         ;
 
@@ -188,7 +193,7 @@ public class AccountEnum {
      */
     @Getter
     @AllArgsConstructor
-    public enum EmpType {
+    public enum EmpType implements IEnum<Integer> {
         MANAGER(0, "管理员"),
         SIMPLE(1, "普通"),
         ;

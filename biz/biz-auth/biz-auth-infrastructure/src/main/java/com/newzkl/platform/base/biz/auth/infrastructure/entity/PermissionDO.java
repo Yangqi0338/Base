@@ -1,24 +1,36 @@
 package com.newzkl.platform.base.biz.auth.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.TableIndex;
+import org.dromara.autotable.annotation.TableIndexes;
 import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 
 /**
  * 权限持久化对象
  *
- * <p>Function(功能点) + Menu(菜单) 合并为单表 permission, 以 type 区分, pid 构树</p>
+ * <p>Function(功能点) + Menu(菜单) 合并为单表 permission, 以 type 区分, pid 构树。
+ * 端隔离: (client, code) 端内唯一, 各端权限独立</p>
  *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName
+@TableIndexes({
+        @TableIndex(name = "key", type = IndexTypeEnum.UNIQUE, fields = {"client", "code", "delFlag"})
+})
 public class PermissionDO extends BaseDO {
+
+    /**
+     * 所属端
+     */
+    private AccountEnum.Client client;
 
     /**
      * 父权限ID
@@ -35,7 +47,6 @@ public class PermissionDO extends BaseDO {
     /**
      * 权限编码
      */
-    @Index(type = IndexTypeEnum.UNIQUE)
     private String code;
 
     /**

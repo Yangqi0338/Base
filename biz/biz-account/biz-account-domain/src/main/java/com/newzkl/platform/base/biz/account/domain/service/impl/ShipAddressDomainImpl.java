@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressReq;
 import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
 import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
 import com.newzkl.platform.base.biz.account.model.assembler.ShipAddressAssembler;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;

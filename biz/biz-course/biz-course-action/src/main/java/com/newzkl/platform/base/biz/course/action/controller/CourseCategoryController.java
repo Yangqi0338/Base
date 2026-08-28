@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseCategoryDomain;
 import com.newzkl.platform.base.biz.course.model.category.query.CourseCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.category.req.CourseCategoryReq;
 import com.newzkl.platform.base.biz.course.model.category.res.CourseCategoryRes;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
@@ -28,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/courseCategory")
 @RequiredArgsConstructor
+@FuncPermission("课程分类管理")
 public class CourseCategoryController {
 
     private final CourseCategoryDomain courseCategoryDomain;
@@ -39,6 +41,7 @@ public class CourseCategoryController {
      * @return 分类视图
      */
     @PostMapping("/add")
+    @FuncPermission("新增课程分类")
     public PlatformResult<CourseCategoryRes> add(@Validated @RequestBody CourseCategoryReq req) {
         if (req.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -53,6 +56,7 @@ public class CourseCategoryController {
      * @return 分类视图
      */
     @PostMapping("/edit")
+    @FuncPermission("编辑课程分类")
     public PlatformResult<CourseCategoryRes> edit(@Validated @RequestBody CourseCategoryReq req) {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -67,6 +71,7 @@ public class CourseCategoryController {
      * @return 是否成功
      */
     @PostMapping("/enable/{id}")
+    @FuncPermission("启用课程分类")
     public PlatformResult<Boolean> enable(@PathVariable("id") Long id) {
         return PlatformResult.success(courseCategoryDomain.enable(id));
     }
@@ -78,6 +83,7 @@ public class CourseCategoryController {
      * @return 是否成功
      */
     @PostMapping("/disable/{id}")
+    @FuncPermission("禁用课程分类")
     public PlatformResult<Boolean> disable(@PathVariable("id") Long id) {
         return PlatformResult.success(courseCategoryDomain.disable(id));
     }
@@ -121,6 +127,7 @@ public class CourseCategoryController {
      * @return 是否成功
      */
     @PostMapping("/delete/{id}")
+    @FuncPermission("删除课程分类")
     public PlatformResult<Boolean> delete(@PathVariable("id") Long id) {
         return PlatformResult.success(courseCategoryDomain.delete(id));
     }
@@ -132,6 +139,7 @@ public class CourseCategoryController {
      * @return 是否成功
      */
     @PostMapping("/batchDelete")
+    @FuncPermission("批量删除课程分类")
     public PlatformResult<Boolean> batchDelete(@Validated @RequestBody IdCommand idListCommand) {
         return PlatformResult.success(courseCategoryDomain.batchDelete(idListCommand.getIdList()));
     }
@@ -143,6 +151,7 @@ public class CourseCategoryController {
      * @return 是否成功
      */
     @PostMapping("/recover/{id}")
+    @FuncPermission("恢复已删除分类")
     public PlatformResult<Boolean> recover(@PathVariable("id") Long id) {
         return PlatformResult.success(courseCategoryDomain.recover(id));
     }

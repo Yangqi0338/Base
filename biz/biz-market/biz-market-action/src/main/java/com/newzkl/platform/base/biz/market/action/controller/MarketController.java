@@ -17,7 +17,8 @@ import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.BindMarketVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketUserVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.MarketVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,7 @@ import java.util.function.Consumer;
 @RequestMapping("/market")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("市场管理")
 public class MarketController {
 
     private final MarketDomain marketDomain;
@@ -142,6 +144,7 @@ public class MarketController {
      * @return 操作结果
      */
     @PostMapping("/saveTwoLevelMarket")
+    @FuncPermission("保存二级市场")
     public PlatformResult<Object> saveTwoLevelMarket(@RequestBody MarketReq req) {
         MarketDTO marketDTO = buildMarketDTO(req);
         marketDTO.setMarketLevel(MarketEnum.Level.TWO.getLevel());
@@ -157,6 +160,7 @@ public class MarketController {
      * @return 绑定ID
      */
     @PostMapping("/appChannelBindMarket")
+    @FuncPermission("APP渠道商绑定市场")
     public PlatformResult<Object> appChannelBindMarket(@RequestBody ClientBindMarketReq req) {
         return PlatformResult.success(marketDomain.appChannelBindMarket(req));
     }
@@ -168,6 +172,7 @@ public class MarketController {
      * @return 操作结果
      */
     @PostMapping("/deBindMarket/{id}")
+    @FuncPermission("解除绑定市场")
     public PlatformResult<Object> deBindMarket(@PathVariable Long id) {
         marketDomain.deBindMarket(id);
         return PlatformResult.success();

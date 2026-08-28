@@ -11,6 +11,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/goods/catalog/industry")
 @RequiredArgsConstructor
+@FuncPermission("行业管理")
 public class IndustryController {
 
     private final IndustryDomain industryDomain;
@@ -38,6 +40,7 @@ public class IndustryController {
      * @return 空结果
      */
     @PostMapping("bindCategory")
+    @FuncPermission("行业绑定分类")
     public PlatformResult<Void> bindCategory(@Validated @RequestBody IndustryCmd.BindCategory bindCmd) {
         spuCategoryService.bindIndustry(bindCmd.getIndustryId(), bindCmd.getCategoryId(),
                 Boolean.TRUE.equals(bindCmd.getIsBind()));
@@ -51,6 +54,7 @@ public class IndustryController {
      * @return 行业主键
      */
     @PostMapping("createIndustry")
+    @FuncPermission("创建行业")
     public PlatformResult<Long> industryCreate(@Validated @RequestBody IndustryReq industryReq) {
         if (industryReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -65,6 +69,7 @@ public class IndustryController {
      * @return 空结果
      */
     @PostMapping("deleteIndustry")
+    @FuncPermission("删除行业")
     public PlatformResult<Void> industryDelete(@RequestBody CommonCmd.IdList idList) {
         industryDomain.industryDelete(idList.getIdList());
         return PlatformResult.success();
@@ -77,6 +82,7 @@ public class IndustryController {
      * @return 空结果
      */
     @PostMapping("updateIndustry")
+    @FuncPermission("修改行业")
     public PlatformResult<Void> industryUpdate(@RequestBody IndustryReq industryReq) {
         if (industryReq.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);

@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.service.UserLecturerFollowDoma
 import com.newzkl.platform.base.biz.course.model.follow.query.UserFollowQuery;
 import com.newzkl.platform.base.biz.course.model.follow.req.UserFollowReq;
 import com.newzkl.platform.base.biz.course.model.follow.res.UserFollowRes;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user/lecturer")
 @RequiredArgsConstructor
+@FuncPermission("用户关注讲师管理")
 public class UserLecturerFollowController {
 
     private final UserLecturerFollowDomain userLecturerFollowDomain;
@@ -32,6 +34,7 @@ public class UserLecturerFollowController {
      * @return 是否成功
      */
     @PostMapping("/follow")
+    @FuncPermission("关注讲师")
     public PlatformResult<Boolean> follow(@Validated @RequestBody UserFollowReq req) {
         return PlatformResult.success(userLecturerFollowDomain.follow(req));
     }
@@ -43,6 +46,7 @@ public class UserLecturerFollowController {
      * @return 是否成功
      */
     @PostMapping("/cancel")
+    @FuncPermission("取消关注讲师")
     public PlatformResult<Boolean> cancel(@Validated @RequestBody UserFollowReq req) {
         return PlatformResult.success(userLecturerFollowDomain.cancelFollow(req));
     }

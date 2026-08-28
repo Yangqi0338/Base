@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -60,7 +61,7 @@ public class LocalMessageDO extends BaseDO {
      * 消息体
      */
     @NotNull
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String messageContent;
 
     /**

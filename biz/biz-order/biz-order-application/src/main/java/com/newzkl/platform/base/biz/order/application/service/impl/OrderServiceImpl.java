@@ -29,7 +29,8 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
 import com.newzkl.platform.base.common.ddd.facade.BalancePayResult;
@@ -287,8 +288,8 @@ public class OrderServiceImpl implements OrderService {
     public void orderBalancePay(Long... idList) {
         for (Long id : idList) {
             OrderAgg orderAgg = orderDomain.orderAgg(id);
-            //检查状态 TODO
-//            ScmUtil.checkInState(Collections.singletonList(OrderEnum.State.CHANNEL_WAIT_PAY), orderAgg.getOrder().getOrderState(), OrderErrorCode.STATE_ERROR);
+            //检查状态
+            BizUtil.checkInState(Collections.singletonList(OrderEnum.State.CHANNEL_WAIT_PAY.getCode()), orderAgg.getOrder().getOrderState().getCode(), OrderErrorCode.STATE_ERROR);
             recalculateServiceAmount(orderAgg);
             //扣减余额
             BalancePayReq balancePayReq = getBalancePayReq(orderAgg.getOrder());

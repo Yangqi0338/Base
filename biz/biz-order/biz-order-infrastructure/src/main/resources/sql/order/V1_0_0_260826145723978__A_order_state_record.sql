@@ -1,0 +1,4 @@
+ALTER TABLE
+  `order_state_record` MODIFY COLUMN `before_order_state` int NULL COMMENT '变更前订单状态[0新订单,1C端待付款,2渠道商待付款,3运营商待付款,4派发中,6待发货,8待收货,10已收货,12已完成,14售后中,99已关闭]',
+  MODIFY COLUMN `after_order_state` int NULL COMMENT '变更后订单状态[0新订单,1C端待付款,2渠道商待付款,3运营商待付款,4派发中,6待发货,8待收货,10已收货,12已完成,14售后中,99已关闭]',
+  MODIFY COLUMN `operator_role` int NULL COMMENT '操作人角色[1平台管理员,2平台员工,1000会员,1001供应商,1002渠道商,1003服务商]';

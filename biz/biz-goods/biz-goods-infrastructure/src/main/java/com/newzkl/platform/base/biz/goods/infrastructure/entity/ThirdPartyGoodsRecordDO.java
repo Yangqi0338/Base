@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
@@ -33,13 +34,13 @@ public class ThirdPartyGoodsRecordDO extends BaseDO {
     /**
      * 请求参数
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String requestJson;
 
     /**
      * 响应结果
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String responseJson;
 
     /**

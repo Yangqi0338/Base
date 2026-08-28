@@ -71,19 +71,21 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     public <R> BaseLambdaQueryWrapper<T> notEmptyIn(SFunction<T, R> column, Collection<?> coll) {
+        CollUtil.removeNull(coll);
         if (CollUtil.size(coll) == 1) {
             this.eq(column, CollUtil.getFirst(coll));
         } else {
-            this.in(CollUtil.isNotEmpty(coll), column, coll);
+            this.in(CollUtil.isNotEmpty(coll), column, CollUtil.distinct(coll));
         }
         return this;
     }
 
     public <R> BaseLambdaQueryWrapper<T> notEmptyNotIn(SFunction<T, R> column, Collection<?> coll) {
+        CollUtil.removeNull(coll);
         if (CollUtil.size(coll) == 1) {
             this.eq(column, CollUtil.getFirst(coll));
         } else {
-            this.notIn(CollUtil.isNotEmpty(coll), column, coll);
+            this.notIn(CollUtil.isNotEmpty(coll), column, CollUtil.distinct(coll));
         }
         return this;
     }
@@ -332,8 +334,7 @@ public class BaseLambdaQueryWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     public BaseQueryWrapper<T> unwrapAlias() {
-        return new BaseQueryWrapper<>(null, getEntityClass(), "t", paramNameSeq, paramNameValuePairs,
-                expression, lastSql, sqlComment, sqlFirst);
+        return unwrap("t");
     }
 
     public BaseQueryWrapper<T> select(Class<?> clazz) {

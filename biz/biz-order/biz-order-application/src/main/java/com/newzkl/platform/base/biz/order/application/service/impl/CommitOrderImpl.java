@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.order.application.service.impl;
+import com.newzkl.platform.base.biz.order.application.service.OrderService;
 import com.newzkl.platform.base.common.ddd.facade.HuiFuPurseInfo;
 
 import cn.hutool.core.collection.CollUtil;
@@ -30,7 +31,7 @@ import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
 import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
@@ -60,6 +61,7 @@ public class CommitOrderImpl implements CommitOrder {
 
 
     private final OrderDomain orderDomain;
+    private final OrderService orderService;
     private final GoodsApi goodsApi;
     private final PayApi orderPayApi;
     private final QueryService queryService;
@@ -94,7 +96,7 @@ public class CommitOrderImpl implements CommitOrder {
         }else if (OrderEnum.OrderType.CHANNEL == orderCreateCommand.getOrderType()){
             orderDomain.orderAggSave(order.getOrderAgg());
             // 7、后续扣减库存、扣减采购金、外部供应链订单请求创建订单放在支付后的异步处理中
-            localMessageApi.orderChannelNodeHandle(new OrderSyncHandleVO(order.getOrderId()));
+            orderService.orderBalancePay(order.getOrderId());
         }
         return order;
     }

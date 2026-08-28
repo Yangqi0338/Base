@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.service.LecturerCategoryDomain
 import com.newzkl.platform.base.biz.course.model.lecturercategory.query.LecturerCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.req.LecturerCategoryReq;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/lecturer/category")
 @RequiredArgsConstructor
+@FuncPermission("讲师分类管理")
 public class LecturerCategoryController {
 
     private final LecturerCategoryDomain lecturerCategoryDomain;
@@ -38,6 +40,7 @@ public class LecturerCategoryController {
      * @return 分类视图
      */
     @PostMapping("/add")
+    @FuncPermission("新增讲师分类")
     public PlatformResult<LecturerCategoryRes> add(@Validated @RequestBody LecturerCategoryReq req) {
         if (req.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -52,6 +55,7 @@ public class LecturerCategoryController {
      * @return 分类视图
      */
     @PostMapping("/edit")
+    @FuncPermission("编辑讲师分类")
     public PlatformResult<LecturerCategoryRes> edit(@Validated @RequestBody LecturerCategoryReq req) {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -66,6 +70,7 @@ public class LecturerCategoryController {
      * @return 是否成功
      */
     @PostMapping("/enable/{id}")
+    @FuncPermission("启用讲师分类")
     public PlatformResult<Boolean> enable(@PathVariable("id") Long id) {
         return PlatformResult.success(lecturerCategoryDomain.enable(id));
     }
@@ -77,6 +82,7 @@ public class LecturerCategoryController {
      * @return 是否成功
      */
     @PostMapping("/disable/{id}")
+    @FuncPermission("禁用讲师分类")
     public PlatformResult<Boolean> disable(@PathVariable("id") Long id) {
         return PlatformResult.success(lecturerCategoryDomain.disable(id));
     }

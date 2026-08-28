@@ -26,15 +26,15 @@ public class SmsEnum {
     @AllArgsConstructor
     public enum Type implements IEnum<String> {
         /** 登录验证码 */
-        Login("1001", "登录验证码", "94792ac718374b54a949a5b6c0ec8316", 1),
+        Login("1001", "登录验证码", "70597249", 1),
         /** 用户修改密码 */
-        UpdatePassword("1002", "用户修改密码", "dd7c973d105e494ab20ae4a421cb3bdb", 1),
+        UpdatePassword("1002", "用户修改密码", "70597254", 1),
         /** 注册验证码 */
-        Register("1003", "注册验证码", "55cc24df986b4371b1a3251f6d796657", 1),
+        Register("1003", "注册验证码", "70597249", 1),
         /** 用户修改绑定手机号 */
-        UpdateUsername("1004", "用户修改绑定手机号", "c86432138a1849afa4980aa6757388a5", 1),
+        UpdateUsername("1004", "用户修改绑定手机号", "70597254", 1),
         /** 注销用户验证码 */
-        DESTROY_USER("1008", "注销用户验证码", "5e2c4fe95b6644758850b39fbaa58498", 1),
+        DESTROY_USER("1008", "注销用户验证码", "70597249", 1),
         /** 注销账号通知 */
         DESTROY_USER_EVENT("1009", "注销账号通知", "1bb9d1c9245f4bf9b2633de1a1e4fd15", 2),
         /** IM注销验证码 */

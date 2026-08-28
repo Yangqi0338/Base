@@ -1,0 +1,20 @@
+CREATE TABLE `channel` (
+  `id` bigint NOT NULL COMMENT '主键ID',
+  `name` varchar(255) NULL COMMENT '名称(源 account.realname)',
+  `state` int NULL COMMENT '状态',
+  `company_info` varchar(255) NULL COMMENT '企业信息',
+  `audit_refuse_reason` varchar(255) NULL COMMENT '审批拒绝原因',
+  `store_permission` int NULL COMMENT '数字门店权限',
+  `ship_province_code` int NULL COMMENT '店铺地址, 省 CODE, 6 位',
+  `ship_city_code` int NULL COMMENT '店铺地址, 市 CODE, 6 位',
+  `ship_area_code` int NULL COMMENT '店铺地址, 区 CODE, 6 位',
+  `contacts_way` varchar(255) NULL COMMENT '联系方式',
+  `contacts_name` varchar(255) NULL COMMENT '联系人名称',
+  `store_name` varchar(255) NULL COMMENT '店铺名称',
+  `executor` json NULL COMMENT '操作人信息',
+  `creator_id` bigint NULL COMMENT '创建人id',
+  `create_time` datetime NULL COMMENT '创建时间',
+  `update_time` datetime NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  PRIMARY KEY (`id`)
+) COMMENT = '渠道商';

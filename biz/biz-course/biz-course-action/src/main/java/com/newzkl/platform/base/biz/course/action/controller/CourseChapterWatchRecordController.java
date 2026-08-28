@@ -5,7 +5,8 @@ import com.newzkl.platform.base.biz.course.domain.service.CourseChapterWatchReco
 import com.newzkl.platform.base.biz.course.model.watch.query.CourseChapterWatchRecordQuery;
 import com.newzkl.platform.base.biz.course.model.watch.req.CourseChapterWatchRecordReq;
 import com.newzkl.platform.base.biz.course.model.watch.res.CourseChapterWatchRecordRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/courseChapterWatchRecord")
 @RequiredArgsConstructor
+@FuncPermission("课程章节观看记录管理")
 public class CourseChapterWatchRecordController {
 
     private final CourseChapterWatchRecordDomain courseChapterWatchRecordDomain;
@@ -38,6 +40,7 @@ public class CourseChapterWatchRecordController {
      * @return 观看记录视图
      */
     @PostMapping("/saveOrUpdate")
+    @FuncPermission("保存或更新当前用户观看记录")
     public PlatformResult<CourseChapterWatchRecordRes> saveOrUpdate(
             @Validated @RequestBody CourseChapterWatchRecordReq req) {
         req.setUserId(SecurityUtils.getAccountId());
@@ -93,6 +96,7 @@ public class CourseChapterWatchRecordController {
      * @return 是否成功
      */
     @PostMapping("/delete/{id}")
+    @FuncPermission("删除观看记录")
     public PlatformResult<Boolean> delete(@org.springframework.web.bind.annotation.PathVariable("id") Long id) {
         return PlatformResult.success(courseChapterWatchRecordDomain.delete(id));
     }
@@ -104,6 +108,7 @@ public class CourseChapterWatchRecordController {
      * @return 是否成功
      */
     @PostMapping("/batchDelete")
+    @FuncPermission("批量删除观看记录")
     public PlatformResult<Boolean> batchDelete(@Validated @RequestBody IdCommand idListCommand) {
         return PlatformResult.success(courseChapterWatchRecordDomain.batchDelete(idListCommand.getIdList()));
     }

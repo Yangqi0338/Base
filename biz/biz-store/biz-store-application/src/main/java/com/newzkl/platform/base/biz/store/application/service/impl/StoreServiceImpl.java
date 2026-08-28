@@ -4,11 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayRes;
+import com.newzkl.platform.base.common.core.model.properties.SysProperties;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.biz.store.application.service.StoreService;
 import com.newzkl.platform.base.common.ddd.facade.ChannelStoreVO;
@@ -56,8 +57,7 @@ public class StoreServiceImpl implements StoreService {
             store = storeDomain.store(defultStoreId);
         } else {
             // 查询默认门店样式 TODO
-//            store = storeDomain.store(SysProperties.officialChannelId);
-            store = new Store();
+            store = storeDomain.store(SysProperties.officialChannelId);
         }
 
         StoreStyleRes storeStyleVO = TransferUtils.transfer(store, StoreStyleRes::new);

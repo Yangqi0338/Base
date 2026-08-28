@@ -14,7 +14,8 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryV
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,7 @@ import java.util.List;
 @RequestMapping("/distribution")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("铺货管理")
 public class DistributionController {
 
     private final DistributionDomain distributionDomain;
@@ -106,6 +108,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @PostMapping("/goodsDistribution/{goodsId}")
+    @FuncPermission("铺货")
     public PlatformResult<Object> goodsDistribution(@PathVariable Long goodsId) {
         distributionDomain.goodsDistribution(SecurityUtils.getAccountId(), goodsId, false);
         return PlatformResult.success();
@@ -118,6 +121,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @PostMapping("/alterGoodsState")
+    @FuncPermission("更新商品状态")
     public PlatformResult<Object> alterGoodsState(@RequestBody GoodsStateAlterReq req) {
         req.setChannelId(SecurityUtils.getAccountId());
         if (req.getStoreId() == null) {
@@ -134,6 +138,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @PostMapping("/batchUpdateDistributions")
+    @FuncPermission("批量修改商品")
     public PlatformResult<Void> batchUpdateDistributions(@RequestBody DistributionsBatchUpdateReq req) {
         req.setChannelId(SecurityUtils.getAccountId());
         distributionDomain.batchUpdateDistributions(req);
@@ -147,6 +152,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @PostMapping("/delGoods/{goodsId}")
+    @FuncPermission("删除商品")
     public PlatformResult<Void> delGoods(@PathVariable Long goodsId) {
         distributionDomain.delGoods(goodsId);
         return PlatformResult.success();
@@ -159,6 +165,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @PostMapping("/batchDelGoods")
+    @FuncPermission("批量删除商品")
     public PlatformResult<Void> batchDelGoods(@RequestBody IdCommand idListCommand) {
         distributionDomain.batchDelGoods(idListCommand.getIdList());
         return PlatformResult.success();
@@ -193,6 +200,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @GetMapping("/recommendationGoods")
+    @FuncPermission("推荐商品")
     public PlatformResult<Void> recommendationGoods(@RequestParam("id") Long id) {
         distributionDomain.recommendationGoods(id);
         return PlatformResult.success();
@@ -205,6 +213,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @GetMapping("/cancelRecommendationGoods")
+    @FuncPermission("取消推荐商品")
     public PlatformResult<Void> cancelRecommendationGoods(@RequestParam("id") Long id) {
         distributionDomain.cancelRecommendationGoods(id);
         return PlatformResult.success();
@@ -217,6 +226,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @GetMapping("/platformStoreListed")
+    @FuncPermission("平台门店上架")
     public PlatformResult<Void> platformStoreListed(@RequestParam("id") Long id) {
         distributionDomain.platformStoreListed(id);
         return PlatformResult.success();
@@ -229,6 +239,7 @@ public class DistributionController {
      * @return 操作结果
      */
     @GetMapping("/platformStoreUnlisted")
+    @FuncPermission("平台门店下架")
     public PlatformResult<Void> platformStoreUnlisted(@RequestParam("id") Long id) {
         distributionDomain.platformStoreUnlisted(id);
         return PlatformResult.success();

@@ -3,7 +3,6 @@ package com.newzkl.platform.base.biz.account.action.controller;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.model.req.ServiceFeeConfigEdit;
-import com.newzkl.platform.base.biz.account.action.cmd.ChannelCmd;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
@@ -16,10 +15,11 @@ import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user/channel")
 @RequiredArgsConstructor
+@FuncPermission("用户-渠道商")
 public class ChannelController {
 
     private final ChannelClientDomain channelClientDomain;
@@ -51,6 +52,7 @@ public class ChannelController {
      * @return 空结果
      */
     @PostMapping("/channelEdit")
+    @FuncPermission("渠道商修改")
     public PlatformResult<Void> channelEdit(@Validated @RequestBody ChannelReq req) {
         if (AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()) {
             if (req.getId() == null) {
@@ -75,6 +77,20 @@ public class ChannelController {
     public PlatformResult<ChannelVO> channel(@RequestParam(value = "id", required = false) Long id) {
         Long channelId = id == null ? SecurityUtils.getAccountId() : id;
         return PlatformResult.success(channelClientDomain.channel(channelId));
+    }
+
+    /**
+     * 渠道商详情 for admin
+     *
+     * <p>收编自旧 {@code AdapterController#channelForAdmin}, 按 ID 查渠道商详情。
+     * 路径 {@code /user/channel/channelForAdmin} 逐字保留(前端 yys-admin 在用)。</p>
+     *
+     * @param id 渠道商账号ID
+     * @return 渠道商视图
+     */
+    @GetMapping("/channelForAdmin")
+    public PlatformResult<ChannelVO> channelForAdmin(@RequestParam("id") Long id) {
+        return PlatformResult.success(channelClientDomain.channel(id));
     }
 
     /**
@@ -122,6 +138,7 @@ public class ChannelController {
      * @return 空结果
      */
     @PostMapping("serviceFeeConfigEdit")
+    @FuncPermission("渠道商服务费修改")
     public PlatformResult<Void> serviceFeeConfigEdit(@RequestBody ServiceFeeConfigEdit serviceFeeConfigEdit) {
         identityService.serviceFeeConfigEdit(serviceFeeConfigEdit.getAccountId(), null);
         return PlatformResult.success();
@@ -156,6 +173,7 @@ public class ChannelController {
      * @return 空结果
      */
     @PostMapping("/update")
+    @FuncPermission("修改渠道商-数字门店")
     public PlatformResult<Void> update(@Validated @RequestBody ChannelUpdateReq req) {
         channelClientDomain.updateChannel(req);
         return PlatformResult.success();

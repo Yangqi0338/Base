@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PaymentQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PaymentVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

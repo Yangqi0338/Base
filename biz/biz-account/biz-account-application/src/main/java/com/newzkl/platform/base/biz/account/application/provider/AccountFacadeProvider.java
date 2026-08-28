@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.application.provider;
 
+import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
@@ -93,7 +94,7 @@ public class AccountFacadeProvider implements AccountFacade {
         } else {
             AccountVO accountVO = accountRepository.account(identity.getClient(), accountId);
             IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
-            saveReq.setHeadImg(accountVO.getHead());
+            saveReq.setHead(accountVO.getHead());
             saveReq.setContactsWay(phone);
             saveReq.setName(accountVO.getRealname());
             saveReq.setStoreName(storeName);
@@ -113,6 +114,12 @@ public class AccountFacadeProvider implements AccountFacade {
     }
 
     @Override
+    public List<AccountRpcVO> accountInfoList(AccountRpcQuery query) {
+        List<AccountVO> accountList = accountRepository.accountList(TransferUtils.transfer(query, AccountQuery::new));
+        return TransferUtils.transfers(accountList, AccountRpcVO::new);
+    }
+
+    @Override
     public AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq) {
         AccountRpcVO mainAccount = null;
         for (int i = 0; i < registerRpcReq.size(); i++) {
@@ -124,9 +131,12 @@ public class AccountFacadeProvider implements AccountFacade {
             IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
             saveReq.setId(account.getId());
             saveReq.setNickname(req.getNickname());
-            saveReq.setHeadImg(req.getHead());
+            saveReq.setHead(req.getHead());
             saveReq.setRegisterOnce(req.isRegisterOnce());
-            AbsIdentityPolicySupport.getPolicy(req.getIdentity()).customRegister(saveReq);
+            AbsIdentityPolicy policy = AbsIdentityPolicySupport.getPolicy(req.getIdentity());
+            policy.customRegister(saveReq);
+            // 端默认身份(自助注册主账号)自动授本端超管; 非默认身份(如员工)由管理员分配, 不触发
+            policy.autoBindDefaultSuperAdmin(account.getId());
 
             // 首个为主角色账号, 回传供上游注册后登录
             if (i == 0) {

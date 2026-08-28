@@ -7,15 +7,15 @@ import com.newzkl.platform.base.biz.auth.domain.service.RoleDomain;
 
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleReq;
-import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
+import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleRes;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +42,7 @@ public class RoleController {
      * @return 角色分页
      */
     @PostMapping("/page")
-    @FuncPermission("角色分页")
-    public PlatformResult<Page<RoleVO>> page(@RequestBody RoleQuery query) {
+    public PlatformResult<Page<RoleRes>> page(@RequestBody RoleQuery query) {
         return PlatformResult.success(roleDomain.page(query));
     }
 
@@ -53,8 +52,7 @@ public class RoleController {
      * @return 角色列表
      */
     @GetMapping("/list")
-    @FuncPermission("角色列表")
-    public PlatformResult<List<RoleVO>> list() {
+    public PlatformResult<List<RoleRes>> list() {
         return PlatformResult.success(roleDomain.listAll());
     }
 
@@ -65,34 +63,29 @@ public class RoleController {
      * @return 角色详情
      */
     @GetMapping("/detail/{id}")
-    @FuncPermission("角色详情")
-    public PlatformResult<RoleVO> detail(@PathVariable Long id) {
+    public PlatformResult<RoleRes> detail(@PathVariable Long id) {
         return PlatformResult.success(roleDomain.detail(id));
     }
 
     /**
-     * 创建角色
+     * 保存角色(新增/修改)
      *
-     * @param req 角色入参
+     * <p>合并旧 {@code POST /create} 与 {@code PUT /update}: 入参同为 {@link RoleReq}(含 id),
+     * 按 id 有无分流 —— 空则 {@code create} 返回新 id, 非空则 {@code update} 返回入参 id。
+     * 原「创建角色」「更新角色」两功能权限点合并为「保存角色」, 权限粒度变粗。</p>
+     *
+     * @param req 角色入参(id 为空新增, 非空修改)
      * @return 主键ID
      */
-    @PostMapping("/create")
-    @FuncPermission("创建角色")
-    public PlatformResult<Long> create(@RequestBody @Valid RoleReq req) {
-        return PlatformResult.success(roleDomain.create(req));
-    }
-
-    /**
-     * 更新角色
-     *
-     * @param req 角色入参
-     * @return 空结果
-     */
-    @PutMapping("/update")
-    @FuncPermission("更新角色")
-    public PlatformResult<Object> update(@RequestBody @Valid RoleReq req) {
+    @PostMapping("/save")
+    @FuncPermission("保存角色")
+    public PlatformResult<Long> save(@RequestBody @Validated RoleReq req) {
+        Long id = req.getId();
+        if (id == null) {
+            return PlatformResult.success(roleDomain.create(req));
+        }
         roleDomain.update(req);
-        return PlatformResult.success();
+        return PlatformResult.success(id);
     }
 
     /**

@@ -23,7 +23,7 @@ import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
 import com.newzkl.platform.base.biz.account.model.vo.*;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.*;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -147,12 +147,10 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public Page<ChannelVO> channelPage(ChannelQuery channelQuery) {
-
-//        List<ChannelVO> channelVO = channelClientDomain.listByQuery(channelQuery);
-        List<ChannelVO> channelVO = new ArrayList<>();
-
-
-        return new Page<>();
+        // 迁移自 new-scm UserQueryServiceImpl.channelPage: 仅补 DAO 分页查询。
+        // 旧实现另调 earningApi.queryEarningContributeByAccountId 回填 earningContribute,
+        // Base 资金域尚无对应 RPC 端口, 收益填充留空 (见 deferred-issues 收益回填项)。
+        return channelClientDomain.channelPageList(channelQuery);
     }
 
     @Override

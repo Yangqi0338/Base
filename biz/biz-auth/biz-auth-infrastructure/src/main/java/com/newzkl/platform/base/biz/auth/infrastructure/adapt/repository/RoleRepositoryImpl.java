@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.auth.infrastructure.entity.RoleDO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
@@ -51,14 +52,18 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public RoleDTO getByCode(String code) {
-        RoleDO entity = roleDAO.selectOne(new BaseLambdaQueryWrapper<RoleDO>().eq(RoleDO::getCode, code));
+    public RoleDTO getByCode(AccountEnum.Client client, String code) {
+        RoleDO entity = roleDAO.selectOne(new BaseLambdaQueryWrapper<RoleDO>()
+                .notNullEq(RoleDO::getClient, client)
+                .eq(RoleDO::getCode, code));
         return TransferUtils.transfer(entity, RoleDTO::new);
     }
 
     @Override
-    public List<RoleDTO> listAll() {
-        return TransferUtils.transfers(roleDAO.selectList(null), RoleDTO::new);
+    public List<RoleDTO> listAll(AccountEnum.Client client) {
+        return TransferUtils.transfers(
+                roleDAO.selectList(new BaseLambdaQueryWrapper<RoleDO>().notNullEq(RoleDO::getClient, client)),
+                RoleDTO::new);
     }
 
     @Override

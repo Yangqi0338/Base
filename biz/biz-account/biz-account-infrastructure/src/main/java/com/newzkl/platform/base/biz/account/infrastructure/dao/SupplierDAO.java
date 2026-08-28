@@ -48,13 +48,13 @@ public interface SupplierDAO extends BaseMapper<SupplierDO> {
                 .notEmptyLike(SupplierDO::getIndustryIdList, query.getIndustryId())
                 .notEmptyEq(SupplierDO::getCompanyAreaCode, query.getCompanyAreaCode())
                 .notEmptyLike(SupplierDO::getName, query.getCompanyName())
-                .notEmptyEq(SupplierDO::getAuditState, query.getAuditState())
+                .notEmptyIn(SupplierDO::getAuditState, query.getAuditStateList())
                 ;
     }
 
     default BaseQueryWrapper<SupplierDO> getJoinQw(SupplierQuery query) {
         return getLw(query)
-                .unwrap("t")
+                .unwrapAlias()
                 .notEmptyLike("a.username", query.getUsername())
                 .notEmptyEq("a.inviteid_account_id", query.getInviteId())
                 ;

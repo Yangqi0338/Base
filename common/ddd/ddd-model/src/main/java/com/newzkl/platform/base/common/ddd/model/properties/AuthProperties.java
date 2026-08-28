@@ -1,0 +1,40 @@
+package com.newzkl.platform.base.common.ddd.model.properties;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 权限过滤
+ */
+@Data
+@Configuration
+@ConfigurationProperties("platform.secure")
+public class AuthProperties {
+    /**
+     * 放行API集合
+     */
+    public static List<String> skipUrl = new ArrayList<>();
+
+    public static List<String> skipRoleUrl = new ArrayList<>();
+
+    /**
+     * 超级管理员角色 code
+     */
+    public static String superAdminRoleCode = "SUPER_ADMIN";
+
+    public void setSkipUrl(List<String> skipUrl) {
+        AuthProperties.skipUrl = skipUrl;
+    }
+
+    public void setSkipRoleUrl(List<String> skipRoleUrl) {
+        AuthProperties.skipRoleUrl = skipRoleUrl;
+    }
+
+    public void setSuperAdminRoleCode(String superAdminRoleCode) {
+        AuthProperties.superAdminRoleCode = superAdminRoleCode;
+    }
+}

@@ -77,7 +77,7 @@ public class AccountOutRes extends BaseRes {
      /**
       * 账号角色ID集合
       */
-     private String roleIdList;
+     private String identityList;
      /**
       * 账号已开通角色申请信息列表
       *

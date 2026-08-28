@@ -87,54 +87,18 @@ public class AuditEnum {
     @Getter
     @AllArgsConstructor
     public enum ApprovalStatus implements IEnum<String> {
-        /**
-         * 待审核
-         */
+        /** 待审核 */
         PENDING("PENDING", "待审核"),
-        /**
-         * 已通过
-         */
+        /** 已通过 */
         APPROVED("APPROVED", "已通过"),
-        /**
-         * 已拒绝
-         */
+        /** 已拒绝 */
         REJECTED("REJECTED", "已拒绝"),
         ;
-        /**
-         * 英文状态值
-         */
+
         @EnumValue
         @JsonValue
+        private final String code;
         private final String value;
-        /**
-         * 中文描述
-         */
-        private final String description;
-
-        @Override
-        public String getCode() {
-            return value;
-        }
-
-        @Override
-        public String getValue() {
-            return description;
-        }
-
-        /**
-         * 根据状态值获取枚举
-         */
-        public static ApprovalStatus fromValue(String value) {
-            if (value == null || value.trim().isEmpty()) {
-                return PENDING;
-            }
-            for (ApprovalStatus status : values()) {
-                if (status.getCode().equalsIgnoreCase(value.trim())) {
-                    return status;
-                }
-            }
-            throw new IllegalArgumentException("无效的审批状态值: " + value);
-        }
     }
 
     @Getter

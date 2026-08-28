@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.biz.sys.domain.adapt.api;
 
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseResponse;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeIdCardResponse;
+
 /**
  * OCR 识别出站端口
  *
@@ -19,7 +22,7 @@ public interface OcrApi {
      * @return 三方识别结果 (已转为通用结构, 与源 {@code RecognizeIdCardResponse} 序列化后契约一致);
      *         识别失败返回 {@code null} (与源逐字一致: 源异常分支仅打印堆栈后返回 null)
      */
-    Object recognizeIdCard(String imageUrl);
+    RecognizeIdCardResponse recognizeIdCard(String imageUrl);
 
     /**
      * 营业执照识别
@@ -30,5 +33,5 @@ public interface OcrApi {
      * @param imageUrl 营业执照图片 URL
      * @return 三方识别结果 (已转为通用结构), 识别失败返回 {@code null} (与源逐字一致)
      */
-    Object recognizeBusinessLicense(String imageUrl);
+    RecognizeBusinessLicenseResponse recognizeBusinessLicense(String imageUrl);
 }

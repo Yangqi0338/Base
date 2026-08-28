@@ -1,11 +1,14 @@
 package com.newzkl.platform.base.biz.sys.action.controller;
 
 import cn.hutool.core.img.ColorUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseResponse;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeIdCardResponse;
 import com.newzkl.platform.base.biz.sys.action.cmd.SysCmd;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OcrApi;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OssTokenApi;
@@ -16,8 +19,12 @@ import com.newzkl.platform.base.biz.sys.model.appversion.vo.AppVersionVO;
 import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -76,6 +83,7 @@ import java.util.List;
 @RequestMapping("/admin/common")
 @RequiredArgsConstructor
 @Validated
+@FuncPermission("平台公共")
 public class CommonController {
 
     private final RegionDomain regionDomain;
@@ -174,7 +182,7 @@ public class CommonController {
      * @return 三方识别结果
      */
     @PostMapping("/ocrIdentify")
-    public PlatformResult<Object> ocrIdentify(@RequestBody SysCmd.StringObj stringObj) {
+    public PlatformResult<RecognizeIdCardResponse> ocrIdentify(@RequestBody SysCmd.StringObj stringObj) {
         return PlatformResult.success(ocrApi.recognizeIdCard(stringObj.getString()));
     }
 
@@ -198,8 +206,23 @@ public class CommonController {
      * @return 三方识别结果 (含反查区域编码)
      */
     @PostMapping("/businessIdentify")
-    public PlatformResult<Object> businessIdentify(@RequestBody SysCmd.StringObj stringObj) {
-        return PlatformResult.success(regionDomain.businessIdentify(stringObj.getString()));
+    public PlatformResult<RecognizeBusinessLicenseRes> businessIdentify(@RequestBody SysCmd.StringObj stringObj) {
+        Pair<RecognizeBusinessLicenseResponse, List<Integer>> pair = regionDomain.businessIdentify(stringObj.getString());
+        RecognizeBusinessLicenseResponse key = pair.getKey();
+        if (key == null) {
+            return PlatformResult.success();
+        }
+        RecognizeBusinessLicenseRes res = TransferUtils.transfer(key, RecognizeBusinessLicenseRes.class);
+        res.setAreaCode(pair.getValue());
+        return PlatformResult.success(res);
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class RecognizeBusinessLicenseRes extends RecognizeBusinessLicenseResponse {
+
+        private List<Integer> areaCode;
+
     }
 
     /**
@@ -235,6 +258,7 @@ public class CommonController {
      * @return 空结果
      */
     @PostMapping("/saveAppVersion")
+    @FuncPermission("保存app版本")
     public PlatformResult<Void> saveAppVersion(@RequestBody AppVersionVO appVersion) {
         appVersionDomain.saveAppVersion(appVersion);
         return PlatformResult.success();

@@ -13,8 +13,9 @@ import com.newzkl.platform.base.biz.store.model.store.query.StoreQuery;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreSearchRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/store")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("门店")
 public class StoreController {
 
     private final StoreDomain storeDomain;
@@ -51,6 +53,7 @@ public class StoreController {
      * @return 成功结果
      */
     @PostMapping("storeEdit")
+    @FuncPermission("门店修改")
     public PlatformResult<Void> storeEdit(@Validated @RequestBody StoreCmd.Edit edit) {
         if (edit.getId() == null) {
             edit.setId(SecurityUtils.getAccountId());
@@ -119,6 +122,7 @@ public class StoreController {
      * @return 支付结果
      */
     @PostMapping("orderPay")
+    @FuncPermission("门店订单支付")
     public PlatformResult<StoreOrderPayRes> orderPay(@RequestBody @Valid StoreOrderPayReq orderPay) {
         return PlatformResult.success(storeService.orderPay(orderPay));
     }

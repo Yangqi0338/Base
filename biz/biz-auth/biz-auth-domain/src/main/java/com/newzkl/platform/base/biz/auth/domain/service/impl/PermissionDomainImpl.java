@@ -1,9 +1,12 @@
 package com.newzkl.platform.base.biz.auth.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.PermissionRepository;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.domain.service.PermissionDomain;
+import com.newzkl.platform.base.biz.auth.model.permission.req.PermissionQuery;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionListDTO;
@@ -14,6 +17,7 @@ import com.newzkl.platform.base.biz.auth.model.permission.vo.PermissionVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,13 +45,15 @@ public class PermissionDomainImpl implements PermissionDomain {
 
     @Override
     public Long create(PermissionReq req) {
+        AccountEnum.Client client = SecurityUtils.getClient();
         if (req.getType() != PermissionEnum.Type.MENU) {
             throw new PlatformException(BaseErrorCode.CUSTOM, "仅支持创建菜单权限");
         }
-        if (permissionRepository.getByCode(req.getCode()) != null) {
+        if (permissionRepository.getByCode(client, req.getCode()) != null) {
             throw new PlatformException(BaseErrorCode.EXIST_DATA, "权限 code");
         }
         PermissionDTO dto = new PermissionDTO();
+        dto.setClient(client);
         dto.setPid(req.getPid());
         dto.setType(PermissionEnum.Type.MENU);
         dto.setCode(req.getCode());
@@ -96,8 +102,8 @@ public class PermissionDomainImpl implements PermissionDomain {
     }
 
     @Override
-    public List<PermissionTreeVO> tree(PermissionEnum.Type type) {
-        List<PermissionDTO> all = permissionRepository.listByType(type);
+    public List<PermissionTreeVO> tree(AccountEnum.Client client, PermissionEnum.Type type) {
+        List<PermissionDTO> all = permissionRepository.listByType(client, type);
         Map<Long, PermissionTreeVO> idMap = all.stream()
                 .collect(Collectors.toMap(PermissionDTO::getId, d -> TransferUtils.transfer(d, PermissionTreeVO::new)));
         List<PermissionTreeVO> roots = new ArrayList<>();
@@ -108,6 +114,9 @@ public class PermissionDomainImpl implements PermissionDomain {
             } else {
                 PermissionTreeVO parent = idMap.get(dto.getPid());
                 if (parent != null) {
+                    if (parent.getChildren() == null) {
+                        parent.setChildren(new ArrayList<>());
+                    }
                     parent.getChildren().add(node);
                 } else {
                     roots.add(node);
@@ -123,16 +132,18 @@ public class PermissionDomainImpl implements PermissionDomain {
         if (CollUtil.isEmpty(menus)) {
             return 0;
         }
+        AccountEnum.Client client = SecurityUtils.getClient();
         Map<String, Long> codeToId = new HashMap<>();
-        permissionRepository.listByType(PermissionEnum.Type.MENU)
+        permissionRepository.listByType(client, PermissionEnum.Type.MENU)
                 .forEach(d -> codeToId.put(d.getCode(), d.getId()));
         int[] count = {0};
-        importRecursive(menus, 0L, codeToId, count);
+        importRecursive(client, menus, 0L, codeToId, count);
         return count[0];
     }
 
-    private void importRecursive(List<PermissionDTO> nodes, Long parentId, Map<String, Long> codeToId, int[] count) {
+    private void importRecursive(AccountEnum.Client client, List<PermissionDTO> nodes, Long parentId, Map<String, Long> codeToId, int[] count) {
         for (PermissionDTO m : nodes) {
+            m.setClient(client);
             m.setType(PermissionEnum.Type.MENU);
             m.setPid(parentId);
             if (m.getSort() == null) {
@@ -148,7 +159,7 @@ public class PermissionDomainImpl implements PermissionDomain {
             }
             count[0]++;
             if (CollUtil.isNotEmpty(m.getChildren())) {
-                importRecursive(m.getChildren(), id, codeToId, count);
+                importRecursive(client, m.getChildren(), id, codeToId, count);
             }
         }
     }
@@ -156,39 +167,67 @@ public class PermissionDomainImpl implements PermissionDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int syncAccountsByPermission(Long permissionId) {
+        AccountEnum.Client client = SecurityUtils.getClient();
         if (permissionRepository.getById(permissionId) == null) {
             throw new PlatformException(BaseErrorCode.NODATA, "权限");
         }
-        List<Long> roleIds = relationRepository
-                .listByTarget(PermissionEnum.RelationType.ROLE_PERMISSION, List.of(permissionId))
-                .stream().map(PermissionRelationDTO::getSourceId).distinct().toList();
-        if (roleIds.isEmpty()) {
+        List<String> roleCodes = relationRepository
+                .listByTarget(client, PermissionEnum.RelationType.ROLE_PERMISSION, List.of(String.valueOf(permissionId)))
+                .stream().map(PermissionRelationDTO::getSource).distinct().toList();
+        if (roleCodes.isEmpty()) {
             return 0;
         }
         Set<Long> accountIds = relationRepository
-                .listByTarget(PermissionEnum.RelationType.ACCOUNT_ROLE, roleIds)
-                .stream().map(PermissionRelationDTO::getSourceId).collect(Collectors.toSet());
+                .listByTarget(client, PermissionEnum.RelationType.ACCOUNT_ROLE, roleCodes)
+                .stream().map(r -> Long.valueOf(r.getSource())).collect(Collectors.toSet());
         if (accountIds.isEmpty()) {
             return 0;
         }
-        recalculator.recalc(accountIds);
+        recalculator.recalc(client, accountIds);
         return accountIds.size();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public SyncResult syncFunc(List<PermissionDTO> classNodes) {
-        Map<String, PermissionDTO> existing = permissionRepository.listByType(PermissionEnum.Type.FUNC)
+        // 扫描器已按端展开: 每个 classNode 自带 client, 同端一棵树。按端分组后逐端 upsert + 清孤儿, 各端 (client,code) 独立
+        Map<AccountEnum.Client, List<PermissionDTO>> byClient = classNodes.stream()
+                .collect(Collectors.groupingBy(PermissionDTO::getClient));
+        int[] createUpdateDeleted = {0, 0, 0};
+        for (Map.Entry<AccountEnum.Client, List<PermissionDTO>> e : byClient.entrySet()) {
+            syncFuncForClient(e.getKey(), e.getValue(), createUpdateDeleted);
+        }
+        return new SyncResult(createUpdateDeleted[0], createUpdateDeleted[1], createUpdateDeleted[2]);
+    }
+
+    @Override
+    public Page<PermissionVO> page(PermissionQuery query) {
+        AccountEnum.Client client = SecurityUtils.getClient();
+        query.setClient(client);
+        Page<PermissionDTO> page = permissionRepository.page(query);
+
+        return TransferUtils.transferPage(page, PermissionVO.class);
+    }
+
+    /**
+     * 同步单端功能权限: upsert 命中节点, 软删该端孤儿并重算受影响账号
+     *
+     * @param client              所属端
+     * @param classNodes          该端类节点树
+     * @param createUpdateDeleted 累计计数 [新增, 更新, 软删]
+     */
+    private void syncFuncForClient(AccountEnum.Client client, List<PermissionDTO> classNodes, int[] createUpdateDeleted) {
+        Map<String, PermissionDTO> existing = permissionRepository.listByType(client, PermissionEnum.Type.FUNC)
                 .stream().collect(Collectors.toMap(PermissionDTO::getCode, d -> d));
         Set<String> seenCodes = new HashSet<>();
         int[] createUpdate = {0, 0};
 
         for (PermissionDTO classNode : classNodes) {
-            Long classId = upsertFunc(existing, classNode.getCode(), 0L, classNode.getRoute(),
+            Long classId = upsertFunc(client, existing, classNode.getCode(), 0L, classNode.getRoute(),
                     classNode.getName(), seenCodes, createUpdate);
             if (CollUtil.isNotEmpty(classNode.getChildren())) {
                 for (PermissionDTO methodNode : classNode.getChildren()) {
-                    upsertFunc(existing, methodNode.getCode(), classId, methodNode.getRoute(),
+                    upsertFunc(client, existing, methodNode.getCode(), classId, methodNode.getRoute(),
                             methodNode.getName(), seenCodes, createUpdate);
                 }
             }
@@ -200,27 +239,31 @@ public class PermissionDomainImpl implements PermissionDomain {
                 .toList();
         if (!orphanIds.isEmpty()) {
             permissionRepository.softDeleteByIds(orphanIds);
-            List<Long> affectedRoles = relationRepository
-                    .listByTarget(PermissionEnum.RelationType.ROLE_PERMISSION, orphanIds).stream()
-                    .map(PermissionRelationDTO::getSourceId).distinct().toList();
-            if (!affectedRoles.isEmpty()) {
+            List<String> orphanKeys = orphanIds.stream().map(String::valueOf).toList();
+            List<String> affectedRoleCodes = relationRepository
+                    .listByTarget(client, PermissionEnum.RelationType.ROLE_PERMISSION, orphanKeys).stream()
+                    .map(PermissionRelationDTO::getSource).distinct().toList();
+            if (!affectedRoleCodes.isEmpty()) {
                 List<Long> affectedAccounts = relationRepository
-                        .listByTarget(PermissionEnum.RelationType.ACCOUNT_ROLE, affectedRoles).stream()
-                        .map(PermissionRelationDTO::getSourceId).distinct().toList();
+                        .listByTarget(client, PermissionEnum.RelationType.ACCOUNT_ROLE, affectedRoleCodes).stream()
+                        .map(r -> Long.valueOf(r.getSource())).distinct().toList();
                 if (!affectedAccounts.isEmpty()) {
-                    recalculator.recalc(affectedAccounts);
+                    recalculator.recalc(client, affectedAccounts);
                 }
             }
         }
-        return new SyncResult(createUpdate[0], createUpdate[1], orphanIds.size());
+        createUpdateDeleted[0] += createUpdate[0];
+        createUpdateDeleted[1] += createUpdate[1];
+        createUpdateDeleted[2] += orphanIds.size();
     }
 
-    private Long upsertFunc(Map<String, PermissionDTO> existing, String code, Long pid, String route,
+    private Long upsertFunc(AccountEnum.Client client, Map<String, PermissionDTO> existing, String code, Long pid, String route,
                             String name, Set<String> seenCodes, int[] createUpdate) {
         seenCodes.add(code);
         PermissionDTO old = existing.get(code);
         if (old == null) {
             PermissionDTO dto = new PermissionDTO();
+            dto.setClient(client);
             dto.setType(PermissionEnum.Type.FUNC);
             dto.setCode(code);
             dto.setPid(pid);

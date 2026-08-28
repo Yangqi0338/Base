@@ -84,9 +84,9 @@ public class AccountQuery extends BizPageQuery {
     private AccountEnum.Client client;
 
     /**
-     * 取消时间
+     * 注销时间上界 (查询: cancelTime <= 该值, 用于筛超宽限期的已注销账号)
      */
-    private LocalDateTime cancelTime;
+    private LocalDateTime cancelTimeBefore;
 
     /**
      * 设置单个邀请人账号ID (内部包装为列表)
@@ -110,6 +110,10 @@ public class AccountQuery extends BizPageQuery {
      * 角色列表
      */
     private List<AccountEnum.Identity> identityList;
+
+    public void setIdentity(AccountEnum.Identity identity) {
+        this.identityList = doWrapperList(this.identityList, identity);
+    }
 
 
 }

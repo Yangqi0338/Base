@@ -15,7 +15,7 @@ import com.newzkl.platform.base.biz.goods.model.biz.vo.CategoryLayerVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiCategoryVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,6 @@ import com.newzkl.platform.base.common.ddd.model.BaseAssembler;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.*;
 import com.newzkl.platform.base.biz.account.model.vo.*;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentitySaveReq;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -43,6 +42,4 @@ public interface AccountAssembler extends BaseAssembler<AccountReq, AccountVO> {
     List<AccountStructureTreeVO> structure2TreeList(List<AccountStructureVO> accountStructureVOS);
 
     AccountRegisterRes vo2RegisterRes(AccountVO account);
-
-    IdentityProxySaveReq adminRegisterReq2ProxyRegisterReq(AdminRegisterIdentityReq req);
 }

@@ -36,7 +36,7 @@ public class SupplierVO extends BaseRes {
     /**
      * 企业信息
      */
-    private String companyInfo;
+    private CompanyInfoVO companyInfo;
     /**
      * 是否缴纳保证金 (查询)
      */

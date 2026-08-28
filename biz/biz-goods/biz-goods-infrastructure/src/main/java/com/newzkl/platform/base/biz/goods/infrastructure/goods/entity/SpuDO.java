@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
@@ -148,6 +149,6 @@ public class SpuDO extends BaseDO {
      * 扩展字段
      * @ext JSON, 存 categoryName/brandName/accountName/marketPriceBegan/marketPriceEnd/salePriceBegan/salePriceEnd/supplierPriceBegan/supplierPriceEnd
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String expand;
 }

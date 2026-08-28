@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.res.report.ReportRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.report.ReportVO;
 import com.newzkl.platform.base.common.core.model.check.UpdateCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/goods/report")
 @RequiredArgsConstructor
+@FuncPermission("报告管理")
 public class ReportController {
 
     private final ReportDomain reportDomain;
@@ -41,6 +43,7 @@ public class ReportController {
      * @return 报告主键
      */
     @PostMapping("/add")
+    @FuncPermission("新增报告")
     public PlatformResult<Long> add(@Validated @RequestBody ReportReq req) {
         return PlatformResult.success(reportDomain.add(req));
     }
@@ -63,6 +66,7 @@ public class ReportController {
      * @return 空结果
      */
     @PutMapping("/edit")
+    @FuncPermission("编辑报告")
     public PlatformResult<Void> edit(@Validated({UpdateCommand.class, Default.class}) @RequestBody ReportReq req) {
         reportDomain.edit(req);
         return PlatformResult.success();
@@ -75,6 +79,7 @@ public class ReportController {
      * @return 空结果
      */
     @DeleteMapping("/del/{id}")
+    @FuncPermission("删除报告")
     public PlatformResult<Void> del(@PathVariable Long id) {
         reportDomain.del(id);
         return PlatformResult.success();

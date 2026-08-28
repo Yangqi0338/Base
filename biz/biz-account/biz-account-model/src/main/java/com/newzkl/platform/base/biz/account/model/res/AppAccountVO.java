@@ -27,7 +27,7 @@ public class AppAccountVO extends BaseRes {
     /**
      * ALL: 账号角色ID集合
      */
-    private String roleIdList;
+    private String identityList;
     /**
      * ALL: 邀请码
      */

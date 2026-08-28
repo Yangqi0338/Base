@@ -6,7 +6,6 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDom
 import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
-import com.newzkl.platform.base.biz.finance.model.pay.vo.PromiseFlowVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
@@ -25,7 +24,8 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.GoodsSeatUsageDetailsExportVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawAmountVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -57,6 +57,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/purse")
 @RequiredArgsConstructor
+@FuncPermission("客户账户")
 public class PurseController {
 
     private final AccountPurseDomain accountPurseDomain;
@@ -296,6 +297,7 @@ public class PurseController {
      * @param req 采购入参
      * @return 扣减成功返回 true, 余额不足返回 false
      */
+    @FuncPermission("供应商采购商品位")
     @PostMapping("/supplierPurchaseGoodsSeat")
     public PlatformResult<Boolean> supplierPurchaseGoodsSeat(@RequestBody SupplierPurchaseGoodsSeatReq req) {
         return PlatformResult.success(goodsSeatDomain.supplierPurchaseGoodsSeat(req));
@@ -309,6 +311,7 @@ public class PurseController {
      * @param req 赠送入参
      * @return 空结果
      */
+    @FuncPermission("平台赠送商品位")
     @PostMapping("/platformGiftGoodsSeat")
     public PlatformResult<Void> platformGiftGoodsSeat(@RequestBody SupplierPurchaseGoodsSeatReq req) {
         goodsSeatDomain.platformGiftGoodsSeat(req);
@@ -328,22 +331,10 @@ public class PurseController {
      * @param req 购买入参
      * @return 支付结果
      */
+    @FuncPermission("渠道商购买商品位")
     @PostMapping("/channelPurchaseGoodsSeat")
     public PlatformResult<PayBaseResult> channelPurchaseGoodsSeat(@RequestBody ChannelPurchaseGoodsSeatReq req) {
         req.setChannelId(SecurityUtils.getAccountId());
         return PlatformResult.success(goodsSeatChannelService.channelPurchaseGoodsSeat(req));
-    }
-
-    /**
-     * 提交保证金缴纳信息
-     *
-     * @param promiseFlowVO 保证金流水
-     * @return 流水ID
-     */
-    @PostMapping("/submitPromiseFlow")
-    public PlatformResult<Long> submitPromiseFlow(@RequestBody @Valid PromiseFlowVO promiseFlowVO) {
-        // TODO 源代码见com.zkl.scm.user.interfaces.controller.RoleController.submitPromiseFlow
-//        identityService.submitPromiseFlow(promiseFlowVO)
-        return PlatformResult.success();
     }
 }

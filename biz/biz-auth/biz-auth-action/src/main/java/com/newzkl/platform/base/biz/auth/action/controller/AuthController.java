@@ -6,17 +6,13 @@ import com.newzkl.platform.base.biz.auth.model.oauth.query.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.auth.model.oauth.req.*;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.AccountLoginLogRes;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.LoginRes;
-import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.model.enums.auth.AuthEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 用户-账号
@@ -49,12 +45,12 @@ public class AuthController {
     /**
      * 注册
      *
-     * @param customSaveReq 注册请求
+     * @param registerReq 注册请求
      * @return 登录结果(login=false 时 token 为空)
      */
     @PostMapping("/register")
-    public PlatformResult<LoginRes> register(@Validated @RequestBody IdentityCustomSaveReq customSaveReq) {
-        return PlatformResult.success(accountLoginService.register(SecurityUtils.getRequestClient(), customSaveReq));
+    public PlatformResult<LoginRes> register(@Validated @RequestBody RegisterReq registerReq) {
+        return PlatformResult.success(accountLoginService.register(SecurityUtils.getRequestClient(), registerReq));
     }
 
 
@@ -69,22 +65,33 @@ public class AuthController {
     }
 
     /**
-     * 验证码登录
+     * 登录
      *
      * @param loginReq 登录请求
      * @return 登录结果
      */
     @PostMapping("/login")
     public PlatformResult<LoginRes> login(@Validated @RequestBody LoginReq loginReq) {
-        return PlatformResult.success(accountLoginService.accountLogin(loginReq));
+
+        return PlatformResult.success(accountLoginService.accountLogin(SecurityUtils.doGetRequestClient(), loginReq));
+    }
+
+    /**
+     * 登录并注册
+     *
+     * <p>先登录, 仅当账号不存在时后端自动注册后再登录; 注册回退开关由后端固定,
+     * 不由前端入参控制, 与纯 {@code /login} 分为两个独立端口。</p>
+     *
+     * @param loginReq 登录请求(注册所需字段复用登录入参)
+     * @return 登录结果
+     */
+    @PostMapping("/loginRegister")
+    public PlatformResult<LoginRes> loginRegister(@Validated @RequestBody LoginReq loginReq) {
+        return PlatformResult.success(accountLoginService.loginRegister(SecurityUtils.doGetRequestClient(), loginReq));
     }
 
     /**
      * 验证码修改密码
-     *
-     * <p>迁移补充: 旧实现在 controller 内按 {@code mainAccountId} 分流主/子账号改密,
-     * 中台化后统一由应用层 {@code editPassword} 承担; 验证码校验与 BCrypt 摘要写入均在领域层完成, 未简化。
-     * 旧 {@code @Limit(code="0", level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
      *
      * @param codeUpdatePasswordCommand 改密命令
      * @return 空结果
@@ -92,7 +99,8 @@ public class AuthController {
     @PostMapping("/codeUpdatePassword")
     public PlatformResult<Void> editPassword(@Validated @RequestBody CodeUpdatePasswordCommand codeUpdatePasswordCommand) {
         CodeUpdatePasswordReq req = TransferUtils.transfer(codeUpdatePasswordCommand, CodeUpdatePasswordReq::new);
-        accountLoginService.editPassword(req);
+        req.setClient(SecurityUtils.getClient());
+        accountLoginService.editPassword(null);
         return PlatformResult.success();
     }
 
@@ -108,27 +116,9 @@ public class AuthController {
     @PostMapping("/updateUsername")
     public PlatformResult<Void> editUsername(@Validated @RequestBody CodeUpdateUsernameCommand codeUpdateUsernameCommand) {
         CodeUpdateUsernameReq req = TransferUtils.transfer(codeUpdateUsernameCommand, CodeUpdateUsernameReq::new);
+        req.setClient(SecurityUtils.getClient());
         accountLoginService.editUsername(req);
         return PlatformResult.success();
-    }
-
-    /**
-     * 可选的身份
-     *
-     * <p>迁移补充: 旧实现在 controller 内按端分组拼装角色并按 {@code isAll}/{@code type} 过滤,
-     * 中台化后归入 {@code accountDomain.accountRoleList}, 其内部已完成按端分组与展示名处理。
-     * 旧的 {@code isAll}/{@code type} 两个查询参数为兼容保留, 领域层不再区分。</p>
-     *
-     * @param isAll 是否含当前端身份
-     * @param type  分组类型
-     * @return 身份列表
-     */
-    @PostMapping("/roleList")
-    public PlatformResult<List<RoleVO>> accountAppVO(
-            @RequestParam(required = false, defaultValue = "false") Boolean isAll,
-            @RequestParam(required = false, defaultValue = "0") Integer type
-    ) {
-        return PlatformResult.success(accountLoginService.accountRoleList(SecurityUtils.getAccountId(), SecurityUtils.getClient()));
     }
 
     /**

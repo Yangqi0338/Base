@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.BrandVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/goods/brand")
 @RequiredArgsConstructor
+@FuncPermission("品牌管理")
 public class BrandController {
 
     private final BrandDomain brandDomain;
@@ -37,6 +39,7 @@ public class BrandController {
      * @return 品牌主键
      */
     @PostMapping("brandCreate")
+    @FuncPermission("创建品牌")
     public PlatformResult<Long> brandCreate(@Validated @RequestBody BrandReq brandReq) {
         if (brandReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -51,6 +54,7 @@ public class BrandController {
      * @return 空结果
      */
     @PostMapping("brandDelete")
+    @FuncPermission("删除品牌")
     public PlatformResult<Void> brandDelete(@RequestBody CommonCmd.IdList idList) {
         brandDomain.brandDelete(idList.getIdList());
         return PlatformResult.success();
@@ -63,6 +67,7 @@ public class BrandController {
      * @return 空结果
      */
     @PostMapping("brandUpdate")
+    @FuncPermission("修改品牌")
     public PlatformResult<Void> brandUpdate(@Validated @RequestBody BrandReq brandReq) {
         if (brandReq.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -93,8 +98,4 @@ public class BrandController {
         return PlatformResult.success(brandDomain.brandPage(brandQuery));
     }
 
-    // TODO[service-gap]: 源 submitBrandAudit (POST submitBrandAudit) 未迁。
-    // 源链路为 IBaseService#submitBrandAudit → IAuditFacade#submitBrand(审批模板 BRAND_CREATE),
-    // Base 全仓无审批提交 facade/port, biz-goods 亦无 AuditDataBrandVO / AuditAccountVO 对等模型,
-    // 接线只能造桩, 故不接。待审批提交端口建立后按原契约恢复。
 }

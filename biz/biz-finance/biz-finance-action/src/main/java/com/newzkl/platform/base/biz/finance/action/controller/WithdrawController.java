@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.RollOutApplyReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.TripartiteWithdrawRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +42,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/withdraw")
 @RequiredArgsConstructor
+@FuncPermission("提现业务")
 public class WithdrawController {
 
     private final WithdrawDomain withdrawDomain;
@@ -53,6 +54,7 @@ public class WithdrawController {
      * @param req 转出申请
      * @return 成功结果
      */
+    @FuncPermission("转出申请")
     @PostMapping("/rollOutApply")
     public PlatformResult<Boolean> rollOutApply(@RequestBody @Valid RollOutApplyReq req) {
         withdrawService.rollOutApply(req);
@@ -65,6 +67,7 @@ public class WithdrawController {
      * @param req 审核请求
      * @return 汇付转出结果
      */
+    @FuncPermission("转出申请审核")
     @PostMapping("/rollOutApplyAudit")
     public PlatformResult<HuiFuRollOutRes> rollOutApplyAudit(@RequestBody RollOutApplyAuditReq req) {
         return PlatformResult.success(withdrawService.rollOutApplyAudit(req));
@@ -112,6 +115,7 @@ public class WithdrawController {
      * @param id 转出申请主键
      * @return 成功结果
      */
+    @FuncPermission("因打款余额不足, 可更新转出 ID 重新发起")
     @PostMapping("/alterRollOutApplyId/{id}")
     public PlatformResult<Boolean> alterRollOutApplyId(@PathVariable Long id) {
         withdrawDomain.alterRollOutApplyId(id);
@@ -124,6 +128,7 @@ public class WithdrawController {
      * @param req 提现请求
      * @return 处理结果
      */
+    @FuncPermission("客户三方账户提现")
     @PostMapping("/accountTripartiteWithdraw")
     public PlatformResult<Boolean> accountTripartiteWithdraw(@RequestBody AccountWithdrawReq req) {
         return withdrawService.accountTripartiteWithdraw(req);

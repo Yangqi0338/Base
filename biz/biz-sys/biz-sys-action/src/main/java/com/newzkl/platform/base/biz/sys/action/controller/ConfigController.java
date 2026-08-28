@@ -3,26 +3,18 @@ package com.newzkl.platform.base.biz.sys.action.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.sys.domain.service.DictDomain;
-import com.newzkl.platform.base.biz.sys.model.config.enums.DictEnum;
-import com.newzkl.platform.base.biz.sys.model.config.vo.AppConfigVO;
+import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.sys.model.dict.req.DictReq;
 import com.newzkl.platform.base.biz.sys.model.dict.res.DictRes;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 平台-配置控制器
@@ -45,6 +37,7 @@ import java.util.stream.Collectors;
 @RestController("sysConfigController")
 @RequestMapping("/admin/config")
 @RequiredArgsConstructor
+@FuncPermission("平台配置")
 public class ConfigController {
 
     private final DictDomain dictDomain;
@@ -70,57 +63,11 @@ public class ConfigController {
      * @return 空结果
      */
     @PostMapping("/orderSet")
+    @FuncPermission("订单配置修改")
     public PlatformResult<Void> orderSet(@RequestBody OrderConfigVO orderConfigVO) {
         DictReq dictReq = new DictReq();
         dictReq.setCode(DictEnum.Key.ORDER_CONFIG.getCode());
         dictReq.setValue(JSONUtil.toJsonStr(orderConfigVO));
-        dictDomain.dictSave(dictReq);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 应用查询
-     *
-     * @return 应用配置列表, 字典未配置时返回空列表
-     */
-    @PostMapping("/appGet")
-    public PlatformResult<List<AppConfigVO>> appGet() {
-        DictRes dictRes = dictDomain.dictVOByCode(DictEnum.Key.APP_CONFIG.getCode());
-        if (dictRes == null || StrUtil.isEmpty(dictRes.getValue())) {
-            return PlatformResult.success(new ArrayList<>());
-        }
-        return PlatformResult.success(JSONUtil.toList(dictRes.getValue(), AppConfigVO.class));
-    }
-
-    /**
-     * 应用修改
-     *
-     * <p>只允许改既有应用的名称/图片/价格, id 不存在直接报参数异常。</p>
-     *
-     * @param appConfigVO 应用配置, id 必填
-     * @return 空结果
-     */
-    @PostMapping("/appSet")
-    public PlatformResult<Void> appSet(@RequestBody AppConfigVO appConfigVO) {
-        DictRes dictRes = dictDomain.dictVOByCode(DictEnum.Key.APP_CONFIG.getCode());
-        ThrowsException.isNull(dictRes, BaseErrorCode.NODATA, "应用配置");
-
-        List<AppConfigVO> appConfigList = JSONUtil.toList(dictRes.getValue(), AppConfigVO.class);
-        Map<Long, AppConfigVO> appConfigMap = appConfigList.stream()
-                .collect(Collectors.toMap(AppConfigVO::getId, Function.identity()));
-        AppConfigVO oldAppConfigVO = appConfigMap.get(appConfigVO.getId());
-        if (oldAppConfigVO == null) {
-            ThrowsException.exception(BaseErrorCode.PARAM, "ID不存在");
-        } else {
-            oldAppConfigVO.setName(appConfigVO.getName());
-            oldAppConfigVO.setImg(appConfigVO.getImg());
-            oldAppConfigVO.setPrice(appConfigVO.getPrice());
-        }
-
-        DictReq dictReq = new DictReq();
-        dictReq.setId(dictRes.getId());
-        dictReq.setDesc(dictRes.getDesc());
-        dictReq.setValue(JSONUtil.toJsonStr(appConfigList));
         dictDomain.dictSave(dictReq);
         return PlatformResult.success();
     }
@@ -132,6 +79,7 @@ public class ConfigController {
      * @return 空结果
      */
     @PostMapping("/channelConfigSet")
+    @FuncPermission("数智门店配置修改")
     public PlatformResult<Void> channelConfigSet(@RequestBody ChannelConfigVO orderConfigVO) {
         DictReq dictReq = new DictReq();
         dictReq.setCode(DictEnum.Key.CHANNEL_CONFIG.getCode());

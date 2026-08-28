@@ -17,7 +17,7 @@ import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO
 import com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO;
 import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

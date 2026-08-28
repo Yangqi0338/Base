@@ -1,0 +1,2 @@
+ALTER TABLE
+  `brand` MODIFY COLUMN `state` varchar(8) NULL COMMENT '状态[PENDING待审核,APPROVED已通过,REJECTED已拒绝]';

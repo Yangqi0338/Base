@@ -3,15 +3,20 @@ package com.newzkl.platform.base.biz.account.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
+import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
-import com.newzkl.platform.base.biz.account.model.req.AdminDisableAccountReq;
 import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
+import com.newzkl.platform.base.biz.account.model.req.MemberQuery;
+import com.newzkl.platform.base.biz.account.model.req.MemberRegisterReq;
+import com.newzkl.platform.base.common.core.utils.common.CommonUtil;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
+import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.core.model.exception.EasyExcelErrorVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +36,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/account/member")
 @RequiredArgsConstructor
 @RoleLimit(client = AccountEnum.Client.ADMIN)
+@FuncPermission("中台-用户管理")
 public class MemberController {
 
     private final AccountService accountService;
     private final UserClientDomain userClientDomain;
+    private final UserQueryService userQueryService;
 
     /**
      * 分页查询
@@ -44,35 +51,41 @@ public class MemberController {
      */
     @PostMapping("/page")
     public PlatformResult<Page<MemberAccountVO>> page(@RequestBody AccountQuery query) {
-        return PlatformResult.success(accountService.pageAccount(query));
+        query.setClient(AccountEnum.Client.USER);
+        query.setIdentity(AccountEnum.Identity.MEMBER);
+        return PlatformResult.success((Page<MemberAccountVO>) accountService.pageAccount(query));
+    }
+
+    /**
+     * c端客户分页
+     *
+     * <p>收编自旧 {@code AccountController#memberPage}, 按主数据归 member 身份控制器。</p>
+     *
+     * @param memberQuery c端客户查询
+     * @return c端客户分页
+     */
+    @PostMapping("/memberPage")
+    public PlatformResult<Page<MemberVO>> memberPage(@RequestBody MemberQuery memberQuery) {
+        return PlatformResult.success(userQueryService.memberPage(memberQuery));
     }
 
     /**
      * 添加会员
      *
-     * <p>迁移补充: 旧 {@code adminCreateAccount(AdminRegisterAccountReq)} 中台化后为
-     * {@code identityCreate(AdminRegisterIdentityReq)}, 入参字段为旧入参的超集 (多出角色与岗位),
-     * 旧字段全部保留。旧实现打印整个入参 (含手机号), 迁移后只打印角色, 避免日志落敏感信息。</p>
+     * <p>收会员专用入参 {@link MemberRegisterReq}, 端内转 {@link AdminRegisterIdentityReq}:
+     * identity 固定 MEMBER。会员无角色/状态/登录账号字段, 昵称空时注册链补手机号。</p>
      *
-     * @param query 身份创建请求
+     * @param req 会员注册请求
      * @return 空结果
      */
     @PostMapping("/add")
-    public PlatformResult<Object> add(@RequestBody @Valid AdminRegisterIdentityReq query) {
-        log.info("添加会员, role:{}", query.getIdentity());
-        accountService.identityCreate(query);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 禁用或者启用
-     *
-     * @param req 禁用/启用请求
-     * @return 空结果
-     */
-    @PostMapping("/disable")
-    public PlatformResult<Object> disableMember(@RequestBody AdminDisableAccountReq req) {
-        accountService.disableAccount(req);
+    @FuncPermission("添加会员")
+    public PlatformResult<Object> add(@RequestBody MemberRegisterReq req) {
+        CommonUtil.validate(req);
+        log.info("添加会员");
+        AdminRegisterIdentityReq registerReq = TransferUtils.transfer(req, AdminRegisterIdentityReq.class);
+        registerReq.setIdentity(AccountEnum.Identity.MEMBER);
+        accountService.identityCreate(registerReq);
         return PlatformResult.success();
     }
 
@@ -87,6 +100,7 @@ public class MemberController {
      * @return 导入错误明细
      */
     @PutMapping("/importMember")
+    @FuncPermission("批量导入会员 (Excel)")
     public PlatformResult<EasyExcelErrorVO> importMember(@RequestParam("file") MultipartFile file) {
         return PlatformResult.success(userClientDomain.adminImportAccount(file));
     }

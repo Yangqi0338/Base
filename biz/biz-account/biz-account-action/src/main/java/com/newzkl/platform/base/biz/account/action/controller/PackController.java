@@ -18,8 +18,9 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account/pack")
 @Validated
 @RequiredArgsConstructor
+@FuncPermission("平台-礼包")
 public class PackController {
 
     private final PackGoodsDomain packGoodsDomain;
@@ -46,12 +48,16 @@ public class PackController {
     private final PackOrderDomain packOrderDomain;
 
     /**
-     * 礼包商品创建
+     * 礼包商品保存(新增/修改)
      *
-     * @param command 写入入参
+     * <p>合并旧 {@code /goods/save} 与 {@code /goods/update}: 二者原委托同一
+     * {@code packGoodsDomain.packGoodsSave}, 由 command.id 有无自行分流增改, 端点重复, 统一为本端点。</p>
+     *
+     * @param command 写入入参(id 为空新增, 非空修改)
      * @return 礼包主键ID
      */
     @PostMapping("/goods/save")
+    @FuncPermission("礼包商品保存(新增/修改)")
     public PlatformResult<Long> packGoodsSave(@Valid @RequestBody PackGoodsCommand command) {
         return PlatformResult.success(packGoodsDomain.packGoodsSave(command));
     }
@@ -63,20 +69,9 @@ public class PackController {
      * @return 空结果
      */
     @PostMapping("/goods/delete")
+    @FuncPermission("礼包商品删除")
     public PlatformResult<Void> packGoodsDelete(@Valid @RequestBody IdCommand idListCommand) {
         packGoodsDomain.packGoodsDelete(idListCommand.getIdList());
-        return PlatformResult.success();
-    }
-
-    /**
-     * 礼包商品修改
-     *
-     * @param command 写入入参
-     * @return 空结果
-     */
-    @PostMapping("/goods/update")
-    public PlatformResult<Void> packGoodsUpdate(@RequestBody PackGoodsCommand command) {
-        packGoodsDomain.packGoodsSave(command);
         return PlatformResult.success();
     }
 
@@ -109,6 +104,7 @@ public class PackController {
      * @return 预单出参
      */
     @PostMapping("order/pre")
+    @FuncPermission("礼包订单预创建")
     public PlatformResult<PackOrderPreRes> packOrderPreSave(@Valid @RequestBody PackOrderCommand command) {
         return PlatformResult.success(packOrderService.packOrderCreate(command));
     }
@@ -120,6 +116,7 @@ public class PackController {
      * @return 订单ID
      */
     @PostMapping("order/submit")
+    @FuncPermission("礼包订单提交")
     public PlatformResult<Long> packOrderSubmit(@Valid @RequestBody IdCommand idListCommand) {
         return PlatformResult.success(packOrderService.packOrderSubmit(idListCommand.getId()));
     }
@@ -159,6 +156,7 @@ public class PackController {
      * @return 空结果
      */
     @PostMapping("order/deliver")
+    @FuncPermission("礼包订单发货")
     public PlatformResult<Void> packOrderDeliver(@Valid @RequestBody PackOrderDeliverCommand command) {
         packOrderDomain.packOrderDeliver(command);
         return PlatformResult.success();
@@ -171,6 +169,7 @@ public class PackController {
      * @return 支付结果
      */
     @PostMapping("order/pay")
+    @FuncPermission("礼包订单支付")
     public PlatformResult<PayResultDTO> packOrderPay(@Valid @RequestBody PackOrderPayReq payReq) {
         return PlatformResult.success(packOrderService.packOrderPay(payReq));
     }

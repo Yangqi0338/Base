@@ -81,10 +81,10 @@ public class RedisEnum {
         SMS_SEND_COUNT_HOUR(ModuleEnum.COMMON, "sms_limit:hour", "短信小时发送限制"),
         /** SMS */
         SMS(ModuleEnum.COMMON, "SMS:%s", "SMS"),
-        /** 账号权限 code 列表缓存, s = 账号ID */
-        ACCOUNT_PERM(ModuleEnum.COMMON, "perm:account:%s", "账号权限 code 列表缓存, s = 账号ID"),
-        /** 账号角色 code 列表缓存, s = 账号ID */
-        ACCOUNT_ROLE(ModuleEnum.COMMON, "role:account:%s", "账号角色 code 列表缓存, s = 账号ID"),
+        /** 账号权限 code 列表缓存, s1 = client, s2 = 账号ID */
+        ACCOUNT_PERM(ModuleEnum.COMMON, "perm:account:%s:%s", "账号权限 code 列表缓存, s1 = client, s2 = 账号ID"),
+        /** 账号角色 code 列表缓存, s1 = client, s2 = 账号ID */
+        ACCOUNT_ROLE(ModuleEnum.COMMON, "role:account:%s:%s", "账号角色 code 列表缓存, s1 = client, s2 = 账号ID"),
 
         /* ============ 互动统计 ============ */
         /** 互动统计缓存, s1 = 目标类型, s2 = 目标ID (格式 store:stat:type:ID) */

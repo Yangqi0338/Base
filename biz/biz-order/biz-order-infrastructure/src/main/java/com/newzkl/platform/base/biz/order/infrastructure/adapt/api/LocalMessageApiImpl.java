@@ -7,7 +7,6 @@ import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC
 import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationRecordRPC;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiDeliverEvent;
-import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
 import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
@@ -17,7 +16,7 @@ import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
@@ -55,11 +54,6 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     @Override
     public void sendRefundPassMessage(RefundDTO refund) {
         MQUtil.send(MQ.Tag.REFUND_PASS, TransferUtils.transfer(refund, RefundPassEvent.class));
-    }
-
-    @Override
-    public void orderChannelNodeHandle(OrderSyncHandleVO orderSyncHandleVO) {
-        MQUtil.send(MQ.Tag.ORDER_SYNC_HANDLE, orderSyncHandleVO);
     }
 
     @Override

@@ -9,8 +9,4 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class EmpOutRes extends BaseRes {
-    /**
-     * 岗位id列表
-     */
-    private List<String> jobIdList;
 }

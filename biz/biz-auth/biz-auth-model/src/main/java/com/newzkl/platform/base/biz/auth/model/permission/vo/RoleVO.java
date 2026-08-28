@@ -11,9 +11,8 @@ import java.util.List;
  *
  * @author KC
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class RoleVO extends BaseRes {
+public class RoleVO {
 
     /** 角色编码 */
     private String code;
@@ -24,30 +23,4 @@ public class RoleVO extends BaseRes {
     /** 角色描述 */
     private String description;
 
-    /** 排序 */
-    private Integer sort;
-
-    /** 绑定账号数 */
-    private Integer accountCount;
-
-    /** 权限数 */
-    private Integer permissionCount;
-
-    /**
-     * 绑定账号ID列表
-     * @ext 详情查时填
-     */
-    private List<Long> accountIds;
-
-    /**
-     * 权限ID列表
-     * @ext 详情查时填, 含半选
-     */
-    private List<Long> permissionIds;
-
-    /**
-     * 半选权限ID列表
-     * @ext 详情查时填
-     */
-    private List<Long> halfCheckedPermissionIds;
 }

@@ -8,7 +8,8 @@ import com.newzkl.platform.base.biz.user.model.interaction.res.BatchInteractionR
 import com.newzkl.platform.base.biz.user.model.interaction.vo.InteractionRPCVO;
 import com.newzkl.platform.base.biz.user.model.relation.req.InteractionAddReq;
 import com.newzkl.platform.base.biz.user.model.relation.res.InteractionCountRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ import java.util.List;
 @RequestMapping("/user/interaction")
 @Slf4j
 @RequiredArgsConstructor
+@FuncPermission("用户互动")
 public class UserInteractionController {
 
     private final UserInteractionDomain userInteractionDomain;
@@ -46,6 +48,7 @@ public class UserInteractionController {
      * @return 是否成功
      */
     @PostMapping("/add")
+    @FuncPermission("新增互动")
     public PlatformResult<Boolean> addInteraction(@Validated @RequestBody InteractionAddReq addVO) {
         Long currentUserId = SecurityUtils.getAccountId();
         log.info("用户新增互动: userId={}, targetType={}, targetId={}, actionType={}",
@@ -61,6 +64,7 @@ public class UserInteractionController {
      * @return 是否成功
      */
     @PostMapping("/cancel")
+    @FuncPermission("取消互动")
     public PlatformResult<Boolean> cancelInteraction(@Validated @RequestBody InteractionAddReq addVO) {
         Long currentUserId = SecurityUtils.getAccountId();
         log.info("用户取消互动: userId={}, targetType={}, targetId={}, actionType={}",

@@ -38,12 +38,6 @@ public class LoginReq {
     private AccountEnum.Identity identity;
 
     /**
-     * 端
-     */
-    @NotNull(message = "登录端不能为空")
-    private AccountEnum.Client client;
-
-    /**
      * 登录类型
      */
     @NotNull(message = "登录类型不能为空")

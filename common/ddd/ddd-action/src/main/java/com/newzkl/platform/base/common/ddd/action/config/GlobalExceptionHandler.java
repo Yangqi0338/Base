@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.common.ddd.action.config;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -128,6 +131,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public PlatformResult<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         return PlatformResult.fail("不支持'" + e.getMethod() + "'请求");
+    }
+
+    /**
+     * 未登录 — sa-token 校验登录态失败
+     *
+     * @param e 未登录异常
+     * @return 失败响应
+     */
+    @ExceptionHandler(NotLoginException.class)
+    public PlatformResult<?> handleNotLogin(NotLoginException e) {
+        log.warn("未登录: {}", e.getMessage());
+        return PlatformResult.fail(BaseErrorCode.USER_NOT_LOGIN.getCode(), "登录状态失效, 请重新登录");
+    }
+
+    /**
+     * 无功能权限 — sa-token 鉴权失败, 直出所缺功能显示名
+     *
+     * @param e 权限不足异常
+     * @return 失败响应
+     */
+    @ExceptionHandler(NotPermissionException.class)
+    public PlatformResult<?> handleNotPermission(NotPermissionException e) {
+        log.warn("权限不足: {}", e.getPermission());
+        return PlatformResult.fail(BaseErrorCode.NO_AUTH.getCode(), StrUtil.format("无操作权限: {}", e.getPermission()));
     }
 
     /**

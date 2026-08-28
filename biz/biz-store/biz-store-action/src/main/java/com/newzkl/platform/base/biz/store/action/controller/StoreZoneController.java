@@ -4,6 +4,7 @@ import com.newzkl.platform.base.biz.store.domain.store.service.StoreZoneDomain;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneCreateReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreZoneUpdateReq;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/storeZone")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("门店专区")
 public class StoreZoneController {
 
     private final StoreZoneDomain storeZoneDomain;
@@ -35,6 +37,7 @@ public class StoreZoneController {
      * @return 成功结果
      */
     @PostMapping("/create")
+    @FuncPermission("新增专区")
     public PlatformResult<Void> create(@Validated @RequestBody StoreZoneCreateReq req) {
         storeZoneDomain.create(req);
         return PlatformResult.success();
@@ -47,6 +50,7 @@ public class StoreZoneController {
      * @return 成功结果
      */
     @PostMapping("/update")
+    @FuncPermission("修改专区")
     public PlatformResult<Void> update(@Validated @RequestBody StoreZoneUpdateReq req) {
         storeZoneDomain.update(req);
         return PlatformResult.success();

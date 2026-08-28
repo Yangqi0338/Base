@@ -6,7 +6,8 @@ import com.newzkl.platform.base.biz.store.model.store.query.StoreAccountQuery;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreAccountUpdateReq;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountExportRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreAccountRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -33,6 +34,7 @@ import java.util.List;
 @RequestMapping("/storeAccount")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("门店客户关系")
 public class StoreAccountController {
 
     private final StoreAccountDomain storeAccountDomain;
@@ -57,6 +59,7 @@ public class StoreAccountController {
      * @return 成功结果
      */
     @PostMapping("/updateStoreAccount")
+    @FuncPermission("修改门店客户关系")
     public PlatformResult<Void> updateStoreAccount(@Validated @RequestBody StoreAccountUpdateReq req) {
         storeAccountDomain.updateStoreAccount(req);
         return PlatformResult.success();

@@ -11,6 +11,7 @@ import com.newzkl.platform.base.biz.order.model.vo.DeliverVO;
 import com.newzkl.platform.base.biz.order.model.vo.FullDeliverExcelVO;
 import com.newzkl.platform.base.biz.order.model.vo.SplitDeliverExcelVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sale/deliver")
+@FuncPermission("发货管理")
 public class DeliverController {
 
     @Autowired
@@ -44,6 +46,7 @@ public class DeliverController {
      * @return
      */
     @PostMapping("deliverCreate")
+    @FuncPermission("发货创建")
     public PlatformResult<Void> deliverCreate(@Validated @RequestBody DeliverCommand deliverCommand) {
         orderService.deliverCreate(deliverCommand);
         return PlatformResult.success();
@@ -59,6 +62,7 @@ public class DeliverController {
      * 修改物流单号
      */
     @PostMapping("deliverEdit")
+    @FuncPermission("修改物流单号")
     public PlatformResult<Void> deliverEdit(@Validated @RequestBody DeliverCodeCommand deliverCodeCommand) {
         orderDomain.deliverEdit(deliverCodeCommand);
         return PlatformResult.success();
@@ -67,6 +71,7 @@ public class DeliverController {
      * 整单发货
      * */
     @PostMapping(value = "/fullDeliver")
+    @FuncPermission("整单发货")
     public PlatformResult<ExcelErrorVO> fullDeliver(MultipartFile file){
         ExcelErrorVO errorVO = null;
         try {
@@ -90,6 +95,7 @@ public class DeliverController {
      * 拆单发货
      * */
     @PostMapping(value = "/splitDeliver")
+    @FuncPermission("拆单发货")
     public PlatformResult<ExcelErrorVO> splitDeliver(MultipartFile file){
         ExcelErrorVO errorVO;
         try {

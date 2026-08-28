@@ -42,14 +42,13 @@ public class HuaweiOcrGateway implements OcrApi {
     private final OcrClient ocrClient;
 
     @Override
-    public Object recognizeIdCard(String imageUrl) {
+    public RecognizeIdCardResponse recognizeIdCard(String imageUrl) {
         RecognizeIdCardRequest request = new RecognizeIdCardRequest();
         IdCardRequestBody body = new IdCardRequestBody();
         body.withUrl(imageUrl);
         request.withBody(body);
         try {
-            RecognizeIdCardResponse response = ocrClient.recognizeIdCard(request);
-            return JSONUtil.parse(JSONUtil.toJsonStr(response));
+            return ocrClient.recognizeIdCard(request);
         } catch (ConnectionException | RequestTimeoutException e) {
             log.error("[HuaweiOcrGateway] 身份证识别连接/超时失败, url={}", imageUrl, e);
         } catch (ServiceResponseException e) {
@@ -60,14 +59,13 @@ public class HuaweiOcrGateway implements OcrApi {
     }
 
     @Override
-    public Object recognizeBusinessLicense(String imageUrl) {
+    public RecognizeBusinessLicenseResponse recognizeBusinessLicense(String imageUrl) {
         RecognizeBusinessLicenseRequest request = new RecognizeBusinessLicenseRequest();
         BusinessLicenseRequestBody body = new BusinessLicenseRequestBody();
         body.withUrl(imageUrl);
         request.withBody(body);
         try {
-            RecognizeBusinessLicenseResponse response = ocrClient.recognizeBusinessLicense(request);
-            return JSONUtil.parse(JSONUtil.toJsonStr(response));
+            return ocrClient.recognizeBusinessLicense(request);
         } catch (ConnectionException | RequestTimeoutException e) {
             log.error("[HuaweiOcrGateway] 营业执照识别连接/超时失败, url={}", imageUrl, e);
         } catch (ServiceResponseException e) {

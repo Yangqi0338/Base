@@ -7,7 +7,8 @@ import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionCreate
 import com.newzkl.platform.base.biz.user.model.relation.query.UserCollectionQuery;
 import com.newzkl.platform.base.biz.user.model.relation.req.UserCollectionReq;
 import com.newzkl.platform.base.biz.user.model.relation.dto.UserCollectionDTO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ import java.util.List;
 @RequestMapping("/user/collection")
 @Slf4j
 @RequiredArgsConstructor
+@FuncPermission("用户收藏")
 public class UserCollectionController {
 
     private final UserCollectionService userCollectionService;
@@ -46,6 +48,7 @@ public class UserCollectionController {
      * @return 收藏记录
      */
     @PostMapping("/collect")
+    @FuncPermission("收藏商品")
     public PlatformResult<UserCollectionDTO> collectProduct(@Validated @RequestBody UserCollectionCreateReq createReq) {
         createReq.setUserId(SecurityUtils.getAccountId());
         createReq.setUserName(SecurityUtils.getUsername());
@@ -60,6 +63,7 @@ public class UserCollectionController {
      * @return 是否成功
      */
     @PostMapping("/uncollectedProduct")
+    @FuncPermission("取消收藏商品")
     public PlatformResult<Boolean> uncollectedProduct(@Validated @RequestBody UncollectedProductReq req) {
         log.info("用户取消收藏商品: {}", req);
         return PlatformResult.success(userCollectionService.uncollectProduct(req));
@@ -71,6 +75,7 @@ public class UserCollectionController {
      * @return 是否成功
      */
     @PostMapping("/uncollectedInvalidProduct")
+    @FuncPermission("取消全部失效收藏")
     public PlatformResult<Boolean> uncollectedInvalidProduct() {
         return PlatformResult.success(userCollectionService.uncollectedInvalidProduct());
     }

@@ -10,6 +10,8 @@ import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 渠道商
  * @author fang
@@ -20,5 +22,6 @@ public class AccountRpcQuery extends BizPageQuery {
     private String yqm;
     private String username;
     private AccountEnum.Client client;
+    private List<AccountEnum.State> stateList;
 
 }

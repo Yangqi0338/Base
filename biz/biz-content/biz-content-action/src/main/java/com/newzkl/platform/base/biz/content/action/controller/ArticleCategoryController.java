@@ -7,8 +7,9 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCat
 import com.newzkl.platform.base.biz.content.model.common.req.RecommendGroupReq;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/article/category")
 @RequiredArgsConstructor
+@FuncPermission("平台-文章分类")
 public class ArticleCategoryController {
 
     private final ArticleCategoryDomain articleCategoryDomain;
@@ -66,6 +68,7 @@ public class ArticleCategoryController {
      * @return 创建结果
      */
     @PostMapping("/create")
+    @FuncPermission("创建文章分类")
     public PlatformResult<Void> createCategory(@Valid @RequestBody ArticleCategoryReq req) {
         articleCategoryDomain.createCategory(req);
         return PlatformResult.success();
@@ -78,6 +81,7 @@ public class ArticleCategoryController {
      * @return 修改结果
      */
     @PostMapping("/update")
+    @FuncPermission("修改文章分类")
     public PlatformResult<Void> updateCategory(@Valid @RequestBody ArticleCategoryReq req) {
         articleCategoryDomain.updateCategory(req);
         return PlatformResult.success();
@@ -90,6 +94,7 @@ public class ArticleCategoryController {
      * @return 删除结果
      */
     @GetMapping("/delete")
+    @FuncPermission("删除文章分类")
     public PlatformResult<Void> deleteCategory(@RequestParam Long id) {
         articleCategoryDomain.deleteCategory(id);
         return PlatformResult.success();

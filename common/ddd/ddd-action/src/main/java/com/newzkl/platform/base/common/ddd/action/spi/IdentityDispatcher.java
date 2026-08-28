@@ -3,7 +3,7 @@ package com.newzkl.platform.base.common.ddd.action.spi;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationHandler;

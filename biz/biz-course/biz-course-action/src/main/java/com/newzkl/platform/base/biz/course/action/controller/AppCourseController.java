@@ -10,7 +10,8 @@ import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCou
 import com.newzkl.platform.base.biz.course.model.purchase.req.CoursePurchaseReq;
 import com.newzkl.platform.base.biz.course.model.purchase.res.CoursePurchaseCreateRes;
 import com.newzkl.platform.base.biz.course.model.purchase.res.UserPurchasedCourseRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/appCourse")
 @RequiredArgsConstructor
+@FuncPermission("C 端课程内容查询 + 课程购买")
 public class AppCourseController {
 
     private final CourseDomain courseDomain;
@@ -82,6 +84,7 @@ public class AppCourseController {
      * @return 下单出参(含支付二维码)
      */
     @PostMapping("/create")
+    @FuncPermission("课程购买下单")
     public PlatformResult<CoursePurchaseCreateRes> create(@Valid @RequestBody CoursePurchaseReq req) {
         req.setUserId(SecurityUtils.getAccountId());
         return PlatformResult.success(coursePurchaseRecordDomain.createCoursePurchaseRecord(req));

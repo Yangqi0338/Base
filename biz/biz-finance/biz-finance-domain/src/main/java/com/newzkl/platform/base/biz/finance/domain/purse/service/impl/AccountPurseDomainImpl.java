@@ -14,7 +14,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterReco
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

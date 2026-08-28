@@ -33,24 +33,22 @@ public class AdminRegisterIdentityReq {
     /**
      * 头像
      */
-    private String headImg;
+    private String head;
     /**
      * 父id
      */
     private Long pid;
-    /**
-     * 父账号
-     */
-    private String superiorAccount;
     /**
      * 角色
      */
     @NotNull(message = "角色不能为空")
     private AccountEnum.Identity identity;
     /**
-     * 后台角色id列表
+     * 角色 id 集合
+     *
+     * <p>建号后按此绑定账号-角色, 空集视为不绑定</p>
      */
-    private List<Long> jobIdList;
+    private List<Long> roleIdList;
     /**
      * 账号状态
      * @ext 批量导入会员指定启用/禁用

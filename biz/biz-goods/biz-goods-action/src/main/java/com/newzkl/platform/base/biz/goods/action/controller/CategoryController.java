@@ -11,8 +11,9 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ import java.util.List;
 @RestController("goodsCategoryController")
 @RequestMapping("/goods/category")
 @RequiredArgsConstructor
+@FuncPermission("分类管理")
 public class CategoryController {
 
     private final SpuDomain spuDomain;
@@ -44,18 +46,9 @@ public class CategoryController {
      * @return 分类主键
      */
     @PostMapping("categoryCreate")
+    @FuncPermission("创建分类")
     public PlatformResult<Long> categoryCreate(@Validated @RequestBody SpuCategoryReq categoryReq) {
-        if (categoryReq.getId() != null) {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
-        AccountEnum.Identity identity = SecurityUtils.getIdentity();
-        if (AccountEnum.Identity.PLATFORM == identity) {
-            categoryReq.setAccountId(0L);
-        } else if (AccountEnum.Identity.CHANNEL == identity) {
-            categoryReq.setAccountId(SecurityUtils.getAccountId());
-        } else {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
+        categoryReq.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(spuDomain.categorySave(categoryReq));
     }
 
@@ -66,6 +59,7 @@ public class CategoryController {
      * @return 空结果
      */
     @PostMapping("categoryDelete")
+    @FuncPermission("删除分类")
     public PlatformResult<Void> categoryDelete(@RequestBody CommonCmd.IdList idList) {
         spuDomain.categoryDelete(idList.getIdList());
         return PlatformResult.success();
@@ -78,6 +72,7 @@ public class CategoryController {
      * @return 空结果
      */
     @PostMapping("categoryUpdate")
+    @FuncPermission("修改分类")
     public PlatformResult<Void> categoryUpdate(@Validated @RequestBody SpuCategoryReq categoryReq) {
         spuDomain.categorySave(categoryReq);
         return PlatformResult.success();
@@ -118,6 +113,7 @@ public class CategoryController {
      * @return 空结果
      */
     @PostMapping("bindBrand")
+    @FuncPermission("分类绑定品牌")
     public PlatformResult<Void> bindBrand(@Validated @RequestBody CategoryCmd.BindBrand bindCategory) {
         spuCategoryService.bindBrand(bindCategory.getCategoryId(), bindCategory.getBrandId(),
                 Boolean.TRUE.equals(bindCategory.getIsBind()));

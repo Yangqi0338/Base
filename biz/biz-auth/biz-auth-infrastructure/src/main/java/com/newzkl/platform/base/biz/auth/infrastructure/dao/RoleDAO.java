@@ -23,6 +23,7 @@ public interface RoleDAO extends BaseMapper<RoleDO> {
      */
     default BaseLambdaQueryWrapper<RoleDO> getLw(RoleQuery query) {
         BaseLambdaQueryWrapper<RoleDO> wrapper = new BaseLambdaQueryWrapper<RoleDO>()
+                .notNullEq(RoleDO::getClient, query.getClient())
                 .notEmptyIn(RoleDO::getId, query.getIdList())
                 .notEmptyEq(RoleDO::getCode, query.getCode())
                 .likeList(query.getKeyword(), RoleDO::getName, RoleDO::getCode);

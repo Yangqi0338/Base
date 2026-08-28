@@ -1,20 +1,19 @@
 package com.newzkl.platform.base.biz.goods.model.goods.req.brand;
 
-import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum.ApprovalStatus;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 品牌
  *
  * @author fang
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class BrandReq {
-    /**
-     * ID
-     */
-    private Long id;
+public class BrandReq extends BaseReq {
     /**
      * 添加人
      */
@@ -22,17 +21,17 @@ public class BrandReq {
     /**
      * 名称
      */
-    @NotBlank(message = "品牌名称?")
+    @NotBlank
     private String name;
     /**
      * LOGO
      */
-    @NotBlank(message = "品牌LOGO?")
+    @NotBlank
     private String logo;
     /**
      * 状态
      */
-    private ApprovalStatus state;
+    private AuditEnum.ApprovalStatus state;
 
     /**
      * 分类id

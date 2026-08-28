@@ -4,6 +4,7 @@ import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
 import com.newzkl.platform.base.biz.order.model.req.PayMemberOrderCommand;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sale/member/order")
+@FuncPermission("消费者订单")
 public class MemberOrderController {
 
     @Autowired
@@ -30,6 +32,7 @@ public class MemberOrderController {
      * @return 支付结果
      */
     @PostMapping("pay")
+    @FuncPermission("支付")
     public PlatformResult<PayBaseResult> consumerPayment(@RequestBody @Validated PayMemberOrderCommand command) {
         return PlatformResult.success(commitOrder.memberPayOrder(command));
     }

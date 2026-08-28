@@ -24,4 +24,9 @@ public class ConfigSupplierVO {
      * 提现手续费比例
      */
     private Integer withdrawRate;
+
+    /**
+     * 是否跳过保证金审核 (1 跳过, 提交即视为审核通过直接入账; 其余走人工审核)
+     */
+    private Integer skipPromiseAudit;
 }

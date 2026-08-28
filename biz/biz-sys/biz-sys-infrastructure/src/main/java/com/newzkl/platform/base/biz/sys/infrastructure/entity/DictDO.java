@@ -7,6 +7,8 @@ import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHan
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.TableIndex;
+import org.dromara.autotable.annotation.TableIndexes;
 import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
@@ -18,6 +20,9 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(autoResultMap = true)
+@TableIndexes({
+        @TableIndex(name = "key", type = IndexTypeEnum.UNIQUE, fields = {"code", "delFlag"})
+})
 public class DictDO extends BaseDO {
 
     /**
@@ -25,7 +30,6 @@ public class DictDO extends BaseDO {
      *
      * <p>稳定业务键, 对应 DictEnum.Key 写死码值, 与物理主键 id 解耦</p>
      */
-    @Index(type = IndexTypeEnum.UNIQUE)
     private Long code;
 
     /**

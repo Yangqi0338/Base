@@ -10,8 +10,9 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreightTemplate
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/goods/freight")
 @RequiredArgsConstructor
+@FuncPermission("运费模板管理")
 public class FreightController {
 
     /**
@@ -45,6 +47,7 @@ public class FreightController {
      * @return 运费模板主键
      */
     @PostMapping("freightTemplateCreate")
+    @FuncPermission("创建运费模板")
     public PlatformResult<Long> freightTemplateCreate(@Validated @RequestBody FreightTemplateReq freightTemplateReq) {
         if (freightTemplateReq.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -66,6 +69,7 @@ public class FreightController {
      * @return 空结果
      */
     @PostMapping("freightTemplateDelete")
+    @FuncPermission("删除运费模板")
     public PlatformResult<Void> freightTemplateDelete(@RequestBody CommonCmd.IdList idList) {
         if (AccountEnum.Identity.PLATFORM != SecurityUtils.getIdentity()
                 && idList.getIdList().contains(SYSTEM_TEMPLATE_ID)) {
@@ -84,6 +88,7 @@ public class FreightController {
      * @return 空结果
      */
     @PostMapping("freightTemplateUpdate")
+    @FuncPermission("修改运费模板")
     public PlatformResult<Void> freightTemplateUpdate(@Validated @RequestBody FreightTemplateReq freightTemplateReq) {
         if (freightTemplateReq.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);

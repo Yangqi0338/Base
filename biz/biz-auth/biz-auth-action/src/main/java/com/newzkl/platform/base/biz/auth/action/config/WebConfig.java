@@ -1,50 +1,40 @@
 package com.newzkl.platform.base.biz.auth.action.config;
 
 
-import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
-import cn.dev33.satoken.stp.StpLogic;
 import com.newzkl.platform.base.common.ddd.action.auth.SecurityContextFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.util.pattern.PathPatternParser;
 
 /**
- * Sa-Token 拦截器配置 — 未登录请求返回401
+ * servlet 安全上下文过滤器配置
+ *
+ * <p>注册 {@link SecurityContextFilter} 填充请求透传上下文。鉴权与 CORS 由
+ * {@link SaTokenConfigure} 的 SaServletFilter 统一处理</p>
+ *
+ * @author KC
  */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    @Bean
-    public FilterRegistrationBean indexFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean(new SecurityContextFilter());
-        registration.addUrlPatterns("/*");
-
-        return registration;
-    }
-
     /**
-     * 跨域配置
+     * 安全上下文过滤器注册
+     *
+     * @return 过滤器注册 bean
      */
     @Bean
-    public CorsWebFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedMethod("*");
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
-        source.registerCorsConfiguration("/**", config);
-        CorsWebFilter corsWebFilter = new CorsWebFilter(source);
-        return new CorsWebFilter(source);
+    public FilterRegistrationBean<SecurityContextFilter> indexFilterRegistration() {
+        FilterRegistrationBean<SecurityContextFilter> registration =
+                new FilterRegistrationBean<>(new SecurityContextFilter());
+        registration.addUrlPatterns("/*");
+        // 早于 SaServletFilter(sa-token 默认 order = -100)执行, 保证鉴权前上下文已填充
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registration;
     }
 }

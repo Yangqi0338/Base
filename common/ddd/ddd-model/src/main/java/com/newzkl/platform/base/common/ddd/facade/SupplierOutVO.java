@@ -1,6 +1,9 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
@@ -32,11 +35,11 @@ public class SupplierOutVO extends BaseRes {
      /**
      * 状态 (查询)
      */
-     private Integer state;
+     private SupplierEnum.State state;
      /**
      * 审批状态 (查询) (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
      */
-     private Integer auditState;
+     private AuditEnum.State auditState;
      /**
      * 企业信息
      */

@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.account.application.service.policy.identity
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
+import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.TreeMap;
 
 /**
@@ -31,6 +33,7 @@ import java.util.TreeMap;
 public class ChannelIdentityPolicy extends AbsIdentityPolicy {
 
     private final ChannelClientDomain channelDomain;
+    private final ChannelRepository channelRepository;
     private final DictApi dictApi;
     private final FinanceConfigApi financeConfigApi;
     private final PurseApi purseApi;
@@ -85,7 +88,9 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
 
     @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
-        return false;
+        // 移除渠道商身份: 删 channel 行
+        channelRepository.channelDelete(Collections.singletonList(accountVO.getId()));
+        return true;
     }
 
     @Override

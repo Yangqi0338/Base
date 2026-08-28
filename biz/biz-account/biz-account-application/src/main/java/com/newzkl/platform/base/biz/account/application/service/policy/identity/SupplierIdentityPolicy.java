@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+
 /**
  * @author muc_fang
  * @Description: 供应商角色策略
@@ -62,7 +64,9 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
 
     @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
-        return false;
+        // 移除供应商身份: 删 supplier 行
+        supplierRepository.supplierDelete(Collections.singletonList(accountVO.getId()));
+        return true;
     }
 
     @Override

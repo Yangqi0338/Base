@@ -23,6 +23,17 @@ public class UserProperties {
         return CollUtil.contains(passSmsCodeList, code);
     }
 
+    /**
+     * 取一个可用通行码
+     *
+     * <p>供后端自动绕过短信校验的业务(如管理端注销)取值, 取列表首元素</p>
+     *
+     * @return 通行码
+     */
+    public static String passCode() {
+        return CollUtil.getFirst(passSmsCodeList);
+    }
+
     public void setPassSmsCodeList(List<String> passSmsCodeList) {
         UserProperties.passSmsCodeList = passSmsCodeList;
     }

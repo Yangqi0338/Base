@@ -5,7 +5,8 @@ import com.newzkl.platform.base.biz.user.domain.service.UserFollowDomain;
 import com.newzkl.platform.base.biz.user.model.relation.req.FollowReq;
 import com.newzkl.platform.base.biz.user.model.relation.query.UserFollowQuery;
 import com.newzkl.platform.base.biz.user.model.relation.res.UserFollowRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import java.util.List;
 @RequestMapping("/user/follow")
 @Slf4j
 @RequiredArgsConstructor
+@FuncPermission("用户关注")
 public class UserFollowController {
 
     private final UserFollowDomain userFollowDomain;
@@ -45,6 +47,7 @@ public class UserFollowController {
      * @return 是否成功
      */
     @PostMapping("/follow")
+    @FuncPermission("关注用户")
     public PlatformResult<Boolean> follow(@Validated @RequestBody FollowReq req) {
         Long follower = SecurityUtils.getAccountId();
         log.info("用户{}关注用户{}", follower, req.getFollowingId());
@@ -58,6 +61,7 @@ public class UserFollowController {
      * @return 是否成功
      */
     @PostMapping("/unfollow")
+    @FuncPermission("取消关注")
     public PlatformResult<Boolean> unfollow(@Validated @RequestBody FollowReq req) {
         Long follower = SecurityUtils.getAccountId();
         log.info("用户{}取消关注用户{}", follower, req.getFollowingId());

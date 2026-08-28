@@ -4,7 +4,7 @@ import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseC
 import com.newzkl.platform.base.biz.finance.model.account.req.BatchQueryConfigChannelQuery;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/config")
 @RequiredArgsConstructor
+@FuncPermission("配置类")
 public class ConfigController {
 
     private final AccountPurseConfigDomain accountPurseConfigDomain;
@@ -63,6 +64,7 @@ public class ConfigController {
      * @param configSupplierVO 供应商配置
      * @return 成功结果
      */
+    @FuncPermission("保存供应商配置")
     @PostMapping("/saveSupplierConfig")
     public PlatformResult<Boolean> saveSupplierConfig(@RequestBody ConfigSupplierVO configSupplierVO) {
         accountPurseConfigDomain.saveSupplierConfig(configSupplierVO);

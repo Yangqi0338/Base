@@ -2,6 +2,8 @@ package com.newzkl.platform.base.biz.account.model.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
@@ -40,11 +42,11 @@ public class SupplierAccountVO extends BaseRes {
     /**
      * 状态 (查询)
      */
-    private Integer state;
+    private SupplierEnum.State state;
     /**
      * 审批状态 (查询) (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
      */
-    private Integer auditState;
+    private AuditEnum.State auditState;
     /**
      * 企业区域
      */
@@ -52,7 +54,7 @@ public class SupplierAccountVO extends BaseRes {
     /**
      * 企业信息
      */
-    private String companyInfo;
+    private CompanyInfoVO companyInfo;
     /**
      * 是否缴纳保证金 (查询)
      */
@@ -64,7 +66,7 @@ public class SupplierAccountVO extends BaseRes {
     /**
      * 保证金审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
      */
-    private Integer promisePayAuditState;
+    private AuditEnum.State promisePayAuditState;
     /**
      * 保证金缴纳配置 promise_pay_config
      * 0 即时 1 延迟
@@ -99,41 +101,9 @@ public class SupplierAccountVO extends BaseRes {
      */
     private String industryIdList;
     /**
-     * 上级甄选师ID
+     * 邀请人
      */
     private Long inviteId;
-    /**
-     * 商品总数
-     */
-    private Integer goodsTotalCount;
-    /**
-     * 售卖中的商品
-     */
-    private Integer goodsOnSaleCount;
-    /**
-     * 总金额 (Money, 落库 BIGINT 分)
-     */
-    private Money goodsSaleAmount;
-    /**
-     * 月金额 (Money, 落库 BIGINT 分)
-     */
-    private Money monthGoodsSaleAmount;
-    /**
-     * 总销量
-     */
-    private Integer goodsSaleCount;
-    /**
-     * 月销量
-     */
-    private Integer monthGoodsSaleCount;
-    /**
-     * 总成交销量
-     */
-    private Integer goodsDealCount;
-    /**
-     * 待售卖的商品
-     */
-    private Integer goodsNotSaleCount;
     /**
      * 结算配置
      */
@@ -146,19 +116,4 @@ public class SupplierAccountVO extends BaseRes {
      * 入驻时间
      */
     private LocalDateTime inTime;
-    /**
-     * 总成交笔数
-     */
-    private Integer totalOrderNumber;
-    /**
-     * 总售后笔数
-     */
-    private Integer totalRefundNumber;
-    /**
-     * 总订单金额 (Money, 落库 BIGINT 分)
-     */
-    /**
-     * 总售后金额 (Money, 落库 BIGINT 分)
-     */
-    private Money totalRefundAmount;
 }

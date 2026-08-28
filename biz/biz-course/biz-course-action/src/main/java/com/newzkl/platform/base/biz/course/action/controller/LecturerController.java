@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.course.domain.service.LecturerDomain;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
 import com.newzkl.platform.base.biz.course.model.lecturer.res.LecturerRes;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/lecturer")
 @RequiredArgsConstructor
+@FuncPermission("讲师管理")
 public class LecturerController {
 
     private final LecturerDomain lecturerDomain;
@@ -38,6 +40,7 @@ public class LecturerController {
      * @return 讲师视图
      */
     @PostMapping("/add")
+    @FuncPermission("新增讲师")
     public PlatformResult<LecturerRes> add(@Validated @RequestBody LecturerReq req) {
         if (req.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -52,6 +55,7 @@ public class LecturerController {
      * @return 讲师视图
      */
     @PostMapping("/edit")
+    @FuncPermission("编辑讲师")
     public PlatformResult<LecturerRes> edit(@Validated @RequestBody LecturerReq req) {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -66,6 +70,7 @@ public class LecturerController {
      * @return 是否成功
      */
     @PostMapping("/enable/{id}")
+    @FuncPermission("启用讲师")
     public PlatformResult<Boolean> enable(@PathVariable("id") Long id) {
         return PlatformResult.success(lecturerDomain.enable(id));
     }
@@ -77,6 +82,7 @@ public class LecturerController {
      * @return 是否成功
      */
     @PostMapping("/disable/{id}")
+    @FuncPermission("禁用讲师")
     public PlatformResult<Boolean> disable(@PathVariable("id") Long id) {
         return PlatformResult.success(lecturerDomain.disable(id));
     }
@@ -131,6 +137,7 @@ public class LecturerController {
      * @return 是否成功
      */
     @PostMapping("/delete/{id}")
+    @FuncPermission("删除讲师")
     public PlatformResult<Boolean> delete(@PathVariable("id") Long id) {
         return PlatformResult.success(lecturerDomain.delete(id));
     }

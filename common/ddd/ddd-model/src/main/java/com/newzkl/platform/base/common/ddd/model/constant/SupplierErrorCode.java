@@ -14,6 +14,7 @@ import lombok.Getter;
 public enum SupplierErrorCode implements ErrorCode {
 
     OVER_INDUSTRY(999, "超过最大行业数量."),
+    AUDIT_STATE(998, "供应商审核状态不允许重复提交."),
     ;
 
     /**

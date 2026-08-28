@@ -2,17 +2,21 @@ package com.newzkl.platform.base.biz.sys.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.huaweicloud.sdk.ocr.v1.model.BusinessLicenseResult;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseResponse;
 import com.newzkl.platform.base.biz.sys.domain.adapt.api.OcrApi;
 import com.newzkl.platform.base.biz.sys.domain.service.RegionDomain;
 import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -122,37 +126,31 @@ public class RegionDomainImpl implements RegionDomain {
     }
 
     @Override
-    public Object businessIdentify(String imageUrl) {
-        Object recognized = ocrApi.recognizeBusinessLicense(imageUrl);
-        if (recognized == null) {
-            return null;
-        }
-        JSONObject response = JSONUtil.parseObj(JSONUtil.toJsonStr(recognized));
-        JSONObject result = response.getJSONObject("result");
-        if (result == null) {
-            return response;
-        }
-        String address = result.getStr("address");
-        if (StrUtil.isBlank(address)) {
-            return response;
-        }
-        loadIfAbsent();
-        List<Integer> codeList = new ArrayList<>();
-        for (Area area : areaList) {
-            area.getCodeByName(codeList, address);
-        }
-        if (CollUtil.isNotEmpty(codeList)) {
-            codeList = CollUtil.reverse(codeList);
-            for (Integer code : codeList) {
-                Area area = areaMap.get(code);
-                if (area != null && StrUtil.isNotBlank(area.getName())) {
-                    address = address.replace(area.getName(), StrUtil.EMPTY);
-                }
+    public Pair<RecognizeBusinessLicenseResponse, List<Integer>> businessIdentify(String imageUrl) {
+        RecognizeBusinessLicenseResponse recognized = ocrApi.recognizeBusinessLicense(imageUrl);
+        List<Integer> areaCodeList = new ArrayList<>();
+        if (recognized != null && recognized.getResult() != null && StrUtil.isNotBlank(recognized.getResult().getAddress())) {
+            BusinessLicenseResult result = recognized.getResult();
+            String address = result.getAddress();
+            loadIfAbsent();
+            List<Integer> codeList = new ArrayList<>();
+            for (Area area : areaList) {
+                area.getCodeByName(codeList, address);
             }
-            result.set("address", address);
-            response.set("areaCode", codeList);
+
+            if (CollUtil.isNotEmpty(codeList)) {
+                codeList = CollUtil.reverse(codeList);
+                for (Integer code : codeList) {
+                    Area area = areaMap.get(code);
+                    if (area != null && StrUtil.isNotBlank(area.getName())) {
+                        address = address.replace(area.getName(), StrUtil.EMPTY);
+                    }
+                }
+                result.setAddress(address);
+                areaCodeList = codeList;
+            }
         }
-        return response;
+        return Pair.of(recognized, areaCodeList);
     }
 
     /**
@@ -259,5 +257,10 @@ public class RegionDomainImpl implements RegionDomain {
                 indexArea(index, area.getChildren());
             }
         }
+    }
+
+    @Data
+    public class RecognizeBusinessLicenseRes extends RecognizeBusinessLicenseResponse {
+        private List<Integer> areaCode;
     }
 }

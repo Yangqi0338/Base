@@ -17,7 +17,7 @@ import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 @Data
 @TableName
 @TableIndexes({
-        @TableIndex(name = "idx_key", type = IndexTypeEnum.UNIQUE, fields = {"followerId", "followingId"}),
+        @TableIndex(name = "key", type = IndexTypeEnum.UNIQUE, fields = {"followerId", "followingId", "delFlag"}),
 })
 public class UserFollowDO extends BaseDO {
 

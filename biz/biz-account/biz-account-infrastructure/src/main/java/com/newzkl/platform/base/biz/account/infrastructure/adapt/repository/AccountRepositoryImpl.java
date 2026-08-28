@@ -121,10 +121,11 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
         AccountDO accountDO = TransferUtils.transfer(account, AccountDO::new);
         // 无查询条件直接使用id更新
         if (query == null) {
-            return accountDAO.updateById(accountDO) > 0;
-        } else {
-            return accountDAO.update(accountDO, accountDAO.getLw(query)) > 0;
+            query = new AccountQuery();
+            query.setId(account.getId());
+            query.setClient(account.getClient());
         }
+        return accountDAO.update(accountDO, accountDAO.getLw(query)) > 0;
     }
 
     @Override

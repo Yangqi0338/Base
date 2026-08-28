@@ -77,8 +77,15 @@ public class Area {
      * @param nameStr  待匹配名称串
      */
     public void getCodeByName(List<Integer> codeList, String nameStr) {
-        if (StrUtil.isNotBlank(nameStr) && codeList.size() <= 3) {
-            boolean isFind = nameStr.contains(this.getName());
+        if (StrUtil.isNotBlank(nameStr) && codeList.size() < 3) {
+            String trimName = StrUtil.removeSuffix(StrUtil.removeSuffix(StrUtil.removeSuffix(this.getName(), "省"), "市"), "区");
+            boolean isFind = false;
+            if (StrUtil.length(trimName) >= 2) {
+                isFind = StrUtil.containsAny(nameStr, this.getName(), trimName);
+            }else {
+                isFind = StrUtil.contains(nameStr, this.getName());
+            }
+
             if (CollUtil.isNotEmpty(this.getChildren())) {
                 this.getChildren().forEach(child -> child.getCodeByName(codeList, nameStr));
             }

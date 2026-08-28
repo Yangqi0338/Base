@@ -114,7 +114,7 @@
     </select>
 
     <!-- BizCountMap 合计, supplier alias t, account alias a, 与 getJoinQw 约定一致 -->
-    <select id="countWithAccountByCondition" resultType="java.util.Map">
+    <select id="countWithAccountByCondition" resultType="com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap">
         select
         ${query.fieldSQL}
         from supplier t
@@ -136,11 +136,17 @@
         </where>
     </update>
 
-    <select id="pageListWithAccount" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO">
+    <!-- company_info 为 JSON 列, 挂 JacksonTypeHandler 反序列化为 CompanyInfoVO; 其余列 autoMapping 自动映射 -->
+    <resultMap id="supplierAccountMap" type="com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO" autoMapping="true">
+        <result column="company_info" property="companyInfo"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <select id="pageListWithAccount" resultMap="supplierAccountMap">
         select
-        t.*, a.username, a.real_name, a.role_id_list
+        t.*, a.username, a.real_name
         from supplier t
-        left join account a on t.id = a.id
+        left join account a on t.id = a.id and a.client = 'supplier'
         ${ew.customSqlSegment}
     </select>
 

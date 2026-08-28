@@ -1,0 +1,2 @@
+ALTER TABLE
+  `video` MODIFY COLUMN `is_visible` int NULL COMMENT '是否显示(0-不显示, 1-显示)[1是,0否]';

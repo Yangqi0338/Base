@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.Generator;
-import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.mapper.IdGeneratorMapper;
+import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.dao.IdGeneratorMapper;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.IdGeneratorDO;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

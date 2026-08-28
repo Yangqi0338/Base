@@ -11,8 +11,9 @@ import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user/supplier")
 @RequiredArgsConstructor
+@FuncPermission("用户-供应商")
 public class SupplierController {
 
     private final SupplierClientDomain supplierClientDomain;
@@ -53,6 +55,7 @@ public class SupplierController {
      * @return 空结果
      */
     @PostMapping("supplierBaseEdit")
+    @FuncPermission("供应商修改")
     public PlatformResult<Void> supplierEdit(@Validated @RequestBody SupplierReq edit) {
         if (AccountEnum.Identity.SUPPLIER == SecurityUtils.getIdentity()) {
             edit.setId(SecurityUtils.getAccountId());
@@ -72,6 +75,7 @@ public class SupplierController {
      */
     @Deprecated
     @PostMapping("supplierDelete")
+    @FuncPermission("供应商删除")
     public PlatformResult<Void> supplierDelete(@Validated @RequestBody SupplierCmd.IDList supplierIdList) {
         supplierClientDomain.supplierDelete(supplierIdList.getSupplierIdList());
         return PlatformResult.success();
@@ -124,6 +128,7 @@ public class SupplierController {
      * @return 空结果
      */
     @PostMapping("/periodSet")
+    @FuncPermission("设置供应商账期")
     public PlatformResult<Void> periodSet(@Validated @RequestBody SupplierCmd.PeriodSet periodSet) {
         supplierClientDomain.periodSet(periodSet.getId(), periodSet.getPeriodSetConfig());
         return PlatformResult.success();
@@ -155,6 +160,7 @@ public class SupplierController {
      * @return 空结果
      */
     @PostMapping("/shouldPromisePayAmountSet")
+    @FuncPermission("供应商应付金额设置")
     public PlatformResult<Void> shouldPromisePayAmountSet(@Validated @RequestBody SupplierCmd.ShouldPromisePayAmountSet set) {
         supplierClientDomain.shouldPromisePayAmountSet(set.getId(), set.getShouldPromisePayAmount(), set.getPromisePayConfig());
         return PlatformResult.success();
@@ -183,6 +189,7 @@ public class SupplierController {
      * @return 空结果
      */
     @PostMapping("/addIndustry")
+    @FuncPermission("添加供应商行业")
     public PlatformResult<Void> addIndustry(@Validated @RequestBody SupplierCmd.AddIndustry addIndustry) {
         if (addIndustry.getAccountId() == null) {
             addIndustry.setAccountId(SecurityUtils.getAccountId());

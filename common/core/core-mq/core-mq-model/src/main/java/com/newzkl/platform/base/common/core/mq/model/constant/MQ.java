@@ -43,25 +43,15 @@ public interface MQ {
         String FINANCE_EARNINGS_EXEC = "finance:earningsexec";
         String FINANCE_EARNINGS_EXEC_MESSAGE = "payment-earnings-message";
         /**
-         * 财务:SKU订单分润消息
-         */
-        String SKU_ORDER_EARNINGS = "finance:sku:order:earnings";
-        String SKU_ORDER_EARNINGS_MESSAGE = "finance-sku-order-earnings-message";
-        /**
          * 开发者:消息推送tag
          */
         String DEVELOPER_NOTIFY_EVENT = "developer:notify";
         String DEVELOPER_NOTIFY_EVENT_MESSAGE = "developer-notify-message";
         /**
-         * 订单同步
-         */
-        String ORDER_SYNC_HANDLE = "orderSyncHandle";
-        String ORDER_SYNC_HANDLE_MESSAGE = "orderSyncHandle-message";
-        /**
          * 结算订单
          */
-        String SETTLE = "earning";
-        String SETTLE_MESSAGE = "earning-message";
+        String SETTLE = "settle";
+        String SETTLE_MESSAGE = "settle-message";
         /**
          * 账号权益升级成功
          */
@@ -104,13 +94,13 @@ public interface MQ {
         String MEMBER_REGISTER_MESSAGE = "member-register-message";
         String MEMBER_REGISTER_BI_MESSAGE = "member-register-bi-message";
         /**
-         * 会员注册
+         * 上链时间
          */
         String BLOCKCHAIN_ON = "blockchain:on";
         String BLOCKCHAIN_ON_MESSAGE = "blockchain-on-message";
         String BLOCKCHAIN_ON_BI_MESSAGE = "blockchain-on-bi-message";
         /**
-         * 会员注册
+         * 库存变更
          */
         String STOCK_CHANGE = "stock:change";
         String STOCK_CHANGE_MESSAGE = "stock-change-message";

@@ -32,14 +32,6 @@ public interface TokenConstants {
      */
     String DETAILS_IDENTITY = "identityList";
     /**
-     * 角色列表
-     */
-    String DETAILS_ROLE = "roleList";
-    /**
-     * 功能权限列表
-     */
-    String DETAILS_FUNC = "funcList";
-    /**
      * TOKEN: 用户ID字段
      */
     String DETAILS_ACCOUNT_ID = "account_id";

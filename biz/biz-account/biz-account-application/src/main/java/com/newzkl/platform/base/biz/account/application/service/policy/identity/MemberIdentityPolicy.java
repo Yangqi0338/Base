@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.application.service.policy.identity
 
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
+import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 /**
  * @author muc_fang
@@ -25,6 +28,8 @@ public class MemberIdentityPolicy extends AbsIdentityPolicy {
 
     @Autowired
     private UserClientDomain userDomain;
+
+    private final MemberRepository memberRepository;
 
     @Override
     public AccountEnum.Identity support() {
@@ -50,7 +55,9 @@ public class MemberIdentityPolicy extends AbsIdentityPolicy {
 
     @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
-        return false;
+        // 移除会员身份: 删 member 行
+        memberRepository.memberDelete(Collections.singletonList(accountVO.getId()));
+        return true;
     }
 
     @Override

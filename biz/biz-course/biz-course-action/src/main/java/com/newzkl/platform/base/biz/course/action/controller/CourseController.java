@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.course.model.course.query.CourseQuery;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseDetailReq;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseReq;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
@@ -29,6 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/course")
 @RequiredArgsConstructor
+@FuncPermission("课程管理")
 public class CourseController {
 
     private final CourseDomain courseDomain;
@@ -40,6 +42,7 @@ public class CourseController {
      * @return 课程视图
      */
     @PostMapping("/add")
+    @FuncPermission("新增课程")
     public PlatformResult<CourseRes> add(@Validated @RequestBody CourseReq req) {
         if (req.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -54,6 +57,7 @@ public class CourseController {
      * @return 课程视图
      */
     @PostMapping("/editBase")
+    @FuncPermission("编辑课程基础信息")
     public PlatformResult<CourseRes> editBase(@Validated @RequestBody CourseReq req) {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -68,6 +72,7 @@ public class CourseController {
      * @return 课程视图
      */
     @PostMapping("/editDetail")
+    @FuncPermission("编辑课程富文本详情")
     public PlatformResult<CourseRes> editDetail(@Validated @RequestBody CourseDetailReq req) {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
@@ -82,6 +87,7 @@ public class CourseController {
      * @return 是否成功
      */
     @PostMapping("/enable/{id}")
+    @FuncPermission("上架课程")
     public PlatformResult<Boolean> enable(@PathVariable("id") Long id) {
         return PlatformResult.success(courseDomain.enable(id));
     }
@@ -93,6 +99,7 @@ public class CourseController {
      * @return 是否成功
      */
     @PostMapping("/disable/{id}")
+    @FuncPermission("下架课程")
     public PlatformResult<Boolean> disable(@PathVariable("id") Long id) {
         return PlatformResult.success(courseDomain.disable(id));
     }
@@ -148,6 +155,7 @@ public class CourseController {
      * @return 是否成功
      */
     @PostMapping("/delete/{id}")
+    @FuncPermission("删除课程")
     public PlatformResult<Boolean> delete(@PathVariable("id") Long id) {
         return PlatformResult.success(courseDomain.delete(id));
     }
@@ -159,6 +167,7 @@ public class CourseController {
      * @return 是否成功
      */
     @PostMapping("/batchDelete")
+    @FuncPermission("批量删除课程")
     public PlatformResult<Boolean> batchDelete(@Validated @RequestBody IdCommand idListCommand) {
         return PlatformResult.success(courseDomain.batchDelete(idListCommand.getIdList()));
     }
@@ -170,6 +179,7 @@ public class CourseController {
      * @return 是否成功
      */
     @PostMapping("/recover/{id}")
+    @FuncPermission("恢复已删除课程")
     public PlatformResult<Boolean> recover(@PathVariable("id") Long id) {
         return PlatformResult.success(courseDomain.recover(id));
     }

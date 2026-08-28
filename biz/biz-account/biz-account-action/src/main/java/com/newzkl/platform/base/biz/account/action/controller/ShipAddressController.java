@@ -5,7 +5,8 @@ import com.newzkl.platform.base.biz.account.domain.service.ShipAddressDomain;
 import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressQuery;
 import com.newzkl.platform.base.biz.account.model.address.req.ShipAddressReq;
 import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
@@ -31,31 +32,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user/shipAddress")
 @RequiredArgsConstructor
+@FuncPermission("用户-收货地址")
 public class ShipAddressController {
 
     private final ShipAddressDomain shipAddressDomain;
 
     /**
-     * 收货地址创建
+     * 收货地址保存(新增/修改)
      *
-     * @param shipAddressReq 收货地址入参
+     * <p>合并旧 {@code shipAddressSave} 与 {@code shipAddressUpdate}: 入参同为 {@link ShipAddressReq}(含 id),
+     * 按 id 有无分流 —— 空则 {@code save} 返回新 id, 非空则 {@code edit} 返回入参 id。</p>
+     *
+     * @param shipAddressReq 收货地址入参(id 为空新增, 非空修改)
      * @return 收货地址ID
      */
     @PostMapping("shipAddressSave")
+    @FuncPermission("收货地址保存(新增/修改)")
     public PlatformResult<Long> shipAddressSave(@Validated @RequestBody ShipAddressReq shipAddressReq) {
-        return PlatformResult.success(shipAddressDomain.save(shipAddressReq));
-    }
-
-    /**
-     * 收货地址修改
-     *
-     * @param edit 收货地址入参
-     * @return 空结果
-     */
-    @PostMapping("shipAddressUpdate")
-    public PlatformResult<Void> shipAddressEdit(@Validated @RequestBody ShipAddressReq edit) {
-        shipAddressDomain.edit(edit.getId(), edit);
-        return PlatformResult.success();
+        Long id = shipAddressReq.getId();
+        if (id == null) {
+            return PlatformResult.success(shipAddressDomain.save(shipAddressReq));
+        }
+        shipAddressDomain.edit(id, shipAddressReq);
+        return PlatformResult.success(id);
     }
 
     /**
@@ -65,6 +64,7 @@ public class ShipAddressController {
      * @return 空结果
      */
     @PostMapping("shipAddressDelete")
+    @FuncPermission("收货地址删除")
     public PlatformResult<Void> shipAddressDelete(@RequestBody IdCommand idListCommand) {
         shipAddressDomain.delete(idListCommand.getIdList());
         return PlatformResult.success();

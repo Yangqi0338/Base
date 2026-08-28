@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
  * @author fang
  */
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class SupplierDO extends BaseDO {
     /**
      * 审批状态
@@ -35,7 +36,7 @@ public class SupplierDO extends BaseDO {
      * 企业信息
      */
     @JsonSerializable
-    private String companyInfo;
+    private CompanyInfoVO companyInfo;
     /**
      * 是否缴纳保证金
      */

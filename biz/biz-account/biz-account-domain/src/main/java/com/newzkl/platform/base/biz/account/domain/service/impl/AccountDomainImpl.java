@@ -52,7 +52,7 @@ public class AccountDomainImpl implements AccountDomain {
         boolean updated = accountRepository.accountEdit(account, null);
 
         // 角色特定修改
-        AbsIdentityPolicySupport.getPolicy(req.getIdentity()).saveByAccount(req);
+//        AbsIdentityPolicySupport.getPolicy(req.getIdentity()).saveByAccount(req);
         return updated;
     }
 
@@ -73,25 +73,22 @@ public class AccountDomainImpl implements AccountDomain {
 
         String username = accountVO.getUsername();
         // 验证验证码
+
         VerificationCodeReq verificationCodeReq = new VerificationCodeReq();
         verificationCodeReq.setCode(destroyRoleReq.getCode());
         verificationCodeReq.setPhone(username);
         verificationCodeReq.setType(SmsEnum.Type.DESTROY_USER);
         accountRepository.verificationCode(verificationCodeReq);
 
-        // 执行账号注销
-        boolean destroyed = accountRepository.destroy(accountVO, destroyRoleReq.getIdentity());
-
-        // 执行角色注销
-        if (destroyed) {
-            AbsIdentityPolicySupport.getPolicy(identity).destroy(accountVO, destroyRoleReq.getDestroyReason());
-            //注销成功通知
+        // 执行账号注销: 仅改状态/摘角色位, 身份实体与角色绑定清理延后到定时回收
+        // 宽限期内 account 仍 DESTROY 保留, 登录可激活恢复; 故此处不删身份实体
+        accountRepository.destroy(accountVO, destroyRoleReq.getIdentity());
+        //注销成功通知
 //            CodeReq codeReq = new CodeReq();
 //            codeReq.setPhone(username);
 //            codeReq.setType(SmsEnum.Type.DESTROY_USER_EVENT);
-            // TODO[infra-port sms]: SmsMethod.sendCode(codeReq);
+        // TODO[infra-port sms]: SmsMethod.sendCode(codeReq);
 //            SmsMethod.send()
-        }
     }
 
     @Override
@@ -166,7 +163,10 @@ public class AccountDomainImpl implements AccountDomain {
         accountVO.setId(accountId);
 
         //初始化财务
-        purseApi.initFinance(accountId, req.getUsername(), PurseEnum.User.getByRole(req.getIdentity()));
+        PurseEnum.User user = PurseEnum.User.getByRole(req.getIdentity());
+        if (user != null) {
+            purseApi.initFinance(accountId, req.getUsername(), user);
+        }
         return accountVO;
     }
 

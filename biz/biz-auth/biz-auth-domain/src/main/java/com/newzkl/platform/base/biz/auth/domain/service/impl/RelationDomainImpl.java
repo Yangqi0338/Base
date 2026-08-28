@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.auth.domain.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.domain.service.RelationDomain;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import lombok.RequiredArgsConstructor;
@@ -25,34 +26,35 @@ public class RelationDomainImpl implements RelationDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void replace(PermissionEnum.RelationType type, Long sourceId, Collection<Long> targetIds) {
-        relationRepository.deleteBySource(type, List.of(sourceId));
-        if (CollUtil.isEmpty(targetIds)) {
+    public void replace(AccountEnum.Client client, PermissionEnum.RelationType type, String source, Collection<String> targets) {
+        relationRepository.deleteBySource(client, type, List.of(source));
+        if (CollUtil.isEmpty(targets)) {
             return;
         }
-        PermissionEnum.Source src = type == PermissionEnum.RelationType.ACCOUNT_PERMISSION
+        PermissionEnum.Source origin = type == PermissionEnum.RelationType.ACCOUNT_PERMISSION
                 ? PermissionEnum.Source.ROLE_DERIVED
                 : PermissionEnum.Source.DIRECT;
-        List<PermissionRelationDTO> dtos = targetIds.stream().distinct().map(t -> {
+        List<PermissionRelationDTO> dtos = targets.stream().distinct().map(t -> {
             PermissionRelationDTO d = new PermissionRelationDTO();
+            d.setClient(client);
             d.setType(type);
-            d.setSourceId(sourceId);
-            d.setTargetId(t);
-            d.setSource(src);
+            d.setSource(source);
+            d.setTarget(t);
+            d.setOrigin(origin);
             return d;
         }).toList();
         relationRepository.insertBatch(dtos);
     }
 
     @Override
-    public List<Long> listTargetIds(PermissionEnum.RelationType type, Long sourceId) {
-        return relationRepository.listBySource(type, List.of(sourceId)).stream()
-                .map(PermissionRelationDTO::getTargetId).toList();
+    public List<String> listTargets(AccountEnum.Client client, PermissionEnum.RelationType type, String source) {
+        return relationRepository.listBySource(client, type, List.of(source)).stream()
+                .map(PermissionRelationDTO::getTarget).toList();
     }
 
     @Override
-    public List<Long> listSourceIds(PermissionEnum.RelationType type, Long targetId) {
-        return relationRepository.listByTarget(type, List.of(targetId)).stream()
-                .map(PermissionRelationDTO::getSourceId).toList();
+    public List<String> listSources(AccountEnum.Client client, PermissionEnum.RelationType type, String target) {
+        return relationRepository.listByTarget(client, type, List.of(target)).stream()
+                .map(PermissionRelationDTO::getSource).toList();
     }
 }

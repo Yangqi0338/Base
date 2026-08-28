@@ -14,18 +14,21 @@ import lombok.Data;
 @Data
 public class DestroyRoleReq {
     /**
+     * 注销目标账号 id
+     */
+    private Long id;
+    /**
      * 角色
      */
-    @NotNull(message = "角色?")
+    @NotNull
     private AccountEnum.Identity identity;
     /**
      * 验证码
      */
-    @NotEmpty(message = "验证码?")
     private String code;
     /**
      * 注销原因
      */
-    @NotEmpty(message = "注销原因?")
+    @NotEmpty
     private String destroyReason;
 }

@@ -68,20 +68,6 @@ public class CountCmd {
     }
 
     /**
-     * 渠道商列表入参
-     *
-     * @author KC
-     */
-    @Data
-    public static class ChannelPage implements Serializable {
-
-        /**
-         * 上级 (旧: 上级交易师) 账号 ID
-         */
-        private Long inviteId;
-    }
-
-    /**
      * 甄选师列表入参
      *
      * @author KC

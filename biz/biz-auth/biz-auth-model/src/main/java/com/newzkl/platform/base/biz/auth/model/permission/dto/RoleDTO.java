@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.auth.model.permission.dto;
 
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,6 +13,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RoleDTO extends BaseDTO {
+
+    /** 所属端 */
+    private AccountEnum.Client client;
 
     /** 角色编码 */
     private String code;

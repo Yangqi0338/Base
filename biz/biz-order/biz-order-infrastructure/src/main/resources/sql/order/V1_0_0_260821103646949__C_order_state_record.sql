@@ -1,0 +1,21 @@
+CREATE TABLE `order_state_record` (
+  `id` bigint NOT NULL COMMENT '主键ID',
+  `order_id` bigint NULL COMMENT '订单主键ID',
+  `spu_order_id` bigint NULL COMMENT 'SPU订单ID',
+  `sku_order_id` bigint NULL COMMENT 'SKU订单ID',
+  `before_order_state` int NULL COMMENT '变更前订单状态',
+  `after_order_state` int NULL COMMENT '变更后订单状态',
+  `orderer_id` bigint NULL COMMENT '下单人ID(匿名订单可为 null)',
+  `operator_role` bigint NULL COMMENT '操作人角色',
+  `ext` json NULL COMMENT '拓展字段',
+  `executor` json NULL COMMENT '操作人信息',
+  `creator_id` bigint NULL COMMENT '创建人id',
+  `create_time` datetime NULL COMMENT '创建时间',
+  `update_time` datetime NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  PRIMARY KEY (`id`),
+  INDEX `auto_idx_order_state_record_order_id`(`order_id`) COMMENT '订单主键ID',
+  INDEX `auto_idx_order_state_record_orderer_id`(`orderer_id`) COMMENT '下单人ID',
+  INDEX `auto_idx_order_state_record_sku_order_id`(`sku_order_id`) COMMENT 'SKU订单ID',
+  INDEX `auto_idx_order_state_record_spu_order_id`(`spu_order_id`) COMMENT 'SPU订单ID'
+) COMMENT = '订单状态记录表 DO';

@@ -28,9 +28,4 @@ public class EmpVO extends BaseRes {
      * 员工类型
      */
     private AccountEnum.EmpType type;
-
-    /**
-     * 岗位ID集合, 逗号隔开
-     */
-    private String jobIdList;
 }

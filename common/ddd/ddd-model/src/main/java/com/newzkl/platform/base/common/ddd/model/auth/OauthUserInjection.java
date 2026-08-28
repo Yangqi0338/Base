@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {OauthUserInjectionValidator.class})
 public @interface OauthUserInjection {
 
     /**

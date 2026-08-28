@@ -5,6 +5,7 @@ import com.newzkl.platform.base.biz.account.model.level.req.LevelQuery;
 import com.newzkl.platform.base.biz.account.model.level.req.LevelReq;
 import com.newzkl.platform.base.biz.account.model.level.res.LevelRes;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user/level")
 @RequiredArgsConstructor
+@FuncPermission("用户-等级")
 public class LevelController {
 
     private final LevelDomain levelDomain;
@@ -36,6 +38,7 @@ public class LevelController {
      * @return 空结果
      */
     @PostMapping("save")
+    @FuncPermission("等级保存")
     public PlatformResult<Void> save(@Validated @RequestBody LevelReq levelReq) {
         levelDomain.save(levelReq);
         return PlatformResult.success();

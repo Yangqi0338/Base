@@ -42,6 +42,10 @@ public class SupplierQuery extends BizPageQuery {
      */
     private AuditEnum.State auditState;
     /**
+     * 审批状态列表 (多值 in 查, 用于审核列表排除待提交态 CUSTOM)
+     */
+    private List<AuditEnum.State> auditStateList;
+    /**
      * 企业名称
      */
     private String companyName;

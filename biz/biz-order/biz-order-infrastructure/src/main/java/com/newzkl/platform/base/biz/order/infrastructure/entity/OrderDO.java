@@ -13,6 +13,8 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.TableIndex;
+import org.dromara.autotable.annotation.TableIndexes;
 import org.dromara.autotable.annotation.enums.IndexTypeEnum;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
@@ -26,12 +28,14 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(autoResultMap = true)
+@TableIndexes({
+        @TableIndex(name = "key", type = IndexTypeEnum.UNIQUE, fields = {"orderNo", "delFlag"})
+})
 public class OrderDO extends BaseDO {
 
     /**
      * 交易单号
      */
-    @Index(type = IndexTypeEnum.UNIQUE)
     private String orderNo;
 
     /**

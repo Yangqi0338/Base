@@ -1,0 +1,22 @@
+CREATE TABLE `ship_address` (
+  `id` bigint NOT NULL COMMENT '主键ID',
+  `ship_area` varchar(255) NULL COMMENT '收货地区, 例如: 辽宁省,沈阳市,铁西区,XXX镇',
+  `ship_name` varchar(255) NULL COMMENT '收货联系人姓名',
+  `ship_address` varchar(255) NULL COMMENT '收货地址, 如创业路东',
+  `ship_phone` bigint NULL COMMENT '联系方式',
+  `ship_zip_code` varchar(255) NULL COMMENT '收货邮编',
+  `ship_province_code` int NULL COMMENT '收货地址编码, 省 CODE, 6 位',
+  `ship_city_code` int NULL COMMENT '收货地址编码, 市 CODE, 6 位',
+  `ship_area_code` int NULL COMMENT '收货地址编码, 区 CODE, 6 位',
+  `is_default` int NULL COMMENT '是否默认(0 否, 1 是)',
+  `identity` bigint NULL COMMENT '角色类型 ID',
+  `account_id` bigint NULL COMMENT '账号 ID',
+  `executor` json NULL COMMENT '操作人信息',
+  `creator_id` bigint NULL COMMENT '创建人id',
+  `create_time` datetime NULL COMMENT '创建时间',
+  `update_time` datetime NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  PRIMARY KEY (`id`),
+  INDEX `auto_idx_ship_address_account_id`(`account_id`) COMMENT '账号 ID',
+  INDEX `auto_idx_ship_address_identity`(`identity`) COMMENT '角色类型 ID'
+) COMMENT = '收货地址持久化对象';

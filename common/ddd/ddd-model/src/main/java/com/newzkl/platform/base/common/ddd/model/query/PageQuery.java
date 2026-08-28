@@ -19,7 +19,7 @@ public class PageQuery extends QuerySupport {
      */
     private Integer pageSize = 0;
     /**
-     * 每页的数量
+     * 不分页
      */
     private boolean nonPaged = false;
 

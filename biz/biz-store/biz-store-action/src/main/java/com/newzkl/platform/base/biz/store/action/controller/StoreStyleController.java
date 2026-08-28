@@ -9,6 +9,7 @@ import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleResponse;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/storeStyle")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("门店样式")
 public class StoreStyleController {
 
     private final StoreStyleDomain storeStyleDomain;
@@ -55,6 +57,7 @@ public class StoreStyleController {
      * @return 成功结果
      */
     @PostMapping("/create")
+    @FuncPermission("新增门店样式")
     public PlatformResult<Void> create(@Validated @RequestBody StoreStyleCreateReq req) {
         storeStyleDomain.create(req);
         return PlatformResult.success();
@@ -67,6 +70,7 @@ public class StoreStyleController {
      * @return 成功结果
      */
     @PostMapping("/updateByCode")
+    @FuncPermission("修改门店样式")
     public PlatformResult<Void> updateByCode(@Validated @RequestBody StoreStyleUpdateReq req) {
         storeStyleDomain.updateByCode(req);
         return PlatformResult.success();

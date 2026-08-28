@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.newzkl.platform.base.common.core.model.constants.TokenConstants;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder;
 import com.newzkl.platform.base.common.ddd.model.vo.RequestInfo;
 import jakarta.servlet.Filter;
@@ -40,9 +39,9 @@ public class SecurityContextFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String ip = SecurityUtils.getHeader(servletRequest, "X-Real-IP");
+        String ip = getHeader(servletRequest, "X-Real-IP");
         SecurityContextHolder.set(TokenConstants.REQUEST_INFO, new RequestInfo(DateUtil.toLocalDateTime(new Date()), ip));
-        SecurityContextHolder.set(TokenConstants.REQUEST_CLIENT, SecurityUtils.getHeader(servletRequest, TokenConstants.REQUEST_CLIENT));
+        SecurityContextHolder.set(TokenConstants.REQUEST_CLIENT, getHeader(servletRequest, TokenConstants.REQUEST_CLIENT));
         try {
             String token = getToken(servletRequest);
             try {
@@ -68,6 +67,15 @@ public class SecurityContextFilter implements Filter {
     @Override
     public void destroy() {
         log.debug("SecurityContextFilter destroy");
+    }
+
+    public static String getHeader(ServletRequest servletRequest, String name) {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        if (!"OPTIONS".equals(request.getMethod())) {
+            return request.getHeader(name);
+        } else {
+            return null;
+        }
     }
 
     /**

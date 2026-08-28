@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.auth.domain.adapt.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 
 import java.util.Collection;
@@ -46,19 +47,21 @@ public interface RoleRepository {
     RoleDTO getById(Long id);
 
     /**
-     * 按编码查询
+     * 按端与编码查询
      *
-     * @param code 角色编码
+     * @param client 所属端
+     * @param code   角色编码
      * @return 角色数据, 未命中返回 null
      */
-    RoleDTO getByCode(String code);
+    RoleDTO getByCode(AccountEnum.Client client, String code);
 
     /**
-     * 列出全部角色
+     * 列出某端全部角色
      *
+     * @param client 所属端
      * @return 角色列表
      */
-    List<RoleDTO> listAll();
+    List<RoleDTO> listAll(AccountEnum.Client client);
 
     /**
      * 按ID集合列出

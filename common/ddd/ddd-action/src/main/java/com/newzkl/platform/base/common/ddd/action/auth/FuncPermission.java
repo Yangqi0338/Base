@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.common.ddd.action.auth;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,4 +25,11 @@ public @interface FuncPermission {
      * 唯一 code。空则用 ClassFQN#methodName 或 ClassFQN
      */
     String code() default "";
+
+    /**
+     * 所属端集合，用于给权限表 client 字段赋值，n 个 client 生成 n 条权限数据
+     *
+     * @return 端数组，默认平台端 ADMIN
+     */
+    AccountEnum.Client[] client() default {AccountEnum.Client.ADMIN};
 }

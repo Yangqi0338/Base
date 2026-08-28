@@ -15,7 +15,8 @@ import com.newzkl.platform.base.biz.market.model.req.relation.SaveGoodsRelationR
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/marketGoods")
 @RequiredArgsConstructor
 @Slf4j
+@FuncPermission("市场商品")
 public class MarketGoodsController {
 
     private final GoodsRelationDomain goodsRelationDomain;
@@ -55,6 +57,7 @@ public class MarketGoodsController {
      * @return 操作结果
      */
     @PostMapping("/saveTwoMarketGoodsRelation")
+    @FuncPermission("二级市场添加商品")
     public PlatformResult<Object> saveTwoMarketGoodsRelation(@RequestBody SaveGoodsRelationReq req) {
         req.setUserId(0L);
         req.setRelationType(GoodsRelationEnum.GoodsRelation.TWO_MARKET_GOODS);
@@ -76,6 +79,7 @@ public class MarketGoodsController {
      * @return 操作结果
      */
     @PostMapping("/saveMarketGoodsSelectRelation")
+    @FuncPermission("渠道商市场选品")
     public PlatformResult<Object> saveMarketGoodsSelectRelation(@RequestBody SaveGoodsRelationReq req) {
         req.setUserId(SecurityUtils.getAccountId());
         req.setRelationType(GoodsRelationEnum.GoodsRelation.SELECT_GOODS);
@@ -155,6 +159,7 @@ public class MarketGoodsController {
      * @return 操作结果
      */
     @PostMapping("/channelCancelSelected/{id}")
+    @FuncPermission("渠道商取消选品")
     public PlatformResult<Object> channelCancelSelected(@PathVariable Long id) {
         goodsRelationDomain.channelCancelSelected(id);
         return PlatformResult.success();

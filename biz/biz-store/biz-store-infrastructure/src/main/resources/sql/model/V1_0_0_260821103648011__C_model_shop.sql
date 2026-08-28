@@ -1,0 +1,20 @@
+CREATE TABLE `model_shop` (
+  `id` bigint NOT NULL COMMENT '主键ID',
+  `channel_id` bigint NULL COMMENT '渠道商id',
+  `model_shop_name` varchar(255) NULL COMMENT '样板店名称',
+  `model_description` varchar(255) NULL COMMENT '样板店描述',
+  `audit_state` int NULL COMMENT '审核状态',
+  `audit_info` varchar(255) NULL COMMENT '审核信息',
+  `style_code` varchar(255) NULL COMMENT '样式code',
+  `state` int NULL COMMENT '状态:0正常，1已禁用',
+  `executor` json NULL COMMENT '操作人信息',
+  `creator_id` bigint NULL COMMENT '创建人id',
+  `create_time` datetime NULL COMMENT '创建时间',
+  `update_time` datetime NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  PRIMARY KEY (`id`),
+  INDEX `auto_idx_model_shop_audit_state`(`audit_state`) COMMENT '审核状态',
+  INDEX `auto_idx_model_shop_channel_id`(`channel_id`) COMMENT '渠道商id',
+  INDEX `auto_idx_model_shop_model_shop_name`(`model_shop_name`) COMMENT '样板店名称',
+  INDEX `auto_idx_model_shop_style_code`(`style_code`) COMMENT '样式code'
+) COMMENT = '样板店';

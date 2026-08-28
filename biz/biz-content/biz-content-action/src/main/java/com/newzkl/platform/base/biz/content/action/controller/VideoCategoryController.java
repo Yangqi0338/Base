@@ -6,8 +6,9 @@ import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.videocategory.req.VideoCategoryReq;
 import com.newzkl.platform.base.biz.content.model.videocategory.res.VideoCategoryRes;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/video/category")
 @RequiredArgsConstructor
+@FuncPermission("平台-视频分类")
 public class VideoCategoryController {
 
     private final VideoCategoryDomain videoCategoryDomain;
@@ -67,6 +69,7 @@ public class VideoCategoryController {
      * @return 创建结果
      */
     @PostMapping("/create")
+    @FuncPermission("创建视频分类")
     public PlatformResult<Void> createCategory(@Valid @RequestBody VideoCategoryReq req) {
         videoCategoryDomain.createCategory(req);
         return PlatformResult.success();
@@ -79,6 +82,7 @@ public class VideoCategoryController {
      * @return 修改结果
      */
     @PostMapping("/update")
+    @FuncPermission("修改视频分类")
     public PlatformResult<Void> updateCategory(@Valid @RequestBody VideoCategoryReq req) {
         videoCategoryDomain.updateCategory(req);
         return PlatformResult.success();
@@ -91,6 +95,7 @@ public class VideoCategoryController {
      * @return 修改结果
      */
     @PostMapping("/batchUpdate")
+    @FuncPermission("批量修改视频分类")
     public PlatformResult<Void> batchUpdateCategory(@Valid @RequestBody List<VideoCategoryReq> reqList) {
         reqList.forEach(videoCategoryDomain::updateCategory);
         return PlatformResult.success();
@@ -103,6 +108,7 @@ public class VideoCategoryController {
      * @return 删除结果
      */
     @GetMapping("/delete")
+    @FuncPermission("删除视频分类")
     public PlatformResult<Void> deleteCategory(@RequestParam Long id) {
         videoCategoryDomain.deleteCategory(id);
         return PlatformResult.success();

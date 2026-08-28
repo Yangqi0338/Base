@@ -3,13 +3,13 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 // TODO[infra-auth satoken]: import cn.dev33.satoken.stp.StpUtil; (登出属 auth 基础设施)
 
 import cn.hutool.core.util.StrUtil;
+import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
-import com.newzkl.platform.base.biz.account.model.auth.req.IdentityProxySaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberImportExcelVO;
@@ -25,7 +25,7 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,6 +54,8 @@ public class UserClientDomainImpl implements UserClientDomain {
     private final AccountRepository accountRepository;
 
     private final AccountAssembler accountAssembler;
+
+    private final com.newzkl.platform.base.biz.account.domain.service.AccountDomain accountDomain;
 
 
     @Override
@@ -88,8 +90,8 @@ public class UserClientDomainImpl implements UserClientDomain {
     }
 
     @Override
-    public void cancelMember(Long accountId, CancelMemberReq req) {
-        log.info("注销c端用户， 入参: {}", req);
+    public void cancelAccount(Long accountId, CancelMemberReq req) {
+        log.info("注销账号， 入参: {}", req);
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setClient(AccountEnum.Client.USER);
         accountQuery.setId(accountId);
@@ -125,7 +127,7 @@ public class UserClientDomainImpl implements UserClientDomain {
         }
 
         //  查询并校验用户信息
-        AccountVO account = accountRepository.account(null, accountId);
+        AccountVO account = accountRepository.account(SecurityUtils.getClient(), accountId);
         if (Objects.isNull(account)) {
             log.error("更新用户信息失败：账号不存在，accountId: {}", accountId);
             throw new PlatformException(AccountErrorCode.PARAM_ERROR, "账号不存在");
@@ -170,7 +172,9 @@ public class UserClientDomainImpl implements UserClientDomain {
             }
             if (StrUtil.isNotBlank(command.getHeadImg())) {
 //                member.setHead(command.getHeadImg());
+                account.setHead(command.getHeadImg());
                 isMemberUpdated = true;
+                isAccountUpdated = true;
             }
             if (StrUtil.isNotBlank(command.getNewPhone())) {
                 account.setPhone(command.getNewPhone());
@@ -217,36 +221,35 @@ public class UserClientDomainImpl implements UserClientDomain {
 
     @Override
     public IdentityRegisterRes adminCreateMember(AdminRegisterIdentityReq req) {
-        //  构建注册参数并执行会员注册
         AccountEnum.Identity identity = AccountEnum.Identity.MEMBER;
-        IdentityProxySaveReq memberRegisterReq = accountAssembler.adminRegisterReq2ProxyRegisterReq(req);
-        memberRegisterReq.setIdentity(identity);
 
-        // 用上级账号查询id（非邀请人）
-        if (StrUtil.isNotBlank(req.getSuperiorAccount())) {
-            AccountQuery accountQuery = new AccountQuery()
-                    .setUserAccount(req.getSuperiorAccount());
-            AccountVO account = accountRepository.account(accountQuery);
-            if (Objects.isNull(account)) {
-                throw new PlatformException(BaseErrorCode.NODATA, "上级账号");
-            }
-            // 若上级和当前不是同客户端，则视为邀请人
-            if (account.getClient() != identity.getClient()) {
-                memberRegisterReq.setInviteId(account.getId());
-            } else {
-                memberRegisterReq.setPid(account.getId());
-            }
-        }
+        // 落 account: 登录账号缺省用手机号, 拿回自增 id
+        com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq rpcReq =
+                new com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq();
+        rpcReq.setIdentity(identity);
+        rpcReq.setClient(identity.getClient());
+        rpcReq.setUsername(StrUtil.blankToDefault(req.getUsername(), req.getPhone()));
+        rpcReq.setPhone(req.getPhone());
+        rpcReq.setNickname(req.getNickname());
+        rpcReq.setHead(req.getHead());
+        rpcReq.setPid(req.getPid());
+        AccountVO account = accountDomain.register(rpcReq);
 
-        // proxyRegister TODO 缺少code验证
-        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(memberRegisterReq.getIdentity())
-                .customRegister(new IdentityCustomSaveReq());
+        // 角色初始化: 组装身份初始化参数并分发到 MEMBER 角色策略
+        IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
+        saveReq.setId(account.getId());
+        saveReq.setNickname(req.getNickname());
+        saveReq.setHead(req.getHead());
+        saveReq.setRoleIdList(req.getRoleIdList());
+        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(identity)
+                .customRegister(saveReq);
 
-        // 注册失败则抛出异常，成功则重新执行登录
+        // 注册失败则抛出异常
         if (registerRes.getErrorCode() != null) {
             throw new PlatformException(registerRes.getErrorCode());
         }
 
+        registerRes.setId(account.getId());
         return registerRes;
     }
 
@@ -284,14 +287,25 @@ public class UserClientDomainImpl implements UserClientDomain {
         AccountQuery query = new AccountQuery();
         LocalDateTime expireBefore = LocalDateTime.now().minusDays(1);
         query.setState(AccountEnum.State.DESTROY);
-        query.setCancelTime(expireBefore);
-        List<Long> idList = accountRepository.findIdList(query);
-        int size = idList.size();
-        if (size > 0) {
-            log.info("回收已注销用户账号{}", idList);
-            accountRepository.accountDelete(idList);
-            log.info("回收已注销用户账号完成，过期界限: {}, 删除行数: {}", expireBefore, size);
+        query.setCancelTimeBefore(expireBefore);
+        List<AccountVO> accountList = accountRepository.accountList(query);
+        int size = accountList.size();
+        if (size == 0) {
+            return 0;
         }
+        // 物理删前按注销时保留的 identityList 逐身份清理: 删身份实体 + 解绑角色
+        for (AccountVO account : accountList) {
+            for (String code : StrUtil.split(account.getIdentityList(), ',', true, true)) {
+                AbsIdentityPolicy policy = AbsIdentityPolicySupport.getPolicy(Long.valueOf(code));
+                if (policy != null) {
+                    policy.destroy(account, null);
+                }
+            }
+        }
+        List<Long> idList = accountList.stream().map(AccountVO::getId).toList();
+        log.info("回收已注销用户账号{}", idList);
+        accountRepository.accountDelete(idList);
+        log.info("回收已注销用户账号完成，过期界限: {}, 删除行数: {}", expireBefore, size);
         return size;
     }
 }

@@ -27,7 +27,6 @@ public class BrandPageQuery extends PageQuery {
     private Long categoryId;
     /**
      * 状态
-     * @see com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum.ApprovalStatus
      */
     private String state;
 }

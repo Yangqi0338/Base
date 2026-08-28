@@ -7,7 +7,8 @@ import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.GoodsSeatPurchaseRecordExportVO;
 import com.newzkl.platform.base.biz.finance.model.pay.vo.PurchaseRecordVO;
-import com.newzkl.platform.base.common.ddd.utils.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -34,6 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/purchaseRecord")
 @RequiredArgsConstructor
+@FuncPermission("购买记录")
 public class PurchaseRecordController {
 
     private final PurchaseRecordDomain purchaseRecordDomain;
@@ -63,6 +65,7 @@ public class PurchaseRecordController {
      *   docs/planning/dead-endpoint-audit/README.md。
      */
     @Deprecated
+    @FuncPermission("新增购买记录")
     @PostMapping("/add")
     public PlatformResult<Long> add(@Validated @RequestBody PurchaseRecordReq saveCommand) {
         return PlatformResult.success(purchaseRecordDomain.add(saveCommand));
@@ -78,6 +81,7 @@ public class PurchaseRecordController {
      *   docs/planning/dead-endpoint-audit/README.md。
      */
     @Deprecated
+    @FuncPermission("编辑购买记录")
     @PutMapping("/edit")
     public PlatformResult<Void> edit(@Validated @RequestBody PurchaseRecordReq saveCommand) {
         purchaseRecordDomain.edit(saveCommand);
@@ -94,6 +98,7 @@ public class PurchaseRecordController {
      *   docs/planning/dead-endpoint-audit/README.md。
      */
     @Deprecated
+    @FuncPermission("删除购买记录")
     @DeleteMapping("/del/{id}")
     public PlatformResult<Void> del(@PathVariable Long id) {
         purchaseRecordDomain.del(id);

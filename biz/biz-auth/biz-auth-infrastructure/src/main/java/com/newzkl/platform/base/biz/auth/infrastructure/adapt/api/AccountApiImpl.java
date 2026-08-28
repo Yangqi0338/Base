@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.auth.infrastructure.adapt.api;
 
+import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
 import com.newzkl.platform.base.biz.account.facade.model.AccountRpcQuery;
 import com.newzkl.platform.base.biz.auth.domain.adapt.api.AccountApi;
@@ -44,16 +45,38 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
+    public List<AccountRpcVO> accountList(AccountEnum.Client client, String username) {
+        AccountRpcQuery query = new AccountRpcQuery();
+        query.setUsername(username);
+        query.setClient(client);
+        return accountFacade.accountInfoList(query);
+    }
+
+    @Override
     public AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq) {
         return accountFacade.register(registerRpcReq);
     }
 
     @Override
-    public boolean updateLoginTime(Long id) {
+    public boolean updateLoginTime(AccountEnum.Client client, Long id) {
         log.info("【登录时间更新】开始更新账号{}的登录时间", id);
         AccountRpcVO rpcVO = new AccountRpcVO();
         rpcVO.setId(id);
         rpcVO.setLastLoginTime(LocalDateTime.now());
+        rpcVO.setClient(client);
         return accountFacade.accountEdit(rpcVO);
+    }
+
+    @Override
+    public boolean exists(String newUsername, AccountEnum.Client client) {
+        AccountRpcQuery query = new AccountRpcQuery();
+        query.setUsername(newUsername);
+        query.setClient(client);
+        return accountFacade.accountInfo(query) != null;
+    }
+
+    @Override
+    public boolean accountEdit(AccountRpcVO accountUpdate) {
+        return accountFacade.accountEdit(accountUpdate);
     }
 }

@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.content.model.video.req.VideoReq;
 import com.newzkl.platform.base.biz.content.model.video.res.VideoRes;
 import com.newzkl.platform.base.biz.content.model.video.vo.RecommendVideoVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/video")
 @RequiredArgsConstructor
+@FuncPermission("平台-视频")
 public class VideoController {
 
     private final VideoDomain videoDomain;
@@ -49,6 +51,7 @@ public class VideoController {
      * @return 创建结果
      */
     @PostMapping("/create")
+    @FuncPermission("创建视频")
     public PlatformResult<Void> createVideo(@Valid @RequestBody VideoReq req) {
         videoDomain.createVideo(req);
         return PlatformResult.success();
@@ -61,6 +64,7 @@ public class VideoController {
      * @return 更新结果
      */
     @PostMapping("/update")
+    @FuncPermission("更新视频")
     public PlatformResult<Void> updateVideo(@RequestBody VideoReq req) {
         videoDomain.updateVideo(req);
         return PlatformResult.success();
@@ -73,6 +77,7 @@ public class VideoController {
      * @return 删除结果
      */
     @GetMapping("/delete")
+    @FuncPermission("删除视频")
     public PlatformResult<Void> deleteVideo(@RequestParam Long id) {
         videoDomain.deleteVideo(id);
         return PlatformResult.success();

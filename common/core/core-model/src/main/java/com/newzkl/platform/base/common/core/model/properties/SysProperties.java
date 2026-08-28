@@ -45,6 +45,10 @@ public class SysProperties {
      */
     public static String appName;
     /**
+     * 官方的渠道商id
+     */
+    public static Long officialChannelId;
+    /**
      * 不受限制用户id列表
      */
     public static List<Long> freedomUser = new ArrayList<>();
@@ -65,6 +69,9 @@ public class SysProperties {
     }
     public void setVersion(String version) {
         SysProperties.version = version;
+    }
+    public void setOfficialChannelId(Long officialChannelId) {
+        SysProperties.officialChannelId = officialChannelId;
     }
     public void setAppName(String appName) {
         SysProperties.appName = appName;

@@ -1,9 +1,15 @@
 package com.newzkl.platform.base.biz.auth.infrastructure.adapt.repository;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.PermissionRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.PermissionDAO;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionDO;
+import com.newzkl.platform.base.biz.auth.infrastructure.entity.RoleDO;
+import com.newzkl.platform.base.biz.auth.model.permission.dto.RoleDTO;
+import com.newzkl.platform.base.biz.auth.model.permission.req.PermissionQuery;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -51,15 +57,16 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     }
 
     @Override
-    public PermissionDTO getByCode(String code) {
+    public PermissionDTO getByCode(AccountEnum.Client client, String code) {
         PermissionDO entity = permissionDAO.selectOne(new BaseLambdaQueryWrapper<PermissionDO>()
+                .notNullEq(PermissionDO::getClient, client)
                 .eq(PermissionDO::getCode, code));
         return TransferUtils.transfer(entity, PermissionDTO::new);
     }
 
     @Override
-    public List<PermissionDTO> listByType(PermissionEnum.Type type) {
-        List<PermissionDO> list = permissionDAO.selectList(permissionDAO.getLw(type));
+    public List<PermissionDTO> listByType(AccountEnum.Client client, PermissionEnum.Type type) {
+        List<PermissionDO> list = permissionDAO.selectList(permissionDAO.getLw(client, type));
         return TransferUtils.transfers(list, PermissionDTO::new);
     }
 
@@ -77,5 +84,11 @@ public class PermissionRepositoryImpl implements PermissionRepository {
             return List.of();
         }
         return TransferUtils.transfers(permissionDAO.selectList(permissionDAO.getLwByCodes(codes)), PermissionDTO::new);
+    }
+
+    @Override
+    public Page<PermissionDTO> page(PermissionQuery query) {
+        Page<PermissionDO> pageList = permissionDAO.selectPage(RepositorySupport.page(query), permissionDAO.getLw(query));
+        return TransferUtils.transferPage(pageList, PermissionDTO::new);
     }
 }

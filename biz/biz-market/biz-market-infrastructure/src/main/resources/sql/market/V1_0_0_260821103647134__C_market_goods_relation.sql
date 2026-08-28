@@ -1,0 +1,22 @@
+CREATE TABLE `market_goods_relation` (
+  `id` bigint NOT NULL COMMENT '主键ID',
+  `goods_id` bigint NULL COMMENT '商品id',
+  `market_id` bigint NULL COMMENT '市场id',
+  `relation_type` int NULL COMMENT '关系类型(1：一级市场商品  2：二级市场商品  3：市场选品商品)',
+  `user_id` bigint NULL COMMENT '用户id(0：为平台   >0:为客户)',
+  `sell_num` int NULL COMMENT '销量',
+  `sell_amount` bigint NULL COMMENT '销售额',
+  `state` int NULL COMMENT '状态(1：正常  0：删除)',
+  `de_bind_time` datetime NULL COMMENT '解绑时间',
+  `discount_rate` int NULL COMMENT '让利比例',
+  `goods_info` json NULL COMMENT '商品信息',
+  `executor` json NULL COMMENT '操作人信息',
+  `creator_id` bigint NULL COMMENT '创建人id',
+  `create_time` datetime NULL COMMENT '创建时间',
+  `update_time` datetime NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  PRIMARY KEY (`id`),
+  INDEX `auto_idx_market_goods_relation_goods_id`(`goods_id`) COMMENT '商品id',
+  INDEX `auto_idx_market_goods_relation_market_id`(`market_id`) COMMENT '市场id',
+  INDEX `auto_idx_market_goods_relation_user_id`(`user_id`) COMMENT '用户id'
+);

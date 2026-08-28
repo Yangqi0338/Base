@@ -34,13 +34,6 @@ public interface LocalMessageApi {
     void sendRefundPassMessage(RefundDTO refund);
 
     /**
-     * 渠道订单支付后同步处理 (投递 {@code scm_order/orderSyncHandle})
-     *
-     * @param orderSyncHandleVO 订单同步处理消息体
-     */
-    void orderChannelNodeHandle(OrderSyncHandleVO orderSyncHandleVO);
-
-    /**
      * 唤醒分润延迟消息
      * @param skuOrderId sku订单维度
      */

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.AuditBaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -39,12 +40,12 @@ public class AuditDataSpuDO extends AuditBaseDO {
     /**
      * 商品创建信息
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String spuCreateInfoJson;
     /**
      * sku销售价
      */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String skuSalePriceJson;
     /**
      * sku审批人值对象

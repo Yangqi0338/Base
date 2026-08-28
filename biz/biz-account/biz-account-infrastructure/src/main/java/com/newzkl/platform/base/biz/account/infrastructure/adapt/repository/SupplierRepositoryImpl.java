@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.account.infrastructure.entity.SupplierDO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
@@ -75,7 +76,8 @@ public class SupplierRepositoryImpl extends RepositorySupport implements Supplie
 
     @Override
     public Page<SupplierAccountVO> pageListWithAccount(SupplierQuery query) {
-        return supplierDAO.pageListWithAccount(RepositorySupport.page(query), supplierDAO.getJoinQw(query));
+        BaseQueryWrapper<SupplierDO> joinQw = supplierDAO.getJoinQw(query);
+        return supplierDAO.pageListWithAccount(RepositorySupport.page(query), joinQw);
     }
 
     @Override

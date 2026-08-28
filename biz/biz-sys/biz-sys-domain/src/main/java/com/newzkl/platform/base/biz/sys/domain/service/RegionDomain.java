@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.sys.domain.service;
 
+import cn.hutool.core.lang.Pair;
+import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseResponse;
 import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
 
@@ -58,5 +60,5 @@ public interface RegionDomain {
      * @param imageUrl 营业执照图片 URL
      * @return 识别结果 (结构 {@code {result:{...}, areaCode:[]}}), 识别失败返回 {@code null}
      */
-    Object businessIdentify(String imageUrl);
+    Pair<RecognizeBusinessLicenseResponse, List<Integer>> businessIdentify(String imageUrl);
 }

@@ -51,31 +51,25 @@ public class BaseQueryWrapper<T> extends QueryWrapper<T> {
             this.expression = new MergeSegments();
 
             List<ISqlSegment> segments = new ArrayList<>();
+            // 条件形如 [字段, 运算符, 值...]，条件之间由 AND/OR 连接
+            // 仅整体开头、或连接符 AND/OR 之后的第一个普通段才是字段名，加别名前缀
+            // IN/EQ/LIKE 等运算符关键字不重置期待，避免其后的值段被误加前缀
             boolean isField = true;
-
             for (ISqlSegment segment : mergeSegments.getNormal()) {
-                boolean addSegments = true;
-                int nowSize = this.expression.getNormal().size();
                 if (segment instanceof SqlKeyword) {
-                    segments.add(segment);
-                    addSegments = false;
-                } else {
-                    // 非关键字，且遇到的第一个元素被判定为字段名
-                    if (isField) {
-                        segments.add(columnToSqlSegment(alias + "." + segment.getSqlSegment()));
-                        isField = false;
-                    } else {
-                        segments.add(segment);
+                    if (segment == SqlKeyword.AND || segment == SqlKeyword.OR) {
+                        isField = true;
                     }
+                    segments.add(segment);
+                } else if (isField) {
+                    segments.add(columnToSqlSegment(alias + "." + segment.getSqlSegment()));
+                    isField = false;
+                } else {
+                    segments.add(segment);
                 }
-                if (addSegments) {
-                    this.appendSqlSegments(ArrayUtil.toArray(segments, ISqlSegment.class));
-                }
-                // 集合数量不对，说明加入进去了，初始化循环数据
-                if (nowSize != this.expression.getNormal().size()) {
-                    isField = true;
-                    segments = new ArrayList<>();
-                }
+            }
+            if (!segments.isEmpty()) {
+                this.appendSqlSegments(ArrayUtil.toArray(segments, ISqlSegment.class));
             }
         } else {
             this.expression = mergeSegments;

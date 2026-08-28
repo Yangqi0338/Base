@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.RelationRepository;
 import com.newzkl.platform.base.biz.auth.infrastructure.dao.PermissionRelationDAO;
 import com.newzkl.platform.base.biz.auth.infrastructure.entity.PermissionRelationDO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionRelationDTO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -35,36 +36,36 @@ public class RelationRepositoryImpl implements RelationRepository {
     }
 
     @Override
-    public void deleteBySource(PermissionEnum.RelationType type, Collection<Long> sourceIds) {
-        if (CollUtil.isEmpty(sourceIds)) {
+    public void deleteBySource(AccountEnum.Client client, PermissionEnum.RelationType type, Collection<String> sources) {
+        if (CollUtil.isEmpty(sources)) {
             return;
         }
-        permissionRelationDAO.delete(permissionRelationDAO.getLw(type, sourceIds));
+        permissionRelationDAO.delete(permissionRelationDAO.getLw(client, type, sources));
     }
 
     @Override
-    public void deleteByTarget(PermissionEnum.RelationType type, Collection<Long> targetIds) {
-        if (CollUtil.isEmpty(targetIds)) {
+    public void deleteByTarget(AccountEnum.Client client, PermissionEnum.RelationType type, Collection<String> targets) {
+        if (CollUtil.isEmpty(targets)) {
             return;
         }
-        permissionRelationDAO.delete(permissionRelationDAO.getLwByTarget(type, targetIds));
+        permissionRelationDAO.delete(permissionRelationDAO.getLwByTarget(client, type, targets));
     }
 
     @Override
-    public List<PermissionRelationDTO> listBySource(PermissionEnum.RelationType type, Collection<Long> sourceIds) {
-        if (CollUtil.isEmpty(sourceIds)) {
+    public List<PermissionRelationDTO> listBySource(AccountEnum.Client client, PermissionEnum.RelationType type, Collection<String> sources) {
+        if (CollUtil.isEmpty(sources)) {
             return List.of();
         }
-        List<PermissionRelationDO> list = permissionRelationDAO.selectList(permissionRelationDAO.getLw(type, sourceIds));
+        List<PermissionRelationDO> list = permissionRelationDAO.selectList(permissionRelationDAO.getLw(client, type, sources));
         return TransferUtils.transfers(list, PermissionRelationDTO::new);
     }
 
     @Override
-    public List<PermissionRelationDTO> listByTarget(PermissionEnum.RelationType type, Collection<Long> targetIds) {
-        if (CollUtil.isEmpty(targetIds)) {
+    public List<PermissionRelationDTO> listByTarget(AccountEnum.Client client, PermissionEnum.RelationType type, Collection<String> targets) {
+        if (CollUtil.isEmpty(targets)) {
             return List.of();
         }
-        List<PermissionRelationDO> list = permissionRelationDAO.selectList(permissionRelationDAO.getLwByTarget(type, targetIds));
+        List<PermissionRelationDO> list = permissionRelationDAO.selectList(permissionRelationDAO.getLwByTarget(client, type, targets));
         return TransferUtils.transfers(list, PermissionRelationDTO::new);
     }
 }

@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.biz.auth.domain.adapt.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.auth.model.permission.req.PermissionQuery;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.auth.PermissionEnum;
 import com.newzkl.platform.base.biz.auth.model.permission.dto.PermissionDTO;
 
@@ -44,20 +47,22 @@ public interface PermissionRepository {
     PermissionDTO getById(Long id);
 
     /**
-     * 按编码查询
+     * 按端与编码查询
      *
-     * @param code 权限编码
+     * @param client 所属端
+     * @param code   权限编码
      * @return 权限数据, 未命中返回 null
      */
-    PermissionDTO getByCode(String code);
+    PermissionDTO getByCode(AccountEnum.Client client, String code);
 
     /**
-     * 按类型列出
+     * 按端与类型列出
      *
-     * @param type 权限类型
+     * @param client 所属端
+     * @param type   权限类型
      * @return 权限列表
      */
-    List<PermissionDTO> listByType(PermissionEnum.Type type);
+    List<PermissionDTO> listByType(AccountEnum.Client client, PermissionEnum.Type type);
 
     /**
      * 按ID集合列出
@@ -74,4 +79,6 @@ public interface PermissionRepository {
      * @return 权限列表
      */
     List<PermissionDTO> listByCodes(Collection<String> codes);
+
+    Page<PermissionDTO> page(PermissionQuery query);
 }

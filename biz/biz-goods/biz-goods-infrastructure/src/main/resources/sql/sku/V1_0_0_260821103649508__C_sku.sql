@@ -1,0 +1,22 @@
+CREATE TABLE `sku` (
+  `id` bigint NOT NULL COMMENT '主键ID',
+  `img` varchar(255) NULL COMMENT '图片',
+  `name` varchar(255) NULL COMMENT '名称',
+  `spu_id` bigint NULL COMMENT 'spuId(查询)',
+  `market_price` bigint NULL COMMENT '市场价',
+  `supply_price` bigint NULL COMMENT '供货价',
+  `sale_price` bigint NULL COMMENT '销售价(to channel)',
+  `unit_price` bigint NULL COMMENT '销售价(to c)',
+  `sale_attribute` json NULL COMMENT '商品销售属性(json格式)',
+  `out_sku_id` varchar(255) NULL COMMENT '外部SkuId',
+  `sale_price_rate` float(4, 2) NULL COMMENT '销售价加价比例',
+  `buy_start_qty` int NULL COMMENT '起购数量',
+  `expand` json NULL COMMENT '追加: 扩展字段',
+  `executor` json NULL COMMENT '操作人信息',
+  `creator_id` bigint NULL COMMENT '创建人id',
+  `create_time` datetime NULL COMMENT '创建时间',
+  `update_time` datetime NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  PRIMARY KEY (`id`),
+  INDEX `auto_idx_sku_spu_id`(`spu_id`) COMMENT 'spuId'
+) COMMENT = 'sku';

@@ -8,6 +8,7 @@ import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
 import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/article")
 @RequiredArgsConstructor
+@FuncPermission("平台-文章")
 public class ArticleController {
 
     private final ArticleDomain articleDomain;
@@ -42,6 +44,7 @@ public class ArticleController {
      * @return 创建结果
      */
     @PostMapping("/create")
+    @FuncPermission("创建文章")
     public PlatformResult<Void> createArticle(@Valid @RequestBody ArticleReq req) {
         articleDomain.createArticle(req);
         return PlatformResult.success();
@@ -54,6 +57,7 @@ public class ArticleController {
      * @return 更新结果
      */
     @PostMapping("/update")
+    @FuncPermission("更新文章")
     public PlatformResult<Void> updateArticle(@RequestBody ArticleReq req) {
         articleDomain.updateArticle(req);
         return PlatformResult.success();
@@ -66,6 +70,7 @@ public class ArticleController {
      * @return 删除结果
      */
     @GetMapping("/delete")
+    @FuncPermission("删除文章")
     public PlatformResult<Void> deleteArticle(@RequestParam Long id) {
         articleDomain.deleteArticle(id);
         return PlatformResult.success();
