@@ -60,15 +60,13 @@ public class FreightTemplateRepositoryImpl implements FreightTemplateRepository 
 
     @Override
     public FreightTemplate freightTemplate(Long id) {
-        return TransferUtils.transfer(freightTemplateDAO.selectById(id), FreightTemplate::new, (c, v) -> {
-            v.setFreePostCondition(JSONObject.parseObject(c.getFreePostCondition(), FreePostConditionVO.class));
-            v.setRegionSpec(JSON.parseArray(c.getRegionSpec(), RegionVO.class));
-        });
+        return TransferUtils.transfer(freightTemplateDAO.selectById(id), FreightTemplate.class);
     }
 
     @Override
     public Page<FreightTemplateVO> freightTemplatePage(FreightTemplateQuery freightTemplateQuery) {
-        return freightTemplateDAO.queryPage(RepositorySupport.page(freightTemplateQuery), freightTemplateQuery);
+        Page<FreightTemplateDO> page = freightTemplateDAO.selectPage(RepositorySupport.page(freightTemplateQuery), freightTemplateDAO.getLw(freightTemplateQuery));
+        return TransferUtils.transferPage(page, FreightTemplateVO.class);
     }
 
 }

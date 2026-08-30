@@ -40,21 +40,15 @@ public class ShipAddressController {
     /**
      * 收货地址保存(新增/修改)
      *
-     * <p>合并旧 {@code shipAddressSave} 与 {@code shipAddressUpdate}: 入参同为 {@link ShipAddressReq}(含 id),
-     * 按 id 有无分流 —— 空则 {@code save} 返回新 id, 非空则 {@code edit} 返回入参 id。</p>
-     *
      * @param shipAddressReq 收货地址入参(id 为空新增, 非空修改)
      * @return 收货地址ID
      */
     @PostMapping("shipAddressSave")
     @FuncPermission("收货地址保存(新增/修改)")
     public PlatformResult<Long> shipAddressSave(@Validated @RequestBody ShipAddressReq shipAddressReq) {
-        Long id = shipAddressReq.getId();
-        if (id == null) {
-            return PlatformResult.success(shipAddressDomain.save(shipAddressReq));
-        }
-        shipAddressDomain.edit(id, shipAddressReq);
-        return PlatformResult.success(id);
+        shipAddressReq.setIdentity(SecurityUtils.getIdentity());
+        shipAddressReq.setAccountId(SecurityUtils.getAccountId());
+        return PlatformResult.success(shipAddressDomain.save(shipAddressReq));
     }
 
     /**

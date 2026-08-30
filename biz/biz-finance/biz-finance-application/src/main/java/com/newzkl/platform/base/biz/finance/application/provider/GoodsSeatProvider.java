@@ -22,4 +22,9 @@ public class GoodsSeatProvider implements GoodsSeatFacade {
     public void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId) {
         goodsSeatDomain.supplierSubmitSubGoodsSeat(supplierId, spuId);
     }
+
+    @Override
+    public void goodsAuditFailAddGoodsSeat(Long supplierId) {
+        goodsSeatDomain.goodsAuditFailAddGoodsSeat(supplierId);
+    }
 }

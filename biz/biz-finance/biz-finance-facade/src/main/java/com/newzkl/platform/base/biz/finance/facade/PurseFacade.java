@@ -39,4 +39,26 @@ public interface PurseFacade {
      */
     boolean skipPromiseAudit();
 
+    /**
+     * 渠道商下游充值金额同步
+     *
+     * <p>给渠道商采购金账户增额并落一条下游同步动账记录, 同时按累计充值额刷新渠道服务费档位。
+     * 供 plugin-openapi 开放接口跨域调用, 对等旧 {@code IAccountPurseApi.channelSyncByDownStream}</p>
+     *
+     * @param accountId 渠道商账号ID
+     * @param amount    同步金额
+     */
+    void channelBalanceSync(Long accountId, Money amount);
+
+    /**
+     * 保证金超出部分退回收益账户
+     *
+     * <p>供应商保证金账户余额超过入驻要求的部分, 可退回收益账户供提现。
+     * 当前未实现: 退回阈值与触发时机待产品定稿, 调用即抛异常, 不做静默成功</p>
+     *
+     * @param supplierId 供应商账号ID
+     * @param amount     退回金额
+     */
+    void refundOverDeposit(Long supplierId, Money amount);
+
 }

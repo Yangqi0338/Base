@@ -44,13 +44,17 @@ public class AccountVO extends BaseRes {
      */
     private String pidList;
     /**
+     * 顶层主账号id (主账号自身=0, 子账号=顶层主账号id)
+     */
+    private Long mainAccountId;
+    /**
+     * 账号来源
+     */
+    private AccountEnum.Origin origin;
+    /**
      * 真实姓名
      */
     private String realname;
-    /**
-     * 父层级角色关系
-     */
-    private String pRoleList;
     /**
      * 登录凭证
      * NOTE 可以是手机号、自定账号名

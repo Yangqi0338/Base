@@ -254,7 +254,11 @@ public class QuerySupport {
         groupSQL.setEmptyResult("");
 
         if (CollUtil.isNotEmpty(groupField)) {
-            groupField.forEach(groupSQL::append);
+            groupField.forEach((field)-> {
+                if (!getCountField().equals(field)) {
+                    groupSQL.append(field);
+                }
+            });
         }
         return groupSQL.toString();
     }

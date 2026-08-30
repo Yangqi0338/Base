@@ -1,13 +1,12 @@
 package com.newzkl.platform.base.biz.content.domain.adapt.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.video.entity.Video;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
 import com.newzkl.platform.base.biz.content.model.video.req.VideoReq;
 import com.newzkl.platform.base.biz.content.model.video.res.VideoRes;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
-import com.newzkl.platform.base.biz.content.model.video.entity.Video;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ public interface VideoRepository {
      * @param query 分页查询条件
      * @return 分页结果(未填分类名/发布人/互动数)
      */
-    ContentPage<VideoRes> getVideoPage(VideoPageQuery query);
+    Page<VideoRes> getVideoPage(VideoPageQuery query);
 
     /**
      * 查询视频领域实体列表

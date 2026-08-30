@@ -126,9 +126,7 @@ public class CommitOrderImpl implements CommitOrder {
 
         // 金额计算：简化条件判断，语义化常量
         SpuEnum.ChannelType channelType = goodsInfo.getSpuChannelType();
-        if (SpuEnum.ChannelType.CUSTOM == channelType) {
-            skuOrder.setStoreAmount(goodsInfo.getStorePrice().multiply(goodsInfo.getNum()));
-        } else if (SpuEnum.ChannelType.SELECTION == channelType
+        if (SpuEnum.ChannelType.SELECTION == channelType
                 || SpuEnum.ChannelType.OUT == channelType) {
             skuOrder.setGoodsAmount(goodsInfo.getSalePrice().multiply(goodsInfo.getNum()));
             skuOrder.setSupplierAmount(goodsInfo.getSupplyPrice().multiply(goodsInfo.getNum()));

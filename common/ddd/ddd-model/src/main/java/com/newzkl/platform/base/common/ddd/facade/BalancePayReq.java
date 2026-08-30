@@ -25,9 +25,13 @@ public class BalancePayReq implements Serializable {
     private PurseEnum.User accountType;
 
     /**
-     * 钱包类型码 (渠道商不用传, 运营商传 1)
+     * 扣款科目, 必传
+     * <p>
+     * 2026-08-28 由 {@code Integer} 改真枚举: 下游 {@code AccountPurseAlterRecordReq.purseType} 是
+     * {@code PurseEnum.Type}, 原 {@code Integer} 靠 {@code TransferUtils}(hutool 浅拷贝)跨类型转换碰运气。
+     * 同类型后拷贝语义确定, 传错编译期即报错
      */
-    private Integer purseType;
+    private PurseEnum.Type purseType;
 
     /**
      * 支付金额 (分)

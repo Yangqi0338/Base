@@ -47,9 +47,11 @@ public class SnowflakeGenerator implements IdentifierGenerator, Generator {
     @Override
     public String nextUUID(Object entity) {
         String result = String.valueOf(nextId(entity));
-        int len = NumberUtil.parseInt(StrUtil.toString(entity));
-        if (len > 0) {
-            result = result.substring(0, Math.min(len, result.length()));
+        if (entity != null) {
+            int len = NumberUtil.parseInt(StrUtil.toString(entity));
+            if (len > 0) {
+                result = result.substring(0, Math.min(len, result.length()));
+            }
         }
         return result;
     }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoRepository;
 import com.newzkl.platform.base.biz.content.infrastructure.dao.ContentVideoDAO;
 import com.newzkl.platform.base.biz.content.infrastructure.entity.VideoDO;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.video.entity.Video;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
@@ -66,7 +65,7 @@ public class VideoRepositoryImpl implements VideoRepository {
     }
 
     @Override
-    public ContentPage<VideoRes> getVideoPage(VideoPageQuery query) {
+    public Page<VideoRes> getVideoPage(VideoPageQuery query) {
         // 旧: videoDAO.selectVideoPage 跨库 JOIN 取互动数, Base 分库不可用, 改纯条件重写; 互动数走跨域降级
         Page<VideoDO> page = contentVideoDAO.selectPage(RepositorySupport.page(query),
                 new BaseLambdaQueryWrapper<VideoDO>()
@@ -78,8 +77,7 @@ public class VideoRepositoryImpl implements VideoRepository {
                         .between(query.getCreateTimeL() != null && query.getCreateTimeR() != null,
                                 VideoDO::getCreateTime, query.getCreateTimeL(), query.getCreateTimeR())
                         .orderByDesc(VideoDO::getCreateTime));
-        return ContentPage.of(page.getCurrent(), page.getSize(), page.getTotal(),
-                TransferUtils.transfers(page.getRecords(), VideoRes::new));
+        return TransferUtils.transferPage(page, VideoRes.class);
     }
 
     @Override

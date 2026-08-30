@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.content.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.service.ArticleDomain;
 import com.newzkl.platform.base.biz.content.model.article.query.ArticlePageQuery;
 import com.newzkl.platform.base.biz.content.model.article.query.ArticleQuery;
 import com.newzkl.platform.base.biz.content.model.article.req.ArticleReq;
 import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import jakarta.validation.Valid;
@@ -86,7 +86,7 @@ public class ArticleController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public PlatformResult<ContentPage<ArticleRes>> getArticlePage(@RequestBody ArticlePageQuery query) {
+    public PlatformResult<Page<ArticleRes>> getArticlePage(@RequestBody ArticlePageQuery query) {
         return PlatformResult.success(articleDomain.getArticlePage(query));
     }
 

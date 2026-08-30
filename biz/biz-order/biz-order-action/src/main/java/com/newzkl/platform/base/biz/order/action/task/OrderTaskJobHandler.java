@@ -87,10 +87,10 @@ public class OrderTaskJobHandler {
             offsetDate = DateUtil.offset(date, DateField.MINUTE, -15);
         }
         LocalDateTime offsetLocalDate = DateUtil.toLocalDateTime(offsetDate);
-        //取出超过*分钟, 并且处于派发中的订单
+        //取出创建时间早于 now-15分钟(dev 1 分钟)且处于派发中的订单, 转待发货
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOrderState(OrderEnum.State.SENDING);
-        orderQuery.setCreateStartTime(offsetLocalDate);
+        orderQuery.setLessCreateTime(offsetLocalDate);
         List<Long> orderIdList = queryService.orderIdList(orderQuery);
         orderDomain.sendOrder(orderIdList);
         log.info("自动派发订单");

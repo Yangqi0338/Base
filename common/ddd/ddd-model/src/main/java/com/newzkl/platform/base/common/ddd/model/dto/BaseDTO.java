@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * 基础数据传输对象
  *
- * <p>平铺主键, 操作人信息与时间字段, 与 BaseDO 的嵌套 executor 结构对应</p>
+ * <p>结构与 BaseDO 一致: 操作人信息持 {@link ExecutorDTO} 对象, 免去平铺字段与嵌套结构的来回转换</p>
  */
 @Setter
 @Getter
@@ -27,19 +27,9 @@ public class BaseDTO implements Serializable {
     protected Long creatorId;
 
     /**
-     * 创建人名称
+     * 操作人信息
      */
-    protected String creatorName;
-
-    /**
-     * 更新人 ID
-     */
-    protected Long updater;
-
-    /**
-     * 更新人名称
-     */
-    protected String updaterName;
+    protected ExecutorDTO executor;
 
     /**
      * 创建时间

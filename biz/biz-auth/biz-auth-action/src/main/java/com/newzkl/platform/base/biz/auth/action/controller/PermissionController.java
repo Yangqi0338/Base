@@ -146,7 +146,6 @@ public class PermissionController {
      */
     @GetMapping("/mine")
     public PlatformResult<MinePermissionVO> mine() {
-
         AccountEnum.Client client = SecurityUtils.getClient();
         List<String> permissions = StpUtil.getPermissionList();
         List<String> roles = StpUtil.getRoleList();
@@ -155,6 +154,7 @@ public class PermissionController {
 
         // TODO 缓存优化
         List<PermissionTreeVO> tree = permissionDomain.tree(client, PermissionEnum.Type.MENU);
+        vo.setMenus(tree);
         if (!CollUtil.contains(permissions,"*")) {
             PermissionQuery query = new PermissionQuery();
             query.resetQueryList();
@@ -166,7 +166,8 @@ public class PermissionController {
 
         RoleQuery roleQuery = new RoleQuery();
         roleQuery.resetQueryList();
-        roleQuery.setIdList(CollUtil.map(roles, NumberUtil::parseLong, true));
+        roleQuery.setCodeList(roles);
+        roleQuery.setClient(client);
         List<RoleRes> records = roleDomain.page(roleQuery).getRecords();
         vo.setRoles(TransferUtils.transfers(records, RoleVO.class));
         return PlatformResult.success(vo);

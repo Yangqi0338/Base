@@ -189,6 +189,25 @@ public class AccountEnum {
     }
 
     /**
+     * 账号来源
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum Origin implements IEnum<Integer> {
+        /** 自行注册: AuthController /register 自助注册 */
+        SELF_REGISTER(1, "自行注册"),
+        /** 主账号创建: 主账号建子账号 */
+        MAIN_CREATE(2, "主账号创建"),
+        /** 邀请: inviteAccountId 有值 */
+        INVITE(3, "邀请"),
+        ;
+        @EnumValue
+        @JsonValue
+        private final Integer code;
+        private final String value;
+    }
+
+    /**
      * 员工类型
      */
     @Getter

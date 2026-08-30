@@ -234,9 +234,7 @@ public class SkuOrderDTO extends BaseDTO {
         this.supplierAmount = Money.ZERO;
         this.goodsAmount = Money.ZERO;
         this.storeAmount = Money.ZERO;
-        if(SpuEnum.ChannelType.CUSTOM == skuVO.getSpuChannelType()){
-            this.storeAmount = Money.of(skuVO.getStorePrice()).multiply(orderItemCommand.getCount());
-        }else if(SpuEnum.ChannelType.SELECTION == skuVO.getSpuChannelType()){
+        if(SpuEnum.ChannelType.SELECTION == skuVO.getSpuChannelType()){
             this.supplierAmount = Money.of(skuVO.getSupplyPrice()).multiply(orderItemCommand.getCount());
             this.goodsAmount = Money.of(skuVO.getSalePrice()).multiply(orderItemCommand.getCount());
             Money storePrice = Money.of(skuVO.getStorePrice());

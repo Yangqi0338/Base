@@ -7,12 +7,15 @@ import com.dtflys.forest.converter.ForestEncoder;
 import com.dtflys.forest.exceptions.ForestRuntimeException;
 import com.dtflys.forest.http.ForestRequest;
 import com.dtflys.forest.http.ForestResponse;
+import com.dtflys.forest.http.body.ObjectRequestBody;
 import com.dtflys.forest.interceptor.ResponseResult;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 
 import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.sysId;
 
@@ -35,13 +38,15 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
     @Override
     public byte[] onBodyEncode(ForestRequest request, ForestEncoder encoder, byte[] encodedData) {
         // 返回的字节数组将替换原有的序列化结果
-        String json = new String(encodedData);
-        Base.Req req = JSONUtil.toBean(json, Base.Req.class);
+        Base.Req req = (Base.Req) request.getArgument(0);
         req.build(sysId);
 
         // 参数校验
-        request.getBody().getObjectItems().forEach(item -> validate(request, item));
+        for (ObjectRequestBody item : request.getBody().getObjectItems()) {
+            validate(request, item);
+        }
 
+        String json = JSONUtil.toJsonStr(req);
         String params = HuiFuMethod.loopSort4JsonString(json, 0, true);
         log.info("排序后参数：" + params);
         String requestSign = HuiFuMethod.sign(params);
@@ -51,7 +56,7 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
         oAuth.setSign(requestSign);
         oAuth.setProduct_id(HuiFuProperties.productId);
         log.info("请求前参数：" + JSON.toJSONString(oAuth));
-        return JSON.toJSONString(oAuth).getBytes();
+        return JSON.toJSONString(oAuth).getBytes(StandardCharsets.UTF_8);
     }
 
 
@@ -83,10 +88,11 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
 
         String content = response.readAsString();
         log.info("汇付返回：" + content);
-        Base.Res res = JSONUtil.toBean(content, Base.Res.class);
-        if (!res.isSuccess()) {
+        Base.SyncRes res = JSONUtil.toBean(content, Base.SyncRes.class);
+        Base.Res data = res.getData();
+        if (!response.isSuccess()) {
             log.error("请求失败，response：" + response);
-            throw new PlatformException(res.getResp_code(), res.getResp_desc());
+            throw new PlatformException(data.getResp_code(), data.getResp_desc());
         }
 
         return proceed(); // 继续执行请求的后续逻辑

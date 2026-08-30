@@ -9,6 +9,8 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.SupplierPurchaseGoodsSeatReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +47,10 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
         if (accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(totalFee), false, false, false) == 1) {
             // 扣减成功才增加商品位额度
             AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT);
-            accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(req.getPurchaseNum()), true, false);
+            // 商品位账户不存在时 update 命中 0 行, 营销金已扣而额度未加 = 资损, 必须抛异常回滚
+            if (accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(req.getPurchaseNum()), true, false) != 1) {
+                throw new PlatformException(BaseErrorCode.CUSTOM, "商品位账户不存在, 加额度失败, supplierId=" + req.getSupplierId());
+            }
             List<AccountPurseAlterRecordVO> records = new ArrayList<>();
             records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.MARKETING, Money.of(totalFee),
                     EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.AlterType.GOODS_POSITION_BUY, 0L));
@@ -61,7 +66,10 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
     @Transactional(rollbackFor = Exception.class)
     public void platformGiftGoodsSeat(SupplierPurchaseGoodsSeatReq req) {
         AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT);
-        accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(req.getPurchaseNum()), true, false);
+        // 同上: 命中 0 行说明商品位账户不存在, 赠送额度会静默丢失
+        if (accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(req.getPurchaseNum()), true, false) != 1) {
+            throw new PlatformException(BaseErrorCode.CUSTOM, "商品位账户不存在, 赠送额度失败, supplierId=" + req.getSupplierId());
+        }
         List<AccountPurseAlterRecordVO> records = new ArrayList<>();
         records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT, Money.of(req.getPurchaseNum()),
                 EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.AlterType.PLATFORM_GIFT_GOODS_SEAT, null));
@@ -72,10 +80,27 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
     @Transactional(rollbackFor = Exception.class)
     public void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId) {
         AccountPurseQuery subQuery = buildQuery(supplierId, PurseEnum.Type.GOODS_SEAT);
-        accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(1), false, false, false);
+        // 商品位额度不足时 ge(amount >= 扣款额) 条件不命中, 更新 0 行, 对齐源 supplierSpuSubmit 的 SUB_GOODS_SEAT_FAIL 拦截
+        if (accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(1), false, false, false) != 1) {
+            throw new PlatformException(BaseErrorCode.PARAM, "剩余商品位不足，请充值");
+        }
         List<AccountPurseAlterRecordVO> records = new ArrayList<>();
         records.add(buildRecord(supplierId, PurseEnum.Type.GOODS_SEAT, Money.of(1),
                 EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.AlterType.SUPPLIER_GOODS_POSITION_SUB, spuId));
+        accountPurseRepository.saveAccountPurseAlterRecord(records);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void goodsAuditFailAddGoodsSeat(Long supplierId) {
+        AccountPurseQuery addQuery = buildQuery(supplierId, PurseEnum.Type.GOODS_SEAT);
+        // 命中 0 行说明商品位账户不存在, 返还额度会静默丢失
+        if (accountPurseRepository.addAccountPurseAmount(addQuery, Money.of(1), false, false) != 1) {
+            throw new PlatformException(BaseErrorCode.CUSTOM, "商品位账户不存在, 返还额度失败, supplierId=" + supplierId);
+        }
+        List<AccountPurseAlterRecordVO> records = new ArrayList<>();
+        records.add(buildRecord(supplierId, PurseEnum.Type.GOODS_SEAT, Money.of(1),
+                EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.AlterType.SUPPLIER_GOODS_POSITION_ADD, null));
         accountPurseRepository.saveAccountPurseAlterRecord(records);
     }
 

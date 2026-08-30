@@ -29,6 +29,12 @@ public class ArticleCategoryDO extends BaseDO {
      */
     private Integer sort;
 
+
+    /**
+     * 文章数量
+     */
+    private Integer articleCount;
+
     /**
      * 是否启用
      * @ext 0-禁用, 1-启用

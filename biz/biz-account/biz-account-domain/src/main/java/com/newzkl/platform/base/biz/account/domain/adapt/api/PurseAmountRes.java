@@ -32,13 +32,9 @@ public class PurseAmountRes implements Serializable {
     private Integer accountType;
 
     /**
-     * 当前收益 (分)
+     * 账户余额 (分)
      */
-    private Integer earnings;
-
-    /**
-     * 累计收益 (分)
-     */
+    private Integer amount;
 
     /**
      * 创建时间

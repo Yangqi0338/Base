@@ -18,6 +18,10 @@ public class SkuDTO {
      */
      private Long id;
      /**
+      * 编码 (后端生成, 不接受入参)
+      */
+     private String code;
+     /**
       * 临时ID
       */
      private Long tempId;

@@ -27,10 +27,12 @@ public class BalancePayReq implements Serializable {
     private PurseEnum.User accountType;
 
     /**
-     * 账户类型
-     * @ext 渠道商不用传, 运营商传采购账户
+     * 账户类型, 必传
+     * <p>
+     * 2026-08-28 撤销原默认值 {@code PurseEnum.Type.PURCHASE}: 金额科目决定钱从哪个账户扣,
+     * 默认值会让「新增支付场景忘了设科目」静默从采购金扣走, 必须由调用方显式声明
      */
-    private PurseEnum.Type purseType = PurseEnum.Type.PURCHASE;
+    private PurseEnum.Type purseType;
 
     /**
      * 支付金额

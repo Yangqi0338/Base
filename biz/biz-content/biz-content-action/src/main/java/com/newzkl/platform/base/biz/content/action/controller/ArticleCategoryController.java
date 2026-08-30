@@ -1,11 +1,11 @@
 package com.newzkl.platform.base.biz.content.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.service.ArticleCategoryDomain;
 import com.newzkl.platform.base.biz.content.model.articlecategory.query.ArticleCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCategoryReq;
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
 import com.newzkl.platform.base.biz.content.model.common.req.RecommendGroupReq;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -46,7 +46,7 @@ public class ArticleCategoryController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public PlatformResult<ContentPage<ArticleCategoryRes>> getCategoryPage(@RequestBody ArticleCategoryPageQuery query) {
+    public PlatformResult<Page<ArticleCategoryRes>> getCategoryPage(@RequestBody ArticleCategoryPageQuery query) {
         return PlatformResult.success(articleCategoryDomain.getCategoryPage(query));
     }
 

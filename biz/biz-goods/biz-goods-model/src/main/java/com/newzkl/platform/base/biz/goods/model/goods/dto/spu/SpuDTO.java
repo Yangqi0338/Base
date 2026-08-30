@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.goods.model.goods.dto.spu;
 
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuExpandVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
@@ -80,17 +81,9 @@ public class SpuDTO {
     @NotNull(message = "categoryId?")
     private Long categoryId;
     /**
-     * 所属平台分类名称完整
-     */
-    private String categoryName;
-    /**
      * 品牌id (查询)
      */
     private Long brandId;
-    /**
-     * 品牌名称
-     */
-    private String brandName;
     /**
      * 运费模板id (查询)
      */
@@ -138,33 +131,9 @@ public class SpuDTO {
      */
     private Integer auditState;
     /**
-     * 内部属性: 审批ID
-     */
-    private Long flowId;
-    /**
      * 内部属性: 最后拒绝原因: 状态变更未待用户提交前的最后一次拒绝原因
      */
     private String lastRefuseReason;
-    /**
-     * 冗余: 销售价起始 (Money, 落库 BIGINT 分)
-     */
-    private Money salePriceBegan;
-    /**
-     * 冗余: 销售价结束 (Money, 落库 BIGINT 分)
-     */
-    private Money salePriceEnd;
-    /**
-     * 冗余: 供货价起始 (Money, 落库 BIGINT 分)
-     */
-    private Money supplierPriceBegan;
-    /**
-     * 冗余: 供货价结束 (Money, 落库 BIGINT 分)
-     */
-    private Money supplierPriceEnd;
-    /**
-     * 冗余: 账号名称
-     */
-    private String accountName;
     /**
      * 冗余: 市场价 (Money, 落库 BIGINT 分)
      */
@@ -195,14 +164,6 @@ public class SpuDTO {
      */
     private Boolean refresh;
     /**
-     * 市场价起始 (Money, 落库 BIGINT 分)
-     */
-    private Money marketPriceBegan;
-    /**
-     * 市场价结束 (Money, 落库 BIGINT 分)
-     */
-    private Money marketPriceEnd;
-    /**
      * 最大利润 (Money, 落库 BIGINT 分)
      */
     private Money maxProfit;
@@ -210,4 +171,22 @@ public class SpuDTO {
      * 供应商ID
      */
     private Long supplierId;
+    /**
+     * 扩展字段 (对应 spu.expand JSON 列, 对象直传)
+     */
+    private SpuExpandVO expand;
+
+    /**
+     * 取扩展字段
+     *
+     * <p>惰性初始化, 免调用方逐处判空</p>
+     *
+     * @return 扩展字段, 恒不为 null
+     */
+    public SpuExpandVO getExpand() {
+        if (expand == null) {
+            expand = new SpuExpandVO();
+        }
+        return expand;
+    }
 }

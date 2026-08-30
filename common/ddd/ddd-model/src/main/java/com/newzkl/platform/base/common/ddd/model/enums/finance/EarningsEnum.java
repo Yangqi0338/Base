@@ -3,6 +3,7 @@ package com.newzkl.platform.base.common.ddd.model.enums.finance;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.enums.IEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -82,7 +83,7 @@ public class EarningsEnum implements Serializable {
      */
     @AllArgsConstructor
     @Getter
-    public enum PurseAlterTypeEnum {
+    public enum PurseAlterTypeEnum implements IEnum<Integer> {
         /** 进账 */
         IN(1, "进账", CommonEnum.Symbol.POSITIVE),
         /** 出账 */
@@ -90,8 +91,8 @@ public class EarningsEnum implements Serializable {
         ;
         @EnumValue
         @JsonValue
-        private final Integer type;
-        private final String info;
+        private final Integer code;
+        private final String value;
         private final CommonEnum.Symbol symbol;
     }
 

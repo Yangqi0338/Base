@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuer
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
+import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuAuditRes;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuUpdateRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
@@ -81,9 +82,8 @@ public interface SpuDomain {
     /**
      * 商品上传提交成功
      * @param spuId
-     * @param flowId
      */
-    void spuSubmit(Long spuId, Long flowId);
+    void spuSubmit(Long spuId);
     /**
      * 商品上传终止
      * @param spuVO
@@ -114,6 +114,16 @@ public interface SpuDomain {
      * spu分页查询
      */
     Page<SpuVO> querySpuPage(SpuQuery spuQuery);
+
+    /**
+     * spu审核分页查询
+     *
+     * <p>复用 {@link #querySpuPage} 的查询链, 出参收窄为审核决策必需字段</p>
+     *
+     * @param spuQuery spu查询条件
+     * @return 审核出参分页
+     */
+    Page<SpuAuditRes> spuAuditPage(SpuQuery spuQuery);
 
     /**
      * sku分页查询

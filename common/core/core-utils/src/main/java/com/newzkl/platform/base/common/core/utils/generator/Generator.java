@@ -22,13 +22,4 @@ public interface Generator {
      */
     String nextUUID(Object entity);
 
-    /**
-     * 设置业务类型
-     *
-     * @param bizType 业务类型
-     */
-    default void setBizType(BusinessType bizType) {
-
-    }
-
 }

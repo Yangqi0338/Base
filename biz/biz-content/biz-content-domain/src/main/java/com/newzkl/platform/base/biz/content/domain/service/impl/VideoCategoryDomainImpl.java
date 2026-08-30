@@ -1,8 +1,8 @@
 package com.newzkl.platform.base.biz.content.domain.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoCategoryRepository;
 import com.newzkl.platform.base.biz.content.domain.service.VideoCategoryDomain;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.biz.content.model.videocategory.entity.VideoCategory;
@@ -35,7 +35,7 @@ public class VideoCategoryDomainImpl implements VideoCategoryDomain {
     private final VideoCategoryRepository videoCategoryRepository;
 
     @Override
-    public ContentPage<VideoCategoryRes> getCategoryPage(VideoCategoryPageQuery query) {
+    public Page<VideoCategoryRes> getCategoryPage(VideoCategoryPageQuery query) {
         return videoCategoryRepository.getCategoryPage(query);
     }
 

@@ -563,13 +563,6 @@ public class BizUtil {
     }
 
     /**
-     * 拼接父账号角色
-     */
-    public static String getPIdentityList(String pIdentityList, String identityList) {
-        return concatParentAccountStr(pIdentityList, identityList) + ";";
-    }
-
-    /**
      * 拼接角色列表
      */
     public static String getIdentityList(String identityList, AccountEnum.Identity identity) {

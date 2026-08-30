@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.content.domain.service;
 
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
 import com.newzkl.platform.base.biz.content.model.video.req.VideoReq;
@@ -46,7 +46,7 @@ public interface VideoDomain {
      * @param query 分页查询条件
      * @return 分页结果
      */
-    ContentPage<VideoRes> getVideoPage(VideoPageQuery query);
+    Page<VideoRes> getVideoPage(VideoPageQuery query);
 
     /**
      * 查询视频列表
@@ -77,7 +77,7 @@ public interface VideoDomain {
      * @param query 分页查询条件
      * @return 分页结果
      */
-    ContentPage<VideoRes> getFollowingVideoPage(VideoPageQuery query);
+    Page<VideoRes> getFollowingVideoPage(VideoPageQuery query);
 
     /**
      * 点赞视频列表

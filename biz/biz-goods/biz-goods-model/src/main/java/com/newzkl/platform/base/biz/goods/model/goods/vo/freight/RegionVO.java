@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.vo.freight;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -44,29 +45,26 @@ public class RegionVO {
     /**
      * 首件
      */
-    @NotNull(message = "firstPiece?")
+    @NotNull
     private BigDecimal firstPiece;
 
     /**
      * 首费
      */
     @NotNull
-    @NotNull(message = "firstAmount?")
-    private BigDecimal firstAmount;
+    private Money firstAmount;
 
     /**
      * 续件
      */
     @NotNull
-    @NotNull(message = "secondPiece?")
     private BigDecimal secondPiece;
 
     /**
      * 续费
      */
     @NotNull
-    @NotNull(message = "secondAmount?")
-    private BigDecimal secondAmount;
+    private Money secondAmount;
 
     /**
      * 地区json

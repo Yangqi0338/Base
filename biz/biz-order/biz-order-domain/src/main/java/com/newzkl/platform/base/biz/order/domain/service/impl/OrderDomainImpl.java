@@ -567,9 +567,6 @@ public class OrderDomainImpl implements OrderDomain {
         spuOrderExt.setMemberId(memberOrderCreateCommand.getAccountId());
         spuOrder.setSpuOrderExt(spuOrderExt);
         spuOrder.setRefund(0);
-        if (spuOrder.getSpuChannelType() == SpuEnum.ChannelType.CUSTOM){
-            spuOrder.setMemberAmount(spuOrder.getStoreAmount().add(spuOrder.getFreightAmount()).subtract(spuOrder.getDiscountAmount()));
-        }
     }
 
     private SkuOrderDTO buildSkuOrder(OrderGoodsInfoVO orderGoodsInfoVO, Long spuOrderId, Long orderId,
@@ -586,16 +583,9 @@ public class OrderDomainImpl implements OrderDomain {
         skuOrder.setSpuOrderId(spuOrderId);
         skuOrder.setSpuChannelType(orderGoodsInfoVO.getSpuChannelType());
         //计算订单金额
-        if(SpuEnum.ChannelType.CUSTOM == orderGoodsInfoVO.getSpuChannelType()){
-            skuOrder.setStoreAmount(orderGoodsInfoVO.getStorePrice().multiply(orderGoodsInfoVO.getNum()));
-        }else if (SpuEnum.ChannelType.SELECTION == orderGoodsInfoVO.getSpuChannelType() ||
-                SpuEnum.ChannelType.OUT == orderGoodsInfoVO.getSpuChannelType()){
-            skuOrder.setGoodsAmount(orderGoodsInfoVO.getSalePrice().multiply(orderGoodsInfoVO.getNum()));
-            skuOrder.setSupplierAmount(orderGoodsInfoVO.getSupplyPrice().multiply(orderGoodsInfoVO.getNum()));
-            skuOrder.setStoreAmount(orderGoodsInfoVO.getStorePrice().multiply(orderGoodsInfoVO.getNum()));
-        }else {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
+        skuOrder.setGoodsAmount(orderGoodsInfoVO.getSalePrice().multiply(orderGoodsInfoVO.getNum()));
+        skuOrder.setSupplierAmount(orderGoodsInfoVO.getSupplyPrice().multiply(orderGoodsInfoVO.getNum()));
+        skuOrder.setStoreAmount(orderGoodsInfoVO.getStorePrice().multiply(orderGoodsInfoVO.getNum()));
 
         skuOrder.buildServiceChange(channelNowServiceFee);
 
@@ -1004,16 +994,9 @@ public class OrderDomainImpl implements OrderDomain {
         skuOrder.setSpuChannelType(orderGoodsInfoVO.getChannelType());
         skuOrder.setStoreId(orderGoodsInfoVO.getStoreId());
         //计算订单金额
-        if(SpuEnum.ChannelType.CUSTOM == orderGoodsInfoVO.getChannelType()){
-            skuOrder.setStoreAmount(orderGoodsInfoVO.getSellPrice().multiply(orderGoodsInfoVO.getBugNum()));
-        }else if (SpuEnum.ChannelType.SELECTION == orderGoodsInfoVO.getChannelType() ||
-                SpuEnum.ChannelType.OUT == orderGoodsInfoVO.getChannelType()){
-            skuOrder.setGoodsAmount(orderGoodsInfoVO.getSupplierPrice().multiply(orderGoodsInfoVO.getBugNum()));
-            skuOrder.setSupplierAmount(orderGoodsInfoVO.getSpuSupplyPrice().multiply(orderGoodsInfoVO.getBugNum()));
-            skuOrder.setStoreAmount(orderGoodsInfoVO.getSellPrice().multiply(orderGoodsInfoVO.getBugNum()));
-        }else {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
+        skuOrder.setGoodsAmount(orderGoodsInfoVO.getSupplierPrice().multiply(orderGoodsInfoVO.getBugNum()));
+        skuOrder.setSupplierAmount(orderGoodsInfoVO.getSpuSupplyPrice().multiply(orderGoodsInfoVO.getBugNum()));
+        skuOrder.setStoreAmount(orderGoodsInfoVO.getSellPrice().multiply(orderGoodsInfoVO.getBugNum()));
 
         skuOrder.buildServiceChange(channelNowServiceFee);
 
@@ -1100,8 +1083,5 @@ public class OrderDomainImpl implements OrderDomain {
         spuOrderExt.setMemberId(SecurityUtils.getAccountId());
         spuOrder.setSpuOrderExt(spuOrderExt);
         spuOrder.setRefund(0);
-        if (spuOrder.getSpuChannelType() == SpuEnum.ChannelType.CUSTOM){
-            spuOrder.setMemberAmount(spuOrder.getStoreAmount().add(spuOrder.getFreightAmount()).subtract(spuOrder.getDiscountAmount()));
-        }
     }
 }

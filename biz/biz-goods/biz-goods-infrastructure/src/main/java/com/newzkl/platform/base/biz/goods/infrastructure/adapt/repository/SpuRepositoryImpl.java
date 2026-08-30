@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.adapt.repository;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
@@ -23,6 +24,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuExpandVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuStateVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsCountVO;
@@ -92,14 +94,6 @@ public class SpuRepositoryImpl implements SpuRepository {
     private static final String[] SPU_ENUM_PROPS =
             {"state", "deliverTimeType", "auditState"};
 
-    /**
-     * SpuDO 上已删除、下沉到 expand JSON 的属性 (拷贝时排除, 由 expand 单独承载)
-     */
-    private static final String[] SPU_EXPAND_PROPS =
-            {"categoryName", "brandName", "accountName",
-             "marketPriceBegan", "marketPriceEnd", "salePriceBegan", "salePriceEnd",
-             "supplierPriceBegan", "supplierPriceEnd"};
-
     private final SpuDAO spuDAO;
     private final SkuDAO skuDAO;
     private final SpuAttributeDAO spuAttributeDAO;
@@ -128,14 +122,38 @@ public class SpuRepositoryImpl implements SpuRepository {
             d.setState(s.getState() == null ? null : s.getState().getCode());
             d.setDeliverTimeType(s.getDeliverTimeType() == null ? null : s.getDeliverTimeType().getCode());
             d.setAuditState(s.getAuditState() == null ? null : s.getAuditState().getCode());
-            expandToDto(s.getExpand(), d);
         }, ignoring(SPU_ENUM_PROPS));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void spuUpdate(SpuDTO spu) {
-        spuDAO.updateById(toSpuDO(spu));
+        SpuDO spuDO = toSpuDO(spu);
+        spuDO.setExpand(mergeExpand(spu.getId(), spuDO.getExpand()));
+        spuDAO.updateById(spuDO);
+    }
+
+    /**
+     * 合并 expand
+     *
+     * <p>updateById 是整列覆盖, 局部更新 (如仅刷价格区间) 会把 expand 里未携带的
+     * categoryName/brandName 等冗余字段冲掉, 故先取库中旧值再用新值的非空属性覆写</p>
+     *
+     * @param id     SPU 主键
+     * @param expand 本次要写入的 expand, 无字段时为 null
+     * @return 合并后的 expand, 无需写入时 null
+     */
+    private SpuExpandVO mergeExpand(Long id, SpuExpandVO expand) {
+        if (expand == null || id == null) {
+            return expand;
+        }
+        SpuDO old = spuDAO.selectById(id);
+        if (old == null || old.getExpand() == null) {
+            return expand;
+        }
+        SpuExpandVO merged = old.getExpand();
+        BeanUtil.copyProperties(expand, merged, CopyOptions.create().setIgnoreNullValue(true));
+        return merged;
     }
 
     @Override
@@ -509,8 +527,7 @@ public class SpuRepositoryImpl implements SpuRepository {
             d.setState(stateOf(s.getState()));
             d.setDeliverTimeType(deliverTimeTypeOf(s.getDeliverTimeType()));
             d.setAuditState(AuditEnum.State.getByCode(s.getAuditState()));
-            d.setExpand(dtoToExpand(s));
-        }, ignoring(ignoringSpuDo()));
+        }, ignoring(SPU_ENUM_PROPS));
     }
 
     /**
@@ -524,7 +541,6 @@ public class SpuRepositoryImpl implements SpuRepository {
             v.setState(s.getState() == null ? null : s.getState().getCode());
             v.setDeliverTimeType(s.getDeliverTimeType() == null ? null : s.getDeliverTimeType().getCode());
             v.setAuditState(s.getAuditState() == null ? null : s.getAuditState().getCode());
-            expandToVo(s.getExpand(), v);
         }, ignoring(SPU_ENUM_PROPS));
     }
 
@@ -591,83 +607,6 @@ public class SpuRepositoryImpl implements SpuRepository {
      */
     private static CopyOptions ignoring(String... props) {
         return CopyOptions.create().setIgnoreProperties(props);
-    }
-
-    /**
-     * SpuDTO 转 SpuDO 时需排除的属性 (枚举显式转 + 下沉 expand 的字段)
-     *
-     * @return 需排除的属性名数组
-     */
-    private static String[] ignoringSpuDo() {
-        String[] merged = new String[SPU_ENUM_PROPS.length + SPU_EXPAND_PROPS.length];
-        System.arraycopy(SPU_ENUM_PROPS, 0, merged, 0, SPU_ENUM_PROPS.length);
-        System.arraycopy(SPU_EXPAND_PROPS, 0, merged, SPU_ENUM_PROPS.length, SPU_EXPAND_PROPS.length);
-        return merged;
-    }
-
-    /**
-     * 将 SpuDTO 的下沉字段序列化为 expand JSON
-     *
-     * <p>价格 begin/end 由 SKU 聚合而来, 加冗余 name 字段, 统一落 expand JSON 列, 不再各占 SpuDO 独立列。
-     * 全为 null 时返回 null, 避免落库空 JSON。</p>
-     *
-     * @param dto SPU 操作对象
-     * @return expand JSON 字符串, 无有效字段时 null
-     */
-    private static String dtoToExpand(SpuDTO dto) {
-        com.alibaba.fastjson2.JSONObject json = new com.alibaba.fastjson2.JSONObject();
-        json.put("categoryName", dto.getCategoryName());
-        json.put("brandName", dto.getBrandName());
-        json.put("accountName", dto.getAccountName());
-        json.put("marketPriceBegan", dto.getMarketPriceBegan());
-        json.put("marketPriceEnd", dto.getMarketPriceEnd());
-        json.put("salePriceBegan", dto.getSalePriceBegan());
-        json.put("salePriceEnd", dto.getSalePriceEnd());
-        json.put("supplierPriceBegan", dto.getSupplierPriceBegan());
-        json.put("supplierPriceEnd", dto.getSupplierPriceEnd());
-        return json.values().stream().allMatch(Objects::isNull) ? null : json.toJSONString();
-    }
-
-    /**
-     * 从 expand JSON 回填 SpuDTO 的下沉字段
-     *
-     * @param expand expand JSON 字符串
-     * @param dto    待回填的 SPU 操作对象
-     */
-    private static void expandToDto(String expand, SpuDTO dto) {
-        if (expand == null || expand.isBlank()) {
-            return;
-        }
-        com.alibaba.fastjson2.JSONObject json = com.alibaba.fastjson2.JSON.parseObject(expand);
-        dto.setCategoryName(json.getString("categoryName"));
-        dto.setBrandName(json.getString("brandName"));
-        dto.setAccountName(json.getString("accountName"));
-        dto.setMarketPriceBegan(json.getObject("marketPriceBegan", Money.class));
-        dto.setMarketPriceEnd(json.getObject("marketPriceEnd", Money.class));
-        dto.setSalePriceBegan(json.getObject("salePriceBegan", Money.class));
-        dto.setSalePriceEnd(json.getObject("salePriceEnd", Money.class));
-        dto.setSupplierPriceBegan(json.getObject("supplierPriceBegan", Money.class));
-        dto.setSupplierPriceEnd(json.getObject("supplierPriceEnd", Money.class));
-    }
-
-    /**
-     * 从 expand JSON 回填 SpuVO 的下沉字段
-     *
-     * @param expand expand JSON 字符串
-     * @param vo     待回填的 SPU 视图对象
-     */
-    private static void expandToVo(String expand, SpuVO vo) {
-        if (expand == null || expand.isBlank()) {
-            return;
-        }
-        com.alibaba.fastjson2.JSONObject json = com.alibaba.fastjson2.JSON.parseObject(expand);
-        vo.setAccountName(json.getString("accountName"));
-        vo.setMarketPriceBegan(json.getObject("marketPriceBegan", Money.class));
-        vo.setMarketPriceEnd(json.getObject("marketPriceEnd", Money.class));
-        vo.setSalePriceBegan(json.getObject("salePriceBegan", Money.class));
-        vo.setSalePriceEnd(json.getObject("salePriceEnd", Money.class));
-        vo.setSupplierPriceBegan(json.getObject("supplierPriceBegan", Money.class));
-        vo.setSupplierPriceEnd(json.getObject("supplierPriceEnd", Money.class));
     }
 
     /**

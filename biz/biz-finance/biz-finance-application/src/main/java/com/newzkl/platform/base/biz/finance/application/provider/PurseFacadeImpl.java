@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.application.provider;
 
 import cn.hutool.core.collection.CollUtil;
+import com.newzkl.platform.base.biz.finance.application.purse.service.PurseService;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.biz.finance.facade.PurseFacade;
@@ -8,8 +9,12 @@ import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AddAccountPurseReq;
+import com.newzkl.platform.base.biz.finance.model.purse.req.AmountDistributionReq;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.biz.finance.facade.model.InitFinanceReq;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
@@ -33,6 +38,9 @@ public class PurseFacadeImpl implements PurseFacade {
 
     @Autowired
     private AccountPurseConfigDomain accountPurseConfigDomain;
+
+    @Autowired
+    private PurseService purseService;
 
     @Override
     public void initFinance(InitFinanceReq req) {
@@ -90,6 +98,38 @@ public class PurseFacadeImpl implements PurseFacade {
         return config != null && Objects.equals(SKIP_AUDIT, config.getSkipPromiseAudit());
     }
 
+    @Override
+    public void channelBalanceSync(Long accountId, Money amount) {
+        // 对齐 new-scm AccountPurseApiImpl.channelSyncByDownStream: 身份必填, 金额空或零视为无需同步直接返回
+        if (accountId == null) {
+            throw new PlatformException(BaseErrorCode.PARAM, "错误的身份信息");
+        }
+        if (amount == null || amount.isNull() || amount.isZero()) {
+            return;
+        }
+        AmountDistributionReq req = new AmountDistributionReq();
+        req.setAccountId(accountId);
+        req.setAmount(amount);
+        PlatformResult<Object> result = purseService.channelBalanceSync(req);
+        if (!result.isSuccess()) {
+            throw new PlatformException(BaseErrorCode.CUSTOM, result.getMessage());
+        }
+    }
+
+    /**
+     * 保证金超出部分退回收益账户
+     *
+     * <p>端点占位: 退回阈值与触发时机待产品定稿。抛异常而非空实现 —— 空方法会让调用方以为退回成功,
+     * 保证金没退、账面却按退了走 = 静默资损</p>
+     *
+     * @param supplierId 供应商账号ID
+     * @param amount     退回金额
+     */
+    @Override
+    public void refundOverDeposit(Long supplierId, Money amount) {
+        throw new PlatformException(BaseErrorCode.CUSTOM, "保证金退回功能尚未实现");
+    }
+
     /**
      * 根据rpc初始化请求对象构建添加客户账户请求对象集合
      * @param initFinanceReq req
@@ -97,8 +137,9 @@ public class PurseFacadeImpl implements PurseFacade {
      */
     private AddAccountPurseReq buildAddAccountPurseReq(InitFinanceReq initFinanceReq, PurseEnum.Type type) {
         AddAccountPurseReq req = new AddAccountPurseReq();
-        TransferUtils.transfer(req, initFinanceReq);
+        TransferUtils.transfer(initFinanceReq, req);
         req.setPurseType(type);
+        req.setAccountType(initFinanceReq.getPurseUser());
         return req;
     }
 }

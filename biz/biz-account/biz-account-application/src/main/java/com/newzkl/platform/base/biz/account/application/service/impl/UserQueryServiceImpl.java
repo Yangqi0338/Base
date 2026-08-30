@@ -167,25 +167,25 @@ public class UserQueryServiceImpl implements UserQueryService {
         // 客户账户查询对象
         AccountPurseReq accountPurseReq = new AccountPurseReq();
         accountPurseReq.setAccountIdList(channelList);
-        accountPurseReq.setAccountType(PurseEnum.User.CHANNEL.getType());
+        accountPurseReq.setAccountType(PurseEnum.User.CHANNEL.getCode());
 
         //查询采购金
-        accountPurseReq.setPurseType(PurseEnum.Type.PURCHASE.getType());
+        accountPurseReq.setPurseType(PurseEnum.Type.PURCHASE.getCode());
         List<PurseAmountRes> purseAmountResList = financePurseApi.queryPurse(accountPurseReq);
         Map<Long, PurseAmountRes> purseAmountMap = purseAmountResList.stream().collect(Collectors.toMap(PurseAmountRes::getAccountId, Function.identity()));
 
         //查询商品位
-        accountPurseReq.setPurseType(PurseEnum.Type.GOODS_SEAT.getType());
+        accountPurseReq.setPurseType(PurseEnum.Type.GOODS_SEAT.getCode());
         List<PurseAmountRes> goodsSeatList = financePurseApi.queryPurse(accountPurseReq);
         Map<Long, PurseAmountRes> goodsSeatMap = goodsSeatList.stream().collect(Collectors.toMap(PurseAmountRes::getAccountId, Function.identity()));
 
         for (ChannelPageRes vo : channelPageVOList) {
             //填充采购金额
             PurseAmountRes purseAmountRes = purseAmountMap.getOrDefault(vo.getId(), new PurseAmountRes());
-            vo.setEarnings(Money.of(Optional.ofNullable(purseAmountRes.getEarnings()).orElse(0)));
+            vo.setEarnings(Money.of(Optional.ofNullable(purseAmountRes.getAmount()).orElse(0)));
             //填充商品位
             PurseAmountRes goodsSeat = goodsSeatMap.getOrDefault(vo.getId(), new PurseAmountRes());
-            vo.setProductSeatCount(Optional.ofNullable(goodsSeat.getEarnings()).orElse(0));
+            vo.setProductSeatCount(Optional.ofNullable(goodsSeat.getAmount()).orElse(0));
             vo.setUsedProductSeat(0);
         }
         return null;

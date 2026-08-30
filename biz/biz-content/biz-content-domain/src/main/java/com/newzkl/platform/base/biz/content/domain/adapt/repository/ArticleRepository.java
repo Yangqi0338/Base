@@ -1,11 +1,11 @@
 package com.newzkl.platform.base.biz.content.domain.adapt.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.model.article.query.ArticlePageQuery;
 import com.newzkl.platform.base.biz.content.model.article.query.ArticleQuery;
 import com.newzkl.platform.base.biz.content.model.article.req.ArticleReq;
 import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public interface ArticleRepository {
      * @param query 分页查询条件
      * @return 分页结果(未填分类名)
      */
-    ContentPage<ArticleRes> getArticlePage(ArticlePageQuery query);
+    Page<ArticleRes> getArticlePage(ArticlePageQuery query);
 
     /**
      * 查询可见文章列表

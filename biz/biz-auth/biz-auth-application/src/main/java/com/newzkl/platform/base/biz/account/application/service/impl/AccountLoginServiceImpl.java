@@ -190,7 +190,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
      * @return 校验后的候选账号列表 (非空)
      */
     private @NotNull List<AccountRpcVO> findAccountList(AccountEnum.Client client, String username) {
-        List<AccountRpcVO> accountList = accountApi.accountList(client, username);
+        List<AccountRpcVO> accountList = accountApi.loginAccountList(client, username);
 
         // 若无可用账号
         if (CollUtil.isEmpty(accountList)) {
@@ -457,7 +457,6 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             if (registerRpcReq.getPid() == null && inviteAccount.getClient() == client) {
                 registerRpcReq.setPid(inviteAccountId);
                 registerRpcReq.setPidList(BizUtil.getPidList(inviteAccount.getPidList(), inviteAccountId));
-                registerRpcReq.setPIdentityList(BizUtil.getPIdentityList(inviteAccount.getPIdentityList(), inviteAccount.getIdentityList()));
             }
         }
 

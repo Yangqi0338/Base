@@ -16,4 +16,11 @@ public interface GoodsSeatFacade {
      * @param spuId SPU主键
      */
     void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId);
+
+    /**
+     * SPU审核未通过或终止审核时返还1个商品位
+     *
+     * @param supplierId 供应商ID
+     */
+    void goodsAuditFailAddGoodsSeat(Long supplierId);
 }

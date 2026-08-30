@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.content.domain.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.ArticleCategoryRepository;
 import com.newzkl.platform.base.biz.content.domain.service.ArticleCategoryDomain;
 import com.newzkl.platform.base.biz.content.model.articlecategory.entity.ArticleCategory;
 import com.newzkl.platform.base.biz.content.model.articlecategory.query.ArticleCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCategoryReq;
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -32,7 +32,7 @@ public class ArticleCategoryDomainImpl implements ArticleCategoryDomain {
     private final ArticleCategoryRepository articleCategoryRepository;
 
     @Override
-    public ContentPage<ArticleCategoryRes> getCategoryPage(ArticleCategoryPageQuery query) {
+    public Page<ArticleCategoryRes> getCategoryPage(ArticleCategoryPageQuery query) {
         return articleCategoryRepository.getCategoryPage(query);
     }
 

@@ -30,10 +30,10 @@ public class PurseAmountRes implements Serializable {
     /**
      * 剩余额度
      */
-    private Integer earnings;
+    private Integer amount;
 
     /**
      * 总额度
      */
-    private Integer totalEarnings;
+    private Integer totalAmount;
 }

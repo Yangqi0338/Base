@@ -1,10 +1,10 @@
 package com.newzkl.platform.base.biz.content.domain.adapt.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.model.articlecategory.entity.ArticleCategory;
 import com.newzkl.platform.base.biz.content.model.articlecategory.query.ArticleCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCategoryReq;
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public interface ArticleCategoryRepository {
      * @param query 分页查询条件
      * @return 分页结果
      */
-    ContentPage<ArticleCategoryRes> getCategoryPage(ArticleCategoryPageQuery query);
+    Page<ArticleCategoryRes> getCategoryPage(ArticleCategoryPageQuery query);
 
     /**
      * 按主键查询文章分类

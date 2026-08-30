@@ -41,4 +41,15 @@ public interface GoodsSeatDomain {
      * @param spuId SPU主键(记录关联ID)
      */
     void supplierSubmitSubGoodsSeat(Long supplierId, Long spuId);
+
+    /**
+     * SPU审核未通过或终止审核时返还1个商品位
+     *
+     * <p>向供应商商品位额度加1, 记一条SUPPLIER_GOODS_POSITION_ADD变动。
+     * 与 {@link #supplierSubmitSubGoodsSeat} 成对, 逐行对齐 new-scm
+     * {@code BalancePayApiImpl.goodsAuditFailAddGoodsSeat}</p>
+     *
+     * @param supplierId 供应商ID
+     */
+    void goodsAuditFailAddGoodsSeat(Long supplierId);
 }

@@ -18,6 +18,10 @@ public class SkuVO extends BaseRes {
      */
      private Long id;
      /**
+      * 编码
+      */
+     private String code;
+     /**
      * 图片
      */
      private String img;

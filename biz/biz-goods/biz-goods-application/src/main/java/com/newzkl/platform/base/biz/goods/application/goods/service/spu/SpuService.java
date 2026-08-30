@@ -20,13 +20,6 @@ import java.util.List;
  */
 public interface SpuService {
     /**
-     * 供应商提交审核
-     * @param accountId
-     * @param spuId
-     * @return
-     */
-    Long supplierSpuSubmit(Long accountId, Long spuId);
-    /**
      * 上下架
      * @param enable
      * @param spuIdList

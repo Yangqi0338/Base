@@ -71,6 +71,19 @@ abstract class Base {
      * @author niu
      */
     @Data
+    static class SyncRes extends Res {
+
+        // 验签
+        private String sign;
+
+        private Base.Res data;
+    }
+
+    /**
+     * 若是异步,应该在拦截器做一层解套
+     * @author niu
+     */
+    @Data
     static class AsyncRes<T> extends Base.Res {
 
         // TODO 验签

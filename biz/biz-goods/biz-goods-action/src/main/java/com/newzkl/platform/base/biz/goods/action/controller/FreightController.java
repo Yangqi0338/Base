@@ -123,10 +123,7 @@ public class FreightController {
     @PostMapping("freightTemplatePage")
     public PlatformResult<Page<FreightTemplateVO>> freightTemplatePageVOList(@RequestBody FreightTemplateQuery freightTemplateQuery) {
         AccountEnum.Identity identity = SecurityUtils.getIdentity();
-        if (AccountEnum.Identity.SUPPLIER == identity
-                || AccountEnum.Identity.CHANNEL == identity) {
-            freightTemplateQuery.setAccountIdAndAdmin(SecurityUtils.getAccountId());
-        }
+        freightTemplateQuery.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(freightDomain.freightTemplatePage(freightTemplateQuery));
     }
 }

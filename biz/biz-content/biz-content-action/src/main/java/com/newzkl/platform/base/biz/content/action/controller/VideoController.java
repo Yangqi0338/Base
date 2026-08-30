@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.content.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.service.VideoDomain;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
 import com.newzkl.platform.base.biz.content.model.video.req.VideoReq;
@@ -93,7 +93,7 @@ public class VideoController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public PlatformResult<ContentPage<VideoRes>> getVideoPage(@RequestBody VideoPageQuery query) {
+    public PlatformResult<Page<VideoRes>> getVideoPage(@RequestBody VideoPageQuery query) {
         return PlatformResult.success(videoDomain.getVideoPage(query));
     }
 
@@ -138,7 +138,7 @@ public class VideoController {
      * @return 分页结果
      */
     @PostMapping("/getFollowingVideoPage")
-    public PlatformResult<ContentPage<VideoRes>> getFollowingVideoPage(@RequestBody VideoPageQuery query) {
+    public PlatformResult<Page<VideoRes>> getFollowingVideoPage(@RequestBody VideoPageQuery query) {
         return PlatformResult.success(videoDomain.getFollowingVideoPage(query));
     }
 

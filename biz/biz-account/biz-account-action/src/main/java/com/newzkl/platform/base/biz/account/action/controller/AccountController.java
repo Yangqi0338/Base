@@ -3,6 +3,9 @@ package com.newzkl.platform.base.biz.account.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.action.cmd.BindRoleCommand;
 import com.newzkl.platform.base.biz.account.action.cmd.CountCmd;
+import com.newzkl.platform.base.biz.account.model.req.SubAccountQuery;
+import com.newzkl.platform.base.biz.account.model.req.SubAccountSaveReq;
+import com.newzkl.platform.base.biz.account.model.res.SubAccountDetailRes;
 import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
@@ -231,6 +234,49 @@ public class AccountController {
     @FuncPermission("绑定角色")
     public PlatformResult<Void> bindRoles(@PathVariable Long id, @RequestBody BindRoleCommand cmd) {
         accountService.bindRoles(id, cmd.roleIds());
+        return PlatformResult.success();
+    }
+
+    /**
+     * 新增/编辑子账号
+     *
+     * <p>主账号创建编辑子账号(等同员工管理): id 空走新增, 继承主账号 identity,
+     * pid=pidList头=mainAccountId=当前登录id, origin=MAIN_CREATE, password 必填,
+     * username 主账号内唯一; id 非空走编辑, 归属校验后改昵称/手机号, password 非空则重置。
+     * 两路均按 roleIds 全量替换端内角色。子账号自身改密/改名/注销由子账号自理(AuthController)。</p>
+     *
+     * @param req 子账号新增/编辑请求
+     * @return 子账号id
+     */
+    @PostMapping("/sub/save")
+    @FuncPermission("保存子账号")
+    public PlatformResult<Long> subSave(@Validated @RequestBody SubAccountSaveReq req) {
+        return PlatformResult.success(accountService.subSave(req));
+    }
+
+    /**
+     * 子账号分页
+     *
+     * @param query 子账号查询(mainAccountId 由登录态注入)
+     * @return 子账号详情分页
+     */
+    @PostMapping("/sub/page")
+    public PlatformResult<Page<SubAccountDetailRes>> subPage(@RequestBody SubAccountQuery query) {
+        return PlatformResult.success(accountService.subPage(query));
+    }
+
+    /**
+     * 删除子账号
+     *
+     * <p>逻辑删除并清空角色关系, 完全由主账号控制。</p>
+     *
+     * @param id 子账号id
+     * @return 空结果
+     */
+    @PostMapping("/sub/{id}/delete")
+    @FuncPermission("删除子账号")
+    public PlatformResult<Void> subDelete(@PathVariable Long id) {
+        accountService.subDelete(id);
         return PlatformResult.success();
     }
 }

@@ -40,17 +40,12 @@ public class AccountPurseDO extends BaseDO {
     private PurseEnum.User accountType;
 
     /**
-     * 收益
+     * 账户余额
      */
-    private Money earnings;
+    private Money amount;
 
     /**
-     * 总收益
+     * 累计入账总额
      */
-    private Integer totalEarnings;
-
-    /**
-     * 三方余额
-     */
-    private Money tripartiteAmount;
+    private Integer totalAmount;
 }

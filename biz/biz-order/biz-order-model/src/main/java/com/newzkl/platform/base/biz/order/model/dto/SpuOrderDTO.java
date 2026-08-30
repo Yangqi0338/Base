@@ -215,9 +215,7 @@ public class SpuOrderDTO extends BaseDTO {
         for (SkuOrderDTO skuOrder : orderAmountVO) {
             //只加属于该SPU订单的SKU
             if(skuOrder.getSpuId().equals(spuVO.getSpuId())){
-                if(SpuEnum.ChannelType.CUSTOM == this.getSpuChannelType()){
-                    this.storeAmount = this.storeAmount.add(skuOrder.getStoreAmount());
-                }else if(SpuEnum.ChannelType.SELECTION == this.getSpuChannelType()){
+                if(SpuEnum.ChannelType.SELECTION == this.getSpuChannelType()){
                     this.supplierAmount = this.supplierAmount.add(skuOrder.getSupplierAmount());
                     this.goodsAmount = this.goodsAmount.add(skuOrder.getGoodsAmount());
                     this.storeAmount = this.storeAmount.add(skuOrder.getStoreAmount());

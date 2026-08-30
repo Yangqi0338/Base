@@ -60,10 +60,6 @@ public class AccountReq extends BaseReq {
      */
     private String pidList;
     /**
-     * 父角色列表
-     */
-    private String pRoleList;
-    /**
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;

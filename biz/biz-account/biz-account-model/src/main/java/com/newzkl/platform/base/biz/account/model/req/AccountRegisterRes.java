@@ -38,10 +38,6 @@ public class AccountRegisterRes {
      * 账号身份列表
      */
     private String identityList;
-    /**
-     * 父账号身份列表
-     */
-    private String pIdentityList;
 
 
     public boolean isSuccess() {

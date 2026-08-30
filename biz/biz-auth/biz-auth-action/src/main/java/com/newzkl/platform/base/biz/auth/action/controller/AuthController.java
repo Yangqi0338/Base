@@ -100,7 +100,7 @@ public class AuthController {
     public PlatformResult<Void> editPassword(@Validated @RequestBody CodeUpdatePasswordCommand codeUpdatePasswordCommand) {
         CodeUpdatePasswordReq req = TransferUtils.transfer(codeUpdatePasswordCommand, CodeUpdatePasswordReq::new);
         req.setClient(SecurityUtils.getClient());
-        accountLoginService.editPassword(null);
+        accountLoginService.editPassword(req);
         return PlatformResult.success();
     }
 

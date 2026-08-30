@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.content.model.articlecategory.req;
 
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,12 +15,7 @@ import java.io.Serializable;
  * @author KC
  */
 @Data
-public class ArticleCategoryReq implements Serializable {
-
-    /**
-     * 主键ID(新增时为空, 修改必填)
-     */
-    private Long id;
+public class ArticleCategoryReq extends BaseReq {
 
     /**
      * 分类名称
@@ -34,10 +31,8 @@ public class ArticleCategoryReq implements Serializable {
 
     /**
      * 是否启用
-     *
-     * @ext 0-禁用, 1-启用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 
     /**
      * 推荐人群

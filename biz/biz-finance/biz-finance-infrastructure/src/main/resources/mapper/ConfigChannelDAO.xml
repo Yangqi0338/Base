@@ -6,7 +6,7 @@
     <!-- 源侧返回 BatchQueryChannelConfigRes, Base 对应 BatchQueryConfigChannelRes -->
     <select id="batchQueryChannelConfig"
             resultType="com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes">
-        select cc.channel_id as channelId,cc.operator_config as operatorConfig,cc.operator_now_value as operatorNowValue,ap.earnings as amount
+        select cc.channel_id as channelId,cc.operator_config as operatorConfig,cc.operator_now_value as operatorNowValue,ap.amount as amount
         from config_channel cc
         left join account_purse ap on cc.channel_id = ap.account_id and ap.account_type = 2
         where cc.channel_id in

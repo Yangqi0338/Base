@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDom
 import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
@@ -74,6 +75,10 @@ public class PurseController {
      */
     @PostMapping("/queryAccountPurse")
     public PlatformResult<List<AccountPurseVO>> queryAccountPurse(@RequestBody @Valid AccountPurseQuery req) {
+        AccountEnum.Client client = SecurityUtils.getClient();
+        if (client != AccountEnum.Client.ADMIN) {
+            req.setAccountId(SecurityUtils.getAccountId());
+        }
         return PlatformResult.success(accountPurseDomain.queryAccountPurse(req));
     }
 
@@ -242,7 +247,7 @@ public class PurseController {
      * @return 变动类型描述
      */
     private String alterTypeInfo(PurseEnum.AlterType alterType) {
-        return Opt.ofNullable(alterType).map(PurseEnum.AlterType::getInfo).orElse("");
+        return Opt.ofNullable(alterType).map(PurseEnum.AlterType::getValue).orElse("");
     }
 
     /**

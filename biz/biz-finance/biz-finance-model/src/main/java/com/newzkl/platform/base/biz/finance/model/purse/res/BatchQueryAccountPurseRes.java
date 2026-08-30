@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
@@ -17,11 +18,8 @@ public class BatchQueryAccountPurseRes {
     private Long accountId;
 
     /**
-     * 累计收益
+     * 账户余额
      */
-
-    /**
-     * 可用收益
-     */
-    private Money earnings;
+    @JsonProperty("earnings")
+    private Money amount;
 }

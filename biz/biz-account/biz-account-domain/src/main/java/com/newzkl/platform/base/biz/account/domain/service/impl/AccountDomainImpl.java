@@ -153,7 +153,8 @@ public class AccountDomainImpl implements AccountDomain {
         accountVO.setPid(req.getPid());
         // 层级链: 上游按父账号已拼接好(末尾含分隔符), 无父账号时由 accountRepository.accountSave 兜底构建
         accountVO.setPidList(req.getPidList());
-        accountVO.setPRoleList(req.getPIdentityList());
+        accountVO.setMainAccountId(req.getMainAccountId());
+        accountVO.setOrigin(req.getOrigin());
         accountVO.setNickname(req.getNickname());
         accountVO.setInviteAccountId(req.getInviteAccountId());
         accountVO.setHead(req.getHead());

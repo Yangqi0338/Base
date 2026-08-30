@@ -11,10 +11,12 @@ import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.biz.account.model.res.SubAccountDetailRes;
 import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.EmpAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
+import org.springframework.transaction.annotation.Transactional;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -168,6 +170,158 @@ public class AccountServiceImpl implements AccountService {
             throw new PlatformException(BaseErrorCode.NODATA, "账号");
         }
         permissionApi.bindRoles(client, accountId, roleIds == null ? null : new ArrayList<>(roleIds));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long subSave(SubAccountSaveReq req) {
+        AccountEnum.Client client = SecurityUtils.getClient();
+        Long mainId = SecurityUtils.getAccountId();
+        // id 非空走编辑, 否则新增
+        if (req.getId() != null) {
+            return subEdit(client, req);
+        }
+        return subCreate(client, mainId, req);
+    }
+
+    /**
+     * 新增子账号: 继承主账号身份建号并绑角色
+     *
+     * @param client 当前登录端
+     * @param mainId 当前登录主账号id
+     * @param req    子账号请求(id 空)
+     * @return 子账号id
+     */
+    private Long subCreate(AccountEnum.Client client, Long mainId, SubAccountSaveReq req) {
+        // 新增 password 必填(编辑非必填, 故未走 @NotBlank, 此处手动校验)
+        if (StrUtil.isBlank(req.getPassword())) {
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "密码不能为空");
+        }
+        // 主账号存在校验(不存在抛)
+        AccountVO main = accountDomain.account(client, mainId);
+
+        // username 空则用手机号(同 emp)
+        String username = StrUtil.blankToDefault(req.getUsername(), req.getPhone());
+        // username 主账号内唯一: pid=mainId + username 命中即占用
+        AccountQuery uq = new AccountQuery();
+        uq.setClient(client);
+        uq.setPid(mainId);
+        uq.setUsername(username);
+        if (accountRepository.selectCount(uq) > 0) {
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
+        }
+        // phone 必填, 校验端内占用
+        AccountQuery pq = new AccountQuery();
+        pq.setClient(client);
+        pq.setPhone(req.getPhone());
+        if (accountRepository.selectCount(pq) > 0) {
+            throw new PlatformException(AccountErrorCode.EXIST_USERNAME);
+        }
+
+        // 组 RPC: identity 继承主账号(主账号 identityList 首个身份)
+        AccountEnum.Identity identity = resolveMainIdentity(main);
+        IdentityRegisterRpcReq rpc = TransferUtils.transfer(req, IdentityRegisterRpcReq.class);
+        rpc.setClient(client);
+        rpc.setIdentity(identity);
+        rpc.setUsername(username);
+        rpc.setPid(mainId);
+        // 两级: pidList = 主账号id + ','(末尾分隔符, 对齐 id_list 列约定)
+        rpc.setPidList(mainId + ",");
+        rpc.setMainAccountId(mainId);
+        rpc.setOrigin(AccountEnum.Origin.MAIN_CREATE);
+        AccountVO sub = accountDomain.register(rpc);
+
+        // 绑角色 + recalc 派生
+        if (CollUtil.isNotEmpty(req.getRoleIds())) {
+            permissionApi.bindRoles(client, sub.getId(), new ArrayList<>(req.getRoleIds()));
+        }
+        return sub.getId();
+    }
+
+    /**
+     * 编辑子账号: 归属校验后改昵称/手机号, password 非空则重置。角色不动(绑角色走独立 /bindRoles)
+     *
+     * @param client 当前登录端
+     * @param req    子账号请求(id 非空)
+     * @return 子账号id
+     */
+    private Long subEdit(AccountEnum.Client client, SubAccountSaveReq req) {
+        AccountVO sub = assertSubOwnership(req.getId());
+        AccountVO update = new AccountVO();
+        update.setId(sub.getId());
+        update.setClient(sub.getClient());
+        update.setNickname(req.getNickname());
+        update.setPhone(req.getPhone());
+        if (StrUtil.isNotBlank(req.getPassword())) {
+            update.setPassword(sub.getNewPassword(req.getPassword()));
+        }
+        accountRepository.accountEdit(update, null);
+        return sub.getId();
+    }
+
+    @Override
+    public Page<SubAccountDetailRes> subPage(SubAccountQuery query) {
+        AccountEnum.Client client = SecurityUtils.getClient();
+        Long mainId = SecurityUtils.getAccountId();
+
+        AccountQuery q = TransferUtils.transfer(query, AccountQuery.class);
+        q.setClient(client);
+        q.setPid(mainId);
+
+        Page<AccountVO> page = accountRepository.accountPage(q);
+        Map<Long, List<Long>> roleMap = permissionApi.findRoleByAccountIdList(
+                client, CollUtil.map(page.getRecords(), AccountVO::getId, true));
+        return TransferUtils.transferPage(page, vo -> {
+            SubAccountDetailRes r = TransferUtils.transfer(vo, SubAccountDetailRes::new);
+            r.setRoleIds(roleMap.getOrDefault(vo.getId(), new ArrayList<>()));
+            return r;
+        });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void subDelete(Long id) {
+        AccountVO sub = assertSubOwnership(id);
+        // 清空该账号 ACCOUNT_ROLE 绑定(空集=清空)并 recalc 派生
+        permissionApi.bindRoles(SecurityUtils.getClient(), sub.getId(), new ArrayList<>());
+        // 逻辑删账号(del_flag=1, @TableLogic)
+        accountRepository.accountDelete(List.of(sub.getId()));
+    }
+
+    /**
+     * 解析主账号身份(identityList csv 首个身份)
+     *
+     * @param main 主账号
+     * @return 主账号身份
+     */
+    private AccountEnum.Identity resolveMainIdentity(AccountVO main) {
+        String csv = main.getIdentityList();
+        if (StrUtil.isBlank(csv)) {
+            throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
+        }
+        Long code = Long.valueOf(StrUtil.split(csv, ",").get(0));
+        AccountEnum.Identity identity = AccountEnum.Identity.getByCode(code);
+        if (identity == null) {
+            throw new PlatformException(AccountErrorCode.NOT_AVAIL_ROLE);
+        }
+        return identity;
+    }
+
+    /**
+     * 子账号归属校验: 必属当前登录主账号且同端
+     *
+     * @param subId 子账号id
+     * @return 校验通过的子账号
+     */
+    private AccountVO assertSubOwnership(Long subId) {
+        AccountEnum.Client client = SecurityUtils.getClient();
+        Long mainId = SecurityUtils.getAccountId();
+        // client 隔离 + 存在校验
+        AccountVO sub = accountDomain.account(client, subId);
+        if (sub.getMainAccountId() == null || !sub.getMainAccountId().equals(mainId)) {
+            throw new PlatformException(BaseErrorCode.CUSTOM, "非本主账号的子账号, 禁止操作");
+        }
+        return sub;
     }
 
 }

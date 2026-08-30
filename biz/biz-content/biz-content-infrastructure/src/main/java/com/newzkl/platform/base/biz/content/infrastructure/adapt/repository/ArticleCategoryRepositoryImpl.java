@@ -10,7 +10,6 @@ import com.newzkl.platform.base.biz.content.model.articlecategory.entity.Article
 import com.newzkl.platform.base.biz.content.model.articlecategory.query.ArticleCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.articlecategory.req.ArticleCategoryReq;
 import com.newzkl.platform.base.biz.content.model.articlecategory.res.ArticleCategoryRes;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -35,14 +34,13 @@ public class ArticleCategoryRepositoryImpl implements ArticleCategoryRepository 
     private final ContentArticleCategoryDAO contentArticleCategoryDAO;
 
     @Override
-    public ContentPage<ArticleCategoryRes> getCategoryPage(ArticleCategoryPageQuery query) {
+    public Page<ArticleCategoryRes> getCategoryPage(ArticleCategoryPageQuery query) {
         Page<ArticleCategoryDO> page = contentArticleCategoryDAO.selectPage(RepositorySupport.page(query),
                 new BaseLambdaQueryWrapper<ArticleCategoryDO>()
                         .notEmptyLike(ArticleCategoryDO::getName, query.getName())
                         .orderByAsc(ArticleCategoryDO::getSort)
                         .orderByDesc(ArticleCategoryDO::getCreateTime));
-        return ContentPage.of(page.getCurrent(), page.getSize(), page.getTotal(),
-                TransferUtils.transfers(page.getRecords(), ArticleCategoryRes::new));
+        return TransferUtils.transferPage(page, ArticleCategoryRes.class);
     }
 
     @Override

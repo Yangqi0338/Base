@@ -147,7 +147,7 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
                 .toUpdate()
                 // 增加余额 (Money → 分 long 落库累加)
-                .setIncrBy(AccountPurseDO::getEarnings, amount.getCent());
+                .setIncrBy(AccountPurseDO::getAmount, amount.getCent());
 
         return accountPurseDAO.update(uw);
     }
@@ -163,10 +163,10 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
         LambdaUpdateWrapper<AccountPurseDO> uw = accountPurseDAO.getLw(query)
                 .toUpdate()
-                // 若是不允许负数, 则余额必须大于0
-                .gt(!isNegative, AccountPurseDO::getEarnings, 0)
+                // 若是不允许负数, 则余额必须不小于本次扣款额
+                .ge(!isNegative, AccountPurseDO::getAmount, amount.getCent())
                 // 扣减余额 (Money → 分 long 落库累减)
-                .setDecrBy(AccountPurseDO::getEarnings, amount.getCent());
+                .setDecrBy(AccountPurseDO::getAmount, amount.getCent());
 
         return accountPurseDAO.update(uw);
     }
@@ -210,8 +210,8 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
         }
         data = new TotalSupplierSettleDataRes();
         // DAO 返回分 Integer, 包成 Money
-        data.setTotalSettle(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.AlterType.SUPPLIER_SETTLE.getType())));
-        data.setSellAfter(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.AlterType.SELL_AFTER.getType())));
+        data.setTotalSettle(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.AlterType.SUPPLIER_SETTLE.getCode())));
+        data.setSellAfter(Money.of(accountPurseAlterRecordDAO.querySupplierSettleData(PurseEnum.AlterType.SELL_AFTER.getCode())));
         RedisUtil.set(key, data, 5L, TimeUnit.MINUTES);
         return data;
     }

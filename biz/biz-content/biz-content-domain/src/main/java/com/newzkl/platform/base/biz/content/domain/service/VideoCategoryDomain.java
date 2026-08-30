@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.content.domain.service;
 
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.videocategory.req.VideoCategoryReq;
@@ -27,7 +27,7 @@ public interface VideoCategoryDomain {
      * @param query 分页查询条件
      * @return 分页结果
      */
-    ContentPage<VideoCategoryRes> getCategoryPage(VideoCategoryPageQuery query);
+    Page<VideoCategoryRes> getCategoryPage(VideoCategoryPageQuery query);
 
     /**
      * 创建视频分类

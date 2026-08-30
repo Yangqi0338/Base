@@ -18,6 +18,10 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 @TableName
 public class SkuDO extends BaseDO {
 	/**
+	 * 编码
+	 */
+	private String code;
+	/**
 	 * 图片
 	 */
 	private String img;
@@ -51,7 +55,7 @@ public class SkuDO extends BaseDO {
 	 * 商品销售属性
 	 * @ext json格式
 	 */
-    @JsonSerializable
+    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
 	private String saleAttribute;
 	/**
 	 * 外部SkuId

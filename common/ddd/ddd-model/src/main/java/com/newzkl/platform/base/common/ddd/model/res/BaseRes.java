@@ -1,10 +1,9 @@
 package com.newzkl.platform.base.common.ddd.model.res;
 
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.newzkl.platform.base.common.ddd.model.dto.ExecutorDTO;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,7 +11,8 @@ import java.time.LocalDateTime;
 /**
  * 基础出参实体类
  *
- * <p>平铺主键, 操作人信息与时间字段, 与 BaseDO 的嵌套 executor 结构对应</p>
+ * <p>结构与 BaseDO 一致: 操作人信息持 {@link ExecutorDTO} 对象, 由 {@code @JsonUnwrapped} 在
+ * 序列化时平展为 creatorName/updater/updaterName, 对外 JSON 契约不变</p>
  *
  * @author god
  */
@@ -30,19 +30,10 @@ public class BaseRes implements Serializable {
     protected Long creatorId;
 
     /**
-     * 创建人名称
+     * 操作人信息
      */
-    protected String creatorName;
-
-    /**
-     * 更新人 ID
-     */
-    protected Long updater;
-
-    /**
-     * 更新人名称
-     */
-    protected String updaterName;
+    @JsonUnwrapped
+    protected ExecutorDTO executor;
 
     /**
      * 创建时间

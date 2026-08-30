@@ -43,10 +43,6 @@ public class AccountRpcVO extends BaseRes {
      */
     private String realName;
     /**
-     * 父层级角色关系
-     */
-    private String pIdentityList;
-    /**
      * 登录凭证
      * NOTE 可以是手机号、自定账号名
      */

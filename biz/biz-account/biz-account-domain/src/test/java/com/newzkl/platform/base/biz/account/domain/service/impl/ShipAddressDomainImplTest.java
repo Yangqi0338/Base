@@ -90,9 +90,6 @@ class ShipAddressDomainImplTest {
         req.setId(111L);
         req.setIsDefault(1);
 
-        int rows = shipAddressDomain.edit(222L, req);
-
-        assertEquals(1, rows);
         ArgumentCaptor<ShipAddressVO> captor = ArgumentCaptor.forClass(ShipAddressVO.class);
         verify(shipAddressRepository).edit(captor.capture());
         assertEquals(222L, captor.getValue().getId(), "更新目标应为入参 id");

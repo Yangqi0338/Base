@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.common.ddd.utils;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCode;
@@ -32,19 +31,11 @@ public class AutoFillFieldValueConfig implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        Object executorObj = this.getFieldValByName("executor", metaObject);
-        if (executorObj instanceof ExecutorDTO executor) {
-            if (ObjectUtil.isEmpty(executor)) {
-                executor = new ExecutorDTO();
-            }
-
-            executor.setCreatorName(SecurityUtils.getNickName());
-            this.setFieldValByName("executor", JSONUtil.toJsonStr(executor), metaObject);
-        }
-        Object creator = this.getFieldValByName("creator", metaObject);
+        fillExecutor(metaObject, true);
+        Object creatorId = this.getFieldValByName("creatorId", metaObject);
         // 实体里主动指定了
-        if (ObjectUtil.isEmpty(creator)) {
-            this.setFieldValByName("creator", SecurityUtils.getAccountId(), metaObject);
+        if (ObjectUtil.isEmpty(creatorId)) {
+            this.setFieldValByName("creatorId", SecurityUtils.getAccountId(), metaObject);
         }
         Object createTime = this.getFieldValByName("createTime", metaObject);
         if (ObjectUtil.isEmpty(createTime)) {
@@ -60,18 +51,32 @@ public class AutoFillFieldValueConfig implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        Object executorObj = this.getFieldValByName("executor", metaObject);
-        if (executorObj instanceof ExecutorDTO executor) {
-            if (ObjectUtil.isEmpty(executor)) {
-                executor = new ExecutorDTO();
-            }
-
-            executor.setUpdater(SecurityUtils.getAccountId());
-            executor.setUpdaterName(SecurityUtils.getNickName());
-            this.setFieldValByName("executor", JSONUtil.toJsonStr(executor), metaObject);
-        }
+        fillExecutor(metaObject, false);
         // updateTime 是 BaseDO 顶层列(非 ExecutorDTO 字段), 直接填充 metaObject
         this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
+    }
+
+    /**
+     * 填充操作人信息
+     *
+     * <p>executor 为 null 时新建对象再填, 不能靠 instanceof 守卫(null 不匹配会整块跳过)</p>
+     *
+     * @param metaObject 元对象
+     * @param insert     true 填创建人名称, false 填更新人
+     */
+    private void fillExecutor(MetaObject metaObject, boolean insert) {
+        if (!metaObject.hasSetter("executor")) {
+            return;
+        }
+        Object executorObj = this.getFieldValByName("executor", metaObject);
+        ExecutorDTO executor = executorObj instanceof ExecutorDTO dto ? dto : new ExecutorDTO();
+        if (insert) {
+            executor.setCreatorName(SecurityUtils.getNickName());
+        } else {
+            executor.setUpdater(SecurityUtils.getAccountId());
+            executor.setUpdaterName(SecurityUtils.getNickName());
+        }
+        this.setFieldValByName("executor", executor, metaObject);
     }
 
     /**

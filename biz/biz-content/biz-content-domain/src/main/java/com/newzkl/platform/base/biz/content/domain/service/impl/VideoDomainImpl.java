@@ -1,10 +1,10 @@
 package com.newzkl.platform.base.biz.content.domain.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoCategoryRepository;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoRepository;
 import com.newzkl.platform.base.biz.content.domain.service.VideoDomain;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.video.entity.Video;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoPageQuery;
 import com.newzkl.platform.base.biz.content.model.video.query.VideoQuery;
@@ -91,8 +91,8 @@ public class VideoDomainImpl implements VideoDomain {
     }
 
     @Override
-    public ContentPage<VideoRes> getVideoPage(VideoPageQuery query) {
-        ContentPage<VideoRes> videoPage = videoRepository.getVideoPage(query);
+    public Page<VideoRes> getVideoPage(VideoPageQuery query) {
+        Page<VideoRes> videoPage = videoRepository.getVideoPage(query);
 
         // 如果分页结果为空, 直接返回
         if (videoPage.getRecords().isEmpty()) {
@@ -190,10 +190,10 @@ public class VideoDomainImpl implements VideoDomain {
     }
 
     @Override
-    public ContentPage<VideoRes> getFollowingVideoPage(VideoPageQuery query) {
+    public Page<VideoRes> getFollowingVideoPage(VideoPageQuery query) {
         // TODO[cross-domain]: 旧实现依赖 IUserFollowFacade.getFollowingIds 取关注列表, 再按 issuerIds 查视频。
         // Base 无用户域关注 facade, 无法确定关注对象, 返回空分页保持契约结构。
-        return ContentPage.of(query.getPageNo(), query.getPageSize(), 0L, new ArrayList<>());
+        return new Page<>();
     }
 
     @Override

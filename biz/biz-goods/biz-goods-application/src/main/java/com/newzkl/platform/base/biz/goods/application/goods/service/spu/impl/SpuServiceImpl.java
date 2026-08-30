@@ -43,10 +43,6 @@ import java.util.List;
  *
  * <p><b>缺口清单 (TODO[capability-gap])</b></p>
  * <ul>
- *   <li>{@code supplierSpuSubmit} —— <b>抛异常</b>。强依赖 finance 域
- *       {@code balancePayApi#supplierSubmitGoodsSubGoodsSeat} (商品位扣减, 业务硬门槛)
- *       与审批域 {@code auditFacade#submitSpu}。本地 {@code SpuWorkflowDomain#saveData}
- *       虽能落审批数据, 但绕过商品位扣减会改变业务语义, 故不做绕过实现</li>
  *   <li>{@code supplierSpuStatistics} —— <b>抛异常</b>。需 user 域 {@code supplierFacade#getSupplierVO}
  *       填充供应商主体信息; 且源端点已标注 {@code @Deprecated}</li>
  *   <li>{@code validateSupplierSpu} —— <b>抛异常</b>。new-scm 全仓无对等方法 (Base 新造接口),
@@ -71,21 +67,6 @@ public class SpuServiceImpl implements SpuService {
     private final SpuDomain spuDomain;
     private final SpuRepository spuRepository;
     private final GoodsQueryService goodsQueryService;
-
-    /**
-     * 供应商提交商品审核
-     *
-     * @param accountId 供应商账号主键
-     * @param spuId     商品主键
-     * @return 审批流主键
-     * @throws UnsupportedOperationException 缺商品位扣减与审批提交端口
-     */
-    @Override
-    public Long supplierSpuSubmit(Long accountId, Long spuId) {
-        throw new UnsupportedOperationException(GAP
-                + "供应商提交审核需 finance 域 balancePayApi#supplierSubmitGoodsSubGoodsSeat 扣商品位 "
-                + "与审批域 auditFacade#submitSpu, 绕过扣减会改变业务语义");
-    }
 
     /**
      * 商品上下架 (平台侧)
@@ -248,8 +229,8 @@ public class SpuServiceImpl implements SpuService {
         // 对外 RPC 契约保持分 Integer, Money 字段显式降为分 (Hutool 不做 Money↔Integer 转换)
         ApiSpuVO apiSpuVO = TransferUtils.transfer(spuVO, ApiSpuVO::new, (s, v) -> {
             v.setUnitPrice(toCent(s.getUnitPrice()));
-            v.setSupplierPriceBegan(toCent(s.getSupplierPriceBegan()));
-        }, ignoreMoney("unitPrice", "supplierPriceBegan"));
+            v.setSupplierPriceBegan(toCent(s.getExpand().getSupplierPriceBegan()));
+        }, ignoreMoney("unitPrice"));
         apiSpuVO.setSaleAttributeList(toApiAttributeList(spuVO.getSpuSaleAttributeList()));
         apiSpuVO.setParamAttributeList(toApiAttributeList(spuVO.getSpuParamAttributeList()));
         apiSpuVO.setSaleState(toSaleState(spuVO.getState()));

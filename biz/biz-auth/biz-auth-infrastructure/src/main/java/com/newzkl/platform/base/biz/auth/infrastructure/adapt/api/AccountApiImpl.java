@@ -53,6 +53,15 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
+    public List<AccountRpcVO> loginAccountList(AccountEnum.Client client, String username) {
+        AccountRpcQuery query = new AccountRpcQuery();
+        query.setUsername(username);
+        query.setClient(client);
+        query.setState(AccountEnum.State.ENABLE);
+        return accountFacade.accountInfoList(query);
+    }
+
+    @Override
     public AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq) {
         return accountFacade.register(registerRpcReq);
     }

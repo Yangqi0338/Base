@@ -3,9 +3,6 @@ package com.newzkl.platform.base.common.ddd.model;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
-import com.newzkl.platform.base.common.ddd.model.dto.ExecutorDTO;
-import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -69,40 +66,6 @@ public class BaseConvert {
             return new HashMap<>(); // 默认空Map
         }
         return JSONUtil.toBean(shipJson, Map.class);
-    }
-
-    /**
-     * 平铺出参 → DO 的嵌套 executor
-     *
-     * <p>反向组装, 将 Res 的平铺操作人字段回收进 ExecutorDTO</p>
-     */
-    @Named("resToExecutor")
-    public ExecutorDTO resToExecutor(BaseRes src) {
-        if (src == null) {
-            return null;
-        }
-        ExecutorDTO executor = new ExecutorDTO();
-        executor.setCreatorName(src.getCreatorName());
-        executor.setUpdater(src.getUpdater());
-        executor.setUpdaterName(src.getUpdaterName());
-        return executor;
-    }
-
-    /**
-     * 平铺 DTO → DO 的嵌套 executor
-     *
-     * <p>反向组装, 将 DTO 的平铺操作人字段回收进 ExecutorDTO</p>
-     */
-    @Named("dtoToExecutor")
-    public ExecutorDTO dtoToExecutor(BaseDTO src) {
-        if (src == null) {
-            return null;
-        }
-        ExecutorDTO executor = new ExecutorDTO();
-        executor.setCreatorName(src.getCreatorName());
-        executor.setUpdater(src.getUpdater());
-        executor.setUpdaterName(src.getUpdaterName());
-        return executor;
     }
 
 }

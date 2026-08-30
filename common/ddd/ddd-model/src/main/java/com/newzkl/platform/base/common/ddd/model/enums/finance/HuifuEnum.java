@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.model.enums.finance;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,7 +19,7 @@ public class HuifuEnum implements Serializable {
     public static String notifySuccess = "Success";
 
     public static boolean isSuccess(String code) {
-        return AccountBizResCodeEnum.isSuccess(code) || BankBizResCode.isSuccess(code) || BizResCode.isSuccess(code) || BizCodeEnum.isSuccess(code);
+        return StrUtil.isBlank(code) || AccountBizResCodeEnum.isSuccess(code) || BankBizResCode.isSuccess(code) || BizResCode.isSuccess(code) || BizCodeEnum.isSuccess(code);
     }
 
     /**

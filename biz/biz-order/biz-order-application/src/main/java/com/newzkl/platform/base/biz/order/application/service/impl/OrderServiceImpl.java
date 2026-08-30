@@ -444,6 +444,8 @@ public class OrderServiceImpl implements OrderService {
         balancePayReq.setAccountId(order.getChannelId());
         balancePayReq.setMemberId(order.getMemberId());
         balancePayReq.setAccountType(PurseEnum.User.CHANNEL);
+        // 渠道商下单扣采购金, 科目必须显式传(BalancePayReq 已撤销默认值)
+        balancePayReq.setPurseType(PurseEnum.Type.PURCHASE);
         balancePayReq.setPayAmount(order.getTotalAmount());
         balancePayReq.setGoodsAmount(order.getGoodsAmount());
         balancePayReq.setOrderNo(order.getId());

@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.content.action.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.service.VideoCategoryDomain;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.util.RecommendGroupsCheckUtil;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
 import com.newzkl.platform.base.biz.content.model.videocategory.req.VideoCategoryReq;
@@ -47,7 +47,7 @@ public class VideoCategoryController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public PlatformResult<ContentPage<VideoCategoryRes>> getCategoryPage(@RequestBody VideoCategoryPageQuery query) {
+    public PlatformResult<Page<VideoCategoryRes>> getCategoryPage(@RequestBody VideoCategoryPageQuery query) {
         return PlatformResult.success(videoCategoryDomain.getCategoryPage(query));
     }
 

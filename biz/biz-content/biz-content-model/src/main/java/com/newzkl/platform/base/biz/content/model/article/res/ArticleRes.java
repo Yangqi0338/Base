@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.content.model.article.res;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,7 +54,7 @@ public class ArticleRes extends BaseRes implements Serializable {
     /**
      * 是否显示:0-不显示,1-显示
      */
-    private Integer isVisible;
+    private CommonEnum.YesOrNo isVisible;
 
     /**
      * 创建人ID

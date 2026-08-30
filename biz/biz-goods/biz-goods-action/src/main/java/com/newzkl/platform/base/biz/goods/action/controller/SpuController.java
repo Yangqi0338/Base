@@ -4,8 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.action.cmd.SpuCmd;
+import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
+import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
@@ -54,6 +56,7 @@ public class SpuController {
 
     private final SpuDomain spuDomain;
     private final SpuService spuService;
+    private final GoodsQueryService goodsQueryService;
 
     /**
      * 外部商品价格修改
@@ -70,27 +73,22 @@ public class SpuController {
 
     /**
      * 创建商品
-     *
-     * <p>仅供应商可创建, 必填供货价; 其余角色不支持。</p>
-     *
      * @param spuDTO 商品请求
      * @return 商品主键
      */
+    @RoleLimit({AccountEnum.Identity.SUPPLIER})
     @PostMapping("spuCreate")
     @FuncPermission("创建商品")
     public PlatformResult<Long> spuCreate(@Validated @RequestBody SpuDTO spuDTO) {
-        if (spuDTO.getId() != null) {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
         AccountEnum.Identity identity = SecurityUtils.getIdentity();
-        if (AccountEnum.Identity.SUPPLIER != identity) {
-            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
-        }
         for (SkuDTO skuDTO : spuDTO.getSkuList()) {
             if (skuDTO.getSupplyPrice() == null || skuDTO.getSupplyPrice().isNull()) {
                 ThrowsException.exception(BaseErrorCode.PARAM, "缺少供货价");
             }
+            // 编码由后端生成, 不采信入参
+            skuDTO.setCode(null);
         }
+        spuDTO.setCode(null);
         spuDTO.setChannelType(SpuEnum.ChannelType.SELECTION);
         spuDTO.setIdentity(identity);
         spuDTO.setAccountId(SecurityUtils.getAccountId());
@@ -113,22 +111,22 @@ public class SpuController {
     /**
      * 修改商品
      *
-     * <p>仅供应商可改, 且不允许改动商品状态; 其余角色不支持。</p>
-     *
      * @param spuDTO 商品请求
      * @return 空结果
      */
+    @RoleLimit({AccountEnum.Identity.SUPPLIER})
     @PostMapping("spuUpdate")
     @FuncPermission("修改商品")
     public PlatformResult<Void> spuUpdate(@RequestBody SpuDTO spuDTO) {
         if (spuDTO.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        AccountEnum.Identity identity = SecurityUtils.getIdentity();
-        if (AccountEnum.Identity.SUPPLIER != identity) {
-            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
-        }
         spuDTO.setState(null);
+        // 编码由后端持有, 不接受入参覆盖
+        spuDTO.setCode(null);
+        if (spuDTO.getSkuList() != null) {
+            spuDTO.getSkuList().forEach(skuDTO -> skuDTO.setCode(null));
+        }
         spuDomain.spuPreUpdate(spuDTO);
         return PlatformResult.success();
     }
@@ -165,9 +163,8 @@ public class SpuController {
     @GetMapping("spu")
     public PlatformResult<SpuVO> spu(@RequestParam("id") Long id,
                                     @RequestParam(value = "needExtraInfo", required = false, defaultValue = "false") Boolean needExtraInfo) {
-        SpuQuery spuQuery = new SpuQuery();
-        spuQuery.setId(id);
-        SpuVO spu = spuDomain.voByQuery(spuQuery);
+        // 走应用层组装, 带出 sku / 销售属性 / 参数属性 / 视频等关联数据
+        SpuVO spu = goodsQueryService.spuVO(id, needExtraInfo);
         if (AccountEnum.Identity.SUPPLIER != SecurityUtils.getIdentity() && spu != null) {
             spu.doDesensitized();
         }

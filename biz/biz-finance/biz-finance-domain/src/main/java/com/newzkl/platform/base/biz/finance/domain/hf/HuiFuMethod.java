@@ -53,6 +53,7 @@ import java.util.TreeMap;
 import java.util.function.BiConsumer;
 
 import static com.newzkl.platform.base.biz.finance.domain.hf.AmountReq.*;
+import static com.newzkl.platform.base.biz.finance.domain.hf.AmountRes.*;
 import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.publicKey;
 import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.sysId;
 
@@ -90,7 +91,7 @@ public class HuiFuMethod {
         req.setTrans_amt(amount);
         req.setNotify_url(HuiFuProperties.payNotifyUrl);
 
-        AmountRes.PayRes res = api.pay(req);
+        PayRes res = api.pay(req);
         // 转化业务类
         HuiFuPayRes huiFuPayRes = buildTradeRes(res, HuiFuPayRes.class);
         huiFuPayRes.setTradeType(request.getTradeType());
@@ -111,7 +112,7 @@ public class HuiFuMethod {
         log.info("请求原始数据:{}", JSONUtil.toJsonStr(request));
         PayStateReq req = new PayStateReq();
         req.setOrg_hf_seq_id(request.getHuifuTradeNo());
-        AmountRes.PayStateRes res = api.payState(req);
+        PayStateRes res = api.payState(req);
         // 转化业务类
         return buildRes(res, HuiFuPayStateRes.class);
     }
@@ -136,7 +137,7 @@ public class HuiFuMethod {
         req.setOrd_amt(amount);
         req.setNotify_url(HuiFuProperties.refundNotifyUrl);
 
-        AmountRes.RefundRes res = api.refund(req);
+        RefundRes res = api.refund(req);
         // 转化业务类
         HuiFuRefundRes huiFuRefundRes = buildTradeRes(res, HuiFuRefundRes.class);
         huiFuRefundRes.setTradeDate(reqDate);
@@ -167,7 +168,7 @@ public class HuiFuMethod {
         req.setCash_amt(amount);
         req.setNotify_url(HuiFuProperties.withdrawNotifyUrl);
 
-        AmountRes.WithdrawRes res = api.withdraw(req);
+        WithdrawRes res = api.withdraw(req);
         // 转化业务类
         HuiFuWithdrawRes huiFuWithdrawRes = buildTradeRes(res, HuiFuWithdrawRes.class);
         huiFuWithdrawRes.setTradeAmount(amountDecimal(amount));
@@ -201,7 +202,7 @@ public class HuiFuMethod {
         RollOutReq.AcctSplitBunch acctSplitBunch = new RollOutReq.AcctSplitBunch(acctInfos);
         req.setAcct_split_bunch(acctSplitBunch);
 
-        AmountRes.RollOutRes res = api.rollout(req);
+        RollOutRes res = api.rollout(req);
         // 转化业务类
         HuiFuRollOutRes huiFuRollOutRes = buildTradeRes(res, HuiFuRollOutRes.class);
         huiFuRollOutRes.setTradeAmount(amountDecimal(res.getOrd_amt()));
@@ -367,6 +368,9 @@ public class HuiFuMethod {
     /* ----------------------------------------- 功能方法 ------------------------------------------ */
 
     public static String sign(String data) {
+        if (StrUtil.isBlank(HuiFuProperties.privateKey)) {
+            throw new PlatformException(BaseErrorCode.EXECUTE, "汇付商户私钥未配置, 无法加签");
+        }
         try {
             byte[] bytes = Base64.getDecoder().decode(HuiFuProperties.privateKey);
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
@@ -377,12 +381,16 @@ public class HuiFuMethod {
             signature.update(data.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(signature.sign());
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            log.error("汇付加签失败", e);
+            throw new PlatformException(BaseErrorCode.EXECUTE, "汇付加签失败");
         }
     }
 
     public static boolean verify(String data, String sign) {
+        if (StrUtil.isBlank(publicKey)) {
+            log.error("汇付平台公钥未配置, 验签直接失败");
+            return false;
+        }
         try {
             byte[] bytes = Base64.getDecoder().decode(publicKey);
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
@@ -393,7 +401,7 @@ public class HuiFuMethod {
             signature.update(data.getBytes(StandardCharsets.UTF_8));
             return signature.verify(Base64.getDecoder().decode(sign));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("汇付验签失败", e);
             return false;
         }
     }
@@ -429,7 +437,7 @@ public class HuiFuMethod {
     /**
      * 构建基础交易类
      */
-    private static <T extends TradeBaseRes> T buildTradeRes(AmountRes.TradeRes res, Class<T> clazz) {
+    private static <T extends TradeBaseRes> T buildTradeRes(TradeRes res, Class<T> clazz) {
         T result = buildRes(res, clazz);
         result.setTripartiteNo(res.getThirdTradeNo());
         return result;

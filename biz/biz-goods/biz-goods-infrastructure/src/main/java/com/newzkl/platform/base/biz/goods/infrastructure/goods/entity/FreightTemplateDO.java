@@ -1,11 +1,15 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreePostConditionVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.RegionVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
+import java.util.List;
 
 /**
 * 运费模板
@@ -13,7 +17,7 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class FreightTemplateDO extends BaseDO {
 	/**
 	 * 名称
@@ -44,12 +48,12 @@ public class FreightTemplateDO extends BaseDO {
 	 * 包邮条件
 	 */
     @JsonSerializable
-	private String freePostCondition;
+	private FreePostConditionVO freePostCondition;
 	/**
 	 * 地区运费规则
 	 */
     @JsonSerializable
-	private String regionSpec;
+	private List<RegionVO> regionSpec;
 	/**
 	 * 账号ID
 	 * @ext 查询

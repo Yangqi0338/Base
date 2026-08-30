@@ -165,10 +165,7 @@ public class RefundServiceImpl implements RefundService {
             if(SpuEnum.ChannelType.SELECTION == refundAuditRes.getRefund().getSpuChannelType()){
                 //供货商品
                 doRefundPassForMemberAndSelection(refundAuditRes);
-            }else if(SpuEnum.ChannelType.CUSTOM == refundAuditRes.getRefund().getSpuChannelType()){
-                //自营商品
-                doRefundPassForMemberAndCustom(refundAuditRes);
-            }else {
+            } else {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
             com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
@@ -223,32 +220,6 @@ public class RefundServiceImpl implements RefundService {
         }
     }
 
-    /**
-     * 售后通过:C端订单-自营商品
-     * @param refundAuditRes
-     */
-    public void doRefundPassForMemberAndCustom(RefundAuditRes refundAuditRes) {
-        //C端打款
-        SellAfterRefundReq sellAfterRefundReq = new SellAfterRefundReq();
-        RefundDTO refund = refundAuditRes.getRefund();
-        sellAfterRefundReq.setAccountId(refund.getChannelId());
-        sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
-        sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
-        sellAfterRefundReq.setSellAfterOrderNo(refund.getId());
-        sellAfterRefundReq.setOrderNo(refund.getOrderId());
-        MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
-        if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
-            throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg());
-        }
-        //售后已打款通知
-        refundDomain.sellAfterRefundNotify(refundAuditRes.getRefund().getId(), null, memberRefundRes.getThirdTradeNo());
-        //售后完成消息
-        localMessageApi.sendRefundPassMessage(refund);
-        //SKU订单售后通过通知订单
-        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
-            orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
-        }
-    }
     /**
      * 售后通过:C端订单-供货商品
      * @param refundAuditRes

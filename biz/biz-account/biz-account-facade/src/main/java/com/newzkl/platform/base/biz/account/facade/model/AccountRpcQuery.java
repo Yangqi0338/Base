@@ -22,6 +22,6 @@ public class AccountRpcQuery extends BizPageQuery {
     private String yqm;
     private String username;
     private AccountEnum.Client client;
-    private List<AccountEnum.State> stateList;
+    private AccountEnum.State state;
 
 }

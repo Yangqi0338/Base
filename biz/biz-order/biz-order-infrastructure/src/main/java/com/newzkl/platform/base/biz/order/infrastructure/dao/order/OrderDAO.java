@@ -34,7 +34,8 @@ public interface OrderDAO extends BaseMapper<OrderDO> {
                 .notEmptyEq(OrderDO::getMemberId, orderQuery.getMemberId())
                 .notEmptyIn(OrderDO::getOutOrderNo, orderQuery.getOutOrderNoList())
                 .notEmptyIn(OrderDO::getOrderState, orderQuery.getOrderStateList())
-                .between(OrderDO::getCreateTime, orderQuery.getCreateTime());
+                .between(OrderDO::getCreateTime, orderQuery.getCreateTime())
+                .notEmptyLt(OrderDO::getCreateTime, orderQuery.getLessCreateTime());
         return wrapper;
     }
 }

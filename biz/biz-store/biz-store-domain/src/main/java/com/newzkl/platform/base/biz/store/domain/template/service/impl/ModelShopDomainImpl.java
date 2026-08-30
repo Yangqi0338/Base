@@ -77,7 +77,6 @@ public class ModelShopDomainImpl implements ModelShopDomain {
             modelShop.setChannelId(SecurityUtils.getAccountId());
             modelShop.setStyleCode(storeStyle.getStyleCode());
             modelShop.setCreatorId(SecurityUtils.getAccountId());
-            modelShop.setCreatorName(SecurityUtils.getNickName());
             modelShopRepository.create(modelShop);
         } else if (AuditEnum.State.FAIL == modelShop.getAuditState()) {
             modelShop.setId(modelShop.getId());

@@ -145,8 +145,6 @@ public class SpuEnum {
     public enum ChannelType implements IEnum<Integer> {
         /** 供应商商品 */
         SELECTION(0, "供应商商品"),
-        /** 商户自营商品 */
-        CUSTOM(1, "商户自营商品"),
         /** 外部供应链商品 */
         OUT(2, "外部供应链商品"),
         ;

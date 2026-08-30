@@ -2,26 +2,17 @@ package com.newzkl.platform.base.biz.finance.domain.hf;
 
 
 import com.dtflys.forest.annotation.*;
-import com.dtflys.forest.reflection.ForestMethod;
-import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties;
 import org.springframework.stereotype.Component;
-
-import static com.newzkl.platform.base.common.core.utils.spring.SecurityContextHolder.isDev;
 
 /**
  * 汇付纯净API接口(FOREST)
  */
 @ForestClient
 @Component
-@BaseRequest(baseURL = "${huiFuPreUrl}", interceptor = HuiFuInterceptor.class)
+@BaseRequest(baseURL = "#{platform.fi.huiFuPreUrl}", interceptor = HuiFuInterceptor.class)
 @Retry(maxRetryCount = "0", maxRetryInterval = "10")
 @LogEnabled(false)
 public interface HuiFuApi {
-
-    @BindingVar("huiFuPreUrl")
-    default String getHuiFuPreUrl(ForestMethod method) {
-        return isDev() ? FinanceProperties.HuiFuProperties.testPreUrl : FinanceProperties.HuiFuProperties.preUrl;
-    }
 
     /**
      * 汇付聚合正扫

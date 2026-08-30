@@ -23,7 +23,7 @@ public interface AccountPurseAssembler extends BaseAssembler<AccountPurseReq, Ac
     List<AccountPurseVO> addReq2VOList(List<AddAccountPurseReq> req);
 
     @Mappings({
-            @Mapping(target = "earnings", source = "initAmount"),
+            @Mapping(target = "amount", source = "initAmount"),
     })
     AccountPurseVO addReq2VO(AddAccountPurseReq req);
 

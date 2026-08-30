@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 运费模板
  * @author fang
@@ -42,9 +44,9 @@ public class FreightTemplateVO extends BaseRes {
      * 包邮条件
      */
      @JsonIgnore
-     private String freePostCondition;
+     private FreePostConditionVO freePostCondition;
      /**
      * 地区运费规则
      */
-     private String regionSpec;
+     private List<RegionVO> regionSpec;
 }

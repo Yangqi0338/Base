@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.model.purse.res;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
@@ -26,13 +27,10 @@ public class PurseAmountRes implements Serializable {
     private Integer accountType;
 
     /**
-     * 收益
+     * 账户余额
      */
-    private Money earnings;
-
-    /**
-     * 总收益
-     */
+    @JsonProperty("earnings")
+    private Money amount;
 
     /**
      * 开户时间

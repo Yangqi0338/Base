@@ -37,28 +37,19 @@ public class ShipAddressDomainImpl implements ShipAddressDomain {
     @Transactional(rollbackFor = Exception.class)
     public Long save(ShipAddressReq req) {
         ShipAddressVO item = assembler.req2VO(req);
-        item.setId(SnowflakeGenerator.getSnowflakeId());
-        item.setAccountId(SecurityUtils.getAccountId());
-        item.setIdentity(SecurityUtils.getIdentity());
+        Long shipAddressId = item.getId();
+        if (item.getId() == null){
+            shipAddressId = shipAddressRepository.save(item);
+        }else {
+            shipAddressRepository.edit(item);
+        }
 
-        Long shipAddressId = shipAddressRepository.save(item);
         // 其他地址设为非默认
         if (isDefault(item.getIsDefault())) {
             shipAddressRepository.setOtherNotDefault(item.getIdentity(), item.getAccountId(), shipAddressId);
         }
-        return shipAddressId;
-    }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int edit(Long id, ShipAddressReq req) {
-        ShipAddressVO item = assembler.req2VO(req);
-        item.setId(id);
-        // 其他地址设为非默认
-        if (isDefault(item.getIsDefault())) {
-            shipAddressRepository.setOtherNotDefault(SecurityUtils.getIdentity(), SecurityUtils.getAccountId(), id);
-        }
-        return shipAddressRepository.edit(item);
+        return shipAddressId;
     }
 
     @Override

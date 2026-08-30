@@ -18,12 +18,15 @@ public enum BusinessType {
     STORE_STYLE("STS", "门店样式"),
     /* 席位 */
     SEAT_PACKAGE("SEP", "席位套餐"),
+    /* 商品 */
+    SPU("S", "商品"),
+    SKU("", "SKU", new AppendGenerator()),
     /* 订单 */
     ORDER("O", "普通订单", new SnowflakeGenerator()),
     ORDER_SKU("OSK", "普通SKU订单", new SnowflakeGenerator()),
     ORDER_RECHARGE("OR", "充值订单", new SnowflakeGenerator()),
     ORDER_SEAT_PACKAGE("OSEP", "席位订单", new SnowflakeGenerator()),
-    PAYMENT("P", "交易订单", new SnowflakeGenerator()),
+    PAYMENT("", "交易订单", new SnowflakeGenerator()),
     ORDER_REFUND_RETURN("ORR", "售后订单", new SnowflakeGenerator()),
     ORDER_DELIVERY("OD", "发货单", new SnowflakeGenerator()),
     /* 课程 */

@@ -15,6 +15,8 @@ import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,15 +101,20 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
      * **从未从 {@code req} 填** accountId / accountType / purseType 就传给仓储。而
      * {@code AccountPurseDAO#getLw} 三个条件全是 {@code notEmptyIn/notEmptyEq}(空值跳过),
      * 拼出的 {@code LambdaUpdateWrapper} 无任何 WHERE 约束 →
-     * {@code UPDATE account_purse SET earnings = earnings ± ?} **全表动账**。
+     * {@code UPDATE account_purse SET amount = amount ± ?} **全表动账**。
      * 现按 req 填三个作用域字段, 并加空作用域断言兜底
+     *
+     * <p>🔴 2026-08-28 修资损: 原实现丢弃仓储返回的影响行数并恒 {@code return true}, 出账守卫拦住后
+     * 调用方仍判定成功(钱没扣、订单照走)。现接住行数, 出账 UPDATE 带 {@code amount >= 扣款额} 守卫
+     * ({@code isNegative} 科目除外, 允许透支为负), 命中 0 行即抛 {@link PlatformException} 让事务回滚</p>
      *
      * @param relateAward      是否关联账户流水
      * @param earningAlterType 加还是减
      * @param reqs             动账明细, 每条必带 accountId / accountType / purseType
-     * @return 恒 true (失败走异常)
+     * @return 全部明细动账成功返回 true
      * @throws IllegalArgumentException 任一明细缺 accountId / accountType / purseType 时抛出,
      *                                  防止退化为无 WHERE 的全表 UPDATE
+     * @throws PlatformException        任一明细命中 0 行(账户不存在或余额不足)时抛出并回滚
      */
     public boolean doPurseAmount(boolean relateAward, EarningsEnum.PurseAlterTypeEnum earningAlterType, AccountPurseAlterRecordReq[] reqs) {
         if (ArrayUtil.isEmpty(reqs)) return true;
@@ -126,10 +133,17 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
             query.setAccountType(req.getAccountType());
             query.setPurseType(purseType);
 
+            int rows = 0;
             if (earningAlterType == EarningsEnum.PurseAlterTypeEnum.IN) {
-                accountPurseRepository.addAccountPurseAmount(query, req.getAmount(), relateAward, purseType.isTotalRelation());
+                rows = accountPurseRepository.addAccountPurseAmount(query, req.getAmount(), relateAward, purseType.isTotalRelation());
             } else if (earningAlterType == EarningsEnum.PurseAlterTypeEnum.OUT) {
-                accountPurseRepository.subAccountPurseAmount(query, req.getAmount(), relateAward, purseType.isTotalRelation(), purseType.isNegative());
+                rows = accountPurseRepository.subAccountPurseAmount(query, req.getAmount(), relateAward, purseType.isTotalRelation(), purseType.isNegative());
+            }
+            // 命中 0 行 = 账户不存在 或 出账守卫(amount >= 扣款额)不成立, 必须抛异常回滚, 否则流水已落而余额未动
+            if (rows <= 0) {
+                throw new PlatformException(BaseErrorCode.CUSTOM,
+                        StrUtil.format("账户余额不足或账户不存在, accountId={}, accountType={}, purseType={}, amount={}",
+                                req.getAccountId(), req.getAccountType(), purseType, req.getAmount().getCent()));
             }
 
             AccountPurseAlterRecordVO recordVO = accountPurseAlterRecordAssembler.req2VO(req);
@@ -145,7 +159,7 @@ public class AccountPurseDomainImpl implements AccountPurseDomain {
     public void saveAccountPurseAlterRecord(List<AccountPurseAlterRecordVO> accountPurseAlterRecords) {
         accountPurseAlterRecords.forEach(record -> {
             if (StrUtil.isBlank(record.getRemark())) {
-                record.setRemark(record.getAlterType().getInfo());
+                record.setRemark(record.getAlterType().getValue());
             }
         });
         accountPurseRepository.saveAccountPurseAlterRecord(accountPurseAlterRecords);

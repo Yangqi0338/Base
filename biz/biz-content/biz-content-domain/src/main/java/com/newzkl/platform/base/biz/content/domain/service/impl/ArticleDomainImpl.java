@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.content.domain.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.ArticleCategoryRepository;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.ArticleRepository;
 import com.newzkl.platform.base.biz.content.domain.service.ArticleDomain;
@@ -10,7 +11,6 @@ import com.newzkl.platform.base.biz.content.model.article.req.ArticleReq;
 import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
 import com.newzkl.platform.base.biz.content.model.articlecategory.entity.ArticleCategory;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import lombok.RequiredArgsConstructor;
@@ -76,8 +76,8 @@ public class ArticleDomainImpl implements ArticleDomain {
     }
 
     @Override
-    public ContentPage<ArticleRes> getArticlePage(ArticlePageQuery query) {
-        ContentPage<ArticleRes> articlePage = articleRepository.getArticlePage(query);
+    public Page<ArticleRes> getArticlePage(ArticlePageQuery query) {
+        Page<ArticleRes> articlePage = articleRepository.getArticlePage(query);
 
         // 如果分页结果为空,直接返回
         if (articlePage.getRecords().isEmpty()) {

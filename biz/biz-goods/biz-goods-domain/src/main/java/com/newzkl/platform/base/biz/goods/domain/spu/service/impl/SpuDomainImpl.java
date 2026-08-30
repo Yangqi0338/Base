@@ -1,11 +1,13 @@
 package com.newzkl.platform.base.biz.goods.domain.spu.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.goods.domain.brand.repository.BrandRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuCategoryRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
@@ -17,7 +19,9 @@ import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.OutSpuEditCommand;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuAttributeDiffRes;
+import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuAuditRes;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.SpuUpdateRes;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.BrandVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
@@ -36,6 +40,8 @@ import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
 import com.newzkl.platform.base.common.core.model.properties.SysProperties;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +65,7 @@ public class SpuDomainImpl implements SpuDomain {
 
     private final SpuRepository spuRepository;
     private final SpuCategoryRepository spuCategoryRepository;
+    private final BrandRepository brandRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -72,8 +79,8 @@ public class SpuDomainImpl implements SpuDomain {
         // 持久化
         Long spuId = spuRepository.spuSave(spu);
 
-        // 设置SKU的spuId
-        skuDTOList.forEach(skuDTO -> skuDTO.setSpuId(spuId));
+        // 设置SKU的spuId与编码
+        bindSku(skuDTOList, spuId, spu.getCode());
 
         // 构建并保存属性
         List<SpuAttributeDTO> spuAttributeDTOList = buildSpuAttributeList(spuDTO, spuId);
@@ -102,8 +109,8 @@ public class SpuDomainImpl implements SpuDomain {
         // 持久化
         Long spuId = spuRepository.spuSave(spu);
 
-        // 设置SKU的spuId
-        skuDTOList.forEach(skuDTO -> skuDTO.setSpuId(spuId));
+        // 设置SKU的spuId与编码
+        bindSku(skuDTOList, spuId, spu.getCode());
 
         // 构建并保存属性
         List<SpuAttributeDTO> spuAttributeDTOList = buildSpuAttributeList(spuDTO, spuId);
@@ -167,14 +174,14 @@ public class SpuDomainImpl implements SpuDomain {
         SpuDTO spu = new SpuDTO();
         spu.setId(spuId);
         spu.setMarketPrice(minMarket);
-        spu.setMarketPriceBegan(minMarket);
-        spu.setMarketPriceEnd(maxMarket);
+        spu.getExpand().setMarketPriceBegan(minMarket);
+        spu.getExpand().setMarketPriceEnd(maxMarket);
         spu.setSupplyPrice(minSupply);
-        spu.setSupplierPriceBegan(minSupply);
-        spu.setSupplierPriceEnd(maxSupply);
+        spu.getExpand().setSupplierPriceBegan(minSupply);
+        spu.getExpand().setSupplierPriceEnd(maxSupply);
         spu.setSalePrice(minSale);
-        spu.setSalePriceBegan(minSale);
-        spu.setSalePriceEnd(maxSale);
+        spu.getExpand().setSalePriceBegan(minSale);
+        spu.getExpand().setSalePriceEnd(maxSale);
         spu.setUnitPrice(minUnit);
         spu.setMaxProfit(maxProfit);
         spuRepository.spuUpdate(spu);
@@ -215,24 +222,12 @@ public class SpuDomainImpl implements SpuDomain {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void spuPreUpdate(SpuDTO spuDTO) {
-        Long spuId = spuDTO.getId();
         SpuDTO spu = spuRepository.getById(spuDTO.getId());
         if (spu == null || !SpuEnum.State.STORE.getCode().equals(spu.getState())) {
             throw new PlatformException(SpuErrorCode.NOT_EXIST_OR_STATE_ERROR);
         }
-
-        // 删除sku
-        spuRepository.skuDeleteBySpuId(spuId);
-
-        // 删除spu
-        spuRepository.spuDelete(spuId);
-
-        // 删除spuAttribute
-        spuRepository.spuAttributeDeleteBySpuId(spuId);
-
-        // 新增
-        spuDTO.setRefresh(false);
-        spuRepository.spuSave(TransferUtils.transfer(spuDTO, SpuDTO::new));
+        // 仓库中商品直接编辑: 复用 spuUpdate 差异化更新, 不删主表重插, 保住 spuId/skuId 与已有关联数据
+        spuUpdate(spuDTO);
     }
 
     @Override
@@ -254,10 +249,13 @@ public class SpuDomainImpl implements SpuDomain {
         updateAttributes(spuDTO);
 
         // 更新SKU信息
-        updateSkuList(spuDTO.getSkuList(), spuUpdateRes);
+        updateSkuList(spuDTO, spuUpdateRes);
 
         // 根据SKU列表计算SPU统计信息
         calculateSpuStatistics(spuDTO, spuDTO.getSkuList());
+
+        // 分类/品牌变更时同步冗余名称
+        fillCategoryAndBrandName(spuDTO);
 
         // 更新SPU基本信息
         spuRepository.spuUpdate(spuDTO);
@@ -316,12 +314,11 @@ public class SpuDomainImpl implements SpuDomain {
     }
 
     @Override
-    public void spuSubmit(Long spuId, Long flowId) {
+    public void spuSubmit(Long spuId) {
         // 状态修改
         SpuDTO spuUpdate = new SpuDTO();
         spuUpdate.setId(spuId);
         spuUpdate.setAuditState(AuditEnum.State.AUDITING.getCode());
-        spuUpdate.setFlowId(flowId);
         spuRepository.spuUpdate(spuUpdate);
     }
 
@@ -391,6 +388,11 @@ public class SpuDomainImpl implements SpuDomain {
     @Override
     public Page<SpuVO> querySpuPage(SpuQuery spuQuery) {
         return spuRepository.querySpuPage(spuQuery);
+    }
+
+    @Override
+    public Page<SpuAuditRes> spuAuditPage(SpuQuery spuQuery) {
+        return TransferUtils.transferPage(spuRepository.querySpuPage(spuQuery), SpuAuditRes.class);
     }
 
     @Override
@@ -478,14 +480,14 @@ public class SpuDomainImpl implements SpuDomain {
 
         // 设置销售价格区间 (Money 无 Comparable, 遍历取极值)
         if (ObjectUtil.isNotEmpty(salePriceList)) {
-            spu.setSalePriceBegan(minOfList(salePriceList));
-            spu.setSalePriceEnd(maxOfList(salePriceList));
+            spu.getExpand().setSalePriceBegan(minOfList(salePriceList));
+            spu.getExpand().setSalePriceEnd(maxOfList(salePriceList));
         }
 
         // 设置供货价格区间
         if (ObjectUtil.isNotEmpty(supplyPriceList)) {
-            spu.setSupplierPriceBegan(minOfList(supplyPriceList));
-            spu.setSupplierPriceEnd(maxOfList(supplyPriceList));
+            spu.getExpand().setSupplierPriceBegan(minOfList(supplyPriceList));
+            spu.getExpand().setSupplierPriceEnd(maxOfList(supplyPriceList));
         }
 
         return spu;
@@ -546,9 +548,13 @@ public class SpuDomainImpl implements SpuDomain {
         SpuDTO spuUpdate = new SpuDTO();
         spuUpdate.setId(outSpuEditCommand.getSpuId());
         spuUpdate.setCategoryId(outSpuEditCommand.getCategoryId());
-        spuUpdate.setCategoryName(outSpuEditCommand.getCategoryName());
+
+        spuUpdate.getExpand().setCategoryName(outSpuEditCommand.getCategoryName());
+
         spuUpdate.setBrandId(outSpuEditCommand.getBrandId());
-        spuUpdate.setBrandName(outSpuEditCommand.getBrandName());
+
+        spuUpdate.getExpand().setBrandName(outSpuEditCommand.getBrandName());
+
         spuUpdate.setAuditState(AuditEnum.State.SUCCESS.getCode());
         spuUpdate.setState(SpuEnum.State.DOWN.getCode());
         return spuUpdate;
@@ -624,14 +630,52 @@ public class SpuDomainImpl implements SpuDomain {
                 v.setCategoryId(0L);
             }
 
-            // 设置品牌名称 OPTIMIZE
-//            if (v.getBrandId() != null) {
-//                v.setBrandName(brandRepository.brandById(v.getBrandId()).getName());
-//            }
+            // 编码后端强制生成, 不采信入参 (外部渠道商品已带编码时保留)
+            if (StrUtil.isEmpty(c.getCode())) {
+                v.setCode(BusinessCodeUtil.generate(BusinessType.SPU));
+            }
+
+            // 回填分类名/品牌名 (下沉 expand, 供列表与详情平展渲染)
+            fillCategoryAndBrandName(v);
 
             // 计算并填充SKU统计信息
             calculateSpuStatistics(v, skuDTOList);
         });
+    }
+
+    /**
+     * 回填分类名与品牌名
+     *
+     * <p>两者仅作展示用冗余, 落库进 spu.expand JSON 列</p>
+     *
+     * @param spu 待回填的 SPU
+     */
+    private void fillCategoryAndBrandName(SpuDTO spu) {
+        SpuCategoryVO category = spuCategoryRepository.category(spu.getCategoryId());
+        if (category != null) {
+            spu.getExpand().setCategoryName(category.getName());
+        }
+        BrandVO brand = brandRepository.brandById(spu.getBrandId());
+        if (brand != null) {
+            spu.getExpand().setBrandName(brand.getName());
+        }
+    }
+
+    /**
+     * 绑定 SKU 的 spuId 与编码
+     *
+     * <p>skuCode = spuCode + "-" + 两位序号, 保证与所属 SPU 可视关联</p>
+     *
+     * @param skuDTOList SKU 列表
+     * @param spuId      SPU 主键
+     * @param spuCode    SPU 编码
+     */
+    private void bindSku(List<SkuDTO> skuDTOList, Long spuId, String spuCode) {
+        for (int i = 0; i < skuDTOList.size(); i++) {
+            SkuDTO skuDTO = skuDTOList.get(i);
+            skuDTO.setSpuId(spuId);
+            skuDTO.setCode(BusinessCodeUtil.generateArgs(BusinessType.SKU, spuCode, i + 1));
+        }
     }
 
     /**
@@ -642,8 +686,7 @@ public class SpuDomainImpl implements SpuDomain {
             spu.setState(SpuEnum.State.INIT.getCode());
         } else {
             SpuEnum.ChannelType channelType = command.getChannelType();
-            if (SpuEnum.ChannelType.CUSTOM == channelType ||
-                    SpuEnum.ChannelType.SELECTION == channelType) {
+            if (SpuEnum.ChannelType.SELECTION == channelType) {
                 spu.setState(SpuEnum.State.STORE.getCode());
             } else if (SpuEnum.ChannelType.OUT == channelType) {
                 spu.setState(SpuEnum.State.DOWN.getCode());
@@ -714,16 +757,16 @@ public class SpuDomainImpl implements SpuDomain {
 
         // 设置SPU统计信息
         spu.setMarketPrice(minMarketPrice);
-        spu.setMarketPriceBegan(minMarketPrice);
-        spu.setMarketPriceEnd(maxMarketPrice);
+        spu.getExpand().setMarketPriceBegan(minMarketPrice);
+        spu.getExpand().setMarketPriceEnd(maxMarketPrice);
 
         spu.setSupplyPrice(minSupplyPrice);
-        spu.setSupplierPriceBegan(minSupplyPrice);
-        spu.setSupplierPriceEnd(maxSupplyPrice);
+        spu.getExpand().setSupplierPriceBegan(minSupplyPrice);
+        spu.getExpand().setSupplierPriceEnd(maxSupplyPrice);
 
         spu.setSalePrice(minSalePrice);
-        spu.setSalePriceBegan(minSalePrice);
-        spu.setSalePriceEnd(maxSalePrice);
+        spu.getExpand().setSalePriceBegan(minSalePrice);
+        spu.getExpand().setSalePriceEnd(maxSalePrice);
 
         spu.setUnitPrice(minUnitPrice);
         spu.setMaxProfit(maxProfit);
@@ -902,7 +945,8 @@ public class SpuDomainImpl implements SpuDomain {
      * 更新参数属性
      */
     private void updateAttributes(SpuDTO spuDTO) {
-        if (ObjectUtil.isEmpty(spuDTO.getSpuParamAttributeList())) {
+        if (ObjectUtil.isEmpty(spuDTO.getSpuParamAttributeList())
+                && ObjectUtil.isEmpty(spuDTO.getSpuSaleAttributeList())) {
             return;
         }
         SpuAttributeQuery spuAttributeQuery = new SpuAttributeQuery();
@@ -929,30 +973,73 @@ public class SpuDomainImpl implements SpuDomain {
     }
     /**
      * 更新SKU列表
+     *
+     * <p>先查出该 SPU 现存 SKU, 前台回传的按 ID 覆盖、未回传的删除, 新增 SKU 的编码
+     * 以现存最大序号为起点在内存中迭代生成</p>
+     *
+     * @param spuDTO       待更新 SPU (含前台 SKU 列表)
+     * @param spuUpdateRes 更新结果, 回填新增/更新/删除的 SKU 主键
      */
-    private void updateSkuList(List<SkuDTO> skuVOList, SpuUpdateRes spuUpdateRes) {
-        if (ObjectUtil.isEmpty(skuVOList)) {
+    private void updateSkuList(SpuDTO spuDTO, SpuUpdateRes spuUpdateRes) {
+        List<SkuDTO> skuDTOList = spuDTO.getSkuList();
+        if (ObjectUtil.isEmpty(skuDTOList)) {
             return;
         }
+        SkuQuery skuQuery = new SkuQuery();
+        skuQuery.setSpuId(spuDTO.getId());
+        List<SkuVO> existSkuList = spuRepository.skuVOList(skuQuery);
 
-        for (SkuDTO sku : skuVOList) {
+        int nextSeq = maxSkuCodeSeq(existSkuList) + 1;
+        Set<Long> retainIdList = new HashSet<>();
+        for (SkuDTO sku : skuDTOList) {
+            sku.setSpuId(spuDTO.getId());
+            // 设置默认SKU图片
+            if (StrUtil.isEmpty(sku.getImg())) {
+                sku.setImg(spuDTO.getImg());
+            }
             if (sku.getId() == null || sku.getId() == 0) {
                 // 新增SKU
-                // 设置默认SKU图片
-                if (StrUtil.isEmpty(sku.getImg())) {
-                    String img = StrUtil.isNotEmpty(sku.getImg())
-                            ? sku.getImg()
-                            : spuRepository.getById(sku.getSpuId()).getImg();
-                    sku.setImg(img);
-                }
                 sku.setId(SnowflakeGenerator.getSnowflakeId());
+                sku.setCode(BusinessCodeUtil.generateArgs(BusinessType.SKU, spuDTO.getCode(), nextSeq++));
                 spuRepository.skuSave(TransferUtils.transfer(sku, SkuDTO::new));
+                spuUpdateRes.getAddSkuIdList().add(sku.getId());
             } else {
-                // 更新SKU
+                // 更新SKU: 编码由后端持有, 不接受入参覆盖
+                sku.setCode(null);
                 spuRepository.skuUpdate(TransferUtils.transfer(sku, SkuDTO::new));
                 spuUpdateRes.getUpdateSkuIdList().add(sku.getId());
             }
+            retainIdList.add(sku.getId());
         }
+
+        // 前台未回传的现存SKU视为删除
+        List<Long> deleteIdList = existSkuList.stream()
+                .map(SkuVO::getId)
+                .filter(id -> !retainIdList.contains(id))
+                .collect(Collectors.toList());
+        if (ObjectUtil.isNotEmpty(deleteIdList)) {
+            SkuQuery deleteQuery = new SkuQuery();
+            deleteQuery.setIdList(deleteIdList);
+            spuRepository.skuDeleteByQuery(deleteQuery);
+            spuUpdateRes.getDeleteSkuIdList().addAll(deleteIdList);
+        }
+    }
+
+    /**
+     * 取 SKU 编码中的最大序号后缀
+     *
+     * @param skuList 现存 SKU 列表
+     * @return 最大序号, 无有效编码时返回 0
+     */
+    private int maxSkuCodeSeq(List<SkuVO> skuList) {
+        int maxSeq = 0;
+        for (SkuVO sku : skuList) {
+            if (StrUtil.isEmpty(sku.getCode())) {
+                continue;
+            }
+            maxSeq = Math.max(maxSeq, Convert.toInt(StrUtil.subAfter(sku.getCode(), "-", true), 0));
+        }
+        return maxSeq;
     }
 
     @Override

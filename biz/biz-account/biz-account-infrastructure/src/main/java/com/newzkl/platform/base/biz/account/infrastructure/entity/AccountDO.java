@@ -47,9 +47,14 @@ public class AccountDO extends BaseDO {
     @Index
     private String pidList;
     /**
-     * 父层级角色关系
+     * 顶层主账号id (主账号自身=0, 子账号=顶层主账号id)
      */
-    private String pRoleList;
+    @Index
+    private Long mainAccountId;
+    /**
+     * 账号来源
+     */
+    private AccountEnum.Origin origin;
     /**
      * 昵称
      */

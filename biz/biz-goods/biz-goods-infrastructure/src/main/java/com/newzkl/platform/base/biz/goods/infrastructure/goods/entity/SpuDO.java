@@ -1,9 +1,9 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuExpandVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
@@ -21,7 +21,7 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class SpuDO extends BaseDO {
 	/**
 	 * 名称
@@ -39,6 +39,12 @@ public class SpuDO extends BaseDO {
 	 */
     @ColumnType(value = MysqlTypeConstant.TEXT)
 	private String scrollImg;
+	/**
+	 * 搜索关键字
+	 *
+	 * @ext 逗号隔开
+	 */
+	private String searchKey;
 	/**
 	 * 图片
 	 */
@@ -136,10 +142,6 @@ public class SpuDO extends BaseDO {
 	 */
 	private String lastRefuseReason;
 	/**
-	 * 审批流ID
-	 */
-	private Long flowId;
-	/**
 	 * 外部商品状态
 	 * @ext 0 已上架，1 已下架
 	 */
@@ -147,8 +149,8 @@ public class SpuDO extends BaseDO {
 
     /**
      * 扩展字段
-     * @ext JSON, 存 categoryName/brandName/accountName/marketPriceBegan/marketPriceEnd/salePriceBegan/salePriceEnd/supplierPriceBegan/supplierPriceEnd
+     * @ext JSON 列, 对象直传, 存分类/品牌/账号名称与价格区间
      */
-    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
-    private String expand;
+    @JsonSerializable
+    private SpuExpandVO expand;
 }

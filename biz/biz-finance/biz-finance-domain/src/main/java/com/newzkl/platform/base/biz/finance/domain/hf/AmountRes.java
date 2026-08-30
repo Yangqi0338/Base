@@ -22,7 +22,7 @@ abstract class AmountRes {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    static class PayRes extends TradeRes implements PayBaseRes {
+    public static class PayRes extends TradeRes implements PayBaseRes {
 
         private String bank_message;
         private Map<String, Object> pay_info;

@@ -2,38 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.FreightTemplateDAO">
 
-    <!-- 列表查询条件 (迁移自 new-scm FreightTemplateDAO.xml 的 where) -->
-    <sql id="querySQL">
-        <if test="query.id != null">
-            and t.`id` = #{query.id}
-        </if>
-        <if test="query.idList != null and query.idList.size() > 0">
-            and t.id in
-            <foreach collection="query.idList" item="item" separator="," close=")" open="(">
-                #{item}
-            </foreach>
-        </if>
-        <if test="query.name != null and query.name != ''">
-            and t.`name` like CONCAT('%',#{query.name},'%')
-        </if>
-        <if test="query.accountId != null">
-            and t.`account_id` = #{query.accountId}
-        </if>
-        <if test="query.accountIdAndAdmin != null">
-            and ( t.`account_id` = #{query.accountIdAndAdmin} or t.`account_id` = 0 )
-        </if>
-    </sql>
-
-    <!-- 运费模板分页 (迁移自 new-scm FreightTemplateDAO.xml 的 listByQuery; 分页壳由 PageInfo 改为 MyBatis-Plus Page) -->
-    <select id="queryPage" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreightTemplateVO">
-        select
-        t.`id`,t.`name`,t.`free_post`,t.`pricing_manner`,t.`is_free_post_condition`,t.`is_default`,t.`free_post_condition`,t.`region_spec`,t.`create_time`,t.`update_time`,t.`account_id`
-        from freight_template t
-        <where>
-            and t.del_flag = 0
-            <include refid="querySQL"/>
-        </where>
-        order by t.create_time desc
-    </select>
-
 </mapper>

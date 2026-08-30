@@ -28,17 +28,6 @@ public interface ShipAddressDomain {
     Long save(ShipAddressReq req);
 
     /**
-     * 修改收货地址
-     *
-     * <p>以入参 {@code id} 为准 (非请求体内的 id); 若为默认地址, 先将同 (角色, 账号) 下其他地址置为非默认。</p>
-     *
-     * @param id  收货地址 ID
-     * @param req 收货地址入参
-     * @return 影响行数
-     */
-    int edit(Long id, ShipAddressReq req);
-
-    /**
      * 删除收货地址
      *
      * @param idList ID 列表

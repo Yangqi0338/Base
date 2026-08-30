@@ -44,18 +44,9 @@ public class AccountPurseVO {
     private PurseEnum.User accountType;
 
     /**
-     * 收益
+     * 账户余额
      */
-    private Money earnings;
-
-    /**
-     * 三方余额
-     */
-    private Money tripartiteAmount;
-
-    /**
-     * 总收益
-     */
+    private Money amount;
 
     /**
      * 开户时间

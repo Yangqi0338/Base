@@ -44,9 +44,13 @@ public class IdentityRegisterRpcReq extends BaseReq {
      */
     private String pidList;
     /**
-     * 父层级角色关系(逗号拼接的祖先角色链, 末尾含 ','), 注册时若账号已存在需与原值拼接
+     * 顶层主账号id (主账号自身=0, 子账号=顶层主账号id)
      */
-    private String pIdentityList;
+    private Long mainAccountId;
+    /**
+     * 账号来源
+     */
+    private AccountEnum.Origin origin;
     /**
      * 昵称
      */

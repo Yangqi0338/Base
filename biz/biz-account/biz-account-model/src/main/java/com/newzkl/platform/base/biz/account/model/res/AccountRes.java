@@ -48,10 +48,6 @@ public class AccountRes extends BaseRes {
      */
     private String password;
     /**
-     * 父层级角色关系
-     */
-    private String pRoleList;
-    /**
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;

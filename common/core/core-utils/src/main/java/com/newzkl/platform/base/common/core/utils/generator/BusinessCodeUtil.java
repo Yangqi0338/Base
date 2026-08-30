@@ -51,7 +51,7 @@ public class BusinessCodeUtil {
      * @return 业务Code
      */
     public static String generate(BusinessType businessType) {
-        return generate(businessType, 0);
+        return generate(businessType, null);
     }
 
     /**
@@ -61,9 +61,22 @@ public class BusinessCodeUtil {
      * @param sequenceLength 序列号长度
      * @return 业务Code
      */
-    public static String generate(BusinessType type, int sequenceLength) {
+    public static String generate(BusinessType type, Integer sequenceLength) {
         Generator sequence = getSequence(type);
         return type.getPrefix() + sequence.nextUUID(sequenceLength);
+    }
+
+    /**
+     * 生成拼接式业务Code
+     *
+     * <p>把上下文参数原样透传给发号器, 由发号器决定拼接规则 (如 {@link AppendGenerator})</p>
+     *
+     * @param type 业务类型
+     * @param args 拼接段
+     * @return 业务Code
+     */
+    public static String generateArgs(BusinessType type, Object... args) {
+        return type.getPrefix() + getSequence(type).nextUUID(args);
     }
 
     /**

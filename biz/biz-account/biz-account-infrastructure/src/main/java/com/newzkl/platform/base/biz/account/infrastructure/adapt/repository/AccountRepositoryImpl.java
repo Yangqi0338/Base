@@ -82,9 +82,7 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
     @Override
     public Long selectCount(AccountQuery query) {
-        query.addCountField();
-        BizCountMap countMap = accountDAO.countByCondition(query, accountDAO.getLw(query));
-        return countMap.getCount(0);
+        return accountDAO.selectCount(accountDAO.getLw(query));
     }
 
     @Override
@@ -96,11 +94,13 @@ public class AccountRepositoryImpl extends RepositorySupport implements AccountR
 
     @Override
     public Long accountSave(AccountVO account) {
+        // 无父账号(顶层主账号): 自建 pidList = 自身id + ','; mainAccountId 兜底 0
         if (account.getPid() == null || account.getPid() == 0) {
-            // 根据不为空的pid构建关联的pidList和pRoleList
-            if (StrUtil.isBlank(account.getPidList()) || StrUtil.isBlank(account.getPRoleList())) {
+            if (StrUtil.isBlank(account.getPidList())) {
                 account.setPidList(BizUtil.getPidList(account.getPidList(), account.getId()));
-                account.setPRoleList(BizUtil.getPIdentityList(account.getPRoleList(), account.getIdentityList()));
+            }
+            if (account.getMainAccountId() == null) {
+                account.setMainAccountId(0L);
             }
         }
         AccountDO entity = TransferUtils.transfer(account, AccountDO::new);

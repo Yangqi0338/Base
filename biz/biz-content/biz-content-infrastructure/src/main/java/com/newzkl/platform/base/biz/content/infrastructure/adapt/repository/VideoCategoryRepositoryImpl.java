@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.content.domain.adapt.repository.VideoCategoryRepository;
 import com.newzkl.platform.base.biz.content.infrastructure.dao.ContentVideoCategoryDAO;
 import com.newzkl.platform.base.biz.content.infrastructure.entity.VideoCategoryDO;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import com.newzkl.platform.base.biz.content.model.videocategory.entity.VideoCategory;
 import com.newzkl.platform.base.biz.content.model.videocategory.query.VideoCategoryPageQuery;
@@ -40,14 +39,13 @@ public class VideoCategoryRepositoryImpl implements VideoCategoryRepository {
     private final ContentVideoCategoryDAO contentVideoCategoryDAO;
 
     @Override
-    public ContentPage<VideoCategoryRes> getCategoryPage(VideoCategoryPageQuery query) {
+    public Page<VideoCategoryRes> getCategoryPage(VideoCategoryPageQuery query) {
         Page<VideoCategoryDO> page = contentVideoCategoryDAO.selectPage(RepositorySupport.page(query),
                 new BaseLambdaQueryWrapper<VideoCategoryDO>()
                         .notEmptyLike(VideoCategoryDO::getName, query.getName())
                         .orderByAsc(VideoCategoryDO::getSort)
                         .orderByDesc(VideoCategoryDO::getCreateTime));
-        return ContentPage.of(page.getCurrent(), page.getSize(), page.getTotal(),
-                TransferUtils.transfers(page.getRecords(), VideoCategoryRes::new));
+        return TransferUtils.transferPage(page, VideoCategoryRes.class);
     }
 
     @Override

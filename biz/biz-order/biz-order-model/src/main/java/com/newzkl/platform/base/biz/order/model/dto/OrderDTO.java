@@ -157,10 +157,7 @@ public class OrderDTO extends BaseDTO {
 		for (SpuOrderDTO spuOrder : spuOrderAmount) {
 			this.discountAmount = this.discountAmount.add(spuOrder.getDiscountAmount());
             this.benefitTripartiteId = String.format("%s,%s", this.benefitTripartiteId, spuOrder.getBenefitTripartiteId());
-			if(SpuEnum.ChannelType.CUSTOM == spuOrder.getSpuChannelType()){
-				this.storeAmount = this.storeAmount.add(spuOrder.getStoreAmount());
-				this.customFreightAmount = this.customFreightAmount.add(spuOrder.getFreightAmount());
-			}else if(SpuEnum.ChannelType.SELECTION == spuOrder.getSpuChannelType() ||
+			if(SpuEnum.ChannelType.SELECTION == spuOrder.getSpuChannelType() ||
 					SpuEnum.ChannelType.OUT == spuOrder.getSpuChannelType()){
 				this.supplierAmount = this.supplierAmount.add(spuOrder.getSupplierAmount());
 				this.goodsAmount = this.goodsAmount.add(spuOrder.getGoodsAmount());

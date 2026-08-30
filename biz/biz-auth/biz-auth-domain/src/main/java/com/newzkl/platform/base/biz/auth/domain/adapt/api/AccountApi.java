@@ -22,6 +22,7 @@ public interface AccountApi {
      * @return 账号列表
      */
     List<AccountRpcVO> accountList(AccountEnum.Client client, String username);
+    List<AccountRpcVO> loginAccountList(AccountEnum.Client client, String username);
 
     AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq);
 

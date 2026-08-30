@@ -9,7 +9,6 @@ import com.newzkl.platform.base.biz.content.model.article.query.ArticleQuery;
 import com.newzkl.platform.base.biz.content.model.article.req.ArticleReq;
 import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
-import com.newzkl.platform.base.biz.content.model.common.res.ContentPage;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
@@ -50,7 +49,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     }
 
     @Override
-    public ContentPage<ArticleRes> getArticlePage(ArticlePageQuery query) {
+    public Page<ArticleRes> getArticlePage(ArticlePageQuery query) {
         Page<ArticleDO> page = contentArticleDAO.selectPage(RepositorySupport.page(query),
                 new BaseLambdaQueryWrapper<ArticleDO>()
                         .notEmptyLike(ArticleDO::getTitle, query.getTitle())
@@ -58,8 +57,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
                         .between(query.getCreateTimeL() != null && query.getCreateTimeR() != null,
                                 ArticleDO::getCreateTime, query.getCreateTimeL(), query.getCreateTimeR())
                         .orderByDesc(ArticleDO::getCreateTime));
-        return ContentPage.of(page.getCurrent(), page.getSize(), page.getTotal(),
-                TransferUtils.transfers(page.getRecords(), ArticleRes::new));
+        return TransferUtils.transferPage(page, ArticleRes.class);
     }
 
     @Override

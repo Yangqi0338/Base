@@ -4,6 +4,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -62,4 +63,12 @@ public class OrderQuery extends BizPageQuery {
     public void setOrderState(OrderEnum.State orderState) {
         this.orderStateList = doWrapperList(this.orderStateList, orderState);;
     }
+
+    /**
+     * 创建时间早于该值
+     * <p>
+     * 单侧上界查询用本字段, 勿复用 {@code BizPageQuery.createStartTime}: 后者只 setStart 不 setEnd 时
+     * createTime 数组长度为 1, {@code between} 会退化成 first==last 的秒级等值
+     */
+    private LocalDateTime lessCreateTime;
 }

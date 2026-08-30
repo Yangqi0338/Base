@@ -204,32 +204,9 @@ public class RefundDomainImpl implements RefundDomain {
     public static RefundEnum.State getRefundInitState(AccountEnum.Identity createRole, SpuEnum.ChannelType spuBelowType) {
         //客户申请
         if(AccountEnum.Identity.MEMBER == createRole){
-            //自营
-            if(SpuEnum.ChannelType.CUSTOM == spuBelowType){
-                return RefundEnum.State.CHANNEL_WAIT;
-                //选品
-            }else if(SpuEnum.ChannelType.SELECTION == spuBelowType){
-                return RefundEnum.State.CHANNEL_WAIT;
-            }
-            //选品
-            else if(SpuEnum.ChannelType.OUT == spuBelowType){
-                return RefundEnum.State.CHANNEL_WAIT;
-            }else {
-                ThrowsException.exception(BaseErrorCode.PARAM);
-            }
-            //渠道商申请
+            return RefundEnum.State.CHANNEL_WAIT;
         }else if(AccountEnum.Identity.CHANNEL == createRole) {
-            //自营
-            if(SpuEnum.ChannelType.CUSTOM == spuBelowType){
-                ThrowsException.exception(BaseErrorCode.PARAM);
-                //选品
-            }else if(SpuEnum.ChannelType.SELECTION == spuBelowType){
-                return RefundEnum.State.SUPPLIER_WAIT;
-            }else if(SpuEnum.ChannelType.OUT == spuBelowType){
-                return RefundEnum.State.SUPPLIER_WAIT;
-            }else {
-                ThrowsException.exception(BaseErrorCode.PARAM);
-            }
+            return RefundEnum.State.SUPPLIER_WAIT;
         }else {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
@@ -256,19 +233,8 @@ public class RefundDomainImpl implements RefundDomain {
         //仅退款
         if(RefundEnum.RefundType.MONEY == refund.getRefundType()){
             log.info("进入【仅退款】流程，refundId: {}", refundId);
-            //自营商品
-            if(SpuEnum.ChannelType.CUSTOM == refund.getSpuChannelType()){
-                log.info("商品渠道为【自营】，设置下一步状态为【退款中】，refundId: {}", refundId);
-                nextState = RefundEnum.State.MONEY_ING;
-
-                for (RefundItemVO refundItemVO : refund.getItem()) {
-                    skuOrderIdList.add(refundItemVO.getSkuOrderId());
-                }
-                log.info("收集到需要更新的SKU订单ID列表，数量: {}, refundId: {}", skuOrderIdList.size(), refundId);
-
-                refundPass = true;
-                //选品
-            }else if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
+            //选品
+            if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
                 // todo 临时改为全部为供应商
                 //供应商审核
                 log.info("商品渠道为【选品】，refundId: {}", refundId);
@@ -319,12 +285,8 @@ public class RefundDomainImpl implements RefundDomain {
             //退货退款
         } else if(RefundEnum.RefundType.MONEY_GOODS == refund.getRefundType()){
             log.info("进入【退货退款】流程，refundId: {}", refundId);
-            //自营商品
-            if(SpuEnum.ChannelType.CUSTOM == refund.getSpuChannelType()){
-                log.info("商品渠道为【自营】，设置下一步状态为【待提交物流】，refundId: {}", refundId);
-                nextState = RefundEnum.State.FREIGHT_WAIT;
-                //选品
-            }else if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
+            //选品
+            if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
                 // todo 临时改为全部为供应商
                 log.info("商品渠道为【选品】，设置下一步状态为【待提交物流】，refundId: {}", refundId);
                 //供应商审核
@@ -399,19 +361,8 @@ public class RefundDomainImpl implements RefundDomain {
         //仅退款
         if(RefundEnum.RefundType.MONEY == refund.getRefundType()){
             log.info("进入【仅退款】流程，refundId: {}", refundId);
-            //自营商品
-            if(SpuEnum.ChannelType.CUSTOM == refund.getSpuChannelType()){
-                log.info("商品渠道为【自营】，设置下一步状态为【退款中】，refundId: {}", refundId);
-                nextState = RefundEnum.State.MONEY_ING;
-
-                for (RefundItemVO refundItemVO : refund.getItem()) {
-                    skuOrderIdList.add(refundItemVO.getSkuOrderId());
-                }
-                log.info("收集到需要更新的SKU订单ID列表，数量: {}, refundId: {}", skuOrderIdList.size(), refundId);
-
-                refundPass = true;
-                //选品
-            }else if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
+            //选品
+            if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
                 //供应商审核
                 log.info("商品渠道为【选品】，refundId: {}", refundId);
                 nextState = RefundEnum.State.MONEY_ING;
@@ -438,12 +389,8 @@ public class RefundDomainImpl implements RefundDomain {
             //退货退款
         } else if(RefundEnum.RefundType.MONEY_GOODS == refund.getRefundType()){
             log.info("进入【退货退款】流程，refundId: {}", refundId);
-            //自营商品
-            if(SpuEnum.ChannelType.CUSTOM == refund.getSpuChannelType()){
-                log.info("商品渠道为【自营】，设置下一步状态为【待提交物流】，refundId: {}", refundId);
-                nextState = RefundEnum.State.FREIGHT_WAIT;
-                //选品
-            }else if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
+            //选品
+            if(SpuEnum.ChannelType.SELECTION == refund.getSpuChannelType()){
                 log.info("商品渠道为【选品】，设置下一步状态为【待提交物流】，refundId: {}", refundId);
                 //供应商审核
                 if(AccountEnum.Identity.SUPPLIER == identity){

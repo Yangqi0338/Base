@@ -43,15 +43,15 @@ public class SeatPackageServiceImpl implements SeatPackageService {
         // 查询渠道商钱包席位
         AccountPurseReq accountPurseReq = new AccountPurseReq();
         accountPurseReq.setAccountId(accountId);
-        accountPurseReq.setAccountType(PurseEnum.User.CHANNEL.getType());
-        accountPurseReq.setPurseType(PurseEnum.Type.GOODS_SEAT.getType());
+        accountPurseReq.setAccountType(PurseEnum.User.CHANNEL.getCode());
+        accountPurseReq.setPurseType(PurseEnum.Type.GOODS_SEAT.getCode());
 
         List<PurseAmountRes> goodsSeatList = purseApi.queryPurse(accountPurseReq);
         int usedSeatNum = 0;
         int totalSeatNum = 0;
         for (PurseAmountRes it : goodsSeatList) {
-            usedSeatNum += (it.getTotalEarnings() - it.getEarnings());
-            totalSeatNum += it.getTotalEarnings();
+            usedSeatNum += (it.getTotalAmount() - it.getAmount());
+            totalSeatNum += it.getTotalAmount();
         }
         channelVO.setUsedSeatNum(usedSeatNum);
         channelVO.setTotalSeatNum(totalSeatNum);
