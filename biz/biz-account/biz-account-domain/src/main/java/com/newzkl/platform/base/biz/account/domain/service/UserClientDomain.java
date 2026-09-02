@@ -45,21 +45,6 @@ public interface UserClientDomain {
     void updateMemberInfo(Long accountId, UpdateMemberInfoCommand command);
 
     /**
-     * 平台侧添加会员
-     *
-     * @param req
-     */
-    IdentityRegisterRes adminCreateMember(AdminRegisterIdentityReq req);
-
-    /**
-     * 批量导入会员（Excel）
-     *
-     * @param file 上传的Excel文件
-     * @return 导入结果
-     */
-    EasyExcelErrorVO adminImportAccount(MultipartFile file);
-
-    /**
      * 回收已注销超过24h宽限期的用户账号(物理删除, 释放 username 唯一索引)
      *
      * @return 删除行数

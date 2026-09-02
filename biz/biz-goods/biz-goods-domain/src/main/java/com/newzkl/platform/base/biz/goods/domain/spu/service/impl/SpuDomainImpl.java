@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.goods.domain.adapt.api.GoodsMessageApi;
 import com.newzkl.platform.base.biz.goods.domain.brand.repository.BrandRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuCategoryRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
@@ -37,7 +38,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.SpuErrorCode;
 import com.newzkl.platform.base.common.core.model.properties.SysProperties;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
@@ -66,6 +67,7 @@ public class SpuDomainImpl implements SpuDomain {
     private final SpuRepository spuRepository;
     private final SpuCategoryRepository spuCategoryRepository;
     private final BrandRepository brandRepository;
+    private final GoodsMessageApi goodsMessageApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -223,7 +225,7 @@ public class SpuDomainImpl implements SpuDomain {
     @Override
     public void spuPreUpdate(SpuDTO spuDTO) {
         SpuDTO spu = spuRepository.getById(spuDTO.getId());
-        if (spu == null || !SpuEnum.State.STORE.getCode().equals(spu.getState())) {
+        if (spu == null || SpuEnum.State.STORE != spu.getState()) {
             throw new PlatformException(SpuErrorCode.NOT_EXIST_OR_STATE_ERROR);
         }
         // 仓库中商品直接编辑: 复用 spuUpdate 差异化更新, 不删主表重插, 保住 spuId/skuId 与已有关联数据
@@ -259,7 +261,43 @@ public class SpuDomainImpl implements SpuDomain {
 
         // 更新SPU基本信息
         spuRepository.spuUpdate(spuDTO);
+
+        // 发开发者通知: 按 SKU 变更结果推断语义类型, 无 SKU 变更则视为 SPU 基础信息变更
+        publishSpuUpdateNotify(spuDTO.getId(), spuUpdateRes);
         return spuUpdateRes;
+    }
+
+    /**
+     * 依 SPU 更新结果发开发者通知
+     *
+     * <p>删除有 SKU → 规格删除; 新增或更新有 SKU → 规格变更; 均无 → SPU 基础信息变更。
+     * 收件人解析下沉 openapi 消费方, 无订阅渠道时静默不发。</p>
+     *
+     * @param spuId SPU 主键
+     * @param res SPU 更新结果, 含新增/更新/删除的 SKU 主键
+     */
+    private void publishSpuUpdateNotify(Long spuId, SpuUpdateRes res) {
+        List<Long> deleteSkuIdList = res.getDeleteSkuIdList();
+        List<Long> addSkuIdList = res.getAddSkuIdList();
+        List<Long> updateSkuIdList = res.getUpdateSkuIdList();
+        boolean hasDelete = CollUtil.isNotEmpty(deleteSkuIdList);
+        boolean hasChange = CollUtil.isNotEmpty(addSkuIdList) || CollUtil.isNotEmpty(updateSkuIdList);
+        if (hasDelete) {
+            goodsMessageApi.notifySkuDelete(spuId, deleteSkuIdList);
+        }
+        if (hasChange) {
+            List<Long> changedSkuIdList = new ArrayList<>();
+            if (CollUtil.isNotEmpty(addSkuIdList)) {
+                changedSkuIdList.addAll(addSkuIdList);
+            }
+            if (CollUtil.isNotEmpty(updateSkuIdList)) {
+                changedSkuIdList.addAll(updateSkuIdList);
+            }
+            goodsMessageApi.notifySkuEdit(spuId, changedSkuIdList);
+        }
+        if (!hasDelete && !hasChange) {
+            goodsMessageApi.notifySpuEdit(spuId);
+        }
     }
 
     @Override
@@ -276,25 +314,35 @@ public class SpuDomainImpl implements SpuDomain {
         // 构建SPU更新对象并设置价格区间
         SpuDTO spu = buildSpuForAuditSuccess(spuCommand.getId(),
                 skuUpdateList, salePriceList, supplyPriceList);
-        
+
         // 执行更新
         spuRepository.spuUpdate(spu);
+
+        // 平台改价时发 SKU 价格变更开发者通知
+        if (CollUtil.isNotEmpty(skuUpdateList)) {
+            List<Long> priceSkuIdList = skuUpdateList.stream().map(SkuDTO::getId).collect(Collectors.toList());
+            goodsMessageApi.notifySkuPrice(spuCommand.getId(), priceSkuIdList);
+        }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int spuUp(Integer enable, List<Long> spuIdList) {
-        return updateSpuState(enable, spuIdList, 
-                SpuEnum.State.SALE.getCode(), 
-                SpuEnum.State.DOWN.getCode());
+    public int spuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList) {
+        SpuEnum.State targetState = CommonEnum.YesOrNo.YES == enable ? SpuEnum.State.SALE : SpuEnum.State.DOWN;
+        int result = updateSpuState(enable, spuIdList,
+                SpuEnum.State.SALE,
+                SpuEnum.State.DOWN);
+        // 发上下架开发者通知, 原状态未知传 null
+        goodsMessageApi.notifySaleState(spuIdList, null, targetState.getCode());
+        return result;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int platformSpuUp(Integer enable, List<Long> spuIdList) {
+    public int platformSpuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList) {
         return updateSpuState(enable, spuIdList, 
-                SpuEnum.State.SALE.getCode(), 
-                SpuEnum.State.PLATFORM_DOWN.getCode());
+                SpuEnum.State.SALE,
+                SpuEnum.State.PLATFORM_DOWN);
     }
 
     @Override
@@ -308,7 +356,7 @@ public class SpuDomainImpl implements SpuDomain {
         // 状态修改
         SpuDTO spuUpdate = new SpuDTO();
         spuUpdate.setId(spuVO.getId());
-        spuUpdate.setAuditState(AuditEnum.State.FAIL.getCode());
+        spuUpdate.setAuditState(AuditEnum.State.FAIL);
         spuUpdate.setLastRefuseReason(lastRefuseReason);
         spuRepository.spuUpdate(spuUpdate);
     }
@@ -318,7 +366,7 @@ public class SpuDomainImpl implements SpuDomain {
         // 状态修改
         SpuDTO spuUpdate = new SpuDTO();
         spuUpdate.setId(spuId);
-        spuUpdate.setAuditState(AuditEnum.State.AUDITING.getCode());
+        spuUpdate.setAuditState(AuditEnum.State.AUDITING);
         spuRepository.spuUpdate(spuUpdate);
     }
 
@@ -327,7 +375,7 @@ public class SpuDomainImpl implements SpuDomain {
         // 状态修改
         SpuDTO spuUpdate = new SpuDTO();
         spuUpdate.setId(spuVO.getId());
-        spuUpdate.setAuditState(AuditEnum.State.STOP.getCode());
+        spuUpdate.setAuditState(AuditEnum.State.STOP);
         spuRepository.spuUpdate(spuUpdate);
     }
 
@@ -474,8 +522,8 @@ public class SpuDomainImpl implements SpuDomain {
                                            List<Money> supplyPriceList) {
         SpuDTO spu = new SpuDTO();
         spu.setId(spuId);
-        spu.setState(SpuEnum.State.SALE.getCode());
-        spu.setAuditState(AuditEnum.State.SUCCESS.getCode());
+        spu.setState(SpuEnum.State.SALE);
+        spu.setAuditState(AuditEnum.State.SUCCESS);
         spu.setSkuList(skuList);
 
         // 设置销售价格区间 (Money 无 Comparable, 遍历取极值)
@@ -524,15 +572,15 @@ public class SpuDomainImpl implements SpuDomain {
     /**
      * 更新SPU状态（上架/下架）
      */
-    private int updateSpuState(Integer enable, List<Long> spuIdList, 
-                              Integer onlineState, Integer offlineState) {
-        Integer targetState = CommonEnum.YesOrNo.YES.getCode().equals(enable)
+    private int updateSpuState(CommonEnum.YesOrNo enable, List<Long> spuIdList,
+                               SpuEnum.State onlineState, SpuEnum.State offlineState) {
+        SpuEnum.State targetState = CommonEnum.YesOrNo.YES == enable
                 ? onlineState : offlineState;
         
         int result = spuRepository.editStateById(targetState, spuIdList);
         
         // 执行上架/下架后置处理
-        if (CommonEnum.YesOrNo.YES.getCode().equals(enable)) {
+        if (CommonEnum.YesOrNo.YES == enable) {
             spuRepository.spuUpAfter(spuIdList);
         } else {
             spuRepository.spuDownAfter(spuIdList);
@@ -555,8 +603,8 @@ public class SpuDomainImpl implements SpuDomain {
 
         spuUpdate.getExpand().setBrandName(outSpuEditCommand.getBrandName());
 
-        spuUpdate.setAuditState(AuditEnum.State.SUCCESS.getCode());
-        spuUpdate.setState(SpuEnum.State.DOWN.getCode());
+        spuUpdate.setAuditState(AuditEnum.State.SUCCESS);
+        spuUpdate.setState(SpuEnum.State.DOWN);
         return spuUpdate;
     }
 
@@ -617,7 +665,7 @@ public class SpuDomainImpl implements SpuDomain {
             }
 
             // 设置审核状态
-            v.setAuditState(AuditEnum.State.CUSTOM.getCode());
+            v.setAuditState(AuditEnum.State.CUSTOM);
 
             // 设置商品状态
             setSpuState(v, c, isPreSave);
@@ -683,13 +731,13 @@ public class SpuDomainImpl implements SpuDomain {
      */
     private void setSpuState(SpuDTO spu, SpuDTO command, boolean isPreSave) {
         if (isPreSave) {
-            spu.setState(SpuEnum.State.INIT.getCode());
+            spu.setState(SpuEnum.State.INIT);
         } else {
             SpuEnum.ChannelType channelType = command.getChannelType();
             if (SpuEnum.ChannelType.SELECTION == channelType) {
-                spu.setState(SpuEnum.State.STORE.getCode());
+                spu.setState(SpuEnum.State.STORE);
             } else if (SpuEnum.ChannelType.OUT == channelType) {
-                spu.setState(SpuEnum.State.DOWN.getCode());
+                spu.setState(SpuEnum.State.DOWN);
             }
         }
     }
@@ -784,7 +832,7 @@ public class SpuDomainImpl implements SpuDomain {
                     spuDTO.getSpuSaleAttributeList(), SpuAttributeDTO::new, (c, v) -> {
                         v.setId(SnowflakeGenerator.getSnowflakeId());
                         v.setSpuId(spuId);
-                        v.setType(SpuEnum.SpuAttributeType.SALE.getCode());
+                        v.setType(SpuEnum.SpuAttributeType.SALE);
                     });
             spuAttributeDTOList.addAll(saleAttributeList);
         }
@@ -795,7 +843,7 @@ public class SpuDomainImpl implements SpuDomain {
                     spuDTO.getSpuParamAttributeList(), SpuAttributeDTO::new, (c, v) -> {
                         v.setId(SnowflakeGenerator.getSnowflakeId());
                         v.setSpuId(spuId);
-                        v.setType(SpuEnum.SpuAttributeType.PARAM.getCode());
+                        v.setType(SpuEnum.SpuAttributeType.PARAM);
                     });
             spuAttributeDTOList.addAll(paramAttributeList);
         }
@@ -813,7 +861,7 @@ public class SpuDomainImpl implements SpuDomain {
 
         SpuAttributeQuery spuAttributeQuery = new SpuAttributeQuery();
         spuAttributeQuery.setSpuId(spuDTO.getId());
-        spuAttributeQuery.setType(SpuEnum.SpuAttributeType.SALE.getCode());
+        spuAttributeQuery.setType(SpuEnum.SpuAttributeType.SALE);
 
         List<SpuAttributeVO> oldSpuSaleAttributeList = spuRepository.querySpuAttributeList(spuAttributeQuery);
         SpuAttributeDiffRes diffRes = getSpuAttributeDiff(oldSpuSaleAttributeList, spuDTO.getSpuSaleAttributeList());
@@ -922,20 +970,25 @@ public class SpuDomainImpl implements SpuDomain {
 
     /**
      * 根据sku列表, 待删除sp销售属性, 获取sku的ID
+     *
+     * <p>按 (属性名, 属性值) 逐对比对 SKU 的销售属性, 命中任一待删除项即整条 SKU 作废</p>
+     *
+     * @param skuList                     SKU 列表
+     * @param deleteSpuSaleAttributeValue 待删除的销售属性: 属性名 → 属性值集合
+     * @return 待删除的 SKU 主键列表
      */
     private List<Long> getDeleteSkuIdList(List<SkuVO> skuList, Map<String, Set<String>> deleteSpuSaleAttributeValue) {
         List<Long> deleteSkuIdList = new ArrayList<>();
-        Set<String> valueLike = new HashSet<>();
-        for (String s : deleteSpuSaleAttributeValue.keySet()) {
-            for (String ss : deleteSpuSaleAttributeValue.get(s)) {
-                valueLike.add(s + "\",\"value\":\"" + ss);
+        for (SkuVO skuVO : skuList) {
+            if (CollUtil.isEmpty(skuVO.getSaleAttribute())) {
+                continue;
             }
-        }
-        for (SkuVO skuDO : skuList) {
-            for (String s : valueLike) {
-                if(skuDO.getSaleAttributeJson().contains(s)){
-                    deleteSkuIdList.add(skuDO.getId());
-                }
+            boolean hit = skuVO.getSaleAttribute().stream().anyMatch(attribute -> {
+                Set<String> deleteValues = deleteSpuSaleAttributeValue.get(attribute.getName());
+                return deleteValues != null && deleteValues.contains(attribute.getValue());
+            });
+            if (hit) {
+                deleteSkuIdList.add(skuVO.getId());
             }
         }
         return deleteSkuIdList;
@@ -957,7 +1010,7 @@ public class SpuDomainImpl implements SpuDomain {
         // 插入新的参数属性
         List<SpuAttributeDTO> updateAttributeList = TransferUtils.transfers(
                 spuDTO.getSpuParamAttributeList(), SpuAttributeDTO::new, (c, v) -> {
-                    v.setType(SpuEnum.SpuAttributeType.PARAM.getCode());
+                    v.setType(SpuEnum.SpuAttributeType.PARAM);
                     v.setSpuId(spuDTO.getId());
                     v.setId(SnowflakeGenerator.getSnowflakeId());
                 });
@@ -965,7 +1018,7 @@ public class SpuDomainImpl implements SpuDomain {
         // 插入新的销售属性
         updateAttributeList.addAll(TransferUtils.transfers(
                 spuDTO.getSpuSaleAttributeList(), SpuAttributeDTO::new, (c, v) -> {
-                    v.setType(SpuEnum.SpuAttributeType.SALE.getCode());
+                    v.setType(SpuEnum.SpuAttributeType.SALE);
                     v.setSpuId(spuDTO.getId());
                     v.setId(SnowflakeGenerator.getSnowflakeId());
                 }));

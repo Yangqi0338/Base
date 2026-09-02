@@ -101,7 +101,7 @@ public class SupplierController {
      * @return 转出限额
      */
     @GetMapping("limitAmount")
-    public PlatformResult<Integer> limitAmount() {
+    public PlatformResult<Money> limitAmount() {
         return PlatformResult.success(supplierClientDomain.limitAmount(SecurityUtils.getAccountId()));
     }
 

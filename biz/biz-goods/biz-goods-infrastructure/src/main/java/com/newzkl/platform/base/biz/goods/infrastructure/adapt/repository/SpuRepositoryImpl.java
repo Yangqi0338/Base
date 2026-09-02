@@ -1,9 +1,7 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.adapt.repository;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
@@ -13,7 +11,10 @@ import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SpuDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SkuDO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuAttributeDO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO;
-import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
+import com.newzkl.platform.base.biz.goods.model.assembler.SkuAssembler;
+import com.newzkl.platform.base.biz.goods.model.assembler.SpuAssembler;
+import com.newzkl.platform.base.biz.goods.model.assembler.SpuAttributeAssembler;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SkuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuAttributeDTO;
@@ -21,7 +22,6 @@ import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.res.spu.IndexCountRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuExpandVO;
@@ -45,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,10 +59,13 @@ import java.util.Set;
  * 本类以 MyBatis-Plus {@code BaseMapper} 能力实现 CRUD / 分页 / 条件查询, 其余能力显式抛
  * {@code UnsupportedOperationException}, 不静默返回 null 或空集合冒充成功。</p>
  *
- * <p>枚举字段说明: {@code SpuDO} 的 goodsType/state/deliverTimeType/auditState/specType 为枚举,
- * 而 DTO/VO 侧为 Integer/String。Hutool 默认拷贝对 Integer↔Enum 走 ordinal 语义, 与本项目
- * {@code @EnumValue} 的 code 语义不一致 (如 {@code SpuEnum.State.INIT} code 为 -1),
- * 故这些字段一律从拷贝中排除并按 code 显式互转。</p>
+ * <p>枚举字段说明: {@code SpuDO} 的 state/deliverTimeType/auditState/type 为枚举, 而 VO 侧为 Integer。
+ * Hutool 默认拷贝对 Integer↔Enum 走 ordinal 语义, 与本项目 {@code @EnumValue} 的 code 语义不一致
+ * (如 {@code SpuEnum.State.SALE} code 为 2 而 ordinal 为 3), 故 DO → VO 不再直拷:
+ * 先 {@code TransferUtils.transfer(do, XxxDTO.class)} 出 DTO (两侧枚举同类型, 引用直传),
+ * 再由 model 层 MapStruct 装配器按 {@code getCode()} 落成 Integer。
+ * 反向 DTO → DO 一律排除 {@code AUDIT_PROPS}: DTO 是 {@code @RequestBody} 绑定对象,
+ * 审计字段须由 {@code MetaObjectHandler} 填充, 不接受客户端入参。</p>
  *
  * <p>未实现方法 (gap) 一览:</p>
  * <ul>
@@ -86,22 +90,28 @@ import java.util.Set;
  */
 @Repository
 @RequiredArgsConstructor
-public class SpuRepositoryImpl implements SpuRepository {
+public class SpuRepositoryImpl extends RepositorySupport implements SpuRepository {
 
     /**
-     * SpuDO 与 DTO/VO 之间类型不一致、需显式转换的属性
+     * DTO → DO 拷贝需排除的审计属性
+     *
+     * <p>DTO 继承 {@code BaseDTO} 后带上这些字段, 而 DTO 同时是 {@code @RequestBody} 绑定对象;
+     * 若随拷贝落到 DO, MyBatis-Plus 的 strict fill 见字段非 null 便不再自动填充,
+     * 等于把审计字段的写入权交给客户端</p>
      */
-    private static final String[] SPU_ENUM_PROPS =
-            {"state", "deliverTimeType", "auditState"};
+    private static final String[] AUDIT_PROPS = {"creatorId", "executor", "createTime", "updateTime"};
 
     private final SpuDAO spuDAO;
     private final SkuDAO skuDAO;
     private final SpuAttributeDAO spuAttributeDAO;
+    private final SpuAssembler spuAssembler;
+    private final SkuAssembler skuAssembler;
+    private final SpuAttributeAssembler spuAttributeAssembler;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long spuSave(SpuDTO spu) {
-        SpuDO spuDO = toSpuDO(spu);
+        SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new, toDoOptions());
         spuDAO.insert(spuDO);
         return spuDO.getId();
     }
@@ -115,20 +125,13 @@ public class SpuRepositoryImpl implements SpuRepository {
     @Override
     public SpuDTO getById(Long id) {
         SpuDO spuDO = spuDAO.selectById(id);
-        if (spuDO == null) {
-            return null;
-        }
-        return TransferUtils.transfer(spuDO, SpuDTO::new, (s, d) -> {
-            d.setState(s.getState() == null ? null : s.getState().getCode());
-            d.setDeliverTimeType(s.getDeliverTimeType() == null ? null : s.getDeliverTimeType().getCode());
-            d.setAuditState(s.getAuditState() == null ? null : s.getAuditState().getCode());
-        }, ignoring(SPU_ENUM_PROPS));
+        return TransferUtils.transfer(spuDO, SpuDTO.class);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void spuUpdate(SpuDTO spu) {
-        SpuDO spuDO = toSpuDO(spu);
+        SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new, toDoOptions());
         spuDO.setExpand(mergeExpand(spu.getId(), spuDO.getExpand()));
         spuDAO.updateById(spuDO);
     }
@@ -152,37 +155,39 @@ public class SpuRepositoryImpl implements SpuRepository {
             return expand;
         }
         SpuExpandVO merged = old.getExpand();
-        BeanUtil.copyProperties(expand, merged, CopyOptions.create().setIgnoreNullValue(true));
+        TransferUtils.transfer(expand, merged, CopyOptions.create().setIgnoreNullValue(true));
         return merged;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteByQuery(SpuQuery spuQuery) {
-        spuDAO.delete(requireCondition(spuWrapper(spuQuery)));
+        spuDAO.delete(spuDAO.getLw(spuQuery));
     }
 
     @Override
     public SpuVO voByQuery(SpuQuery spuQuery) {
-        List<SpuDO> list = spuDAO.selectList(spuWrapper(spuQuery).last("limit 1"));
-        return CollUtil.isEmpty(list) ? null : toSpuVO(list.get(0));
+        return spuAssembler.req2VO(
+                TransferUtils.transfer(getOne(spuDAO, spuDAO.getLw(spuQuery)), SpuDTO.class));
     }
 
     @Override
     public List<SpuVO> listSelect(SpuQuery spuQuery) {
-        return TransferUtils.transfers(spuDAO.selectList(spuWrapper(spuQuery)), this::toSpuVO);
+        return TransferUtils.transfers(spuDAO.selectList(spuDAO.getLw(spuQuery)),
+                spuDO -> spuAssembler.req2VO(TransferUtils.transfer(spuDO, SpuDTO.class)));
     }
 
     @Override
     public Page<SpuVO> querySpuPage(SpuQuery spuQuery) {
-        Page<SpuDO> page = spuDAO.selectPage(RepositorySupport.page(spuQuery), spuWrapper(spuQuery));
-        return TransferUtils.transferPage(page, this::toSpuVO);
+        Page<SpuDO> page = spuDAO.selectPage(page(spuQuery), spuDAO.getLw(spuQuery));
+        return TransferUtils.transferPage(page,
+                spuDO -> spuAssembler.req2VO(TransferUtils.transfer(spuDO, SpuDTO.class)));
     }
 
     @Override
     public List<SpuStateVO> spuStateList(SpuQuery spuQuery) {
         List<SpuDO> list = spuDAO.selectList(
-                spuWrapper(spuQuery).select(SpuDO::getId, SpuDO::getState));
+                spuDAO.getLw(spuQuery).select(SpuDO::getId, SpuDO::getState));
         return TransferUtils.transfers(list, spuDO -> {
             SpuStateVO vo = new SpuStateVO();
             vo.setId(spuDO.getId());
@@ -193,42 +198,39 @@ public class SpuRepositoryImpl implements SpuRepository {
 
     @Override
     public Long spuId(Integer channelType, String outSpuId) {
-        // select 返回父类 LambdaQueryWrapper, 会丢掉 BaseLambdaQueryWrapper 的 notEmptyXxx, 故放链尾
-        List<SpuDO> list = spuDAO.selectList(new BaseLambdaQueryWrapper<SpuDO>()
+        return getId(spuDAO, new BaseLambdaQueryWrapper<SpuDO>()
                 .notEmptyEq(SpuDO::getChannelType, SpuEnum.ChannelType.getByCode(channelType))
-                .notEmptyEq(SpuDO::getOutSpuId, outSpuId)
-                .last("limit 1")
-                .select(SpuDO::getId));
-        return CollUtil.isEmpty(list) ? null : list.get(0).getId();
+                .notEmptyEq(SpuDO::getOutSpuId, outSpuId));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int editStateById(Integer state, List<Long> spuIdList) {
+    public int editStateById(SpuEnum.State state, List<Long> spuIdList) {
         if (CollUtil.isEmpty(spuIdList)) {
             return 0;
         }
         LambdaUpdateWrapper<SpuDO> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.set(SpuDO::getState, stateOf(state)).in(SpuDO::getId, spuIdList);
+        wrapper.set(SpuDO::getState, state).in(SpuDO::getId, spuIdList);
         return spuDAO.update(null, wrapper);
     }
 
     @Override
     public Page<SkuVO> querySkuPage(SkuQuery skuQuery) {
-        Page<SkuDO> page = skuDAO.selectPage(RepositorySupport.page(skuQuery), skuWrapper(skuQuery));
-        return TransferUtils.transferPage(page, this::toSkuVO);
+        Page<SkuDO> page = skuDAO.selectPage(page(skuQuery), skuDAO.getLw(skuQuery));
+        return TransferUtils.transferPage(page,
+                skuDO -> skuAssembler.req2VO(TransferUtils.transfer(skuDO, SkuDTO.class)));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void skuUpdate(SkuDTO skuDTO) {
-        skuDAO.updateById(toSkuDO(skuDTO));
+        skuDAO.updateById(TransferUtils.transfer(skuDTO, SkuDO::new, toDoOptions()));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void skuSave(SkuDTO skuDTO) {
-        skuDAO.insert(toSkuDO(skuDTO));
+        skuDAO.insert(TransferUtils.transfer(skuDTO, SkuDO::new, toDoOptions()));
     }
 
     @Override
@@ -237,18 +239,20 @@ public class SpuRepositoryImpl implements SpuRepository {
         if (CollUtil.isEmpty(skuDTOList)) {
             return;
         }
-        skuDAO.insert(TransferUtils.transfers(skuDTOList, this::toSkuDO));
+        skuDAO.insert(TransferUtils.transfers(skuDTOList,
+                dto -> TransferUtils.transfer(dto, SkuDO::new, toDoOptions())));
     }
 
     @Override
     public List<SkuVO> skuVOList(SkuQuery skuQuery) {
-        return TransferUtils.transfers(skuDAO.selectList(skuWrapper(skuQuery)), this::toSkuVO);
+        return TransferUtils.transfers(skuDAO.selectList(skuDAO.getLw(skuQuery)),
+                skuDO -> skuAssembler.req2VO(TransferUtils.transfer(skuDO, SkuDTO.class)));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void skuDeleteByQuery(SkuQuery skuDelete) {
-        skuDAO.delete(requireCondition(skuWrapper(skuDelete)));
+        skuDAO.delete(skuDAO.getLw(skuDelete));
     }
 
     @Override
@@ -262,17 +266,15 @@ public class SpuRepositoryImpl implements SpuRepository {
 
     @Override
     public SkuVO skuVO(Long skuId) {
-        SkuDO skuDO = skuDAO.selectById(skuId);
-        return skuDO == null ? null : toSkuVO(skuDO);
+        return skuAssembler.req2VO(TransferUtils.transfer(skuDAO.selectById(skuId), SkuDTO.class));
     }
 
     @Override
     public SkuVO skuVO(Long spuId, String outSkuId) {
-        List<SkuDO> list = skuDAO.selectList(new BaseLambdaQueryWrapper<SkuDO>()
+        SkuDO skuDO = getOne(skuDAO, new BaseLambdaQueryWrapper<SkuDO>()
                 .notEmptyEq(SkuDO::getSpuId, spuId)
-                .notEmptyEq(SkuDO::getOutSkuId, outSkuId)
-                .last("limit 1"));
-        return CollUtil.isEmpty(list) ? null : toSkuVO(list.get(0));
+                .notEmptyEq(SkuDO::getOutSkuId, outSkuId));
+        return skuAssembler.req2VO(TransferUtils.transfer(skuDO, SkuDTO.class));
     }
 
     @Override
@@ -290,13 +292,14 @@ public class SpuRepositoryImpl implements SpuRepository {
         if (CollUtil.isEmpty(spuAttributeDTOList)) {
             return;
         }
-        spuAttributeDAO.insert(TransferUtils.transfers(spuAttributeDTOList, this::toSpuAttributeDO));
+        spuAttributeDAO.insert(TransferUtils.transfers(spuAttributeDTOList,
+                dto -> TransferUtils.transfer(dto, SpuAttributeDO.class)));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void attributeDeleteByQuery(SpuAttributeQuery spuAttributeQuery) {
-        spuAttributeDAO.delete(requireCondition(spuAttributeWrapper(spuAttributeQuery)));
+        spuAttributeDAO.delete(spuAttributeDAO.getLw(spuAttributeQuery));
     }
 
     @Override
@@ -311,22 +314,24 @@ public class SpuRepositoryImpl implements SpuRepository {
 
     @Override
     public SpuAttributeVO spuAttributeById(Long spuAttributeId) {
-        SpuAttributeDO attributeDO = spuAttributeDAO.selectById(spuAttributeId);
-        return attributeDO == null ? null : toSpuAttributeVO(attributeDO);
+        return spuAttributeAssembler.req2VO(
+                TransferUtils.transfer(spuAttributeDAO.selectById(spuAttributeId), SpuAttributeDTO.class));
     }
 
     @Override
     public Page<SpuAttributeVO> querySpuAttributePage(SpuAttributeQuery spuAttributeQuery) {
         Page<SpuAttributeDO> page = spuAttributeDAO.selectPage(
-                RepositorySupport.page(spuAttributeQuery), spuAttributeWrapper(spuAttributeQuery));
-        return TransferUtils.transferPage(page, this::toSpuAttributeVO);
+                page(spuAttributeQuery), spuAttributeDAO.getLw(spuAttributeQuery));
+        return TransferUtils.transferPage(page, attributeDO -> spuAttributeAssembler.req2VO(
+                TransferUtils.transfer(attributeDO, SpuAttributeDTO.class)));
     }
 
     @Override
     public List<SpuAttributeVO> querySpuAttributeList(SpuAttributeQuery spuAttributeQuery) {
         return TransferUtils.transfers(
-                spuAttributeDAO.selectList(spuAttributeWrapper(spuAttributeQuery)),
-                this::toSpuAttributeVO);
+                spuAttributeDAO.selectList(spuAttributeDAO.getLw(spuAttributeQuery)),
+                attributeDO -> spuAttributeAssembler.req2VO(
+                        TransferUtils.transfer(attributeDO, SpuAttributeDTO.class)));
     }
 
     @Override
@@ -427,179 +432,6 @@ public class SpuRepositoryImpl implements SpuRepository {
     }
 
     /**
-     * 构建 SPU 条件包装器
-     *
-     * <p>条件集合与 {@code SpuDAO.buildQueryWrapper} 保持一致 (含 supplierIdList 映射到
-     * account_id 的既有口径), 并补齐 SpuDO 上确有对应列的 salePrice / saleNum 区间。
-     * marketId / relationType / type / profit 区间涉及市场关联表, 本包装器不处理。</p>
-     *
-     * @param query SPU 查询
-     * @return 条件包装器, 恒非 null
-     */
-    private BaseLambdaQueryWrapper<SpuDO> spuWrapper(SpuQuery query) {
-        BaseLambdaQueryWrapper<SpuDO> wrapper = new BaseLambdaQueryWrapper<>(SpuDO.class);
-        if (query == null) {
-            return wrapper;
-        }
-        wrapper.notEmptyIn(SpuDO::getId, query.getIdList())
-                .notEmptyIn(SpuDO::getAccountId, query.getAccountIdList())
-                .notEmptyIn(SpuDO::getAccountId, query.getSupplierIdList())
-                .notEmptyIn(SpuDO::getCode, query.getCodeList())
-                .notEmptyIn(SpuDO::getCategoryId, query.getCategoryIdList())
-                .notEmptyIn(SpuDO::getState, query.getStateList())
-                .notEmptyIn(SpuDO::getAuditState, query.getAuditStateList())
-                .notEmptyLike(SpuDO::getName, query.getName())
-                .notEmptyLike(SpuDO::getTitle, query.getTitle());
-        wrapper.notEmptyEq(SpuDO::getDeliverTimeType, query.getDeliverTimeType())
-                .notEmptyEq(SpuDO::getChannelType, query.getChannelType())
-                .notEmptyEq(SpuDO::getIdentity, query.getIdentity())
-                .notEmptyEq(SpuDO::getBrandId, query.getBrandId())
-                .notEmptyEq(SpuDO::getFreightTemplateId, query.getFreightTemplateId())
-                .notEmptyEq(SpuDO::getOutSpuId, query.getOutSpuId())
-                // 价格列已 Money 化, 区间入参 (SpuQuery 分 Integer) 显式 Money.of(分) 后 doBetween
-                .doBetween(SpuDO::getSupplyPrice, moneyBound(query.getSupplyPriceStart()), moneyBound(query.getSupplyPriceEnd()))
-                .doBetween(SpuDO::getSalePrice, moneyBound(query.getSalePriceStart()), moneyBound(query.getSalePriceEnd()))
-                // saleNum 为数量列 (Integer), 保持 Integer 区间
-                .doBetween(SpuDO::getSaleNum, query.getSaleNumStart(), query.getSaleNumEnd())
-                .between(SpuDO::getCreateTime, query.getCreateTime());
-        return wrapper;
-    }
-
-    /**
-     * 构建 SKU 条件包装器
-     *
-     * @param query SKU 查询
-     * @return 条件包装器, 恒非 null
-     */
-    private BaseLambdaQueryWrapper<SkuDO> skuWrapper(SkuQuery query) {
-        BaseLambdaQueryWrapper<SkuDO> wrapper = new BaseLambdaQueryWrapper<>(SkuDO.class);
-        if (query == null) {
-            return wrapper;
-        }
-        wrapper.notEmptyIn(SkuDO::getId, query.getIdList())
-                .notEmptyIn(SkuDO::getSpuId, query.getSpuIdList());
-        return wrapper;
-    }
-
-    /**
-     * 构建 SPU 属性条件包装器
-     *
-     * @param query SPU 属性查询
-     * @return 条件包装器, 恒非 null
-     */
-    private BaseLambdaQueryWrapper<SpuAttributeDO> spuAttributeWrapper(SpuAttributeQuery query) {
-        BaseLambdaQueryWrapper<SpuAttributeDO> wrapper = new BaseLambdaQueryWrapper<>(SpuAttributeDO.class);
-        if (query == null) {
-            return wrapper;
-        }
-        wrapper.notEmptyIn(SpuAttributeDO::getId, query.getIdList())
-                .notEmptyIn(SpuAttributeDO::getSpuId, query.getSpuIdList())
-                .notEmptyEq(SpuAttributeDO::getType, attributeTypeOf(query.getType()));
-        return wrapper;
-    }
-
-    /**
-     * 校验批量删除条件非空
-     *
-     * <p>入参查询对象若未携带任何条件, 包装器会退化为无 where 条件, 导致全表逻辑删除
-     * 此处显式拒绝, 而非静默执行。</p>
-     *
-     * @param wrapper 条件包装器
-     * @param <T>     实体类型
-     * @return 原包装器
-     */
-    private <T> BaseLambdaQueryWrapper<T> requireCondition(BaseLambdaQueryWrapper<T> wrapper) {
-        String segment = wrapper.getSqlSegment();
-        if (segment == null || segment.isBlank()) {
-            throw new PlatformException(BaseErrorCode.PARAM, "批量删除必须携带条件");
-        }
-        return wrapper;
-    }
-
-    /**
-     * SpuDTO 转 SpuDO
-     *
-     * @param dto SPU 操作对象
-     * @return SPU 数据对象, 入参为 null 时返回 null
-     */
-    private SpuDO toSpuDO(SpuDTO dto) {
-        return TransferUtils.transfer(dto, SpuDO::new, (s, d) -> {
-            d.setState(stateOf(s.getState()));
-            d.setDeliverTimeType(deliverTimeTypeOf(s.getDeliverTimeType()));
-            d.setAuditState(AuditEnum.State.getByCode(s.getAuditState()));
-        }, ignoring(SPU_ENUM_PROPS));
-    }
-
-    /**
-     * SpuDO 转 SpuVO
-     *
-     * @param spuDO SPU 数据对象
-     * @return SPU 视图对象, 入参为 null 时返回 null
-     */
-    private SpuVO toSpuVO(SpuDO spuDO) {
-        return TransferUtils.transfer(spuDO, SpuVO::new, (s, v) -> {
-            v.setState(s.getState() == null ? null : s.getState().getCode());
-            v.setDeliverTimeType(s.getDeliverTimeType() == null ? null : s.getDeliverTimeType().getCode());
-            v.setAuditState(s.getAuditState() == null ? null : s.getAuditState().getCode());
-        }, ignoring(SPU_ENUM_PROPS));
-    }
-
-    /**
-     * SkuDTO 转 SkuDO
-     *
-     * <p>saleAttribute 在 DTO 侧为对象列表, 在 DO 侧为 JSON 列, 故单独序列化。</p>
-     *
-     * @param dto SKU 操作对象
-     * @return SKU 数据对象, 入参为 null 时返回 null
-     */
-    private SkuDO toSkuDO(SkuDTO dto) {
-        return TransferUtils.transfer(dto, SkuDO::new, (s, d) ->
-                        d.setSaleAttribute(s.getSaleAttribute() == null
-                                ? null : JSON.toJSONString(s.getSaleAttribute())),
-                ignoring("saleAttribute"));
-    }
-
-    /**
-     * SkuDO 转 SkuVO
-     *
-     * <p>DO 的 JSON 列同时回填 VO 的 saleAttributeJson (原文) 与 saleAttribute (解析结果),
-     * 与 {@code GoodsQueryServiceImpl} 既有用法保持一致。</p>
-     *
-     * @param skuDO SKU 数据对象
-     * @return SKU 视图对象, 入参为 null 时返回 null
-     */
-    private SkuVO toSkuVO(SkuDO skuDO) {
-        return TransferUtils.transfer(skuDO, SkuVO::new, (s, v) -> {
-            v.setSaleAttributeJson(s.getSaleAttribute());
-            v.setSaleAttribute(s.getSaleAttribute() == null
-                    ? null : JSON.parseArray(s.getSaleAttribute(), SkuSaleAttributeVO.class));
-        }, ignoring("saleAttribute"));
-    }
-
-    /**
-     * SpuAttributeDTO 转 SpuAttributeDO
-     *
-     * @param dto SPU 属性操作对象
-     * @return SPU 属性数据对象, 入参为 null 时返回 null
-     */
-    private SpuAttributeDO toSpuAttributeDO(SpuAttributeDTO dto) {
-        return TransferUtils.transfer(dto, SpuAttributeDO::new,
-                (s, d) -> d.setType(attributeTypeOf(s.getType())), ignoring("type"));
-    }
-
-    /**
-     * SpuAttributeDO 转 SpuAttributeVO
-     *
-     * @param attributeDO SPU 属性数据对象
-     * @return SPU 属性视图对象, 入参为 null 时返回 null
-     */
-    private SpuAttributeVO toSpuAttributeVO(SpuAttributeDO attributeDO) {
-        return TransferUtils.transfer(attributeDO, SpuAttributeVO::new,
-                (s, v) -> v.setType(s.getType() == null ? null : s.getType().getCode()),
-                ignoring("type"));
-    }
-
-    /**
      * 构建排除指定属性的拷贝选项
      *
      * @param props 需排除的属性名
@@ -610,67 +442,18 @@ public class SpuRepositoryImpl implements SpuRepository {
     }
 
     /**
-     * 分区间边界 (Integer 分) 显式升 Money, null 保持 null 以便 doBetween 跳过该侧条件
+     * 构建 DTO → DO 的拷贝选项: 排除审计属性, 并追加调用方指定的属性
      *
-     * @param cent 分, 可为 null
-     * @return Money 或 null
+     * @param extraProps 除审计属性外还需排除的属性名
+     * @return 拷贝选项
      */
-    private static Money moneyBound(Integer cent) {
-        return cent == null ? null : Money.of(cent);
-    }
-
-    /**
-     * code 转 SPU 状态枚举
-     *
-     * @param code 状态码
-     * @return 状态枚举, 无匹配返回 null
-     */
-    private static SpuEnum.State stateOf(Integer code) {
-        if (code == null) {
-            return null;
+    private static CopyOptions toDoOptions(String... extraProps) {
+        if (extraProps.length == 0) {
+            return ignoring(AUDIT_PROPS);
         }
-        for (SpuEnum.State state : SpuEnum.State.values()) {
-            if (state.getCode().equals(code)) {
-                return state;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * code 转发货时效类型枚举
-     *
-     * @param code 发货时效类型码
-     * @return 发货时效类型枚举, 无匹配返回 null
-     */
-    private static SpuEnum.DeliverTimeType deliverTimeTypeOf(Integer code) {
-        if (code == null) {
-            return null;
-        }
-        for (SpuEnum.DeliverTimeType type : SpuEnum.DeliverTimeType.values()) {
-            if (type.getCode().equals(code)) {
-                return type;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * code 转 SPU 属性类型枚举
-     *
-     * @param code 属性类型码
-     * @return 属性类型枚举, 无匹配返回 null
-     */
-    private static SpuEnum.SpuAttributeType attributeTypeOf(Integer code) {
-        if (code == null) {
-            return null;
-        }
-        for (SpuEnum.SpuAttributeType type : SpuEnum.SpuAttributeType.values()) {
-            if (type.getCode().equals(code)) {
-                return type;
-            }
-        }
-        return null;
+        String[] props = Arrays.copyOf(AUDIT_PROPS, AUDIT_PROPS.length + extraProps.length);
+        System.arraycopy(extraProps, 0, props, AUDIT_PROPS.length, extraProps.length);
+        return ignoring(props);
     }
 
 }

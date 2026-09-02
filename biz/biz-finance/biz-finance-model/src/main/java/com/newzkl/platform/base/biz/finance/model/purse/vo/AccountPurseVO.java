@@ -49,6 +49,11 @@ public class AccountPurseVO {
     private Money amount;
 
     /**
+     * 累计账户余额
+     */
+    private Money totalAmount;
+
+    /**
      * 开户时间
      */
     private LocalDateTime createTime;

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import lombok.Data;
 
@@ -32,4 +33,8 @@ public class SettlementConfigVO implements Serializable {
      * 订单完成后N天结算
      */
     private Integer orderTypeDay;
+    /**
+     * 最小转出金额
+     */
+    private Money limitAmount;
 }

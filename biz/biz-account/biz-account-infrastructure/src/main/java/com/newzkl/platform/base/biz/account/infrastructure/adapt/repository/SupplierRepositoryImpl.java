@@ -10,6 +10,7 @@ import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +82,8 @@ public class SupplierRepositoryImpl extends RepositorySupport implements Supplie
     }
 
     @Override
-    public String getSettlementConfig(Long accountId) {
-        return supplierDAO.getSettlementConfig(accountId);
+    public SettlementConfigVO getSettlementConfig(Long accountId) {
+        return findById2OneField(supplierDAO, accountId, SupplierDO::getPeriodSetConfig);
     }
 
     @Override

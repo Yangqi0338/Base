@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.GoodsCountVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
@@ -59,14 +60,14 @@ public interface SpuDomain {
      * @param enable
      * @param spuIdList
      */
-    int spuUp(Integer enable, List<Long> spuIdList);
+    int spuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList);
 
     /**
      * 上下架
      * @param enable
      * @param spuIdList
      */
-    int platformSpuUp(Integer enable, List<Long> spuIdList);
+    int platformSpuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList);
     /**
      * Sku列表
      * @param skuQuery

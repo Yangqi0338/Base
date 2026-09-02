@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public interface SupplierRepository {
      */
     Page<SupplierAccountVO> pageListWithAccount(SupplierQuery query);
 
-    String getSettlementConfig(Long accountId);
+    SettlementConfigVO getSettlementConfig(Long accountId);
 
     Long selectCount(SupplierQuery query);
 }

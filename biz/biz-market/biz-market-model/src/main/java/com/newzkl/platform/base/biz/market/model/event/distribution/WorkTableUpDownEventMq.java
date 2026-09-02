@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.event.distribution;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +13,7 @@ public class WorkTableUpDownEventMq implements Serializable {
     /**
      * 1 上架 0 下架
      */
-    private Integer enable;
+    private SpuEnum.State enable;
 
     /**
      * 需要推送的事件详情
@@ -21,6 +23,6 @@ public class WorkTableUpDownEventMq implements Serializable {
     /**
      * 需要推送的事件详情
      */
-    private Integer needUpdate;
+    private CommonEnum.YesOrNo needUpdate;
 
 }

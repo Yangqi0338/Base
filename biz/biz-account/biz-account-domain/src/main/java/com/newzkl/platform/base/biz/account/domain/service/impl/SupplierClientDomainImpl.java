@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
@@ -213,15 +214,9 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     }
 
     @Override
-    public Integer limitAmount(Long accountId) {
-        String settlementConfig = supplierRepository.getSettlementConfig(accountId);
-        if (StrUtil.isEmpty(settlementConfig)) {
-            return 0;
-        } else {
-            JSONObject jsonObject = JSONObject.parseObject(settlementConfig);
-            Integer limitAmount = jsonObject.getInteger("limitAmount");
-            return limitAmount == null ? 0 : limitAmount;
-        }
+    public Money limitAmount(Long accountId) {
+        SettlementConfigVO settlementConfig = supplierRepository.getSettlementConfig(accountId);
+        return Opt.ofNullable(settlementConfig).map(SettlementConfigVO::getLimitAmount).orElse(Money.nullVal());
     }
 
     @Override

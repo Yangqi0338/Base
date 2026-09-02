@@ -47,5 +47,5 @@ public class AccountPurseDO extends BaseDO {
     /**
      * 累计入账总额
      */
-    private Integer totalAmount;
+    private Money totalAmount;
 }

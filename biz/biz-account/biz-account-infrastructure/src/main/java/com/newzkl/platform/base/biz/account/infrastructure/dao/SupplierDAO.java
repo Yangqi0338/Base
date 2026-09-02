@@ -35,8 +35,6 @@ public interface SupplierDAO extends BaseMapper<SupplierDO> {
 
     void resetUserOrderCount();
 
-    String getSettlementConfig(@Param("id") Long accountId);
-
 
     default BaseLambdaQueryWrapper<SupplierDO> getLw(SupplierQuery query) {
         return new BaseLambdaQueryWrapper<SupplierDO>()

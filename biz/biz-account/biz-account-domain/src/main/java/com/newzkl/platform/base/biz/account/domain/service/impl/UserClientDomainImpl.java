@@ -220,68 +220,6 @@ public class UserClientDomainImpl implements UserClientDomain {
     }
 
     @Override
-    public IdentityRegisterRes adminCreateMember(AdminRegisterIdentityReq req) {
-        AccountEnum.Identity identity = AccountEnum.Identity.MEMBER;
-
-        // 落 account: 登录账号缺省用手机号, 拿回自增 id
-        com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq rpcReq =
-                new com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq();
-        rpcReq.setIdentity(identity);
-        rpcReq.setClient(identity.getClient());
-        rpcReq.setUsername(StrUtil.blankToDefault(req.getUsername(), req.getPhone()));
-        rpcReq.setPhone(req.getPhone());
-        rpcReq.setNickname(req.getNickname());
-        rpcReq.setHead(req.getHead());
-        rpcReq.setPid(req.getPid());
-        AccountVO account = accountDomain.register(rpcReq);
-
-        // 角色初始化: 组装身份初始化参数并分发到 MEMBER 角色策略
-        IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
-        saveReq.setId(account.getId());
-        saveReq.setNickname(req.getNickname());
-        saveReq.setHead(req.getHead());
-        saveReq.setRoleIdList(req.getRoleIdList());
-        IdentityRegisterRes registerRes = AbsIdentityPolicySupport.getPolicy(identity)
-                .customRegister(saveReq);
-
-        // 注册失败则抛出异常
-        if (registerRes.getErrorCode() != null) {
-            throw new PlatformException(registerRes.getErrorCode());
-        }
-
-        registerRes.setId(account.getId());
-        return registerRes;
-    }
-
-    @Override
-    public EasyExcelErrorVO adminImportAccount(MultipartFile file) {
-        Set<String> phoneSet = new HashSet<>();
-        try (InputStream inputStream = file.getInputStream()) {
-            return EasyExcelUtil.importBiz(inputStream, MemberImportExcelVO.class,
-                    (data, rowNum) -> {
-                        String phone = StrUtil.trimToNull(data.getPhone());
-                        data.setPhone(phone);
-                        if (!phoneSet.add(phone)) {
-                            return String.format("第%s行：手机号【%s】重复，跳过导入", rowNum, phone);
-                        }
-                        return null;
-                    },
-                    list -> {
-                        for (MemberImportExcelVO po : list) {
-                            AdminRegisterIdentityReq req = new AdminRegisterIdentityReq();
-                            req.setPhone(po.getPhone());
-                            req.setNickname(StrUtil.blankToDefault(StrUtil.trim(po.getNickname()), po.getPhone()));
-                            req.setState(AccountEnum.State.ENABLE);
-                            this.adminCreateMember(req);
-                        }
-                    }, new EasyExcelUtil.ImportParam().setHeadRowNum(1));
-        } catch (Exception e) {
-            log.error("会员批量导入异常", e);
-            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "导入失败：" + e.getMessage());
-        }
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public int recycleCanceledMember() {
         AccountQuery query = new AccountQuery();

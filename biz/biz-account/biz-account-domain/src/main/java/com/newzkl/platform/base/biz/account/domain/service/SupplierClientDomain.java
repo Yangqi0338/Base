@@ -87,7 +87,7 @@ public interface SupplierClientDomain {
      */
     void promisePayAuditFail(Long accountId, String lastRefuseReason);
 
-    Integer limitAmount(Long accountId);
+    Money limitAmount(Long accountId);
 
     Page<SupplierRes> supplierPage(SupplierQuery supplierQuery);
 

@@ -4,22 +4,6 @@ public interface MQ {
 
     interface Tag {
         /**
-         * 审批:保证金缴纳
-         */
-        String AUDIT_PROMISE_FLOW = "audit:promise";
-        String AUDIT_PROMISE_FLOW_MESSAGE = "audit-promise-message";
-        /**
-         * 审批:spu创建
-         */
-        String AUDIT_SPU_CREATE = "audit:spu";
-        String AUDIT_SPU_CREATE_GOODS = "audit-spu-goods";
-        String AUDIT_SPU_CREATE_MESSAGE = "audit-spu-message";
-        /**
-         * 审批:spu工单
-         */
-        String AUDIT_SPU_WORK_TABLE = "audit:worktable";
-        String AUDIT_SPU_WORK_TABLE_MESSAGE = "audit-worktable-message";
-        /**
          * 支付:支付成功
          */
         String PAYMENT_PAY_SUCCESS = "payment:paysuccess";
@@ -48,6 +32,11 @@ public interface MQ {
         String DEVELOPER_NOTIFY_EVENT = "developer:notify";
         String DEVELOPER_NOTIFY_EVENT_MESSAGE = "developer-notify-message";
         /**
+         * 商品:开发者通知(收件人未解析), 由 goods 域发布, openapi 侧解析订阅渠道后转 DEVELOPER_NOTIFY_EVENT
+         */
+        String GOODS_DEVELOPER_NOTIFY_EVENT = "goods:developer:notify";
+        String GOODS_DEVELOPER_NOTIFY_EVENT_MESSAGE = "goods-developer-notify-message";
+        /**
          * 结算订单
          */
         String SETTLE = "settle";
@@ -57,12 +46,6 @@ public interface MQ {
          */
         String LEVEL_UP_SUCCESS = "account:levelUp:success:event";
         String LEVEL_UP_SUCCESS_MESSAGE = "levelUp-success-event-message";
-        /**
-         * 工单下架更新铺货
-         */
-        String WORK_TABLE_UP_DOWN_EVENT = "work:table:up:down";
-        String WORK_TABLE_UP_DOWN_EVENT_MESSAGE = "work-table-up-down-message";
-        /**
         /**
          * 超时关闭订单
          */
