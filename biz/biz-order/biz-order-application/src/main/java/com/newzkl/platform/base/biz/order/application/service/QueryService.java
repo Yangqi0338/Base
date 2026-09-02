@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.order.application.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
@@ -45,7 +45,7 @@ public interface QueryService {
      * @param spuOrderIdList
      * @return
      */
-    List<SpuOrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList);
+    List<OrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList);
     /**
      * 订单ID列表
      * @param orderQuery

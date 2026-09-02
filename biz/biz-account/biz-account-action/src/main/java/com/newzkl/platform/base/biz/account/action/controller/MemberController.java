@@ -88,20 +88,4 @@ public class MemberController {
         accountService.identityCreate(registerReq);
         return PlatformResult.success();
     }
-
-    /**
-     * 批量导入会员 (Excel)
-     *
-     * <p>迁移补充: 旧 {@code IAccountService.importAccount(file)} 回包装结果并按 {@code isSuccess} 分流,
-     * 中台化后由 {@link UserClientDomain#adminImportAccount} 承担, 直接回导入错误明细,
-     * 失败信息由出参承载而非结果包装的 message。</p>
-     *
-     * @param file 上传的 Excel 文件
-     * @return 导入错误明细
-     */
-    @PutMapping("/importMember")
-    @FuncPermission("批量导入会员 (Excel)")
-    public PlatformResult<EasyExcelErrorVO> importMember(@RequestParam("file") MultipartFile file) {
-        return PlatformResult.success(userClientDomain.adminImportAccount(file));
-    }
 }

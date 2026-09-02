@@ -1,0 +1,17 @@
+ALTER TABLE
+  `third_party_goods_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `platform_type` varchar(255) NULL COMMENT '平台类型',
+  MODIFY COLUMN `out_spu_id` varchar(255) NULL COMMENT '外部商品(SPU)ID',
+  MODIFY COLUMN `interface_name` varchar(255) NULL COMMENT '接口名称',
+  MODIFY COLUMN `request_json` json NULL COMMENT '请求参数',
+  MODIFY COLUMN `response_json` json NULL COMMENT '响应结果',
+  MODIFY COLUMN `request_status` int NULL COMMENT '请求状态',
+  MODIFY COLUMN `error_message` varchar(255) NULL COMMENT '错误信息',
+  MODIFY COLUMN `retry_count` int NULL COMMENT '重试次数',
+  MODIFY COLUMN `next_retry_time` datetime NULL COMMENT '下次重试时间',
+  MODIFY COLUMN `executor` json NULL COMMENT '操作人信息',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT '创建人id',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = '第三方商品同步记录数据对象 (DO)';

@@ -25,6 +25,8 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.AccountBindSyn
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.TripartiteAccountBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.TripartiteBaseRes;
+import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties;
+import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuNotifyEnum;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
 
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -89,7 +91,7 @@ public class HuiFuMethod {
         req.setTrade_type(EnumUtil.toString(request.getTradeType()));
         String amount = decorateAmount(request.getPayAmount());
         req.setTrans_amt(amount);
-        req.setNotify_url(HuiFuProperties.payNotifyUrl);
+        req.setNotify_url(HuiFuProperties.getUrl(HuiFuNotifyEnum.pay));
 
         PayRes res = api.pay(req);
         // 转化业务类
@@ -135,7 +137,7 @@ public class HuiFuMethod {
         req.setOrg_req_date(reqDate);
         String amount = decorateAmount(request.getRefundAmount());
         req.setOrd_amt(amount);
-        req.setNotify_url(HuiFuProperties.refundNotifyUrl);
+        req.setNotify_url(HuiFuProperties.getUrl(HuiFuNotifyEnum.refund));
 
         RefundRes res = api.refund(req);
         // 转化业务类
@@ -166,7 +168,7 @@ public class HuiFuMethod {
         req.setReq_seq_id(idStr(request.getWithdrawId()));
         String amount = decorateAmount(request.getWithdrawAmount());
         req.setCash_amt(amount);
-        req.setNotify_url(HuiFuProperties.withdrawNotifyUrl);
+        req.setNotify_url(HuiFuProperties.getUrl(HuiFuNotifyEnum.withdraw));
 
         WithdrawRes res = api.withdraw(req);
         // 转化业务类
@@ -192,7 +194,7 @@ public class HuiFuMethod {
         req.setHuifu_id(request.getHuifuId());
         String amount = decorateAmount(request.getApplyAmount());
         req.setOrd_amt(amount);
-        req.setNotify_url(HuiFuProperties.withdrawNotifyUrl);
+        req.setNotify_url(HuiFuProperties.getUrl(HuiFuNotifyEnum.withdraw));
 
         List<RollOutReq.AcctInfo> acctInfos = new ArrayList<>();
         RollOutReq.AcctInfo acctInfo = new RollOutReq.AcctInfo();
@@ -324,7 +326,7 @@ public class HuiFuMethod {
                 null, CopyOptions.create().setFieldNameEditor(StrUtil::toUnderlineCase));
 
         req.setUpper_huifu_id(sysId);
-        req.setAsync_return_url(HuiFuProperties.bindCardNotifyUrl);
+        req.setAsync_return_url(HuiFuProperties.getUrl(HuiFuNotifyEnum.bindCard));
 
         // 结算信息
         AccountReq.SettleConfig settleConfig = new AccountReq.SettleConfig();

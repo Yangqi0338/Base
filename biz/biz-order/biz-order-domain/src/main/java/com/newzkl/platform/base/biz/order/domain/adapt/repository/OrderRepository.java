@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
 import com.newzkl.platform.base.biz.order.model.req.query.*;
@@ -115,7 +115,7 @@ public interface OrderRepository {
      */
     List<Long> orderIdList(OrderQuery orderQuery);
 
-    List<SpuOrderStateVO> accountOrderState(Long accountId, List<Long> orderIdList);
+    List<OrderStateVO> accountOrderState(Long accountId, List<Long> orderIdList);
 
     SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId);
 

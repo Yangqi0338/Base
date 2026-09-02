@@ -1,0 +1,15 @@
+ALTER TABLE
+  `level` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `type` bigint NULL COMMENT 'type',
+  MODIFY COLUMN `enable` int NULL COMMENT 'enable',
+  MODIFY COLUMN `value` int NULL COMMENT 'value',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT 'name',
+  MODIFY COLUMN `permission` json NULL COMMENT 'permission',
+  MODIFY COLUMN `condition` json NULL COMMENT 'condition',
+  MODIFY COLUMN `condition_judge_type` int NULL COMMENT 'conditionJudgeType',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'LevelDO表';

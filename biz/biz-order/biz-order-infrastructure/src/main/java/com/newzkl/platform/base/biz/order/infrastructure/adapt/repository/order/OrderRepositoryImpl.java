@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.order.*;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.*;
 import com.newzkl.platform.base.biz.order.model.dto.*;
@@ -221,11 +221,11 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public List<SpuOrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList) {
+    public List<OrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList) {
         SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
         spuOrderQuery.setChannelId(accountId);
         spuOrderQuery.setIdList(spuOrderIdList);
-        return list(spuOrderDAO, spuOrderDAO.getLw(spuOrderQuery), SpuOrderStateVO.class);
+        return list(spuOrderDAO, spuOrderDAO.getLw(spuOrderQuery), OrderStateVO.class);
     }
 
     @Override

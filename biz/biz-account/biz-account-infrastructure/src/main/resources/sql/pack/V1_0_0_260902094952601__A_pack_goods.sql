@@ -1,0 +1,15 @@
+ALTER TABLE
+  `pack_goods` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `type` int NULL COMMENT 'type[1平台管理员,2平台员工,1000会员,1001供应商,1002渠道商,1003服务商,1004脉脉通渠道商]',
+  MODIFY COLUMN `level` int NULL COMMENT 'level',
+  MODIFY COLUMN `amount` bigint NULL COMMENT 'amount',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT 'name',
+  MODIFY COLUMN `img` varchar(255) NULL COMMENT 'img',
+  MODIFY COLUMN `desc` varchar(255) NULL COMMENT 'desc',
+  MODIFY COLUMN `state` int NULL COMMENT 'state[1是,0否]',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'PackGoodsDO表';

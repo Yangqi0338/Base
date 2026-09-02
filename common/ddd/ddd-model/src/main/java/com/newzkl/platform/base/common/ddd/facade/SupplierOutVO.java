@@ -63,7 +63,7 @@ public class SupplierOutVO extends BaseRes {
      /**
      * 账期配置JSON
      */
-     private String periodSetConfig;
+     private SettlementConfigVO periodSetConfig;
      /**
      * 应付保证金金额
      */

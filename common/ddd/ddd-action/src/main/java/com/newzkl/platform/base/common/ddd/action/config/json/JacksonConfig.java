@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.newzkl.platform.base.common.core.model.annotation.JsonTranslate;
 import com.newzkl.platform.base.common.core.model.enums.EnumDeserializerModifier;
+import com.newzkl.platform.base.common.core.model.json.JsonTimeModule;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.money.MoneyJsonDeserializer;
 import com.newzkl.platform.base.common.core.model.money.MoneyJsonSerializer;
@@ -79,6 +80,18 @@ public class JacksonConfig {
     @Bean
     public Module jsonTimeModule() {
         return new JsonTimeModule();
+    }
+
+    /**
+     * {@code @JsonUnwrapped(prefix=...)} 驼峰模块 — 平展字段输出 {@code prefix + 首字母大写字段名}
+     *
+     * <p>不接线则 Jackson 原生按纯字符串拼接输出 {@code issuername}, 违反前端驼峰契约</p>
+     *
+     * @return Jackson 模块
+     */
+    @Bean
+    public Module jsonUnwrappedCamelModule() {
+        return new JsonUnwrappedCamelModule();
     }
 
     /**

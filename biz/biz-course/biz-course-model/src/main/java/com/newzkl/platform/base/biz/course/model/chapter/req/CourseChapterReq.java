@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.chapter.req;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -54,7 +55,7 @@ public class CourseChapterReq extends BaseReq {
      * @ext 1-是, 0-否
      */
     @NotNull(message = "是否免费不能为空")
-    private Integer isFree = 1;
+    private CommonEnum.YesOrNo isFree = CommonEnum.YesOrNo.YES;
 
     /**
      * 视频时长
@@ -80,7 +81,7 @@ public class CourseChapterReq extends BaseReq {
      * @ext 1-启用, 0-禁用
      */
     @NotNull(message = "启用状态不能为空")
-    private Integer isEnabled = 1;
+    private CommonEnum.YesOrNo isEnabled = CommonEnum.YesOrNo.YES;
 
     /**
      * 发布时间, 为空取当前时间

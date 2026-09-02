@@ -1,0 +1,16 @@
+ALTER TABLE
+  `store_account` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `store_id` bigint NULL COMMENT 'storeId',
+  MODIFY COLUMN `account_id` bigint NULL COMMENT 'accountId',
+  MODIFY COLUMN `channel_id` bigint NULL COMMENT 'channelId',
+  MODIFY COLUMN `last_view_time` datetime NULL COMMENT 'lastViewTime',
+  MODIFY COLUMN `last_pay_time` datetime NULL COMMENT 'lastPayTime',
+  MODIFY COLUMN `last_pay_amount` bigint NULL COMMENT 'lastPayAmount',
+  MODIFY COLUMN `relation_type` int NULL COMMENT 'relationType',
+  MODIFY COLUMN `defult` int NULL COMMENT 'defult[1是,0否]',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'StoreAccountDO表';

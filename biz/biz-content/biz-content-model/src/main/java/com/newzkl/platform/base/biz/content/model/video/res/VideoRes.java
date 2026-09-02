@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.content.model.video.res;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -72,7 +73,7 @@ public class VideoRes extends BaseRes implements Serializable {
     /**
      * 是否显示:0-不显示,1-显示
      */
-    private Integer isVisible;
+    private CommonEnum.YesOrNo isVisible;
 
     /**
      * 是否已关注发布人(跨域降级, 暂不填充)

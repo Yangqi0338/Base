@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class ShortVideoRepositoryImpl implements ShortVideoRepository {
+public class ShortVideoRepositoryImpl extends RepositorySupport implements ShortVideoRepository {
 
     /**
      * 视频类型: 短视频

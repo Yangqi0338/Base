@@ -19,13 +19,6 @@ public interface IdentityService {
      */
     void updateAuditState(Long accountId, AccountEnum.Identity identity);
 
-//    /**
-//     * 提交保证金缴纳流水
-//     *
-//     * @param promiseFlowVO
-//     */
-//    Long submitPromiseFlow(PromiseFlowVO promiseFlowVO);
-
     /**
      * 服务费修改
      *

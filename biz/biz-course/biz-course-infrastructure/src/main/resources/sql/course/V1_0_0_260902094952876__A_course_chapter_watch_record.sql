@@ -1,0 +1,18 @@
+ALTER TABLE
+  `course_chapter_watch_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `user_id` bigint NULL COMMENT 'userId',
+  MODIFY COLUMN `course_id` bigint NULL COMMENT 'courseId',
+  MODIFY COLUMN `course_chapter_id` bigint NULL COMMENT 'courseChapterId',
+  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNum',
+  MODIFY COLUMN `chapter_num` int NULL COMMENT 'chapterNum',
+  MODIFY COLUMN `is_watched` int NULL COMMENT 'isWatched[1是,0否]',
+  MODIFY COLUMN `watch_duration_centisecond` int NULL COMMENT 'watchDurationCentisecond',
+  MODIFY COLUMN `last_watch_position_centisecond` int NULL COMMENT 'lastWatchPositionCentisecond',
+  MODIFY COLUMN `watch_time` datetime NULL COMMENT 'watchTime',
+  MODIFY COLUMN `total_watch_times` int NULL COMMENT 'totalWatchTimes',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'CourseChapterWatchRecordDO表';

@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.biz.course.model.chapter.res;
 
+import cn.hutool.core.lang.Opt;
+import com.newzkl.platform.base.common.core.model.annotation.JsonTranslate;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -45,12 +48,11 @@ public class CourseChapterRes extends BaseRes {
     /**
      * 是否免费: 1-是, 0-否
      */
-    private Integer isFree;
+    private CommonEnum.YesOrNo isFree;
 
-    /**
-     * 是否免费描述: 免费/付费
-     */
-    private String isFreeDesc;
+    public String getIsFreeDesc(){
+        return isFree == CommonEnum.YesOrNo.YES ? "免费" : "付费";
+    }
 
     /**
      * 自媒体上传视频URL
@@ -80,10 +82,10 @@ public class CourseChapterRes extends BaseRes {
     /**
      * 是否启用: 1-启用, 0-禁用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 
-    /**
-     * 启用状态描述: 启用/禁用
-     */
-    private String isEnabledDesc;
+    @JsonTranslate
+    public String getIsEnabledDesc(){
+        return isEnabled == CommonEnum.YesOrNo.YES ? "启用" : "禁用";
+    }
 }

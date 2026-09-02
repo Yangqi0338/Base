@@ -1,0 +1,18 @@
+ALTER TABLE
+  `spu_category` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `pid` bigint NULL COMMENT 'pid',
+  MODIFY COLUMN `pid_list` varchar(255) NULL COMMENT 'pidList',
+  MODIFY COLUMN `level` int NULL COMMENT 'level',
+  MODIFY COLUMN `brand_id_list` varchar(255) NULL COMMENT 'brandIdList',
+  MODIFY COLUMN `account_id` bigint NULL COMMENT 'accountId',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT 'name',
+  MODIFY COLUMN `desc` varchar(255) NULL COMMENT 'desc',
+  MODIFY COLUMN `img` varchar(255) NULL COMMENT 'img',
+  MODIFY COLUMN `idx` int NULL COMMENT 'idx',
+  MODIFY COLUMN `is_enabled` int NULL COMMENT 'isEnabled[1是,0否]',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'SpuCategoryDO表';

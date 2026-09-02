@@ -67,16 +67,16 @@ abstract class Base {
     }
 
     /**
-     * 若是异步,应该在拦截器做一层解套
+     * 同步返回外层结构, data 为业务结构 T, 拦截器据此解套
      * @author niu
      */
     @Data
-    static class SyncRes extends Res {
+    static class SyncRes<T> extends Res {
 
         // 验签
         private String sign;
 
-        private Base.Res data;
+        private T data;
     }
 
     /**

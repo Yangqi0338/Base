@@ -1,14 +1,11 @@
 package com.newzkl.platform.base.biz.goods.application.goods.service.goods.impl;
 
-import com.alibaba.fastjson2.JSON;
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.domain.video.service.ShortVideoDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuAttributeQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.query.video.ShortVideoQuery;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
@@ -56,7 +53,7 @@ public class GoodsQueryServiceImpl implements GoodsQueryService {
     /**
      * 查询 spu 详情
      *
-     * <p>组装顺序: SPU 主体 → SKU (含销售属性反序列化) → 销售属性 → 参数属性 → 商品视频。</p>
+     * <p>组装顺序: SPU 主体 → SKU → 销售属性 → 参数属性 → 商品视频</p>
      *
      * @param spuId         spu 主键
      * @param needExtraInfo 是否需要额外信息 (行业名称 / 铺货标记, 当前为能力缺口)
@@ -74,17 +71,11 @@ public class GoodsQueryServiceImpl implements GoodsQueryService {
         // 组装 sku
         SkuQuery skuQuery = new SkuQuery();
         skuQuery.setSpuId(spuId);
-        List<SkuVO> skuVOList = spuDomain.skuVOList(skuQuery);
-        if (skuVOList != null) {
-            for (SkuVO skuVO : skuVOList) {
-                skuVO.setSaleAttribute(JSON.parseArray(skuVO.getSaleAttributeJson(), SkuSaleAttributeVO.class));
-            }
-        }
-        spuVO.setSkuList(skuVOList);
+        spuVO.setSkuList(spuDomain.skuVOList(skuQuery));
 
         // 组装销售属性 / 参数属性
-        spuVO.setSpuSaleAttributeList(listSpuAttribute(spuId, SpuEnum.SpuAttributeType.SALE.getCode()));
-        spuVO.setSpuParamAttributeList(listSpuAttribute(spuId, SpuEnum.SpuAttributeType.PARAM.getCode()));
+        spuVO.setSpuSaleAttributeList(listSpuAttribute(spuId, SpuEnum.SpuAttributeType.SALE));
+        spuVO.setSpuParamAttributeList(listSpuAttribute(spuId, SpuEnum.SpuAttributeType.PARAM));
 
         if (Boolean.TRUE.equals(needExtraInfo)) {
             spuVO.setIndustryName(INDUSTRY_NAME_NONE);
@@ -104,7 +95,7 @@ public class GoodsQueryServiceImpl implements GoodsQueryService {
      * @param type  属性类型 (0 销售属性, 1 参数属性)
      * @return 属性列表
      */
-    private List<SpuAttributeVO> listSpuAttribute(Long spuId, Integer type) {
+    private List<SpuAttributeVO> listSpuAttribute(Long spuId, SpuEnum.SpuAttributeType type) {
         SpuAttributeQuery spuAttributeQuery = new SpuAttributeQuery();
         spuAttributeQuery.setSpuId(spuId);
         spuAttributeQuery.setType(type);

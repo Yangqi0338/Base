@@ -6,6 +6,7 @@ import com.newzkl.platform.base.biz.goods.infrastructure.dao.ThirdPartyGoodsReco
 import com.newzkl.platform.base.biz.goods.infrastructure.entity.ThirdPartyGoodsRecordDO;
 import com.newzkl.platform.base.biz.goods.model.biz.req.query.ThirdPartyGoodsRecordQuery;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ThirdPartyGoodsRepositoryImpl implements ThirdPartyGoodsRepository {
+public class ThirdPartyGoodsRepositoryImpl extends RepositorySupport implements ThirdPartyGoodsRepository {
 
     private final ThirdPartyGoodsRecordDAO recordDAO;
 

@@ -1,6 +1,10 @@
 package com.newzkl.platform.base.biz.content.model.article.res;
 
+import com.alibaba.ttl.threadpool.agent.internal.javassist.bytecode.analysis.Executor;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.dto.AccountVO;
+import com.newzkl.platform.base.common.ddd.model.dto.ExecutorDTO;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -57,22 +61,8 @@ public class ArticleRes extends BaseRes implements Serializable {
     private CommonEnum.YesOrNo isVisible;
 
     /**
-     * 创建人ID
-     */
-    private Long creatorId;
-
-    /**
-     * 创建人姓名
-     */
-    private String creatorName;
-
-    /**
-     * 发布人id
-     */
-    private Long issuerId;
-
-    /**
      * 发布人
      */
-    private String issuer;
+    @JsonUnwrapped(prefix = "issuer")
+    private AccountVO issuer;
 }

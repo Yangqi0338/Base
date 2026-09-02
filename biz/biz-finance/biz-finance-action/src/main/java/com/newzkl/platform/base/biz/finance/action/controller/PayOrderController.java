@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 /**
  * 支付订单控制器
  *
@@ -55,23 +57,24 @@ public class PayOrderController {
      * <p>注意: 旧实现校验的是配置里的 {@code minimumWithdrawalAmount} (最小提现金额) 而非
      * {@code minimumRechargeAmount}, 此处按旧行为原样迁移, 避免线上字典只配了提现阈值时改变准入。</p>
      *
-     * @param amount    充值金额 (分)
+     * @param rechargeAmount    充值金额
      * @param payMethod 支付方式 1:微信 2:支付宝
      * @return 汇付支付结果
      */
     @FuncPermission("渠道商充值采购金")
     @PostMapping("/channelRecharge/{amount}/{payMethod}")
-    public PlatformResult<HuiFuPayRes> channelRecharge(@PathVariable("amount") Integer amount,
+    public PlatformResult<HuiFuPayRes> channelRecharge(@PathVariable("amount") BigDecimal rechargeAmount,
                                                   @PathVariable("payMethod") Integer payMethod) {
         ChannelConfigVO channelConfig = accountPurseConfigDomain.defaultChannelConfig();
-        if (channelConfig.getMinimumWithdrawalAmount().getCent() > amount) {
+        Money money = Money.of(rechargeAmount);
+        if (channelConfig.getMinimumWithdrawalAmount().greaterThan(money)) {
             throw new PlatformException(FinanceErrorCode.LESS_THAN_MINIMUM_RECHARGE_AMOUNT);
         }
 
         RechargeOrderInfo orderInfo = new RechargeOrderInfo();
         orderInfo.setLevel(1);
 
-        OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.RECHARGE, amount, payMethod);
+        OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.RECHARGE, money, payMethod);
         req.setOrderInfo(JSONUtil.toJsonStr(orderInfo));
         req.setGoodsInfo(CHANNEL_RECHARGE);
         return PlatformResult.success(cashPayService.orderPay(req));
@@ -80,15 +83,16 @@ public class PayOrderController {
     /**
      * 供应商充值运营账户
      *
-     * @param rechargeAmount 充值金额 (分)
+     * @param rechargeAmount 充值金额
      * @param payType        支付方式 1:微信 2:支付宝
      * @return 汇付支付结果
      */
     @FuncPermission("供应商充值运营账户")
     @PostMapping("/supplierRecharge/{rechargeAmount}/{payType}")
-    public PlatformResult<HuiFuPayRes> supplierRecharge(@PathVariable("rechargeAmount") Integer rechargeAmount,
+    public PlatformResult<HuiFuPayRes> supplierRecharge(@PathVariable("rechargeAmount") BigDecimal rechargeAmount,
                                                    @PathVariable("payType") Integer payType) {
-        OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE, rechargeAmount, payType);
+        Money amount = Money.of(rechargeAmount);
+        OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE, amount, payType);
         req.setOrderInfo(String.valueOf(rechargeAmount));
         req.setGoodsInfo(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE.getInfo());
         return PlatformResult.success(cashPayService.orderPay(req));
@@ -102,13 +106,12 @@ public class PayOrderController {
      * @param payType     支付方式编码
      * @return 支付入参
      */
-    private OrderPayReq buildOrderPayReq(EarningsEnum.ConsumeType consumeType, Integer amount, Integer payType) {
+    private OrderPayReq buildOrderPayReq(EarningsEnum.ConsumeType consumeType, Money amount, Integer payType) {
         OrderPayReq req = new OrderPayReq();
         req.setOrderNo(SnowflakeGenerator.getSnowflakeId());
         req.setConsumeType(consumeType);
-        // amount 为分 Integer, Money.of(Integer)=分, 与 orderAmount/payAmount(Money) 对齐
-        req.setOrderAmount(Money.of(amount));
-        req.setPayAmount(Money.of(amount));
+        req.setOrderAmount(amount);
+        req.setPayAmount(amount);
         req.setAccountId(SecurityUtils.getAccountId());
         req.setAccountName(SecurityUtils.getUsername());
         req.setPayType(PaymentEnum.PayType.getByCode(payType));

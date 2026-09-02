@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
@@ -58,11 +59,12 @@ public class SupplierDO extends BaseDO {
     /**
      * 是否设置账期
      */
-    private Integer periodSetState;
+    private CommonEnum.YesOrNo periodSetState;
     /**
      * 账期配置JSON
      */
-    private String periodSetConfig;
+    @JsonSerializable
+    private SettlementConfigVO periodSetConfig;
     /**
      * 应付保证金金额
      * @ext Money, 落库 BIGINT 分

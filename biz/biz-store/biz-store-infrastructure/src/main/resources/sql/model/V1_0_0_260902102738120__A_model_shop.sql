@@ -1,0 +1,15 @@
+ALTER TABLE
+  `model_shop` MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `channel_id` bigint NULL COMMENT '渠道商id',
+  MODIFY COLUMN `model_shop_name` varchar(255) NULL COMMENT '样板店名称',
+  MODIFY COLUMN `model_description` varchar(255) NULL COMMENT '样板店描述',
+  MODIFY COLUMN `audit_state` int NULL COMMENT '审核状态[0待用户提交,1待审核,2通过,3未通过,4终止]',
+  MODIFY COLUMN `audit_info` varchar(255) NULL COMMENT '审核信息',
+  MODIFY COLUMN `style_code` varchar(255) NULL COMMENT '样式code',
+  MODIFY COLUMN `state` int NULL COMMENT '状态:0正常，1已禁用[1是,0否]',
+  MODIFY COLUMN `executor` json NULL COMMENT '操作人信息',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT '创建人id',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = '样板店';

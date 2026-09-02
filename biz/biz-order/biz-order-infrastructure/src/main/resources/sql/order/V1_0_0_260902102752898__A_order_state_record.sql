@@ -1,0 +1,16 @@
+ALTER TABLE
+  `order_state_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `order_id` bigint NULL COMMENT '订单主键ID',
+  MODIFY COLUMN `spu_order_id` bigint NULL COMMENT 'SPU订单ID',
+  MODIFY COLUMN `sku_order_id` bigint NULL COMMENT 'SKU订单ID',
+  MODIFY COLUMN `before_order_state` int NULL COMMENT '变更前订单状态[0新订单,1C端待付款,2渠道商待付款,3运营商待付款,4派发中,6待发货,8待收货,10已收货,12已完成,14售后中,99已关闭]',
+  MODIFY COLUMN `after_order_state` int NULL COMMENT '变更后订单状态[0新订单,1C端待付款,2渠道商待付款,3运营商待付款,4派发中,6待发货,8待收货,10已收货,12已完成,14售后中,99已关闭]',
+  MODIFY COLUMN `orderer_id` bigint NULL COMMENT '下单人ID(匿名订单可为 null)',
+  MODIFY COLUMN `operator_role` int NULL COMMENT '操作人角色[1平台管理员,2平台员工,1000会员,1001供应商,1002渠道商,1003服务商,1004脉脉通渠道商]',
+  MODIFY COLUMN `ext` json NULL COMMENT '拓展字段',
+  MODIFY COLUMN `executor` json NULL COMMENT '操作人信息',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT '创建人id',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = '订单状态记录表 DO';

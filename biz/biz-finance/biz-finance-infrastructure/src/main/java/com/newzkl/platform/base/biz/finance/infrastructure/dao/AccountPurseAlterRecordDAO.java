@@ -23,6 +23,7 @@ public interface AccountPurseAlterRecordDAO extends BaseMapper<AccountPurseAlter
                 .notEmptyEq(AccountPurseAlterRecordDO::getAccountId, query.getAccountId())
                 .notEmptyEq(AccountPurseAlterRecordDO::getPurseType, query.getPurseType())
                 .notEmptyIn(AccountPurseAlterRecordDO::getAlterType, query.getAlterTypeList())
+                .notEmptyEq(AccountPurseAlterRecordDO::getEarningAlterType, query.getEarningAlterType())
                 .between(AccountPurseAlterRecordDO::getCreateTime, query.getCreateTime())
                 .eq(AccountPurseAlterRecordDO::getAccountType, query.getAccountType())
                 .orderByDesc(AccountPurseAlterRecordDO::getId);

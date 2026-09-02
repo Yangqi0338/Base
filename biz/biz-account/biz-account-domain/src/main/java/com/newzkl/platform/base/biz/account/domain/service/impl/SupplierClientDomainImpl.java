@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -172,7 +173,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     }
 
     @Override
-    public void promiseFlowSubmitAuditSuccess(Long supplierId) {
+    public void promisePaySubmitAudit(Long supplierId) {
         SupplierVO supplier = new SupplierVO();
         supplier.setId(supplierId);
         supplier.setPromisePayAuditState(AuditEnum.State.AUDITING);
@@ -248,7 +249,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void periodSet(Long id, String periodSetConfig) {
+    public void periodSet(Long id, SettlementConfigVO periodSetConfig) {
         SupplierVO item = new SupplierVO();
         item.setId(id);
         item.setPeriodSetState(CommonEnum.YesOrNo.YES);
@@ -259,10 +260,10 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void shouldPromisePayAmountSet(Long id, Integer shouldPromisePayAmount, Integer promisePayConfig) {
+    public void shouldPromisePayAmountSet(Long id, Money shouldPromisePayAmount, Integer promisePayConfig) {
         SupplierVO item = new SupplierVO();
         item.setId(id);
-        item.setShouldPromisePayAmount(Money.of(shouldPromisePayAmount));
+        item.setShouldPromisePayAmount(shouldPromisePayAmount);
         item.setPromisePayConfig(promisePayConfig);
         supplierRepository.supplierEdit(item);
         tripInState(id);

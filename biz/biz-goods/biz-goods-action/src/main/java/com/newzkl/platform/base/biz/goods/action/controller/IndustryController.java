@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.action.cmd.IndustryCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuCategoryService;
 import com.newzkl.platform.base.biz.goods.domain.brand.service.IndustryDomain;
@@ -10,6 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.brand.IndustryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.IndustryVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +70,7 @@ public class IndustryController {
      */
     @PostMapping("deleteIndustry")
     @FuncPermission("删除行业")
-    public PlatformResult<Void> industryDelete(@RequestBody CommonCmd.IdList idList) {
+    public PlatformResult<Void> industryDelete(@RequestBody IdCommand idList) {
         industryDomain.industryDelete(idList.getIdList());
         return PlatformResult.success();
     }

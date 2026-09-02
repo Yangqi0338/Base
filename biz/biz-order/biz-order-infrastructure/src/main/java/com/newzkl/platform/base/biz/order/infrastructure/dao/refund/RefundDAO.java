@@ -24,7 +24,7 @@ public interface RefundDAO extends BaseMapper<RefundDO> {
                 .notEmptyIn(RefundDO::getRefundState, query.getRefundStateList())
                 .notEmptyEq(RefundDO::getSupplierId, query.getSupplierId())
                 .notEmptyEq(RefundDO::getChannelId, query.getChannelId())
-                .notEmptyGt(RefundDO::getStateTime, query.getStateTimeLess())
+                .notEmptyLt(RefundDO::getStateTime, query.getStateTimeLess())
                 .notEmptyNotIn(RefundDO::getFromOrderState, query.getFromOrderStateNot())
                 .between(RefundDO::getCreateTime, query.getCreateTime())
                 .jsonLike(RefundDO::getItem, "spuName",query.getSpuName())

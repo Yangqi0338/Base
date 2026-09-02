@@ -11,12 +11,14 @@ import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuStateVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.GoodsCountVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuCountQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 
@@ -152,7 +154,7 @@ public interface SpuRepository {
 
     void resetSpuOrderCount();
 
-    int editStateById(Integer state, List<Long> spuIdList);
+    int editStateById(SpuEnum.State state, List<Long> spuIdList);
 
     OrderGoodsInfoVO queryOrderSkuInfoVOList(Long skuId);
 

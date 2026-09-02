@@ -1,0 +1,16 @@
+ALTER TABLE
+  `freight_template` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT 'name',
+  MODIFY COLUMN `free_post` int NULL COMMENT 'freePost',
+  MODIFY COLUMN `pricing_manner` int NULL COMMENT 'pricingManner',
+  MODIFY COLUMN `is_free_post_condition` int NULL COMMENT 'isFreePostCondition',
+  MODIFY COLUMN `is_default` int NULL COMMENT 'isDefault',
+  MODIFY COLUMN `free_post_condition` json NULL COMMENT 'freePostCondition',
+  MODIFY COLUMN `region_spec` json NULL COMMENT 'regionSpec',
+  MODIFY COLUMN `account_id` bigint NULL COMMENT 'accountId',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'FreightTemplateDO表';

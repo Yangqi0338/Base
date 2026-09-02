@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
@@ -143,7 +144,7 @@ public class SupplierController {
      * @return 账期配置
      */
     @PostMapping("/periodInfo")
-    public PlatformResult<String> periodInfo(@RequestBody IdCommand idListCommand) {
+    public PlatformResult<SettlementConfigVO> periodInfo(@RequestBody IdCommand idListCommand) {
         Long id = CollUtil.getFirst(idListCommand.getIdList());
         if (id == null) {
             id = SecurityUtils.getAccountId();

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
  */
 @ForestClient
 @Component
-@BaseRequest(baseURL = "#{platform.fi.huiFuPreUrl}", interceptor = HuiFuInterceptor.class)
+@BaseRequest(baseURL = "#{platform.fi.huifu.preUrl}", interceptor = HuiFuInterceptor.class)
 @Retry(maxRetryCount = "0", maxRetryInterval = "10")
 @LogEnabled(false)
-public interface HuiFuApi {
+interface HuiFuApi {
 
     /**
      * 汇付聚合正扫

@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
-import com.newzkl.platform.base.biz.goods.model.exception.goods.SpuErrorCode;
+import com.newzkl.platform.base.common.ddd.model.constant.SpuErrorCode;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
@@ -76,7 +76,7 @@ public class SpuServiceImpl implements SpuService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void spuUp(Integer enable, List<Long> spuIdList) {
+    public void spuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList) {
         spuDomain.platformSpuUp(enable, spuIdList);
         log.warn(GAP + "平台上下架后未通知供应商, 缺 user 域 supplierFacade#upDownEvent, spuIdList={}", spuIdList);
     }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.action.config.json;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,7 @@ class JacksonConfigTest {
                 .registerModule(config.enumDeserializeModule())
                 .registerModule(config.jsonTranslateModule())
                 .registerModule(config.jsonTimeModule())
+                .registerModule(config.jsonUnwrappedCamelModule())
                 .registerModule(config.longToStringModule());
     }
 
@@ -95,6 +97,37 @@ class JacksonConfigTest {
         assertEquals(null, holder.getType());
     }
 
+    @Test
+    @DisplayName("带 prefix 的 @JsonUnwrapped 平展成驼峰 (issuerName 而非 issuername)")
+    void unwrappedPrefixCamelized() throws Exception {
+        Holder holder = new Holder();
+        Issuer issuer = new Issuer();
+        issuer.setName("张三");
+        issuer.setId(841333562827845L);
+        holder.setIssuer(issuer);
+        String json = mapper.writeValueAsString(holder);
+        assertEquals("\"张三\"", mapper.readTree(json).get("issuerName").toString());
+        assertEquals("\"841333562827845\"", mapper.readTree(json).get("issuerId").toString());
+    }
+
+    @Test
+    @DisplayName("驼峰平展字段可反序列化回原对象")
+    void unwrappedPrefixCamelizedRead() throws Exception {
+        Holder holder = mapper.readValue("{\"issuerName\":\"张三\",\"issuerId\":\"841333562827845\"}", Holder.class);
+        assertEquals("张三", holder.getIssuer().getName());
+        assertEquals(841333562827845L, holder.getIssuer().getId());
+    }
+
+    @Test
+    @DisplayName("无 prefix 的 @JsonUnwrapped 保持原名平展 (BaseRes.executor 契约不变)")
+    void unwrappedWithoutPrefixKeptAsIs() throws Exception {
+        Holder holder = new Holder();
+        Issuer plain = new Issuer();
+        plain.setName("李四");
+        holder.setPlain(plain);
+        assertEquals("\"李四\"", field(holder, "name"));
+    }
+
     /**
      * 取序列化结果中指定字段的 JSON 片段
      *
@@ -142,6 +175,54 @@ class JacksonConfigTest {
          * 短信类型
          */
         private SmsEnum.Type type;
+
+        /**
+         * 带 prefix 平展的对象
+         */
+        @JsonUnwrapped(prefix = "issuer")
+        private Issuer issuer;
+
+        /**
+         * 无 prefix 平展的对象
+         */
+        @JsonUnwrapped
+        private Issuer plain;
+
+        /**
+         * 取带 prefix 平展的对象
+         *
+         * @return 平展对象
+         */
+        public Issuer getIssuer() {
+            return issuer;
+        }
+
+        /**
+         * 设带 prefix 平展的对象
+         *
+         * @param issuer 平展对象
+         */
+        public void setIssuer(Issuer issuer) {
+            this.issuer = issuer;
+        }
+
+        /**
+         * 取无 prefix 平展的对象
+         *
+         * @return 平展对象
+         */
+        public Issuer getPlain() {
+            return plain;
+        }
+
+        /**
+         * 设无 prefix 平展的对象
+         *
+         * @param plain 平展对象
+         */
+        public void setPlain(Issuer plain) {
+            this.plain = plain;
+        }
 
         /**
          * 取 id
@@ -249,6 +330,57 @@ class JacksonConfigTest {
          */
         public void setType(SmsEnum.Type type) {
             this.type = type;
+        }
+    }
+
+    /**
+     * 被平展的内嵌对象 (对齐 {@code AccountVO} 的 name/id 结构)
+     */
+    static class Issuer {
+        /**
+         * 名称
+         */
+        private String name;
+
+        /**
+         * 主键
+         */
+        private Long id;
+
+        /**
+         * 取名称
+         *
+         * @return 名称
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * 设名称
+         *
+         * @param name 名称
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * 取主键
+         *
+         * @return 主键
+         */
+        public Long getId() {
+            return id;
+        }
+
+        /**
+         * 设主键
+         *
+         * @param id 主键
+         */
+        public void setId(Long id) {
+            this.id = id;
         }
     }
 }

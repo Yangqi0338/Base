@@ -23,6 +23,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -69,7 +71,7 @@ class PayOrderControllerTest {
     void channelRechargeShouldRejectAmountBelowThreshold() {
         when(accountPurseConfigDomain.defaultChannelConfig()).thenReturn(channelConfig(10000));
 
-        PlatformException ex = assertThrows(PlatformException.class, () -> payOrderController.channelRecharge(9999, 1));
+        PlatformException ex = assertThrows(PlatformException.class, () -> payOrderController.channelRecharge(BigDecimal.valueOf(9999), 1));
 
         assertTrue(ex.equalsCode(FinanceErrorCode.LESS_THAN_MINIMUM_RECHARGE_AMOUNT));
         verify(cashPayService, never()).orderPay(any());
@@ -81,7 +83,7 @@ class PayOrderControllerTest {
         when(accountPurseConfigDomain.defaultChannelConfig()).thenReturn(channelConfig(10000));
         when(cashPayService.orderPay(any())).thenReturn(new HuiFuPayRes());
 
-        PlatformResult<HuiFuPayRes> result = payOrderController.channelRecharge(10000, 1);
+        PlatformResult<HuiFuPayRes> result = payOrderController.channelRecharge(BigDecimal.valueOf(10000), 1);
 
         assertTrue(result.isSuccess());
         OrderPayReq req = captureOrderPayReq();
@@ -103,7 +105,7 @@ class PayOrderControllerTest {
         when(accountPurseConfigDomain.defaultChannelConfig()).thenReturn(channelConfig(0));
         when(cashPayService.orderPay(any())).thenReturn(new HuiFuPayRes());
 
-        payOrderController.channelRecharge(500, 2);
+        payOrderController.channelRecharge(BigDecimal.valueOf(500), 2);
 
         assertEquals(PaymentEnum.PayType.ALIPAY, captureOrderPayReq().getPayType());
     }
@@ -113,7 +115,7 @@ class PayOrderControllerTest {
     void supplierRechargeShouldBuildSupplierRequest() {
         when(cashPayService.orderPay(any())).thenReturn(new HuiFuPayRes());
 
-        PlatformResult<HuiFuPayRes> result = payOrderController.supplierRecharge(2000, 1);
+        PlatformResult<HuiFuPayRes> result = payOrderController.supplierRecharge(BigDecimal.valueOf(2000), 1);
 
         assertTrue(result.isSuccess());
         OrderPayReq req = captureOrderPayReq();

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.category.req;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -52,5 +53,5 @@ public class CourseCategoryReq extends BaseReq {
      * @ext 1-启用, 0-禁用
      */
     @NotNull(message = "启用状态不能为空")
-    private Integer isEnabled = 1;
+    private CommonEnum.YesOrNo isEnabled = CommonEnum.YesOrNo.YES;
 }

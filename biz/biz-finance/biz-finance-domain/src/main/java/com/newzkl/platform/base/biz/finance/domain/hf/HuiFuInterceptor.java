@@ -3,18 +3,21 @@ package com.newzkl.platform.base.biz.finance.domain.hf;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.util.ParameterizedTypeImpl;
 import com.dtflys.forest.converter.ForestEncoder;
 import com.dtflys.forest.exceptions.ForestRuntimeException;
 import com.dtflys.forest.http.ForestRequest;
 import com.dtflys.forest.http.ForestResponse;
 import com.dtflys.forest.http.body.ObjectRequestBody;
 import com.dtflys.forest.interceptor.ResponseResult;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
 import static com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties.sysId;
@@ -41,9 +44,9 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
         Base.Req req = (Base.Req) request.getArgument(0);
         req.build(sysId);
 
-        // 参数校验
+        // 参数校验: 解包出真实业务 DTO, 直接传 ObjectRequestBody 壳会导致校验注解空转
         for (ObjectRequestBody item : request.getBody().getObjectItems()) {
-            validate(request, item);
+            validate(request, item.getObject());
         }
 
         String json = JSONUtil.toJsonStr(req);
@@ -83,19 +86,24 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
     public ResponseResult onResponse(ForestRequest request, ForestResponse response) {
         if (response.isError() && !response.statusOk()) {
             log.error("请求失败，response：" + response);
-            return error((Exception) response.getException());
+            return error(response.getException());
         }
 
         String content = response.readAsString();
         log.info("汇付返回：" + content);
-        Base.SyncRes res = JSONUtil.toBean(content, Base.SyncRes.class);
+
+        Type bizType = request.getMethod().getReturnType();
+        Type syncType = new ParameterizedTypeImpl(new Type[]{bizType}, null, Base.SyncRes.class);
+        Base.SyncRes<Base.Res> res = JSON.parseObject(content, syncType);
         Base.Res data = res.getData();
-        if (!response.isSuccess()) {
-            log.error("请求失败，response：" + response);
-            throw new PlatformException(data.getResp_code(), data.getResp_desc());
+        if (data == null) {
+
+            log.error("汇付返回缺少 data 节点，response：" + response);
+            throw new PlatformException(BaseErrorCode.EXECUTE, "汇付返回报文异常");
         }
 
-        return proceed(); // 继续执行请求的后续逻辑
+        // 剥掉外层通用结构, 只把 data 业务对象作为 Api 返回值, Api 层无需感知 SyncRes
+        return success(data);
     }
 
     /**

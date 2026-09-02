@@ -31,11 +31,6 @@ public class VideoCategoryRes implements Serializable {
      * 排序值(小于100)
      */
     private Integer sort;
-
-    /**
-     * 视频数量
-     */
-
     /**
      * 创建时间
      */

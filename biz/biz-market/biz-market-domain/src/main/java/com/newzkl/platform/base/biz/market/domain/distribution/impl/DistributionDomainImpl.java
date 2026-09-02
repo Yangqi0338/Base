@@ -58,7 +58,7 @@ public class DistributionDomainImpl implements DistributionDomain {
     @Override
     public DistributionsBatchUpdateReq upDownEvent(WorkTableUpDownEventMq workTableUpDownEventMq) {
         DistributionsBatchUpdateReq req = new DistributionsBatchUpdateReq();
-        Integer state = DistributionEnum.State.PLATFORM_UNLISTED.getCode();
+        DistributionEnum.State state = DistributionEnum.State.PLATFORM_UNLISTED;
         DistributionsQuery distributionsReq = new DistributionsQuery();
         distributionsReq.setGoodsIds(workTableUpDownEventMq.getSpuIdList());
         distributionsReq.setStateNot(state);

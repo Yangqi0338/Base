@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.action.cmd;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -14,18 +15,6 @@ import java.util.List;
 public class SpuCmd {
 
     /**
-     * 商品 ID 命令
-     */
-    @Data
-    public static class Id {
-        /**
-         * 商品 ID
-         */
-        @NotNull
-        private Long id;
-    }
-
-    /**
      * 商品上下架命令
      */
     @Data
@@ -34,7 +23,7 @@ public class SpuCmd {
          * 上下架状态
          */
         @NotNull
-        private Integer enable;
+        private CommonEnum.YesOrNo enable;
         /**
          * 商品 ID 列表
          */

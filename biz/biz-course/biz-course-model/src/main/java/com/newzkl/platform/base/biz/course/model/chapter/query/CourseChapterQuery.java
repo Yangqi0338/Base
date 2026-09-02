@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.chapter.query;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,12 +32,12 @@ public class CourseChapterQuery extends BizPageQuery {
      *
      * @ext 1-免费, 0-付费; 为空查全部
      */
-    private Integer isFree;
+    private CommonEnum.YesOrNo isFree;
 
     /**
      * 是否启用
      *
      * @ext 1-启用, 0-禁用; 为空查全部
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 }

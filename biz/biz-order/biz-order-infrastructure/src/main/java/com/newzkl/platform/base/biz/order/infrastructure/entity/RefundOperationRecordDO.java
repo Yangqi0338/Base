@@ -3,8 +3,8 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.newzkl.platform.base.biz.order.model.vo.RefundOperationRecordExt;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.Data;
@@ -17,7 +17,7 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
  * @since 2026-01-23
  */
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class RefundOperationRecordDO extends BaseDO {
 
     /**
@@ -93,7 +93,8 @@ public class RefundOperationRecordDO extends BaseDO {
 
     /**
      * 拓展字段
+     * @ext JSON 列, 对象直传
      */
-    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
-    private String ext;
+    @JsonSerializable
+    private RefundOperationRecordExt ext;
 }

@@ -1,12 +1,11 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.action.cmd.SpuCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.goods.GoodsQueryService;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -27,6 +26,7 @@ import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 商品-商品库控制器
@@ -141,7 +140,7 @@ public class SpuController {
      */
     @PostMapping("spuDelete")
     @FuncPermission("删除商品")
-    public PlatformResult<Void> spuDelete(@RequestBody CommonCmd.IdList idList) {
+    public PlatformResult<Void> spuDelete(@RequestBody IdCommand idList) {
         AccountEnum.Identity identity = SecurityUtils.getIdentity();
         if (AccountEnum.Identity.SUPPLIER == identity) {
             spuDomain.spuDelete(idList.getIdList());
@@ -215,16 +214,8 @@ public class SpuController {
         if (SpuEnum.State.STORE == spuQuery.getState() && AuditEnum.State.CUSTOM == spuQuery.getAuditState()) {
             spuQuery.setAuditStateList(Arrays.asList(AuditEnum.State.CUSTOM, AuditEnum.State.STOP));
         }
-        Page<SpuVO> spuPage = spuDomain.querySpuPage(spuQuery);
-        Page<SelectorSpuVO> resultPage = new Page<>();
-        resultPage.setCurrent(spuPage.getCurrent());
-        resultPage.setSize(spuPage.getSize());
-        resultPage.setTotal(spuPage.getTotal());
-        resultPage.setPages(spuPage.getPages());
-        resultPage.setRecords(spuPage.getRecords().stream()
-                .map(it -> BeanUtil.copyProperties(it, SelectorSpuVO.class))
-                .collect(Collectors.toList()));
-        return PlatformResult.success(resultPage);
+        return PlatformResult.success(
+                TransferUtils.transferPage(spuDomain.querySpuPage(spuQuery), SelectorSpuVO.class));
     }
 
     /**
@@ -283,16 +274,8 @@ public class SpuController {
     @PostMapping("marketSearchAllSpu")
     public PlatformResult<Page<MarketSimpleSpuVO>> marketSearchAllSpu(@RequestBody SpuQuery spuQuery) {
         spuQuery.setState(SpuEnum.State.SALE);
-        Page<SpuVO> spuPage = marketSpuPage(spuQuery);
-        Page<MarketSimpleSpuVO> resultPage = new Page<>();
-        resultPage.setCurrent(spuPage.getCurrent());
-        resultPage.setSize(spuPage.getSize());
-        resultPage.setTotal(spuPage.getTotal());
-        resultPage.setPages(spuPage.getPages());
-        resultPage.setRecords(spuPage.getRecords().stream()
-                .map(it -> BeanUtil.copyProperties(it, MarketSimpleSpuVO.class))
-                .collect(Collectors.toList()));
-        return PlatformResult.success(resultPage);
+        return PlatformResult.success(
+                TransferUtils.transferPage(marketSpuPage(spuQuery), MarketSimpleSpuVO.class));
     }
 
     /**

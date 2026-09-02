@@ -1,0 +1,15 @@
+ALTER TABLE
+  `settle_goods` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `supplier_id` bigint NULL COMMENT 'supplierId',
+  MODIFY COLUMN `spu_id` bigint NULL COMMENT 'spuId',
+  MODIFY COLUMN `next_settle_time` datetime NULL COMMENT 'nextSettleTime',
+  MODIFY COLUMN `settle_num` int NULL COMMENT 'settleNum',
+  MODIFY COLUMN `settle_money` bigint NULL COMMENT 'settleMoney',
+  MODIFY COLUMN `settle_goods_num` int NULL COMMENT 'settleGoodsNum',
+  MODIFY COLUMN `up_num` int NULL COMMENT 'upNum',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'SettleGoodsDO表';

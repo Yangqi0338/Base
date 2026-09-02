@@ -1,0 +1,16 @@
+ALTER TABLE
+  `account_purse_alter_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `account_id` bigint NULL COMMENT 'accountId',
+  MODIFY COLUMN `account_type` int NULL COMMENT 'accountType[0会员,1供应商,2渠道商]',
+  MODIFY COLUMN `purse_type` int NULL COMMENT 'purseType[0总账户,11商品分润账户,13商品货款结余账户,2采购金账户,3保证金账户,4营销账户,5商品位]',
+  MODIFY COLUMN `earning_alter_type` int NULL COMMENT 'earningAlterType[1进账,2出账]',
+  MODIFY COLUMN `alter_type` int NULL COMMENT 'alterType[1转出,2订单支付,3采购金充值,4售后退款,5渠道商订单结算,6分润,10供应商订单结算补充保证金,11供应商运营账户充值,12商品位购买,13平台赠送商品位,14商品审核失败或终止审核返还商品位,15商品提交平台扣除商品位,16渠道商下游同步,17订单流水分红,18保证金充值,19商品上架扣除商品位,20商品下架返还商品位,21转出审核拒绝,22渠道商订单结算]',
+  MODIFY COLUMN `amount` bigint NULL COMMENT 'amount',
+  MODIFY COLUMN `join_record_id` bigint NULL COMMENT 'joinRecordId',
+  MODIFY COLUMN `remark` varchar(255) NULL COMMENT 'remark',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'AccountPurseAlterRecordDO表';

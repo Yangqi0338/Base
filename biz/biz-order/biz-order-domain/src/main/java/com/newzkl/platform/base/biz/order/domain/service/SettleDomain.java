@@ -17,6 +17,7 @@ import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleRecordItemVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleRecordVO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 
 import java.time.LocalDateTime;
@@ -41,7 +42,7 @@ public interface SettleDomain {
      * @param settleTime 结算时间
      * @return
      */
-    ExecuteSettleRes executeSettle(Long supplierId, SettlementConfigOutVO settlementConfigRpcVO, List<SettleGoodsVO> settleGoodsVOList, LocalDateTime settleTime);
+    ExecuteSettleRes executeSettle(Long supplierId, SettlementConfigVO settlementConfigRpcVO, List<SettleGoodsVO> settleGoodsVOList, LocalDateTime settleTime);
 
     /**
      * 执行结算

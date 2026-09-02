@@ -3,25 +3,24 @@ package com.newzkl.platform.base.biz.goods.model.goods.dto.spu;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuExpandVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
+ * spu 操作对象
  * @author muc_fang
- * @Description: spu 操作对象
- * @date 2023/10/1713:33
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SpuDTO {
-    /**
-     * ID (查询)
-     */
-    private Long id;
+public class SpuDTO extends BaseDTO {
     /**
      * 编码 (查询)
      */
@@ -89,17 +88,25 @@ public class SpuDTO {
      */
     private Long freightTemplateId;
     /**
-     * 发货时效类型 0 三日内 1 大于三日 (查询)
+     * 发货时效类型
      */
-    private Integer deliverTimeType;
+    private SpuEnum.DeliverTimeType deliverTimeType;
     /**
      * 最大发货天数
      */
     private Integer maxDeliverDay;
     /**
-     * 状态 0:仓库中 2:上架中 3:待上架 (查询)
+     * 状态
      */
-    private Integer state;
+    private SpuEnum.State state;
+    /**
+     * 销量
+     */
+    private Integer saleNum;
+    /**
+     * 虚拟销量
+     */
+    private Integer virtualSaleNum;
     /**
      * sku列表
      */
@@ -127,9 +134,9 @@ public class SpuDTO {
      */
     private String limitArea;
     /**
-     * 内部属性: 审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过",4,"终止")
+     * 内部属性
      */
-    private Integer auditState;
+    private AuditEnum.State auditState;
     /**
      * 内部属性: 最后拒绝原因: 状态变更未待用户提交前的最后一次拒绝原因
      */

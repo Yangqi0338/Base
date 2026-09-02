@@ -9,9 +9,10 @@ import com.newzkl.platform.base.biz.content.model.article.query.ArticleQuery;
 import com.newzkl.platform.base.biz.content.model.article.req.ArticleReq;
 import com.newzkl.platform.base.biz.content.model.article.res.ArticleRes;
 import com.newzkl.platform.base.biz.content.model.article.vo.ArticleVO;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.dto.AccountVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +35,11 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
     @Override
     public void save(ArticleReq req) {
-        ArticleDO articleDO = TransferUtils.transfer(req, ArticleDO::new);
+        ArticleDO articleDO = TransferUtils.transfer(req, ArticleDO.class);
+        AccountVO accountVO = new AccountVO();
+        accountVO.setId(req.getIssuerId());
+        accountVO.setName(req.getIssuerName());
+        articleDO.setIssuer(accountVO);
         contentArticleDAO.insert(articleDO);
     }
 
@@ -45,7 +50,12 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
     @Override
     public void update(ArticleReq req) {
-        contentArticleDAO.updateById(TransferUtils.transfer(req, ArticleDO::new));
+        ArticleDO articleDO = TransferUtils.transfer(req, ArticleDO::new);
+        AccountVO accountVO = new AccountVO();
+        accountVO.setId(req.getIssuerId());
+        accountVO.setName(req.getIssuerName());
+        articleDO.setIssuer(accountVO);
+        contentArticleDAO.updateById(articleDO);
     }
 
     @Override

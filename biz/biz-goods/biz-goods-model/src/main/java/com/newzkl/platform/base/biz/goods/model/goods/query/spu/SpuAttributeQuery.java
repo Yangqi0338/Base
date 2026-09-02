@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.goods.model.goods.query.spu;
 
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 
@@ -28,5 +29,5 @@ public class SpuAttributeQuery extends BizPageQuery {
     * 类型 (查询)
     * @ext 0:销售属性 1:参数属性
     */
-    private Integer type;
+    private SpuEnum.SpuAttributeType type;
 }

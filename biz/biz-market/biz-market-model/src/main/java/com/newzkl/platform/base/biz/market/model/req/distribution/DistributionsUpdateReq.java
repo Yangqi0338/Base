@@ -20,7 +20,7 @@ public class DistributionsUpdateReq {
      * 状态
      * @see DistributionEnum.State
      */
-    private Integer goodsState;
+    private DistributionEnum.State goodsState;
 
     /**
      * 商品信息

@@ -1,0 +1,15 @@
+ALTER TABLE
+  `account_withdraw_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `account_id` bigint NULL COMMENT 'accountId',
+  MODIFY COLUMN `amount` bigint NULL COMMENT 'amount',
+  MODIFY COLUMN `goods_points` int NULL COMMENT 'goodsPoints',
+  MODIFY COLUMN `config` json NULL COMMENT 'config',
+  MODIFY COLUMN `finish_time` varchar(255) NULL COMMENT 'finishTime',
+  MODIFY COLUMN `tripartite_trade_no` varchar(255) NULL COMMENT 'tripartiteTradeNo',
+  MODIFY COLUMN `state` int NULL COMMENT 'state[0待审核,1通过,2拒绝,3退汇]',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'AccountWithdrawRecordDO表';

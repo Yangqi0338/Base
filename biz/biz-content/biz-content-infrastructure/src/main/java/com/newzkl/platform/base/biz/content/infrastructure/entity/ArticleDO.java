@@ -1,15 +1,15 @@
 package com.newzkl.platform.base.biz.content.infrastructure.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.ddd.model.dto.AccountVO;
+import com.newzkl.platform.base.common.ddd.model.dto.ExecutorDTO;
 import lombok.Data;
 import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,4 +55,10 @@ public class ArticleDO extends BaseDO {
      * @ext 0-不显示, 1-显示
      */
     private CommonEnum.YesOrNo isVisible;
+
+    /**
+     * 发布人信息
+     */
+    @JsonSerializable
+    protected AccountVO issuer;
 }

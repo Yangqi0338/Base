@@ -28,27 +28,27 @@ public class SpuExpandVO implements Serializable {
      */
     private String accountName;
     /**
-     * 市场价起始 (Money, 落库 BIGINT 分)
+     * 市场价起始
      */
     private Money marketPriceBegan;
     /**
-     * 市场价结束 (Money, 落库 BIGINT 分)
+     * 市场价结束
      */
     private Money marketPriceEnd;
     /**
-     * 销售价起始 (Money, 落库 BIGINT 分)
+     * 销售价起始
      */
     private Money salePriceBegan;
     /**
-     * 销售价结束 (Money, 落库 BIGINT 分)
+     * 销售价结束
      */
     private Money salePriceEnd;
     /**
-     * 供货价起始 (Money, 落库 BIGINT 分)
+     * 供货价起始
      */
     private Money supplierPriceBegan;
     /**
-     * 供货价结束 (Money, 落库 BIGINT 分)
+     * 供货价结束
      */
     private Money supplierPriceEnd;
 }

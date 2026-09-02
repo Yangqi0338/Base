@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.category.res;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -44,7 +45,7 @@ public class CourseCategoryRes extends BaseRes {
     /**
      * 是否启用: 1-启用, 0-禁用
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
 
     /**
      * 启用状态描述: 启用/禁用

@@ -1,13 +1,13 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.domain.brand.service.BrandDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.query.brand.BrandPageQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.brand.BrandReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.BrandVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class BrandController {
      */
     @PostMapping("brandDelete")
     @FuncPermission("删除品牌")
-    public PlatformResult<Void> brandDelete(@RequestBody CommonCmd.IdList idList) {
+    public PlatformResult<Void> brandDelete(@RequestBody IdCommand idList) {
         brandDomain.brandDelete(idList.getIdList());
         return PlatformResult.success();
     }

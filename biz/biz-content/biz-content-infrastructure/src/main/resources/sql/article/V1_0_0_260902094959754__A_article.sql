@@ -1,0 +1,15 @@
+ALTER TABLE
+  `article` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `title` varchar(255) NULL COMMENT 'title',
+  MODIFY COLUMN `content` text NULL COMMENT 'content',
+  MODIFY COLUMN `cover_image` varchar(255) NULL COMMENT 'coverImage',
+  MODIFY COLUMN `poster_images` varchar(255) NULL COMMENT 'posterImages',
+  MODIFY COLUMN `category_id` bigint NULL COMMENT 'categoryId',
+  MODIFY COLUMN `is_visible` int NULL COMMENT 'isVisible[1是,0否]',
+  MODIFY COLUMN `issuer` json NULL COMMENT 'issuer',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'ArticleDO表';

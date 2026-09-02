@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class FreightTemplateRepositoryImpl implements FreightTemplateRepository {
+public class FreightTemplateRepositoryImpl extends RepositorySupport implements FreightTemplateRepository {
 
     private final FreightTemplateDAO freightTemplateDAO;
 

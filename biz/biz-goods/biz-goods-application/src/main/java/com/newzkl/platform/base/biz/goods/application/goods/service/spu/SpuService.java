@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.model.goods.dto.spu.SpuDTO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SupplierSpuStatisticsVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.ApiSkuVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuDetailVO;
 import com.newzkl.platform.base.common.ddd.facade.ApiSpuStateVO;
@@ -24,7 +25,7 @@ public interface SpuService {
      * @param enable
      * @param spuIdList
      */
-    void spuUp(Integer enable, List<Long> spuIdList);
+    void spuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList);
     /**
      * 外部供应链商品同步
      * @param spuDTO

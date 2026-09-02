@@ -80,6 +80,7 @@ public class DictController {
      */
     @PostMapping("dictItemSave")
     @FuncPermission("字典条目保存")
+    @Deprecated
     public PlatformResult<Long> dictItemSave(@Validated({UpdateCommand.class, Default.class}) @RequestBody DictItemReq req) {
         return PlatformResult.success(dictItemDomain.itemSave(req));
     }
@@ -91,6 +92,7 @@ public class DictController {
      * @return 条目列表
      */
     @GetMapping("dictItemList")
+    @Deprecated
     public PlatformResult<List<DictItemRes>> dictItemList(@RequestParam("dictId") Long dictId) {
         return PlatformResult.success(dictItemDomain.itemList(dictId));
     }
@@ -103,6 +105,7 @@ public class DictController {
      */
     @PostMapping("dictItemDelete")
     @FuncPermission("字典条目删除")
+    @Deprecated
     public PlatformResult<Void> dictItemDelete(@Validated @RequestBody IdCommand idList) {
         dictItemDomain.itemDelete(idList.getIdList());
         return PlatformResult.success();

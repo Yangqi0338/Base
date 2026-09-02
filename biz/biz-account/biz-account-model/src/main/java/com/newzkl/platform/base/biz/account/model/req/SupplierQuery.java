@@ -38,13 +38,12 @@ public class SupplierQuery extends BizPageQuery {
      */
     private String username;
     /**
-     * 审批状态
-     */
-    private AuditEnum.State auditState;
-    /**
      * 审批状态列表 (多值 in 查, 用于审核列表排除待提交态 CUSTOM)
      */
     private List<AuditEnum.State> auditStateList;
+    public void setAuditState(AuditEnum.State auditState){
+        this.auditStateList = doWrapperList(this.auditStateList, auditState);
+    }
     /**
      * 企业名称
      */

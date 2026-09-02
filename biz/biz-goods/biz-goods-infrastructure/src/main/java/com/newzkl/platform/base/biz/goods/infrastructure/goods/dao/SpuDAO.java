@@ -2,13 +2,12 @@ package com.newzkl.platform.base.biz.goods.infrastructure.goods.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SpuDO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.facade.GoodsCountVO;
 import com.newzkl.platform.base.common.ddd.facade.SpuCountQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
@@ -46,62 +45,36 @@ public interface SpuDAO extends BaseMapper<SpuDO> {
     Page<SpuVO> voPageByQuery(Page<?> page, @Param(Constants.WRAPPER) QueryWrapper<SpuDO> queryWrapper);
 
     /**
-     * 构建 SPU 查询条件的 QueryWrapper
+     * 构建 SPU 通用条件包装器
+     *
+     * <p>accountIdList 承接旧口径的 supplierIdList (同一列 account_id)。
+     * marketId / relationType / type / profit 区间涉及市场关联表, 不在本包装器覆盖范围</p>
+     *
+     * @param query SPU 查询, 可为 null
+     * @return 条件包装器, 恒非 null
      */
-    default QueryWrapper<SpuDO> buildQueryWrapper(SpuQuery query) {
-        QueryWrapper<SpuDO> wrapper = new QueryWrapper<>();
-
-        // idList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getIdList()), "t.id", query.getIdList());
-
-        // supplierIdList 条件 (映射到 account_id)
-        wrapper.in(CollectionUtils.isNotEmpty(query.getSupplierIdList()), "account_id", query.getSupplierIdList());
-
-        // codeList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getCodeList()), "code", query.getCodeList());
-
-        // name 模糊查询
-        wrapper.like(StringUtils.isNotBlank(query.getName()), "name", query.getName());
-
-        // title 模糊查询
-        wrapper.like(StringUtils.isNotBlank(query.getTitle()), "title", query.getTitle());
-
-        // brandId 条件
-        wrapper.eq(query.getBrandId() != null, "brand_id", query.getBrandId());
-
-        // freightTemplateId 条件
-        wrapper.eq(query.getFreightTemplateId() != null, "freight_template_id", query.getFreightTemplateId());
-
-        // deliverTimeType 条件
-        wrapper.eq(query.getDeliverTimeType() != null, "deliver_time_type", query.getDeliverTimeType());
-
-        // auditStateList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getAuditStateList()), "audit_state", query.getAuditStateList());
-
-        // accountId 条件
-        wrapper.eq(query.getAccountId() != null, "account_id", query.getAccountId());
-
-        // categoryIdList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getCategoryIdList()), "category_id", query.getCategoryIdList());
-
-        // stateList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getStateList()), "state", query.getStateList());
-
-        // supplyPrice 价格区间
-        if (query.getSupplyPriceStart() != null && query.getSupplyPriceEnd() != null) {
-            wrapper.ge("supply_price", query.getSupplyPriceStart())
-                    .le("supply_price", query.getSupplyPriceEnd());
+    default BaseLambdaQueryWrapper<SpuDO> getLw(SpuQuery query) {
+        BaseLambdaQueryWrapper<SpuDO> wrapper = new BaseLambdaQueryWrapper<>(SpuDO.class);
+        if (query == null) {
+            return wrapper;
         }
-
-        // channelType 条件
-        wrapper.eq(query.getChannelType() != null, "channel_type", query.getChannelType());
-
-        // roleId 条件
-        wrapper.eq(query.getIdentity() != null, "role", query.getIdentity());
-
-        // outSpuId 条件
-        wrapper.eq(StringUtils.isNotBlank(query.getOutSpuId()), "out_spu_id", query.getOutSpuId());
-
-        return wrapper;
+        return wrapper.notEmptyIn(SpuDO::getId, query.getIdList())
+                .notEmptyIn(SpuDO::getAccountId, query.getAccountIdList())
+                .notEmptyIn(SpuDO::getCode, query.getCodeList())
+                .notEmptyIn(SpuDO::getCategoryId, query.getCategoryIdList())
+                .notEmptyIn(SpuDO::getState, query.getStateList())
+                .notEmptyIn(SpuDO::getAuditState, query.getAuditStateList())
+                .notEmptyLike(SpuDO::getName, query.getName())
+                .notEmptyLike(SpuDO::getTitle, query.getTitle())
+                .notEmptyEq(SpuDO::getDeliverTimeType, query.getDeliverTimeType())
+                .notEmptyEq(SpuDO::getChannelType, query.getChannelType())
+                .notEmptyEq(SpuDO::getIdentity, query.getIdentity())
+                .notEmptyEq(SpuDO::getBrandId, query.getBrandId())
+                .notEmptyEq(SpuDO::getFreightTemplateId, query.getFreightTemplateId())
+                .notEmptyEq(SpuDO::getOutSpuId, query.getOutSpuId())
+                .between(SpuDO::getSupplyPrice, query.getSupplyPriceStart(), query.getSupplyPriceEnd())
+                .between(SpuDO::getSalePrice, query.getSalePriceStart(), query.getSalePriceEnd())
+                .between(SpuDO::getSaleNum, query.getSaleNumStart(), query.getSaleNumEnd())
+                .between(SpuDO::getCreateTime, query.getCreateTime());
     }
 }

@@ -11,6 +11,7 @@ import com.newzkl.platform.base.common.ddd.facade.SettlementConfigOutVO;
 import com.newzkl.platform.base.biz.order.model.vo.ExecuteSettleRes;
 import com.newzkl.platform.base.biz.order.model.vo.SettleGoodsVO;
 import com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.SupplierOutVO;
 import com.newzkl.platform.base.common.ddd.facade.SupplierSettleReq;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -90,9 +91,9 @@ public class SettleTaskJobHandler {
             List<SettleGoodsVO> supplierSettleGoodsVOList = settleGoodsVOMap.get(supplierId);
             //查询结算配置
             SupplierOutVO supplierVO = supplierApi.getSupplierVO(supplierId);
-            SettlementConfigOutVO settlementConfigRpcVO = null;
+            SettlementConfigVO settlementConfigRpcVO = null;
             try{
-                settlementConfigRpcVO = JSONObject.parseObject(supplierVO.getPeriodSetConfig(), SettlementConfigOutVO.class);
+                settlementConfigRpcVO = supplierVO.getPeriodSetConfig();
             } catch (Exception e){
                 log.warn("供应商的结算配置错误:accountId:" + supplierId);
             }
@@ -118,7 +119,7 @@ public class SettleTaskJobHandler {
             this.settleDomain = settleDomain;
         }
 
-        public void executeSettle(Long supplierId, SettlementConfigOutVO settlementConfigRpcVO, List<SettleGoodsVO> supplierSettleGoodsVOList, LocalDateTime settleTime) {
+        public void executeSettle(Long supplierId, SettlementConfigVO settlementConfigRpcVO, List<SettleGoodsVO> supplierSettleGoodsVOList, LocalDateTime settleTime) {
             //执行结算
             ExecuteSettleRes executeSettleRes = settleDomain.executeSettle(supplierId, settlementConfigRpcVO, supplierSettleGoodsVOList, settleTime);
             if(executeSettleRes != null

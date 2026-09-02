@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.domain.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
@@ -54,7 +55,15 @@ public interface SupplierClientDomain {
 
     void auditFail(Long accountId, String lastRefuseReason);
 
-    void promiseFlowSubmitAuditSuccess(Long accountId);
+    /**
+     * 保证金流水提交后置供应商保证金审核中
+     *
+     * <p>与 {@code supplierSubmitAudit} 同族: 供应商提交保证金流水单后同事务回写主数据审核态,
+     * 供前端展示"保证金审核中"。审核终态由 promisePayAuditSuccess / promisePayAuditFail 落</p>
+     *
+     * @param accountId 供应商账号ID
+     */
+    void promisePaySubmitAudit(Long accountId);
 
     /**
      * 保证金审核通过后回写供应商主数据
@@ -68,6 +77,14 @@ public interface SupplierClientDomain {
      */
     void promisePayAuditSuccess(Long accountId, Money promisePayAmount);
 
+    /**
+     * 保证金审核拒绝后回写供应商主数据
+     *
+     * <p>置保证金审核态为未通过并记录拒绝原因, 供应商可据原因重新提交流水单</p>
+     *
+     * @param accountId        供应商账号ID
+     * @param lastRefuseReason 拒绝原因
+     */
     void promisePayAuditFail(Long accountId, String lastRefuseReason);
 
     Integer limitAmount(Long accountId);
@@ -104,7 +121,7 @@ public interface SupplierClientDomain {
      * @param id              供应商账号ID
      * @param periodSetConfig 账期配置 JSON
      */
-    void periodSet(Long id, String periodSetConfig);
+    void periodSet(Long id, SettlementConfigVO periodSetConfig);
 
     /**
      * 设置供应商应付保证金金额
@@ -116,7 +133,7 @@ public interface SupplierClientDomain {
      * @param shouldPromisePayAmount 应付保证金金额
      * @param promisePayConfig       保证金缴纳配置, 0 即时 1 延迟
      */
-    void shouldPromisePayAmountSet(Long id, Integer shouldPromisePayAmount, Integer promisePayConfig);
+    void shouldPromisePayAmountSet(Long id, Money shouldPromisePayAmount, Integer promisePayConfig);
 
     /**
      * 追加供应商经营行业

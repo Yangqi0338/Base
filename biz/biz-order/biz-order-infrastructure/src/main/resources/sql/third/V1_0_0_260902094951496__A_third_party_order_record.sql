@@ -1,0 +1,18 @@
+ALTER TABLE
+  `third_party_order_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `platform_type` varchar(255) NULL COMMENT 'platformType',
+  MODIFY COLUMN `biz_order_no` varchar(255) NULL COMMENT 'bizOrderNo',
+  MODIFY COLUMN `third_order_no` varchar(255) NULL COMMENT 'thirdOrderNo',
+  MODIFY COLUMN `interface_name` varchar(255) NULL COMMENT 'interfaceName',
+  MODIFY COLUMN `request_json` json NULL COMMENT 'requestJson',
+  MODIFY COLUMN `response_json` json NULL COMMENT 'responseJson',
+  MODIFY COLUMN `request_status` int NULL COMMENT 'requestStatus[1成功,0失败]',
+  MODIFY COLUMN `error_message` varchar(255) NULL COMMENT 'errorMessage',
+  MODIFY COLUMN `retry_count` int NULL COMMENT 'retryCount',
+  MODIFY COLUMN `next_retry_time` datetime NULL COMMENT 'nextRetryTime',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'ThirdPartyOrderRecordDO表';

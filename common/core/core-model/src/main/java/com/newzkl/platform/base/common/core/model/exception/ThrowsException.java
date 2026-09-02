@@ -103,7 +103,7 @@ public class ThrowsException {
      * @param msg       异常消息（说明条件不满足的原因）
      */
     public static void isTrue(boolean condition, ErrorCode errorCode, String msg) {
-        if (!condition) {
+        if (condition) {
             exception(errorCode, msg);
         }
     }
@@ -126,7 +126,7 @@ public class ThrowsException {
      * @param msg       异常消息（说明条件满足的问题）
      */
     public static void isFalse(boolean condition, ErrorCode errorCode, String msg) {
-        if (condition) {
+        if (!condition) {
             exception(errorCode, msg);
         }
     }

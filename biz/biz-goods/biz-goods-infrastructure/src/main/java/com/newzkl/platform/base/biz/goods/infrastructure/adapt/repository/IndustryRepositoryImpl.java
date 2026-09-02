@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class IndustryRepositoryImpl implements IndustryRepository {
+public class IndustryRepositoryImpl extends RepositorySupport implements IndustryRepository {
 
     private final IndustryDAO industryDAO;
 

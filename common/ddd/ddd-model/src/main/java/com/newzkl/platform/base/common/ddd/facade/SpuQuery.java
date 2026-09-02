@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 import cn.hutool.core.collection.CollUtil;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -115,27 +116,27 @@ public class SpuQuery extends BizPageQuery implements Serializable {
     /**
      * 供货价起始
      */
-    private Integer supplyPriceStart;
+    private Money supplyPriceStart;
     /**
      * 供货价结束
      */
-    private Integer supplyPriceEnd;
+    private Money supplyPriceEnd;
     /**
      * 零售价起始
      */
-    private Integer salePriceStart;
+    private Money salePriceStart;
     /**
      * 零售价结束
      */
-    private Integer salePriceEnd;
+    private Money salePriceEnd;
     /**
      * 利润起始
      */
-    private Integer profitStart;
+    private Money profitStart;
     /**
      * 利润结束
      */
-    private Integer profitEnd;
+    private Money profitEnd;
     /**
      * 销量起始
      */
@@ -152,10 +153,6 @@ public class SpuQuery extends BizPageQuery implements Serializable {
      * 外部供应链商品ID
      */
     private String outSpuId;
-    /**
-     * 供应商id集合
-     */
-    private List<Long> supplierIdList;
 
     public AuditEnum.State getAuditState() {
         return CollUtil.getFirst(auditStateList);

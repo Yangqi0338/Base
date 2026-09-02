@@ -22,7 +22,7 @@ import java.util.List;
 */
 @Repository
 @RequiredArgsConstructor
-public class BrandRepositoryImpl implements BrandRepository {
+public class BrandRepositoryImpl extends RepositorySupport implements BrandRepository {
 
     private final BrandDAO brandDAO;
 

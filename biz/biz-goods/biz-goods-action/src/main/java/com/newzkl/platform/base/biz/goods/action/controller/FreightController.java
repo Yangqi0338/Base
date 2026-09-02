@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.domain.freight.service.FreightDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.entity.freight.FreightTemplate;
 import com.newzkl.platform.base.biz.goods.model.goods.query.freight.FreightTemplateQuery;
@@ -9,6 +8,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.req.freight.FreightTemplat
 import com.newzkl.platform.base.biz.goods.model.goods.vo.freight.FreightTemplateVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -70,7 +70,7 @@ public class FreightController {
      */
     @PostMapping("freightTemplateDelete")
     @FuncPermission("删除运费模板")
-    public PlatformResult<Void> freightTemplateDelete(@RequestBody CommonCmd.IdList idList) {
+    public PlatformResult<Void> freightTemplateDelete(@RequestBody IdCommand idList) {
         if (AccountEnum.Identity.PLATFORM != SecurityUtils.getIdentity()
                 && idList.getIdList().contains(SYSTEM_TEMPLATE_ID)) {
             ThrowsException.exception(BaseErrorCode.CUSTOM, "无法删除系统运费模板");

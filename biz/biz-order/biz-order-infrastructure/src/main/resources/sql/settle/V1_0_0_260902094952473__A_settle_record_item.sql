@@ -1,0 +1,16 @@
+ALTER TABLE
+  `settle_record_item` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `settle_record_id` bigint NULL COMMENT 'settleRecordId',
+  MODIFY COLUMN `spu_id` bigint NULL COMMENT 'spuId',
+  MODIFY COLUMN `spu_name` varchar(255) NULL COMMENT 'spuName',
+  MODIFY COLUMN `spu_img` varchar(255) NULL COMMENT 'spuImg',
+  MODIFY COLUMN `sku_settle_detail` varchar(255) NULL COMMENT 'skuSettleDetail',
+  MODIFY COLUMN `settle_money` bigint NULL COMMENT 'settleMoney',
+  MODIFY COLUMN `settle_goods_num` int NULL COMMENT 'settleGoodsNum',
+  MODIFY COLUMN `spu_freight` bigint NULL COMMENT 'spuFreight',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'SettleRecordItemDO表';

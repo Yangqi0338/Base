@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
@@ -42,7 +43,7 @@ public class SupplierOutRes extends BaseRes {
      /**
      * 账期配置JSON
      */
-     private String periodSetConfig;
+     private SettlementConfigVO periodSetConfig;
      /**
      * 应付保证金金额 (Money, 落库 BIGINT 分)
      */

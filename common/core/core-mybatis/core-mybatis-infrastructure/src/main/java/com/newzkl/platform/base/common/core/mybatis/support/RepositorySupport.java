@@ -167,9 +167,9 @@ public abstract class RepositorySupport {
     }
 
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> R getOne(M mapper, BaseLambdaQueryWrapper<T> wrapper, Class<R> clazz) {
-        return TransferUtils.transfer(mapper.selectList(
+        return TransferUtils.transfer(CollUtil.getFirst(mapper.selectList(
                 buildOne(wrapper.unwrap().setEntityClass(mapper).select(clazz))
-        ), clazz);
+        )), clazz);
     }
 
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> List<R> listOneField(M mapper, LambdaQueryWrapper<T> wrapper, SFunction<T, R> function) {

@@ -36,10 +36,6 @@ public class SkuVO extends BaseRes {
      @NotEmpty
      private List<SkuSaleAttributeVO> saleAttribute;
      /**
-      * 补偿字段. 设计初应将 saleAttribute字段 设计为字符串
-      */
-     private String saleAttributeJson;
-     /**
      * spuId (查询)
      */
      private Long spuId;
@@ -87,5 +83,5 @@ public class SkuVO extends BaseRes {
      /**
       * 追加: 扩展字段
       */
-     private String expand;
+     private SkuExpandVO expand;
 }

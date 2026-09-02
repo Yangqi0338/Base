@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 
 import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
@@ -78,7 +79,7 @@ public class SupplierRes extends BaseRes {
      * dataOne 每月固定日期
      * dataTwo 商品审核周期
      */
-    private String periodSetConfig;
+    private SettlementConfigVO periodSetConfig;
     /**
      * 应付保证金金额 (Money, 落库 BIGINT 分)
      */
@@ -131,10 +132,6 @@ public class SupplierRes extends BaseRes {
      * 待售卖的商品
      */
     private Integer goodsNotSaleCount;
-    /**
-     * 结算配置
-     */
-    private String settlementConfigVO;
     /**
      * 收货地址
      */

@@ -1,9 +1,8 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.dao;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.entity.SkuDO;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
@@ -30,14 +29,16 @@ public interface SkuDAO extends BaseMapper<SkuDO> {
 
     List<OrderGoodsInfoVO> queryOrderSkuInfoVOList(@Param("skuIdList") List<Long> skuIdList);
 
-    default QueryWrapper<SkuDO> buildQueryWrapper(SkuQuery query) {
-        QueryWrapper<SkuDO> wrapper = new QueryWrapper<>();
-
-        // idList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getIdList()), "id", query.getIdList());
-
-        // spuIdList 条件
-        wrapper.in(CollectionUtils.isNotEmpty(query.getSpuIdList()), "spu_id", query.getSpuIdList());
+    /**
+     * 构建 SKU 通用条件包装器
+     *
+     * @param query SKU 查询, 可为 null
+     * @return 条件包装器, 恒非 null
+     */
+    default BaseLambdaQueryWrapper<SkuDO> getLw(SkuQuery query) {
+        BaseLambdaQueryWrapper<SkuDO> wrapper = new BaseLambdaQueryWrapper<SkuDO>()
+                .notEmptyIn(SkuDO::getId, query.getIdList())
+                .notEmptyIn(SkuDO::getSpuId, query.getSpuIdList());
         return wrapper;
     }
 }

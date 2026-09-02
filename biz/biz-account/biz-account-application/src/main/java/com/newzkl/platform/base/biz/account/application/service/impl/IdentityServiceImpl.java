@@ -58,32 +58,6 @@ public class IdentityServiceImpl implements IdentityService {
         AbsIdentityPolicySupport.getPolicy(identity).customRegister(req);
     }
 
-//    @Override
-//    public Long submitPromiseFlow(PromiseFlowVO promiseFlowVO) {
-//        //基础信息
-//        Long accountId = SecurityUtils.getAccountId();
-//        //获取企业信息
-//        SupplierVO supplierVO = userQueryService.supplierVO(accountId);
-//        JSONObject jsonObject = JSON.parseObject(supplierVO.getCompanyInfo());
-//        //创建审批单
-//        promiseFlowVO.setAccountId(accountId);
-////        AuditDataPromiseFlowVO auditDataPromiseFlowVO = TransferUtils.transfer(promiseFlowVO, AuditDataPromiseFlowVO::new);
-////        if (jsonObject != null) {
-////            auditDataPromiseFlowVO.setLegalName(jsonObject.getString("legalName"));
-////            auditDataPromiseFlowVO.setCompanyName(jsonObject.getString("companyName"));
-////        }
-////        auditDataPromiseFlowVO.setAccountId(SecurityUtils.getAccountId());
-////        auditDataPromiseFlowVO.setRoleId(RoleEnum.CompanyRole.SUPPLIER.getCode());
-////        AuditAccountVO auditAccountVO = new AuditAccountVO();
-////        auditAccountVO.setAccountId(SecurityUtils.getAccountId());
-////        auditAccountVO.setUsername(SecurityUtils.getUsername());
-////        auditAccountVO.setRoleId(SecurityUtils.getIdentity());
-////        Long flowId = auditFacade.submitPromiseFlow(AuditEnum.TemplateType.PROMISE_FLOW.getCode(), auditAccountVO, auditDataPromiseFlowVO);
-//        supplierDomain.promiseFlowSubmitAuditSuccess(accountId);
-////        return flowId;
-//        return null;
-//    }
-
     // FIXME 这整个端口应该搬移到Finance
     @Override
     @Transactional(rollbackFor = Exception.class)

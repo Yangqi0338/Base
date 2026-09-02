@@ -1,0 +1,16 @@
+ALTER TABLE
+  `settle_record_item` MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `settle_record_id` bigint NULL COMMENT '结算记录ID',
+  MODIFY COLUMN `spu_id` bigint NULL COMMENT 'SPU_ID',
+  MODIFY COLUMN `spu_name` varchar(255) NULL COMMENT 'spu名称',
+  MODIFY COLUMN `spu_img` varchar(255) NULL COMMENT 'spu图片',
+  MODIFY COLUMN `sku_settle_detail` varchar(255) NULL COMMENT 'sku订单结算信息',
+  MODIFY COLUMN `settle_money` bigint NULL COMMENT '结算金额',
+  MODIFY COLUMN `settle_goods_num` int NULL COMMENT '结算商品数量',
+  MODIFY COLUMN `spu_freight` bigint NULL COMMENT '结算运费',
+  MODIFY COLUMN `executor` json NULL COMMENT '操作人信息',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT '创建人id',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = '结算记录明细表';

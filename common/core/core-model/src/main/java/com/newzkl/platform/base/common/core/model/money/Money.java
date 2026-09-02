@@ -19,6 +19,9 @@ import java.util.Currency;
  * 业务运算 / 序列化 / TypeHandler 一致按未设置语义处理, 调用方无需做 != null 判断.</p>
  * <p>业务运算用本类 static add/subtract/multiply/divide, 委派 hutool 父类同名方法 , 再包成子类型.</p>
  * <p>hutool JSONUtil 支持: 实现 {@code JSONString} 控制序列化, 注册 {@code ConverterRegistry} 自定义转换器控制 toBean 反序列化.</p>
+ * <p>Jackson 支持: 不在类头绑 {@code @JsonSerialize}/{@code @JsonDeserialize} — 类头注解优先级高于 Module,
+ * 会连带改掉对外出参形态。出参 (元字符串) 由 {@code JacksonConfig} 装配, DB JSON 列 (分) 由
+ * {@code MybatisPlusConfig} 给 {@code JacksonTypeHandler} 装配独立 ObjectMapper.</p>
  * @ext Long
  * @ext Long cent
  * @ext null
@@ -222,12 +225,12 @@ public class Money extends cn.hutool.core.math.Money implements JSONString {
     }
 
     /**
-     * hutool JSONString 序列化, NULL 输出 null, 否则输出带引号元字符串 "11.11"
+     * hutool JSONString 序列化, NULL 输出 null, 否则输出元字符串 11.11
      */
     @Override
     public String toJSONString() {
-        if (isNull()) return "null";
-        return "\"" + super.getAmount().toPlainString() + "\"";
+        if (isNull()) return ZERO.toJSONString();
+        return super.getAmount().toPlainString();
     }
 
     /**

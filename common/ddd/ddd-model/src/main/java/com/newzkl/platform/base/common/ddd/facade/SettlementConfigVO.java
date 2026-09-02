@@ -19,18 +19,17 @@ public class SettlementConfigVO implements Serializable {
     /**
      * 结算周期类型:
      */
-    private Integer dataType;
+    private EarningsEnum.DataType dataType;
     /**
-     * 结算周期天数: dataType = 0
+     * 每月固定天数
      */
     private String dataOne;
     /**
-     * 结算周期天数: dataType = 1
+     * 商品审核完成天数
      */
     private String dataTow;
-
     /**
-     * 订单结算类型2时，此值表示订单完成后N天结算
+     * 订单完成后N天结算
      */
     private Integer orderTypeDay;
 }

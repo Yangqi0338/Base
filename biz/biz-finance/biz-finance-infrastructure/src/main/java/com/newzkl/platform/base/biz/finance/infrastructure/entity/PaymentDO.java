@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.finance.model.pay.vo.OrderPayeeInfoVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
@@ -12,6 +13,7 @@ import org.dromara.autotable.annotation.Index;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 支付单
@@ -19,7 +21,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class PaymentDO extends BaseDO {
     /**
      * 交易单号
@@ -78,9 +80,10 @@ public class PaymentDO extends BaseDO {
 
     /**
      * 收款方信息
+     * @ext 嵌套 Money 由 MoneyCentJsonSerializer 按分存取
      */
-    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
-    private String payeeInfo;
+    @JsonSerializable
+    private List<OrderPayeeInfoVO> payeeInfo;
 
     /**
      * 支付时间

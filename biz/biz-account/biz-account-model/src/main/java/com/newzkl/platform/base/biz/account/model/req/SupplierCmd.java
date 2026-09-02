@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -35,7 +37,7 @@ public class SupplierCmd {
          * 账期配置
          */
         @NotNull
-        private String periodSetConfig;
+        private SettlementConfigVO periodSetConfig;
     }
 
     @Data
@@ -49,7 +51,7 @@ public class SupplierCmd {
          * 应付保证金金额
          */
         @NotNull
-        private Integer shouldPromisePayAmount;
+        private Money shouldPromisePayAmount;
         /**
          * 保证金缴纳配置 promise_pay_config
          * 0 即时 1 延迟

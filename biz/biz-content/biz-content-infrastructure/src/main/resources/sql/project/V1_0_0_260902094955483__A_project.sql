@@ -1,0 +1,18 @@
+ALTER TABLE
+  `project` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT 'name',
+  MODIFY COLUMN `desc` varchar(255) NULL COMMENT 'desc',
+  MODIFY COLUMN `province` int NULL COMMENT 'province',
+  MODIFY COLUMN `city` int NULL COMMENT 'city',
+  MODIFY COLUMN `area` int NULL COMMENT 'area',
+  MODIFY COLUMN `basic_amount` bigint NULL COMMENT 'basicAmount',
+  MODIFY COLUMN `flags` varchar(255) NULL COMMENT 'flags',
+  MODIFY COLUMN `detail` text NULL COMMENT 'detail',
+  MODIFY COLUMN `interest_num` int NULL COMMENT 'interestNum',
+  MODIFY COLUMN `interest_person` varchar(255) NULL COMMENT 'interestPerson',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'ProjectDO表';

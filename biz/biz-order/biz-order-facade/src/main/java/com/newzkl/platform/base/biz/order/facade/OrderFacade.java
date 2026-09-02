@@ -9,7 +9,7 @@ import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public interface OrderFacade {
       * @param outOrderNoList
       * @return
       */
-     List<SpuOrderStateVO> apiOrderState(Long accountId, List<String> outOrderNoList);
+     List<OrderStateVO> apiOrderState(Long accountId, List<String> outOrderNoList);
      /**
       * SPU订单关系
       *

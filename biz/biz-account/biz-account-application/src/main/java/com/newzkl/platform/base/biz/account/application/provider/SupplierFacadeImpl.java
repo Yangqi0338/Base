@@ -37,11 +37,10 @@ public class SupplierFacadeImpl implements SupplierFacade {
         SupplierQuery supplierQuery = TransferUtils.transfer(query, SupplierQuery.class);
         supplierQuery.resetQueryList();
         List<SupplierRes> supplierVOList = supplierQueryAppService.supplierPage(supplierQuery).getRecords();
-        List<SettlementConfigOutVO> settlementConfigOutVOList = TransferUtils.transfers(supplierVOList, supplierVO -> {
-            SettlementConfigOutVO settlementConfigOutVO = JSONObject.parseObject(supplierVO.getPeriodSetConfig(), SettlementConfigOutVO.class);
+        return TransferUtils.transfers(supplierVOList, supplierVO -> {
+            SettlementConfigOutVO settlementConfigOutVO = TransferUtils.transfer(supplierVO.getPeriodSetConfig(), SettlementConfigOutVO.class);
             settlementConfigOutVO.setId(supplierVO.getId());
             return settlementConfigOutVO;
         });
-        return settlementConfigOutVOList;
     }
 }

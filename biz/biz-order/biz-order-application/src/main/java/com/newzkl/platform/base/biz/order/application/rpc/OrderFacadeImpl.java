@@ -18,7 +18,7 @@ import com.newzkl.platform.base.biz.order.facade.model.hdh.PkgInfo;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderStateRecordEntity;
@@ -193,7 +193,7 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public List<SpuOrderStateVO> apiOrderState(Long accountId, List<String> outOrderNoList) {
+    public List<OrderStateVO> apiOrderState(Long accountId, List<String> outOrderNoList) {
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOutOrderNoList(outOrderNoList);
         List<Long> orderIdList = queryService.orderIdList(orderQuery);

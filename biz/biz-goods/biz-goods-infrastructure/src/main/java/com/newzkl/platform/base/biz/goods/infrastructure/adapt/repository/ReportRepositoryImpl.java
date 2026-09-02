@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class ReportRepositoryImpl implements ReportRepository {
+public class ReportRepositoryImpl extends RepositorySupport implements ReportRepository {
     @Resource
     private ReportDAO reportDAO;
     @Resource

@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.model.vo;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
@@ -83,7 +84,7 @@ public class SupplierAccountVO extends BaseRes {
      * dataOne 每月固定日期
      * dataTwo 商品审核周期
      */
-    private String periodSetConfig;
+    private SettlementConfigVO periodSetConfig;
     /**
      * 应付保证金金额 (Money, 落库 BIGINT 分)
      */
@@ -104,10 +105,6 @@ public class SupplierAccountVO extends BaseRes {
      * 邀请人
      */
     private Long inviteId;
-    /**
-     * 结算配置
-     */
-    private String settlementConfigVO;
     /**
      * 收货地址
      */

@@ -1,15 +1,12 @@
 package com.newzkl.platform.base.biz.goods.action.controller;
 
 import com.newzkl.platform.base.biz.goods.action.cmd.CategoryCmd;
-import com.newzkl.platform.base.biz.goods.action.cmd.CommonCmd;
 import com.newzkl.platform.base.biz.goods.application.goods.service.spu.SpuCategoryService;
 import com.newzkl.platform.base.biz.goods.domain.spu.service.SpuDomain;
 import com.newzkl.platform.base.biz.goods.model.goods.query.spu.SpuCategoryQuery;
 import com.newzkl.platform.base.biz.goods.model.goods.req.spu.SpuCategoryReq;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.utils.BizUtil;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -60,7 +57,7 @@ public class CategoryController {
      */
     @PostMapping("categoryDelete")
     @FuncPermission("删除分类")
-    public PlatformResult<Void> categoryDelete(@RequestBody CommonCmd.IdList idList) {
+    public PlatformResult<Void> categoryDelete(@RequestBody IdCommand idList) {
         spuDomain.categoryDelete(idList.getIdList());
         return PlatformResult.success();
     }

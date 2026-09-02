@@ -1,0 +1,15 @@
+ALTER TABLE
+  `member` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT 'name',
+  MODIFY COLUMN `background_img` varchar(255) NULL COMMENT 'backgroundImg',
+  MODIFY COLUMN `gender` int NULL COMMENT 'gender[0男,1女]',
+  MODIFY COLUMN `birthday` date NULL COMMENT 'birthday',
+  MODIFY COLUMN `residence` varchar(255) NULL COMMENT 'residence',
+  MODIFY COLUMN `wx_id` varchar(255) NULL COMMENT 'wxId',
+  MODIFY COLUMN `channel_id` bigint NULL COMMENT 'channelId',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'MemberDO表';

@@ -63,5 +63,5 @@ public class ArticleReq implements Serializable {
     /**
      * 发布人
      */
-    private String issuer;
+    private String issuerName;
 }

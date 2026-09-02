@@ -1,0 +1,15 @@
+ALTER TABLE
+  `model_shop` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `channel_id` bigint NULL COMMENT 'channelId',
+  MODIFY COLUMN `model_shop_name` varchar(255) NULL COMMENT 'modelShopName',
+  MODIFY COLUMN `model_description` varchar(255) NULL COMMENT 'modelDescription',
+  MODIFY COLUMN `audit_state` int NULL COMMENT 'auditState[0待用户提交,1待审核,2通过,3未通过,4终止]',
+  MODIFY COLUMN `audit_info` varchar(255) NULL COMMENT 'auditInfo',
+  MODIFY COLUMN `style_code` varchar(255) NULL COMMENT 'styleCode',
+  MODIFY COLUMN `state` int NULL COMMENT 'state[1是,0否]',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'ModelShopDO表';

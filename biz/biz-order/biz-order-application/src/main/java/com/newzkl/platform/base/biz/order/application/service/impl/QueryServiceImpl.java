@@ -11,7 +11,7 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
@@ -257,7 +257,7 @@ public class QueryServiceImpl implements QueryService {
         return orderRepository.orderIdList(orderQuery);
     }
     @Override
-    public List<SpuOrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList) {
+    public List<OrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList) {
         return orderRepository.accountOrderState(accountId, spuOrderIdList);
     }
 

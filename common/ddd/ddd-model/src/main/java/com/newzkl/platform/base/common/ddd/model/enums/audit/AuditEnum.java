@@ -8,26 +8,13 @@ import lombok.Getter;
 
 /**
  * 审核相关枚举
+ *
+ * <p>审核引擎(audit_flow/audit_template/DAG)拆除后只余审核态与动作语义:
+ * 各业务链把审核态直接落主数据, 不再有审批模板与流转节点概念</p>
+ *
+ * @author god
  */
 public class AuditEnum {
-
-    public static final String END_STEP_CODE = "end";
-
-    @Getter
-    @AllArgsConstructor
-    public enum TemplateType implements IEnum<Long> {
-        ROLE_APPLY(1L, "角色申请审批模板"),
-        PROMISE_FLOW(2L, "保证金缴纳审批模板"),
-        SPU_CREATE(3L, "SPU上传审批模板"),
-        BRAND_CREATE(4L, "品牌申请审批模板"),
-        SPU_WORK_TABLE(5L, "SPU工单审批模板"),
-        NAME_AUTH(6L, "实名认证审批模板"),
-        ;
-        @EnumValue
-        @JsonValue
-        private Long code;
-        private String value;
-    }
 
     /**
      * 审核状态

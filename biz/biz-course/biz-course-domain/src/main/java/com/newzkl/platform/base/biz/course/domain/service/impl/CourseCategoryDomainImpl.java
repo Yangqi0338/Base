@@ -45,6 +45,7 @@ public class CourseCategoryDomainImpl implements CourseCategoryDomain {
         ThrowsException.isTrue(courseCategoryRepository.existsByName(req.getCategoryName(), null),
                 BaseErrorCode.EXIST_DATA, "分类名称");
         req.setId(null);
+        req.setIsEnabled(CommonEnum.YesOrNo.YES);
         req.setCategoryCode(BusinessCodeUtil.generate(BusinessType.COURSE_CATEGORY));
         Long id = courseCategoryRepository.save(req);
         return courseCategoryRepository.detail(id);

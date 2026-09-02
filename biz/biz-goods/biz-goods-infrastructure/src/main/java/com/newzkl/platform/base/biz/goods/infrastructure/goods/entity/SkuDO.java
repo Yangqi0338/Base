@@ -1,13 +1,16 @@
 package com.newzkl.platform.base.biz.goods.infrastructure.goods.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuExpandVO;
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.core.mybatis.handler.RawJsonStringTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
+import java.util.List;
 
 /**
 * sku
@@ -15,7 +18,7 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class SkuDO extends BaseDO {
 	/**
 	 * 编码
@@ -53,10 +56,10 @@ public class SkuDO extends BaseDO {
     private Money unitPrice;
 	/**
 	 * 商品销售属性
-	 * @ext json格式
+	 * @ext JSON 列, 对象直传
 	 */
-    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
-	private String saleAttribute;
+    @JsonSerializable
+	private List<SkuSaleAttributeVO> saleAttribute;
 	/**
 	 * 外部SkuId
 	 */
@@ -71,7 +74,8 @@ public class SkuDO extends BaseDO {
 	private Integer buyStartQty;
     /**
      * 追加: 扩展字段
+     * @ext JSON 列, 对象直传
      */
-    @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
-    private String expand;
+    @JsonSerializable
+    private SkuExpandVO expand;
 }

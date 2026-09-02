@@ -1,0 +1,18 @@
+ALTER TABLE
+  `market_goods_relation` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
+  MODIFY COLUMN `goods_id` bigint NULL COMMENT 'goodsId',
+  MODIFY COLUMN `market_id` bigint NULL COMMENT 'marketId',
+  MODIFY COLUMN `relation_type` int NULL COMMENT 'relationType[2二市场-商品,3市场选品-商品]',
+  MODIFY COLUMN `user_id` bigint NULL COMMENT 'userId',
+  MODIFY COLUMN `sell_num` int NULL COMMENT 'sellNum',
+  MODIFY COLUMN `sell_amount` bigint NULL COMMENT 'sellAmount',
+  MODIFY COLUMN `state` int NULL COMMENT 'state',
+  MODIFY COLUMN `de_bind_time` datetime NULL COMMENT 'deBindTime',
+  MODIFY COLUMN `discount_rate` int NULL COMMENT 'discountRate',
+  MODIFY COLUMN `goods_info` json NULL COMMENT 'goodsInfo',
+  MODIFY COLUMN `executor` json NULL COMMENT 'executor',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT 'creatorId',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT 'createTime',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT 'updateTime',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT 'delFlag',
+  COMMENT = 'MarketGoodsRelationDO表';

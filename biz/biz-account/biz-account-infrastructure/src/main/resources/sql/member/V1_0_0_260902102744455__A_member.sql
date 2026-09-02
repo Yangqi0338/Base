@@ -1,0 +1,15 @@
+ALTER TABLE
+  `member` MODIFY COLUMN `id` bigint NOT NULL COMMENT '主键ID',
+  MODIFY COLUMN `name` varchar(255) NULL COMMENT '用户名称',
+  MODIFY COLUMN `background_img` varchar(255) NULL COMMENT '背景图',
+  MODIFY COLUMN `gender` int NULL COMMENT '性别[0男,1女]',
+  MODIFY COLUMN `birthday` date NULL COMMENT '生日',
+  MODIFY COLUMN `residence` varchar(255) NULL COMMENT '常住地(省份, 城市, 区县)',
+  MODIFY COLUMN `wx_id` varchar(255) NULL COMMENT '微信ID',
+  MODIFY COLUMN `channel_id` bigint NULL COMMENT '渠道商ID',
+  MODIFY COLUMN `executor` json NULL COMMENT '操作人信息',
+  MODIFY COLUMN `creator_id` bigint NULL COMMENT '创建人id',
+  MODIFY COLUMN `create_time` datetime NULL COMMENT '创建时间',
+  MODIFY COLUMN `update_time` datetime NULL COMMENT '更新时间',
+  MODIFY COLUMN `del_flag` int NULL DEFAULT 0 COMMENT '逻辑删除标记(正常 0, 删除为 NULL(确保唯一索引生效))',
+  COMMENT = 'c端客户';

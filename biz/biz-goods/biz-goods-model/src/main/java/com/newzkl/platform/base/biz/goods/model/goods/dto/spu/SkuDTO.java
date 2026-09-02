@@ -1,22 +1,26 @@
 package com.newzkl.platform.base.biz.goods.model.goods.dto.spu;
 
+import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuExpandVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuSaleAttributeVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
  * sku
+ *
+ * <p>继承 {@code BaseDTO} 承接 id/creatorId/executor/createTime/updateTime,
+ * 使 DO → DTO → VO 两跳转换不丢审计字段</p>
+ *
  * @author fang
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SkuDTO {
-     /**
-     * ID (查询)
-     */
-     private Long id;
+public class SkuDTO extends BaseDTO {
      /**
       * 编码 (后端生成, 不接受入参)
       */
@@ -75,5 +79,5 @@ public class SkuDTO {
     /**
      * 追加: 扩展字段
      */
-    private String expand;
+    private SkuExpandVO expand;
 }
