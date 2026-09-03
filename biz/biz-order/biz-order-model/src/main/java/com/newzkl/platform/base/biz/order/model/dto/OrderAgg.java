@@ -23,10 +23,6 @@ public class OrderAgg implements Serializable {
      */
     private OrderDTO order;
     /**
-     * spu订单
-     */
-    private List<SpuOrderDTO> spuOrderList;
-    /**
      * sku订单
      */
     private List<SkuOrderDTO> skuOrderList;

@@ -1,7 +1,8 @@
 package com.newzkl.platform.base.common.core.utils.generator;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Opt;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -11,6 +12,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author fang
  */
 public class DateTimeGenerator extends AtomicLong implements Generator {
+
+    /**
+     * 默认序列号补零位数
+     */
+    private static final int DEFAULT_SEQUENCE_LENGTH = 4;
 
     private static Integer MODE = 0;
 
@@ -63,10 +69,14 @@ public class DateTimeGenerator extends AtomicLong implements Generator {
 
     /**
      * 生成带时间戳的UUID（格式：日期 + 时间 + 序列号）
-     * 不支持截断。
+     * 不支持截断。序列号长度非正时按 {@link #DEFAULT_SEQUENCE_LENGTH} 补零
      */
     @Override
     public String nextUUID(Object entity) {
-        return getPrefix() + String.format("%0" + Opt.ofNullable(entity).orElse(4) + "d", nextId(entity));
+        int length = NumberUtil.parseInt(StrUtil.toString(entity));
+        if (length <= 0) {
+            length = DEFAULT_SEQUENCE_LENGTH;
+        }
+        return getPrefix() + String.format("%0" + length + "d", nextId(entity));
     }
 }

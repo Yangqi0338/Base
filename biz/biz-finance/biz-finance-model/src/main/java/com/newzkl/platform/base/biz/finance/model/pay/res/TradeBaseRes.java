@@ -12,7 +12,7 @@ public abstract class TradeBaseRes extends TripartiteBaseRes {
     /**
      * 单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 金额

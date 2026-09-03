@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.order.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 
+import com.newzkl.platform.base.biz.order.model.vo.OrderExt;
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
@@ -172,4 +173,10 @@ public class OrderDO extends BaseDO {
      * 是否有售后
      */
     private CommonEnum.YesOrNo refund;
+
+    /**
+     * 订单拓展信息(承接原 spu_order.spu_order_ext, 含取消/关闭原因与门店会员快照)
+     */
+    @JsonSerializable
+    private OrderExt orderExt;
 }

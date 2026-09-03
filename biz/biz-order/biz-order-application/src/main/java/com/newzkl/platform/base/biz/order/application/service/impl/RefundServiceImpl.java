@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.application.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -11,11 +12,12 @@ import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundReposito
 import com.newzkl.platform.base.biz.order.domain.service.*;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
 import com.newzkl.platform.base.biz.order.model.vo.RefundItemVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderAggVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
+import com.newzkl.platform.base.biz.order.model.vo.OrderAggVO;
+import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -61,16 +63,16 @@ public class RefundServiceImpl implements RefundService {
             ThrowsException.exception(BaseErrorCode.PARAM,"售后单备注不能超过300字！");
         }
         //查询订单
-        SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(refundCommand.getSpuOrderId());
+        OrderAggVO orderAggVO = queryService.orderAggVO(refundCommand.getOrderNo());
         //售后单创建
-        RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
+        RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, orderAggVO);
         RefundDTO refund = refundCreateRes.getRefund();
         // 发送协商记录
         localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.LAUNCH_REFUND);
 //        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
         //如果是派发中订单, 售后自动通过
-        if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
-            supplierAudit(refundCreateRes.getRefundId(), CommonEnum.YesOrNo.YES, false);
+        if(OrderEnum.State.SENDING == orderAggVO.getOrderVO().getOrderState()) {
+            audit(AccountEnum.Identity.SUPPLIER, refundCreateRes.getRefundId(), null, CommonEnum.YesOrNo.YES, null, false);
         }
         return refundCreateRes.getRefundId();
     }
@@ -81,67 +83,45 @@ public class RefundServiceImpl implements RefundService {
             ThrowsException.exception(BaseErrorCode.PARAM,"售后单备注不能超过300字！");
         }
         //查询订单
-        SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(refundCommand.getSpuOrderId());
-        SpuOrderVO spuOrderVO = spuOrderAggVO.getSpuOrderVO();
-        if (Objects.isNull(spuOrderVO)){
+        OrderAggVO orderAggVO = queryService.orderAggVO(refundCommand.getOrderNo());
+        OrderVO orderVO = orderAggVO.getOrderVO();
+        if (Objects.isNull(orderVO)){
             ThrowsException.exception(OrderErrorCode.NOT_EXISTS,"订单不存在！");
         }
         if (refundCommand.getRefundType() == RefundEnum.RefundType.MONEY){
             Set<OrderEnum.State> moneyOrderStates = OrderEnum.State.getMoneyOrderStates();
-            if(!moneyOrderStates.contains(spuOrderVO.getOrderState())){
+            if(!moneyOrderStates.contains(orderVO.getOrderState())){
                 ThrowsException.exception(BaseErrorCode.CUSTOM, "当前状态不能发起仅退款！");
             }
         }else if (refundCommand.getRefundType() == RefundEnum.RefundType.MONEY_GOODS){
             Set<OrderEnum.State> moneyGoodsOrderStates = OrderEnum.State.getMoneyGoodsOrderStates();
-            if(!moneyGoodsOrderStates.contains(spuOrderVO.getOrderState())){
+            if(!moneyGoodsOrderStates.contains(orderVO.getOrderState())){
                 ThrowsException.exception(BaseErrorCode.CUSTOM, "当前状态不能发起退货退款！");
             }
         }else {
             ThrowsException.exception(OrderErrorCode.REFUND_FAIL,"售后单类型错误！");
         }
         //售后单创建
-        RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, spuOrderAggVO);
+        RefundCreateRes refundCreateRes = refundDomain.refundCreate(refundCommand, orderAggVO);
         RefundDTO refund = refundCreateRes.getRefund();
         // 发送协商记录
         localMessageApi.sendRefundOperationRecord(refund, RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.CHANNEL_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.LAUNCH_REFUND);
 //        refundOperationRecordRPC.setOperationType(Tag.OperationType.CREATE);
         //如果是派发中订单, 售后自动通过
-        if(OrderEnum.State.SENDING == spuOrderAggVO.getSpuOrderVO().getOrderState()) {
-            supplierAudit(refundCreateRes.getRefundId(), CommonEnum.YesOrNo.YES, false);
+        if(OrderEnum.State.SENDING == orderAggVO.getOrderVO().getOrderState()) {
+            audit(AccountEnum.Identity.SUPPLIER, refundCreateRes.getRefundId(), null, CommonEnum.YesOrNo.YES, null, false);
         }
         return refundCreateRes.getRefundId();
     }
 
     @Override
-    public void supplierAudit(Long refundId, CommonEnum.YesOrNo execute, boolean isAudit) {
-        //审核
-        RefundAuditRes refundAuditRes = null;
-        if(CommonEnum.YesOrNo.YES == execute){
-            refundAuditRes = refundDomain.agreeAuditV2(refundId, AccountEnum.Identity.SUPPLIER);
-
-            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_AGREE;
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), refundOperateTypeEnum);
-        }else {refundAuditRes = refundDomain.refuseAudit(refundId, AccountEnum.Identity.SUPPLIER, "");
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), RefundEnum.State.SUPPLIER_WAIT,refundAuditRes.getNextState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_REFUSE);
-        }
-
-        //售后通过处理
-        if(refundAuditRes.isRefundPass()){
-            doRefundPassForChannel(refundAuditRes);
-            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS);
-        }
-        RefundDTO refund = refundAuditRes.getRefund();
-
-    }
-    @Override
-    public void channelAudit(Long refundId, Long spuOrderId, CommonEnum.YesOrNo execute, String reason, boolean isAudit) {
-        if (refundId == null && spuOrderId == null){
-            ThrowsException.exception(BaseErrorCode.PARAM,"售后单id和spu订单id不能都为空！");
+    public void audit(AccountEnum.Identity identity, Long refundId, String orderNo, CommonEnum.YesOrNo execute, String reason, boolean isAudit) {
+        if (refundId == null && StrUtil.isBlank(orderNo)){
+            ThrowsException.exception(BaseErrorCode.PARAM,"售后单id和交易单号不能都为空！");
         }
         RefundDTO refund = null;
         if (refundId == null){
-            refund = refundRepository.refundBySpuOrderId(spuOrderId);
+            refund = refundRepository.refundByOrderNo(orderNo);
         }else {
             refund =  refundRepository.refund(refundId);
         }
@@ -152,21 +132,31 @@ public class RefundServiceImpl implements RefundService {
         //审核
         RefundAuditRes refundAuditRes = null;
         if(CommonEnum.YesOrNo.YES == execute){
-            refundAuditRes = refundDomain.agreeAuditV2(refundId, AccountEnum.Identity.CHANNEL);
-            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_AGREE;
+            refundAuditRes = refundDomain.agreeAuditV2(refundId, identity);
+            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = AccountEnum.Identity.SUPPLIER == identity
+                    ? (isAudit ? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_TIMEOUT_AGREE : com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_AGREE)
+                    : (isAudit ? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_TIMEOUT_AGREE : com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_AGREE);
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refundOperateTypeEnum);
         }else {
-            refundAuditRes = refundDomain.refuseAudit(refundId, AccountEnum.Identity.CHANNEL, reason);
-            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_REFUSE);
+            refundAuditRes = refundDomain.refuseAudit(refundId, identity, reason);
+            com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refuseOperateTypeEnum = AccountEnum.Identity.SUPPLIER == identity
+                    ? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_REFUSE
+                    : com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.CHANNEL_REFUSE;
+            localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refund.getRefundState(), refundAuditRes.getNextState(), refuseOperateTypeEnum);
         }
 
         //售后通过处理
         if(refundAuditRes.isRefundPass()){
-            if(SpuEnum.ChannelType.SELECTION == refundAuditRes.getRefund().getSpuChannelType()){
-                //供货商品
-                doRefundPassForMemberAndSelection(refundAuditRes);
+            if(AccountEnum.Identity.SUPPLIER == identity){
+                //供应商审核通过: 渠道商订单-供货商品打款
+                doRefundPassForChannel(refundAuditRes);
             } else {
-                ThrowsException.exception(BaseErrorCode.PARAM);
+                //渠道商审核通过: C端订单-供货商品
+                if(SpuEnum.ChannelType.SELECTION == refundAuditRes.getRefund().getSpuChannelType()){
+                    doRefundPassForMemberAndSelection(refundAuditRes);
+                } else {
+                    ThrowsException.exception(BaseErrorCode.PARAM);
+                }
             }
             com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum = isAudit? com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_TIMEOUT_SUCCESS: com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.REFUND_MONEY_SUCCESS;
             localMessageApi.sendRefundOperationRecord(refundAuditRes.getRefund(), refundAuditRes.getNextState(), RefundEnum.State.SUCCESS,  refundOperateTypeEnum);
@@ -185,7 +175,7 @@ public class RefundServiceImpl implements RefundService {
         sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
         sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
         sellAfterRefundReq.setSellAfterOrderNo(refund.getId());
-        sellAfterRefundReq.setOrderNo(refund.getOrderId());
+        sellAfterRefundReq.setOrderId(refund.getSpuOrderId());
         MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
         if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
             throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg());
@@ -195,19 +185,19 @@ public class RefundServiceImpl implements RefundService {
         //售后完成消息
         localMessageApi.sendRefundPassMessage(refund);
         //SKU订单售后通过通知订单
-        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
-            orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
+        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderNoList())){
+            orderDomain.tripOrderChange(null, refundAuditRes.getSkuOrderNoList());
         }
         //处理待结算记录
-        Map<Long, List<RefundItemVO>> refundItemMap = refund.getItem().stream().collect(Collectors.groupingBy(RefundItemVO::getSkuOrderId));
-        for (Long skuOrderId : refundAuditRes.getSkuOrderIdList()) {
-            Integer result = settleDomain.closeSettleOrder(skuOrderId, refund.getId());
+        Map<String, List<RefundItemVO>> refundItemMap = refund.getItem().stream().collect(Collectors.groupingBy(RefundItemVO::getSkuOrderNo));
+        for (String skuOrderNo : refundAuditRes.getSkuOrderNoList()) {
+            Integer result = settleDomain.closeSettleOrder(skuOrderNo, refund.getId());
             if(result == null){
                 //无需操作
             }else if(result == 0){
                 Money refundAmount = Money.ZERO;
                 Long spuId = null;
-                List<RefundItemVO> refundItemVOS = refundItemMap.get(skuOrderId);
+                List<RefundItemVO> refundItemVOS = refundItemMap.get(skuOrderNo);
                 if(ObjectUtil.isNotEmpty(refundItemVOS)){
                     for (RefundItemVO refundItemVO : refundItemVOS) {
                         refundAmount = refundItemVO.getSupplierAmount();
@@ -232,7 +222,7 @@ public class RefundServiceImpl implements RefundService {
         sellAfterRefundReq.setRefundAmount(refund.getRefundAmount());
         sellAfterRefundReq.setServiceAmount(refund.getServiceAmount());
         sellAfterRefundReq.setSellAfterOrderNo(refund.getId());
-        sellAfterRefundReq.setOrderNo(refund.getOrderId());
+        sellAfterRefundReq.setOrderId(refund.getSpuOrderId());
         MemberRefundRes memberRefundRes = balancePayApi.sellAfterRefund(sellAfterRefundReq);
         if (StrUtil.isNotBlank(memberRefundRes.getRefundWarnMsg())) {
             throw new PlatformException(OrderErrorCode.REFUND_FAIL, memberRefundRes.getRefundWarnMsg());
@@ -244,8 +234,8 @@ public class RefundServiceImpl implements RefundService {
 //        RefundPassEvent refundPassEvent =  RefundUtil.refund2RefundPassEvent(refundAuditRes.getRefund());
 //        localMessageFacade.sendMessage(Tag.REFUND_PASS, refundPassEvent, RefundPassEvent.class.getCanonicalName());
         //SKU订单售后通过通知订单
-        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderIdList())){
-            orderDomain.tripSpuOrderChange(null, null, refundAuditRes.getSkuOrderIdList());
+        if(ObjectUtil.isNotEmpty(refundAuditRes.getSkuOrderNoList())){
+            orderDomain.tripOrderChange(null, refundAuditRes.getSkuOrderNoList());
         }
     }
     @Override

@@ -12,7 +12,7 @@ public class OrderApiImpl implements OrderApi {
     private OrderFacade orderFacade;
 
     @Override
-    public void orderChannelPay(Long orderNo) {
+    public void orderChannelPay(String orderNo) {
         orderFacade.orderChannelPay(orderNo);
     }
 }

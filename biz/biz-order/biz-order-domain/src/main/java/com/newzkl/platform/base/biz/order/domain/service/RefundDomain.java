@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.order.domain.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
+import com.newzkl.platform.base.biz.order.model.req.ApplyPlatformCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
@@ -25,7 +26,7 @@ public interface RefundDomain {
      * @param orderAggVO
      * @return
      */
-    RefundCreateRes refundCreate(RefundCommand refundCommand, SpuOrderAggVO orderAggVO);
+    RefundCreateRes refundCreate(RefundCommand refundCommand, OrderAggVO orderAggVO);
     /**
      * 同意售后 api接口用
      * @param refundId
@@ -72,6 +73,19 @@ public interface RefundDomain {
     void stopAudit(AccountEnum.Identity identity, Long accountId, Long refundId);
 
     /**
+     * 申请平台介入
+     * @param applyPlatformCommand 申请参数
+     */
+    void applyPlatform(ApplyPlatformCommand applyPlatformCommand);
+
+    /**
+     * 平台介入处理
+     * @param refundId 售后单ID
+     * @param execute 处理结果 0 渠道商原因 1 供应商原因
+     */
+    void platformExecute(Long refundId, Integer execute);
+
+    /**
      * 售后关闭修改订单
      * @param spuOrderId spu订单id
      * @param item 售后数据
@@ -94,7 +108,7 @@ public interface RefundDomain {
 
 	RefundVO refundVO(Long refundId);
 
-    RefundVO refundVoBySpuOrderId(Long spuOrderId);
+    RefundVO refundVoByOrderNo(String orderNo);
 
     Page<RefundVO> refundPage(RefundQuery refundQuery);
 

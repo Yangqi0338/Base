@@ -28,8 +28,8 @@ public class HuiFuTradeRes extends HuiFuBaseRes implements PayBaseResult {
     private String hf_seq_id;
 
     @Override
-    public Long getTradeNo() {
-        return NumberUtil.parseLong(this.getReq_seq_id());
+    public String getTradeNo() {
+        return this.getReq_seq_id();
     }
 
     @Override

@@ -8,18 +8,17 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * SPU 订单分润消息载体
+ * 交易单分润消息载体(替 SpuOrderMessageVO, SpuOrder 层折叠后, 语义 order 级)
  *
- * <p>迁移: 原 new-scm scm-message-rpc message.rpc.model.sale.SpuOrderMessageVO,
- * 支付成功后组装分润消息用. adopt-chicken: orderState 用枚举, 与 SpuOrder getter 对齐
+ * <p>支付成功后组装分润消息用. orderState 用枚举
  *
  * @author muc_fang
  */
 @Data
-public class SpuOrderMessageVO implements Serializable {
+public class OrderMessageVO implements Serializable {
 
     /**
-     * SPU订单ID
+     * 交易单ID
      */
     private Long id;
 

@@ -7,6 +7,7 @@ import com.newzkl.platform.base.biz.order.infrastructure.entity.SkuOrderDO;
 
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
+import com.newzkl.platform.base.biz.order.model.res.OrderRefundRes;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,12 +25,12 @@ import java.util.List;
 public interface SkuOrderDAO extends BaseMapper<SkuOrderDO> {
     /**
      * 修改SKU发货数量
-     * @param spuOrderId
+     * @param orderNo 交易单号
      * @param skuId
      * @param count
      * @return
      */
-    int updateSkuDeliverCount(@Param("spuOrderId") Long spuOrderId, @Param("skuId") Long skuId, @Param("count") Integer count);
+    int updateSkuDeliverCount(@Param("orderNo") String orderNo, @Param("skuId") Long skuId, @Param("count") Integer count);
     /**
      * 获取已售后数量信息
      * @param wrapper
@@ -38,13 +39,24 @@ public interface SkuOrderDAO extends BaseMapper<SkuOrderDO> {
     List<SkuRefundDTO> skuRefundResList(@Param(Constants.WRAPPER) AbstractWrapper<?, ?, ?> wrapper);
 
     /**
+     * SPU 维度售后统计
+     *
+     * <p>迁移自旧 SpuOrderDAO.spuRefundResList: SpuOrder 层折叠后按 order_no + spu_id 聚合 sku_order,
+     * 运费取交易单 freight_amount</p>
+     *
+     * @param wrapper 查询包装器(别名 t)
+     * @return SPU 维度售后统计列表
+     */
+    List<OrderRefundRes> orderRefundResList(@Param(Constants.WRAPPER) AbstractWrapper<?, ?, ?> wrapper);
+
+    /**
      * 修改SKU售后数量
-     * @param orderId
+     * @param orderNo 交易单号
      * @param skuId
      * @param count
      * @return
      */
-    int updateSkuRefundingCount(@Param("orderId") Long orderId, @Param("skuId") Long skuId, @Param("count") Integer count);
+    int updateSkuRefundingCount(@Param("orderNo") String orderNo, @Param("skuId") Long skuId, @Param("count") Integer count);
 
     /**
      * SKU售后通过订单处理
@@ -53,7 +65,7 @@ public interface SkuOrderDAO extends BaseMapper<SkuOrderDO> {
      *         //如果已售后数量 = 购买数量, 则关闭订单
      * @param skuIdList
      */
-    int skuOrderEditForRefundPass(@Param("skuOrderId") List<Long> skuIdList, @Param("toState") OrderEnum.State toState);
+    int skuOrderEditForRefundPass(@Param("skuOrderNo") List<String> skuOrderNoList, @Param("toState") OrderEnum.State toState);
 
     /**
      * 构建 SKU 订单查询条件
@@ -67,9 +79,10 @@ public interface SkuOrderDAO extends BaseMapper<SkuOrderDO> {
     default BaseLambdaQueryWrapper<SkuOrderDO> getLw(SkuOrderQuery skuOrderQuery) {
         return new BaseLambdaQueryWrapper<SkuOrderDO>()
                 .notEmptyIn(SkuOrderDO::getId, skuOrderQuery.getIdList())
-                .notEmptyIn(SkuOrderDO::getSpuOrderId, skuOrderQuery.getSpuOrderIdList())
+                .notEmptyIn(SkuOrderDO::getSpuId, skuOrderQuery.getSpuIdList())
                 .notEmptyIn(SkuOrderDO::getSkuId, skuOrderQuery.getSkuIdList())
-                .notEmptyIn(SkuOrderDO::getOrderId, skuOrderQuery.getOrderIdList())
+                .notEmptyIn(SkuOrderDO::getOrderNo, skuOrderQuery.getOrderNoList())
+                .notEmptyIn(SkuOrderDO::getSkuOrderNo, skuOrderQuery.getSkuOrderNoList())
                 .notEmptyIn(SkuOrderDO::getOrderState, skuOrderQuery.getOrderStateList())
                 .notEmptyLt(SkuOrderDO::getDeliveredTime, skuOrderQuery.getLessDeliverTime())
                 .notEmptyLt(SkuOrderDO::getReceiveTime, skuOrderQuery.getLessReceiveTime())

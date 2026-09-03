@@ -33,10 +33,10 @@ public interface CommitOrder {
     OrderCreateRes getOrderCreateResByRedis(MemberOrderCreateCommand memberOrderCreateCommand);
     /**
      * 再来一单
-     * @param spuOrderId
+     * @param orderNo
      * @return
      */
-    OrderCreateRes createOrderAgain(List<Long> spuOrderId);
+    OrderCreateRes createOrderAgain(List<String> orderNo);
     /**
      * 提交预订单 （从redis中删除）
      *

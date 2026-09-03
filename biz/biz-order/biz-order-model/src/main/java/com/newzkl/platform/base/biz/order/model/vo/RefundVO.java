@@ -32,9 +32,9 @@ public class RefundVO extends BaseRes {
       */
      private String outRefundId;
      /**
-     * 订单ID
+     * 交易单号
      */
-     private Long orderId;
+     private String orderNo;
      /**
       * 申请人角色
       */

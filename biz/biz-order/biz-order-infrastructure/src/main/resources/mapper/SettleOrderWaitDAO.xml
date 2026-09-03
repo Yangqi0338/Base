@@ -7,11 +7,13 @@
            resultType 全限定名靠 MP 驼峰自动映射(不写 resultMap, 防启动期找不到 setter) -->
 <mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.settle.SettleOrderWaitDAO">
 
+    <!-- SpuOrder 层折叠: 去 spu_order 联表, spuName/spuImg 从 sku_order.order_sku_info JSON 提取 -->
     <select id="queryWaitSettleOrder" resultType="com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO">
-        select sw.*, so.sku_sale_attribute as skuName, spo.spu_name as spuName, spo.spu_img as spuImg
+        select sw.*, so.sku_sale_attribute as skuName,
+               so.order_sku_info ->> '$.spuName' as spuName,
+               so.order_sku_info ->> '$.spuImg' as spuImg
         from settle_order_wait sw
         left join sku_order so on sw.sku_order_id = so.id
-        left join spu_order spo on sw.spu_order_id = spo.id
         where sw.spu_id in
         <foreach collection="spuIdList" item="item" separator="," close=")" open="(">
             #{item}
@@ -21,11 +23,13 @@
         and sw.del_flag = 0
     </select>
 
+    <!-- SpuOrder 层折叠: 去 spu_order 联表, spuName/spuImg 从 sku_order.order_sku_info JSON 提取 -->
     <select id="queryWaitSettleOrderIn" resultType="com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO">
-        select sw.*, so.sku_sale_attribute as skuName, spo.spu_name as spuName, spo.spu_img as spuImg
+        select sw.*, so.sku_sale_attribute as skuName,
+               so.order_sku_info ->> '$.spuName' as spuName,
+               so.order_sku_info ->> '$.spuImg' as spuImg
         from settle_order_wait sw
         left join sku_order so on sw.sku_order_id = so.id
-        left join spu_order spo on sw.spu_order_id = spo.id
         where sw.spu_id in
         <foreach collection="spuIdList" item="item" separator="," close=")" open="(">
             #{item}
@@ -39,12 +43,14 @@
         and sw.del_flag = 0
     </select>
 
+    <!-- SpuOrder 层折叠: 去 spu_order 联表, spuName/spuImg 从 sku_order.order_sku_info JSON 提取 -->
     <select id="queryWaitSettleOrderTimeNode"
             resultType="com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO">
-        select sw.*, so.sku_sale_attribute as skuName, spo.spu_name as spuName, spo.spu_img as spuImg
+        select sw.*, so.sku_sale_attribute as skuName,
+               so.order_sku_info ->> '$.spuName' as spuName,
+               so.order_sku_info ->> '$.spuImg' as spuImg
         from settle_order_wait sw
         left join sku_order so on sw.sku_order_id = so.id
-        left join spu_order spo on sw.spu_order_id = spo.id
         where sw.settle_time_node &lt; #{settleTimeNode}
         and sw.settle_time_node > 1
         and sw.settle_state = 0

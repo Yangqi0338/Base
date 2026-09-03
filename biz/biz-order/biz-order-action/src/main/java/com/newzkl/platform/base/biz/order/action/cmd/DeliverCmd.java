@@ -13,6 +13,6 @@ public class DeliverCmd {
         /**
          * SPU订单ID
          */
-        private Long spuOrderId;
+        private String orderNo;
     }
 }

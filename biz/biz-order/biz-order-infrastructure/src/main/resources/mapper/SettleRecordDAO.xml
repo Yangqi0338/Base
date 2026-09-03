@@ -9,8 +9,9 @@
     <select id="settleTypeList" resultType="com.newzkl.platform.base.biz.order.model.vo.SettleOrderWaitVO">
         <choose>
             <when test="query.type == 0">
-                select sw.*, spo.create_time as createOrderTime from settle_order_wait sw
-                left join spu_order spo on sw.spu_order_no = spo.spu_order_no
+                <!-- 子表关联键 settle_order_wait.order_no, join order 取 create_time -->
+                select sw.*, ord.create_time as createOrderTime from settle_order_wait sw
+                left join `order` ord on sw.order_no = ord.order_no
             </when>
             <otherwise>
                 select sw.* from settle_order_wait sw

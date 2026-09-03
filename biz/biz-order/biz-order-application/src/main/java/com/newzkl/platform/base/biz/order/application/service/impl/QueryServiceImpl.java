@@ -10,13 +10,12 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.GoodsApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.query.DeliverQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
@@ -60,25 +59,25 @@ public class QueryServiceImpl implements QueryService {
         return TransferUtils.transferPage(skuOrderDTOPage, SkuOrderVO.class);
     }
     @Override
-    public SpuOrderAggVO spuOrderAggVO(Long spuOrderId) {
-        SpuOrderAggVO spuOrderAggVO = orderRepository.spuOrderAggVO(spuOrderId);
+    public OrderAggVO orderAggVO(String orderNo) {
+        OrderAggVO orderAggVO = orderRepository.orderAggVO(orderNo);
         //物流信息
-        Map<Long, List<DeliverVO>> deliverMap = this.orderDeliverInfo(spuOrderId);
-        this.buildDeliver(deliverMap, spuOrderAggVO);
-        SpuOrderVO spuOrderVO = spuOrderAggVO.getSpuOrderVO();
-        SpuOrderExt spuOrderExt = spuOrderVO.getSpuOrderExt();
-        Long memberId = spuOrderVO.getMemberId();
-        Long channelId = spuOrderVO.getChannelId();
+        Map<Long, List<DeliverVO>> deliverMap = this.orderDeliverInfo(orderNo);
+        this.buildDeliver(deliverMap, orderAggVO);
+        OrderVO orderVO = orderAggVO.getOrderVO();
+        OrderExt orderExt = Optional.ofNullable(orderVO.getOrderExt()).orElseGet(OrderExt::new);
+        Long memberId = orderVO.getMemberId();
+        Long channelId = orderVO.getChannelId();
 
         List<Long> storeIds = Collections.singletonList(channelId);
         List<StoreRPCVO> storeRPCVOS =CollUtil.isNotEmpty(storeIds)? goodsApi.batchQueryStoreInfo(storeIds):Collections.emptyList();
         if (CollUtil.isNotEmpty(storeRPCVOS)){
             StoreRPCVO storeRPCVO = storeRPCVOS.get(0);
             if (storeRPCVO != null){
-                spuOrderVO.setStoreName(storeRPCVO.getName());
-                spuOrderVO.setStoreHead(storeRPCVO.getLogo());
-                spuOrderExt.setStoreName(storeRPCVO.getName());
-                spuOrderExt.setStoreHead(storeRPCVO.getLogo());
+                orderVO.setStoreName(storeRPCVO.getName());
+                orderVO.setStoreHead(storeRPCVO.getLogo());
+                orderExt.setStoreName(storeRPCVO.getName());
+                orderExt.setStoreHead(storeRPCVO.getLogo());
             }
         }
 
@@ -89,187 +88,194 @@ public class QueryServiceImpl implements QueryService {
         List<AccountGroupVO> accountGroupVOS =CollUtil.isNotEmpty(memberIds)? accountApi.listAccountByIds(memberIds):Collections.emptyList();
         if (CollUtil.isNotEmpty(accountGroupVOS)){
             Map<Long, AccountGroupVO> accountMap = accountGroupVOS.stream().collect(Collectors.toMap(AccountGroupVO::getId, v -> v));
-            AccountGroupVO storeAccountDto = accountMap.get(spuOrderVO.getChannelId());
+            AccountGroupVO storeAccountDto = accountMap.get(orderVO.getChannelId());
             if (storeAccountDto != null){
-                spuOrderExt.setStoreAccount(storeAccountDto.getUserAccount());
+                orderExt.setStoreAccount(storeAccountDto.getUserAccount());
             }
-            AccountGroupVO memberAccount = accountMap.get(spuOrderVO.getAccountId());
+            AccountGroupVO memberAccount = accountMap.get(orderVO.getAccountId());
             if (memberAccount != null){
-                spuOrderExt.setUserAccount(memberAccount.getUserAccount());
-                spuOrderExt.setUserName(memberAccount.getPhone());
-                spuOrderExt.setNickName(memberAccount.getNickname());
-                spuOrderExt.setMemberHead(memberAccount.getHead());
-                spuOrderVO.setUsername(memberAccount.getPhone());
-                spuOrderVO.setNickname(memberAccount.getNickname());
+                orderExt.setUserAccount(memberAccount.getUserAccount());
+                orderExt.setUserName(memberAccount.getPhone());
+                orderExt.setNickName(memberAccount.getNickname());
+                orderExt.setMemberHead(memberAccount.getHead());
+                orderVO.setUsername(memberAccount.getPhone());
+                orderVO.setNickname(memberAccount.getNickname());
             }
         }
 
-        spuOrderVO.setSpuOrderExt(spuOrderExt);
-        if (spuOrderVO.getRefundingCount() > 0) {
-            RefundDTO refundDTO = refundRepository.refundBySpuOrderId(spuOrderId);
-            spuOrderVO.setRefundState(refundDTO.getRefundState());
-            spuOrderVO.setRefundType(refundDTO.getRefundType());
+        orderVO.setOrderExt(orderExt);
+        if (orderVO.getRefundingCount() != null && orderVO.getRefundingCount() > 0) {
+            RefundDTO refundDTO = refundRepository.refundByOrderNo(orderNo);
+            orderVO.setRefundState(refundDTO.getRefundState());
+            orderVO.setRefundType(refundDTO.getRefundType());
         }
-        if (spuOrderVO.getOrderState() == OrderEnum.State.MEMBER_WAIT_PAY) {
-            long remainTime = spuOrderVO.getCreateTime().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            spuOrderVO.setRemainTime(remainTime);
-        }else if (spuOrderVO.getOrderState() == OrderEnum.State.CHANNEL_WAIT_PAY){
+        if (orderVO.getOrderState() == OrderEnum.State.MEMBER_WAIT_PAY) {
+            long remainTime = orderVO.getCreateTime().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            orderVO.setRemainTime(remainTime);
+        }else if (orderVO.getOrderState() == OrderEnum.State.CHANNEL_WAIT_PAY){
             long remainTime;
             if(isDev()){//测试环境7分钟
-                remainTime = spuOrderVO.getUpdateTime().plusMinutes(7).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                remainTime = orderVO.getUpdateTime().plusMinutes(7).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             }else {//生产环境5天
-                remainTime = spuOrderVO.getUpdateTime().plusDays(5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                remainTime = orderVO.getUpdateTime().plusDays(5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             }
-            spuOrderVO.setRemainTime(remainTime);
+            orderVO.setRemainTime(remainTime);
         }
-        return spuOrderAggVO;
+        return orderAggVO;
     }
 
     @Override
-    public Page spuOrderAggVOList(SpuOrderQuery spuOrderQuery) {
+    public Page<OrderAggVO> orderAggVOList(OrderQuery orderQuery) {
         // ========== 1. 处理渠道名称查询：转换为渠道ID列表 ==========
-        String channelName = spuOrderQuery.getChannelName();
+        String channelName = orderQuery.getChannelName();
         if (StrUtil.isNotBlank(channelName)) {
             List<ChannelDTO> channelVOs = channelApi.channelList(null, channelName);
-            
+
             // 渠道不存在则直接返回空分页
             if (CollUtil.isEmpty(channelVOs)) {
                 return new Page<>();
             }
-            spuOrderQuery.setChannelIdList(channelVOs.stream().map(ChannelDTO::getId).collect(Collectors.toList()));
+            orderQuery.setChannelIdList(channelVOs.stream().map(ChannelDTO::getId).collect(Collectors.toList()));
         }
-        String nickname = spuOrderQuery.getNickname();
+        String nickname = orderQuery.getNickname();
         if (StrUtil.isNotBlank(nickname)) {
             List<Long> longs = accountApi.queryMember(nickname);
             if (CollUtil.isEmpty(longs)){
                 return new Page<>();
             }
-            spuOrderQuery.setMemberIdList(longs);
+            orderQuery.setMemberIdList(longs);
         }
         // ========== 2. 处理门店账号查询：转换为渠道ID列表 ==========
-        String storeAccount = spuOrderQuery.getStoreAccount();
+        String storeAccount = orderQuery.getStoreAccount();
         if (StrUtil.isNotBlank(storeAccount)) {
             AccountGroupVO accountGroup = accountApi.selectByUserAccount(storeAccount);
             AccountEnum.Identity identity = SecurityUtils.getIdentity();
             if (AccountEnum.Identity.CHANNEL == identity) {
                 Optional.ofNullable(accountGroup)
-                        .ifPresent(ag -> spuOrderQuery.setMemberIdList(Collections.singletonList(ag.getId())));
+                        .ifPresent(ag -> orderQuery.setMemberIdList(Collections.singletonList(ag.getId())));
             }else if (AccountEnum.Identity.MEMBER == identity){
                 Optional.ofNullable(accountGroup)
-                        .ifPresent(ag -> spuOrderQuery.setChannelIdList(Collections.singletonList(ag.getId())));
+                        .ifPresent(ag -> orderQuery.setChannelIdList(Collections.singletonList(ag.getId())));
             }
 
         }
         
-        // ========== 3. 查询SPU订单分页数据 ==========
-        Page<SpuOrderDTO> spuOrderPage = orderRepository.spuOrderList(spuOrderQuery);
-        List<Long> spuOrderIds = spuOrderPage.getRecords().stream().map(SpuOrderDTO::getId).collect(Collectors.toList());
-        
-        // SPU订单为空则返回空分页
-        if (CollUtil.isEmpty(spuOrderIds)) {
-            return spuOrderPage;
+        // ========== 3. 查询交易单分页数据 ==========
+        Page<OrderDTO> orderPage = orderRepository.orderList(orderQuery);
+        List<String> orderNoLis = orderPage.getRecords().stream().map(OrderDTO::getOrderNo).collect(Collectors.toList());
+
+        // 交易单为空则返回空分页
+        if (CollUtil.isEmpty(orderNoLis)) {
+            return new Page<>(orderPage.getCurrent(), orderPage.getSize(), orderPage.getTotal());
         }
-        
+
         // ========== 4. 查询SKU订单+物流信息，并构建分组映射 ==========
-        // 4.1 查询SKU订单并按SPU订单ID分组
+        // 4.1 查询SKU订单并按交易单号分组(子表关联键为 order_no)
+        List<String> orderNos = orderPage.getRecords().stream().map(OrderDTO::getOrderNo).collect(Collectors.toList());
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setSpuOrderIdList(spuOrderIds);
+        skuOrderQuery.setOrderNoList(orderNos);
         List<SkuOrderVO> skuOrderList = TransferUtils.transfers(orderRepository.skuOrderList(skuOrderQuery).getRecords(), SkuOrderVO.class);
-        Map<Long, List<SkuOrderVO>> skuOrderMapBySpuId =
-            skuOrderList.stream().collect(Collectors.groupingBy(SkuOrderVO::getSpuOrderId));
-        
+        Map<String, List<SkuOrderVO>> skuOrderMapByOrderNo =
+            skuOrderList.stream().collect(Collectors.groupingBy(SkuOrderVO::getOrderNo));
+
         // 4.2 查询物流信息并构建映射
-        Map<Long, Map<Long, List<DeliverVO>>> deliverMap = this.orderDeliverInfo(spuOrderIds);
-        List<SpuOrderVO> spuOrderVOList = TransferUtils.transfers(spuOrderPage.getRecords(), SpuOrderVO.class);
-        List<Long> memberIds = spuOrderVOList.stream().map(SpuOrderVO::getAccountId).collect(Collectors.toList());
-        List<Long> storeIds = spuOrderVOList.stream().map(SpuOrderVO::getChannelId).distinct().collect(Collectors.toList());
+        Map<String, Map<Long, List<DeliverVO>>> deliverMap = this.orderDeliverInfo(orderNoLis);
+        List<OrderVO> orderVOList = TransferUtils.transfers(orderPage.getRecords(), OrderVO.class);
+        List<Long> memberIds = orderVOList.stream().map(OrderVO::getAccountId).collect(Collectors.toList());
+        List<Long> storeIds = orderVOList.stream().map(OrderVO::getChannelId).distinct().collect(Collectors.toList());
         memberIds.addAll(storeIds);
         memberIds = memberIds.stream().distinct().collect(Collectors.toList());
         List<AccountGroupVO> accountGroupVOS =CollUtil.isNotEmpty(memberIds)? accountApi.listAccountByIds(memberIds):Collections.emptyList();
         Map<Long, AccountGroupVO> accountMap = accountGroupVOS.stream().collect(Collectors.toMap(AccountGroupVO::getId, v -> v));
         List<StoreRPCVO> storeRPCVOS =CollUtil.isNotEmpty(storeIds)? goodsApi.batchQueryStoreInfo(storeIds):Collections.emptyList();
         Map<Long, StoreRPCVO> storeMap = storeRPCVOS.stream().collect(Collectors.toMap(StoreRPCVO::getId, v -> v));
-        // ========== 5. 组装SPU订单聚合VO列表 ==========
-        List<SpuOrderAggVO> aggVOList = new ArrayList<>();
-        for (SpuOrderVO spuOrderVO : spuOrderVOList) {
-            Long spuOrderId = spuOrderVO.getId();
-            SpuOrderAggVO aggVO = new SpuOrderAggVO();
-            
+        // ========== 5. 组装交易单聚合VO列表 ==========
+        List<OrderAggVO> aggVOList = new ArrayList<>();
+        for (OrderVO orderVO : orderVOList) {
+            String orderNo = orderVO.getOrderNo();
+            OrderAggVO aggVO = new OrderAggVO();
+
             // 5.1 基础信息填充
-            aggVO.setSpuOrderVO(TransferUtils.transfer(spuOrderVO, SpuOrderVO.class));
-            aggVO.setSkuOrderList(TransferUtils.transfers(skuOrderMapBySpuId.getOrDefault(spuOrderId, new ArrayList<>()), SkuOrderVO.class));
-            
-            // 5.2 处理SPU订单扩展信息
-            SpuOrderExt spuOrderExt = spuOrderVO.getSpuOrderExt();
-            StoreRPCVO storeRPCVO = storeMap.get(spuOrderVO.getChannelId());
+            aggVO.setOrderVO(orderVO);
+            aggVO.setSkuOrderList(skuOrderMapByOrderNo.getOrDefault(orderVO.getOrderNo(), new ArrayList<>()));
+
+            // 5.2 处理交易单扩展信息
+            OrderExt orderExt = Optional.ofNullable(orderVO.getOrderExt()).orElseGet(OrderExt::new);
+            StoreRPCVO storeRPCVO = storeMap.get(orderVO.getChannelId());
             if (storeRPCVO != null){
-                spuOrderVO.setStoreName(storeRPCVO.getName());
-                spuOrderVO.setStoreHead(storeRPCVO.getLogo());
-                spuOrderExt.setStoreName(storeRPCVO.getName());
-                spuOrderExt.setStoreHead(storeRPCVO.getLogo());
+                orderVO.setStoreName(storeRPCVO.getName());
+                orderVO.setStoreHead(storeRPCVO.getLogo());
+                orderExt.setStoreName(storeRPCVO.getName());
+                orderExt.setStoreHead(storeRPCVO.getLogo());
             }
-            AccountGroupVO storeAccountDto = accountMap.get(spuOrderVO.getChannelId());
+            AccountGroupVO storeAccountDto = accountMap.get(orderVO.getChannelId());
             if (storeAccountDto != null){
-                spuOrderExt.setStoreAccount(storeAccountDto.getUserAccount());
+                orderExt.setStoreAccount(storeAccountDto.getUserAccount());
             }
-            AccountGroupVO memberAccount = accountMap.get(spuOrderVO.getAccountId());
+            AccountGroupVO memberAccount = accountMap.get(orderVO.getAccountId());
             if (memberAccount != null){
-                spuOrderExt.setUserAccount(memberAccount.getUserAccount());
-                spuOrderExt.setUserName(memberAccount.getPhone());
-                spuOrderExt.setNickName(memberAccount.getNickname());
-                spuOrderExt.setMemberHead(memberAccount.getHead());
-                spuOrderVO.setUsername(memberAccount.getPhone());
-                spuOrderVO.setNickname(memberAccount.getNickname());
+                orderExt.setUserAccount(memberAccount.getUserAccount());
+                orderExt.setUserName(memberAccount.getPhone());
+                orderExt.setNickName(memberAccount.getNickname());
+                orderExt.setMemberHead(memberAccount.getHead());
+                orderVO.setUsername(memberAccount.getPhone());
+                orderVO.setNickname(memberAccount.getNickname());
             }
-            spuOrderVO.setSpuOrderExt(spuOrderExt);
+            orderVO.setOrderExt(orderExt);
             // 5.3 处理退款状态
-            if (spuOrderVO.getRefundingCount() > 0) {
-                RefundDTO refundDTO = refundRepository.refundBySpuOrderId(spuOrderId);
-                spuOrderVO.setRefundState(refundDTO.getRefundState());
-                spuOrderVO.setRefundType(refundDTO.getRefundType());
+            if (orderVO.getRefundingCount() != null && orderVO.getRefundingCount() > 0) {
+                RefundDTO refundDTO = refundRepository.refundByOrderNo(orderNo);
+                orderVO.setRefundState(refundDTO.getRefundState());
+                orderVO.setRefundType(refundDTO.getRefundType());
             }
             
             // 5.4 填充物流信息
-            buildDeliver(deliverMap.get(spuOrderId), aggVO);
-            
+            buildDeliver(deliverMap.get(orderNo), aggVO);
+
             // 5.5 处理待支付订单剩余时间
-            if (Objects.equals(spuOrderVO.getOrderState(), OrderEnum.State.MEMBER_WAIT_PAY)) {
-                long remainTime = spuOrderVO.getCreateTime().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                spuOrderVO.setRemainTime(remainTime);
-            }else if (Objects.equals(spuOrderVO.getOrderState(), OrderEnum.State.CHANNEL_WAIT_PAY)){
+            if (Objects.equals(orderVO.getOrderState(), OrderEnum.State.MEMBER_WAIT_PAY)) {
+                long remainTime = orderVO.getCreateTime().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                orderVO.setRemainTime(remainTime);
+            }else if (Objects.equals(orderVO.getOrderState(), OrderEnum.State.CHANNEL_WAIT_PAY)){
                 long remainTime;
                 if(isDev()){//测试环境7分钟
-                    remainTime = spuOrderVO.getUpdateTime().plusMinutes(7).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                    remainTime = orderVO.getUpdateTime().plusMinutes(7).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 }else {//生产环境5天
-                    remainTime = spuOrderVO.getUpdateTime().plusDays(5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                    remainTime = orderVO.getUpdateTime().plusDays(5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 }
-                spuOrderVO.setRemainTime(remainTime);
+                orderVO.setRemainTime(remainTime);
             }
-            
+
             aggVOList.add(aggVO);
         }
-        
-        // ========== 6. 装饰渠道名称 + 转换分页返回 ==========
-        return spuOrderPage;
+
+        // ========== 6. 转换分页返回 ==========
+        Page<OrderAggVO> resultPage = new Page<>(orderPage.getCurrent(), orderPage.getSize(), orderPage.getTotal());
+        resultPage.setRecords(aggVOList);
+        return resultPage;
     }
     @Override
     public List<Long> orderIdList(OrderQuery orderQuery) {
         return orderRepository.orderIdList(orderQuery);
     }
     @Override
-    public List<OrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList) {
-        return orderRepository.accountOrderState(accountId, spuOrderIdList);
+    public List<String> orderNoList(OrderQuery orderQuery) {
+        return orderRepository.orderNoList(orderQuery);
+    }
+    @Override
+    public List<OrderStateVO> accountOrderState(Long accountId, List<Long> orderIdList) {
+        return orderRepository.accountOrderState(accountId, orderIdList);
     }
 
     @Override
-    public SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId) {
-        return orderRepository.spuOrderRelation(orderId, spuId);
+    public OrderRelationVO orderRelation(Long orderId, Long spuId) {
+        return orderRepository.orderRelation(orderId, spuId);
     }
 
     @Override
-    public Map<Long, List<DeliverVO>> orderDeliverInfo(Long spuOrderId) {
+    public Map<Long, List<DeliverVO>> orderDeliverInfo(String orderNo) {
         DeliverQuery deliverQuery = new DeliverQuery();
-        deliverQuery.setSpuOrderId(spuOrderId);
+        deliverQuery.setOrderNo(orderNo);
         List<DeliverVO> deliverVOS = orderRepository.deliverListByQuery(deliverQuery);
         //组装数据
         Map<Long, List<DeliverVO>> deliverVOList = new HashMap<>();
@@ -290,22 +296,22 @@ public class QueryServiceImpl implements QueryService {
     /**
      * 批量查询物流信息
      *
-     * @param spuOrderIdList
+     * @param orderNoList
      * @return
      */
-    private Map<Long, Map<Long, List<DeliverVO>>> orderDeliverInfo(List<Long> spuOrderIdList) {
+    private Map<String, Map<Long, List<DeliverVO>>> orderDeliverInfo(List<String> orderNoList) {
         DeliverQuery deliverQuery = new DeliverQuery();
-        deliverQuery.setSpuOrderIdList(spuOrderIdList);
+        deliverQuery.setOrderNoList(orderNoList);
         List<DeliverVO> deliverVOS = orderRepository.deliverListByQuery(deliverQuery);
         //组装数据 - 先按spuOrderId分组，再按skuId分组
-        Map<Long, Map<Long, List<DeliverVO>>> result = new HashMap<>();
+        Map<String, Map<Long, List<DeliverVO>>> result = new HashMap<>();
         for (DeliverVO deliverVO : deliverVOS) {
-            Long currentSpuOrderId = deliverVO.getSpuOrderId();
+            String currentOrderNo = deliverVO.getOrderNo();
             // 确保外层Map中存在该spuOrderId的分组
-            if (!result.containsKey(currentSpuOrderId)) {
-                result.put(currentSpuOrderId, new HashMap<>());
+            if (!result.containsKey(currentOrderNo)) {
+                result.put(currentOrderNo, new HashMap<>());
             }
-            Map<Long, List<DeliverVO>> skuDeliverMap = result.get(currentSpuOrderId);
+            Map<Long, List<DeliverVO>> skuDeliverMap = result.get(currentOrderNo);
 
             // 内部按skuId分组（保持原有逻辑）
             List<DeliverItemVO> deliverItemVOS = JSONObject.parseArray(deliverVO.getItem(), DeliverItemVO.class);
@@ -326,9 +332,9 @@ public class QueryServiceImpl implements QueryService {
     /**
      * 填充物流信息
      */
-    private void buildDeliver(Map<Long, List<DeliverVO>> map, SpuOrderAggVO spuOrderAggVO) {
+    private void buildDeliver(Map<Long, List<DeliverVO>> map, OrderAggVO orderAggVO) {
         if(map != null) {
-            for (SkuOrderVO skuOrderVO : spuOrderAggVO.getSkuOrderList()) {
+            for (SkuOrderVO skuOrderVO : orderAggVO.getSkuOrderList()) {
                 List<DeliverVO> deliverList = map.get(skuOrderVO.getSkuId());
                 if (deliverList != null) {
                     skuOrderVO.setDeliverVOList(deliverList);

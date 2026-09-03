@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GoodsPaySuccessEvent implements Serializable {
     /**
-     * 订单ID
+     * 订单ID(主键)
      */
     private Long orderId;
     /**
@@ -26,7 +26,7 @@ public class GoodsPaySuccessEvent implements Serializable {
      */
     private List<SkuOrderMessageVO> skuOrderList;
     /**
-     * SPU订单支付成功信息
+     * 交易单支付成功信息
      */
-    private List<SpuOrderMessageVO> spuOrderList;
+    private List<OrderMessageVO> spuOrderList;
 }

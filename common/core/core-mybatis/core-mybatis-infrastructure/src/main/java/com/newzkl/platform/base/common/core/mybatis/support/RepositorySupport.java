@@ -111,7 +111,7 @@ public abstract class RepositorySupport {
     /**
      * 仅查询一个
      */
-    public <T, R, Children extends AbstractWrapper<T, R, Children>> AbstractWrapper<T, R, Children> buildOne(
+    public static  <T, R, Children extends AbstractWrapper<T, R, Children>> AbstractWrapper<T, R, Children> buildOne(
             AbstractWrapper<T, R, Children> wrapper) {
         return wrapper.last("limit 1");
     }

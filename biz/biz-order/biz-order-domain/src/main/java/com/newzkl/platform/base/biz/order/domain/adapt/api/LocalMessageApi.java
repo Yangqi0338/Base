@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.order.domain.adapt.api;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
+import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSyncHandleVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
@@ -39,7 +39,7 @@ public interface LocalMessageApi {
      */
     void wakeUpEarningMessage(Long skuOrderId);
 
-    void sendOrderNewRecordEvent(List<SpuOrderDTO> spuOrderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, AccountEnum.Identity operatorRoleId);
+    void sendOrderNewRecordEvent(List<OrderDTO> orderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, AccountEnum.Identity operatorRoleId);
 
     void deliverNotify(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId);
 

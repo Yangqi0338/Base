@@ -15,7 +15,7 @@ public class HuiFuPayReq {
     /**
      * 交易单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 商品描述

@@ -9,6 +9,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.OldColumnName;
 
 import java.time.LocalDateTime;
 
@@ -26,10 +27,13 @@ public class SettleOrderWaitDO extends BaseDO {
 	@Index
 	private Long supplierId;
 	/**
-	 * SPU_订单ID
+	 * 交易单号
+	 *
+	 * <p>原 spu_order_id 列, slug42 起已存 order 主键值, 本次改名并转业务单号</p>
 	 */
 	@Index
-	private Long spuOrderId;
+	@OldColumnName("spu_order_id")
+	private String orderNo;
 	/**
 	 * sku订单ID
 	 */

@@ -25,6 +25,6 @@ public interface DeliverDAO extends BaseMapper<DeliverDO> {
 
     default BaseLambdaQueryWrapper<DeliverDO> getLw(DeliverQuery deliverQuery) {
         return new BaseLambdaQueryWrapper<DeliverDO>()
-                .notEmptyIn(DeliverDO::getSpuOrderId, deliverQuery.getSpuOrderIdList());
+                .notEmptyIn(DeliverDO::getOrderNo, deliverQuery.getOrderNoList());
     }
 }

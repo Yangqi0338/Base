@@ -35,7 +35,7 @@ public class PaySuccessConsumer extends AbstractMessageMQPushConsumer<PaySuccess
 
     @Override
     public void remoteProcess(PaySuccessEvent message, Map<String, Object> extMap) {
-        Long tradeNo = message.getOrderId();
+        String tradeNo = message.getOrderId();
         log.info("开始消费: 查询订单信息 :" + tradeNo);
         TradeOrderInfoRes tradeOrderInfoRes = orderPayDomain.tradeOrderQuery(tradeNo);
         //甄选师礼包支付成功业务

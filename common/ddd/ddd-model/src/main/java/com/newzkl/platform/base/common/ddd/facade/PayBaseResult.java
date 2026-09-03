@@ -16,8 +16,8 @@ public interface PayBaseResult extends Serializable {
      * 交易单号
      * @return 交易单号, 默认 0
      */
-    default Long getTradeNo() {
-        return 0L;
+    default String getTradeNo() {
+        return "0";
     }
 
     /**

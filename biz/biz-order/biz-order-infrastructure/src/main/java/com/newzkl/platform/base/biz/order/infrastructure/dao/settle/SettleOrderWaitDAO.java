@@ -39,7 +39,7 @@ public interface SettleOrderWaitDAO extends BaseMapper<SettleOrderWaitDO> {
                 .notNullEq(SettleOrderWaitDO::getSettleState, query.getSettleState())
                 .notNullEq(SettleOrderWaitDO::getSkuOrderId, query.getSkuOrderId())
                 .notNullEq(SettleOrderWaitDO::getType, query.getType())
-                .notNullEq(SettleOrderWaitDO::getSpuOrderId, query.getSpuOrderId())
+                .notNullEq(SettleOrderWaitDO::getOrderNo, query.getOrderNo())
                 ;
     }
 }

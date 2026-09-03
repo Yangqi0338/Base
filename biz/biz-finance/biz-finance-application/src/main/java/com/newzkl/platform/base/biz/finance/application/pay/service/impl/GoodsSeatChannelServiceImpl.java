@@ -147,7 +147,7 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
         PurchaseRecordReq saveCommand = new PurchaseRecordReq();
         saveCommand.setPurchaseNo(BusinessCodeUtil.generate(BusinessType.ORDER_SEAT_PACKAGE));
         saveCommand.setType(PurseEnum.PurchaseRecordType.SEAT_PACKAGE.getCode());
-        saveCommand.setTradeNo(0L);
+        saveCommand.setTradeNo("0");
         saveCommand.setOrderNo(0L);
         saveCommand.setAccountId(req.getChannelId());
         saveCommand.setAccountName(SecurityUtils.getUsername());

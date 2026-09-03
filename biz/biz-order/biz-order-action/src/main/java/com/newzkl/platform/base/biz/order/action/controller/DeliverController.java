@@ -56,7 +56,7 @@ public class DeliverController {
      */
     @PostMapping("orderDeliverInfo")
     public PlatformResult<Map<Long, List<DeliverVO>>> orderDeliverInfo(@Validated @RequestBody DeliverCmd.OrderDeliverInfoReq deliverInfoReq) {
-        return PlatformResult.success(orderDomain.orderDeliverInfo(deliverInfoReq.getSpuOrderId()));
+        return PlatformResult.success(orderDomain.orderDeliverInfo(deliverInfoReq.getOrderNo()));
     }
     /**
      * 修改物流单号

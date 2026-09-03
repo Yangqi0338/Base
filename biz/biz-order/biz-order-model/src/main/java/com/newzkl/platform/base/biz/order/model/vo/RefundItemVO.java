@@ -13,9 +13,9 @@ import java.io.Serializable;
 @Data
 public class RefundItemVO implements Serializable {
      /**
-      * sku订单ID
+      * sku订单号
       */
-     private Long skuOrderId;
+     private String skuOrderNo;
      private String spuImg;
      private String spuName;
      private String skuSaleAttribute;

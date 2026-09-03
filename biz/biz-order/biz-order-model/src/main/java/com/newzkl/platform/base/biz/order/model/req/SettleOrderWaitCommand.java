@@ -15,9 +15,9 @@ public class SettleOrderWaitCommand {
      */
     private Long supplierId;
     /**
-     * SPU_订单ID
+     * 交易单号
      */
-    private Long spuOrderId;
+    private String orderNo;
     /**
      * sku订单ID
      */

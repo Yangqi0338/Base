@@ -19,5 +19,5 @@ public class PaySuccessEvent implements Serializable {
     /**
      * 交易id
      */
-    private Long orderId;
+    private String orderId;
 }

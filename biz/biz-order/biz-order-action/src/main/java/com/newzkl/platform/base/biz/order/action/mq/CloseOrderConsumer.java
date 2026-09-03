@@ -17,14 +17,14 @@ import java.util.Map;
  */
 @Slf4j
 @MQConsumer(consumerGroup = MQ.Tag.TIME_OUT_CLOSE_ORDER_MESSAGE, tag = MQ.Tag.TIME_OUT_CLOSE_ORDER_EVENT)
-public class CloseOrderConsumer extends AbstractMessageMQPushConsumer<Long> {
+public class CloseOrderConsumer extends AbstractMessageMQPushConsumer<String> {
     @Autowired
     private OrderService orderService;
 
     @Override
-    public void remoteProcess(Long message, Map<String, Object> extMap) {
-        if (message != null){
-            orderService.closeOrder(message);
+    public void remoteProcess(String orderNo, Map<String, Object> extMap) {
+        if (orderNo != null){
+            orderService.closeOrder(orderNo);
         }
     }
 }

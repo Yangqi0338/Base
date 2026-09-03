@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.order.model.res;
 
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
+import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import lombok.Data;
 
 import java.util.List;
@@ -24,5 +24,5 @@ public class DeliverRes {
      * 发货完成sku订单id集合
      */
     private List<Long> completeSkuOrderIdList;
-    private SpuOrderVO spuOrderVO;
+    private OrderVO orderVO;
 }

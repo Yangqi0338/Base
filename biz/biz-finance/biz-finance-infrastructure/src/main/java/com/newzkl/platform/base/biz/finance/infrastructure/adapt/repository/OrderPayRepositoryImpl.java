@@ -35,9 +35,9 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long saveOrderPayRecord(PaymentVO paymentVO, List<OrderPayeeInfoVO> payeeInfos) {
+    public String saveOrderPayRecord(PaymentVO paymentVO, List<OrderPayeeInfoVO> payeeInfos) {
         PaymentDO payment = TransferUtils.transfer(paymentVO, PaymentDO::new);
-        payment.setTradeNo(NumberUtil.parseLong(BusinessCodeUtil.generate(BusinessType.PAYMENT)));
+        payment.setTradeNo(BusinessCodeUtil.generate(BusinessType.PAYMENT));
         payment.setPayeeInfo(payeeInfos);
         paymentDAO.insert(payment);
         return payment.getTradeNo();
@@ -45,7 +45,7 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean alterPayState(Long tradeNo, String tripartiteTradeNo) {
+    public boolean alterPayState(String tradeNo, String tripartiteTradeNo) {
         return paymentDAO.update(new LambdaUpdateWrapper<PaymentDO>()
                 .set(PaymentDO::getPayState, 1)
                 .set(PaymentDO::getTripartiteTradeNo, tripartiteTradeNo)
@@ -57,7 +57,7 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void resetTripartiteTradeNo(Long tradeNo, String tripartiteTradeNo) {
+    public void resetTripartiteTradeNo(String tradeNo, String tripartiteTradeNo) {
         paymentDAO.update(new LambdaUpdateWrapper<PaymentDO>()
                 .set(PaymentDO::getTripartiteTradeNo, tripartiteTradeNo)
                 .eq(PaymentDO::getTradeNo, tradeNo)
@@ -65,8 +65,14 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
     }
 
     @Override
-    public TradeOrderInfoRes tradeOrderQuery(Long tradeNo) {
-        PaymentDO payment = paymentDAO.selectById(tradeNo);
+    public TradeOrderInfoRes tradeOrderQuery(String tradeNo) {
+        PaymentDO payment = paymentDAO.selectOne(new LambdaQueryWrapper<PaymentDO>().eq(PaymentDO::getTradeNo, tradeNo));
+        return TransferUtils.transfer(payment, TradeOrderInfoRes::new);
+    }
+
+    @Override
+    public TradeOrderInfoRes tradeOrderQueryByOrderNo(Long orderNo) {
+        PaymentDO payment = paymentDAO.selectOne(new LambdaQueryWrapper<PaymentDO>().eq(PaymentDO::getOrderNo, orderNo).orderByDesc(PaymentDO::getId));
         return TransferUtils.transfer(payment, TradeOrderInfoRes::new);
     }
 

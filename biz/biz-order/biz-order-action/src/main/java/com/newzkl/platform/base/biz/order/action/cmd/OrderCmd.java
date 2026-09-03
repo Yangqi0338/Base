@@ -7,9 +7,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-
-import java.util.List;
-
 /**
  * @author muc_fang
  * @Description:
@@ -41,12 +38,5 @@ public class OrderCmd {
          */
         @NotEmpty
         private Integer type;
-    }
-    @Data
-    public static class CompleteOrder {
-        @NotEmpty
-        private Long spuOrderId;
-        @NotEmpty
-        private List<Long> skuOrderId;
     }
 }

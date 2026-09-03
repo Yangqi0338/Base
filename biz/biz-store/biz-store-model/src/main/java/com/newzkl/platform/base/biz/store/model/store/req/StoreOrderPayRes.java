@@ -19,7 +19,7 @@ public class StoreOrderPayRes implements PayBaseResult {
     /**
      * 平台交易号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 第三方交易号

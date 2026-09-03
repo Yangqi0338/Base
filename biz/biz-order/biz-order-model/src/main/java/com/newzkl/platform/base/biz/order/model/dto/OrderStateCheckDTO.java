@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class OrderStateCheckDTO {
     private Long id;
+    private String orderNo;
     private OrderEnum.State currentState;
     private OrderEnum.State toState;
     private String outOrderNo;

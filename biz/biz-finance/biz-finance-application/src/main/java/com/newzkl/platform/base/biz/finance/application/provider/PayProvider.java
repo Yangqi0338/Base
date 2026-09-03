@@ -86,7 +86,7 @@ public class PayProvider implements PayFacade {
     @Transactional(rollbackFor = Exception.class)
     public MemberRefundRes sellAfterRefund(SellAfterRefundReq req) {
         MemberRefundRes refundRes = new MemberRefundRes();
-        TradeOrderInfoRes tradeOrderInfoRes = orderPayDomain.tradeOrderQuery(req.getOrderNo());
+        TradeOrderInfoRes tradeOrderInfoRes = orderPayDomain.tradeOrderQueryByOrderNo(req.getOrderId());
         if (tradeOrderInfoRes != null) {
             // 客户退款 同步即可
             refundRes.setRefundNo(tradeOrderInfoRes.getTradeNo());
@@ -110,7 +110,7 @@ public class PayProvider implements PayFacade {
             recordReq.setAccountType(PurseEnum.User.CHANNEL);
             recordReq.setPurseType(PurseEnum.Type.PURCHASE);
             recordReq.setAmount(req.getRefundAmount());
-            recordReq.setJoinRecordId(req.getOrderNo());
+            recordReq.setJoinRecordId(req.getOrderId());
             recordReq.setAlterType(PurseEnum.AlterType.SELL_AFTER);
             purseDomain.addAmount(recordReq);
         }

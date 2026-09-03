@@ -16,13 +16,14 @@ import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundOperationRecordDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
+import com.newzkl.platform.base.biz.order.model.req.ApplyPlatformCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundItemCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.res.RefundAuditRes;
 import com.newzkl.platform.base.biz.order.model.res.RefundCreateRes;
-import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
+import com.newzkl.platform.base.biz.order.model.res.OrderRefundRes;
 import com.newzkl.platform.base.biz.order.model.support.api.StoreRPCVO;
 import com.newzkl.platform.base.biz.order.model.support.api.SupplierRefundVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
@@ -89,24 +90,24 @@ public class RefundDomainImpl implements RefundDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RefundCreateRes refundCreate(RefundCommand refundCommand, SpuOrderAggVO orderAggVO) {
+    public RefundCreateRes refundCreate(RefundCommand refundCommand, OrderAggVO orderAggVO) {
         RefundCreateRes refundCreateRes = new RefundCreateRes();
-        List<Long> skuOrderIdList = new ArrayList<>();
+        List<String> skuOrderNoList = new ArrayList<>();
         //订单
-        SpuOrderVO spuOrderVO = orderAggVO.getSpuOrderVO();
+        OrderVO orderVO = orderAggVO.getOrderVO();
         //skuId
         List<Long> skuIds = refundCommand.getRefundItemCommandList().stream().map(RefundItemCommand::getSkuId).toList();
         //订单检查
-        if(OrderEnum.State.SUCCESS == spuOrderVO.getOrderState()
-            || OrderEnum.State.CLOSE == spuOrderVO.getOrderState()){
+        if(OrderEnum.State.SUCCESS == orderVO.getOrderState()
+            || OrderEnum.State.CLOSE == orderVO.getOrderState()){
             ThrowsException.exception(RefundErrorCode.ORDER_STATE_CANNOT);
         }
         //SKU订单售后信息查询
-        List<SkuRefundDTO> skuRefundResList = orderRepository.skuRefundResList(spuOrderVO.getOrderId(), null);
+        List<SkuRefundDTO> skuRefundResList = orderRepository.skuRefundResList(orderVO.getOrderNo(), null);
         Map<Long, SkuRefundDTO> skuRefundResMap = skuRefundResList.stream().collect(Collectors.toMap(SkuRefundDTO::getSkuId, Function.identity()));
-        //SPU订单售后信息查询
-        List<SpuRefundRes> spuRefundResList = refundRepository.spuRefundResList(spuOrderVO.getOrderId(), null);
-        Map<Long, SpuRefundRes> spuRefundResMap = spuRefundResList.stream().collect(Collectors.toMap(SpuRefundRes::getSpuId, Function.identity()));
+        //SPU维度售后信息查询(SpuOrder 层折叠后按 order + spu 聚合)
+        List<OrderRefundRes> spuRefundResList = refundRepository.orderRefundResList(orderVO.getOrderNo(), null);
+        Map<Long, OrderRefundRes> spuRefundResMap = spuRefundResList.stream().collect(Collectors.toMap(OrderRefundRes::getSpuId, Function.identity()));
         //运费金额
         Money freightAmount = Money.ZERO;
         //商品检查
@@ -134,7 +135,7 @@ public class RefundDomainImpl implements RefundDomain {
                 }
                 refundCount = refundItemCommand.getCount();
             }
-            SpuRefundRes spuRefundRes = spuRefundResMap.get(skuRefundRes.getSpuId());
+            OrderRefundRes spuRefundRes = spuRefundResMap.get(skuRefundRes.getSpuId());
             //如果未发货 && 已售后数量 + 当前申请数量 = 购买数量, 则加上运费
             spuRefundRes.setRefundingCount(spuRefundRes.getRefundingCount() + refundCount);
             if(spuRefundRes.getDeliverCount() == 0 &&
@@ -147,31 +148,31 @@ public class RefundDomainImpl implements RefundDomain {
                 ThrowsException.exception(BaseErrorCode.PARAM, "未发货订单不能申请退货退款");
             }
             //添加涉及的sku订单id
-            skuOrderIdList.add(skuRefundRes.getSkuOrderId());
+            skuOrderNoList.add(skuRefundRes.getSkuOrderNo());
         }
         //初始化售后单 supplierDomain.supplier(edit.getId())
         RefundDTO refund = new RefundDTO();
         refund.init(refundCommand, orderAggVO, skuRefundResMap, freightAmount);
-        refund.setRefundState(getRefundInitState(refundCommand.getIdentity(), spuOrderVO.getSpuChannelType()));
-        refund.setFromOrderState(orderAggVO.getSpuOrderVO().getOrderState());
+        refund.setRefundState(getRefundInitState(refundCommand.getIdentity(), orderVO.getSpuChannelType()));
+        refund.setFromOrderState(orderVO.getOrderState());
 
         // 补充拓展信息
         FreightExt freightExt = new FreightExt();
-        if (spuOrderVO.getSpuOrderExt() != null){
-            SpuOrderExt spuOrderExt =spuOrderVO.getSpuOrderExt();
-            freightExt.setStoreAccount(spuOrderExt.getStoreAccount());
-            freightExt.setStoreName(spuOrderExt.getStoreName());
-            freightExt.setStoreHead(spuOrderExt.getStoreHead());
-            freightExt.setUserAccount(spuOrderExt.getUserAccount());
+        if (orderVO.getOrderExt() != null){
+            OrderExt orderExt = orderVO.getOrderExt();
+            freightExt.setStoreAccount(orderExt.getStoreAccount());
+            freightExt.setStoreName(orderExt.getStoreName());
+            freightExt.setStoreHead(orderExt.getStoreHead());
+            freightExt.setUserAccount(orderExt.getUserAccount());
         }
         if (StrUtil.isBlank(freightExt.getUserAccount())) {
-            AccountGroupVO accountInfo = accountApi.accountInfo(spuOrderVO.getMemberId());
+            AccountGroupVO accountInfo = accountApi.accountInfo(orderVO.getMemberId());
             if (Objects.nonNull(accountInfo)) {
                 freightExt.setUserAccount(accountInfo.getUserAccount());
             }
         }
         if (StrUtil.isAllBlank(freightExt.getStoreAccount(),freightExt.getStoreName(),freightExt.getStoreHead())) {
-            List<StoreRPCVO> storeList = goodsApi.batchQueryStoreInfo(Collections.singletonList(spuOrderVO.getStoreId()));
+            List<StoreRPCVO> storeList = goodsApi.batchQueryStoreInfo(Collections.singletonList(orderVO.getStoreId()));
             if (CollUtil.isNotEmpty(storeList)) {
                 StoreRPCVO store = storeList.get(0);
                 AccountGroupVO accountInfo1 = accountApi.channelInfo(store.getId());
@@ -185,19 +186,16 @@ public class RefundDomainImpl implements RefundDomain {
         //持久化售后单
         Long refundId = refundRepository.refundSave(refund);
         refundCreateRes.setRefundId(refundId);
-        refundCreateRes.setSkuOrderIdList(skuOrderIdList);
+        refundCreateRes.setSkuOrderNoList(skuOrderNoList);
         refundCreateRes.setRefund(refund);
 
-        //修改订单售后中数量
-        int number = 0;
+        //修改订单售后中数量 (SpuOrder 层折叠: 原 spu_order.refund_quantity 冗余列已删, 只落 sku 级, order 级由查询聚合)
         for (RefundItemVO refundItem : refund.getItem()) {
-            int count = orderRepository.updateSkuRefundingCount(refund.getOrderId(), refundItem.getSkuId(), refundItem.getCount());
+            int count = orderRepository.updateSkuRefundingCount(refund.getOrderNo(), refundItem.getSkuId(), refundItem.getCount());
             if (count != 1){
                 ThrowsException.exception(RefundErrorCode.SKU_REFUNDING_COUNT);
             }
-            number = number + refundItem.getCount();
         }
-        orderRepository.updateSpuRefundingCount(refund.getSpuOrderId(), number);
         return refundCreateRes;
     }
 
@@ -219,7 +217,7 @@ public class RefundDomainImpl implements RefundDomain {
 
         log.info("开始执行售后审核通过操作，refundId: {}, role: {}", refundId, identity);
         boolean refundPass = false;
-        List<Long> skuOrderIdList = new ArrayList<>();
+        List<String> skuOrderNoList = new ArrayList<>();
         //查询售后单
         RefundDTO refund = refundRepository.refund(refundId);
         log.info("成功查询到售后单，refund: {}", JSONUtil.toJsonStr(refund));
@@ -242,16 +240,16 @@ public class RefundDomainImpl implements RefundDomain {
                 nextState = RefundEnum.State.MONEY_ING;
 
                 for (RefundItemVO refundItemVO : refund.getItem()) {
-                    skuOrderIdList.add(refundItemVO.getSkuOrderId());
+                    skuOrderNoList.add(refundItemVO.getSkuOrderNo());
                 }
-                log.info("收集到需要更新的SKU订单ID列表，数量: {}, refundId: {}", skuOrderIdList.size(), refundId);
+                log.info("收集到需要更新的SKU订单号列表，数量: {}, refundId: {}", skuOrderNoList.size(), refundId);
 
                 refundPass = true;
 
 //                if(RoleEnum.CompanyRole.SUPPLIER == role){
 //                    nextState = RefundEnum.State.MONEY_ING;
 //                    for (RefundItemVO refundItemVO : refund.getItem()) {
-//                        skuOrderIdList.add(refundItemVO.getSkuOrderId());
+//                        skuOrderNoList.add(refundItemVO.getSkuOrderNo());
 //                    }
 //                    refundPass = true;
 //                //渠道商审核
@@ -266,7 +264,7 @@ public class RefundDomainImpl implements RefundDomain {
                 nextState = RefundEnum.State.MONEY_ING;
 
                 for (RefundItemVO refundItemVO : refund.getItem()) {
-                    skuOrderIdList.add(refundItemVO.getSkuOrderId());
+                    skuOrderNoList.add(refundItemVO.getSkuOrderNo());
                 }
                 refundPass = true;
 //                if(RoleEnum.CompanyRole.SUPPLIER == role){
@@ -319,7 +317,7 @@ public class RefundDomainImpl implements RefundDomain {
         if(refundPass){
             skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
         }
-        return new RefundAuditRes(refundPass, skuOrderIdList, refund,nextState);
+        return new RefundAuditRes(refundPass, skuOrderNoList, refund,nextState);
     }
 
     @Override
@@ -347,7 +345,7 @@ public class RefundDomainImpl implements RefundDomain {
 
         log.info("开始执行售后审核通过操作，refundId: {}, role: {}", refundId, identity);
         boolean refundPass = false;
-        List<Long> skuOrderIdList = new ArrayList<>();
+        List<String> skuOrderNoList = new ArrayList<>();
         //查询售后单
         RefundDTO refund = refundRepository.refund(refundId);
         log.info("成功查询到售后单，refund: {}", JSONUtil.toJsonStr(refund));
@@ -367,10 +365,10 @@ public class RefundDomainImpl implements RefundDomain {
                 log.info("商品渠道为【选品】，refundId: {}", refundId);
                 nextState = RefundEnum.State.MONEY_ING;
                 for (RefundItemVO refundItemVO : refund.getItem()) {
-                    skuOrderIdList.add(refundItemVO.getSkuOrderId());
+                    skuOrderNoList.add(refundItemVO.getSkuOrderNo());
                 }
                 refundPass = true;
-                log.info("收集到需要更新的SKU订单ID列表，数量: {}, refundId: {}", skuOrderIdList.size(), refundId);
+                log.info("收集到需要更新的SKU订单号列表，数量: {}, refundId: {}", skuOrderNoList.size(), refundId);
                 //外部商品
             }else if(SpuEnum.ChannelType.OUT == refund.getSpuChannelType()){
 
@@ -379,7 +377,7 @@ public class RefundDomainImpl implements RefundDomain {
                 nextState = RefundEnum.State.MONEY_ING;
 
                 for (RefundItemVO refundItemVO : refund.getItem()) {
-                    skuOrderIdList.add(refundItemVO.getSkuOrderId());
+                    skuOrderNoList.add(refundItemVO.getSkuOrderNo());
                 }
                 refundPass = true;
             }else {
@@ -419,13 +417,13 @@ public class RefundDomainImpl implements RefundDomain {
         if(refundPass){
             skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
         }
-        return new RefundAuditRes(refundPass, skuOrderIdList, refund,nextState);
+        return new RefundAuditRes(refundPass, skuOrderNoList, refund,nextState);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RefundAuditRes confirmRefundFreight(Long refundId) {
-        List<Long> skuOrderIdList = new ArrayList<>();
+        List<String> skuOrderNoList = new ArrayList<>();
         //查询售后单
         RefundDTO refund = refundRepository.refund(refundId);
         //状态检查
@@ -434,9 +432,9 @@ public class RefundDomainImpl implements RefundDomain {
         }
         refundRepository.updateState(null, refundId, refund.getOrderType(), refund.getRefundState(), RefundEnum.State.MONEY_ING, refund.getChannelId());
         for (RefundItemVO refundItemVO : refund.getItem()) {
-            skuOrderIdList.add(refundItemVO.getSkuOrderId());
+            skuOrderNoList.add(refundItemVO.getSkuOrderNo());
         }
-        RefundAuditRes refundAuditRes = new RefundAuditRes(true, skuOrderIdList, refund,RefundEnum.State.MONEY_ING);
+        RefundAuditRes refundAuditRes = new RefundAuditRes(true, skuOrderNoList, refund,RefundEnum.State.MONEY_ING);
 
         skuOrderEditForRefundPass(refund.getSpuOrderId(), refund.getItem());
 
@@ -504,10 +502,7 @@ public class RefundDomainImpl implements RefundDomain {
     @Transactional(rollbackFor = Exception.class)
     public void stopAudit(AccountEnum.Identity identity, Long accountId, Long refundId) {
         RefundDTO refund = refundRepository.refund(refundId);
-        if (Objects.isNull(refund)){
-            refund = refundRepository.refundBySpuOrderId(refundId);
-        }
-        refundRepository.updateState(null, refundId, refund.getOrderType(), refund.getRefundState(), RefundEnum.State.CLOSE, refund.getChannelId());
+        refundRepository.updateState(null, refund.getId(), refund.getOrderType(), refund.getRefundState(), RefundEnum.State.CLOSE, refund.getChannelId());
 
         skuOrderEditForRefundClose(refund.getSpuOrderId(), refund.getItem());
 
@@ -521,18 +516,41 @@ public class RefundDomainImpl implements RefundDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void applyPlatform(ApplyPlatformCommand applyPlatformCommand) {
+        RefundDTO refund = refundRepository.refund(applyPlatformCommand.getRefundId());
+        if (Objects.isNull(refund)) {
+            ThrowsException.exception(BaseErrorCode.PARAM, "售后单不存在！");
+        }
+        refundRepository.updateStateWithFrom(refund.getOrderType(), applyPlatformCommand.getRefundId(), refund.getRefundState(), RefundEnum.State.PLATFORM_ING, refund.getChannelId());
+        localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), RefundEnum.State.PLATFORM_ING, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.PLATFORM_WAIT);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void platformExecute(Long refundId, Integer execute) {
+        RefundDTO refund = refundRepository.refund(refundId);
+        if (Objects.isNull(refund)) {
+            ThrowsException.exception(BaseErrorCode.PARAM, "售后单不存在！");
+        }
+        // 平台介入裁决: 0 渠道商原因(驳回) 1 供应商原因(通过)
+        // TODO[platform-execute] 裁决后状态流转与退款/驳回扣款编排待定, 当前仅落操作记录
+        RefundEnum.State toState = execute != null && execute == 1 ? RefundEnum.State.MONEY_ING : RefundEnum.State.REFUSE;
+        refundRepository.updateStateWithFrom(refund.getOrderType(), refundId, refund.getRefundState(), toState, refund.getChannelId());
+        localMessageApi.sendRefundOperationRecord(refund, refund.getRefundState(), toState, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.PLATFORM_ING);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void skuOrderEditForRefundClose(Long spuOrderId, List<RefundItemVO> item) {
-        List<Long> skuOrderIdList = item.stream().map(RefundItemVO::getSkuOrderId).toList();
-        orderRepository.cutSkuOrderRefundingNumber(spuOrderId, skuOrderIdList);
-        orderRepository.skuOrderEditForRefundClose(skuOrderIdList);
+        List<String> skuOrderNoList = item.stream().map(RefundItemVO::getSkuOrderNo).toList();
+        orderRepository.skuOrderEditForRefundClose(skuOrderNoList);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void skuOrderEditForRefundPass(Long spuOrderId, List<RefundItemVO> item) {
-        List<Long> skuOrderIdList = item.stream().map(RefundItemVO::getSkuOrderId).toList();
-        orderRepository.cutSkuOrderRefundingNumber(spuOrderId, skuOrderIdList);
-        orderRepository.skuOrderEditForRefundPass(skuOrderIdList);
+        List<String> skuOrderNoList = item.stream().map(RefundItemVO::getSkuOrderNo).toList();
+        orderRepository.skuOrderEditForRefundPass(skuOrderNoList);
     }
 
     @Override
@@ -596,8 +614,8 @@ public class RefundDomainImpl implements RefundDomain {
     }
 
     @Override
-    public RefundVO refundVoBySpuOrderId(Long spuOrderId) {
-        RefundDTO refundDTO = refundRepository.refundBySpuOrderId(spuOrderId);
+    public RefundVO refundVoByOrderNo(String orderNo) {
+        RefundDTO refundDTO = refundRepository.refundByOrderNo(orderNo);
         return TransferUtils.transfer(refundDTO, RefundVO.class);
     }
 

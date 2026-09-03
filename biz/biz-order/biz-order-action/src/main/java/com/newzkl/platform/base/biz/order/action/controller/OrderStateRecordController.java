@@ -27,14 +27,14 @@ public class OrderStateRecordController {
     private OrderDomain orderDomain;
 
     /**
-     * 按spuOrderId查询订单状态记录列表（按操作时间倒序）
+     * 按交易单号查询订单状态记录列表（按操作时间倒序）
      *
-     * @param spuOrderId 商品订单ID（不能为空）
+     * @param orderNo 交易单号（不能为空）
      * @return 订单状态记录列表
      */
-    @GetMapping("listBySpuOrderId")
-    public PlatformResult<List<OrderStateRecordVO>> listBySpuOrderId(@RequestParam("spuOrderId") @NotNull(message = "spuOrderId不能为空") Long spuOrderId) {
-        List<OrderStateRecordVO> result = orderDomain.recordListBySpuOrderId(spuOrderId);
+    @GetMapping("listByOrderNo")
+    public PlatformResult<List<OrderStateRecordVO>> listByOrderNo(@RequestParam("orderNo") @NotNull(message = "orderNo不能为空") String orderNo) {
+        List<OrderStateRecordVO> result = orderDomain.recordListByOrderNo(orderNo);
         return PlatformResult.success(result);
     }
 

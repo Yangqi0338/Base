@@ -26,7 +26,7 @@ public class HuiFuRefundReq {
     /**
      * 原交易单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 原交易日期

@@ -30,13 +30,14 @@ import java.time.LocalDateTime;
 @Data
 public class SkuOrderDTO extends BaseDTO {
     /**
-     * 订单ID
+     * 交易单号
      */
-    private Long orderId;
+    private String orderNo;
+
     /**
-     * SPU订单ID
+     * SKU订单号
      */
-    private Long spuOrderId;
+    private String skuOrderNo;
 
     /**
      * 门店id 传参用
@@ -217,19 +218,20 @@ public class SkuOrderDTO extends BaseDTO {
 
     /**
      * 初始化
+     *
+     * <p>SpuOrder 层折叠: 原 spuOrderId 参数删除, 子层唯一为 sku_order</p>
+     *
      * @param orderItemCommand
-     * @param orderId
-     * @param spuOrderId Spu订单ID
+     * @param orderNo 交易单号
      * @param freightAmount 运费金额
      * @param channelVO
      */
-    public void init(OrderItemCommand orderItemCommand, Long orderId, Long spuOrderId, SkuSaleInfo skuVO,
+    public void init(OrderItemCommand orderItemCommand, String orderNo, SkuSaleInfo skuVO,
                      Integer freightAmount, EarningsConfigRpcVO channelVO, ChannelNowServiceFeeRes channelNowServiceFee) {
         this.id = SnowflakeGenerator.getSnowflakeId();
-        this.orderId = orderId;
+        this.orderNo = orderNo;
         this.spuId = skuVO.getSpuId();
         this.skuImg = skuVO.getImg();
-        this.spuOrderId = spuOrderId;
         //计算订单金额 (skuVO 价格为 Integer 分, 乘数量后包 Money)
         this.supplierAmount = Money.ZERO;
         this.goodsAmount = Money.ZERO;

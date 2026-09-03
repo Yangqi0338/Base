@@ -11,5 +11,5 @@ package com.newzkl.platform.base.biz.finance.domain.adapt.api;
 public interface OrderApi {
 
 
-    void orderChannelPay(Long orderNo);
+    void orderChannelPay(String orderNo);
 }

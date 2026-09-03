@@ -15,9 +15,9 @@ import lombok.Data;
 public class OrderStateRecordQuery extends BizPageQuery {
 
     /**
-     * 订单主键ID
+     * 交易单号
      */
-    private Long orderId;
+    private String orderNo;
 
     /**
      * SPU订单ID

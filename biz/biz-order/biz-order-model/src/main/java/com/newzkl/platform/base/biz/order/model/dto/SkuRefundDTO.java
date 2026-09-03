@@ -19,13 +19,9 @@ public class SkuRefundDTO {
      */
     private Long spuId;
     /**
-     * spu订单id
+     * sku订单号
      */
-    private Long spuOrderId;
-    /**
-     * sku订单id
-     */
-    private Long skuOrderId;
+    private String skuOrderNo;
     /**
      * sku订单状态
      */

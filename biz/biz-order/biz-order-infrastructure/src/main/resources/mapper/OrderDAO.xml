@@ -4,21 +4,56 @@
 <mapper namespace="com.newzkl.platform.base.biz.order.infrastructure.dao.order.OrderDAO">
 
     <!-- updateOrderStateByOrderNo(死码, 无 DAO 绑定+无调用方) 已删; 状态机走 batchUpdateOrderState -->
-    <select id="checkOrderState" parameterType="java.lang.Long" resultType="com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO">
+    <select id="checkOrderState" resultType="com.newzkl.platform.base.biz.order.model.dto.OrderStateCheckDTO">
         SELECT
         t1.id as id,
+        t1.order_no as orderNo,
         t1.order_state as current_state,
         MIN(t.order_state) as to_state,
         t1.channel_id,
         t1.out_order_no,
         t1.order_type
         FROM
-        spu_order t left join `order` t1 on t.order_id = t1.id
+        <!-- SpuOrder 层折叠: 子层最小状态由 spu_order 改取 sku_order; 关联键为 order_no, 入参为交易单号列表 -->
+        sku_order t left join `order` t1 on t.order_no = t1.order_no
         WHERE
-        t1.id IN
-        <foreach collection="orderId" item="item" separator="," close=")" open="(">
-            #{item,jdbcType=BIGINT}
+        t1.order_no IN
+        <foreach collection="orderNoList" item="item" separator="," close=")" open="(">
+            #{item,jdbcType=VARCHAR}
         </foreach>
         GROUP BY t1.id
+    </select>
+
+    <!-- SpuOrder 层折叠: 迁自 SpuOrderDAO.countMapWithOrderByQuery; 数据源 spu_order left join order 改 order 单表(order 自身即主单); buy_mode 列 order 表无, 去该过滤 -->
+    <select id="countMapWithOrderByQuery" resultType="com.newzkl.platform.base.common.ddd.infrastructure.mybatis.model.BizCountMap">
+        select
+        ${query.fieldSQL}
+        from `order` o
+        ${ew.customSqlSegment}
+        <if test="query.memberAmount != null and query.memberAmount.length >= 1">
+            and o.`member_amount` >= #{query.memberAmount[0]}
+        </if>
+        <if test="query.memberAmount != null and query.memberAmount.length >= 2">
+            and o.`member_amount` &lt;= #{query.memberAmount[1]}
+        </if>
+        ${query.groupSQL}
+    </select>
+
+    <!-- SpuOrder 层折叠: 迁自 SpuOrderDAO.orderCount; 数据源 spu_order 改 order 表 -->
+    <select id="orderCount" resultType="com.newzkl.platform.base.common.ddd.model.res.GroupCountRes"
+            parameterType="com.newzkl.platform.base.common.ddd.model.query.TimeQuery">
+        select
+        <if test="query.groupType == 0">
+            DATE_FORMAT(create_time, '%Y-%m-%d-%h') as transDay,
+        </if>
+        <if test="query.groupType == 1">
+            DATE_FORMAT(create_time, '%Y-%m-%d') as transDay,
+        </if>
+        count(*) as transNum,
+        sum(total_amount) as transAmount
+        from `order`
+        where UNIX_TIMESTAMP(create_time) * 1000 between #{query.createBeginTime} and #{query.createEndTime}
+        group by transDay
+        order by transDay asc;
     </select>
 </mapper>

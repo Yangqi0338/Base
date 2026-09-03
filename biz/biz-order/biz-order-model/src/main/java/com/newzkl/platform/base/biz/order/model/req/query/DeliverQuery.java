@@ -13,10 +13,10 @@ import java.util.List;
 public class DeliverQuery extends BizPageQuery {
 
     /**
-     * SPU订单ID
+     * 订单号
      */
-    private List<Long> spuOrderIdList;
-    public void setSpuOrderId(Long spuOrderId) {
-        this.spuOrderIdList = doWrapperList(this.spuOrderIdList, spuOrderId);
+    private List<String> orderNoList;
+    public void setOrderNo(String orderNo) {
+        this.orderNoList = doWrapperList(this.orderNoList, orderNo);
     }
 }

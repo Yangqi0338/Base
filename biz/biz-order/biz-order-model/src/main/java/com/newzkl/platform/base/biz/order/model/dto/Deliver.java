@@ -4,7 +4,7 @@ package com.newzkl.platform.base.biz.order.model.dto;
 import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
 import com.newzkl.platform.base.biz.order.model.req.DeliverItemCommand;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverItemVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
+import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import lombok.Data;
@@ -45,17 +45,23 @@ public class Deliver {
      */
     private List<DeliverItemVO> item;
 
-    public void init(DeliverCommand deliverCommand, SpuOrderVO spuOrderVO) {
+    /**
+     * 初始化发货实体
+     *
+     * @param deliverCommand 发货命令
+     * @param orderVO 交易单
+     */
+    public void init(DeliverCommand deliverCommand, OrderVO orderVO) {
         this.setId(SnowflakeGenerator.getSnowflakeId());
         this.setExpressCompanyName(deliverCommand.getExpressCompanyName());
         this.setExpressNo(deliverCommand.getExpressNo());
-        this.setSpuOrderId(spuOrderVO.getId());
+        this.setSpuOrderId(orderVO.getId());
         this.setDeliverUsername(SecurityUtils.getUsername());
         this.item = new ArrayList<>();
         for (DeliverItemCommand deliverItemCommand : deliverCommand.getDeliverItemCommandList()) {
             DeliverItemVO deliverItem = new DeliverItemVO();
             deliverItem.setId(SnowflakeGenerator.getSnowflakeId());
-            deliverItem.setSpuOrderId(spuOrderVO.getId());
+            deliverItem.setSpuOrderId(orderVO.getId());
             deliverItem.setDeliverId(this.getId());
             deliverItem.setSkuId(deliverItemCommand.getSkuId());
             deliverItem.setCount(deliverItemCommand.getCount());

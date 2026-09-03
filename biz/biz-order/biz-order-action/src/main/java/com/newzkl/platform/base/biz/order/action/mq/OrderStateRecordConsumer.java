@@ -34,10 +34,10 @@ public class OrderStateRecordConsumer extends AbstractMessageMQPushConsumer<Orde
      */
     @Override
     public void remoteProcess(OrderStateRecordRPC message, Map<String, Object> extMap) {
-        log.info("开始消费订单状态记录消息, 订单ID: {}, 变更后状态: {}", message.getOrderId(), message.getAfterOrderState());
+        log.info("开始消费订单状态记录消息, 交易单号: {}, 变更后状态: {}", message.getOrderNo(), message.getAfterOrderState());
         OrderStateRecordEntity entity = new OrderStateRecordEntity();
         BeanUtils.copyProperties(message, entity);
         orderDomain.createStateRecord(entity);
-        log.info("订单状态记录消息消费成功, 订单ID: {}", message.getOrderId());
+        log.info("订单状态记录消息消费成功, 交易单号: {}", message.getOrderNo());
     }
 }

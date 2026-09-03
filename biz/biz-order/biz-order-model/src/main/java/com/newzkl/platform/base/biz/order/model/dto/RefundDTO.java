@@ -31,9 +31,9 @@ public class RefundDTO extends BaseDTO {
 	 */
 	private String outRefundId;
 	/**
-	 * 订单ID
+	 * 交易单号
 	 */
-	private Long orderId;
+	private String orderNo;
 	/**
 	 * SPU订单ID
 	 */
@@ -174,11 +174,19 @@ public class RefundDTO extends BaseDTO {
 
     private FreightExt freightExt;
 
-	public void init(RefundCommand refundCommand, SpuOrderAggVO spuOrderAggVO, Map<Long, SkuRefundDTO> skuRefundResMap, Money freightAmount) {
+	/**
+	 * 初始化售后单
+	 *
+	 * @param refundCommand 售后命令
+	 * @param orderAggVO 交易单聚合
+	 * @param skuRefundResMap sku 售后信息映射
+	 * @param freightAmount 售后运费
+	 */
+	public void init(RefundCommand refundCommand, OrderAggVO orderAggVO, Map<Long, SkuRefundDTO> skuRefundResMap, Money freightAmount) {
 		TransferUtils.transfer(refundCommand, this);
 		this.setId(SnowflakeGenerator.getSnowflakeId());
-		SpuOrderVO orderVO = spuOrderAggVO.getSpuOrderVO();
-		Map<Long, SkuOrderVO> orderItemVOMap = spuOrderAggVO.getSkuOrderList().stream().collect(Collectors.toMap(SkuOrderVO::getSkuId, Function.identity()));
+		OrderVO orderVO = orderAggVO.getOrderVO();
+		Map<Long, SkuOrderVO> orderItemVOMap = orderAggVO.getSkuOrderList().stream().collect(Collectors.toMap(SkuOrderVO::getSkuId, Function.identity()));
 		Money refundAmount = Money.ZERO;
 		Money supplierAmount = Money.ZERO;
 		Money goodsAmount = Money.ZERO;
@@ -203,7 +211,7 @@ public class RefundDTO extends BaseDTO {
             refundItem.setRefundAmount(orderItemVO.getStoreAmount().add(orderItemVO.getFreightAmount()).subtract(orderItemVO.getDiscountAmount()));
             refundItem.setSkuStorePrice(orderItemVO.getSkuStorePrice());
 			refundItem.setSupplierAmount(orderItemVO.getSupplierAmount());
-			refundItem.setSkuOrderId(skuRefundRes.getSkuOrderId());
+			refundItem.setSkuOrderNo(skuRefundRes.getSkuOrderNo());
 			refundItem.setRefundedCount(skuRefundRes.getRefundedCount());
 			refundItem.setOrderCount(skuRefundRes.getOrderCount());
 			refundAmount = refundAmount.add(refundItem.getRefundAmount());
@@ -216,7 +224,7 @@ public class RefundDTO extends BaseDTO {
 		this.spuChannelType = orderVO.getSpuChannelType();
 		this.storeId = orderVO.getStoreId();
 		this.memberId = orderVO.getMemberId();
-		this.setOrderId(orderVO.getOrderId());
+		this.setOrderNo(orderVO.getOrderNo());
 		this.setSpuOrderId(orderVO.getId());
 		this.setSupplierId(orderVO.getSupplierId());
 		this.setChannelId(orderVO.getChannelId());

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.action.cmd.RefundCmd;
 import com.newzkl.platform.base.biz.order.application.service.RefundService;
 import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
+import com.newzkl.platform.base.biz.order.model.req.ApplyPlatformCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundOperationRecordQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
@@ -15,6 +16,7 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ExpressEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 交易-售后
@@ -53,36 +56,25 @@ public class RefundController {
         return PlatformResult.success(refundId);
     }
     /**
-     * C端取消售后
+     * 取消售后(会员/渠道商统一入口, 按 token 身份分流)
      * @param idObj 售后单ID
      * @return
      */
-    @PostMapping("memberCancelRefund")
-    @FuncPermission("C端取消售后")
-    public PlatformResult<Void> memberCancelRefund(@Validated @RequestBody IdCommand idObj) {
-        refundDomain.stopAudit(AccountEnum.Identity.MEMBER, SecurityUtils.getAccountId(), idObj.getId());
+    @PostMapping("cancelRefund")
+    @FuncPermission("取消售后")
+    public PlatformResult<Void> cancelRefund(@Validated @RequestBody IdCommand idObj) {
+        refundDomain.stopAudit(SecurityUtils.getIdentity(), SecurityUtils.getAccountId(), idObj.getId());
         return PlatformResult.success();
     }
     /**
-     * 渠道商审核售后单
+     * 售后审核(渠道商/供应商统一入口, 按 token 身份分流)
      * @param audit
      * @return
      */
-    @PostMapping("channelAudit")
-    @FuncPermission("渠道商审核售后单")
-    public PlatformResult<Void> channelAudit(@Validated @RequestBody RefundCmd.Audit audit) {
-        refundService.channelAudit(audit.getRefundId(),audit.getSpuOrderId() , audit.getExecute(), audit.getReason(), false);
-        return PlatformResult.success();
-    }
-    /**
-     * 供应商审核售后单
-     * @param audit
-     * @return
-     */
-    @PostMapping("supplierAudit")
-    @FuncPermission("供应商审核售后单")
-    public PlatformResult<Void> supplierAudit(@Validated @RequestBody RefundCmd.Audit audit) {
-        refundService.supplierAudit(audit.getRefundId(), audit.getExecute(), false);
+    @PostMapping("audit")
+    @FuncPermission("售后审核")
+    public PlatformResult<Void> audit(@Validated @RequestBody RefundCmd.Audit audit) {
+        refundService.audit(SecurityUtils.getIdentity(), audit.getRefundId(), audit.getOrderNo(), audit.getExecute(), audit.getReason(), false);
         return PlatformResult.success();
     }
     /**
@@ -118,6 +110,36 @@ public class RefundController {
         refundDomain.refuseRefundFreight(idObj.getId());
         return PlatformResult.success();
     }
+    /**
+     * 申请平台介入
+     * @param applyPlatformCommand
+     * @return
+     */
+    @PostMapping("applyPlatform")
+    @FuncPermission("申请平台介入")
+    public PlatformResult<Void> applyPlatform(@Validated @RequestBody ApplyPlatformCommand applyPlatformCommand) {
+        refundDomain.applyPlatform(applyPlatformCommand);
+        return PlatformResult.success();
+    }
+    /**
+     * 平台介入处理
+     * @param platformExecute
+     * @return
+     */
+    @PostMapping("platformExecute")
+    @FuncPermission("平台介入处理")
+    public PlatformResult<Void> platformExecute(@Validated @RequestBody RefundCmd.PlatformExecute platformExecute) {
+        refundDomain.platformExecute(platformExecute.getRefundId(), platformExecute.getExecute());
+        return PlatformResult.success();
+    }
+    /**
+     * 所有物流公司
+     * @return
+     */
+    @GetMapping("allExpress")
+    public PlatformResult<List<Map<String, String>>> allExpress() {
+        return PlatformResult.success(ExpressEnum.ExpressType.listAllWithMap());
+    }
 
     /**
      * 售后单详情
@@ -131,13 +153,13 @@ public class RefundController {
     }
 
     /**
-     * 根据BySpuOrderId查售后单详情
-     * @param spuOrderId
+     * 根据交易单号查售后单详情
+     * @param orderNo 交易单号
      * @return
      */
-    @GetMapping("refundBySpuOrderId")
-    public PlatformResult<RefundVO> refundVoBySpuOrderId(@RequestParam("spuOrderId") Long spuOrderId) {
-        RefundVO refund = refundDomain.refundVoBySpuOrderId(spuOrderId);
+    @GetMapping("refundByOrderNo")
+    public PlatformResult<RefundVO> refundVoByOrderNo(@RequestParam("orderNo") String orderNo) {
+        RefundVO refund = refundDomain.refundVoByOrderNo(orderNo);
         return PlatformResult.success(refund);
     }
 

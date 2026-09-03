@@ -16,7 +16,7 @@ public interface CashPayService {
      * @param tradeNo      交易号
      * @param thirdOrderNo 三方订单号
      */
-    void alterPayState(Long tradeNo, String thirdOrderNo);
+    void alterPayState(String tradeNo, String thirdOrderNo);
 
     /**
      * 拉起三方现金支付

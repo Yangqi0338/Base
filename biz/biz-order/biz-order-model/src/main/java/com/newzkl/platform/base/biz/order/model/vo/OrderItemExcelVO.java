@@ -8,12 +8,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 订单明细Excel对象
+ * 订单明细Excel对象(替 SpuOrderItemExcelVO)
+ * @author KC
  */
 @Getter
 @Setter
 @EqualsAndHashCode
-public class SpuOrderItemExcelVO {
+public class OrderItemExcelVO {
     @ExcelProperty("订单ID")
     @ColumnWidth(value = 20)
     private String id;

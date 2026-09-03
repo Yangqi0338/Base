@@ -31,7 +31,7 @@ public class PurchaseRecordQuery extends BizPageQuery {
     /**
      * 交易单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 订单号

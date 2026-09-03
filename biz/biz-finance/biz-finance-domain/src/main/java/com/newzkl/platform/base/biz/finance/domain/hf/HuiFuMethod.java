@@ -86,7 +86,7 @@ public class HuiFuMethod {
         log.info("请求原始数据:{}", JSONUtil.toJsonStr(request));
         // 转化内部类
         PayReq req = new PayReq();
-        req.setReq_seq_id(idStr(request.getTradeNo()));
+        req.setReq_seq_id(request.getTradeNo());
         req.setGoods_desc(request.getGoodsInfo());
         req.setTrade_type(EnumUtil.toString(request.getTradeType()));
         String amount = decorateAmount(request.getPayAmount());
@@ -132,7 +132,7 @@ public class HuiFuMethod {
         // 转化内部类
         RefundReq req = new RefundReq();
         req.setReq_seq_id(idStr(request.getSellAfterOrderNo()));
-        req.setOrg_req_seq_id(idStr(request.getTradeNo()));
+        req.setOrg_req_seq_id(request.getTradeNo());
         String reqDate = dateStr(request.getTradeDate());
         req.setOrg_req_date(reqDate);
         String amount = decorateAmount(request.getRefundAmount());

@@ -95,15 +95,17 @@ public interface SettleRepository {
 
     /**
      * 更新待结算运费时间节点
-     * @param spuOrderId
+     *
+     * @param orderNo 交易单号
+     * @param settleNodeTime 结算时间节点
      */
-    void alterWaitSettleFreightTimeNode(Long spuOrderId,Long settleNodeTime);
+    void alterWaitSettleFreightTimeNode(String orderNo, Long settleNodeTime);
 
     SettleRecordDetailVO settleRecordDetailVO(Long id);
 
     Page<SettleRecordItemDTO> settleRecordItemPage(SettleRecordItemQuery settleRecordItemQuery);
 
-    Integer closeSettleOrder(Long skuOrderId, Long refundId);
+    Integer closeSettleOrder(String skuOrderNo, Long refundId);
 
     // TODO 上层没了检查一下
     void editSettleRecord(SettleRecordEditReq settleRecordEditReq);

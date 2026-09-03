@@ -5,15 +5,14 @@ package com.newzkl.platform.base.biz.order.domain.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.model.dto.*;
 import com.newzkl.platform.base.biz.order.model.req.*;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderStateRecordQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.*;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.ddd.model.query.TimeQuery;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,9 +41,9 @@ public interface OrderDomain {
     void orderAggSave(OrderAgg orderAgg);
     /**
      * 派发订单
-     * @param orderIdList
+     * @param orderNoList
      */
-    void sendOrder(List<Long> orderIdList);
+    void sendOrder(List<String> orderNoList);
 
     /**
      * 发货SKU
@@ -54,35 +53,45 @@ public interface OrderDomain {
     DeliverRes deliverCreate(DeliverCommand deliverCommand);
     /**
      * 收货SKU订单
-     * @param spuOrderId
-     * @param skuOrderIdList
+     * @param orderNo 交易单ID
+     * @param skuOrderNoList
      * @return
      */
-    ReceiveSkuOrderRes receiveSkuOrder(Long spuOrderId, List<Long> skuOrderIdList);
+    ReceiveSkuOrderRes receiveSkuOrder(String orderNo, List<String> skuOrderNoList);
     /**
      * 完成SKU订单
-     * @param spuOrderId
-     * @param skuOrderIdList
+     * @param orderNo 交易单ID
+     * @param skuOrderNoList
      * @return
      */
-    CompleteSkuOrderRes completeSkuOrder(Long spuOrderId, List<Long> skuOrderIdList);
+    CompleteSkuOrderRes completeSkuOrder(String orderNo, List<String> skuOrderNoList);
     /**
      * 消费者取消交易单
      *
-     * @param spuOrderId
+     * @param orderNo 交易单ID
      * @param cancelReason
      */
-    void memberCancelOrder(Long spuOrderId, String cancelReason);
+    void cancelOrder(String orderNo, String cancelReason);
 
     /**
      * 渠道取消交易单
      *
-     * @param spuOrderId
+     * @param orderNo 交易单ID
      * @param cancelReason
      */
-    void channelCancelOrder(Long spuOrderId, String cancelReason);
+    void channelCancelOrder(String orderNo, String cancelReason);
 
-    TripSpuOrderChangeRes tripSpuOrderChange(List<Long> orderId, List<Long> spuOrderId, List<Long> skuOrderId);
+    /**
+     * 订单状态巡检变更
+     *
+     * <p>SpuOrder 层折叠: 原 {@code tripSpuOrderChange} 中间的 spuOrderId 参数删除,
+     * 子层唯一为 sku_order</p>
+     *
+     * @param orderNoList 交易单ID列表, 可为 null
+     * @param skuOrderNoList SKU订单ID列表, 可为 null
+     * @return 状态变更结果
+     */
+    TripOrderChangeRes tripOrderChange(List<String> orderNoList, List<String> skuOrderNoList);
 
     /**
      * 获取C端用户预支付单
@@ -104,17 +113,21 @@ public interface OrderDomain {
 
     /**
      * 校验运费是否变动（独立封装，便于两处调用）
-     * @param spuOrderList SPU订单列表
+     *
+     * <p>SpuOrder 层折叠: 原收 {@code List<SpuOrderDTO>}, 折叠后按 sku 侧 spuId 分组比对运费和
+     * (运费只落同 spu 首个 sku, 分组和 = 原 spu 级运费)</p>
+     *
+     * @param orderAgg 订单聚合
      * @param goodsFreight 最新运费信息
      */
-    void validateFreightUnchanged(List<SpuOrderDTO> spuOrderList, Map<Long, Money> goodsFreight);
+    void validateFreightUnchanged(OrderAgg orderAgg, Map<Long, Money> goodsFreight);
 
     /**
      * 数据库层修改订单收货地址（最终执行更新）
-     * @param orderId 订单ID
+     * @param orderNo 订单ID
      * @param shipVOJson 收货地址JSON串
      */
-    void updateOrderShipDb(Long orderId, ShipVO shipVOJson);
+    void updateOrderShipDb(String orderNo, ShipVO shipVOJson);
 
 
     /**
@@ -133,41 +146,46 @@ public interface OrderDomain {
 
     /**
      * 订单聚合
-     * @param orderId
+     * @param orderId 交易单主键
      * @return
      */
     OrderAgg orderAgg(Long orderId);
 
     /**
-     * SPU订单-列表
-     * @param spuOrderQuery
+     * 订单聚合
+     * @param orderNo
      * @return
      */
-    Page<SpuOrderVO> spuOrderPage(SpuOrderQuery spuOrderQuery);
+    OrderAgg orderAgg(String orderNo);
+
+    /**
+     * 交易单-列表
+     * @param orderQuery
+     * @return
+     */
+    Page<OrderVO> orderPage(OrderQuery orderQuery);
 
     /**
      * 批量修改订单状态
      *
-     * @param orderIdList
+     * @param orderNoList
      * @param sourceState
      * @param toState
-     * @param spuOrderExt
+     * @param orderExt 订单拓展信息, 可为 null
      */
-    void batchUpdateOrderState(List<Long> orderIdList, OrderEnum.State sourceState, OrderEnum.State toState,String spuOrderExt);
+    void batchUpdateOrderState(List<String> orderNoList, OrderEnum.State sourceState, OrderEnum.State toState, OrderExt orderExt);
 
-    List<SpuOrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
+    List<OrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
 
     void orderEdit(OrderDTO orderEdit);
     /**
-     * SPU订单发货信息
-     * @param spuOrderId
+     * 交易单发货信息
+     * @param orderNo 交易单ID
      * @return
      */
-    Map<Long, List<DeliverVO>> orderDeliverInfo(Long spuOrderId);
+    Map<Long, List<DeliverVO>> orderDeliverInfo(String orderNo);
 
-    Long spuOrderId(Long orderId, Long skuId);
-
-    List<SpuOrderItemExcelVO> querySpuOrderItemExcelVO(SpuOrderQuery spuOrderQuery);
+    List<OrderItemExcelVO> queryOrderItemExcelVO(OrderQuery orderQuery);
 
     /**
      * 新增订单状态记录（含领域规则校验）
@@ -181,10 +199,10 @@ public interface OrderDomain {
     /**
      * 按 spuOrderId 查询订单状态记录列表(按操作时间倒序)
      *
-     * @param spuOrderId 商品订单 ID
+     * @param orderNo 商品订单 ID
      * @return 订单状态记录列表
      */
-    List<OrderStateRecordVO> recordListBySpuOrderId(Long spuOrderId);
+    List<OrderStateRecordVO> recordListByOrderNo(String orderNo);
 
     /**
      * 创建订单

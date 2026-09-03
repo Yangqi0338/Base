@@ -24,6 +24,10 @@ public class RefundQuery extends BizPageQuery {
      */
     private Long spuOrderId;
     /**
+     * 交易单号
+     */
+    private String orderNo;
+    /**
      * 渠道商ID
      */
     private Long channelId;

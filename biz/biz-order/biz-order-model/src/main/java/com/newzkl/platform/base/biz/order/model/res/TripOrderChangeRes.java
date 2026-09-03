@@ -7,18 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 订单状态巡检变更结果
+ *
+ * <p>SpuOrder 层折叠: 原 {@code TripSpuOrderChangeRes} 改名, 子层唯一为 sku_order,
+ * 变更项本就只带 orderId, 字段零改动</p>
+ *
  * @author muc_fang
- * @Description:
- * @date 2024/1/2516:18
  */
 @Data
-public class TripSpuOrderChangeRes {
+public class TripOrderChangeRes {
 
     private List<Item> orderStateChange;
 
-    public TripSpuOrderChangeRes() {
+    public TripOrderChangeRes() {
         this.orderStateChange = new ArrayList<>();
     }
+
     @Data
     public static class Item {
         public Item(Long orderId, OrderEnum.State sourceState, OrderEnum.State newState) {

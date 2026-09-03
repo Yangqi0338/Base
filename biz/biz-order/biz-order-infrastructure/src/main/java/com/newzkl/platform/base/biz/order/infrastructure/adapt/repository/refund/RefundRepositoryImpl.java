@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.refund;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,15 +9,14 @@ import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundReposito
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundFreightAddressVO;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundStateVO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.order.SkuOrderDAO;
-import com.newzkl.platform.base.biz.order.infrastructure.dao.order.SpuOrderDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.refund.RefundDAO;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.RefundDO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.res.OrderRefundRes;
 import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiRefundStateEvent;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
 import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
@@ -45,7 +45,6 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
 
     private final RefundDAO refundDAO;
     private final SkuOrderDAO skuOrderDAO;
-    private final SpuOrderDAO spuOrderDAO;
 
     @Override
     public Long refundSave(RefundDTO refund) {
@@ -65,9 +64,12 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
     }
 
     @Override
-    public RefundDTO refundBySpuOrderId(Long spuOrderId) {
+    public RefundDTO refundByOrderNo(String orderNo) {
+        if (StrUtil.isBlank(orderNo)) {
+            return null;
+        }
         RefundQuery query = RefundQuery.builder()
-                .spuOrderId(spuOrderId)
+                .orderNo(orderNo)
                 .build();
         BaseLambdaQueryWrapper<RefundDO> queryWrapper = refundDAO.getLw(query);
         queryWrapper.orderByDesc(RefundDO::getId);
@@ -126,19 +128,19 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
     }
 
     @Override
-    public List<SkuRefundDTO> skuRefundResList(Long spuOrderId, List<Long> skuIds) {
+    public List<SkuRefundDTO> skuRefundResList(String orderNo, List<Long> skuIds) {
         SkuOrderQuery query = new SkuOrderQuery();
-        query.setSpuOrderId(spuOrderId);
+        query.setOrderNo(orderNo);
         query.setSkuIdList(skuIds);
         return skuOrderDAO.skuRefundResList(skuOrderDAO.getLw(query).unwrap("t"));
     }
 
     @Override
-    public List<SpuRefundRes> spuRefundResList(Long orderId, List<Long> spuIds) {
-        SpuOrderQuery query = new SpuOrderQuery();
-        query.setOrderId(orderId);
+    public List<OrderRefundRes> orderRefundResList(String orderNo, List<Long> spuIds) {
+        SkuOrderQuery query = new SkuOrderQuery();
+        query.setOrderNo(orderNo);
         query.setSpuIdList(spuIds);
-        return spuOrderDAO.spuRefundResList(spuOrderDAO.getLw(query).unwrap("t"));
+        return skuOrderDAO.orderRefundResList(skuOrderDAO.getLw(query).unwrap("t"));
     }
 
     @Override
@@ -148,19 +150,19 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
     }
 
     @Override
-    public ApiRefundFreightAddressVO getOutRefundAddress(Long spuOrderId, Long spuId) {
+    public ApiRefundFreightAddressVO getOutRefundAddress(Long orderId, Long spuId) {
         RefundQuery query = new RefundQuery();
-        query.setSpuOrderId(spuOrderId);
+        query.setSpuOrderId(orderId);
         query.setSpuId(spuId);
         String outRefundAddress = findOneField(refundDAO, refundDAO.getLw(query), RefundDO::getOutRefundAddress);
         return JSONUtil.toBean(outRefundAddress, ApiRefundFreightAddressVO.class);
     }
 
     @Override
-    public Integer countTotalRefunding(SpuOrderQuery spuOrderQuery) {
+    public Integer countTotalRefunding(OrderQuery orderQuery) {
         RefundQuery query = RefundQuery.builder()
-                .memberId(spuOrderQuery.getMemberId())
-                .storeId(spuOrderQuery.getStoreId())
+                .memberId(orderQuery.getMemberId())
+                .storeId(orderQuery.getStoreId())
                 .refundStateList(CollUtil.newArrayList(
                         RefundEnum.State.CHANNEL_WAIT, RefundEnum.State.SUPPLIER_WAIT,
                         RefundEnum.State.FREIGHT_WAIT, RefundEnum.State.RECEIVE_WAIT,

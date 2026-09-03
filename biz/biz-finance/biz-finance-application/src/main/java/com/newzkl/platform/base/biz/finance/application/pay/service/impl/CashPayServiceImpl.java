@@ -66,7 +66,7 @@ public class CashPayServiceImpl implements CashPayService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void alterPayState(Long tradeNo, String thirdOrderNo) {
+    public void alterPayState(String tradeNo, String thirdOrderNo) {
         // 1、更新支付状态,flag表示是否更新成功
         boolean flag = orderPayService.alterPayState(tradeNo, thirdOrderNo);
         if (flag) {
@@ -96,7 +96,7 @@ public class CashPayServiceImpl implements CashPayService {
                     // 供应商购买商品位只能扣采购金,所以不会到这里
                     PurchaseRecordReq saveCommand = new PurchaseRecordReq();
                     saveCommand.setPayState(OrderEnum.State.SUCCESS);
-                    saveCommand.setTradeNo(tradeNo);
+                    saveCommand.setTradeNo(null);
                     purchaseRecordAction.seatPackageSaveOrUpdate(saveCommand);
                     break;
                 case STORE:
@@ -151,7 +151,7 @@ public class CashPayServiceImpl implements CashPayService {
             return cached;
         }
         // 2、落库业务支付单; 收款方分账信息暂不启用, 传 null
-        Long tradeNo = orderPayService.saveOrderPayRecord(req, null);
+        String tradeNo = orderPayService.saveOrderPayRecord(req, null);
         // 3、请求汇付聚合正扫
         HuiFuPayRes payRes = HuiFuMethod.pay(buildHuiFuPayReq(req, tradeNo));
         // 4、三方受理成功则回填三方交易号
@@ -171,7 +171,7 @@ public class CashPayServiceImpl implements CashPayService {
      *
      * <p>汇付侧的日期、金额换算、回调地址已由 {@code HuiFuMethod} 内部处理, 此处只做支付方式映射。</p>
      */
-    private HuiFuPayReq buildHuiFuPayReq(OrderPayReq req, Long tradeNo) {
+    private HuiFuPayReq buildHuiFuPayReq(OrderPayReq req, String tradeNo) {
         HuiFuPayReq huiFuPayReq = new HuiFuPayReq();
         huiFuPayReq.setTradeNo(tradeNo);
         huiFuPayReq.setGoodsInfo(req.getGoodsInfo());
@@ -195,7 +195,7 @@ public class CashPayServiceImpl implements CashPayService {
         req.setAccountType(accountType);
         req.setAlterType(alterType);
         req.setAmount(tradeOrder.getPayAmount());
-        req.setJoinRecordId(tradeOrder.getTradeNo());
+        req.setJoinRecordId(tradeOrder.getId());
         req.setRemark(JSONUtil.toJsonStr(tradeOrder));
         return req;
     }

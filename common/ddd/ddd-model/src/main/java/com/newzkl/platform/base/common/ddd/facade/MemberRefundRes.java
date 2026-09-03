@@ -20,7 +20,7 @@ public class MemberRefundRes implements Serializable {
     /**
      * 退款单号
      */
-    private Long refundNo;
+    private String refundNo;
 
     /**
      * 三方退款单号

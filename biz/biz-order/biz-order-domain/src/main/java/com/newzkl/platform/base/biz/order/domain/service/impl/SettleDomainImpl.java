@@ -293,7 +293,7 @@ public class SettleDomainImpl implements SettleDomain {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
             settleOrderWait.init();
             settleOrderWait.setId(SnowflakeGenerator.getSnowflakeId());
-            settleOrderWait.setSpuOrderId(skuOrderVO.getSpuOrderId());
+            settleOrderWait.setOrderNo(skuOrderVO.getOrderNo());
             settleOrderWait.setSupplierId(skuOrderVO.getSupplierId());
             settleOrderWait.setSkuOrderId(skuOrderVO.getSkuOrderId());
             settleOrderWait.setType(skuOrderVO.getType());
@@ -308,7 +308,7 @@ public class SettleDomainImpl implements SettleDomain {
                 Integer settleDayNum = settleRepository.querySupplierSettleConfig(skuOrderVO.getSupplierId());
                 Long time = System.currentTimeMillis() + settleDayNum * 86400000L;
                 settleOrderWait.setSettleTimeNode(time);
-                settleRepository.alterWaitSettleFreightTimeNode(skuOrderVO.getSpuOrderId(),time);
+                settleRepository.alterWaitSettleFreightTimeNode(skuOrderVO.getOrderNo(),time);
             }else {
                 settleOrderWait.setSettleTimeNode(0L);
             }
@@ -329,7 +329,7 @@ public class SettleDomainImpl implements SettleDomain {
             SettleOrderWait settleOrderWait = new SettleOrderWait();
             settleOrderWait.init();
             settleOrderWait.setId(SnowflakeGenerator.getSnowflakeId());
-            settleOrderWait.setSpuOrderId(item.getSpuOrderId());
+            settleOrderWait.setOrderNo(item.getOrderNo());
             settleOrderWait.setSupplierId(item.getSupplierId());
             settleOrderWait.setSkuOrderId(0L);
             settleOrderWait.setType(1);
@@ -347,8 +347,8 @@ public class SettleDomainImpl implements SettleDomain {
     }
 
     @Override
-    public Integer closeSettleOrder(Long skuOrderId, Long refundId) {
-        return settleRepository.closeSettleOrder(skuOrderId, refundId);
+    public Integer closeSettleOrder(String skuOrderNo, Long refundId) {
+        return settleRepository.closeSettleOrder(skuOrderNo, refundId);
     }
 
     @Override

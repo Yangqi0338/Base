@@ -10,9 +10,9 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class SettleGoodsExcelVO {
-    @ExcelProperty("订单ID")
+    @ExcelProperty("订单号")
     @ColumnWidth(value = 20)
-    private String spuOrderId;
+    private String orderNo;
     @ExcelProperty("商品信息")
     @ColumnWidth(value = 30)
     private String spuName;

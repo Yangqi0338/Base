@@ -27,9 +27,13 @@ public class SkuOrderVO extends BaseRes {
       */
      private Long spuOrderId;
      /**
-      * 订单ID
+      * 交易单号
       */
-     private Long orderId;
+     private String orderNo;
+     /**
+      * SKU订单号
+      */
+     private String skuOrderNo;
      /**
      * 商品金额
      */

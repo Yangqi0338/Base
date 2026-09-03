@@ -20,9 +20,9 @@ public class OrderStateRecordRPC implements Serializable {
     private Long id;
 
     /**
-     * 订单主键ID（关联订单表）
+     * 交易单号（关联订单表 order_no）
      */
-    private Long orderId;
+    private String orderNo;
 
     /**
      * SPU订单ID（关联SPU订单表）

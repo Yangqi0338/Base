@@ -11,6 +11,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
+import org.dromara.autotable.annotation.OldColumnName;
 import org.dromara.mpe.autofill.annotation.JsonSerializable;
 
 import java.time.LocalDateTime;
@@ -26,9 +27,10 @@ import java.util.List;
 public class RefundDO extends BaseDO {
 
     /**
-     * 交易单ID
+     * 交易单号
      */
-    private Long orderId;
+    @OldColumnName("order_id")
+    private String orderNo;
     /**
      * 外部售后单号
      */

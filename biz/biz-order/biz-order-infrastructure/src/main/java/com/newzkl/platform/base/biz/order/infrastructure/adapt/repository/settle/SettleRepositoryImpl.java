@@ -162,9 +162,9 @@ public class SettleRepositoryImpl implements SettleRepository {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void alterWaitSettleFreightTimeNode(Long spuOrderId,Long settleNodeTime) {
+    public void alterWaitSettleFreightTimeNode(String orderNo, Long settleNodeTime) {
         SettleOrderWaitQuery query = new SettleOrderWaitQuery();
-        query.setSpuOrderId(spuOrderId);
+        query.setOrderNo(orderNo);
         settleOrderWaitDAO.update(settleOrderWaitDAO.getLw(query).toUpdate()
                 .set(SettleOrderWaitDO::getSettleTimeNode, settleNodeTime)
         );
@@ -191,9 +191,9 @@ public class SettleRepositoryImpl implements SettleRepository {
     }
 
     @Override
-    public Integer closeSettleOrder(Long skuOrderId, Long refundId) {
+    public Integer closeSettleOrder(String skuOrderNo, Long refundId) {
         SettleOrderWaitQuery query = new SettleOrderWaitQuery();
-        query.setSkuOrderId(skuOrderId);
+        query.setSkuOrderNo(skuOrderNo);
         query.setType(0);
         SettleOrderWaitDO settleOrderWaitDO = CollUtil.getFirst(settleOrderWaitDAO.selectList(settleOrderWaitDAO.getLw(query)));
         if(settleOrderWaitDO == null){

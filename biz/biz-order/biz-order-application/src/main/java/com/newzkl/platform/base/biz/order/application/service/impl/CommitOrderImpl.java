@@ -13,17 +13,16 @@ import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.*;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.support.api.order.*;
 import com.newzkl.platform.base.common.ddd.facade.*;
+import com.newzkl.platform.base.biz.order.model.vo.OrderAggVO;
+import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderAggVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -96,7 +95,7 @@ public class CommitOrderImpl implements CommitOrder {
         }else if (OrderEnum.OrderType.CHANNEL == orderCreateCommand.getOrderType()){
             orderDomain.orderAggSave(order.getOrderAgg());
             // 7、后续扣减库存、扣减采购金、外部供应链订单请求创建订单放在支付后的异步处理中
-            orderService.orderBalancePay(order.getOrderId());
+            orderService.orderBalancePay(order.getOrderNo());
         }
         return order;
     }
@@ -108,58 +107,6 @@ public class CommitOrderImpl implements CommitOrder {
         return doMemberPrePayOrder(orderCreateCommand, memberOrderCreateCommand);
     }
 
-    /**
-     * 构建SKU订单（保留核心逻辑，简化冗余setter，优化空值处理）
-     */
-    private SkuOrderDTO buildSkuOrder(OrderGoodsInfoVO goodsInfo, Long spuOrderId, Long orderId, LocalDateTime createTime) {
-        SkuOrderDTO skuOrder = new SkuOrderDTO();
-        // 基础字段批量赋值（减少冗余行）
-        skuOrder.setId(SnowflakeGenerator.getSnowflakeId());
-        skuOrder.setOrderId(orderId);
-        skuOrder.setSpuOrderId(spuOrderId);
-        skuOrder.setSpuId(goodsInfo.getSpuId());
-        skuOrder.setSkuId(goodsInfo.getSkuId());
-        skuOrder.setCount(goodsInfo.getNum());
-        skuOrder.setCreateTime(createTime);
-        // 空值兜底简化
-        skuOrder.setOutSkuId(StrUtil.isEmpty(goodsInfo.getOutSkuId()) ? "0" : goodsInfo.getOutSkuId());
-
-        // 金额计算：简化条件判断，语义化常量
-        SpuEnum.ChannelType channelType = goodsInfo.getSpuChannelType();
-        if (SpuEnum.ChannelType.SELECTION == channelType
-                || SpuEnum.ChannelType.OUT == channelType) {
-            skuOrder.setGoodsAmount(goodsInfo.getSalePrice().multiply(goodsInfo.getNum()));
-            skuOrder.setSupplierAmount(goodsInfo.getSupplyPrice().multiply(goodsInfo.getNum()));
-            skuOrder.setStoreAmount(goodsInfo.getStorePrice().multiply(goodsInfo.getNum()));
-        } else {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
-
-        // 固定值字段集中赋值
-        skuOrder.setFreightAmount(Money.ZERO);
-        skuOrder.setDiscountAmount(Money.ZERO);
-        skuOrder.setOrderState(OrderEnum.State.NEW);
-        skuOrder.setOrderStateLog(OrderEnum.State.NEW.toString());
-        skuOrder.setSupplierId(goodsInfo.getSupplierId());
-        skuOrder.setTwoMarketId(goodsInfo.getTwoMarketId());
-        skuOrder.setDeliverCount(0);
-        skuOrder.setRefundedCount(0);
-        skuOrder.setRefundingCount(0);
-
-        // 商品信息字段赋值
-        skuOrder.setSkuImg(goodsInfo.getImg());
-        skuOrder.setSpuChannelType(channelType);
-        skuOrder.setSpuName(goodsInfo.getSpuName());
-        skuOrder.setSpuImg(goodsInfo.getSpuImg());
-        skuOrder.setSkuSaleAttribute(goodsInfo.getSaleAttributeJson());
-        skuOrder.setSkuWeight(goodsInfo.getWeight().doubleValue());
-        skuOrder.setSkuVolume(goodsInfo.getVolume().doubleValue());
-        skuOrder.setSkuSalePrice(goodsInfo.getSalePrice());
-        skuOrder.setSkuSupplierPrice(goodsInfo.getSupplyPrice());
-        skuOrder.setSkuStorePrice(goodsInfo.getStorePrice());
-        return skuOrder;
-    }
-
     @Override
     public OrderCreateRes getOrderCreateResByRedis(MemberOrderCreateCommand memberOrderCreateCommand) {
         return orderDomain.getPrePayOrder(
@@ -168,27 +115,27 @@ public class CommitOrderImpl implements CommitOrder {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OrderCreateRes createOrderAgain(List<Long> spuOrderIdList) {
-        for (Long spuOrderId : spuOrderIdList) {
-            SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(spuOrderId);
-            SpuOrderVO spuOrderVO = spuOrderAggVO.getSpuOrderVO();
-            List<SkuOrderVO> skuOrderList = spuOrderAggVO.getSkuOrderList();
-            if (spuOrderVO == null){
+    public OrderCreateRes createOrderAgain(List<String> orderNoList) {
+        for (String orderNo : orderNoList) {
+            OrderAggVO orderAggVO = queryService.orderAggVO(orderNo);
+            OrderVO orderVO = orderAggVO.getOrderVO();
+            List<SkuOrderVO> skuOrderList = orderAggVO.getSkuOrderList();
+            if (orderVO == null){
                 ThrowsException.exception(BaseErrorCode.NODATA);
             }
             OrderCreateCommand orderCreateCommand = new OrderCreateCommand();
-            orderCreateCommand.setOrderType(spuOrderVO.getOrderType());
-            orderCreateCommand.setShipVO(JSON.parseObject(spuOrderVO.getShipVO(), ShipVO.class));
-            orderCreateCommand.setChannelId(spuOrderVO.getChannelId());
+            orderCreateCommand.setOrderType(orderVO.getOrderType());
+            orderCreateCommand.setShipVO(JSON.parseObject(orderVO.getShipVO(), ShipVO.class));
+            orderCreateCommand.setChannelId(orderVO.getChannelId());
             List<OrderItemCommand> orderGoodsList = new ArrayList<>();
             skuOrderList.forEach(skuOrder -> {
-                StoreDistributionDetailOutVO storeDistributionRpcVO = goodsApi.selectBySkuId(spuOrderVO.getChannelId(), spuOrderVO.getStoreId(), skuOrder.getSkuId());
+                StoreDistributionDetailOutVO storeDistributionRpcVO = goodsApi.selectBySkuId(orderVO.getChannelId(), orderVO.getStoreId(), skuOrder.getSkuId());
                 orderGoodsList.add(new OrderItemCommand(storeDistributionRpcVO.getId(), skuOrder.getSkuId(), skuOrder.getCount()));
             });
             orderCreateCommand.setOrderGoodsList(orderGoodsList);
             orderCreateCommand.setOperatorId(SecurityUtils.getAccountId());
             MemberOrderCreateCommand memberOrderCreateCommand = new MemberOrderCreateCommand();
-            memberOrderCreateCommand.setStoreId(spuOrderVO.getStoreId());
+            memberOrderCreateCommand.setStoreId(orderVO.getStoreId());
             memberOrderCreateCommand.setAccountId(SecurityUtils.getAccountId());
             memberOrderCreateCommand.setUserName(SecurityUtils.getUsername());
             memberOrderCreateCommand.setNickName(SecurityUtils.getNickName());
@@ -286,7 +233,7 @@ public class CommitOrderImpl implements CommitOrder {
 
     @Override
     public PayBaseResult memberPayOrder(PayMemberOrderCommand command) {
-        OrderAgg orderAgg = orderDomain.orderAgg(command.getOrderId());
+        OrderAgg orderAgg = orderDomain.orderAgg(command.getOrderNo());
         OrderDTO order = orderAgg.getOrder();
         if (Objects.isNull(order)) {
             throw new PlatformException(BaseErrorCode.NODATA);
@@ -302,13 +249,13 @@ public class CommitOrderImpl implements CommitOrder {
 //        localMessageApi.sendModelShopMessage(modelShopDataDTO);
         // 调用支付API
         PayBaseResult payBaseResult = orderPayApi.orderPay(orderPayReq);
-        orderDomain.batchUpdateOrderState(Collections.singletonList(order.getId()), OrderEnum.State.NEW, OrderEnum.State.MEMBER_WAIT_PAY, null);
+        orderDomain.batchUpdateOrderState(Collections.singletonList(order.getOrderNo()), OrderEnum.State.NEW, OrderEnum.State.MEMBER_WAIT_PAY, null);
         OrderDTO orderUpdate = new OrderDTO();
         orderUpdate.setId(order.getId());
         orderUpdate.setPayTime(LocalDateTime.now());
         orderUpdate.setPayType(command.getPaymentType());
         orderDomain.orderEdit(orderUpdate);
-        localMessageApi.sendOrderNewRecordEvent(orderAgg.getSpuOrderList(), OrderEnum.State.NEW,OrderEnum.State.MEMBER_WAIT_PAY,SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
+        localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(order), OrderEnum.State.NEW,OrderEnum.State.MEMBER_WAIT_PAY,SecurityUtils.getAccountId(),SecurityUtils.getIdentity());
 
         return payBaseResult;
     }
@@ -333,22 +280,22 @@ public class CommitOrderImpl implements CommitOrder {
                 // 缓存逻辑：复用领域层核心校验
                 OrderAgg orderAgg = orderCreateRes.getOrderAgg();
                 Map<Long, Money> goodsFreight = orderDomain.validateOrderShipChange(orderAgg, shipVO);
-                orderDomain.validateFreightUnchanged(orderAgg.getSpuOrderList(), goodsFreight);
+                orderDomain.validateFreightUnchanged(orderAgg, goodsFreight);
 
                 // 线程安全更新缓存地址
                 OrderCreateRes newOrder = copyAndUpdateShipInfo(orderCreateRes,shipVO);
                 orderRepository.savePrePayOrder(newOrder, cacheCommand);
 
-                log.info("修改预支付订单地址成功(缓存), orderId={}", command.getOrderId());
+                log.info("修改预支付订单地址成功(缓存), orderId={}", command.getOrderNo());
                 return true;
             } else {
                 // 数据库逻辑：直接调用领域层方法（完全复用，无重复代码）
                 Boolean result = orderDomain.changeOrderShip(command);
-                log.info("修改订单地址成功(数据库), orderId={}, 结果={}", command.getOrderId(), result);
+                log.info("修改订单地址成功(数据库), orderId={}, 结果={}", command.getOrderNo(), result);
                 return result;
             }
         } catch (Exception e) {
-            log.error("修改订单地址失败, orderId={}", command.getOrderId(), e);
+            log.error("修改订单地址失败, orderId={}", command.getOrderNo(), e);
             throw new PlatformException(BaseErrorCode.UPDATE, "修改订单收货地址失败：" + e.getMessage());
         }
     }
@@ -409,16 +356,6 @@ public class CommitOrderImpl implements CommitOrder {
         BeanUtils.copyProperties(order, newOrder);
         newOrder.setShipVO(shipVO);
         orderAgg.setOrder(newOrder);
-
-        // 深拷贝商品订单列表，修改收货地址
-        List<SpuOrderDTO> newSpuOrderList = orderAgg.getSpuOrderList().stream()
-                .map(spuOrder -> {
-                    SpuOrderDTO newSpuOrder = new SpuOrderDTO();
-                    BeanUtils.copyProperties(spuOrder, newSpuOrder);
-                    newSpuOrder.setShipVO(shipVO);
-                    return newSpuOrder;
-                }).collect(Collectors.toList());
-        orderAgg.setSpuOrderList(newSpuOrderList);
 
         return copy;
     }

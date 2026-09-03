@@ -6,7 +6,8 @@
             t1.out_order_no, t.*, t1.channel_id
         FROM
             deliver t
-            LEFT JOIN spu_order t1 ON t.spu_order_id = t1.id
+            <!-- SpuOrder 层折叠: deliver.spu_order_id 值语义已改 orderId, join spu_order 改 join order 单表 -->
+            LEFT JOIN `order` t1 ON t.spu_order_id = t1.id
         WHERE
             t1.out_order_no IN
         <foreach collection="outOrderList" item="item" separator="," close=")" open="(">

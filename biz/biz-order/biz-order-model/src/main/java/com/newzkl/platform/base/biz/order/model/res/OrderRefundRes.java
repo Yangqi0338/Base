@@ -1,48 +1,39 @@
 package com.newzkl.platform.base.biz.order.model.res;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
-
 import lombok.Data;
 
 /**
- * @author muc_fang
- * @Description: 订单商品发货信息
- * @date 2023/5/914:58
+ * SPU 维度售后统计(替 SpuRefundRes, SpuOrder 层折叠后按 order + spu 聚合)
+ *
+ * @author KC
  */
 @Data
-public class SpuRefundRes {
+public class OrderRefundRes {
     /**
-     * SpuID
+     * 商品ID
      */
     private Long spuId;
     /**
-     * spu订单id
+     * 交易单号
      */
-    private Long spuOrderId;
+    private String orderNo;
     /**
-     * 购买数量
+     * 购买数量合计
      */
     private Integer orderCount;
     /**
-     * 售后中数量
+     * 售后中数量合计
      */
     private Integer refundingCount;
     /**
-     * 已售后数量
+     * 已售后数量合计
      */
     private Integer refundedCount;
     /**
-     * 已发货数量
+     * 已发货数量合计
      */
     private Integer deliverCount;
-    /**
-     * spu_name
-     */
-    private String spuName;
-    /**
-     * spu_img
-     */
-    private String spuImg;
     /**
      * 运费金额
      */

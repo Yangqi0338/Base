@@ -10,8 +10,9 @@ import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.req.*;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
+import com.newzkl.platform.base.common.core.model.req.CodeCommand;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
@@ -122,135 +123,146 @@ public class OrderController {
 
     /**
      * C端取消订单
-     * @param idObj SPU订单ID
+     * @param command SPU订单ID
      * @return
      */
     @PostMapping("memberCancelOrder")
     @FuncPermission("C端取消订单")
-    public PlatformResult<Void> memberCancelOrder(@Validated @RequestBody MemberCancelOrderCommand idObj) {
-        orderDomain.memberCancelOrder(idObj.getId(), idObj.getCancelReason());
+    public PlatformResult<Void> memberCancelOrder(@Validated @RequestBody MemberCancelOrderCommand command) {
+        orderDomain.cancelOrder(command.getOrderNo(), command.getCancelReason());
         return PlatformResult.success();
     }
     /**
      * C端确认收货
-     * @param idObj SPU订单ID
+     * @param orderNo SPU订单ID
      * @return
      */
     @PostMapping("memberConfirmOrder")
     @FuncPermission("C端确认收货")
-    public PlatformResult<Void> memberConfirmOrder(@Validated @RequestBody IdCommand idObj) {
-        orderDomain.receiveSkuOrder(idObj.getId(), null);
+    public PlatformResult<Void> memberConfirmOrder(@RequestParam("orderNo") String orderNo) {
+        orderDomain.receiveSkuOrder(orderNo, null);
         return PlatformResult.success();
     }
 
     /**
      * C端再来一单
-     * @param idObj SPU订单ID
+     * @param command SPU订单ID
      * @return
      */
     @PostMapping("createOrderAgain")
     @FuncPermission("再来一单")
-    public PlatformResult<OrderCreateRes> createOrderAgain(@Validated @RequestBody IdCommand idObj) {
-        return PlatformResult.success(commitOrder.createOrderAgain(idObj.getIdList()));
+    public PlatformResult<OrderCreateRes> createOrderAgain(@Validated @RequestBody CodeCommand command) {
+        return PlatformResult.success(commitOrder.createOrderAgain(command.getCodeList()));
     }
 
     /**
      * 渠道商取消交易单
-     * @param idObj 交易单ID
+     * @param command 交易单ID
      * @return
      */
     @PostMapping("channelCancelOrder")
     @FuncPermission("渠道商取消交易单")
-    public PlatformResult<Void> channelCancelOrder(@Validated @RequestBody IdCommand idObj) {
-        orderDomain.channelCancelOrder(idObj.getId(),"门店主动取消订单" );
+    public PlatformResult<Void> channelCancelOrder(@Validated @RequestBody CodeCommand command) {
+        orderDomain.channelCancelOrder(command.getCode(),"门店主动取消订单" );
         return PlatformResult.success();
     }
 
     /**
-     * SPU订单分页
-     * @param spuOrderQuery
-     * @return
+     * 交易单分页
+     * @param orderQuery 交易单查询条件
+     * @return 交易单聚合分页
      */
-    @PostMapping("spuOrderPage")
-    public PlatformResult<Page<SpuOrderAggVO>> spuOrderPage(@RequestBody SpuOrderQuery spuOrderQuery) {
-        boolean b = appendSpuOrderQuery(spuOrderQuery);
+    @PostMapping("orderPage")
+    public PlatformResult<Page<OrderAggVO>> orderPage(@RequestBody OrderQuery orderQuery) {
+        boolean b = appendOrderQuery(orderQuery);
         if (!b) {
             return PlatformResult.success(new Page<>());
         }
-        Page<SpuOrderAggVO> listOrder = queryService.spuOrderAggVOList(spuOrderQuery);
+        Page<OrderAggVO> listOrder = queryService.orderAggVOList(orderQuery);
         return PlatformResult.success(listOrder);
     }
 
     /**
-     * SPU订单详情
-     * @param spuOrderId
-     * @return
+     * 交易单详情
+     * @param orderNo 交易单号
+     * @return 交易单聚合
      */
-    @GetMapping("spuOrderVO")
-    public PlatformResult<SpuOrderAggVO> spuOrderVO(@RequestParam("id") Long spuOrderId) {
-        SpuOrderAggVO spuOrderAggVO = queryService.spuOrderAggVO(spuOrderId);
-        return PlatformResult.success(spuOrderAggVO);
+    @GetMapping("orderVO")
+    public PlatformResult<OrderAggVO> orderVO(@RequestParam("orderNo") String orderNo) {
+        OrderAggVO orderAggVO = queryService.orderAggVO(orderNo);
+        return PlatformResult.success(orderAggVO);
     }
 
     /**
      * 交易单余额支付
      *
-     * @param idObj
+     * @param command
      * @return
      */
     @PostMapping("orderBalancePay")
     @FuncPermission("交易单余额支付")
-    public PlatformResult<Void> orderBalancePay(@RequestBody IdCommand idObj) {
+    public PlatformResult<Void> orderBalancePay(@RequestBody CodeCommand command) {
         if (AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()) {
-            orderService.orderBalancePay(idObj.getIdList().toArray(new Long[0]));
+            orderService.orderBalancePay(command.getCodeList().toArray(new String[0]));
         }
         return PlatformResult.success();
     }
     /**
-     * SPU订单导出
+     * 交易单直接支付(渠道商对 C 端待付款订单直接确认支付, 跳过采购金扣减)
      */
-    @PostMapping("exportSpuOrder")
-    public void exportSpuOrder(HttpServletResponse response, @RequestBody SpuOrderQuery spuOrderQuery) throws IOException {
+    @PostMapping("orderDirectPay")
+    @FuncPermission("交易单直接支付")
+    public PlatformResult<Void> orderDirectPay(@RequestBody CodeCommand command) {
+        if (AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()) {
+            orderService.orderDirectPay(command.getCode());
+        }
+        return PlatformResult.success();
+    }
+    /**
+     * 交易单导出
+     */
+    @PostMapping("exportOrder")
+    public void exportOrder(HttpServletResponse response, @RequestBody OrderQuery orderQuery) throws IOException {
         // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("订单", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), SpuOrderExcelVO.class).sheet("模板").doWrite(data(spuOrderQuery));
+        EasyExcel.write(response.getOutputStream(), OrderExcelVO.class).sheet("模板").doWrite(data(orderQuery));
     }
 
     /**
-     * SPU订单明细导出
+     * 交易单明细导出
      */
-    @PostMapping("exportSpuOrderItem")
-    public void exportSpuOrderItem(@RequestBody SpuOrderQuery spuOrderQuery) throws IOException {
-        appendSpuOrderQuery(spuOrderQuery);
+    @PostMapping("exportOrderItem")
+    public void exportOrderItem(@RequestBody OrderQuery orderQuery) throws IOException {
+        appendOrderQuery(orderQuery);
         Set<Integer> yellowRowsSet = new HashSet<>();
         RowBackGroundWriteHandler handler = new RowBackGroundWriteHandler(yellowRowsSet, IndexedColors.YELLOW.index);
-        List<SpuOrderItemExcelVO> data = orderDomain.querySpuOrderItemExcelVO(spuOrderQuery);
+        List<OrderItemExcelVO> data = orderDomain.queryOrderItemExcelVO(orderQuery);
         for (int i = 0; i < data.size(); i++) {
-            SpuOrderItemExcelVO spuOrderItemExcelVO = data.get(i);
-            if(spuOrderItemExcelVO.getRefundingCount() > 0){
+            OrderItemExcelVO orderItemExcelVO = data.get(i);
+            if(orderItemExcelVO.getRefundingCount() != null && orderItemExcelVO.getRefundingCount() > 0){
                 yellowRowsSet.add(i + 1);
             }
         }
         EasyExcelUtil.export(data, handler, "订单明细");
     }
 
-    private boolean appendSpuOrderQuery(SpuOrderQuery spuOrderQuery) {
+    private boolean appendOrderQuery(OrderQuery orderQuery) {
         Long accountId = SecurityUtils.getAccountId();
         AccountEnum.Identity identity = SecurityUtils.getIdentity();
         if (AccountEnum.Identity.CHANNEL == identity) {
-            spuOrderQuery.setChannelId(accountId);
-            if(OrderEnum.OrderType.MEMBER == spuOrderQuery.getOrderType() && spuOrderQuery.getStoreId() == null){
-                spuOrderQuery.setStoreId(accountId);
+            orderQuery.setChannelId(accountId);
+            if(OrderEnum.OrderType.MEMBER == orderQuery.getOrderType() && orderQuery.getStoreId() == null){
+                orderQuery.setStoreId(accountId);
             }
         } else if (AccountEnum.Identity.PLATFORM == identity) {
-            spuOrderQuery.setSpuChannelType(null);
+            orderQuery.setSpuChannelType(null);
         } else if (AccountEnum.Identity.SUPPLIER == identity) {
-            spuOrderQuery.setSupplierId(accountId);
-            spuOrderQuery.setOrderStateList(Arrays.asList(
+            orderQuery.setSupplierId(accountId);
+            orderQuery.setOrderStateList(Arrays.asList(
                     OrderEnum.State.WAIT_DELIVERY,
                     OrderEnum.State.WAIT_RECEIVE,
                     OrderEnum.State.DOWN_RECEIVE,
@@ -258,42 +270,42 @@ public class OrderController {
                     OrderEnum.State.CLOSE
             ));
         } else if (AccountEnum.Identity.MEMBER == identity) {
-            spuOrderQuery.setMemberId(accountId);
+            orderQuery.setMemberId(accountId);
 
         }
 
         return true;
     }
 
-    private List<SpuOrderExcelVO> data(SpuOrderQuery spuOrderQuery) {
-        appendSpuOrderQuery(spuOrderQuery);
-        Page<SpuOrderAggVO> listOrder = queryService.spuOrderAggVOList(spuOrderQuery);
-        List<SpuOrderAggVO> list = listOrder.getRecords();
-        List<SpuOrderExcelVO> excelDate = new ArrayList<>();
-        for (SpuOrderAggVO spuOrderAggVO : list) {
-            SpuOrderExcelVO spuOrderExcelVO = new SpuOrderExcelVO();
-            spuOrderExcelVO.setId(spuOrderAggVO.getSpuOrderVO().getId().toString());
-            spuOrderExcelVO.setOutOrderNo(spuOrderAggVO.getSpuOrderVO().getOutOrderNo());
-            BigDecimal supplierAmount = spuOrderAggVO.getSpuOrderVO().getSupplierAmount().getAmount().setScale(2, RoundingMode.DOWN);
-            spuOrderExcelVO.setSupplierAmount(supplierAmount.toPlainString());
-            BigDecimal freightAmount = spuOrderAggVO.getSpuOrderVO().getFreightAmount().getAmount().setScale(2, RoundingMode.DOWN);
-            spuOrderExcelVO.setFreightAmount(freightAmount.toPlainString());
+    private List<OrderExcelVO> data(OrderQuery orderQuery) {
+        appendOrderQuery(orderQuery);
+        Page<OrderAggVO> listOrder = queryService.orderAggVOList(orderQuery);
+        List<OrderAggVO> list = listOrder.getRecords();
+        List<OrderExcelVO> excelDate = new ArrayList<>();
+        for (OrderAggVO orderAggVO : list) {
+            OrderExcelVO orderExcelVO = new OrderExcelVO();
+            orderExcelVO.setId(orderAggVO.getOrderVO().getId().toString());
+            orderExcelVO.setOutOrderNo(orderAggVO.getOrderVO().getOutOrderNo());
+            BigDecimal supplierAmount = orderAggVO.getOrderVO().getSupplierAmount().getAmount().setScale(2, RoundingMode.DOWN);
+            orderExcelVO.setSupplierAmount(supplierAmount.toPlainString());
+            BigDecimal freightAmount = orderAggVO.getOrderVO().getFreightAmount().getAmount().setScale(2, RoundingMode.DOWN);
+            orderExcelVO.setFreightAmount(freightAmount.toPlainString());
             Integer skuCount = 0;
-            if(spuOrderAggVO.getSkuOrderList() != null){
-                for (SkuOrderVO skuOrderVO : spuOrderAggVO.getSkuOrderList()) {
+            if(orderAggVO.getSkuOrderList() != null){
+                for (SkuOrderVO skuOrderVO : orderAggVO.getSkuOrderList()) {
                     skuCount = skuCount + skuOrderVO.getCount();
                 }
             }
-            spuOrderExcelVO.setCount(String.valueOf(skuCount));
-            spuOrderExcelVO.setOrderState(spuOrderAggVO.getSpuOrderVO().getOrderState().getValue());
-            ShipVO shipVO = JSON.parseObject(spuOrderAggVO.getSpuOrderVO().getShipVO(), ShipVO.class);
-            spuOrderExcelVO.setShipName(shipVO.getShipName());
-            spuOrderExcelVO.setShipPhone(shipVO.getShipPhone());
+            orderExcelVO.setCount(String.valueOf(skuCount));
+            orderExcelVO.setOrderState(orderAggVO.getOrderVO().getOrderState().getValue());
+            ShipVO shipVO = JSON.parseObject(orderAggVO.getOrderVO().getShipVO(), ShipVO.class);
+            orderExcelVO.setShipName(shipVO.getShipName());
+            orderExcelVO.setShipPhone(shipVO.getShipPhone());
             String shipAddress = shipVO.getShipAddress() == null ? "":shipVO.getShipAddress();
-            spuOrderExcelVO.setShipArea(shipVO.getShipArea() + "," + shipAddress);
-            spuOrderExcelVO.setSpuName(spuOrderAggVO.getSpuOrderVO().getSpuName());
-            spuOrderExcelVO.setRemark(spuOrderAggVO.getSpuOrderVO().getRemark());
-            excelDate.add(spuOrderExcelVO);
+            orderExcelVO.setShipArea(shipVO.getShipArea() + "," + shipAddress);
+            orderExcelVO.setSpuName(orderAggVO.getOrderVO().getSpuName());
+            orderExcelVO.setRemark(orderAggVO.getOrderVO().getRemark());
+            excelDate.add(orderExcelVO);
         }
         return excelDate;
     }
@@ -305,7 +317,7 @@ public class OrderController {
     @GetMapping("/countOrderState")
     public PlatformResult<List<OrderStateCountVO>> countOrderState() {
         // 获取当前渠道商ID
-        SpuOrderQuery orderQuery = new SpuOrderQuery();
+        OrderQuery orderQuery = new OrderQuery();
         orderQuery.setChannelId(SecurityUtils.getAccountId());
         List<OrderStateCountVO> stateCountList = orderService.countOrderState(orderQuery);
         return PlatformResult.success(stateCountList);
@@ -317,7 +329,7 @@ public class OrderController {
      */
     @GetMapping("/countState")
     public PlatformResult<List<OrderStateCountVO>> countState() {
-        SpuOrderQuery orderQuery = new SpuOrderQuery();
+        OrderQuery orderQuery = new OrderQuery();
         orderQuery.setMemberId(SecurityUtils.getAccountId());
         List<OrderStateCountVO> stateCountList = orderService.countOrderState(orderQuery);
         return PlatformResult.success(stateCountList);

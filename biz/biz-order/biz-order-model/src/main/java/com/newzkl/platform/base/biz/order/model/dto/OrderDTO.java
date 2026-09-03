@@ -4,8 +4,10 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 
 import com.newzkl.platform.base.biz.order.model.req.OrderCreateCommand;
+import com.newzkl.platform.base.biz.order.model.vo.OrderExt;
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
@@ -36,6 +38,12 @@ public class OrderDTO extends BaseDTO {
 	 * 渠道商ID
 	 */
 	private Long channelId;
+	/**
+	 * 交易单号
+	 *
+	 * <p>业务可读单号, BusinessType.ORDER 发号(前缀 O + 日期时间 + 序列), 子表关联键</p>
+	 */
+	private String orderNo;
 	/**
 	 * 外部订单号
 	 */
@@ -131,14 +139,52 @@ public class OrderDTO extends BaseDTO {
      */
     private String benefitTripartiteId;
 
+    /**
+     * spuId
+     *
+     * <p>SpuOrder 层折叠: 承接原 spu_order.spu_id, String 冗余为多 spu 下单兼容(当前仅单 spu)</p>
+     */
+    private String spuId;
+
+    /**
+     * 关闭时间
+     *
+     * <p>SpuOrder 层折叠: 承接原 spu_order.close_time</p>
+     */
+    private LocalDateTime closeTime;
+
+    /**
+     * 是否有售后
+     *
+     * <p>SpuOrder 层折叠: 承接原 spu_order.refund</p>
+     */
+    private CommonEnum.YesOrNo refund;
+
+    /**
+     * C端支付状态
+     */
+    private CommonEnum.YesOrNo memberPayState;
+
+    /**
+     * 渠道商支付状态
+     */
+    private CommonEnum.YesOrNo channelPayState;
+
+    /**
+     * 订单拓展信息
+     *
+     * <p>SpuOrder 层折叠: 承接原 spu_order.spu_order_ext, 含取消/关闭原因与门店会员快照</p>
+     */
+    private OrderExt orderExt;
+
 
 	/**
 	 * 初始化
-     * @param orderCreateCommand
-     * @param orderId
-     * @param spuOrderAmount
+     * @param orderCreateCommand 建单命令
+     * @param orderId 交易单ID
+     * @param skuOrderAmount sku 订单明细(SpuOrder 层折叠后金额汇总源改 sku 级)
      */
-	public void init(OrderCreateCommand orderCreateCommand, Long orderId, List<SpuOrderDTO> spuOrderAmount) {
+	public void init(OrderCreateCommand orderCreateCommand, Long orderId, List<SkuOrderDTO> skuOrderAmount) {
 		this.id = orderId;
 		this.outOrderNo = orderCreateCommand.getOutOrderNo();
 		this.shipVO = orderCreateCommand.getShipVO();
@@ -154,16 +200,18 @@ public class OrderDTO extends BaseDTO {
 		this.customFreightAmount = Money.ZERO;
 		this.discountAmount = Money.ZERO;
 		this.serviceAmount = Money.ZERO;
-		for (SpuOrderDTO spuOrder : spuOrderAmount) {
-			this.discountAmount = this.discountAmount.add(spuOrder.getDiscountAmount());
-            this.benefitTripartiteId = String.format("%s,%s", this.benefitTripartiteId, spuOrder.getBenefitTripartiteId());
-			if(SpuEnum.ChannelType.SELECTION == spuOrder.getSpuChannelType() ||
-					SpuEnum.ChannelType.OUT == spuOrder.getSpuChannelType()){
-				this.supplierAmount = this.supplierAmount.add(spuOrder.getSupplierAmount());
-				this.goodsAmount = this.goodsAmount.add(spuOrder.getGoodsAmount());
-				this.storeAmount = this.storeAmount.add(spuOrder.getStoreAmount());
-				this.freightAmount = this.freightAmount.add(spuOrder.getFreightAmount());
-				this.serviceAmount = this.serviceAmount.add(spuOrder.getServiceAmount());
+		// merge-1.0: SpuEnum.ChannelType 已删 CUSTOM(自营)枚举值(1.0 去自营, "全部改为供应商"),
+		// 故删除原 CUSTOM 分支; customFreightAmount 字段保留但恒为 0。
+		// 注: 1.0 曾在 spuOrder 级累加 benefitTripartiteId, 折叠到 sku 级未沿用; 已定案三方分润不汇总。
+		for (SkuOrderDTO skuOrder : skuOrderAmount) {
+			this.discountAmount = this.discountAmount.add(skuOrder.getDiscountAmount());
+			if(SpuEnum.ChannelType.SELECTION == skuOrder.getSpuChannelType() ||
+					SpuEnum.ChannelType.OUT == skuOrder.getSpuChannelType()){
+				this.supplierAmount = this.supplierAmount.add(skuOrder.getSupplierAmount());
+				this.goodsAmount = this.goodsAmount.add(skuOrder.getGoodsAmount());
+				this.storeAmount = this.storeAmount.add(skuOrder.getStoreAmount());
+				this.freightAmount = this.freightAmount.add(skuOrder.getFreightAmount());
+				this.serviceAmount = this.serviceAmount.add(skuOrder.getTotalServiceChange());
 			}else {
 				ThrowsException.exception(BaseErrorCode.PARAM);
 			}

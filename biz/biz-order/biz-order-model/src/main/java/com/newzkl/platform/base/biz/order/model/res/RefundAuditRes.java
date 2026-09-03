@@ -22,7 +22,7 @@ public class RefundAuditRes {
     /**
      * 通过的SkuOrderID集合
      */
-    private List<Long> skuOrderIdList;
+    private List<String> skuOrderNoList;
     private RefundDTO refund;
 
     RefundEnum.State nextState;

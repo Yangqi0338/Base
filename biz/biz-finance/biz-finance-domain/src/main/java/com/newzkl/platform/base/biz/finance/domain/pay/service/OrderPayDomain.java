@@ -24,7 +24,7 @@ public interface OrderPayDomain {
      * @param orderPayeeInfos
      * @return
      */
-    Long saveOrderPayRecord(OrderPayReq req, List<OrderPayeeInfoVO> orderPayeeInfos);
+    String saveOrderPayRecord(OrderPayReq req, List<OrderPayeeInfoVO> orderPayeeInfos);
 
     /**
      * 更新支付状态
@@ -33,7 +33,7 @@ public interface OrderPayDomain {
      * @param tripartiteTradeNo
      * @return
      */
-    boolean alterPayState(Long tradeNo, String tripartiteTradeNo);
+    boolean alterPayState(String tradeNo, String tripartiteTradeNo);
 
     /**
      * 回填三方交易号
@@ -43,7 +43,7 @@ public interface OrderPayDomain {
      * @param tradeNo           支付单号
      * @param tripartiteTradeNo 三方交易号
      */
-    void resetTripartiteTradeNo(Long tradeNo, String tripartiteTradeNo);
+    void resetTripartiteTradeNo(String tradeNo, String tripartiteTradeNo);
 
     /**
      * 交易单信息查询
@@ -51,7 +51,14 @@ public interface OrderPayDomain {
      * @param tradeNo
      * @return
      */
-    TradeOrderInfoRes tradeOrderQuery(Long tradeNo);
+    TradeOrderInfoRes tradeOrderQuery(String tradeNo);
+
+    /**
+     * 按订单号查询交易单信息
+     * @param orderNo 订单号
+     * @return 交易单信息
+     */
+    TradeOrderInfoRes tradeOrderQueryByOrderNo(Long orderNo);
 
     /**
      * 交易单信息分页查询

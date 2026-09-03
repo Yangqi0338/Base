@@ -8,8 +8,8 @@ import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundState
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.res.SpuRefundRes;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
+import com.newzkl.platform.base.biz.order.model.res.OrderRefundRes;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 
@@ -39,11 +39,11 @@ public interface RefundRepository {
     RefundDTO refund(Long refundId);
 
     /**
-     * 根据spuOrderId查询售后单详情
-     * @param spuOrderId
-     * @return
+     * 根据交易单号查询售后单详情
+     * @param orderNo 交易单号
+     * @return 售后单
      */
-    RefundDTO refundBySpuOrderId(Long spuOrderId);
+    RefundDTO refundByOrderNo(String orderNo);
 
     /**
      * 售后单-值对象列表
@@ -78,24 +78,25 @@ public interface RefundRepository {
      */
     List<ApiRefundStateVO> accountRefundState(Long accountId, List<Long> refundIdList);
 
-    List<SkuRefundDTO> skuRefundResList(Long orderId, List<Long> skuIds);
+    List<SkuRefundDTO> skuRefundResList(String orderNo, List<Long> skuIds);
 
     /**
      * SPU售后统计
-     * @param orderId
-     * @param spuIds
-     * @return
+     * @param orderNo 交易单号
+     * @param spuIds 商品ID列表
+     * @return SPU 维度售后统计
      */
-    List<SpuRefundRes> spuRefundResList(Long orderId, List<Long> spuIds);
+    List<OrderRefundRes> orderRefundResList(String orderNo, List<Long> spuIds);
 
     Page<RefundDTO> page(RefundQuery refundQuery);
 
-    ApiRefundFreightAddressVO getOutRefundAddress(Long spuOrderId, Long spuId);
+    ApiRefundFreightAddressVO getOutRefundAddress(Long orderId, Long spuId);
 
     /**
      * 根据会员ID统计售后中的订单总数
-     * @param memberId 会员ID
+     *
+     * @param orderQuery 查询条件
      * @return 售后中订单总数
      */
-    Integer countTotalRefunding(SpuOrderQuery spuOrderQuery);
+    Integer countTotalRefunding(OrderQuery orderQuery);
 }

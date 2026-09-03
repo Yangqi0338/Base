@@ -17,12 +17,11 @@ import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.PkgInfo;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderStateRecordEntity;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
 import com.newzkl.platform.base.biz.order.model.req.DeliverItemCommand;
 import com.newzkl.platform.base.biz.order.model.req.MemberOrderCreateCommand;
@@ -30,12 +29,10 @@ import com.newzkl.platform.base.biz.order.model.req.OrderCreateCommand;
 import com.newzkl.platform.base.biz.order.model.req.OrderItemCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
-import com.newzkl.platform.base.biz.order.model.vo.SpuOrderVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -53,6 +50,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -132,11 +130,11 @@ public class OrderFacadeImpl implements OrderFacade {
     public ApiOrderAggVO apiDetail(Long accountId, String outOrderNo) {
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOutOrderNo(outOrderNo);
-        List<Long> orderIdList = queryService.orderIdList(orderQuery);
-        if(ObjectUtil.isEmpty(orderIdList)){
+        List<String> orderNoList = queryService.orderNoList(orderQuery);
+        if(ObjectUtil.isEmpty(orderNoList)){
             ThrowsException.exception(BaseErrorCode.PARAM, "外部订单号错误");
         }
-        OrderAgg orderAgg = orderDomain.orderAgg(orderIdList.get(0));
+        OrderAgg orderAgg = orderDomain.orderAgg(orderNoList.get(0));
         ApiOrderAggVO apiOrderAggVO = new ApiOrderAggVO();
         apiOrderAggVO.setOrder(TransferUtils.transfer(orderAgg.getOrder(), ApiOrderVO.class));
         apiOrderAggVO.setOrderItem(TransferUtils.transfers(orderAgg.getSkuOrderList(), ApiSkuOrderVO.class));
@@ -147,21 +145,19 @@ public class OrderFacadeImpl implements OrderFacade {
     public void apiConfirm(Long accountId, ApiOrderConfirmReq confirmReq) {
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOutOrderNo(confirmReq.getOutOrderNo());
-        List<Long> orderIdList = queryService.orderIdList(orderQuery);
-        if(ObjectUtil.isEmpty(orderIdList)){
+        orderQuery.resetQuerySingle();
+        OrderVO order =  CollUtil.getFirst(queryService.orderVOList(orderQuery).getRecords());
+        if(order == null){
             ThrowsException.exception(BaseErrorCode.PARAM, "外部订单号错误");
         }
         //查询SKU订单ID
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setOrderId(orderIdList.get(0));
+        skuOrderQuery.setOrderNo(order.getOrderNo());
         skuOrderQuery.setSkuIdList(confirmReq.getSkuIdList());
         List<SkuOrderVO> skuOrderVOList = queryService.skuOrderVOList(skuOrderQuery).getRecords();
-        Map<Long, List<SkuOrderVO>> skuOrderVOMap = skuOrderVOList.stream().collect(Collectors.groupingBy(SkuOrderVO::getSpuOrderId));
-        for (Long spuOrderId : skuOrderVOMap.keySet()) {
-            List<Long> skuOrderIdList = skuOrderVOMap.get(spuOrderId).stream().map(item -> item.getId()).collect(Collectors.toList());
-            if(ObjectUtil.isNotEmpty(skuOrderIdList)){
-                orderService.receiveSkuOrder(spuOrderId, skuOrderIdList);
-            }
+        List<String> skuOrderNoList = skuOrderVOList.stream().map(SkuOrderVO::getSkuOrderNo).collect(Collectors.toList());
+        if(ObjectUtil.isNotEmpty(skuOrderNoList)){
+            orderService.receiveSkuOrder(order.getOrderNo(), skuOrderNoList);
         }
     }
 
@@ -204,36 +200,34 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId) {
-        return queryService.spuOrderRelation(orderId,spuId);
+    public OrderRelationVO orderRelation(Long orderId, Long spuId) {
+        return queryService.orderRelation(orderId, spuId);
     }
 
     @Override
     // TODO[#171-seata] 原 Seata @GlobalTransactional 降级为本地事务(Base 未接 Seata); 会员支付成功编排走单体本地事务, 待 Seata 装配后恢复分布式全局事务
     @Transactional(rollbackFor = Exception.class)
-    public void memberPaySuccess(Long orderId) {
-        orderService.memberPaySuccess(orderId);
+    public void memberPaySuccess(String orderNo) {
+        orderService.memberPaySuccess(orderNo);
     }
 
     @Override
-    public void orderChannelPay(Long orderId) {
-        orderService.orderBalancePay(orderId);
+    public void orderChannelPay(String orderNo) {
+        orderService.orderBalancePay(orderNo);
     }
 
     @Override
-    public void orderMemberPay(List<Long> orderIdList) {
-        orderDomain.batchUpdateOrderState(orderIdList, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, null);
-        orderIdList.forEach(orderId -> {
-            SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-            spuOrderQuery.setOrderId(orderId);
-            List<SpuOrderVO> spuOrders = orderDomain.spuOrderPage(spuOrderQuery).getRecords();
-            localMessageApi.sendOrderNewRecordEvent(TransferUtils.transfers(spuOrders, SpuOrderDTO.class), OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
+    public void orderMemberPay(List<String> orderNoList) {
+        orderDomain.batchUpdateOrderState(orderNoList, OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, null);
+        orderNoList.forEach(orderNo -> {
+            OrderDTO orderDTO = orderDomain.orderAgg(orderNo).getOrder();
+            localMessageApi.sendOrderNewRecordEvent(Collections.singletonList(orderDTO), OrderEnum.State.MEMBER_WAIT_PAY, OrderEnum.State.CHANNEL_WAIT_PAY, AccountEnum.Identity.PLATFORM.getCode(), AccountEnum.Identity.PLATFORM);
         });
     }
 
     @Override
-    public void closeOrder(Long orderId) {
-        orderService.closeOrder(orderId);
+    public void closeOrder(String orderNo) {
+        orderService.closeOrder(orderNo);
     }
 
     @Override
@@ -267,16 +261,9 @@ public class OrderFacadeImpl implements OrderFacade {
             log.warn("回调外部订单号为空");
             return false;
         }
-        Long orderId;
-        try {
-            orderId = Long.valueOf(userOrderNum);
-        } catch (NumberFormatException e) {
-            log.warn("外部订单号格式错误：{}", userOrderNum, e);
-            return false;
-        }
 
         // 2. 查询订单（确保存在）—— 经 domain 聚合读, 不直连 repository
-        OrderAgg orderAgg = orderDomain.orderAgg(orderId);
+        OrderAgg orderAgg = orderDomain.orderAgg(userOrderNum);
         OrderDTO orderDTO = orderAgg == null ? null : orderAgg.getOrder();
         if (orderDTO == null) {
             log.warn("未查询到订单，外部订单号：{}", userOrderNum);
@@ -317,7 +304,7 @@ public class OrderFacadeImpl implements OrderFacade {
                 String expressCompany = pkgInfo.getExpressCompany();
                 List<ItemInfo> itemList = pkgInfo.getItemList();
                 List<String> skuIdList = itemList.stream().map(ItemInfo::getSkuId).collect(Collectors.toList());
-                orderDeliver(skuIdList, orderId, expressCompany, expressNum, itemList);
+                orderDeliver(skuIdList, orderDTO, expressCompany, expressNum, itemList);
             });
         }
         log.info("订单状态更新成功，订单ID：{}，{}→{}", orderDTO.getId(), currentState.getValue(), validatedTarget.getValue());
@@ -333,13 +320,14 @@ public class OrderFacadeImpl implements OrderFacade {
      * 会订货发货：外部SKU反查内部SKU, 按回调数量构建发货命令
      *
      * @param outSkuIdList       外部SKU ID列表
-     * @param orderId            订单ID
+     * @param order              交易单(主键给发货命令, 单号给子表关联查询)
      * @param expressCompanyName 快递公司名称
      * @param expressNo          快递单号
      * @param itemList           回调商品信息列表 (含外部SKU + 发货数量)
      */
-    private void orderDeliver(List<String> outSkuIdList, Long orderId, String expressCompanyName, String expressNo,
+    private void orderDeliver(List<String> outSkuIdList, OrderDTO order, String expressCompanyName, String expressNo,
                               List<ItemInfo> itemList) {
+        Long orderId = order == null ? null : order.getId();
         if (CollUtil.isEmpty(outSkuIdList) || orderId == null || StrUtil.isBlank(expressNo)
                 || CollUtil.isEmpty(itemList)) {
             log.warn("发货参数不完整，订单ID：{}，外部SKU列表：{}，快递单号：{}，商品信息：{}", orderId, outSkuIdList, expressNo, itemList);
@@ -371,7 +359,7 @@ public class OrderFacadeImpl implements OrderFacade {
         // 查订单下SKU信息 (经 queryService, 不直连 repository)
         List<Long> innerSkuIdList = new ArrayList<>(innerIdToOutSkuMap.keySet());
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setOrderId(orderId);
+        skuOrderQuery.setOrderNo(order.getOrderNo());
         skuOrderQuery.setSkuIdList(innerSkuIdList);
         List<SkuOrderVO> skuOrderVOList = queryService.skuOrderVOList(skuOrderQuery).getRecords();
         if (CollUtil.isEmpty(skuOrderVOList)) {
@@ -379,43 +367,36 @@ public class OrderFacadeImpl implements OrderFacade {
             return;
         }
 
-        Map<Long, List<SkuOrderVO>> spuOrderIdToSkuMap =
-                skuOrderVOList.stream().collect(Collectors.groupingBy(SkuOrderVO::getSpuOrderId));
-        for (Map.Entry<Long, List<SkuOrderVO>> entry : spuOrderIdToSkuMap.entrySet()) {
-            Long spuOrderId = entry.getKey();
-            List<SkuOrderVO> skuOrderList = entry.getValue();
+        DeliverCommand deliverCommand = new DeliverCommand();
+        deliverCommand.setSpuOrderId(orderId);
+        deliverCommand.setExpressCompanyName(expressCompanyName);
+        deliverCommand.setExpressNo(expressNo);
+        deliverCommand.setExpressMobile("");
 
-            DeliverCommand deliverCommand = new DeliverCommand();
-            deliverCommand.setSpuOrderId(spuOrderId);
-            deliverCommand.setExpressCompanyName(expressCompanyName);
-            deliverCommand.setExpressNo(expressNo);
-            deliverCommand.setExpressMobile("");
-
-            List<DeliverItemCommand> deliverItemList = skuOrderList.stream().map(skuOrder -> {
-                Long innerSkuId = skuOrder.getSkuId();
-                String outSkuId = innerIdToOutSkuMap.get(innerSkuId);
-                if (StrUtil.isBlank(outSkuId)) {
-                    log.warn("内部SKU未找到对应外部SKU，跳过发货。内部SKU：{}，订单ID：{}", innerSkuId, orderId);
-                    return null;
-                }
-                Integer deliverNum = outSkuToNumberMap.get(outSkuId);
-                if (deliverNum == null || deliverNum <= 0) {
-                    log.warn("外部SKU未找到有效发货数量，跳过发货。外部SKU：{}，内部SKU：{}，订单ID：{}", outSkuId, innerSkuId, orderId);
-                    return null;
-                }
-                DeliverItemCommand itemCommand = new DeliverItemCommand();
-                itemCommand.setSkuId(innerSkuId);
-                itemCommand.setCount(deliverNum);
-                return itemCommand;
-            }).filter(Objects::nonNull).collect(Collectors.toList());
-
-            if (!CollUtil.isEmpty(deliverItemList)) {
-                deliverCommand.setDeliverItemCommandList(deliverItemList);
-                orderDomain.deliverCreate(deliverCommand);
-                log.info("SPU订单发货命令已提交，SPU订单ID：{}，快递单号：{}，发货商品数：{}", spuOrderId, expressNo, deliverItemList.size());
-            } else {
-                log.warn("SPU订单无有效发货商品，跳过发货。SPU订单ID：{}，订单ID：{}", spuOrderId, orderId);
+        List<DeliverItemCommand> deliverItemList = skuOrderVOList.stream().map(skuOrder -> {
+            Long innerSkuId = skuOrder.getSkuId();
+            String outSkuId = innerIdToOutSkuMap.get(innerSkuId);
+            if (StrUtil.isBlank(outSkuId)) {
+                log.warn("内部SKU未找到对应外部SKU，跳过发货。内部SKU：{}，订单ID：{}", innerSkuId, orderId);
+                return null;
             }
+            Integer deliverNum = outSkuToNumberMap.get(outSkuId);
+            if (deliverNum == null || deliverNum <= 0) {
+                log.warn("外部SKU未找到有效发货数量，跳过发货。外部SKU：{}，内部SKU：{}，订单ID：{}", outSkuId, innerSkuId, orderId);
+                return null;
+            }
+            DeliverItemCommand itemCommand = new DeliverItemCommand();
+            itemCommand.setSkuId(innerSkuId);
+            itemCommand.setCount(deliverNum);
+            return itemCommand;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        if (!CollUtil.isEmpty(deliverItemList)) {
+            deliverCommand.setDeliverItemCommandList(deliverItemList);
+            orderDomain.deliverCreate(deliverCommand);
+            log.info("订单发货命令已提交，订单ID：{}，快递单号：{}，发货商品数：{}", orderId, expressNo, deliverItemList.size());
+        } else {
+            log.warn("订单无有效发货商品，跳过发货。订单ID：{}", orderId);
         }
     }
 }

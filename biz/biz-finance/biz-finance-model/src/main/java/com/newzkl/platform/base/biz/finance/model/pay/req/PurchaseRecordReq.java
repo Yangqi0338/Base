@@ -29,7 +29,7 @@ public class PurchaseRecordReq extends BaseRes {
     /**
      * 交易单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 订单号

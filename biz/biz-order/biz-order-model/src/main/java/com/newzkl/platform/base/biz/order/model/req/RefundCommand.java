@@ -33,15 +33,10 @@ public class RefundCommand {
      */
     private String images;
     /**
-     * SPU订单ID
+     * 订单号
      */
     @NotNull
-    private Long spuOrderId;
-    /**
-     * 订单ID
-     */
-    @NotNull
-    private Long orderId;
+    private String orderNo;
     /**
      * 售后明细
      */

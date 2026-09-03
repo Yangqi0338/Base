@@ -1,11 +1,5 @@
 package com.newzkl.platform.base.biz.order.infrastructure.entity;
 
-//import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
-//import com.gitee.sunchenbin.mybatis.actable.annotation.Index;
-//import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
-//import com.gitee.sunchenbin.mybatis.actable.annotation.TableComment;
-//import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
-
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverItemVO;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
@@ -28,7 +22,7 @@ public class DeliverDO extends BaseDO implements Serializable {
     /**
      * SPU订单ID
      */
-    private Long spuOrderId;
+    private String orderNo;
 
     /**
      * 发货人用户名

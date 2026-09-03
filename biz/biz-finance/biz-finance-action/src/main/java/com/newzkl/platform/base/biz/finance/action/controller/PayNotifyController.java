@@ -79,7 +79,7 @@ public class PayNotifyController {
         HuiFuAsyncRes huiFuRes = getHuiFuRes(request);
         HuiFuPayNotifyRes res = JSONUtil.toBean(huiFuRes.getData(), HuiFuPayNotifyRes.class);
         if (res != null && res.isSuccess()) {
-            cashPayService.alterPayState(Long.valueOf(res.getReq_seq_id()), res.getHf_seq_id());
+            cashPayService.alterPayState(res.getReq_seq_id(), res.getHf_seq_id());
             return SUCCESS;
         }
         return null;

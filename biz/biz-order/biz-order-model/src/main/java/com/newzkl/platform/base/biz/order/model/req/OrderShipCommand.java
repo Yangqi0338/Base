@@ -15,7 +15,7 @@ public class OrderShipCommand {
     /**
      * 门店ID
      */
-    @NotNull(message = "storeId不能为空")
+    @NotNull
     private Long storeId;
 
     /**
@@ -24,14 +24,14 @@ public class OrderShipCommand {
     private Long accountId;
 
     /**
-     * 订单ID
+     * 订单号
      */
-    @NotNull(message = "orderId?")
-    private Long orderId;
+    @NotNull
+    private String orderNo;
 
     /**
      * 收货信息值对象
      */
-    @NotNull(message = "shipVO?")
+    @NotNull
     private ShipVO shipVO;
 }

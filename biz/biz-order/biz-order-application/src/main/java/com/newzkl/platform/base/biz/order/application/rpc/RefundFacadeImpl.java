@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.application.rpc;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.application.service.QueryService;
@@ -12,7 +13,7 @@ import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
 import com.newzkl.platform.base.biz.order.facade.OrderFacade;
 import com.newzkl.platform.base.biz.order.facade.RefundFacade;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.*;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
 import com.newzkl.platform.base.biz.order.model.req.RefundCommand;
 import com.newzkl.platform.base.biz.order.model.req.RefundItemCommand;
@@ -56,14 +57,14 @@ public class RefundFacadeImpl implements RefundFacade {
     public Long apiSubmit(Long accountId, ApiRefundSubmitReq refundSubmitReq) {
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOutOrderNo(refundSubmitReq.getOutOrderNo());
-        List<Long> orderIdList = queryService.orderIdList(orderQuery);
-        if(ObjectUtil.isEmpty(orderIdList)){
+        orderQuery.resetQuerySingle();
+        String orderNo = CollUtil.getFirst(queryService.orderNoList(orderQuery));
+        if(orderNo == null){
             ThrowsException.exception(BaseErrorCode.PARAM, "外部订单号错误");
         }
         if(refundSubmitReq.getSkuList().size() > 1){
             ThrowsException.exception(BaseErrorCode.PARAM, "退款SkuID集合, 目前仅能提交一个SKU");
         }
-        Long spuOrderId = orderDomain.spuOrderId(orderIdList.get(0), refundSubmitReq.getSkuList().get(0).getSkuId());
         RefundCommand refundCommand = TransferUtils.transfer(refundSubmitReq, new Function<ApiRefundSubmitReq, RefundCommand>() {
             @Override
             public RefundCommand apply(ApiRefundSubmitReq refundSubmitReq) {
@@ -72,8 +73,7 @@ public class RefundFacadeImpl implements RefundFacade {
                 refundCommand.setReason(refundSubmitReq.getReason());
                 refundCommand.setRemark(refundSubmitReq.getRemark());
                 refundCommand.setImages(refundSubmitReq.getImages());
-                refundCommand.setOrderId(orderIdList.get(0));
-                refundCommand.setSpuOrderId(spuOrderId);
+                refundCommand.setOrderNo(orderNo);
                 refundCommand.setIdentity(AccountEnum.Identity.CHANNEL);
                 refundCommand.setRefundItemCommandList(TransferUtils.transfers(refundSubmitReq.getSkuList(), new Function<ApiRefundSubmitGoodsReq, RefundItemCommand>() {
                     @Override
@@ -128,18 +128,18 @@ public class RefundFacadeImpl implements RefundFacade {
         if(ObjectUtil.isEmpty(orderIdList)){
             ThrowsException.exception(BaseErrorCode.PARAM, "外部订单号不存在");
         }
-        SpuOrderRelationVO spuOrderRelationVO = orderFacade.spuOrderRelation(orderIdList.get(0), refundAddressInfoReq.getSpuId());
-        if(spuOrderRelationVO == null){
+        OrderRelationVO orderRelationVO = orderFacade.orderRelation(orderIdList.get(0), refundAddressInfoReq.getSpuId());
+        if(orderRelationVO == null){
             ThrowsException.exception(BaseErrorCode.PARAM, "SPU_ID错误");
         }
-        if(spuOrderRelationVO.getSupplierId().intValue() == 1){
-            ApiRefundFreightAddressVO outRefundAddress = refundRepository.getOutRefundAddress(spuOrderRelationVO.getId(), refundAddressInfoReq.getSpuId());
+        if(orderRelationVO.getSupplierId().intValue() == 1){
+            ApiRefundFreightAddressVO outRefundAddress = refundRepository.getOutRefundAddress(orderRelationVO.getId(), refundAddressInfoReq.getSpuId());
             if(outRefundAddress == null){
                 ThrowsException.exception(RefundErrorCode.OUT_ADDRESS_NOT_REFUND);
             }
             return outRefundAddress;
         }else {
-            SupplierRefundVO supplierRefundVO = supplierApi.supplierRefundVO(spuOrderRelationVO.getSupplierId());
+            SupplierRefundVO supplierRefundVO = supplierApi.supplierRefundVO(orderRelationVO.getSupplierId());
             return TransferUtils.transfer(supplierRefundVO.getReceiveAddressVO(), new Function<ReceiveAddressOutVO, ApiRefundFreightAddressVO>() {
                 @Override
                 public ApiRefundFreightAddressVO apply(ReceiveAddressOutVO receiveAddressVO) {

@@ -5,11 +5,11 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 订单拓展信息
+ * 订单拓展信息(替 SpuOrderExt, SpuOrder 层折叠后)
  * @author sijiwang
  */
 @Data
-public class SpuOrderExt implements Serializable {
+public class OrderExt implements Serializable {
 
     private Long storeId;
 

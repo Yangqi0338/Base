@@ -75,7 +75,7 @@ public interface SettleDomain {
      * @param skuOrderId
      * @return null:待结算记录未生成 0 待结算记录关闭失败 1 待结算记录关闭成功
      */
-    Integer closeSettleOrder(Long skuOrderId, Long refundId);
+    Integer closeSettleOrder(String skuOrderNo, Long refundId);
 
     /**
      * 结算单分页

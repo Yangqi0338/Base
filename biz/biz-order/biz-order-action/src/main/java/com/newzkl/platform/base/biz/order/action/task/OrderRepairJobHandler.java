@@ -8,11 +8,9 @@ import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundReposito
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.SettleRepository;
 import com.newzkl.platform.base.biz.order.domain.service.SettleDomain;
 import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.FreightSettleOrderWaitCommand;
 import com.newzkl.platform.base.biz.order.model.req.SettleOrderWaitCommand;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -52,26 +50,9 @@ public class OrderRepairJobHandler {
      */
     @Transactional(rollbackFor = Exception.class)
     public void initSettleOrderWait()  {
-        // 询SPU订单: 生成运费待结算单
-        SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        spuOrderQuery.setOrderStateList(Arrays.asList(OrderEnum.State.WAIT_RECEIVE,OrderEnum.State.DOWN_RECEIVE,OrderEnum.State.SUCCESS));
-        spuOrderQuery.setSettleSendStatus(CommonEnum.YesOrNo.NO);
-        List<SpuOrderDTO> orderList = orderRepository.spuOrderList(spuOrderQuery).getRecords();
-
-        for (SpuOrderDTO order : orderList) {
-            FreightSettleOrderWaitCommand freightSettleOrderWaitCommand = new FreightSettleOrderWaitCommand();
-            freightSettleOrderWaitCommand.setSpuOrderId(order.getId());
-            freightSettleOrderWaitCommand.setSpuId(order.getSpuId());
-            freightSettleOrderWaitCommand.setSupplierId(order.getSupplierId());
-            freightSettleOrderWaitCommand.setAmount(order.getFreightAmount());
-            if(!freightSettleOrderWaitCommand.getAmount().equals(0)){
-                settleDomain.freightSettleOrderWaitSave(Collections.singletonList(freightSettleOrderWaitCommand),
-                        orderRepository.settleOrderType(order.getSupplierId()));
-            }
-
-            order.setSettleSendState(CommonEnum.YesOrNo.YES);
-        }
-        orderRepository.spuOrderSave(orderList);
+        // SpuOrder 层折叠: 原首段"询 SPU 订单生成运费待结算单"依赖已删 orderRepository.spuOrderList/spuOrderSave
+        // 及 SpuOrderDTO.supplierId/settleSendState(OrderDTO 无对应字段), 且本方法为无 @XxlJob 无调用方的
+        // 一次性数据修复死码(硬编码日期), 故运费待结算首段整体删除; SKU 待结算段依赖健在, 保留。
         // 查询SKU订单: 生成待结算单
         List<Long> waitSettlementOrderId = new ArrayList<>();
         List<SkuOrderDTO> waitSettlementOrder = new ArrayList<>();
@@ -120,16 +101,6 @@ public class OrderRepairJobHandler {
             settleDomain.settleOrderWaitSave(commandList, EarningsEnum.SettleType.ORDER_SUCCESS);
         }
     }
-    /**
-     * 订单统计刷新
-     */
-    //@Scheduled(cron = "0 0/5 * * * ? ")
-    @XxlJob("orderCount")
-    public ReturnT<String> orderCount(String param)  {
-        // FIXME 先移除
-        return null;
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void repairSettle() {
         //取出已收货,未结算,收货时间小于7月20号的sku订单

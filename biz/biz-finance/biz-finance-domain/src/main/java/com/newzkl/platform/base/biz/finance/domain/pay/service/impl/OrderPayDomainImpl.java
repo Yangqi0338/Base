@@ -30,7 +30,7 @@ public class OrderPayDomainImpl implements OrderPayDomain {
     private final PaymentAssembler assembler;
 
     @Override
-    public Long saveOrderPayRecord(OrderPayReq req, List<OrderPayeeInfoVO> orderPayeeInfos) {
+    public String saveOrderPayRecord(OrderPayReq req, List<OrderPayeeInfoVO> orderPayeeInfos) {
         PaymentVO paymentVO = assembler.req2VO(req);
         if (!JSONUtil.isTypeJSON(paymentVO.getOrderInfo())) {
             JSONObject jsonObj = new JSONObject();
@@ -41,18 +41,23 @@ public class OrderPayDomainImpl implements OrderPayDomain {
     }
 
     @Override
-    public boolean alterPayState(Long tradeNo, String tripartiteTradeNo) {
+    public boolean alterPayState(String tradeNo, String tripartiteTradeNo) {
         return orderPayRepository.alterPayState(tradeNo, tripartiteTradeNo);
     }
 
     @Override
-    public void resetTripartiteTradeNo(Long tradeNo, String tripartiteTradeNo) {
+    public void resetTripartiteTradeNo(String tradeNo, String tripartiteTradeNo) {
         orderPayRepository.resetTripartiteTradeNo(tradeNo, tripartiteTradeNo);
     }
 
     @Override
-    public TradeOrderInfoRes tradeOrderQuery(Long tradeNo) {
+    public TradeOrderInfoRes tradeOrderQuery(String tradeNo) {
         return orderPayRepository.tradeOrderQuery(tradeNo);
+    }
+
+    @Override
+    public TradeOrderInfoRes tradeOrderQueryByOrderNo(Long orderNo) {
+        return orderPayRepository.tradeOrderQueryByOrderNo(orderNo);
     }
 
     @Override

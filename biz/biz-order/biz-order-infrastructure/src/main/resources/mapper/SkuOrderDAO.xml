@@ -6,26 +6,39 @@
         <set>
             `deliver_count` = `deliver_count` + #{count}
         </set>
-        where `spu_order_id` = #{spuOrderId}
+        where `order_no` = #{orderNo}
         and `sku_id` = #{skuId}
         and `count` &gt;= `deliver_count` + #{count}
     </update>
+    <!-- SpuOrder 层折叠: 去 spu_order 联表, spu_name/spu_img 已下沉入 order_sku_info JSON(SkuRefundDTO 不再用), supplier_id 直取 sku_order -->
     <select id="skuRefundResList" resultType="com.newzkl.platform.base.biz.order.model.dto.SkuRefundDTO">
         select
             t.sku_id,
             t.spu_id,
             t.count as order_count,
-            t.id as  sku_order_id,
-            t.spu_order_id,
+            t.sku_order_no as sku_order_no,
             t.refunding_count,
             t.refunded_count,
-            t.delivery_count,
+            t.deliver_count,
             t.order_state as sku_order_state,
-            t1.`spu_name` ,
-            t1.`spu_img` ,
-            t1.supplier_id
-        from sku_order t left join spu_order t1 on t.spu_order_id = t1.id
+            t.supplier_id
+        from sku_order t
         ${ew.customSqlSegment}
+    </select>
+
+    <!-- 迁移自旧 SpuOrderDAO.spuRefundResList: 去 spu_order, 按 order_no + spu_id 聚合 sku_order, 运费取交易单 -->
+    <select id="orderRefundResList" resultType="com.newzkl.platform.base.biz.order.model.res.OrderRefundRes">
+        select
+            t.spu_id,
+            t.order_no,
+            sum(t.count) as order_count,
+            sum(t.refunding_count) as refunding_count,
+            sum(t.refunded_count) as refunded_count,
+            sum(t.deliver_count) as deliver_count,
+            t1.freight_amount
+        from sku_order t left join `order` t1 on t.order_no = t1.order_no
+        ${ew.customSqlSegment}
+        group by t.order_no, t.spu_id
     </select>
 
     <update id="updateSkuRefundingCount">
@@ -33,7 +46,7 @@
         <set>
             `refunding_count` = `refunding_count` + #{count}
         </set>
-        where `order_id` = #{orderId}
+        where `order_no` = #{orderNo}
         and `sku_id` = #{skuId}
         and `count` &gt;= `refunding_count` + #{count} + `refunded_count`
     </update>
@@ -45,8 +58,8 @@
             t.refunding_count = 0,
             t.order_state = if(t.refunded_count + t.refunding_count = t.buy_num, #{toState}, t.order_state)
         where
-            t.`id` in
-        <foreach collection="skuOrderId" item="item" separator="," close=")" open="(">
+            t.`sku_order_no` in
+        <foreach collection="skuOrderNo" item="item" separator="," close=")" open="(">
             #{item,jdbcType=VARCHAR}
         </foreach>
     </update>

@@ -34,9 +34,9 @@ public class SellAfterRefundReq implements Serializable {
     private Money serviceAmount;
 
     /**
-     * 订单单号
+     * 订单主键(资金流水 join_record_id 关联键, 沿用 id 口径)
      */
-    private Long orderNo;
+    private Long orderId;
 
     /**
      * 变动类型码

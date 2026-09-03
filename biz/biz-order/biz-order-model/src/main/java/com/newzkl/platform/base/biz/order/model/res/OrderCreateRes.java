@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author muc_fang
@@ -20,10 +19,7 @@ public class OrderCreateRes implements Serializable {
      * 交易单ID
      */
     private Long orderId;
-    /**
-     * SPU订单ID
-     */
-    private List<Long> spuOrderId;
+    private String orderNo;
     /***
      *
      * 交易单状态
@@ -40,9 +36,9 @@ public class OrderCreateRes implements Serializable {
     private Long remainTime;
 
 
-    public OrderCreateRes(Long orderId, List<Long> spuOrderId, OrderEnum.State orderState, OrderAgg orderAgg) {
+    public OrderCreateRes(Long orderId, String orderNo, OrderEnum.State orderState, OrderAgg orderAgg) {
         this.orderId = orderId;
-        this.spuOrderId = spuOrderId;
+        this.orderNo = orderNo;
         this.orderState = orderState;
         this.orderAgg = orderAgg;
     }

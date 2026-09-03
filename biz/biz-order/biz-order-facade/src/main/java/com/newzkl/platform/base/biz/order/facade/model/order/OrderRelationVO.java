@@ -3,14 +3,13 @@ package com.newzkl.platform.base.biz.order.facade.model.order;
 import lombok.Data;
 
 /**
+ * 交易单关系(替 SpuOrderRelationVO, SpuOrder 层折叠后, 语义 order 级)
  * @author muc_fang
- * @Description: SPU订单关系
- * @date 2024/1/1916:50
  */
 @Data
-public class SpuOrderRelationVO {
+public class OrderRelationVO {
     /**
-     * SPU订单ID
+     * 交易单ID
      */
     private Long id;
     /**

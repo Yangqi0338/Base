@@ -5,8 +5,8 @@ import java.io.Serializable;
 
 public interface PayBaseRes extends Serializable {
 
-    default Long getTradeNo() {
-        return 0L;
+    default String getTradeNo() {
+        return "0";
     }
 
     default String getThirdTradeNo() {

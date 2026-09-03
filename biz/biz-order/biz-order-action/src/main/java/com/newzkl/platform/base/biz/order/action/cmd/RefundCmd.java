@@ -19,9 +19,9 @@ public class RefundCmd {
         private Long refundId;
 
         /**
-         * spu订单id  和 售后单id二选一
+         * 交易单号  和 售后单id二选一
          */
-        private Long spuOrderId;
+        private String orderNo;
         /**
          * 审核操作
          * 0 拒绝 1 通过

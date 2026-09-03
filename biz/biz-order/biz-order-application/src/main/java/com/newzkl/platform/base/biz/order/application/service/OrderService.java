@@ -5,7 +5,7 @@ package com.newzkl.platform.base.biz.order.application.service;
 import com.newzkl.platform.base.biz.order.model.dto.ExcelErrorVO;
 import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
 import com.newzkl.platform.base.biz.order.model.req.OrderCreateCommand;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
+import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.vo.FullDeliverExcelVO;
 import com.newzkl.platform.base.biz.order.model.vo.OrderStateCountVO;
 import com.newzkl.platform.base.biz.order.model.vo.SplitDeliverExcelVO;
@@ -21,15 +21,21 @@ import java.util.Map;
  */
 public interface OrderService {
 
-    void receiveSkuOrder(Long spuOrderId, List<Long> skuOrderIdList);
+    void receiveSkuOrder(String orderNo, List<String> skuOrderNoList);
 
-    void completeSkuOrder(Long spuOrderId, List<Long> skuOrderIdList);
+    void completeSkuOrder(String orderNo, List<String> skuOrderNoList);
 
-    void orderBalancePay(Long... id);
+    void orderBalancePay(String... orderNo);
+
+    void orderBalancePay(Long... orderId);
 
     Long channelRealOrderFreight(OrderCreateCommand orderCreateCommand);
 
+    void memberPaySuccess(String orderNo);
+
     void memberPaySuccess(Long orderId);
+
+    void orderDirectPay(String orderNo);
 
     void deliverCreate(DeliverCommand deliverCommand);
 
@@ -40,7 +46,7 @@ public interface OrderService {
     /**
      * 超时关闭订单
      */
-    void closeOrder(Long orderId);
+    void closeOrder(String orderNo);
 
-    List<OrderStateCountVO> countOrderState(SpuOrderQuery spuOrderQuery);
+    List<OrderStateCountVO> countOrderState(OrderQuery orderQuery);
 }

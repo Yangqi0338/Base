@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class NotifyApiImpl implements NotifyApi {
 
     @Override
-    public void paySuccess(Long orderId) {
+    public void paySuccess(String orderId) {
         MQUtil.send(MQ.Tag.PAYMENT_PAY_SUCCESS, new PaySuccessEvent(orderId));
     }
 }

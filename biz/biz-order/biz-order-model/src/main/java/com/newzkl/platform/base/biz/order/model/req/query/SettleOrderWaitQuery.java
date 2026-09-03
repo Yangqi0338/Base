@@ -37,8 +37,9 @@ public class SettleOrderWaitQuery extends BizPageQuery {
      */
     private Integer type;
     /**
-     * spu订单ID
+     * 交易单号
      * @ext 单值, 供 getLw 精确匹配
      */
-    private Long spuOrderId;
+    private String orderNo;
+    private String skuOrderNo;
 }

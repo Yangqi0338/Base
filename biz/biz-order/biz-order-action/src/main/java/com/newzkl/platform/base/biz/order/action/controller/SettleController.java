@@ -96,7 +96,7 @@ public class SettleController {
         if(listReq.getType() == 0){
             List<SettleGoodsExcelVO> goodsExcelVOList = TransferUtils.transfers(voList, c -> {
                 SettleGoodsExcelVO v = new SettleGoodsExcelVO();
-                v.setSpuOrderId(String.valueOf(c.getSpuOrderId()));
+                v.setOrderNo(c.getOrderNo());
                 v.setSpuName(c.getSpuName() + "( " + BizUtil.goodsSkuName(c.getSkuName()) + " * " + c.getSkuCount() + " )");
                 v.setOrderMoney(BizUtil.excelMoney(c.getOrderMoney()));
                 v.setC4("已结算");
@@ -109,7 +109,7 @@ public class SettleController {
                 @Override
                 public SettleFreightExcelVO apply(SettleOrderWaitVO settleOrderWaitVO) {
                     SettleFreightExcelVO settleFreightExcelVO = new SettleFreightExcelVO();
-                    settleFreightExcelVO.setSpuOrderId(String.valueOf(settleOrderWaitVO.getSpuOrderId()));
+                    settleFreightExcelVO.setOrderNo(settleOrderWaitVO.getOrderNo());
                     settleFreightExcelVO.setOrderMoney(BizUtil.excelMoney(settleOrderWaitVO.getOrderMoney()));
                     return settleFreightExcelVO;
                 }
@@ -121,7 +121,7 @@ public class SettleController {
                 public SettleRefundExcelVO apply(SettleOrderWaitVO settleOrderWaitVO) {
                     SettleRefundExcelVO settleRefundExcelVO = new SettleRefundExcelVO();
                     settleRefundExcelVO.setRefundId(String.valueOf(settleOrderWaitVO.getRefundId()));
-                    settleRefundExcelVO.setSpuOrderId(String.valueOf(settleOrderWaitVO.getSpuOrderId()));
+                    settleRefundExcelVO.setOrderNo(settleOrderWaitVO.getOrderNo());
                     settleRefundExcelVO.setOrderMoney(BizUtil.excelMoney(settleOrderWaitVO.getOrderMoney()));
                     settleRefundExcelVO.setC4(BizUtil.excelMoney(Money.ZERO.subtract(settleOrderWaitVO.getOrderMoney())));
                     return settleRefundExcelVO;

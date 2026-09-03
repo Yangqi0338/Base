@@ -14,9 +14,9 @@ public class DeliverVO extends BaseRes {
      */
      private Long id;
      /**
-     * SPU订单号
+     * 订单号
      */
-     private Long spuOrderId;
+     private String orderNo;
      /**
      * 发货人账号
      */

@@ -8,7 +8,7 @@ import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 
 import java.util.List;
@@ -62,36 +62,36 @@ public interface OrderFacade {
       */
      List<OrderStateVO> apiOrderState(Long accountId, List<String> outOrderNoList);
      /**
-      * SPU订单关系
+      * 交易单关系
       *
       * @param orderId
       * @param spuId
       * @return
       */
-     SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId);
+     OrderRelationVO orderRelation(Long orderId, Long spuId);
      /**
       * C端支付成功
-      * @param orderId
+      * @param orderNo
       */
-     void memberPaySuccess(Long orderId);
+     void memberPaySuccess(String orderNo);
 
      /**
       * 订单渠道商支付
-      * @param orderId
+      * @param orderNo
       */
-     void orderChannelPay(Long orderId);
+     void orderChannelPay(String orderNo);
 
     /**
      * 批量修改订单状态
      *
-     * @param orderIdList
+     * @param orderNoList
      */
-    void orderMemberPay(List<Long> orderIdList);
+    void orderMemberPay(List<String> orderNoList);
 
     /**
      * 超时关闭订单
      */
-    void closeOrder(Long orderId);
+    void closeOrder(String orderNo);
 
     /**
      * 保存订单状态记录

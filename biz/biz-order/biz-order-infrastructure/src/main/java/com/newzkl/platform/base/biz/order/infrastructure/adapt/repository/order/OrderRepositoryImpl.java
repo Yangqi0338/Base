@@ -2,13 +2,12 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.order
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.infrastructure.dao.order.*;
 import com.newzkl.platform.base.biz.order.infrastructure.entity.*;
@@ -64,15 +63,97 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
 
     private final SupplierApi supplierApi;
     private final OrderDAO orderDAO;
-    private final SpuOrderDAO spuOrderDAO;
     private final SkuOrderDAO skuOrderDAO;
     private final ChannelApi channelApi;
     private final DeliverDAO deliverDAO;
     private final OrderStateRecordDAO orderStateRecordDAO;
 
+    /**
+     * SkuOrderDTO 转 DO
+     *
+     * <p>SpuOrder 层折叠: spu/sku 快照字段收进 orderSkuInfo JSON 列, 3 个价格列去 sku 前缀,
+     * TransferUtils 按同名映射覆盖不到, 需显式赋值</p>
+     */
+    private static SkuOrderDO toDO(SkuOrderDTO skuOrderDTO) {
+        if (skuOrderDTO == null) {
+            return null;
+        }
+        SkuOrderDO skuOrderDO = TransferUtils.transfer(skuOrderDTO, SkuOrderDO.class);
+        skuOrderDO.setSupplierPrice(skuOrderDTO.getSkuSupplierPrice());
+        skuOrderDO.setSalePrice(skuOrderDTO.getSkuSalePrice());
+        skuOrderDO.setStorePrice(skuOrderDTO.getSkuStorePrice());
+        // 部分更新场景(如只改 settleSendState)快照字段全 null, 此时不可 set 空对象, 否则 JSON 列被刷成 {}
+        if (skuOrderDTO.getSpuId() != null || skuOrderDTO.getSkuId() != null
+                || skuOrderDTO.getSpuName() != null || skuOrderDTO.getSkuName() != null) {
+            OrderSkuInfo orderSkuInfo = new OrderSkuInfo();
+            orderSkuInfo.setSpuId(skuOrderDTO.getSpuId());
+            orderSkuInfo.setSpuName(skuOrderDTO.getSpuName());
+            orderSkuInfo.setSpuImg(skuOrderDTO.getSpuImg());
+            orderSkuInfo.setSkuId(skuOrderDTO.getSkuId());
+            orderSkuInfo.setSkuName(skuOrderDTO.getSkuName());
+            orderSkuInfo.setSkuWeight(skuOrderDTO.getSkuWeight());
+            orderSkuInfo.setSkuVolume(skuOrderDTO.getSkuVolume());
+            skuOrderDO.setOrderSkuInfo(orderSkuInfo);
+        }
+        return skuOrderDO;
+    }
+
+    /**
+     * SkuOrderDO 转 DTO
+     *
+     * <p>SpuOrder 层折叠: orderSkuInfo JSON 列拆平回 DTO 平铺字段, 3 个价格列补回 sku 前缀</p>
+     */
+    private static SkuOrderDTO toDTO(SkuOrderDO skuOrderDO) {
+        if (skuOrderDO == null) {
+            return null;
+        }
+        SkuOrderDTO skuOrderDTO = TransferUtils.transfer(skuOrderDO, SkuOrderDTO.class);
+        skuOrderDTO.setSkuSupplierPrice(skuOrderDO.getSupplierPrice());
+        skuOrderDTO.setSkuSalePrice(skuOrderDO.getSalePrice());
+        skuOrderDTO.setSkuStorePrice(skuOrderDO.getStorePrice());
+        OrderSkuInfo orderSkuInfo = skuOrderDO.getOrderSkuInfo();
+        if (orderSkuInfo != null) {
+            skuOrderDTO.setSpuName(orderSkuInfo.getSpuName());
+            skuOrderDTO.setSpuImg(orderSkuInfo.getSpuImg());
+            skuOrderDTO.setSkuName(orderSkuInfo.getSkuName());
+            skuOrderDTO.setSkuWeight(orderSkuInfo.getSkuWeight());
+            skuOrderDTO.setSkuVolume(orderSkuInfo.getSkuVolume());
+        }
+        return skuOrderDTO;
+    }
+
+    /**
+     * SkuOrderDO 转 VO
+     *
+     * <p>SpuOrder 层折叠: 与 {@link #toDTO} 同口径, 前端契约字段名保持 skuXxxPrice 不变</p>
+     */
+    private static SkuOrderVO toVO(SkuOrderDO skuOrderDO) {
+        if (skuOrderDO == null) {
+            return null;
+        }
+        SkuOrderVO skuOrderVO = TransferUtils.transfer(skuOrderDO, SkuOrderVO.class);
+        skuOrderVO.setSkuSupplierPrice(skuOrderDO.getSupplierPrice());
+        skuOrderVO.setSkuSalePrice(skuOrderDO.getSalePrice());
+        skuOrderVO.setSkuStorePrice(skuOrderDO.getStorePrice());
+        OrderSkuInfo orderSkuInfo = skuOrderDO.getOrderSkuInfo();
+        if (orderSkuInfo != null) {
+            skuOrderVO.setSpuName(orderSkuInfo.getSpuName());
+            skuOrderVO.setSkuName(orderSkuInfo.getSkuName());
+            skuOrderVO.setSkuWeight(orderSkuInfo.getSkuWeight());
+            skuOrderVO.setSkuVolume(orderSkuInfo.getSkuVolume());
+        }
+        return skuOrderVO;
+    }
+
     @Override
     public OrderDTO order(Long orderId) {
         OrderDO orderDO = orderDAO.selectById(orderId);
+        return TransferUtils.transfer(orderDO, OrderDTO.class);
+    }
+
+    @Override
+    public OrderDTO order(String orderNo) {
+        OrderDO orderDO = getOne(orderDAO,orderDAO.getKeyLw(orderNo));
         return TransferUtils.transfer(orderDO, OrderDTO.class);
     }
 
@@ -83,15 +164,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public Page<SpuOrderDTO> spuOrderList(SpuOrderQuery spuOrderQuery) {
-        Page<SpuOrderDO> page = spuOrderDAO.selectPage(RepositorySupport.page(spuOrderQuery), spuOrderDAO.getLw(spuOrderQuery));
-        return TransferUtils.transferPage(page, SpuOrderDTO.class);
-    }
-
-    @Override
-    public Map<OrderEnum.State, Integer> stateCountMap(SpuOrderQuery spuOrderQuery) {
-        spuOrderQuery.addGroupField(SpuOrderDO::getOrderState);
-        BizCountMap countMap = spuOrderDAO.countMapWithOrderByQuery(spuOrderDAO.getLw(spuOrderQuery).unwrapAlias(), spuOrderQuery);
+    public Map<OrderEnum.State, Integer> stateCountMap(OrderQuery orderQuery) {
+        orderQuery.addGroupField(OrderDO::getOrderState);
+        BizCountMap countMap = orderDAO.countMapWithOrderByQuery(orderDAO.getLw(orderQuery).unwrapAlias(), orderQuery);
         Map<OrderEnum.State, Integer> resultMap = new HashMap<>();
         countMap.forEach(map -> {
             Integer count = BizCountMap.getIntCount(map,0);
@@ -104,88 +179,55 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     @Override
     public Page<SkuOrderDTO> skuOrderList(SkuOrderQuery orderQuery) {
         Page<SkuOrderDO> page = skuOrderDAO.selectPage(RepositorySupport.page(orderQuery), skuOrderDAO.getLw(orderQuery));
-        return TransferUtils.transferPage(page,SkuOrderDTO.class);
+        Page<SkuOrderDTO> result = TransferUtils.transferPage(page,SkuOrderDTO.class);
+        result.setRecords(page.getRecords().stream().map(OrderRepositoryImpl::toDTO).collect(Collectors.toList()));
+        return result;
     }
 
     @Override
-    public int updateSkuRefundingCount(Long orderId, Long skuId, Integer count) {
-        return skuOrderDAO.updateSkuRefundingCount(orderId, skuId, count);
+    public int updateSkuRefundingCount(String orderNo, Long skuId, Integer count) {
+        return skuOrderDAO.updateSkuRefundingCount(orderNo, skuId, count);
     }
 
     @Override
-    public int updateSpuRefundingCount(Long spuOrderId, Integer count) {
-        return spuOrderDAO.updateSpuRefundingCount(spuOrderId, count);
-    }
-
-    @Override
-    public List<SkuRefundDTO> skuRefundResList(Long spuOrderId, List<Long> skuIds) {
+    public List<SkuRefundDTO> skuRefundResList(String orderNo, List<Long> skuIds) {
         SkuOrderQuery query = new SkuOrderQuery();
-        query.setSpuOrderId(spuOrderId);
+        query.setOrderNo(orderNo);
         query.setSkuIdList(skuIds);
         return skuOrderDAO.skuRefundResList(skuOrderDAO.getLw(query).unwrap("t"));
     }
 
     @Override
-    public SpuOrderVO spuOrderVO(Long spuOrderId) {
-        SpuOrderDO spuOrderDO = spuOrderDAO.selectById(spuOrderId);
-        return TransferUtils.transfer(spuOrderDO,SpuOrderVO.class);
-    }
-
-    @Override
-    public SpuOrderAggVO spuOrderAggVO(Long spuOrderId) {
-        SpuOrderAggVO spuOrderAggVO = new SpuOrderAggVO();
-        SpuOrderVO spuOrderVO = spuOrderVO(spuOrderId);
+    public OrderAggVO orderAggVO(String orderNo) {
+        OrderAggVO orderAggVO = new OrderAggVO();
+        OrderDO orderDO = getOne(orderDAO, orderDAO.getKeyLw(orderNo));
+        orderAggVO.setOrderVO(TransferUtils.transfer(orderDO, OrderVO.class));
+        // 子表关联键为 order_no, 交易单不存在时不可放行空条件查询(否则捞全表 sku_order)
+        if (orderDO == null) {
+            orderAggVO.setSkuOrderList(Collections.emptyList());
+            return orderAggVO;
+        }
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setSpuOrderId(spuOrderId);
-        List<SkuOrderDO> skuOrderVOS = skuOrderDAO.selectList(skuOrderDAO.getLw(skuOrderQuery));
-        spuOrderAggVO.setSpuOrderVO(spuOrderVO);
-        spuOrderAggVO.setSkuOrderList(TransferUtils.transfers(skuOrderVOS, SkuOrderVO.class));
-        return spuOrderAggVO;
+        skuOrderQuery.setOrderNo(orderDO.getOrderNo());
+        List<SkuOrderDO> skuOrderDOS = skuOrderDAO.selectList(skuOrderDAO.getLw(skuOrderQuery));
+        orderAggVO.setSkuOrderList(skuOrderDOS.stream().map(OrderRepositoryImpl::toVO).collect(Collectors.toList()));
+        return orderAggVO;
     }
 
     @Override
-    public int batchUpdateOrderState(List<Long> orderIdList,  OrderEnum.State sourceState,  OrderEnum.State toState) {
+    public int batchUpdateOrderState(List<String> orderNoList,  OrderEnum.State sourceState,  OrderEnum.State toState, OrderExt orderExt) {
+        OrderDO orderDO = new OrderDO();
+        if (toState == OrderEnum.State.CLOSE) {
+            orderDO.setCloseTime(LocalDateTime.now());
+        }
         OrderQuery query = new OrderQuery();
-        query.setIdList(orderIdList);
+        query.setOrderNoList(orderNoList);
         query.setOrderState(sourceState);
         return orderDAO.update(orderDAO.getLw(query).toUpdate()
+                .notEmptySet(OrderDO::getCloseTime, orderDO.getCloseTime())
+                .notEmptySet(OrderDO::getOrderExt, orderExt)
                 .append(OrderDO::getOrderStateLog, toState)
                 .set(OrderDO::getOrderState,toState)
-        );
-    }
-
-    @Override
-    public int batchUpdateSpuOrderState(List<Long> spuOrderIdList,  OrderEnum.State sourceState,  OrderEnum.State toState) {
-        SpuOrderDO spuOrderDO = new SpuOrderDO();
-        LocalDateTime now = LocalDateTime.now();
-        if (toState == OrderEnum.State.WAIT_RECEIVE) {
-            spuOrderDO.setDeliveredTime(now);
-        } else if (toState == OrderEnum.State.DOWN_RECEIVE) {
-            spuOrderDO.setReceiveTime(now);
-        } else if (toState == OrderEnum.State.CLOSE) {
-            spuOrderDO.setCloseTime(now);
-        }
-        SpuOrderQuery query = new SpuOrderQuery();
-        query.setIdList(spuOrderIdList);
-        query.setOrderState(sourceState);
-        return spuOrderDAO.update(spuOrderDAO.getLw(query).toUpdate()
-                .notEmptySet(SpuOrderDO::getDeliveredTime, spuOrderDO.getDeliveredTime())
-                .notEmptySet(SpuOrderDO::getReceiveTime, spuOrderDO.getReceiveTime())
-                .notEmptySet(SpuOrderDO::getCloseTime, spuOrderDO.getReceiveTime())
-                .append(SpuOrderDO::getOrderStateLog, toState)
-                .set(SpuOrderDO::getOrderState,toState)
-        );
-    }
-
-    @Override
-    public int batchUpdateSpuOrderStateByOrderId(List<Long> orderIdList, OrderEnum.State sourceState, OrderEnum.State toState, String spuOrderExt) {
-        SpuOrderQuery query = new SpuOrderQuery();
-        query.setOrderIdList(orderIdList);
-        query.setOrderState(sourceState);
-        return spuOrderDAO.update(spuOrderDAO.getLw(query).toUpdate()
-                .notEmptySet(SpuOrderDO::getSpuOrderExt,spuOrderExt)
-                .append(SpuOrderDO::getOrderStateLog, toState)
-                .set(SpuOrderDO::getOrderState,toState)
         );
     }
 
@@ -197,9 +239,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public int batchUpdateSkuOrderState(List<Long> skuOrderIdList, OrderEnum.State from, OrderEnum.State to, SkuOrderCommand skuOrderCommand) {
+    public int batchUpdateSkuOrderState(List<String> skuOrderNoList, OrderEnum.State from, OrderEnum.State to, SkuOrderCommand skuOrderCommand) {
         SkuOrderQuery query = new SkuOrderQuery();
-        query.setIdList(skuOrderIdList);
+        query.setSkuOrderNoList(skuOrderNoList);
         query.setOrderState(from);
         return skuOrderDAO.update(skuOrderDAO.getLw(query).toUpdate()
                 .notEmptySet(SkuOrderDO::getDeliveredTime, skuOrderCommand.getDeliveredTime())
@@ -210,9 +252,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public int batchUpdateSkuOrderStateByOrderId(List<Long> orderIdList, OrderEnum.State sourceState, OrderEnum.State toState) {
+    public int batchUpdateSkuOrderState(List<String> orderNoList, OrderEnum.State sourceState, OrderEnum.State toState) {
         SkuOrderQuery query = new SkuOrderQuery();
-        query.setOrderIdList(orderIdList);
+        query.setOrderNoList(orderNoList);
         query.setOrderState(sourceState);
         return skuOrderDAO.update(skuOrderDAO.getLw(query).toUpdate()
                 .append(SkuOrderDO::getOrderStateLog, toState)
@@ -220,51 +262,43 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
         );
     }
 
+
     @Override
-    public List<OrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList) {
-        SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        spuOrderQuery.setChannelId(accountId);
-        spuOrderQuery.setIdList(spuOrderIdList);
-        return list(spuOrderDAO, spuOrderDAO.getLw(spuOrderQuery), OrderStateVO.class);
+    public List<OrderStateVO> accountOrderState(Long accountId, List<Long> orderIdList) {
+        OrderQuery orderQuery = new OrderQuery();
+        orderQuery.setChannelId(accountId);
+        orderQuery.setIdList(orderIdList);
+        return list(orderDAO, orderDAO.getLw(orderQuery), OrderStateVO.class);
     }
 
     @Override
-    public SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId) {
-        SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        spuOrderQuery.setOrderId(orderId);
-        spuOrderQuery.setSpuId(spuId);
-        return getOne(spuOrderDAO, spuOrderDAO.getLw(spuOrderQuery), SpuOrderRelationVO.class);
+    public OrderRelationVO orderRelation(Long orderId, Long spuId) {
+        OrderQuery orderQuery = new OrderQuery();
+        orderQuery.setIdList(Collections.singletonList(orderId));
+        return getOne(orderDAO, orderDAO.getLw(orderQuery), OrderRelationVO.class);
     }
 
     @Override
-    public List<OrderStateCheckDTO> checkSpuOrderState(List<Long> orderId) {
-        if (ObjectUtil.isEmpty(orderId)) {
-            return new ArrayList<>();
-        }
-        return spuOrderDAO.checkSpuOrderState(orderId);
+    public List<OrderStateCheckDTO> checkOrderState(List<String> orderNoList) {
+        return orderDAO.checkOrderState(orderNoList);
     }
 
     @Override
-    public List<OrderStateCheckDTO> checkOrderState(List<Long> orderId) {
-        return orderDAO.checkOrderState(orderId);
-    }
-
-    @Override
-    public List<Long> orderIdBySpuSkuOrderId(List<Long> spuOrderId, List<Long> skuOrderId) {
+    public List<String> orderNoBySkuOrderNo(List<String> skuOrderNoList) {
         SkuOrderQuery query = new SkuOrderQuery();
-        query.setIdList(skuOrderId);
-        query.setSpuOrderIdList(spuOrderId);
+        query.setSkuOrderNoList(skuOrderNoList);
+        // 子表关联键为 order_no, 需再回查交易单主键; 单号为空时不可放行空条件查询(否则捞全表 order)
         return CollUtil.distinct(
-                listOneField(skuOrderDAO, skuOrderDAO.getLw(query), SkuOrderDO::getOrderId)
+                listOneField(skuOrderDAO, skuOrderDAO.getLw(query), SkuOrderDO::getOrderNo)
         );
     }
 
     @Override
-    public int skuOrderEditForRefundPass(List<Long> skuIdList) {
-        if (CollUtil.isEmpty(skuIdList)) {
+    public int skuOrderEditForRefundPass(List<String> skuOrderNoList) {
+        if (CollUtil.isEmpty(skuOrderNoList)) {
             return 0;
         }
-        return skuOrderDAO.skuOrderEditForRefundPass(skuIdList, OrderEnum.State.CLOSE);
+        return skuOrderDAO.skuOrderEditForRefundPass(skuOrderNoList, OrderEnum.State.CLOSE);
     }
 
     @Override
@@ -282,28 +316,20 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public int skuOrderEditForRefundClose(List<Long> idList) {
-        if (CollUtil.isEmpty(idList)) {
+    public int skuOrderEditForRefundClose(List<String> skuOrderNoList) {
+        if (CollUtil.isEmpty(skuOrderNoList)) {
             return 0;
         }
         SkuOrderQuery query = new SkuOrderQuery();
-        query.setIdList(idList);
+        query.setSkuOrderNoList(skuOrderNoList);
         return skuOrderDAO.update(skuOrderDAO.getLw(query).toUpdate()
                 .set(SkuOrderDO::getRefundingCount,0)
         );
     }
 
     @Override
-    public int cutSkuOrderRefundingNumber(Long spuOrderId, List<Long> skuIdList) {
-        if (CollUtil.isEmpty(skuIdList)) {
-            return 0;
-        }
-        return spuOrderDAO.cutSkuOrderRefundingNumber(spuOrderId, skuIdList);
-    }
-
-    @Override
     public int skuOrderSave(SkuOrderDTO skuOrderDTO, SkuOrderQuery skuOrderQuery) {
-        SkuOrderDO skuOrderDO = TransferUtils.transfer(skuOrderDTO, SkuOrderDO.class);
+        SkuOrderDO skuOrderDO = toDO(skuOrderDTO);
         if (skuOrderQuery != null) {
             return skuOrderDAO.update(skuOrderDO, skuOrderDAO.getLw(skuOrderQuery));
         }else {
@@ -313,25 +339,8 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
 
     @Override
     public int skuOrderSave(List<SkuOrderDTO> skuList) {
-        List<SkuOrderDO> skuOrderList = TransferUtils.transfers(skuList, SkuOrderDO.class);
+        List<SkuOrderDO> skuOrderList = skuList.stream().map(OrderRepositoryImpl::toDO).collect(Collectors.toList());
         List<BatchResult> result = skuOrderDAO.insertOrUpdate(skuOrderList);
-        return 1;
-    }
-
-    @Override
-    public int spuOrderSave(SpuOrderDTO spuOrderDTO, SpuOrderQuery spuOrderQuery) {
-        SpuOrderDO spuOrderDO = TransferUtils.transfer(spuOrderDTO, SpuOrderDO.class);
-        if (spuOrderQuery != null) {
-            return spuOrderDAO.update(spuOrderDO, spuOrderDAO.getLw(spuOrderQuery));
-        }else {
-            return spuOrderDAO.insert(spuOrderDO);
-        }
-    }
-
-    @Override
-    public int spuOrderSave(List<SpuOrderDTO> spuList) {
-        List<SpuOrderDO> spuOrderList = TransferUtils.transfers(spuList, SpuOrderDO.class);
-        List<BatchResult> result = spuOrderDAO.insertOrUpdate(spuOrderList);
         return 1;
     }
 
@@ -346,9 +355,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public List<AlreadyDeliverRes> getAlreadyDeliverResList(Long spuOrderId, List<Long> skuIds) {
+    public List<AlreadyDeliverRes> getAlreadyDeliverResList(String orderNo, List<Long> skuIds) {
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setSpuOrderId(spuOrderId);
+        skuOrderQuery.setOrderNo(orderNo);
         skuOrderQuery.setSkuIdList(skuIds);
         return list(skuOrderDAO, skuOrderDAO.getLw(skuOrderQuery), AlreadyDeliverRes.class);
     }
@@ -361,32 +370,24 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public int updateSkuDeliverCount(DeliverItemVO deliverItem) {
-        return skuOrderDAO.updateSkuDeliverCount(deliverItem.getSpuOrderId(), deliverItem.getSkuId(), deliverItem.getCount());
+    public int updateSkuDeliverCount(String orderNo, DeliverItemVO deliverItem) {
+        return skuOrderDAO.updateSkuDeliverCount(orderNo, deliverItem.getSkuId(), deliverItem.getCount());
     }
 
     @Override
-    public List<Long> querySkuOrderIdList(Long spuOrderId, List<Long> skuIdList) {
+    public List<Long> querySkuOrderIdList(String orderNo, List<Long> skuIdList) {
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setSpuOrderId(spuOrderId);
+        skuOrderQuery.setOrderNo(orderNo);
         skuOrderQuery.setSkuIdList(skuIdList);
-        return skuOrderDAO.selectList(skuOrderDAO.getLw(skuOrderQuery)).stream()
-                .map(SkuOrderDO::getId)
-                .collect(Collectors.toList());
+        return listOneField(skuOrderDAO, skuOrderDAO.getLw(skuOrderQuery), SkuOrderDO::getId);
     }
 
     @Override
-    public Long spuOrderIdByOrderSku(Long orderId, Long skuId) {
+    public List<String> querySkuOrderNoList(String orderNo, List<Long> skuIdList) {
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setOrderId(orderId);
-        skuOrderQuery.setSkuId(skuId);
-        return findOneField(skuOrderDAO, skuOrderDAO.getLw(skuOrderQuery), SkuOrderDO::getSpuOrderId);
-    }
-
-    @Override
-    public SpuOrderDTO spuOrder(Long spuOrderId) {
-        SpuOrderDO spuOrderDO = spuOrderDAO.selectById(spuOrderId);
-        return TransferUtils.transfer(spuOrderDO, SpuOrderDTO.class);
+        skuOrderQuery.setOrderNo(orderNo);
+        skuOrderQuery.setSkuIdList(skuIdList);
+        return listOneField(skuOrderDAO, skuOrderDAO.getLw(skuOrderQuery), SkuOrderDO::getOrderNo);
     }
 
     @Override
@@ -404,39 +405,39 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     public List<SkuOrderVO> querySkuOrderByOrderId(Long orderId, List<Long> skuIdList) {
         SkuOrderQuery query = new SkuOrderQuery();
         List<SkuOrderDO> list = skuOrderDAO.selectList(skuOrderDAO.getLw(query));
-        return TransferUtils.transfers(list, SkuOrderVO.class);
+        return list.stream().map(OrderRepositoryImpl::toVO).collect(Collectors.toList());
     }
 
     @Override
-    public List<SpuOrderItemExcelVO> querySpuOrderItemExcelVO(SpuOrderQuery spuOrderQuery) {
-        // 纯 Java 编排: 先按 SPU 条件取 spu_order, 再按 spu_order_id 取 sku_order, 内存组装
-        // 不写联表 SQL —— Base sku_order/spu_order 手迁 XML 用 *_no 列, 与 MP 实体 *_id 映射矛盾, 物理列口径未定
+    public List<OrderItemExcelVO> queryOrderItemExcelVO(OrderQuery orderQuery) {
+        // 纯 Java 编排: 先按条件取 order, 再按 order_no 取 sku_order, 内存组装
+        // spu 字段(spuName/attribute)取自 sku_order 内嵌 OrderSkuInfo/skuSaleAttribute; 主单信息(outOrderNo/ship/remark)取自 order
         // 二次加工(orderState 转义 / attribute 解析 / ship 拆分 / price 分转元)由 domain 层完成
-        List<SpuOrderDO> spuOrderDOList = spuOrderDAO.selectList(spuOrderDAO.getLw(spuOrderQuery));
-        if (CollUtil.isEmpty(spuOrderDOList)) {
+        List<OrderDO> orderDOList = orderDAO.selectList(orderDAO.getLw(orderQuery));
+        if (CollUtil.isEmpty(orderDOList)) {
             return Collections.emptyList();
         }
-        Map<Long, SpuOrderDO> spuOrderMap = spuOrderDOList.stream()
-                .collect(Collectors.toMap(SpuOrderDO::getId, Function.identity()));
+        Map<String, OrderDO> orderMap = orderDOList.stream()
+                .collect(Collectors.toMap(OrderDO::getOrderNo, Function.identity()));
         SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setSpuOrderIdList(new ArrayList<>(spuOrderMap.keySet()));
+        skuOrderQuery.setOrderNoList(new ArrayList<>(orderMap.keySet()));
         List<SkuOrderDO> skuOrderDOList = skuOrderDAO.selectList(skuOrderDAO.getLw(skuOrderQuery));
-        List<SpuOrderItemExcelVO> result = new ArrayList<>();
+        List<OrderItemExcelVO> result = new ArrayList<>();
         for (SkuOrderDO skuOrder : skuOrderDOList) {
-            SpuOrderDO spuOrder = spuOrderMap.get(skuOrder.getSpuOrderId());
-            SpuOrderItemExcelVO vo = new SpuOrderItemExcelVO();
-            vo.setId(skuOrder.getSpuOrderId() == null ? null : String.valueOf(skuOrder.getSpuOrderId()));
+            OrderDO order = orderMap.get(skuOrder.getOrderNo());
+            OrderItemExcelVO vo = new OrderItemExcelVO();
+            vo.setId(skuOrder.getOrderNo());
             vo.setOrderState(skuOrder.getOrderState() == null ? null : String.valueOf(skuOrder.getOrderState()));
-            vo.setSpuName(skuOrder.getSpuName());
+            vo.setSpuName(skuOrder.getOrderSkuInfo() == null ? null : skuOrder.getOrderSkuInfo().getSpuName());
             vo.setAttribute(skuOrder.getSkuSaleAttribute());
             vo.setSkuId(skuOrder.getSkuId() == null ? null : String.valueOf(skuOrder.getSkuId()));
-            vo.setPrice(skuOrder.getSkuSupplierPrice() == null ? null : String.valueOf(skuOrder.getSkuSupplierPrice()));
+            vo.setPrice(skuOrder.getSupplierPrice() == null ? null : String.valueOf(skuOrder.getSupplierPrice()));
             vo.setCount(skuOrder.getCount() == null ? null : String.valueOf(skuOrder.getCount()));
             vo.setRefundingCount(skuOrder.getRefundingCount());
-            if (spuOrder != null) {
-                vo.setOutOrderNo(spuOrder.getOutOrderNo());
-                vo.setShipVO(spuOrder.getShipVO());
-                vo.setRemark(spuOrder.getRemark());
+            if (order != null) {
+                vo.setOutOrderNo(order.getOutOrderNo());
+                vo.setShipVO(order.getShipVO());
+                vo.setRemark(order.getRemark());
             }
             result.add(vo);
         }
@@ -449,13 +450,13 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public Integer spuOrderCount(SpuOrderQuery spuOrderQuery) {
-        return Math.toIntExact(spuOrderDAO.selectCount(spuOrderDAO.getLw(spuOrderQuery)));
+    public Integer orderCount(OrderQuery orderQuery) {
+        return Math.toIntExact(orderDAO.selectCount(orderDAO.getLw(orderQuery)));
     }
 
     @Override
-    public Money spuOrderSumAmount(SpuOrderQuery spuOrderQuery) {
-        return listOneField(spuOrderDAO, spuOrderDAO.getLw(spuOrderQuery), SpuOrderDO::getTotalAmount).stream()
+    public Money orderSumAmount(OrderQuery orderQuery) {
+        return listOneField(orderDAO, orderDAO.getLw(orderQuery), OrderDO::getTotalAmount).stream()
                 .reduce(Money.ZERO, Money::add);
     }
 
@@ -463,7 +464,7 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     public List<GroupCountRes> orderCountComplete(TimeQuery timeQuery) {
         // 迁移: 原 ScmUtil.groupCountRes2Complete(依赖 new-scm DateSplitUtils) 内联至 infra
         // 按 groupType(0 小时/1 天) + groupCount 切片, 用已有统计填桶, 空桶补 0
-        List<GroupCountRes> groupCountRes = spuOrderDAO.orderCount(timeQuery);
+        List<GroupCountRes> groupCountRes = orderDAO.orderCount(timeQuery);
         Map<String, GroupCountRes> groupCountResMap = groupCountRes.stream()
                 .collect(Collectors.toMap(GroupCountRes::getTransDay, Function.identity(), (a, b) -> a));
         int groupCount = timeQuery.getGroupCount() == null ? 1 : timeQuery.getGroupCount();
@@ -488,29 +489,23 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public void updateOrderShip(Long orderId, ShipVO shipVo) {
+    public void updateOrderShip(String orderNo, ShipVO shipVo) {
         OrderDO orderDO = new OrderDO();
-        orderDO.setId(orderId);
+        // FIXME
+        orderDO.setOrderNo(orderNo);
         orderDO.setShipVO(shipVo);
         orderDAO.updateById(orderDO);
     }
 
     @Override
-    public void updateSpuOrderShip(Long orderId, ShipVO shipVo) {
-        SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        spuOrderQuery.setOrderId(orderId);
-        spuOrderDAO.update(spuOrderDAO.getLw(spuOrderQuery).toUpdate().set(SpuOrderDO::getShipVO, shipVo));
-    }
-
-    @Override
-    public List<SpuOrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime) {
+    public List<OrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime) {
         // 需要新增待支付时间，禁止使用updateTime不明动作更新时间来筛选 TODO
-        SpuOrderQuery spuOrderQuery = new SpuOrderQuery();
-        spuOrderQuery.setOrderState(orderState);
-        spuOrderQuery.initSortField("updateTime", true);
-//        spuOrderQuery.setUpdateTime(updateTime);
-        List<SpuOrderDO> spuOrderDOS = spuOrderDAO.selectList(spuOrderDAO.getLw(spuOrderQuery));
-        return TransferUtils.transfers(spuOrderDOS, SpuOrderDTO.class);
+        OrderQuery orderQuery = new OrderQuery();
+        orderQuery.setOrderState(orderState);
+        orderQuery.initSortField("updateTime", true);
+//        orderQuery.setUpdateTime(updateTime);
+        List<OrderDO> orderDOS = orderDAO.selectList(orderDAO.getLw(orderQuery));
+        return TransferUtils.transfers(orderDOS, OrderDTO.class);
     }
 
     @Override
@@ -520,9 +515,9 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public List<DeliverVO> deliverListBySpuOrderId(Long spuOrderId) {
+    public List<DeliverVO> deliverListByOrderNo(String orderNo) {
         DeliverQuery deliverQuery = new DeliverQuery();
-        deliverQuery.setSpuOrderIdList(Collections.singletonList(spuOrderId));
+        deliverQuery.setOrderNo(orderNo);
         List<DeliverDO> list = deliverDAO.selectList(deliverDAO.getLw(deliverQuery));
         return TransferUtils.transfers(list, DeliverVO.class);
     }
@@ -580,5 +575,12 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     public Page<OrderStateRecordEntity> recordPage(OrderStateRecordQuery query) {
         Page<OrderStateRecordDO> page = orderStateRecordDAO.selectPage(RepositorySupport.page(query),orderStateRecordDAO.getLw(query));
         return TransferUtils.transferPage(page,OrderStateRecordEntity.class);
+    }
+
+    @Override
+    public List<String> orderNoList(OrderQuery orderQuery) {
+        return orderDAO.selectList(orderDAO.getLw(orderQuery)).stream()
+                .map(OrderDO::getOrderNo)
+                .collect(Collectors.toList());
     }
 }

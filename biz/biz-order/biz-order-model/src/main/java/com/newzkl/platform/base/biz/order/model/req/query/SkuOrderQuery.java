@@ -30,22 +30,29 @@ public class SkuOrderQuery extends BizPageQuery {
      * 小于收货时间
      */
     private LocalDateTime lessReceiveTime;
-
     /**
-     * 订单ID集合
+     * 交易单号集合
      */
-    private List<Long> orderIdList;
+    private List<String> skuOrderNoList;
 
-    public void setOrderId(Long orderId) {
-        this.orderIdList = doWrapperList(orderIdList, orderId);
+    public void setSkuOrderNo(String skuOrderNo) {
+        this.skuOrderNoList = doWrapperList(skuOrderNoList, skuOrderNo);
     }
     /**
-     * SPU订单ID
+     * 交易单号集合
      */
-    private List<Long> spuOrderIdList;
+    private List<String> orderNoList;
 
-    public void setSpuOrderId(Long spuOrderId) {
-        this.spuOrderIdList = doWrapperList(spuOrderIdList, spuOrderId);
+    public void setOrderNo(String orderNo) {
+        this.orderNoList = doWrapperList(orderNoList, orderNo);
+    }
+    /**
+     * SPU_ID集合
+     */
+    private List<Long> spuIdList;
+
+    public void setSpuId(Long spuId) {
+        this.spuIdList = doWrapperList(spuIdList, spuId);
     }
 
     /**

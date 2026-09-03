@@ -11,7 +11,10 @@ import lombok.Data;
  */
 @Data
 public class FreightSettleOrderWaitCommand {
-    private Long spuOrderId;
+    /**
+     * 交易单号
+     */
+    private String orderNo;
     private Long spuId;
     /**
      * 供应商ID

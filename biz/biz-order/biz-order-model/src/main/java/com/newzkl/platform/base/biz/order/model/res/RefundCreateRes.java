@@ -14,9 +14,9 @@ import java.util.List;
 public class RefundCreateRes {
     private Long refundId;
     /**
-     * 申请的sku订单id集合
+     * 申请的sku订单号集合
      */
-    private List<Long> skuOrderIdList;
+    private List<String> skuOrderNoList;
 
     private RefundDTO refund;
 }

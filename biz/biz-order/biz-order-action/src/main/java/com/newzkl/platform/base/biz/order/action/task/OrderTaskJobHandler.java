@@ -16,15 +16,17 @@ import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
 import com.newzkl.platform.base.biz.order.domain.service.RefundDomain;
+import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.RefundDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SpuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.common.ddd.facade.OrderConfigVO;
 import com.newzkl.platform.base.biz.order.model.vo.FreightExt;
+import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.RefundEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
@@ -91,8 +93,8 @@ public class OrderTaskJobHandler {
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.setOrderState(OrderEnum.State.SENDING);
         orderQuery.setLessCreateTime(offsetLocalDate);
-        List<Long> orderIdList = queryService.orderIdList(orderQuery);
-        orderDomain.sendOrder(orderIdList);
+        List<String> orderNoList = queryService.orderNoList(orderQuery);
+        orderDomain.sendOrder(orderNoList);
         log.info("自动派发订单");
         return new ReturnT<>(SUCCESS);
     }
@@ -117,11 +119,12 @@ public class OrderTaskJobHandler {
         orderQuery.setLessDeliverTime(offsetLocalDate);
         orderQuery.setRefundingCount(0);
         List<SkuOrderVO> skuOrderVOList = queryService.skuOrderVOList(orderQuery).getRecords();
-        Map<Long, List<SkuOrderVO>> skuOrderVOMap = skuOrderVOList.stream().collect(Collectors.groupingBy(SkuOrderVO::getSpuOrderId));
-        for (Long spuOrderId : skuOrderVOMap.keySet()) {
-            List<Long> skuOrderIdList = skuOrderVOMap.get(spuOrderId).stream().map(SkuOrderVO::getId).collect(Collectors.toList());
-            if(ObjectUtil.isNotEmpty(skuOrderIdList)){
-                orderService.receiveSkuOrder(spuOrderId, skuOrderIdList);
+        // SpuOrder 层折叠 + 子表关联键改 order_no: 按交易单号分组, 再批量反查交易单主键
+        Map<String, List<SkuOrderVO>> skuOrderVOMap = skuOrderVOList.stream().collect(Collectors.groupingBy(SkuOrderVO::getOrderNo));
+        for (Map.Entry<String, List<SkuOrderVO>> entry : skuOrderVOMap.entrySet()) {
+            List<String> skuOrderNoList = entry.getValue().stream().map(SkuOrderVO::getSkuOrderNo).collect(Collectors.toList());
+            if(ObjectUtil.isNotEmpty(skuOrderNoList)){
+                orderService.receiveSkuOrder(entry.getKey(), skuOrderNoList);
             }
         }
         log.info("自动收货订单");
@@ -148,12 +151,12 @@ public class OrderTaskJobHandler {
         orderQuery.setLessReceiveTime(offsetLocalDate);
         orderQuery.setRefundingCount(0);
         List<SkuOrderVO> skuOrderVOList = queryService.skuOrderVOList(orderQuery).getRecords();
-        //收货订单, 按SPU订单分组
-        Map<Long, List<SkuOrderVO>> skuOrderVOMap = skuOrderVOList.stream().collect(Collectors.groupingBy(SkuOrderVO::getSpuOrderId));
-        for (Long spuOrderId : skuOrderVOMap.keySet()) {
-            List<Long> skuOrderIdList = skuOrderVOMap.get(spuOrderId).stream().map(SkuOrderVO::getId).collect(Collectors.toList());
-            if(ObjectUtil.isNotEmpty(skuOrderIdList)){
-                orderService.completeSkuOrder(spuOrderId, skuOrderIdList);
+        // SpuOrder 层折叠 + 子表关联键改 order_no: 按交易单号分组, 再批量反查交易单主键
+        Map<String, List<SkuOrderVO>> skuOrderVOMap = skuOrderVOList.stream().collect(Collectors.groupingBy(SkuOrderVO::getOrderNo));
+        for (Map.Entry<String, List<SkuOrderVO>> entry : skuOrderVOMap.entrySet()) {
+            List<String> skuOrderNoList = entry.getValue().stream().map(SkuOrderVO::getSkuOrderNo).collect(Collectors.toList());
+            if(ObjectUtil.isNotEmpty(skuOrderNoList)){
+                orderService.completeSkuOrder(entry.getKey(), skuOrderNoList);
             }
         }
         log.info("自动完成订单");
@@ -173,13 +176,13 @@ public class OrderTaskJobHandler {
         }else {//生产环境5天
             oneDayAgo = LocalDateTime.now().minusDays(5);
         }
-        List<SpuOrderDTO> spuOrders = orderDomain.listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State.CHANNEL_WAIT_PAY, oneDayAgo);
-        if (CollUtil.isEmpty(spuOrders)){
+        List<OrderDTO> orders = orderDomain.listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State.CHANNEL_WAIT_PAY, oneDayAgo);
+        if (CollUtil.isEmpty(orders)){
             log.info("渠道商没有待付款且超时的订单");
             return new ReturnT<>(SUCCESS);
         }
-        for (SpuOrderDTO spuOrder : spuOrders) {
-            orderDomain.channelCancelOrder(spuOrder.getId(),"渠道商采购金不足，超时未支付订单关闭！");
+        for (OrderDTO order : orders) {
+            orderDomain.channelCancelOrder(order.getOrderNo(),"渠道商采购金不足，超时未支付订单关闭！");
         }
         return new ReturnT<>(SUCCESS);
     }
@@ -209,9 +212,9 @@ public class OrderTaskJobHandler {
         List<RefundDTO> refundVOList = refundRepository.page(refundQuery).getRecords();
         for (RefundDTO refundVO : refundVOList) {
             if(RefundEnum.State.CHANNEL_WAIT == refundVO.getRefundState()){
-                refundService.channelAudit(refundVO.getId(),null , CommonEnum.YesOrNo.YES, "系统自动审核", true);
+                refundService.audit(AccountEnum.Identity.CHANNEL, refundVO.getId(), null, CommonEnum.YesOrNo.YES, "系统自动审核", true);
             }else if(RefundEnum.State.SUPPLIER_WAIT == refundVO.getRefundState()){
-                refundService.supplierAudit(refundVO.getId(), CommonEnum.YesOrNo.YES, true);
+                refundService.audit(AccountEnum.Identity.SUPPLIER, refundVO.getId(), null, CommonEnum.YesOrNo.YES, null, true);
             }else if(RefundEnum.State.RECEIVE_WAIT == refundVO.getRefundState()){
                 refundDomain.confirmRefundFreight(refundVO.getId());
                 localMessageApi.sendRefundOperationRecord(refundVO, RefundEnum.State.RECEIVE_WAIT, RefundEnum.State.RECEIVE_WAIT, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum.SUPPLIER_CONFIRM_RECEIPT);

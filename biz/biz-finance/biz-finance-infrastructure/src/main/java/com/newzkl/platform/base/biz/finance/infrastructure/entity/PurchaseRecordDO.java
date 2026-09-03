@@ -38,7 +38,7 @@ public class PurchaseRecordDO extends BaseDO {
      * 交易单号
      */
     @Index
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 订单号

@@ -21,10 +21,11 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 public class OrderStateRecordDO extends BaseDO {
 
     /**
-     * 订单主键ID
+     * 交易单号
      */
     @Index
-    private Long orderId;
+    @OldColumnName("order_id")
+    private String orderNo;
 
     /**
      * SPU订单ID

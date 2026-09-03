@@ -16,5 +16,5 @@ public interface NotifyApi {
      * @param orderId    订单id
      * @return 账户基础信息, 无则 null
      */
-    void paySuccess(Long orderId);
+    void paySuccess(String orderId);
 }

@@ -17,6 +17,7 @@ public interface RefundDAO extends BaseMapper<RefundDO> {
     default BaseLambdaQueryWrapper<RefundDO> getLw(RefundQuery query){
         return new BaseLambdaQueryWrapper<RefundDO>()
                 .notEmptyIn(RefundDO::getId, query.getIdList())
+                .notEmptyEq(RefundDO::getOrderNo, query.getOrderNo())
                 .notEmptyEq(RefundDO::getSpuOrderId, query.getSpuOrderId())
                 .notEmptyEq(RefundDO::getMemberId, query.getMemberId())
                 .notEmptyEq(RefundDO::getOrderType, query.getOrderType())

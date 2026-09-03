@@ -53,7 +53,12 @@ public class LocalMessageApiImpl implements LocalMessageApi {
 
     @Override
     public void sendRefundPassMessage(RefundDTO refund) {
-        MQUtil.send(MQ.Tag.REFUND_PASS, TransferUtils.transfer(refund, RefundPassEvent.class));
+        RefundPassEvent refundPassEvent = TransferUtils.transfer(refund, RefundPassEvent.class);
+        // RefundDTO 关联键已改 String orderNo, 与事件的 Long orderId 不同名故不会自动映射;
+        // 下游 BI 事实表(FactRefundDO/FactOrderDO/FactPaymentDO)统一按订单主键 Long 建外键,
+        // 层折叠后 spuOrderId 即 order 主键(RefundDTO:228 setSpuOrderId(orderVO.getId())), 直接取用
+        refundPassEvent.setOrderId(refund.getSpuOrderId());
+        MQUtil.send(MQ.Tag.REFUND_PASS, refundPassEvent);
     }
 
     @Override
@@ -63,16 +68,17 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
-    public void sendOrderNewRecordEvent(List<SpuOrderDTO> spuOrderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, AccountEnum.Identity operatorRoleId) {
-        spuOrderList.forEach(spuOrder -> {
+    public void sendOrderNewRecordEvent(List<OrderDTO> orderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, AccountEnum.Identity operatorRoleId) {
+        orderList.forEach(order -> {
             OrderStateRecordRPC orderStateRecordRPC = new OrderStateRecordRPC();
-            orderStateRecordRPC.setOrderId(spuOrder.getOrderId());
-            orderStateRecordRPC.setSpuOrderId(spuOrder.getId());
+            orderStateRecordRPC.setOrderNo(order.getOrderNo());
+            // SpuOrder 层折叠: spu_order_id 列名保留(归 slug26), 值同 orderId
+            orderStateRecordRPC.setSpuOrderId(order.getId());
             orderStateRecordRPC.setBeforeOrderState(beforeOrderState);
             orderStateRecordRPC.setBeforeStateDesc(beforeOrderState.getValue());
             orderStateRecordRPC.setAfterOrderState(afterOrderState);
             orderStateRecordRPC.setAfterStateDesc(afterOrderState.getValue());
-            orderStateRecordRPC.setOrdererId(spuOrder.getAccountId());
+            orderStateRecordRPC.setOrdererId(order.getAccountId());
             orderStateRecordRPC.setOperatorId(operatorId);
             orderStateRecordRPC.setOperatorRoleId(operatorRoleId);
             orderStateRecordRPC.setRoleDesc(operatorRoleId.getValue());

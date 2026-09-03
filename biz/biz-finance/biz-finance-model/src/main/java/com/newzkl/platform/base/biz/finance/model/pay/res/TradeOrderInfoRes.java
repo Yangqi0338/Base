@@ -16,9 +16,14 @@ import java.time.LocalDateTime;
 public class TradeOrderInfoRes implements Serializable {
 
     /**
+     * 主键ID
+     */
+    private Long id;
+
+    /**
      * 交易单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 客户id

@@ -13,9 +13,9 @@ public class SettleRefundExcelVO {
     @ExcelProperty("售后单")
     @ColumnWidth(value = 20)
     private String refundId;
-    @ExcelProperty("关联订单")
+    @ExcelProperty("关联订单号")
     @ColumnWidth(value = 15)
-    private String spuOrderId;
+    private String orderNo;
     @ExcelProperty("售后总额")
     @ColumnWidth(value = 15)
     private String orderMoney;

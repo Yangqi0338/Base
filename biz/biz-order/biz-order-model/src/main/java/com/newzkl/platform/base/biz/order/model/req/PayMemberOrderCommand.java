@@ -11,14 +11,14 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class PayMemberOrderCommand {
     /**
-     * 订单id
+     * 订单号
      */
-    @NotNull(message = "订单id不能为空")
-    private Long orderId;
+    @NotNull
+    private String orderNo;
 
     /**
      * 支付类型
      */
-    @NotNull(message = "paymentType不能为空")
+    @NotNull
     private PaymentEnum.PayType paymentType;
 }

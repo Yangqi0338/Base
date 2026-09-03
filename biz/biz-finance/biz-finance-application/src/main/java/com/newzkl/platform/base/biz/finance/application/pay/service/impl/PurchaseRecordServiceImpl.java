@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.finance.application.pay.service.impl;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.pay.service.PurchaseRecordService;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
@@ -35,9 +36,9 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
 
     @Override
     public boolean seatPackageSaveOrUpdate(PurchaseRecordReq saveCommand) {
-        Long tradeNo = saveCommand.getTradeNo();
+        String tradeNo = saveCommand.getTradeNo();
 
-        if (tradeNo != null && tradeNo != 0) {
+        if (StrUtil.isNotBlank(tradeNo)) {
             PurchaseRecordQuery query = new PurchaseRecordQuery();
             query.setTradeNo(tradeNo);
             query.setType(PurseEnum.PurchaseRecordType.SEAT_PACKAGE);
@@ -61,7 +62,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         // 若是采购金抵扣
         if (PaymentEnum.PayType.PURCHASE == payMode) {
             // 减少采购金额度
-            AccountPurseAlterRecordReq recordReq = buildChannelOperatorPurseAlterRecord(accountId, tradeNo, payAmount);
+            AccountPurseAlterRecordReq recordReq = buildChannelOperatorPurseAlterRecord(accountId, saveCommand.getId(), payAmount);
             boolean subSuccess = accountPurseService.subAmount(recordReq);
             if (!subSuccess) {
                 // 采购金不充足
@@ -70,7 +71,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
             }
         }
 
-        AccountPurseAlterRecordReq recordReq = buildChannelGoodsSeatAlterRecord(accountId, tradeNo, purchaseNum);
+        AccountPurseAlterRecordReq recordReq = buildChannelGoodsSeatAlterRecord(accountId, saveCommand.getId(), purchaseNum);
         accountPurseService.addAmount(recordReq);
 
         // 生成购买记录
@@ -83,21 +84,21 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
 
     }
 
-    private AccountPurseAlterRecordReq buildChannelOperatorPurseAlterRecord(Long accountId, Long tradeNo, Money totalFee) {
+    private AccountPurseAlterRecordReq buildChannelOperatorPurseAlterRecord(Long accountId, Long joinRecordId, Money totalFee) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(accountId);
         req.setPurseType(PurseEnum.Type.PURCHASE);
         req.setAccountType(PurseEnum.User.CHANNEL);
         req.setAlterType(PurseEnum.AlterType.GOODS_POSITION_BUY);
         req.setAmount(totalFee);
-        req.setJoinRecordId(tradeNo);
+        req.setJoinRecordId(joinRecordId);
         return req;
     }
 
     /**
      * 供应商商品位变动记录
      */
-    private AccountPurseAlterRecordReq buildChannelGoodsSeatAlterRecord(Long accountId, Long tradeNo, Integer num) {
+    private AccountPurseAlterRecordReq buildChannelGoodsSeatAlterRecord(Long accountId, Long joinRecordId, Integer num) {
         AccountPurseAlterRecordReq req = new AccountPurseAlterRecordReq();
         req.setAccountId(accountId);
         req.setPurseType(PurseEnum.Type.GOODS_SEAT);
@@ -105,7 +106,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         req.setAlterType(PurseEnum.AlterType.GOODS_POSITION_BUY);
         // num 为席位数量, 存入 Money 型 amount 字段 (按分数值等值存放)
         req.setAmount(Money.of(num));
-        req.setJoinRecordId(tradeNo);
+        req.setJoinRecordId(joinRecordId);
         return req;
     }
 }

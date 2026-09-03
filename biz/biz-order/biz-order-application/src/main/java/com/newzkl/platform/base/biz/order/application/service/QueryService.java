@@ -3,11 +3,10 @@ package com.newzkl.platform.base.biz.order.application.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.order.facade.model.order.SpuOrderRelationVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
-import com.newzkl.platform.base.biz.order.model.req.query.SpuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 
 import java.util.List;
@@ -20,38 +19,39 @@ import java.util.Map;
  */
 public interface QueryService {
     /**
-     * SPU订单聚合值对象
-     * @param spuOrderId
+     * 交易单聚合值对象
+     * @param orderNo
      * @return
      */
-    SpuOrderAggVO spuOrderAggVO(Long spuOrderId);
+    OrderAggVO orderAggVO(String orderNo);
     /**
-     * SPU聚合订单分页
-     * @param spuOrderQuery
+     * 交易单聚合分页
+     * @param orderQuery
      * @return
      */
-    Page<SpuOrderAggVO> spuOrderAggVOList(SpuOrderQuery spuOrderQuery);
+    Page<OrderAggVO> orderAggVOList(OrderQuery orderQuery);
     /**
-     * SPU订单用户关系信息
+     * 交易单用户关系信息
      *
      * @param orderId
      * @param spuId
      * @return
      */
-    SpuOrderRelationVO spuOrderRelation(Long orderId, Long spuId);
+    OrderRelationVO orderRelation(Long orderId, Long spuId);
     /**
      * 用户订单状态
      * @param accountId
-     * @param spuOrderIdList
+     * @param orderIdList
      * @return
      */
-    List<OrderStateVO> accountOrderState(Long accountId, List<Long> spuOrderIdList);
+    List<OrderStateVO> accountOrderState(Long accountId, List<Long> orderIdList);
     /**
      * 订单ID列表
      * @param orderQuery
      * @return
      */
     List<Long> orderIdList(OrderQuery orderQuery);
+    List<String> orderNoList(OrderQuery orderQuery);
     /**
      * 订单列表
      * @param orderQuery
@@ -65,5 +65,5 @@ public interface QueryService {
      */
     Page<SkuOrderVO> skuOrderVOList(SkuOrderQuery orderQuery);
 
-    Map<Long, List<DeliverVO>> orderDeliverInfo(Long spuOrderId);
+    Map<Long, List<DeliverVO>> orderDeliverInfo(String orderNo);
 }

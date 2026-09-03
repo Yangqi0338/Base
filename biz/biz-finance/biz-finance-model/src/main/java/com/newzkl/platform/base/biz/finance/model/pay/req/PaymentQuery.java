@@ -19,7 +19,7 @@ public class PaymentQuery extends BizPageQuery {
     /**
      * 交易单号
      */
-    private List<Long> tradeNoList;
+    private List<String> tradeNoList;
 
     /**
      * 交易单号

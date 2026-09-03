@@ -75,7 +75,7 @@ public class OrderPayReq implements Serializable {
     /**
      * 支付单号
      */
-    private Long tradeNo;
+    private String tradeNo;
 
     /**
      * 渠道商id

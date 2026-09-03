@@ -6,10 +6,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 订单导出Excel对象(替 SpuOrderExcelVO)
+ * @author KC
+ */
 @Getter
 @Setter
 @EqualsAndHashCode
-public class SpuOrderExcelVO {
+public class OrderExcelVO {
 
     @ExcelProperty("订单ID")
     @ColumnWidth(value = 20)
