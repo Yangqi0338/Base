@@ -14,12 +14,15 @@ public class DeliverCodeCommand {
 
     private Long id;
     /**
-     * 物流公司名称
+     * 快递公司名称
+     *
+     * <p>值域为快递公司编码表 (见 {@code /admin/common/logisticsCompanies}), 也允许直接传编码;
+     * 落库前由 domain 归一到编码表官方名称, 识别不出的名称直接报错</p>
      */
     @NotNull
     private String expressCompanyName;
     /**
-     * 物流单号
+     * 快递单号
      */
     @NotNull
     private String expressNo;

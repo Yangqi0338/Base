@@ -104,6 +104,4 @@ public class BankController {
     public PlatformResult<List<BankBranchVO>> queryBranchList(@RequestBody BankQuery query) {
         return PlatformResult.success(bankService.queryBranchList(query));
     }
-
-    // 源 /importBankAndBranch 带 @Deprecated, 按迁移规则不迁。
 }

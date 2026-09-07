@@ -16,10 +16,6 @@ public class OrderGoodsInfoVO implements Serializable {
     /** 数量 */
     private Integer num;
     /**
-     * 二级市场ID
-     */
-    private Long twoMarketId;
-    /**
      * 供应商ID
      */
     private Long supplierId;

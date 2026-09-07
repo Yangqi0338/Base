@@ -5,7 +5,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 
 import com.newzkl.platform.base.biz.order.model.vo.OrderExt;
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.ddd.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
@@ -22,9 +22,11 @@ import org.dromara.mpe.autofill.annotation.JsonSerializable;
 import java.time.LocalDateTime;
 
 /**
+ * 交易单数据对象
+ *
+ * <p>一次支付行为的顶层单据, 下挂 spu_order / sku_order 两级明细</p>
+ *
  * @author muc_fang
- * @Description: 交易单
- * @date 2023/11/1014:50
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

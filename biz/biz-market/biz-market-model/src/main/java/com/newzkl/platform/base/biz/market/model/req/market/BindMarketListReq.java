@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.req.market;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -13,14 +14,12 @@ public class BindMarketListReq {
     /**
      * 客户id
      */
-    private Long clientId;
+    private Long bindAccountId;
 
     /**
-     * 绑定类型
-     *
-     * @ext 1：运营商 2：交易师 3：渠道商
+     * 绑定身份类型
      */
-    private Integer bindType;
+    private AccountEnum.Identity bindIdentity;
 
     /**
      * 市场名称

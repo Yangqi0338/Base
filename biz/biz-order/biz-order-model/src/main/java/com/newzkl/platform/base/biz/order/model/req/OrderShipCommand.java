@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
 
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.ddd.model.vo.ShipVO;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;

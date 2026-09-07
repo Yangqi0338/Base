@@ -78,12 +78,4 @@ public interface ArticleCategoryRepository {
      * @param num 增量值, 可为负数
      */
     void updateArticleCount(Long id, Integer num);
-
-    /**
-     * 按推荐人群查询启用的文章分类列表
-     *
-     * @param recommendGroups 推荐人群名称集合, 任一命中即返回
-     * @return 文章分类出参集合
-     */
-    List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups);
 }

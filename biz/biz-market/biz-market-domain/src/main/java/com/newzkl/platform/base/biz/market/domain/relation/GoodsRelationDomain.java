@@ -47,11 +47,6 @@ public interface GoodsRelationDomain {
     Page<GoodsRelationListVO> platformQueryMarketGoodsList(GoodsListPageQuery req);
 
     /**
-     * app查询市场商品
-     */
-    Page<GoodsRelationListVO> appQueryMarketGoodList(GoodsListPageQuery req);
-
-    /**
      * 渠道商查询选品列表
      */
     Page<GoodsRelationListVO> channelQuerySelectGoodsList(MarketGoodsPageQuery req);
@@ -72,11 +67,6 @@ public interface GoodsRelationDomain {
     Page<GoodsRelationListVO> channelMarketNotSelectedGoodsList(PlatformQueryMarketNotAddGoodsReq req);
 
     /**
-     * 渠道商铺货查询选品列表
-     */
-    Page<GoodsRelationListVO> channelDistributionSelectedGoodsList(PlatformQueryMarketNotAddGoodsReq query);
-
-    /**
      * 渠道商取消选品
      */
     void channelCancelSelected(Long id);
@@ -91,4 +81,16 @@ public interface GoodsRelationDomain {
      * 更新市场商品标签 (按账号+商品查询)
      */
     void updateMarketGoodsLabel(Long accountId, Long goodsId, String productLabel);
+
+    /**
+     * 反查订阅指定 SPU 的渠道商账户ID列表
+     *
+     * <p>覆盖两条订阅路径并去重: 市场选品(relation_type=SELECT_GOODS 取 user_id)、
+     * 专区绑定(relation_type=MARKET_GOODS 取 market_id 再查 market_bind 中 bind_type=CHANNEL
+     * 且 state=YES 的 user_id)</p>
+     *
+     * @param spuId SPU 主键
+     * @return 渠道商账户ID列表 无订阅返回空列表
+     */
+    List<Long> channelIdListBySpuId(Long spuId);
 }

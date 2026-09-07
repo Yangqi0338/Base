@@ -1,7 +1,5 @@
 package com.newzkl.platform.base.biz.sys.action.cmd;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -30,33 +28,6 @@ public class SysCmd {
          */
         @NotNull(message = "id?")
         private Long id;
-    }
-
-    /**
-     * Excel 导入异常明细行 (旧 {@code ExcelErrorVO.Item})
-     *
-     * <p>字段名与类型逐字沿用旧 {@code Item(line:Integer, msg:String)}, 表头文案与列宽同旧,
-     * 以免改动前端契约。Base 的 {@code EasyExcelErrorVO.ErrorLineVO(line:String, errorMsg:String)}
-     * 字段名与类型均不同, 故不复用。</p>
-     *
-     * @author KC
-     */
-    @Data
-    public static class ExcelErrorItem implements Serializable {
-
-        /**
-         * 行号
-         */
-        @ExcelProperty("行号")
-        @ColumnWidth(value = 15)
-        private Integer line;
-
-        /**
-         * 异常信息
-         */
-        @ExcelProperty("异常信息")
-        @ColumnWidth(value = 80)
-        private String msg;
     }
 
     /**

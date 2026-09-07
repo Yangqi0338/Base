@@ -47,4 +47,12 @@ public interface SupplierRepository {
     SettlementConfigVO getSettlementConfig(Long accountId);
 
     Long selectCount(SupplierQuery query);
+
+    /**
+     * 按主键批量查供应商身份行
+     *
+     * @param idList 供应商 (账号) ID 列表
+     * @return 供应商视图列表, 无则空列表
+     */
+    List<SupplierVO> listByIdList(List<Long> idList);
 }

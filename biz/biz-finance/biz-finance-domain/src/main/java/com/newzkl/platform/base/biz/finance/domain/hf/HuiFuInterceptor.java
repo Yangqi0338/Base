@@ -42,7 +42,7 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
     public byte[] onBodyEncode(ForestRequest request, ForestEncoder encoder, byte[] encodedData) {
         // 返回的字节数组将替换原有的序列化结果
         Base.Req req = (Base.Req) request.getArgument(0);
-        req.build(sysId);
+        req.build(HuiFuProperties.getHuiFuId());
 
         // 参数校验: 解包出真实业务 DTO, 直接传 ObjectRequestBody 壳会导致校验注解空转
         for (ObjectRequestBody item : request.getBody().getObjectItems()) {

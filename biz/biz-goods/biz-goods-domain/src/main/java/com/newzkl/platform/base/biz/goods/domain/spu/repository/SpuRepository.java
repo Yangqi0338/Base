@@ -9,9 +9,7 @@ import com.newzkl.platform.base.biz.goods.model.goods.res.spu.IndexCountRes;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.brand.SpuCategoryVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SkuVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuAttributeVO;
-import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuStateVO;
 import com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.GoodsCountVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO;
@@ -45,7 +43,7 @@ public interface SpuRepository {
     /**
      * spu实体
      */
-    SpuDTO getById(Long id);
+    SpuDTO detail(Long id);
 
     /**
      * spu修改
@@ -60,17 +58,17 @@ public interface SpuRepository {
     /**
      * spu查询
      */
-    SpuVO voByQuery(SpuQuery spuQuery);
+    SpuDTO detail(SpuQuery spuQuery);
 
     /**
      * spu批量查询
      */
-    List<SpuVO> listSelect(SpuQuery spuQuery);
+    List<SpuDTO> listSelect(SpuQuery spuQuery);
 
     /**
      * spu分页查询
      */
-    Page<SpuVO> querySpuPage(SpuQuery spuQuery);
+    Page<SpuDTO> querySpuPage(SpuQuery spuQuery);
 
     /**
      * sku分页查询
@@ -137,7 +135,7 @@ public interface SpuRepository {
 
     List<SpuCategoryVO> countSpuByCategory(List<Long> categoryIdList);
 
-    List<SpuStateVO> spuStateList(SpuQuery spuQuery);
+    <T> List<T> spuList(SpuQuery spuQuery, Class<T> clazz);
 
     void editColumn(Long id, List<EditColumnVO> editColumnDTOS);
 
@@ -150,7 +148,7 @@ public interface SpuRepository {
      */
     List<OrderGoodsInfoVO> queryOrderGoodsInfoVOList(List<GoodsVO> goods, Long channelId, Long storeId);
 
-    Long spuId(Integer channelType, String outSpuId);
+    Long spuId(SpuEnum.ChannelType channelType, String outSpuId);
 
     void resetSpuOrderCount();
 
@@ -185,29 +183,6 @@ public interface SpuRepository {
      * @return
      */
     float maxSalePriceRate(Long spuId);
-    /**
-     * 开发者通知 SPU 上下架
-     * @param spuId
-     * @param state
-     */
-    void notifyUp(Long spuId, Integer state);
-    /**
-     * 开发者通知 SPU 基本信息
-     * @param spuId
-     */
-    void notifySpuBase(Long spuId);
-    /**
-     * 开发者通知 SKU 删除
-     * @param spuId
-     * @param skuId
-     */
-    void notifySkuDelete(Long spuId, Long skuId);
-    /**
-     * 开发者通知 SKU 变更
-     * @param spuId
-     * @param skuId
-     */
-    void notifySkuEdit(Long spuId, Long skuId);
 
     SkuVO skuVO(Long spuId, String outSkuId);
 

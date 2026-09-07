@@ -16,9 +16,9 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.facade.GoodsCountVO;
 import com.newzkl.platform.base.biz.goods.rpc.model.spu.SkuQuery;
 import com.newzkl.platform.base.common.ddd.facade.SpuQuery;
-import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * spu领域
@@ -43,7 +43,7 @@ public interface SpuDomain {
     /**
      * spu实体
      */
-    SpuDTO getById(Long id);
+    SpuDTO detail(Long id);
 
     /**
      * spu修改
@@ -54,20 +54,13 @@ public interface SpuDomain {
      * @param spuVO 供应商提交的商品
      * @param skuSalePriceJson 平台修改的数据
      */
-    void spuAuditSuccess(SpuVO spuVO, String skuSalePriceJson);
+    void spuAuditSuccess(SpuVO spuVO, Map<Long, String> skuSalePriceMap);
     /**
      * 上下架
      * @param enable
      * @param spuIdList
      */
     int spuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList);
-
-    /**
-     * 上下架
-     * @param enable
-     * @param spuIdList
-     */
-    int platformSpuUp(CommonEnum.YesOrNo enable, List<Long> spuIdList);
     /**
      * Sku列表
      * @param skuQuery
@@ -91,25 +84,13 @@ public interface SpuDomain {
      */
     void spuAuditStop(SpuVO spuVO);
 
-    void editColumn(Long spuId, List<EditColumnVO> editColumnDTOS);
-
     void spuDelete(List<Long> spuIdList);
 
-    /**
-     * 查询订单商品信息
-     * @param goods
-     * @param channelId
-     * @param storeId 门店id 0：api接口查选品  >0：门店id，查铺货
-     * @return
-     */
-    //List<OrderGoodsInfoVO> queryOrderGoodsInfoVOList(List<GoodsVO> goods, Long channelId, Long storeId);
     /**
      * 外部商品修改
      * @param outSpuEditCommand
      */
     void outSpuEdit(OutSpuEditCommand outSpuEditCommand);
-
-    //OrderGoodsInfoVO queryOrderSkuInfoVOList(Long skuId);
 
     /**
      * spu分页查询

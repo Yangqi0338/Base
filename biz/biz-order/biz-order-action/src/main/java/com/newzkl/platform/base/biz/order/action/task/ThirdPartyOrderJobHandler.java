@@ -2,13 +2,10 @@ package com.newzkl.platform.base.biz.order.action.task;
 
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ThirdPartyOrderRepository;
-import com.newzkl.platform.base.biz.order.domain.service.ThirdPartyOrderDomain;
 import com.newzkl.platform.base.biz.order.domain.spi.ThirdPartyOrderProcessor;
 import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
 import com.newzkl.platform.base.biz.order.model.req.query.ThirdPartyOrderRecordQuery;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderDTO;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +25,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ThirdPartyOrderJobHandler {
 
+    /**
+     * 单轮补偿扫描上限
+     */
+    private static final int BATCH_SIZE = 200;
+
     private final ThirdPartyOrderRepository thirdPartyOrderRepository;
-    private final ThirdPartyOrderDomain thirdPartyOrderDomain;
 
     /**
      * 三方订单补偿
+     *
+     * @param param xxl-job 任务参数 当前未使用
+     * @return 执行结果
      */
     @XxlJob("thirdPartyOrderCompensation")
     public ReturnT<String> compensation(String param) {
         log.info("XXL Job任务[thirdPartyOrderCompensation]开始执行，参数：{}", param);
         try {
-            // 只查询会订货平台的失败订单
+            // 扫已排期且重试次数未耗尽的失败记录 排期只对开发者通知失败生成 见 ThirdPartyOrderDomain.recordAction
             ThirdPartyOrderRecordQuery recordQuery = new ThirdPartyOrderRecordQuery();
+            recordQuery.setPageNo(1);
+            recordQuery.setPageSize(BATCH_SIZE);
             recordQuery.setNextRetryTimeBefore(LocalDateTime.now());
             recordQuery.setRequestStatus(CommonEnum.RequestStatusEnum.FAILED);
+            recordQuery.setRetryCountLt(ThirdPartyOrderRecordDTO.MAX_RETRY_COUNT);
             List<ThirdPartyOrderRecordDTO> compensationList = thirdPartyOrderRepository.selectPage(recordQuery).getRecords();
             if (CollUtil.isEmpty(compensationList)) {
                 log.info("无需要补偿的订单，任务提前结束");
@@ -50,7 +57,6 @@ public class ThirdPartyOrderJobHandler {
 
             ThirdPartyOrderProcessor processor = ThirdPartyOrderProcessor.find();
             log.info("获取到需要补偿的失败订单数量：{}", compensationList.size());
-            // TODO 可以grouping做批量
             for (ThirdPartyOrderRecordDTO record : compensationList) {
                 log.info("开始处理订单补偿，订单来源【{}】，业务订单号：{}", record.getPlatformType(), record.getBizOrderNo());
                 try {

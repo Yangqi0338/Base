@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
+import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -13,8 +14,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketBindDTO;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
 import com.newzkl.platform.base.biz.market.model.query.market.AppBindMarketGoodsPageQuery;
-import com.newzkl.platform.base.biz.market.model.query.market.ChannelMarketPageQuery;
-import com.newzkl.platform.base.biz.market.model.query.market.MarketPageQuery;
+import com.newzkl.platform.base.biz.market.model.query.market.MarketQuery;
 import com.newzkl.platform.base.biz.market.model.req.market.BindMarketListReq;
 import com.newzkl.platform.base.biz.market.model.req.market.ClientBindMarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
@@ -41,77 +41,62 @@ public class MarketRepositoryImpl implements MarketRepository {
     private final MarketDAO marketDAO;
 
     @Override
-    public Page<AppBindMarketVO> queryChannelBindMarket(ChannelMarketPageQuery query) {
-        return marketBindDAO.queryChannelBindMarket(RepositorySupport.page(query),query);
+    public Page<BindMarketGoodsRes> queryMarketGoods(AppBindMarketGoodsPageQuery query) {
+        return marketBindDAO.queryMarketGoods(RepositorySupport.page(query),query);
     }
 
     @Override
-    public Page<AppBindMarketGoodsVO> queryChannelBindMarketGoods(AppBindMarketGoodsPageQuery query) {
-        return marketBindDAO.queryChannelBindMarketGoods(RepositorySupport.page(query),query);
-    }
-
-    @Override
-    public Page<MarketVO> queryMarketList(MarketPageQuery query) {
-        // subBindUser 不为空时，先查 market_bind 得到符合条件的 market_id 列表
-        List<Long> subBindMarketIds = null;
-        if (query.getSubBindUser() != null) {
-            List<Long> ids = marketBindDAO.selectList(
-                    new LambdaQueryWrapper<MarketBindDO>()
-                            .eq(MarketBindDO::getUserId, query.getSubBindUser())
-                            .eq(query.getSubBindType() != null, MarketBindDO::getBindType, query.getSubBindType())
-                            .select(MarketBindDO::getMarketId)
-            ).stream().map(MarketBindDO::getMarketId).collect(Collectors.toList());
-            // 无匹配绑定记录则直接返回空页
-            if (CollectionUtils.isEmpty(ids)) {
-                return new Page<>(query.getPageNo(), query.getPageSize());
-            }
-            subBindMarketIds = ids;
-        }
-
-        final List<Long> finalSubBindMarketIds = subBindMarketIds;
+    public Page<MarketRes> queryMarketList(MarketQuery query) {
         Page<MarketDO> page = marketDAO.selectPage(
                 RepositorySupport.page(query),
-                new LambdaQueryWrapper<MarketDO>()
-                        .eq(query.getMarketLevel() != null, MarketDO::getMarketLevel, query.getMarketLevel())
-                        .eq(query.getClientId() != null && query.getClientId() > 0, MarketDO::getClientId, query.getClientId())
-                        .like(query.getMarketName() != null, MarketDO::getMarketName, query.getMarketName())
-                        .in(finalSubBindMarketIds != null, MarketDO::getId, finalSubBindMarketIds != null ? finalSubBindMarketIds : Collections.emptyList())
-                        .orderByDesc(MarketDO::getId)
+                marketDAO.getLw(query)
         );
-        return TransferUtils.transferPage(page, MarketVO::new);
+        return TransferUtils.transferPage(page, MarketRes::new);
     }
 
     @Override
-    public MarketVO queryMarket(Long marketId) {
+    public MarketRes queryMarket(Long marketId) {
         return TransferUtils.transfer(
                 marketDAO.selectById(marketId),
-                MarketVO::new
+                MarketRes::new
         );
     }
 
     @Override
     public void saveMarket(MarketDTO marketDTO) {
-        marketBindDAO.insert(TransferUtils.transfer(marketDTO, MarketBindDO::new));
+        marketDAO.insert(TransferUtils.transfer(marketDTO, MarketDO::new));
     }
 
     @Override
     public void updateMarket(MarketDTO marketDTO) {
-        marketBindDAO.updateById(TransferUtils.transfer(marketDTO, MarketBindDO::new));
+        marketDAO.updateById(TransferUtils.transfer(marketDTO, MarketDO::new));
     }
 
     @Override
-    public Long queryAccountIsBindMarket(ClientBindMarketReq req) {
+    public MarketBindDTO queryAccountIsBindMarket(ClientBindMarketReq req) {
         return marketBindDAO.selectList(
                 new LambdaQueryWrapper<MarketBindDO>()
                         .eq(MarketBindDO::getMarketId, req.getMarketId())
                         .eq(MarketBindDO::getBindType, req.getBindType())
                         .eq(MarketBindDO::getUserId, req.getUserId())
-        ).stream().findFirst().map(MarketBindDO::getId).orElse(null);
+        ).stream().findFirst()
+                .map(bind -> TransferUtils.transfer(bind, MarketBindDTO::new))
+                .orElse(null);
+    }
+
+    @Override
+    public MarketBindDTO queryMarketBind(Long id) {
+        return TransferUtils.transfer(marketBindDAO.selectById(id), MarketBindDTO::new);
     }
 
     @Override
     public void updateMarketBind(MarketBindDTO marketBindDTO) {
-        marketBindDAO.updateById(TransferUtils.transfer(marketBindDTO, MarketBindDO::new));
+        marketBindDAO.update(new LambdaUpdateWrapper<MarketBindDO>()
+                .eq(MarketBindDO::getId, marketBindDTO.getId())
+                .set(MarketBindDO::getState, marketBindDTO.getState())
+                .set(MarketBindDO::getDebindTime, null)
+                .set(marketBindDTO.getUserName() != null,
+                        MarketBindDO::getUserName, marketBindDTO.getUserName()));
     }
 
     @Override
@@ -147,9 +132,9 @@ public class MarketRepositoryImpl implements MarketRepository {
         // 1. 查询符合条件的绑定记录，获取 market_id 列表
         List<MarketBindDO> binds = marketBindDAO.selectList(
                 new LambdaQueryWrapper<MarketBindDO>()
-                        .eq(MarketBindDO::getUserId, req.getClientId())
-                        .eq(MarketBindDO::getState, 1)
-                        .eq(req.getBindType() != null, MarketBindDO::getBindType, req.getBindType())
+                        .eq(MarketBindDO::getUserId, req.getBindAccountId())
+                        .eq(MarketBindDO::getState, CommonEnum.YesOrNo.YES)
+                        .eq(req.getBindIdentity() != null, MarketBindDO::getBindType, req.getBindIdentity())
         );
         if (CollectionUtils.isEmpty(binds)) {
             return Collections.emptyList();
@@ -159,12 +144,12 @@ public class MarketRepositoryImpl implements MarketRepository {
                 .collect(Collectors.toMap(MarketBindDO::getMarketId, MarketBindDO::getId, (a, b) -> a));
 
         // 2. 根据 market_id 查询市场信息，支持名称和分类过滤
-        List<MarketDO> markets = marketDAO.selectList(
-                new LambdaQueryWrapper<MarketDO>()
-                        .in(MarketDO::getId, marketIdToBindId.keySet())
-                        .like(req.getMarketName() != null, MarketDO::getMarketName, req.getMarketName())
-                        .eq(req.getCategoryId() != null, MarketDO::getCategoryId, req.getCategoryId())
-        );
+        MarketQuery marketQuery = new MarketQuery();
+        marketQuery.resetQueryList();
+        marketQuery.setIdList(CollUtil.newArrayList(marketIdToBindId.keySet()));
+        marketQuery.setMarketName(req.getMarketName());
+        marketQuery.setCategoryId(req.getCategoryId());
+        List<MarketDO> markets = marketDAO.selectList(marketDAO.getLw(marketQuery));
         if (CollectionUtils.isEmpty(markets)) {
             return Collections.emptyList();
         }
@@ -204,8 +189,8 @@ public class MarketRepositoryImpl implements MarketRepository {
         return marketBindDAO.selectList(
                 new LambdaQueryWrapper<MarketBindDO>()
                         .eq(MarketBindDO::getMarketId, req.getMarketId())
-                        .eq(MarketBindDO::getBindType, req.getBindType())
-                        .eq(MarketBindDO::getState, 1)
+                        .eq(req.getBindType() != null, MarketBindDO::getBindType, req.getBindType())
+                        .eq(MarketBindDO::getState, CommonEnum.YesOrNo.YES)
                         .in(!CollectionUtils.isEmpty(req.getUserIds()), MarketBindDO::getUserId, req.getUserIds())
                         .orderByDesc(MarketBindDO::getId)
         ).stream().map(bind -> {

@@ -38,7 +38,8 @@ public class OrderSkuVO implements Serializable {
     private Long supplierId;
 
     /**
-     * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部为 null
+     * 供货平台(轴B) 这批货由哪个上游发 HUI_DING_HUO 等 本地货为 null
+     * <p>三方下单派发只认本字段 订单级 {@code OrderDTO.platformType}(轴A 订单来源)不参与</p>
      */
     private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 }

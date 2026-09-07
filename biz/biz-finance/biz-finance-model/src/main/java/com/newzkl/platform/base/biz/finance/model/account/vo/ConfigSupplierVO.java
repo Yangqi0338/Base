@@ -21,6 +21,11 @@ public class ConfigSupplierVO {
     private Integer skuSpaceFee;
 
     /**
+     * 商品位最小购买数量
+     */
+    private Integer purchaseMinimumNum;
+
+    /**
      * 提现手续费比例
      */
     private Integer withdrawRate;

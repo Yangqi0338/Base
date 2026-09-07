@@ -52,7 +52,7 @@ public class UserCollectionController {
     public PlatformResult<UserCollectionDTO> collectProduct(@Validated @RequestBody UserCollectionCreateReq createReq) {
         createReq.setUserId(SecurityUtils.getAccountId());
         createReq.setUserName(SecurityUtils.getUsername());
-        log.info("用户收藏商品: userId={}, storeDistributionId={}", createReq.getUserId(), createReq.getStoreDistributionId());
+        log.info("用户收藏商品: userId={}, storeGoodsId={}", createReq.getUserId(), createReq.getStoreGoodsId());
         return PlatformResult.success(userCollectionService.collectProduct(createReq));
     }
 
@@ -101,7 +101,7 @@ public class UserCollectionController {
     @PostMapping("/check")
     public PlatformResult<Boolean> checkIsCollected(@Validated @RequestBody UserCollectionReq req) {
         req.setUserId(SecurityUtils.getAccountId());
-        log.info("检查用户是否收藏商品: userId={}, storeDistributionId={}", req.getUserId(), req.getStoreDistributionId());
+        log.info("检查用户是否收藏商品: userId={}, storeGoodsId={}", req.getUserId(), req.getStoreGoodsId());
         return PlatformResult.success(userCollectionService.checkIsCollected(req));
     }
 

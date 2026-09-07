@@ -50,11 +50,6 @@ public class SkuOrderMessageVO implements Serializable {
     private OrderEnum.State orderState;
 
     /**
-     * 二级市场ID
-     */
-    private Long twoMarketId;
-
-    /**
      * 供应商ID
      */
     private Long supplierId;

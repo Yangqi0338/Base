@@ -87,21 +87,6 @@
         </if>
     </update>
 
-    <select id="supplierDescVOList" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO">
-        select t.id, a.username, t.`name` as 'company_name'
-        from supplier t
-        left join account a on t.id = a.id
-        <where>
-            t.del_flag = 0
-            <if test="supplierIdList != null and supplierIdList.size() > 0">
-                and t.id in
-                <foreach collection="supplierIdList" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
-    </select>
-
     <!-- Base 已无 total_order_number/goods_sale_count 等冗余统计列(收敛 count_sale 表), 源清零语句无目标列, 退化 no-op 待裁决 -->
     <update id="resetUserOrderCount">
         update supplier set update_time = update_time where 1 = 0

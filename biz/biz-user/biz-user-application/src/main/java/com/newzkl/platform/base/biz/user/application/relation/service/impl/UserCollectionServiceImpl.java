@@ -38,9 +38,9 @@ public class UserCollectionServiceImpl implements UserCollectionService {
     @Transactional(rollbackFor = Exception.class)
     public UserCollectionDTO collectProduct(UserCollectionCreateReq req) {
         Long userId = req.getUserId();
-        Long storeDistributionId = req.getStoreDistributionId();
+        Long storeGoodsId = req.getStoreGoodsId();
 
-        return userCollectionRepository.findWithDeletedByUserIdAndProductId(userId, storeDistributionId)
+        return userCollectionRepository.findWithDeletedByUserIdAndProductId(userId, storeGoodsId)
                 .orElseGet(() -> {
                     // TODO[infra-gap] 旧实现先经 IDistributionRpcFacade.selectById 校验铺货并回填
                     //  storeId/spuId/skuId/price，中台无 market 出站端口，改用入参快照。
@@ -51,7 +51,7 @@ public class UserCollectionServiceImpl implements UserCollectionService {
                     });
                     UserCollectionDTO saved = userCollectionRepository.save(newCollection);
                     log.info("用户[{}]新增收藏：铺货ID={}, SPU={}, SKU={}",
-                            userId, storeDistributionId, req.getSpuId(), req.getSkuId());
+                            userId, storeGoodsId, req.getSpuId(), req.getSkuId());
                     return saved;
                 });
     }
@@ -89,7 +89,7 @@ public class UserCollectionServiceImpl implements UserCollectionService {
     @Override
     public boolean checkIsCollected(UserCollectionReq req) {
         return userCollectionRepository
-                .findWithDeletedByUserIdAndProductId(req.getUserId(), req.getStoreDistributionId())
+                .findWithDeletedByUserIdAndProductId(req.getUserId(), req.getStoreGoodsId())
                 .isPresent();
     }
 

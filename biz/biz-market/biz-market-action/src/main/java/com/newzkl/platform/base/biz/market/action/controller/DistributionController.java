@@ -48,7 +48,7 @@ import java.util.List;
  *       {@code biz-goods-facade} 与 {@code biz-account-facade} 依赖 (pom 改动), 故记阻塞不补。</li>
  *   <li>{@code POST /recoverGoods/&#123;goodsId&#125;}: {@code DistributionDomain} 与
  *       {@code DistributionRepository} 均无 {@code recoverGoods} 端口,
- *       {@code StoreDistributionDAO} 亦无对应语句。</li>
+ *       {@code StoreGoodsDAO} 亦无对应语句。</li>
  * </ul>
  *
  * @author KC
@@ -155,6 +155,19 @@ public class DistributionController {
     @FuncPermission("删除商品")
     public PlatformResult<Void> delGoods(@PathVariable Long goodsId) {
         distributionDomain.delGoods(goodsId);
+        return PlatformResult.success();
+    }
+
+    /**
+     * 恢复商品
+     *
+     * @param goodsId 商品ID
+     * @return 操作结果
+     */
+    @PostMapping("/recoverGoods/{goodsId}")
+    @FuncPermission("恢复商品")
+    public PlatformResult<Void> recoverGoods(@PathVariable Long goodsId) {
+        distributionDomain.recoverGoods(goodsId);
         return PlatformResult.success();
     }
 

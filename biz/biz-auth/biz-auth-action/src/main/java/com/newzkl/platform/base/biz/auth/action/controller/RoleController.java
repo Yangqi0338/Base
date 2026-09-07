@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.auth.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.auth.action.cmd.AssignPermissionCommand;
 import com.newzkl.platform.base.biz.auth.action.cmd.BindAccountCommand;
+import com.newzkl.platform.base.biz.auth.action.cmd.BindRoleCommand;
 import com.newzkl.platform.base.biz.auth.domain.service.RoleDomain;
 
 import com.newzkl.platform.base.biz.auth.model.permission.req.RoleQuery;
@@ -10,6 +11,7 @@ import com.newzkl.platform.base.biz.auth.model.permission.req.RoleReq;
 import com.newzkl.platform.base.biz.auth.model.permission.vo.RoleRes;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -125,7 +127,24 @@ public class RoleController {
     @PostMapping("/bindAccounts/{id}")
     @FuncPermission("绑定账号")
     public PlatformResult<Object> bindAccounts(@PathVariable Long id, @RequestBody BindAccountCommand cmd) {
-        roleDomain.bindAccounts(id, cmd.accountIds());
+        roleDomain.bindAccounts(SecurityUtils.getClient(), id, cmd.accountIds());
+        return PlatformResult.success();
+    }
+
+    /**
+     * 绑定角色到账号
+     *
+     * <p>全量替换指定账号的角色集合并重算派生权限。端由当前登录 client 推导, 角色须同端。
+     * 迁移自 adopt-chicken {@code EmpController#bindRoles}, 语义对齐并适配中台多端隔离。</p>
+     *
+     * @param id  账号ID
+     * @param cmd 角色ID集合
+     * @return 空结果
+     */
+    @PostMapping("/{id}/bindRoles")
+    @FuncPermission("绑定角色")
+    public PlatformResult<Void> bindRoles(@PathVariable Long id, @RequestBody BindRoleCommand cmd) {
+        roleDomain.bindRoles(SecurityUtils.getClient(), id, cmd.roleIds());
         return PlatformResult.success();
     }
 }

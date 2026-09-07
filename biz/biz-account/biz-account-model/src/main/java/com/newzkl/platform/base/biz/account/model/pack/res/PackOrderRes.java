@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.pack.res;
 
-import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
+import com.newzkl.platform.base.biz.account.model.pack.vo.PackShipVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
@@ -29,7 +29,7 @@ public class PackOrderRes extends BaseRes {
     /**
      * 收货信息
      */
-    private ShipAddressRes shipVO;
+    private PackShipVO shipVO;
 
     /**
      * 订单金额（分）

@@ -94,44 +94,9 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
 
     @Override
     public void addAccountTripartitePurse(AccountTripartitePurseVO accountTripartitePurse) {
-        LambdaQueryWrapper<AccountTripartitePurseDO> queryWrapper = accountTripartitePurseDAO.getPrimaryLw(accountTripartitePurse.getAccountId());
-        AccountTripartitePurseDO tripartitePurse = accountTripartitePurseDAO.selectOne(queryWrapper);
-
+        // 只增不查不维护: 汇付开户成功后纯 insert 落库, 不做存在性判断与更新
         AccountTripartitePurseDO accountTripartite = TransferUtils.transfer(accountTripartitePurse, AccountTripartitePurseDO::new);
-        if (tripartitePurse != null) {
-            if (StrUtil.isBlank(tripartitePurse.getRemark())) {
-                accountTripartite.setRemark("重新提交审核中");
-            }
-            accountTripartitePurseDAO.update(accountTripartite, queryWrapper);
-        } else {
-            accountTripartitePurseDAO.insert(accountTripartite);
-        }
-    }
-
-    @Override
-    public void alterAccountTripartitePurse(AccountTripartitePurseVO accountTripartitePurse) {
-        LambdaQueryWrapper<AccountTripartitePurseDO> queryWrapper = accountTripartitePurseDAO.getPrimaryLw(accountTripartitePurse.getAccountId());
-        AccountTripartitePurseDO entity = TransferUtils.transfer(accountTripartitePurse, AccountTripartitePurseDO::new);
-        accountTripartitePurseDAO.update(entity, queryWrapper);
-    }
-
-    @Override
-    public AccountTripartitePurseVO queryAccountTripartitePurse(Long accountId) {
-        LambdaQueryWrapper<AccountTripartitePurseDO> queryWrapper = accountTripartitePurseDAO.getPrimaryLw(accountId);
-        AccountTripartitePurseDO accountTripartitePurse = accountTripartitePurseDAO.selectOne(queryWrapper);
-        return TransferUtils.transfer(accountTripartitePurse, AccountTripartitePurseVO::new);
-    }
-
-    @Override
-    public List<AccountTripartitePurseVO> queryAccountTripartitePurse(AccountTripartitePurseQuery query) {
-        LambdaQueryWrapper<AccountTripartitePurseDO> queryWrapper = accountTripartitePurseDAO.getLw(query);
-        Page<AccountTripartitePurseDO> entityList = accountTripartitePurseDAO.selectPage(RepositorySupport.page(query), queryWrapper);
-        return TransferUtils.transfers(entityList.getRecords(), AccountTripartitePurseVO.class);
-    }
-
-    @Override
-    public String queryCommitInfo(Long accountId) {
-        return accountTripartitePurseDAO.queryCommitInfo(accountId);
+        accountTripartitePurseDAO.insert(accountTripartite);
     }
 
     @Override
@@ -187,18 +152,6 @@ public class AccountPurseRepositoryImpl implements AccountPurseRepository {
     @Override
     public Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(AccountPurseAlterRecordQuery query) {
         return accountPurseAlterRecordDAO.queryChannelRollOutRecords(RepositorySupport.page(query), query);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void addAccountTripartitePurseAmount(Long accountId, Integer amount) {
-        accountTripartitePurseDAO.addAccountTripartitePurseAmount(accountId, amount);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void subAccountTripartitePurseAmount(Long accountId, Integer amount) {
-        accountTripartitePurseDAO.subAccountTripartitePurseAmount(accountId, amount);
     }
 
     @Override

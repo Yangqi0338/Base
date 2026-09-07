@@ -46,4 +46,10 @@ public class ThirdPartyOrderRecordQuery extends PageQuery {
      * @ext 用于扫描超时未重试的记录
      */
     private LocalDateTime nextRetryTimeBefore;
+
+    /**
+     * 重试次数上限(lt)
+     * @ext 用于排除重试次数已耗尽的记录
+     */
+    private Integer retryCountLt;
 }

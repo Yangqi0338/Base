@@ -42,7 +42,7 @@ public class UserCollectionCreateReq {
      * 铺货表ID
      */
     @NotNull(message = "铺货表ID不能为空")
-    private Long storeDistributionId;
+    private Long storeGoodsId;
 
     /**
      * SPU ID

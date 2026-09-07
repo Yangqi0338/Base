@@ -80,4 +80,19 @@ public class ThirdPartyOrderEnum {
                     .orElse(null);
         }
     }
+
+    /**
+     * 三方动作名 与 third_party_order_record.interface_name 列取值一一对应
+     */
+    public interface Action {
+
+        /** 下单 */
+        String CREATE = "create";
+
+        /** 补偿重推 */
+        String COMPENSATION = "compensation";
+
+        /** 开发者回调通知 */
+        String NOTIFY = "notify";
+    }
 }

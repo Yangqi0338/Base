@@ -72,10 +72,6 @@ public class SkuOrderDTO extends BaseDTO {
      */
     private LocalDateTime deliverTime;
     /**
-     * 二级市场ID
-     */
-    private Long twoMarketId;
-    /**
      * 供应商ID
      */
     private Long supplierId;
@@ -258,7 +254,6 @@ public class SkuOrderDTO extends BaseDTO {
         if(channelVO.getUpOperatorId() != null){
             this.operatorId = channelVO.getUpOperatorId();
         }
-        this.twoMarketId = skuVO.getTwoMarketId();
         this.skuId = orderItemCommand.getSkuId();
         this.count = orderItemCommand.getCount();
         this.spuName = skuVO.getSpuName();

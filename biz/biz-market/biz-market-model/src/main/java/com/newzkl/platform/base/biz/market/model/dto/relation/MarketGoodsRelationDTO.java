@@ -24,7 +24,7 @@ public class MarketGoodsRelationDTO implements Serializable {
      */
     private Long marketId;
     /**
-     * 关系类型：  1：一级市场商品  2：二级市场商品  3：市场选品商品
+     * 关系类型：  2：市场商品  3：市场选品商品
      */
     private GoodsRelationEnum.GoodsRelation relationType;
     /**

@@ -1,6 +1,9 @@
 package com.newzkl.platform.base.common.core.model.enums;
 
 import cn.hutool.core.lang.EnumItem;
+import cn.hutool.core.util.StrUtil;
+
+import java.util.List;
 
 /**
  * 通用枚举接口
@@ -9,6 +12,13 @@ import cn.hutool.core.lang.EnumItem;
  * @param <T> code 类型
  */
 public interface IEnum<T> extends EnumItem<IEnum<T>> {
+
+    /**
+     * 多语义分隔符
+     *
+     * <p>枚举描述可用该字符串接多套语义, 如 "是|启用", 由语义位下标决定取哪一套</p>
+     */
+    char SEMANTIC_SEPARATOR = '|';
 
     /**
      * 获取枚举编码
@@ -27,6 +37,23 @@ public interface IEnum<T> extends EnumItem<IEnum<T>> {
      * @return 枚举描述字符串
      */
     String getValue();
+
+    /**
+     * 按语义位获取枚举描述
+     *
+     * <p>描述含 {@link #SEMANTIC_SEPARATOR} 时按下标截取对应语义, 无分隔符则原样返回, 下标越界回落首位</p>
+     *
+     * @param index 语义位下标, 从 0 开始
+     * @return 指定语义位的枚举描述
+     */
+    default String getValue(int index) {
+        String text = getValue();
+        if (!StrUtil.contains(text, SEMANTIC_SEPARATOR)) {
+            return text;
+        }
+        List<String> parts = StrUtil.split(text, SEMANTIC_SEPARATOR);
+        return index >= 0 && index < parts.size() ? parts.get(index) : parts.get(0);
+    }
 
     default int intVal(){
         T code = getCode();

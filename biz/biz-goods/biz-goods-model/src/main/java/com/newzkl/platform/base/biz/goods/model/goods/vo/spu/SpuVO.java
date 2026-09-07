@@ -98,7 +98,7 @@ public class SpuVO extends BaseRes implements Serializable {
     /**
      * 状态 0:仓库中 2:上架中 3:待上架 (查询)
      */
-     private Integer state;
+     private SpuEnum.State state;
     /**
      * 外部商品状态：0、已上架 1、已下架
      */

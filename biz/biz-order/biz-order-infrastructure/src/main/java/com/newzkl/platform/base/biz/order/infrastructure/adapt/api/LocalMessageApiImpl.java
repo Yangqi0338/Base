@@ -1,20 +1,18 @@
 package com.newzkl.platform.base.biz.order.infrastructure.adapt.api;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
 import com.newzkl.platform.base.biz.order.facade.model.order.RefundOperationRecordRPC;
 import com.newzkl.platform.base.biz.order.model.dto.*;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiDeliverEvent;
+import com.newzkl.platform.base.biz.order.model.event.OrderDeliveryEvent;
+import com.newzkl.platform.base.biz.order.model.event.OrderStateEvent;
+import com.newzkl.platform.base.biz.order.model.event.RefundStateEvent;
 import com.newzkl.platform.base.biz.order.model.support.api.order.RefundPassEvent;
 import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
 import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
-import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
 import com.newzkl.platform.base.common.core.mq.model.constant.MQ;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
-import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
-import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -26,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,14 +88,18 @@ public class LocalMessageApiImpl implements LocalMessageApi {
     }
 
     @Override
-    public void deliverNotify(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId) {
-        log.info("发货通知开发者: outOrderNo: " + outOrderNo + " : " + JSONObject.toJSONString(skuCountDTOList));
-        NotifyEventCommand notifyEventCommand = new NotifyEventCommand();
-        notifyEventCommand.setServiceType(NotifyEnums.ServiceType.ORDER.getCode());
-        notifyEventCommand.setBusinessType(NotifyEnums.OrderType.DELIVERY.getCode());
-        ApiDeliverEvent object = new ApiDeliverEvent(outOrderNo, skuCountDTOList, expressCompanyName, expressNo);
-        notifyEventCommand.setEventInfo(JSONObject.toJSONString(object));
-        NotifyUtil.batchSend(Collections.singletonList(channelId), notifyEventCommand);
+    public void publishOrderState(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, OrderEnum.State sourceState, OrderEnum.State newState) {
+        MQUtil.send(MQ.Tag.ORDER_STATE_EVENT, new OrderStateEvent(outOrderNo, channelId, orderType, sourceState, newState));
+    }
+
+    @Override
+    public void publishRefundState(OrderEnum.OrderType orderType, Long channelId, Long refundId, RefundEnum.State sourceState, RefundEnum.State newState) {
+        MQUtil.send(MQ.Tag.REFUND_STATE_EVENT, new RefundStateEvent(refundId, channelId, orderType, sourceState, newState));
+    }
+
+    @Override
+    public void publishOrderDelivery(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, List<SkuCountDTO> skuDeliverList, String expressName, String expressNo) {
+        MQUtil.send(MQ.Tag.ORDER_DELIVERY_EVENT, new OrderDeliveryEvent(outOrderNo, channelId, orderType, skuDeliverList, expressName, expressNo));
     }
 
     @Override

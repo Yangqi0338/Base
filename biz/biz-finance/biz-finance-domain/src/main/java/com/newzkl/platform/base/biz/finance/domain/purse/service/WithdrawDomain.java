@@ -102,11 +102,4 @@ public interface WithdrawDomain {
      * @param accountId
      */
     WithdrawAmountVO queryWithdrawAmount(AccountEnum.Identity identity, Long accountId);
-
-    /**
-     * 提现申请记录导出
-     *
-     * @param req
-     */
-    List<RollOutApplyExportVO> withdrawRecordsExport(RollOutApplyQuery req);
 }

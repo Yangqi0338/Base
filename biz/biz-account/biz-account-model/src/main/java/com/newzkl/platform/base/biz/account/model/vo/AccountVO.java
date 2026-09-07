@@ -54,7 +54,7 @@ public class AccountVO extends BaseRes {
     /**
      * 真实姓名
      */
-    private String realname;
+    private String realName;
     /**
      * 登录凭证
      * NOTE 可以是手机号、自定账号名

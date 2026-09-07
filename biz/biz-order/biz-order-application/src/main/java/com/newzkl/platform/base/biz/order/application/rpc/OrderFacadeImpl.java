@@ -15,10 +15,7 @@ import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.ItemInfo;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.PkgInfo;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.*;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderStateRecordEntity;
@@ -31,7 +28,7 @@ import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.ddd.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -74,53 +71,9 @@ public class OrderFacadeImpl implements OrderFacade {
     private final GoodsApi goodsApi;
 
     @Override
-    public ApiOrderRes apiSubmitOrder(Long accountId, ApiOrderSubmitReq orderReq) {
-        OrderCreateCommand orderCreateCommand = new OrderCreateCommand();
-        orderCreateCommand.setChannelId(accountId);
-        orderCreateCommand.setOrderType(OrderEnum.OrderType.CHANNEL);
-        orderCreateCommand.setShipVO(TransferUtils.transfer(orderReq, apiShipVO -> {
-            ShipVO shipVO = new ShipVO();
-            shipVO.setShipName(apiShipVO.getShipName());
-            shipVO.setShipPhone(apiShipVO.getShipPhone());
-            shipVO.setShipArea(apiShipVO.getShipArea());
-            shipVO.setShipAddress(apiShipVO.getShipAddress());
-            shipVO.setShipProvinceCode(apiShipVO.getShipProvinceCode());
-            shipVO.setShipCityCode(apiShipVO.getShipCityCode());
-            shipVO.setShipAreaCode(apiShipVO.getShipAreaCode());
-            shipVO.setShipZipCode(apiShipVO.getShipZipCode());
-            return shipVO;
-        }));
-        orderCreateCommand.setOrderGoodsList(TransferUtils.transfers(orderReq.getOrderGoodsList(), apiOrderSubmitItemReq -> {
-            OrderItemCommand orderItemCommand = new OrderItemCommand();
-            orderItemCommand.setSkuId(apiOrderSubmitItemReq.getSkuId());
-            orderItemCommand.setCount(apiOrderSubmitItemReq.getCount());
-            return orderItemCommand;
-        }));
-        orderCreateCommand.setRemark(orderReq.getRemark());
-        orderCreateCommand.setOutOrderNo(orderReq.getOutOrderNo());
-        OrderCreateRes orderCreateRes = commitOrder.commitOrder(orderCreateCommand, new MemberOrderCreateCommand());
-        return TransferUtils.transfer(orderCreateRes, orderCreateRes1 -> {
-            ApiOrderRes apiOrderRes = new ApiOrderRes();
-            apiOrderRes.setPayState(CommonEnum.YesOrNo.YES);
-            return apiOrderRes;
-        });
-    }
-
-    @Override
     public Page<ApiOrderVO> apiList(Long accountId, ApiOrderReq apiOrderReq) {
         //参数转换
-        OrderQuery spuOrderQuery = TransferUtils.transfer(apiOrderReq, new Function<ApiOrderReq, OrderQuery>() {
-            @Override
-            public OrderQuery apply(ApiOrderReq apiSpuOrderReq) {
-                OrderQuery spuOrderQuery = new OrderQuery();
-                spuOrderQuery.setOutOrderNo(apiSpuOrderReq.getOutOrderNo());
-                spuOrderQuery.setCreateStartTime(apiSpuOrderReq.getCreateBeginTime());
-                spuOrderQuery.setCreateEndTime(apiSpuOrderReq.getCreateEndTime());
-                spuOrderQuery.setPageNo(apiSpuOrderReq.getPageNo());
-                spuOrderQuery.setPageSize(apiSpuOrderReq.getPageSize());
-                return spuOrderQuery;
-            }
-        });
+        OrderQuery spuOrderQuery = TransferUtils.transfer(apiOrderReq, OrderQuery.class);
         //分页查询
         Page<OrderVO> apiSpuOrderPageVOPage = queryService.orderVOList(spuOrderQuery);
         return TransferUtils.transferPage(apiSpuOrderPageVOPage,ApiOrderVO.class);
@@ -314,6 +267,16 @@ public class OrderFacadeImpl implements OrderFacade {
     @Override
     public OrderPayInfoRes queryPayInfoByOrderId(Long orderId) {
         return null;
+    }
+
+    @Override
+    public ApiOrderRes commitOrder(OrderCreateRpcCommand orderCreateCommand) {
+        OrderCreateRes orderCreateRes = commitOrder.commitOrder(TransferUtils.transfer(orderCreateCommand, OrderCreateCommand.class), new MemberOrderCreateCommand());
+        return TransferUtils.transfer(orderCreateRes, orderCreateRes1 -> {
+            ApiOrderRes apiOrderRes = new ApiOrderRes();
+            apiOrderRes.setPayState(CommonEnum.YesOrNo.YES);
+            return apiOrderRes;
+        });
     }
 
     /**

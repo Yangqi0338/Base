@@ -26,4 +26,12 @@ public interface ChannelRepository {
 
     Page<ChannelVO> pageList(ChannelQuery channelQuery);
 
+    /**
+     * 按主键批量查渠道商身份行
+     *
+     * @param idList 渠道商 (账号) ID 列表
+     * @return 渠道商视图列表, 无则空列表
+     */
+    List<ChannelVO> listByIdList(List<Long> idList);
+
 }

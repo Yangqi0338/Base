@@ -96,7 +96,7 @@ public class AccountFacadeProvider implements AccountFacade {
             IdentityCustomSaveReq saveReq = new IdentityCustomSaveReq();
             saveReq.setHead(accountVO.getHead());
             saveReq.setContactsWay(phone);
-            saveReq.setName(accountVO.getRealname());
+            saveReq.setName(accountVO.getRealName());
             saveReq.setStoreName(storeName);
             saveReq.setContactsName(contactName);
 //        saveReq.setChannelType();

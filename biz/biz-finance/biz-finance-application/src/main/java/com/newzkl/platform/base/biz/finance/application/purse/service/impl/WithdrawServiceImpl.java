@@ -1,20 +1,15 @@
 package com.newzkl.platform.base.biz.finance.application.purse.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.purse.service.WithdrawService;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseConfigRepository;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
-import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuRollOutReq;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuRollOutRes;
-import com.newzkl.platform.base.biz.finance.model.pay.vo.CommitInfoExt;
 import com.newzkl.platform.base.biz.finance.model.purse.req.*;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
@@ -46,7 +41,6 @@ public class WithdrawServiceImpl implements WithdrawService {
     private final WithdrawDomain withdrawDomain;
     private final AccountPurseDomain accountPurseService;
     private final AccountPurseConfigRepository accountPurseConfigRepository;
-    private final TripartitePurseDomain tripartitePurse;
     private final AccountApi accountApi;
 
     private static HuiFuRollOutReq buildRollOutReq(RollOutApplyVO rollOutApplyVO) {
@@ -87,10 +81,6 @@ public class WithdrawServiceImpl implements WithdrawService {
         // 检查提现申请
         checkRollOutApply(req, channelConfigVO);
 
-        AccountTripartitePurseVO accountTripartitePurseVO = tripartitePurse.queryAccountTripartitePurse(SecurityUtils.getAccountId());
-        if (accountTripartitePurseVO == null || PurseEnum.TripartitePurchaseStatus.NORMAL != accountTripartitePurseVO.getUserStatus()) {
-            throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
-        }
         if (!req.getAmount().greaterThanZero()) {
             throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
         }
@@ -109,13 +99,8 @@ public class WithdrawServiceImpl implements WithdrawService {
         boolean flag = accountPurseService.subAmount(recordReq);
         // false为余额不足
         if (flag) {
-            // 2、保存申请
+            // 2、保存申请 (三方钱包只增不查, tripartiteAccountId 由前端传入)
             req.setAccountType(accountType);
-            CommitInfoExt infoExt = JSONUtil.toBean(accountTripartitePurseVO.getCommitInfo(), CommitInfoExt.class);
-            if (infoExt == null || StrUtil.isBlank(infoExt.getHuifuId())) {
-                throw new PlatformException(FinanceErrorCode.NOT_OPEN_ACCOUNT);
-            }
-            req.setTripartiteAccountId(infoExt.getHuifuId());
             withdrawDomain.rollOutApply(req);
         }
     }

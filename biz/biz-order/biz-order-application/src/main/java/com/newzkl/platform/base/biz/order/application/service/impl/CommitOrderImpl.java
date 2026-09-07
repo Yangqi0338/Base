@@ -10,18 +10,20 @@ import com.newzkl.platform.base.biz.order.application.service.QueryService;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.*;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.OrderRepository;
 import com.newzkl.platform.base.biz.order.domain.service.OrderDomain;
+import com.newzkl.platform.base.biz.order.domain.service.ShipAddressDomain;
 import com.newzkl.platform.base.biz.order.model.dto.OrderAgg;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
 import com.newzkl.platform.base.biz.order.model.dto.SkuOrderDTO;
 import com.newzkl.platform.base.biz.order.model.req.*;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
+import com.newzkl.platform.base.biz.order.model.res.ShipAddressRes;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.support.api.order.*;
 import com.newzkl.platform.base.common.ddd.facade.*;
 import com.newzkl.platform.base.biz.order.model.vo.OrderAggVO;
 import com.newzkl.platform.base.biz.order.model.vo.OrderVO;
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.ddd.model.vo.ShipVO;
 import com.newzkl.platform.base.biz.order.model.vo.SkuOrderVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -33,7 +35,7 @@ import com.newzkl.platform.base.common.ddd.model.enums.store.StoreStyleEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.generator.SnowflakeGenerator;
 import com.newzkl.platform.base.common.ddd.facade.ModelShopOutVO;
-import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
+import com.newzkl.platform.base.common.ddd.facade.StoreGoodsDetailOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
@@ -66,7 +68,7 @@ public class CommitOrderImpl implements CommitOrder {
     private final QueryService queryService;
     private final PurseApi accountPurseApi;
     private final OrderRepository orderRepository;
-    private final AccountShipAddressApi shipAddressApi;
+    private final ShipAddressDomain shipAddressDomain;
     private final LocalMessageApi localMessageApi;
 
     @Override
@@ -107,6 +109,56 @@ public class CommitOrderImpl implements CommitOrder {
         return doMemberPrePayOrder(orderCreateCommand, memberOrderCreateCommand);
     }
 
+    /**
+     * 构建SKU订单（保留核心逻辑，简化冗余setter，优化空值处理）
+     */
+    private SkuOrderDTO buildSkuOrder(OrderGoodsInfoVO goodsInfo, Long spuOrderId, String orderNo, LocalDateTime createTime) {
+        SkuOrderDTO skuOrder = new SkuOrderDTO();
+        // 基础字段批量赋值（减少冗余行）
+        skuOrder.setId(SnowflakeGenerator.getSnowflakeId());
+        skuOrder.setOrderNo(orderNo);
+        skuOrder.setSpuId(goodsInfo.getSpuId());
+        skuOrder.setSkuId(goodsInfo.getSkuId());
+        skuOrder.setCount(goodsInfo.getNum());
+        skuOrder.setCreateTime(createTime);
+        // 空值兜底简化
+        skuOrder.setOutSkuId(StrUtil.isEmpty(goodsInfo.getOutSkuId()) ? "0" : goodsInfo.getOutSkuId());
+
+        // 金额计算：简化条件判断，语义化常量
+        SpuEnum.ChannelType channelType = goodsInfo.getSpuChannelType();
+        if (SpuEnum.ChannelType.SELECTION == channelType
+                || SpuEnum.ChannelType.OUT == channelType) {
+            skuOrder.setGoodsAmount(goodsInfo.getSalePrice().multiply(goodsInfo.getNum()));
+            skuOrder.setSupplierAmount(goodsInfo.getSupplyPrice().multiply(goodsInfo.getNum()));
+            skuOrder.setStoreAmount(goodsInfo.getStorePrice().multiply(goodsInfo.getNum()));
+        } else {
+            ThrowsException.exception(BaseErrorCode.PARAM);
+        }
+
+        // 固定值字段集中赋值
+        skuOrder.setFreightAmount(Money.ZERO);
+        skuOrder.setDiscountAmount(Money.ZERO);
+        skuOrder.setOrderState(OrderEnum.State.NEW);
+        skuOrder.setOrderStateLog(OrderEnum.State.NEW.toString());
+        skuOrder.setSupplierId(goodsInfo.getSupplierId());
+        skuOrder.setDeliverCount(0);
+        skuOrder.setRefundedCount(0);
+        skuOrder.setRefundingCount(0);
+
+        // 商品信息字段赋值
+        skuOrder.setSkuImg(goodsInfo.getImg());
+        skuOrder.setSpuChannelType(channelType);
+        skuOrder.setSpuName(goodsInfo.getSpuName());
+        skuOrder.setSpuImg(goodsInfo.getSpuImg());
+        skuOrder.setSkuSaleAttribute(goodsInfo.getSaleAttributeJson());
+        skuOrder.setSkuWeight(goodsInfo.getWeight().doubleValue());
+        skuOrder.setSkuVolume(goodsInfo.getVolume().doubleValue());
+        skuOrder.setSkuSalePrice(goodsInfo.getSalePrice());
+        skuOrder.setSkuSupplierPrice(goodsInfo.getSupplyPrice());
+        skuOrder.setSkuStorePrice(goodsInfo.getStorePrice());
+        return skuOrder;
+    }
+
     @Override
     public OrderCreateRes getOrderCreateResByRedis(MemberOrderCreateCommand memberOrderCreateCommand) {
         return orderDomain.getPrePayOrder(
@@ -129,8 +181,8 @@ public class CommitOrderImpl implements CommitOrder {
             orderCreateCommand.setChannelId(orderVO.getChannelId());
             List<OrderItemCommand> orderGoodsList = new ArrayList<>();
             skuOrderList.forEach(skuOrder -> {
-                StoreDistributionDetailOutVO storeDistributionRpcVO = goodsApi.selectBySkuId(orderVO.getChannelId(), orderVO.getStoreId(), skuOrder.getSkuId());
-                orderGoodsList.add(new OrderItemCommand(storeDistributionRpcVO.getId(), skuOrder.getSkuId(), skuOrder.getCount()));
+                StoreGoodsDetailOutVO storeGoodsRpcVO = goodsApi.selectBySkuId(orderVO.getChannelId(), orderVO.getStoreId(), skuOrder.getSkuId());
+                orderGoodsList.add(new OrderItemCommand(storeGoodsRpcVO.getId(), skuOrder.getSkuId(), skuOrder.getCount()));
             });
             orderCreateCommand.setOrderGoodsList(orderGoodsList);
             orderCreateCommand.setOperatorId(SecurityUtils.getAccountId());
@@ -155,7 +207,7 @@ public class CommitOrderImpl implements CommitOrder {
         List<GoodsVO> goodsList = orderGoodsList.stream()
                 .map(item -> {
                     GoodsVO goodsVO = new GoodsVO();
-                    goodsVO.setStoreDistributionId(item.getStoreDistributionId());
+                    goodsVO.setStoreGoodsId(item.getStoreGoodsId());
                     goodsVO.setSkuId(item.getSkuId());
                     goodsVO.setNum(item.getCount());
                     return goodsVO;
@@ -168,13 +220,13 @@ public class CommitOrderImpl implements CommitOrder {
         orderCreateCommand.setBenefitTripartiteId(huifuId);
         ShipVO shipVO = orderCreateCommand.getShipVO();
         if (shipVO.getId() != null){
-            // 迁移: 原 shipAddressFacade.shipAddress(id)->ShipAddressOutVO 对齐既有出站端口 getAddressDetail(id, accountId)->ShipAddressDTO
-            ShipAddressDTO shipAddressDTO = shipAddressApi.getAddressDetail(shipVO.getId());
-            if (Objects.isNull(shipAddressDTO)){
+            // 收货地址并入订单域后由 ShipAddressDomain 同域查询, 不再经账户域 facade 出站
+            ShipAddressRes shipAddressRes = shipAddressDomain.detail(shipVO.getId());
+            if (Objects.isNull(shipAddressRes)){
                 ThrowsException.exception(BaseErrorCode.PARAM, "收货地址不存在");
             }
-            BeanUtils.copyProperties(shipAddressDTO, shipVO);
-            shipVO.setShipPhone(shipAddressDTO.getShipPhone());
+            BeanUtils.copyProperties(shipAddressRes, shipVO);
+            shipVO.setShipPhone(shipAddressRes.getShipPhone() == null ? StrUtil.EMPTY : shipAddressRes.getShipPhone().toString());
         }
         // 商品校验
 
@@ -193,10 +245,10 @@ public class CommitOrderImpl implements CommitOrder {
 
         // 生成订单
         OrderGoodsCheckV2Res checkData = checkResult.getData();
-        StoreDistributionDetailRpcVO storeDistributionDetailRpcVO = checkData.getGoodsInfo().get(0);
-        memberOrderCreateCommand.setStoreId(storeDistributionDetailRpcVO.getStoreId());
+        StoreGoodsDetailRpcVO storeGoodsDetailRpcVO = checkData.getGoodsInfo().get(0);
+        memberOrderCreateCommand.setStoreId(storeGoodsDetailRpcVO.getStoreId());
         memberOrderCreateCommand.setAccountId(SecurityUtils.getAccountId());
-        orderCreateCommand.setChannelId(storeDistributionDetailRpcVO.getChannelId());
+        orderCreateCommand.setChannelId(storeGoodsDetailRpcVO.getChannelId());
         //  创建订单 + 保存预支付订单
         OrderCreateRes order = orderDomain.createOrder(checkData, orderCreateCommand);
         orderDomain.savePrePayOrder(order, memberOrderCreateCommand);
@@ -265,12 +317,12 @@ public class CommitOrderImpl implements CommitOrder {
         MemberOrderCreateCommand cacheCommand = new MemberOrderCreateCommand(command.getStoreId(), command.getAccountId());
         ShipVO shipVO = command.getShipVO();
         if (shipVO.getId() != null){
-            ShipAddressDTO shipAddressOutVO = shipAddressApi.getAddressDetail(shipVO.getId());
-            if (Objects.isNull(shipAddressOutVO)){
+            ShipAddressRes shipAddressRes = shipAddressDomain.detail(shipVO.getId());
+            if (Objects.isNull(shipAddressRes)){
                 ThrowsException.exception(BaseErrorCode.PARAM, "收货地址不存在");
             }
-            BeanUtils.copyProperties(shipAddressOutVO, shipVO);
-            shipVO.setShipPhone(shipAddressOutVO.getShipPhone() == null ? StrUtil.EMPTY : shipAddressOutVO.getShipPhone().toString());
+            BeanUtils.copyProperties(shipAddressRes, shipVO);
+            shipVO.setShipPhone(shipAddressRes.getShipPhone() == null ? StrUtil.EMPTY : shipAddressRes.getShipPhone().toString());
         }
         try {
             // 1. 查询缓存中的订单

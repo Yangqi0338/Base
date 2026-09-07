@@ -45,8 +45,6 @@ public interface MarketGoodsRelationDAO extends BaseMapper<MarketGoodsRelationDO
 
     Page<GoodsRelationListVO> channelMarketNotSelectedGoodsList(Page<?> page, @Param("req") PlatformQueryMarketNotAddGoodsReq req);
 
-    Page<GoodsRelationListVO> channelDistributionSelectedGoodsList(Page<?> page, @Param("req") PlatformQueryMarketNotAddGoodsReq query);
-
     Page<ApiChannelSpuRelationVO> channelSpuRelationList(Page<?> page, @Param("req") GoodsListPageQuery req);
 
 

@@ -45,7 +45,7 @@ public class UserCollectionDTO {
     /**
      * 铺货表ID
      */
-    private Long storeDistributionId;
+    private Long storeGoodsId;
 
     /**
      * SPU ID

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.application.service.impl;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,15 +8,22 @@ import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PermissionApi;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
+import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
+import com.newzkl.platform.base.biz.account.domain.repository.EmpRepository;
+import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
+import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.biz.account.model.res.AccountAggRes;
 import com.newzkl.platform.base.biz.account.model.res.SubAccountDetailRes;
 import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.EmpAccountVO;
-import com.newzkl.platform.base.biz.account.model.vo.MemberAccountVO;
+import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
+import com.newzkl.platform.base.biz.account.model.vo.EmpVO;
+import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
+import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import org.springframework.transaction.annotation.Transactional;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
@@ -26,7 +34,6 @@ import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -45,66 +52,156 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountAssembler accountAssembler;
     private final PermissionApi permissionApi;
+    private final MemberRepository memberRepository;
+    private final EmpRepository empRepository;
+    private final SupplierRepository supplierRepository;
+    private final ChannelRepository channelRepository;
 
 
     @Override
-    public Page<?> pageAccount(AccountQuery query) {
-        AccountEnum.Client client = query.getClient();
+    public Page<AccountAggRes> aggPage(AccountQuery query) {
+        List<AccountEnum.Identity> identityList = query.getIdentityList();
+        if (CollUtil.isEmpty(identityList)) {
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "身份不能为空");
+        }
+        // 跨端聚合: 不按 client 过滤 account, 只按 identityList 过滤
+        query.setClient(null);
+
         Page<AccountVO> accountPage = accountRepository.accountPage(query);
         if (accountPage == null || CollectionUtils.isEmpty(accountPage.getRecords())) {
             return new Page<>();
         }
-        List<AccountVO> accountList = accountPage.getRecords();
+        List<Long> idList = CollUtil.map(accountPage.getRecords(), AccountVO::getId, true);
 
-        List<Long> pidList = accountList.stream()
-                .map(AccountVO::getPid)
-                .filter(pid -> ObjectUtils.isNotEmpty(pid) && pid != 0)
-                .toList();
+        Map<AccountEnum.Identity, Map<Long, Object>> identityMaps = loadIdentityMaps(identityList, idList);
+        Map<Long, List<String>> roleMap = loadRoleCodes(accountPage.getRecords());
 
-        Map<Long, AccountVO> parentAccountMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(pidList)) {
-            AccountQuery parentQuery = new AccountQuery();
-            parentQuery.setIdList(pidList);
-            List<AccountVO> parentAccountList = accountRepository.accountList(parentQuery);
-            parentAccountList.forEach(parentVO -> parentAccountMap.put(parentVO.getId(), parentVO));
+        return TransferUtils.transferPage(accountPage, accountVO -> assembleAgg(identityList, accountVO,
+                identityMaps, roleMap.getOrDefault(accountVO.getId(), new ArrayList<>())));
+    }
+
+    @Override
+    public AccountAggRes aggDetail(List<AccountEnum.Identity> identityList, Long accountId) {
+        if (CollUtil.isEmpty(identityList) || accountId == null) {
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "身份与账号 ID 不能为空");
         }
+        AccountVO accountVO = accountRepository.account(null, accountId);
+        if (accountVO == null) {
+            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "账号不存在");
+        }
+        List<Long> idList = List.of(accountId);
+        Map<AccountEnum.Identity, Map<Long, Object>> identityMaps = loadIdentityMaps(identityList, idList);
+        Map<Long, List<String>> roleMap = loadRoleCodes(List.of(accountVO));
+        return assembleAgg(identityList, accountVO, identityMaps,
+                roleMap.getOrDefault(accountId, new ArrayList<>()));
+    }
 
-        // 角色查询
-        Map<Long, List<Long>> roleMap = permissionApi.findRoleByAccountIdList(client, CollUtil.map(accountList, AccountVO::getId, true));
-
-        return TransferUtils.transferPage(accountPage, (accountVO)-> {
-            accountVO.setRoleIdList(roleMap.getOrDefault(accountVO.getId(), new ArrayList<>()));
-            switch (client) {
-                case ADMIN -> {
-                    return TransferUtils.transfer(accountVO, EmpAccountVO.class);
-                }
-                case USER -> {
-                    MemberAccountVO memberVO = TransferUtils.transfer(accountVO, MemberAccountVO.class);
-                    Long pid = accountVO.getPid();
-                    if (ObjectUtils.isNotEmpty(pid) && pid != 0) {
-                        AccountVO parentAccount = parentAccountMap.get(pid);
-                        if (ObjectUtils.isNotEmpty(parentAccount)) {
-                            memberVO.setPid(parentAccount.getId());
-                            memberVO.setPUsername(parentAccount.getUsername());
-                            memberVO.setPNickname(parentAccount.getNickname());
-                        }
-                    }
-                    return memberVO;
-                }
-                case PARTNER -> {
-                    return null;
-                }
-                case CHANNEL -> {
-                    return null;
-                }
-                case SUPPLIER -> {
-                    return null;
-                }
+    /**
+     * 按传入身份批量加载各身份表
+     * <p>
+     * 每个 identity 返回一张表, 内层 map 的 key 是 account id。身份表与 account 共用主键,
+     * 故 map 的 key 就是 account id。PLATFORM / PARTNER / MMT_CHANNEL 无身份表, 对应内层 map 为空。
+     * value 的运行时类型由 identity 唯一决定, 这条不变量由本方法保证, assembleAgg 据此强转。
+     *
+     * @param identityList 身份列表, 决定查哪几张身份表
+     * @param idList       账号 ID 列表, 调用方保证非空
+     * @return identity 到 (account id → 身份视图) 的映射
+     */
+    private Map<AccountEnum.Identity, Map<Long, Object>> loadIdentityMaps(
+            List<AccountEnum.Identity> identityList, List<Long> idList) {
+        Map<AccountEnum.Identity, Map<Long, Object>> maps = new HashMap<>();
+        for (AccountEnum.Identity identity : identityList) {
+            Map<Long, Object> m = new HashMap<>();
+            switch (identity) {
+                case MEMBER -> memberRepository.selectMemberByAccountIdList(idList)
+                        .forEach(vo -> m.put(vo.getId(), vo));
+                case EMP -> empRepository.listByIdList(idList)
+                        .forEach(vo -> m.put(vo.getId(), vo));
+                case SUPPLIER -> supplierRepository.listByIdList(idList)
+                        .forEach(vo -> m.put(vo.getId(), vo));
+                case CHANNEL -> channelRepository.listByIdList(idList)
+                        .forEach(vo -> m.put(vo.getId(), vo));
                 default -> {
-                    return null;
+                    // PLATFORM / PARTNER / MMT_CHANNEL 无身份表, 内层 map 保持空
                 }
             }
-        });
+            maps.put(identity, m);
+        }
+        return maps;
+    }
+
+    /**
+     * 按账号各自 client 分组查角色编码列表
+     *
+     * <p>跨端分页下本页账号可能分属多个端, 角色关系 (ACCOUNT_ROLE) 按端隔离,
+     * 故按 account.client 分组后逐端批量查, 再合并为 account id → 角色编码列表。</p>
+     *
+     * @param accountList 本页账号视图列表
+     * @return account id 到角色编码列表的映射
+     */
+    private Map<Long, List<String>> loadRoleCodes(List<AccountVO> accountList) {
+        Map<AccountEnum.Client, List<Long>> clientGroups = new HashMap<>();
+        for (AccountVO vo : accountList) {
+            if (vo.getClient() == null) {
+                continue;
+            }
+            clientGroups.computeIfAbsent(vo.getClient(), k -> new ArrayList<>()).add(vo.getId());
+        }
+        Map<Long, List<String>> roleMap = new HashMap<>();
+        clientGroups.forEach((client, ids) ->
+                roleMap.putAll(permissionApi.findRoleCodeByAccountIdList(client, ids)));
+        return roleMap;
+    }
+
+    /**
+     * 解析账号身份 csv 为身份枚举列表
+     *
+     * @param csv 账号身份 csv (如 "1000,1001")
+     * @return 身份枚举列表, 空串或无法识别时返回空列表
+     */
+    private List<AccountEnum.Identity> parseIdentityList(String csv) {
+        if (StrUtil.isBlank(csv)) {
+            return new ArrayList<>();
+        }
+        return StrUtil.split(csv, ",").stream()
+                .map(code -> AccountEnum.Identity.getByCode(Long.valueOf(code)))
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    /**
+     * 装配单行账号聚合根
+     * <p>
+     * 账号主体字段由 {@code TransferUtils} 直接平铺映射 (AccountAggRes 继承 AccountRes), 仅 identityList
+     * 需从 account.identityList csv 显式解析。identityVO 的运行时类型由 identity 唯一决定, 故槽内强转安全。
+     *
+     * @param identityList 本次查询传入的身份列表, 决定回填哪些槽
+     * @param accountVO    账号视图, 非 null
+     * @param identityMaps identity 到 (account id → 身份视图) 的映射
+     * @param roleCodes    角色编码列表, 无角色传空列表
+     * @return 聚合根, 永不为 null
+     */
+    private AccountAggRes assembleAgg(List<AccountEnum.Identity> identityList, AccountVO accountVO,
+                                      Map<AccountEnum.Identity, Map<Long, Object>> identityMaps,
+                                      List<String> roleCodes) {
+        AccountAggRes agg = TransferUtils.transfer(accountVO, AccountAggRes.class, null,
+                CopyOptions.create().setIgnoreProperties("identityList"));
+        agg.setIdentityList(parseIdentityList(accountVO.getIdentityList()));
+        agg.setRoleList(roleCodes);
+
+        for (AccountEnum.Identity identity : identityList) {
+            Object vo = identityMaps.getOrDefault(identity, Collections.emptyMap()).get(accountVO.getId());
+            switch (identity) {
+                case MEMBER -> agg.setMember((MemberVO) vo);
+                case EMP -> agg.setEmp((EmpVO) vo);
+                case SUPPLIER -> agg.setSupplier((SupplierVO) vo);
+                case CHANNEL -> agg.setChannel((ChannelVO) vo);
+                default -> {
+                    // PLATFORM / PARTNER / MMT_CHANNEL 无身份表, 无槽可填
+                }
+            }
+        }
+        return agg;
     }
 
     @Override
@@ -160,16 +257,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
         return account.getId();
-    }
-
-    @Override
-    public void bindRoles(Long accountId, Collection<Long> roleIds) {
-        AccountEnum.Client client = SecurityUtils.getClient();
-        AccountVO account = accountDomain.account(client, accountId);
-        if (account == null) {
-            throw new PlatformException(BaseErrorCode.NODATA, "账号");
-        }
-        permissionApi.bindRoles(client, accountId, roleIds == null ? null : new ArrayList<>(roleIds));
     }
 
     @Override

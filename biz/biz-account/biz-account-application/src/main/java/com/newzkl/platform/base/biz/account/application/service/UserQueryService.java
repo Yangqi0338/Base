@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.application.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.*;
 import com.newzkl.platform.base.biz.account.model.vo.*;
@@ -14,32 +13,6 @@ import java.util.List;
  * @date 2024/2/2210:36
  */
 public interface UserQueryService {
-
-    /**
-     * 账号外部视图
-     *
-     * @param client
-     * @param userId
-     * @return
-     */
-    AccountOutRes accountOutVO(AccountEnum.Client client, Long userId);
-
-    /**
-     * 账号外部视图
-     *
-     * @param phone
-     * @return
-     */
-    AccountOutRes accountOutVO(String phone);
-
-    /**
-     * 获取账号身份信息
-     *
-     * @param id
-     * @param role
-     * @return
-     */
-    Object userIdentityDetail(Long id, AccountEnum.Identity identity);
 
     /**
      * 账号视图 by 邀请码
@@ -57,31 +30,12 @@ public interface UserQueryService {
      */
     MemberVO memberVO(Long memberId);
 
-    /**
-     * member分页
-     *
-     * @param memberQuery
-     * @return
-     */
-    Page<MemberVO> memberPage(MemberQuery memberQuery);
-
-    List<SupplierDescVO> supplierDescVOList(List<Long> supplierIdList);
-
-    Page<ChannelVO> channelPage(ChannelQuery channelQuery);
 
     SupplierVO supplierVO(Long supplierId);
 
     List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList);
 
     ChannelEarningsConfigVO serviceFeeConfigVO(Long channelId);
-
-    /**
-     * app账号详情
-     *
-     */
-    AppAccountVO appVO(AccountKeyQuery query);
-
-    Page<ChannelPageRes> queryChannelPage(ChannelQuery channelQuery);
 
     /**
      * 运营商供应商分页

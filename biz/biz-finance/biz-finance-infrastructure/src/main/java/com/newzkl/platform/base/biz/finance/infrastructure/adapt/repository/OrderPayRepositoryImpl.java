@@ -1,4 +1,5 @@
 package com.newzkl.platform.base.biz.finance.infrastructure.adapt.repository;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 
 import cn.hutool.core.util.NumberUtil;
@@ -15,6 +16,7 @@ import com.newzkl.platform.base.biz.finance.model.pay.vo.PaymentVO;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessCodeUtil;
 import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,7 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
     @Transactional(rollbackFor = Exception.class)
     public String saveOrderPayRecord(PaymentVO paymentVO, List<OrderPayeeInfoVO> payeeInfos) {
         PaymentDO payment = TransferUtils.transfer(paymentVO, PaymentDO::new);
+        payment.setPayState(PaymentEnum.PayState.PENDING);
         payment.setTradeNo(BusinessCodeUtil.generate(BusinessType.PAYMENT));
         payment.setPayeeInfo(payeeInfos);
         paymentDAO.insert(payment);
@@ -47,11 +50,11 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
     @Transactional(rollbackFor = Exception.class)
     public boolean alterPayState(String tradeNo, String tripartiteTradeNo) {
         return paymentDAO.update(new LambdaUpdateWrapper<PaymentDO>()
-                .set(PaymentDO::getPayState, 1)
+                .set(PaymentDO::getPayState, PaymentEnum.PayState.SUCCESS)
                 .set(PaymentDO::getTripartiteTradeNo, tripartiteTradeNo)
                 .set(PaymentDO::getPayTime, LocalDateTime.now())
                 .eq(PaymentDO::getTradeNo, tradeNo)
-                .eq(PaymentDO::getPayState, 0)
+                .eq(PaymentDO::getPayState, PaymentEnum.PayState.PENDING)
         ) > 0;
     }
 
@@ -66,7 +69,8 @@ public class OrderPayRepositoryImpl extends RepositorySupport implements OrderPa
 
     @Override
     public TradeOrderInfoRes tradeOrderQuery(String tradeNo) {
-        PaymentDO payment = paymentDAO.selectOne(new LambdaQueryWrapper<PaymentDO>().eq(PaymentDO::getTradeNo, tradeNo));
+        PaymentDO payment = getOne(paymentDAO, new BaseLambdaQueryWrapper<PaymentDO>()
+                .notEmptyEq(PaymentDO::getTradeNo, tradeNo));
         return TransferUtils.transfer(payment, TradeOrderInfoRes::new);
     }
 

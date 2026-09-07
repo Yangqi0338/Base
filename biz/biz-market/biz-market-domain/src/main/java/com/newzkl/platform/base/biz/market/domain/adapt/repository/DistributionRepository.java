@@ -1,12 +1,12 @@
 package com.newzkl.platform.base.biz.market.domain.adapt.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
+import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreGoodsDTO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
-import com.newzkl.platform.base.biz.market.model.query.distribution.StoreDistributionQuery;
+import com.newzkl.platform.base.biz.market.model.query.distribution.StoreGoodsQuery;
 import com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsDetailRes;
 import com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsListRes;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryVO;
@@ -19,7 +19,6 @@ import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author niu
@@ -36,12 +35,12 @@ public interface DistributionRepository {
     /**
      * 批量修改铺货
      */
-    void batchUpdateDistributions(List<StoreDistributionDTO> storeDistributionList);
+    void batchUpdateDistributions(List<StoreGoodsDTO> storeGoodsList);
 
     /**
      * 修改铺货
      */
-    void updateDistributions(StoreDistributionDTO storeDistributionDTO);
+    void updateDistributions(StoreGoodsDTO storeGoodsDTO);
 
     /**
      * 查询铺货列表-渠道商
@@ -56,12 +55,12 @@ public interface DistributionRepository {
     /**
      * 查询铺货列表
      */
-    List<StoreDistributionDTO> queryDistributionsList(StoreDistributionQuery query);
+    List<StoreGoodsDTO> queryDistributionsList(StoreGoodsQuery query);
 
     /**
      * 查询铺货表数据
      */
-    StoreDistributionDTO queryOneDistributions(StoreDistributionQuery query);
+    StoreGoodsDTO queryOneDistributions(StoreGoodsQuery query);
 
     /**
      * 根据skuId查询spuId
@@ -78,9 +77,17 @@ public interface DistributionRepository {
      */
     List<DistributionGoodsInfoVO> queryGoodsDistributionSku(Long goodsId);
 
-    void batchSave(List<StoreDistributionDTO> storeDistributionList);
+    void batchSave(List<StoreGoodsDTO> storeGoodsList);
 
     void delGoods(Long goodsId,Long accountId);
+
+    /**
+     * 恢复逻辑删除的铺货商品
+     *
+     * @param goodsId   商品ID
+     * @param accountId 渠道商账号ID
+     */
+    void recoverGoods(Long goodsId, Long accountId);
 
     /**
      * 统计可删除的铺货商品数量（下架/待上架且销量为0的商品级记录）
@@ -175,16 +182,11 @@ public interface DistributionRepository {
     /**
      * 根据id查询铺货信息
      */
-    List<StoreDistributionDTO> getByIds(List<Long> ids);
+    List<StoreGoodsDTO> getByIds(List<Long> ids);
 
     /**
      * 批量查询铺货详情
      */
     List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> ids);
-
-    /**
-     * 复制渠道商铺货
-     */
-    void copyChannelDistribution(Long channelId, Long targetChannelId, Set<Long> goodsIdList);
 
 }

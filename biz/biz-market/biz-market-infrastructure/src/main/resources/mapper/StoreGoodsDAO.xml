@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.market.infrastructure.dao.StoreGoodsDAO">
+
+    <!-- 铺货列表公共查询条件 (迁移自 new-scm StoreDistributionDAO.xml 的 sql id="where") -->
+    <sql id="where">
+        <if test="query.goodsType != null">
+            <if test="query.goodsType == 0">
+                and sd.market_id = 0
+            </if>
+            <if test="query.goodsType == 1">
+                and sd.market_id > 0
+            </if>
+        </if>
+        <if test="query.goodsName != null">
+            and sp.name like CONCAT('%',#{query.goodsName},'%')
+        </if>
+        <if test="query.goodsId != null">
+            and sp.id = #{query.goodsId}
+        </if>
+        ${query.buildInSQL('goodsIds', 'sp.id')}
+        <if test="query.categoryId != null">
+            and sp.category_id = #{query.categoryId}
+        </if>
+        <if test="query.delState != null">
+            and sd.del_flag = #{query.delState}
+        </if>
+        <if test="query.state != null">
+            and sd.goods_state = #{query.state}
+        </if>
+        <if test="query.stateNot != null">
+            and sd.goods_state != #{query.stateNot}
+        </if>
+        <if test="query.sellPriceL != null and query.sellPriceR != null">
+            and sd.sell_price between #{query.sellPriceL} and #{query.sellPriceR}
+        </if>
+        <if test="query.supplierPriceL != null and query.supplierPriceR != null">
+            and sd.supplier_price between #{query.supplierPriceL} and #{query.supplierPriceR}
+        </if>
+    </sql>
+
+    <!-- 按条件查询铺货ID列表 (迁移自 new-scm StoreDistributionDAO.xml 的 idByQuery) -->
+    <select id="idByQuery" resultType="java.lang.Long">
+        select sd.id
+        from store_goods sd
+        inner join spu sp on sd.goods_id = sp.id
+        where 1=1
+        <if test="query.channelId != null">
+            and sd.channel_id = #{query.channelId}
+        </if>
+        <if test="query.storeId != null">
+            and sd.store_id = #{query.storeId}
+        </if>
+        <include refid="where"/>
+    </select>
+
+    <!-- 查询铺货列表-渠道商 (迁移自 new-scm StoreDistributionDAO.xml 的 queryDistributions) -->
+    <select id="queryDistributionsChannel"
+            resultType="com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsListRes">
+        select sd.goods_id as goodsId,sd.sell_price as sellPrice,sd.sell_num as sellNum,sd.goods_state as
+        goodsState,sd.supplier_price,sd.goods_info,sd.need_update,sd.up_time,
+        sd.market_id as marketId,sd.id,sp.deliver_time_type as deliverTimeType,sp.max_deliver_day as maxDeliverDay,
+        sp.name as goodsName,sp.img as goodsPicture,sp.title,sd.unit_price as unitPrice,sd.supplier_price as
+        supplierPrice,sd.create_time as createTime, sp.market_price, sp.virtual_sale_num
+        from store_goods sd
+        inner join spu sp on sd.goods_id = sp.id
+        where sd.data_type = 0
+        <if test="query.channelId != null">
+            and sd.channel_id = #{query.channelId}
+        </if>
+        <if test="query.storeId != null">
+            and sd.store_id = #{query.storeId}
+        </if>
+        <include refid="where"/>
+        ${query.sortSQL}
+    </select>
+
+    <!-- 查询铺货列表-总平台 (迁移自 new-scm StoreDistributionDAO.xml 的 queryDistributionsOverallPlatform) -->
+    <select id="queryDistributionsOverallPlatform"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO">
+        select sd.*,sp.name as goods_name,sp.img as goodsPicture,
+        sp.virtual_sale_num,
+        (select GROUP_CONCAT(sku_sd.sku_id)
+        from store_goods sku_sd
+        where sku_sd.goods_id = sd.goods_id
+        and sku_sd.store_id = sd.store_id
+        and sku_sd.channel_id = sd.channel_id
+        and sku_sd.data_type = 1) as skuIds
+        from store_goods sd
+        inner join spu sp on sd.goods_id = sp.id
+        where sd.data_type = 0
+        <if test="query.goodsName != null">
+            and sp.name like CONCAT('%',#{query.goodsName},'%')
+        </if>
+        <if test="query.goodsId != null">
+            and sp.id = #{query.goodsId}
+        </if>
+        <if test="query.categoryId != null">
+            and sp.category_id = #{query.categoryId}
+        </if>
+        <if test="query.state != null">
+            and sd.goods_state = #{query.state}
+        </if>
+        <if test="query.stateNot != null">
+            and sd.goods_state != #{query.stateNot}
+        </if>
+        <if test="query.sellPriceL != null and query.sellPriceR != null">
+            and sd.sell_price between #{query.sellPriceL} and #{query.sellPriceR}
+        </if>
+        <if test="query.upTimeL != null and query.upTimeR != null">
+            and sd.up_time between #{query.upTimeL} and #{query.upTimeR}
+        </if>
+        <if test="query.storeId != null">
+            and sd.store_id = #{query.storeId}
+        </if>
+        <if test="query.goodsIds != null and query.goodsIds.size() > 0">
+            and sd.goods_id in
+            <foreach collection="query.goodsIds" item="id" separator="," open="(" close=")">
+                #{id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        order by sd.recommendation_time desc
+    </select>
+
+    <!-- 查询铺货商品信息 (迁移自 new-scm StoreDistributionDAO.xml 的 queryGoodsDistribution) -->
+    <select id="queryGoodsDistribution"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO">
+        select sp.sale_price as sellPrice,sp.unit_price as unitPrice
+        <if test="!proprietary">
+            ,mgr.market_id as marketId,sp.category_id as categoryId
+        </if>
+        from spu sp
+        <if test="!proprietary">
+            left join market_goods_relation mgr on sp.id = mgr.goods_id and mgr.user_id = #{channelId} and mgr.relation_type = 3
+        </if>
+        where sp.id = #{goodsId}
+        limit 1
+    </select>
+
+    <!-- 查询铺货商品sku信息 (迁移自 new-scm StoreDistributionDAO.xml 的 queryGoodsDistributionSku) -->
+    <select id="queryGoodsDistributionSku"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO">
+        select id,sale_price as sellPrice,unit_price
+        from sku
+        where spu_id = #{goodsId}
+    </select>
+
+    <!-- 查询门店铺货商品的分类列表 (迁移自 new-scm StoreDistributionDAO.xml 的 queryDistributionGoodsCategory) -->
+    <select id="queryDistributionGoodsCategory"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryVO">
+        SELECT DISTINCT sp.category_id,sp.category_name
+        FROM store_goods sd
+        INNER JOIN spu sp ON sd.goods_id = sp.id
+        WHERE sd.store_id = #{storeId}
+        AND sd.data_type = 0
+        AND sd.goods_state = 0
+    </select>
+
+    <!-- 铺货列表随机分页查询 (迁移自 new-scm StoreDistributionDAO.xml 的 randomSelectedGoodsList) -->
+    <select id="randomSelectedGoodsPage"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO">
+        SELECT sd.*,s.name,s.img,s.virtual_sale_num
+        from store_goods sd
+        inner join spu s on sd.goods_id = s.id
+        where sd.data_type = 0
+        and sd.goods_state = 0
+        <if test="query.categoryId != null">
+            and s.category_id like CONCAT(#{query.categoryId},'%')
+        </if>
+        <if test="query.goodsName != null and query.goodsName != ''">
+            and s.name like CONCAT('%',#{query.goodsName},'%')
+        </if>
+        <if test="query.sellPriceL != null and query.sellPriceR != null">
+            and sd.sell_price between #{query.sellPriceL} and #{query.sellPriceR}
+        </if>
+        <if test="query.isRecommended != null and query.isRecommended == true">
+            and sd.recommendation_time IS NOT NULL
+        </if>
+        ${query.sortSQL}
+    </select>
+
+    <!-- 随机查询推荐商品列表 (迁移自 new-scm StoreDistributionDAO.xml 的 queryRandomRecommendationDistributions) -->
+    <select id="queryRandomRecommendationDistributions"
+            resultType="com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsDetailRes">
+        SELECT sd.id, sd.goods_id as goodsId, sd.sell_price as sellPrice, sd.sell_num as sellNum,
+               sd.goods_state as goodsState, sd.supplier_price as supplierPrice, sd.goods_info as goodsInfo,
+               sd.need_update as needUpdate, sd.up_time as upTime, sd.market_id as marketId,
+               sd.unit_price as unitPrice, sd.create_time as createTime, sd.store_id as storeId,
+               sd.channel_id as channelId, sp.name as goodsName, sp.img as goodsPicture, sp.virtual_sale_num as virtualSaleNum
+        FROM store_goods sd
+        INNER JOIN spu sp ON sd.goods_id = sp.id
+        WHERE sd.data_type = 0
+          AND sd.goods_state = 0
+          AND sd.recommendation_time IS NOT NULL
+        ORDER BY sd.sell_num DESC
+        LIMIT #{limitNum}
+    </select>
+
+    <!-- 查询推荐门店列表 (迁移自 new-scm StoreDistributionDAO.xml 的 queryRecommendationStores) -->
+    <select id="queryRecommendationStores"
+            resultType="com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsDetailRes">
+        SELECT t.id, t.goodsId, t.sellPrice, t.sellNum, t.goodsState, t.supplierPrice, t.goodsInfo,
+               t.needUpdate, t.upTime, t.marketId, t.unitPrice, t.createTime, t.storeId, t.channelId,
+               t.goodsName, t.goodsPicture,  t.virtualSaleNum
+        FROM (
+            SELECT sd.id, sd.goods_id as goodsId, sd.sell_price as sellPrice, sd.sell_num as sellNum,
+                   sd.goods_state as goodsState, sd.supplier_price as supplierPrice, sd.goods_info as goodsInfo,
+                   sd.need_update as needUpdate, sd.up_time as upTime, sd.market_id as marketId,
+                   sd.unit_price as unitPrice, sd.create_time as createTime, sd.store_id as storeId,
+                   sd.channel_id as channelId, sp.name as goodsName, sp.img as goodsPicture,
+                   ROW_NUMBER() OVER (PARTITION BY sd.store_id ORDER BY sd.sell_num DESC) as rn, sp.virtual_sale_num as virtualSaleNum
+            FROM store_goods sd
+            INNER JOIN spu sp ON sd.goods_id = sp.id
+            WHERE sd.data_type = 0
+              AND sd.goods_state = 0
+        ) t
+        WHERE t.rn = 1
+        ORDER BY t.sellNum DESC
+        LIMIT #{limitNum}
+    </select>
+
+    <!-- 门店单个商品总销量 (迁移自 new-scm StoreDistributionDAO.xml 的 getStoreGoodsTotalSellNum) -->
+    <select id="getStoreGoodsTotalSellNum" resultType="java.lang.Integer">
+        select sd.sell_num + spu.virtual_sale_num from store_goods sd left join spu on sd.goods_id = spu.id
+        where sd.id = #{distributionId}
+          and sd.goods_state = 0
+          and sd.del_flag = 0
+    </select>
+
+    <!-- 查询商品总销量 (迁移自 new-scm StoreDistributionDAO.xml 的 queryGoodsSellNum) -->
+    <select id="queryGoodsSellNum"
+            resultType="com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO">
+        SELECT
+        sd.id AS id,
+        sd.sell_num + IFNULL(p.virtual_sale_num, 0) AS num
+        FROM
+        store_goods sd
+        LEFT JOIN spu p ON sd.goods_id = p.id
+        WHERE
+        1=1
+        <if test="ids != null and ids.size() > 0">
+            AND sd.id IN
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        AND sd.goods_state = 0
+        AND sd.del_flag = 0
+    </select>
+
+    <!-- 门店总销量 (迁移自 new-scm StoreDistributionDAO.xml 的 getStoreTotalSellNum) -->
+    <select id="getStoreTotalSellNum" resultType="java.lang.Integer">
+        select SUM(sd.sell_num + spu.virtual_sale_num)
+        from store_goods sd
+                 left join spu on sd.goods_id = spu.id
+        where sd.store_id = #{storeId}
+          and sd.goods_state = 0
+          and sd.del_flag = 0
+    </select>
+
+    <!-- 根据门店ID列表随机查询铺货信息 (迁移自 new-scm StoreDistributionDAO.xml 的 queryRandomDistributionByStoreIdList) -->
+    <select id="queryRandomDistributionByStoreIdList"
+            resultType="com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO">
+        SELECT t.* FROM (
+            SELECT
+        sd.*,s.name,s.img,
+                ROW_NUMBER() OVER (PARTITION BY sd.store_id ORDER BY RAND()) AS rn
+        FROM store_goods sd inner join spu s on sd.goods_id = s.id
+            WHERE sd.store_id IN
+            <foreach collection="storeIdList" item="storeId" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            AND sd.data_type = 0
+            AND sd.goods_state = 0
+        ) t
+        WHERE t.rn &lt;= #{limitNum}
+    </select>
+
+</mapper>

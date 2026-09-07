@@ -15,9 +15,10 @@ public interface GoodsSeatDomain {
     /**
      * 供应商采购商品位
      *
-     * <p>扣供应商营销金(数量×单席费), 扣减成功后增加同额商品位额度, 并记两条变动</p>
+     * <p>扣供应商营销金(purchasePrice), 扣减成功后增加商品位额度(purchaseNum), 并记两条变动。
+     * 总价由 application 编排确定 (席位套餐价或 自定义单价×数量)。</p>
      *
-     * @param req 采购入参 (supplierId / purchaseNum)
+     * @param req 采购入参 (supplierId / purchaseNum / purchasePrice)
      * @return 扣减成功返回 true, 余额不足返回 false
      */
     Boolean supplierPurchaseGoodsSeat(SupplierPurchaseGoodsSeatReq req);

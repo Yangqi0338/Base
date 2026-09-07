@@ -17,12 +17,6 @@ import org.dromara.autotable.annotation.Index;
 @TableName
 public class MarketDO extends BaseDO {
     /**
-     * 市场等级
-     *
-     * @ext 1：一级 2：二级
-     */
-    private Integer marketLevel;
-    /**
      * 市场名称
      */
     private String marketName;
@@ -44,7 +38,7 @@ public class MarketDO extends BaseDO {
      */
     private Integer goodsNum;
     /**
-     * 下级推广人数量
+     * 渠道商绑定数
      */
     private Integer subBindNum;
     /**
@@ -55,12 +49,6 @@ public class MarketDO extends BaseDO {
      * 总销售额
      */
     private Money sellAmount;
-    /**
-     * 客户id
-     * @ext 0：平台  >0：客户
-     */
-    @Index
-    private Long clientId;
     /**
      * 市场类型
      */

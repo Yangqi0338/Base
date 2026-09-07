@@ -36,8 +36,7 @@ public class MarketReq {
 
     /**
      * 市场类型
-     * @see MarketEnum.MarketTypeEnum
      */
-    private String marketType;
+    private MarketEnum.MarketTypeEnum marketType;
 
 }

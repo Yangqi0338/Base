@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
         OrderGoodsCheckReq req = new OrderGoodsCheckReq();
         req.setChannelId(orderCreateCommand.getChannelId());
         req.setStoreId(memberOrderCreateCommand.getStoreId());
-        ShipVO shipVO = orderCreateCommand.getShipVO();
+        com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVO = orderCreateCommand.getShipVO();
         req.setShipAreaCode(shipVO.getShipAreaCode());
         req.setShipCityCode(shipVO.getShipCityCode());
         req.setShipProvinceCode(shipVO.getShipProvinceCode());
@@ -169,7 +169,8 @@ public class OrderServiceImpl implements OrderService {
         OrderVO orderVO = deliverRes.getOrderVO();
         //发货开发者通知
         List<SkuCountDTO> skuCountDTOList = TransferUtils.transfers(deliverCommand.getDeliverItemCommandList(), SkuCountDTO.class);
-        ThirdPartyOrderProcessor.find().delivery(orderVO.getOutOrderNo(), skuCountDTOList, deliverCommand.getExpressCompanyName(), deliverCommand.getExpressNo(), orderVO.getChannelId());
+        localMessageApi.publishOrderDelivery(orderVO.getOrderType(), orderVO.getChannelId(), orderVO.getOutOrderNo(),
+                skuCountDTOList, deliverCommand.getExpressCompanyName(), deliverCommand.getExpressNo());
         //结算运费
         if(CommonEnum.YesOrNo.NO == orderVO.getSettleSendState() && orderVO.getSupplierId() != null && orderVO.getSupplierId() > 100L){
             FreightSettleOrderWaitCommand freightSettleOrderWaitCommand = new FreightSettleOrderWaitCommand();

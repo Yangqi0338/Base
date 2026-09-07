@@ -9,6 +9,15 @@ public interface PermissionApi {
     Map<Long, List<Long>> findRoleByAccountIdList(AccountEnum.Client client, List<Long> accountIdList);
 
     /**
+     * 按账号批量查角色编码列表
+     *
+     * @param client        所属端
+     * @param accountIdList 账号 ID 列表
+     * @return accountId → 角色编码列表, 无角色返回空列表
+     */
+    Map<Long, List<String>> findRoleCodeByAccountIdList(AccountEnum.Client client, List<Long> accountIdList);
+
+    /**
      * 为账号绑定角色, 全量替换该账号在指定端下的角色集合并重算派生权限
      *
      * @param client     所属端

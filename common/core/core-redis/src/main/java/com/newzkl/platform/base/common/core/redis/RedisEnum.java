@@ -74,6 +74,12 @@ public class RedisEnum {
         /** 订单支付信息缓存, s = 订单编号 */
         ORDER_PAY_CACHE_PRE(ModuleEnum.FINANCE, "orderPayCache:%s", "订单支付信息缓存, s = 订单编号"),
 
+        /* ============ 物流 ============ */
+        /** 快递100 轨迹缓存, s1 = 快递公司编码, s2 = 快递单号 */
+        KUAIDI100_TRACK(ModuleEnum.COMMON, "kuaidi100:track:%s:%s", "快递100 轨迹缓存, s1 = 快递公司编码, s2 = 快递单号"),
+        /** 快递100 单号识别结果缓存, s = 快递单号 */
+        KUAIDI100_COMPANY(ModuleEnum.COMMON, "kuaidi100:company:%s", "快递100 单号识别结果缓存, s = 快递单号"),
+
         /* ============ 系统 ============ */
         /** 短信分钟发送限制 */
         SMS_SEND_COUNT_MINUTE(ModuleEnum.COMMON, "sms_limit:minute", "短信分钟发送限制"),

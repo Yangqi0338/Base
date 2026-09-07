@@ -6,7 +6,7 @@ import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayServi
 import com.newzkl.platform.base.biz.finance.application.pay.service.GoodsSeatChannelService;
 import com.newzkl.platform.base.biz.finance.application.pay.service.PurchaseRecordService;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
-import com.newzkl.platform.base.biz.finance.domain.adapt.api.StorePackageApi;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.SeatPackageApi;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.PurchaseRecordDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 渠道商购买商品位编排实现
  *
  * <p>逐行迁移自 new-scm {@code BalancePayApiImpl.channelPurchaseGoodsSeat}。跨域件映射:
- * 源 {@code storeFacade.seatPackageVO} → {@code StorePackageApi} 出站端口;
+ * 源 {@code storeFacade.seatPackageVO} → {@code SeatPackageApi} 出站端口;
  * 源 {@code dictFacade.get(CHANNEL_CONFIG)} → {@code AccountPurseConfigDomain.defaultChannelConfig};
  * 源 {@code purchaseRecordAction.seatPackageSaveOrUpdate} → {@code PurchaseRecordService};
  * 源 {@code iOrderPayApi.orderPay} → {@code CashPayService.orderPay};
@@ -51,7 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
 
-    private final StorePackageApi storePackageApi;
+    private final SeatPackageApi seatPackageApi;
     private final AccountPurseConfigDomain accountPurseConfigDomain;
     private final PurchaseRecordService purchaseRecordService;
     private final PurchaseRecordDomain purchaseRecordDomain;
@@ -66,8 +66,8 @@ public class GoodsSeatChannelServiceImpl implements GoodsSeatChannelService {
         Integer purchaseNum = req.getPurchaseNum();
 
         if (seatPackageId != null && seatPackageId != 0L) {
-            // 选定套餐: 数量与价格取套餐 (跨域 biz-store)
-            SeatPackageApiVO seatPackage = storePackageApi.seatPackageVO(seatPackageId);
+            // 选定套餐: 数量与价格取套餐 (跨域 biz-goods)
+            SeatPackageApiVO seatPackage = seatPackageApi.seatPackageVO(seatPackageId);
             if (seatPackage == null) {
                 throw new PlatformException(BaseErrorCode.PARAM, "错误的席位套餐");
             }

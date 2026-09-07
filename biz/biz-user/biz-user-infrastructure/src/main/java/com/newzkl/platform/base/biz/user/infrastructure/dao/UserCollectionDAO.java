@@ -48,10 +48,10 @@ public interface UserCollectionDAO extends BaseMapper<UserCollectionDO> {
      * <p>绕过 {@code @TableLogic}, 用于"取消收藏后再次收藏"的复活判定。</p>
      *
      * @param userId              用户ID
-     * @param storeDistributionId 铺货ID
+     * @param storeGoodsId 铺货ID
      * @return 收藏记录, 未找到返回 null
      */
-    @Select("SELECT * FROM user_collection WHERE user_id = #{userId} AND store_distribution_id = #{storeDistributionId} LIMIT 1")
+    @Select("SELECT * FROM user_collection WHERE user_id = #{userId} AND store_goods_id = #{storeGoodsId} LIMIT 1")
     UserCollectionDO selectWithDeletedByUserId(@Param("userId") Long userId,
-                                               @Param("storeDistributionId") Long storeDistributionId);
+                                               @Param("storeGoodsId") Long storeGoodsId);
 }

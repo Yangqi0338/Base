@@ -9,7 +9,7 @@ import lombok.Data;
  */
 public class DeliverCmd {
     @Data
-    public static class OrderDeliverInfoReq{
+    public static class OrderDeliverReq {
         /**
          * SPU订单ID
          */

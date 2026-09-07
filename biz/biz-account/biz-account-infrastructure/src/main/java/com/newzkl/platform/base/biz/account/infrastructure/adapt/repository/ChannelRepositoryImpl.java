@@ -12,7 +12,9 @@ import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 渠道商
@@ -59,6 +61,13 @@ public class ChannelRepositoryImpl extends RepositorySupport implements ChannelR
     public Page<ChannelVO> pageList(ChannelQuery query) {
         Page<ChannelDO> channelPage = channelDAO.selectPage(RepositorySupport.page(query), channelDAO.getLw(query));
         return TransferUtils.transferPage(channelPage, ChannelVO.class);
+    }
+
+    @Override
+    public List<ChannelVO> listByIdList(List<Long> idList) {
+        List<ChannelDO> channelList =
+                Optional.ofNullable(channelDAO.selectByIds(idList)).orElse(Collections.emptyList());
+        return TransferUtils.transfers(channelList, ChannelVO.class);
     }
 
 }

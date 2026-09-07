@@ -7,10 +7,14 @@ import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicy;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.MemberRepository;
+import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
+import com.newzkl.platform.base.biz.account.model.assembler.identity.MemberAssembler;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
+import com.newzkl.platform.base.biz.account.model.dto.MemberDTO;
 import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.biz.account.model.res.MemberRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberImportExcelVO;
 import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
@@ -28,7 +32,6 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,22 +57,34 @@ public class UserClientDomainImpl implements UserClientDomain {
     private final AccountRepository accountRepository;
 
     private final AccountAssembler accountAssembler;
+    private final MemberAssembler memberAssembler;
 
-    private final com.newzkl.platform.base.biz.account.domain.service.AccountDomain accountDomain;
-
+    private final AccountDomain accountDomain;
 
     @Override
     public Long memberSave(MemberReq memberCommand) {
-        MemberVO item = TransferUtils.transfer(memberCommand, MemberVO::new);
+        MemberVO item = TransferUtils.transfer(memberCommand, MemberVO::new,
+                (c, v) -> v.setResidence(joinResidence(c)));
 //        item.init();
 //        item.setPid(memberCommand.getInviteId());
         return memberRepository.memberSave(item);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int memberEdit(Long id, MemberReq memberCommand) {
+        // nickname / head 已随建模收敛到 account 表(member 表无该两列), 命中时先落账号侧
+        if (StrUtil.isNotBlank(memberCommand.getNickname()) || StrUtil.isNotBlank(memberCommand.getHead())) {
+            AccountReq accountReq = TransferUtils.transfer(memberCommand, AccountReq::new,
+                    (source, target) -> {
+                        target.setId(id);
+                        target.setIdentity(AccountEnum.Identity.MEMBER);
+                    });
+            accountDomain.accountEdit(accountReq);
+        }
         MemberVO item = TransferUtils.transfer(memberCommand, MemberVO::new, (c, v) -> {
             v.setId(id);
+            v.setResidence(joinResidence(c));
         });
         return memberRepository.memberEdit(item);
     }
@@ -87,6 +102,28 @@ public class UserClientDomainImpl implements UserClientDomain {
     @Override
     public MemberVO member(Long memberId) {
         return memberRepository.member(memberId);
+    }
+
+    @Override
+    public MemberDTO memberBase(Long memberId) {
+        return memberAssembler.vo2DTO(this.loadMember(memberId));
+    }
+
+    @Override
+    public MemberRes memberDetail(Long memberId) {
+        MemberRes res = memberAssembler.vo2Res(this.loadMember(memberId));
+        // 副数据: 账号侧展示字段。memberId 同时是账号ID, 账号缺失时 accountDomain 内部抛 NO_EXIST
+        AccountVO account = accountDomain.account(AccountEnum.Client.USER, memberId);
+        res.setUsername(account.getUsername());
+        res.setRealName(account.getRealName());
+        res.setNickname(account.getNickname());
+        res.setHead(account.getHead());
+        res.setPhone(account.getPhone());
+        res.setYqm(account.getYqm());
+        res.setAccountState(account.getState());
+        res.setLastLoginTime(account.getLastLoginTime());
+        res.setInviteId(account.getInviteAccountId());
+        return res;
     }
 
     @Override
@@ -117,109 +154,6 @@ public class UserClientDomainImpl implements UserClientDomain {
 
 
     @Override
-    public void updateMemberInfo(Long accountId, UpdateMemberInfoCommand command) {
-        log.info("开始更新用户信息，accountId: {}, 入参: {}", accountId, command);
-
-        // 基础参数校验：无更新字段直接抛异常
-        if (StrUtil.isAllBlank(command.getNickname(), command.getHeadImg(), command.getNewPhone(), command.getNewPassword(), command.getOldPassword())) {
-            log.error("更新用户信息失败：无有效更新字段，accountId: {}", accountId);
-            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "请至少填写一项更新内容");
-        }
-
-        //  查询并校验用户信息
-        AccountVO account = accountRepository.account(SecurityUtils.getClient(), accountId);
-        if (Objects.isNull(account)) {
-            log.error("更新用户信息失败：账号不存在，accountId: {}", accountId);
-            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "账号不存在");
-        }
-//        MemberVO member = memberRepository.validByAccountId(accountId);
-//        if (Objects.isNull(member)) {
-//            log.error("更新用户信息失败：用户不存在，accountId: {}", accountId);
-//            throw new PlatformException(AccountErrorCode.PARAM_ERROR, "用户不存在");
-//        }
-
-        // 验证码校验：传手机号则必须传验证码，且验证合法性
-        if (StrUtil.isNotBlank(command.getPhone())) {
-            if (StrUtil.isBlank(command.getCode())) {
-                log.error("更新用户信息失败：传手机号但未传验证码，accountId: {}, phone: {}", accountId, command.getPhone());
-                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "验证码不能为空");
-            }
-            // 校验验证码有效性
-            VerificationCodeReq codeReq = new VerificationCodeReq();
-            codeReq.setPhone(command.getPhone());
-            codeReq.setCode(command.getCode());
-            codeReq.setType(SmsEnum.Type.UpdatePassword);
-            accountRepository.verificationCode(codeReq);
-            // 校验验证码手机号与绑定手机号一致
-            if (!account.getPhone().equals(command.getPhone())) {
-                log.error("更新用户信息失败：验证码手机号与绑定手机号不一致，accountId: {}, 绑定手机号: {}, 验证码手机号: {}",
-                        accountId, account.getPhone(), command.getPhone());
-                throw new PlatformException(AccountErrorCode.PARAM_ERROR, "验证码手机号和已绑定手机号不一致！");
-            }
-        }
-        AccountEnum.Identity MEMBER_ROLE_CODE = AccountEnum.Identity.MEMBER;
-        BCryptPasswordEncoder PWD_ENCODER = new BCryptPasswordEncoder();
-        // 事务包裹核心更新逻辑
-//        transactionUtils.executeWithoutResult(() -> {
-            boolean isMemberUpdated = false;
-            boolean isAccountUpdated = false;
-
-            if (StrUtil.isNotBlank(command.getNickname())) {
-//                member.setNickname(command.getNickname());
-                account.setNickname(command.getNickname());
-                isMemberUpdated = true;
-                isAccountUpdated = true;
-            }
-            if (StrUtil.isNotBlank(command.getHeadImg())) {
-//                member.setHead(command.getHeadImg());
-                account.setHead(command.getHeadImg());
-                isMemberUpdated = true;
-                isAccountUpdated = true;
-            }
-            if (StrUtil.isNotBlank(command.getNewPhone())) {
-                account.setPhone(command.getNewPhone());
-                isAccountUpdated = true;
-            }
-
-            if (StrUtil.isNotBlank(command.getNewPassword())) {
-
-//                List<String> oldRoleIdList = findSameClientOldRoleId(account.getRoleIdList(), MEMBER_ROLE_CODE);
-
-                //  首次设置密码（无旧密码）
-                if (StrUtil.isBlank(command.getOldPassword())) {
-                    String newPassword = account.getNewPassword(command.getNewPassword());
-                    account.setPassword(newPassword);
-                    isAccountUpdated = true;
-                } else {
-                    // 修改密码（有旧密码）
-//                    RoleEnum.CompanyRole companyRole = findRole(account);
-//                    if (Objects.isNull(companyRole)) {
-//                        throw new PlatformException(AccountErrorCode.NO_EXIST);
-//                    }
-                    // 旧密码校验
-                    boolean checkPassword = SecurityUtils.matchesPassword(command.getOldPassword(), account.getPassword());
-                    if (!checkPassword) {
-                        throw new PlatformException(AccountErrorCode.PASSWORD);
-                    }
-                    // 更新密码
-                    String newPassword = account.getNewPassword(command.getNewPassword());
-                    account.setPassword(newPassword);
-                    isAccountUpdated = true;
-                }
-            }
-
-            if (isMemberUpdated) {
-//                memberRepository.memberEdit(member);
-            }
-            if (isAccountUpdated) {
-                accountRepository.accountEdit(account, null);
-            }
-            log.info("用户信息更新事务执行成功，accountId: {}, member更新: {}, account更新: {}",
-                    accountId, isMemberUpdated, isAccountUpdated);
-        log.info("用户信息更新完成，accountId: {}", accountId);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public int recycleCanceledMember() {
         AccountQuery query = new AccountQuery();
@@ -245,5 +179,37 @@ public class UserClientDomainImpl implements UserClientDomain {
         accountRepository.accountDelete(idList);
         log.info("回收已注销用户账号完成，过期界限: {}, 删除行数: {}", expireBefore, size);
         return size;
+    }
+
+    /**
+     * 按ID取会员主数据, 不存在直接抛
+     *
+     * @param memberId 会员账号ID
+     * @return 会员视图
+     */
+    private MemberVO loadMember(Long memberId) {
+        MemberVO member = memberRepository.member(memberId);
+        if (member == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "会员");
+        }
+        return member;
+    }
+
+    /**
+     * 三拆分常住地拼成单列
+     *
+     * <p>{@code member} 表只有 {@code residence} 一列, 入参仍保留省/市/区三字段以免前端改动。
+     * 三者全空时返回 null, 交由 MyBatis-Plus 跳过该列, 保持部分更新语义</p>
+     *
+     * @param req 会员入参
+     * @return 逗号分隔的常住地, 三者全空则 null
+     */
+    private String joinResidence(MemberReq req) {
+        if (StrUtil.isAllBlank(req.getResidenceProvince(), req.getResidenceCity(), req.getResidenceDistrict())) {
+            return null;
+        }
+        return StrUtil.join(",", StrUtil.nullToEmpty(req.getResidenceProvince()),
+                StrUtil.nullToEmpty(req.getResidenceCity()),
+                StrUtil.nullToEmpty(req.getResidenceDistrict()));
     }
 }

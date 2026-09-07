@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SkuDAO">
 
-    <!-- 订单商品信息: storeId 为空走渠道选品(market_goods_relation), 非空走门店铺货(store_distribution)
+    <!-- 订单商品信息: storeId 为空走渠道选品(market_goods_relation), 非空走门店铺货(store_goods)
          (迁移自 new-scm SkuDAO.xml 的 queryOrderGoodsInfoVOList) -->
     <select id="queryOrderGoodsInfoVOList"
             resultType="com.newzkl.platform.base.biz.goods.rpc.model.order.OrderGoodsInfoVO">
@@ -18,11 +18,9 @@
         t.buy_start_qty,
         t.`expand` as expand,
         <if test="storeId == null">
-            GROUP_CONCAT(DISTINCT t1.market_id ORDER BY t1.market_id) as twoMarketIds,
             MAX(IF(t1.id IS NOT NULL, 1, 0)) as is_select,
         </if>
         <if test="storeId != null">
-            GROUP_CONCAT(DISTINCT t1.market_id ORDER BY t1.market_id) as twoMarketIds,
             MAX(t1.sell_price) as store_price,
         </if>
         t2.account_id as supplier_id,
@@ -38,7 +36,7 @@
             LEFT JOIN market_goods_relation t1 ON t.spu_id = t1.goods_id
         </if>
         <if test="storeId != null">
-            LEFT JOIN store_distribution t1 ON t.id = t1.sku_id
+            LEFT JOIN store_goods t1 ON t.id = t1.sku_id
         </if>
         LEFT JOIN spu t2 on t.spu_id = t2.id
         <where>

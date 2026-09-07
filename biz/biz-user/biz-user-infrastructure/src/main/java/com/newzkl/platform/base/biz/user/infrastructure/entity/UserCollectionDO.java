@@ -7,6 +7,7 @@ import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
+import org.dromara.autotable.annotation.OldColumnName;
 
 /**
  * 用户商品收藏持久化对象
@@ -44,7 +45,8 @@ public class UserCollectionDO extends BaseDO {
      * 铺货表ID
      */
     @Index
-    private Long storeDistributionId;
+    @OldColumnName("store_distribution_id")
+    private Long storeGoodsId;
 
     /**
      * SPU ID

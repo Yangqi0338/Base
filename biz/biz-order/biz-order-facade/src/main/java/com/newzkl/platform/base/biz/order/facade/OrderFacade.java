@@ -6,10 +6,7 @@ package com.newzkl.platform.base.biz.order.facade;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.facade.model.api.order.*;
 import com.newzkl.platform.base.biz.order.facade.model.hdh.OrderCallbackRequest;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderPayInfoRes;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateRecordRPC;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderRelationVO;
-import com.newzkl.platform.base.biz.order.facade.model.order.OrderStateVO;
+import com.newzkl.platform.base.biz.order.facade.model.order.*;
 
 import java.util.List;
 
@@ -20,13 +17,6 @@ import java.util.List;
  */
 public interface OrderFacade {
 
-     /**
-      * API-订单创建
-      * @param accountId
-      * @param orderReq
-      * @return
-      */
-     ApiOrderRes apiSubmitOrder(Long accountId, ApiOrderSubmitReq orderReq);
      /**
       * API-订单列表
       * @param accountId
@@ -114,4 +104,6 @@ public interface OrderFacade {
     boolean handleStatusCallback(OrderCallbackRequest callbackRequest);
 
     OrderPayInfoRes queryPayInfoByOrderId(Long orderId);
+
+    ApiOrderRes commitOrder(OrderCreateRpcCommand orderCreateCommand);
 }

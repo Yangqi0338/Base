@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
+ * SPU 基础信息变更事件
+ *
+ * <p>SPU 主数据变更时发布 见 GoodsMessageApi#publishSpuEdit</p>
+ *
  * @author muc_fang
- * @Description: 商品基本信息修改信息体
- * @date 2024/1/2014:19
  */
 @Data
 @AllArgsConstructor

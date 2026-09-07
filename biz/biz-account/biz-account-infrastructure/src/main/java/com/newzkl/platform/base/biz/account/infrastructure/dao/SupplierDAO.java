@@ -31,7 +31,6 @@ public interface SupplierDAO extends BaseMapper<SupplierDO> {
 
     void resetColumn(@Param("id") Long id, @Param("columnList") List<String> columnList);
 
-    List<SupplierDescVO> supplierDescVOList(@Param("supplierIdList") List<Long> supplierIdList);
 
     void resetUserOrderCount();
 

@@ -59,37 +59,6 @@ public interface AccountPurseRepository {
     void addAccountTripartitePurse(AccountTripartitePurseVO accountTripartitePurse);
 
     /**
-     * 更新三方账户
-     *
-     * @param accountTripartitePurse
-     */
-    void alterAccountTripartitePurse(AccountTripartitePurseVO accountTripartitePurse);
-
-    /**
-     * 查询三方账户
-     *
-     * @param accountId
-     * @return
-     */
-    AccountTripartitePurseVO queryAccountTripartitePurse(Long accountId);
-
-    /**
-     * 查询三方账户
-     *
-     * @param query
-     * @return
-     */
-    List<AccountTripartitePurseVO> queryAccountTripartitePurse(AccountTripartitePurseQuery query);
-
-    /**
-     * 查新提交资料信息
-     *
-     * @param accountId
-     * @return
-     */
-    String queryCommitInfo(Long accountId);
-
-    /**
      * 增加客户账户金额
      *
      * @param query 查询账户对象
@@ -138,22 +107,6 @@ public interface AccountPurseRepository {
      * @return 提现记录分页
      */
     Page<AccountPurseAlterRecordVO> queryChannelRollOutRecords(AccountPurseAlterRecordQuery req);
-
-    /**
-     * 增加客户三方账户余额
-     *
-     * @param accountId
-     * @param amount
-     */
-    void addAccountTripartitePurseAmount(Long accountId, Integer amount);
-
-    /**
-     * 扣减客户三方账户余额
-     *
-     * @param accountId
-     * @param amount
-     */
-    void subAccountTripartitePurseAmount(Long accountId, Integer amount);
 
     /**
      * 查询供应商累计结算数据

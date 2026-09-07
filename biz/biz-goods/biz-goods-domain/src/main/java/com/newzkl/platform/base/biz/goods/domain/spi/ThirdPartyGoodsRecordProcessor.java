@@ -64,17 +64,6 @@ public class ThirdPartyGoodsRecordProcessor extends Processor implements ThirdPa
         }
     }
 
-    /**
-     * 批量处理待补偿记录(供定时任务调用)
-     * <p>
-     * TODO[deferred] 待补偿扫描未实现 依赖尚不存在的能力面 ThirdPartyGoodsRepository 缺按状态批量扫描 + 乐观锁状态流转 + 重试计数 且无调用方(JobHandler 未迁) 补齐后按指数退避重派发
-     *
-     * @param batchSize 单批处理条数
-     */
-    public void processPendingRecords(int batchSize) {
-        log.warn("processPendingRecords 暂未实现 待补偿扫描能力面与定时任务调用方尚未迁入 batchSize={}", batchSize);
-    }
-
     @Override
     public boolean supports(Object type) {
         // 派发器本身不参与业务 恒 false 使 strategyProvider 过滤时自动排除自身

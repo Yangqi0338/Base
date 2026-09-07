@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.course.model.lecturer.res;
 
+import com.newzkl.platform.base.common.core.model.annotation.JsonTranslate;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -67,14 +69,10 @@ public class LecturerRes extends BaseRes {
     private String avatarUrl;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
      */
-    private Integer isEnabled;
-
-    /**
-     * 启用状态描述: 启用/禁用
-     */
-    private String isEnabledDesc;
+    @JsonTranslate(index = 1)
+    private CommonEnum.YesOrNo isEnabled;
 
     /**
      * 当前登录用户是否已关注该讲师

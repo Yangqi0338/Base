@@ -46,10 +46,10 @@ public interface UserCollectionRepository {
      * 根据用户ID和商品ID查询收藏记录，包含已逻辑删除的记录
      *
      * @param userId              用户ID
-     * @param storeDistributionId 铺货ID
+     * @param storeGoodsId 铺货ID
      * @return 收藏实体
      */
-    Optional<UserCollectionDTO> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId);
+    Optional<UserCollectionDTO> findWithDeletedByUserIdAndProductId(Long userId, Long storeGoodsId);
 
     /**
      * 物理删除收藏（取消收藏）

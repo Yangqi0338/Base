@@ -4,31 +4,24 @@ import cn.hutool.core.lang.Opt;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
-import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.WithdrawDomain;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
-import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.BatchAccountPurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.req.SupplierPurchaseGoodsSeatReq;
 import com.newzkl.platform.base.biz.finance.model.purse.req.ChannelPurchaseGoodsSeatReq;
 import com.newzkl.platform.base.biz.finance.application.pay.service.GoodsSeatChannelService;
+import com.newzkl.platform.base.biz.finance.application.pay.service.GoodsSeatSupplierService;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.finance.model.purse.res.BatchQueryAccountPurseRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.TotalSupplierSettleDataRes;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordExportVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseAlterRecordVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountPurseVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.GoodsSeatUsageDetailsExportVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawAmountVO;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,7 +40,7 @@ import java.util.List;
  * <p>迁移调整:</p>
  * <ul>
  *   <li>{@code PageInfo} 壳去掉, 分页查询直接返回 {@code List};</li>
- *   <li>导出方法的金额换算与枚举取值逻辑逐条照搬旧实现;</li>
+ *   <li>动账/使用明细的 Excel 导出端点整体移除, 只保留查询;</li>
  *   <li>{@code AccountPurseAlterRecordVO.remark} 在 Base 已是 {@code String},
  *       旧实现对 remark 再做一次枚举翻译 (源字段为 Integer) 的写法不再适用, 直接透传</li>
  * </ul>
@@ -62,10 +54,10 @@ import java.util.List;
 public class PurseController {
 
     private final AccountPurseDomain accountPurseDomain;
-    private final TripartitePurseDomain tripartitePurseDomain;
     private final WithdrawDomain withdrawDomain;
     private final GoodsSeatDomain goodsSeatDomain;
     private final GoodsSeatChannelService goodsSeatChannelService;
+    private final GoodsSeatSupplierService goodsSeatSupplierService;
 
     /**
      * 查询客户账户
@@ -105,24 +97,6 @@ public class PurseController {
     }
 
     /**
-     * 查询三方账户
-     *
-     * @return 三方账户
-     * @deprecated [DEAD-ENDPOINT #128 审计 2026-07-24] 前端7仓零引用 + 后端无caller。
-     *   待删: 若项目完成后仍未被接线调用, 则删除本方法。详见
-     *   docs/planning/dead-endpoint-audit/README.md。
-     */
-    @Deprecated
-    @PostMapping("/queryAccountTripartitePurse")
-    public PlatformResult<AccountTripartitePurseVO> queryAccountTripartitePurse() {
-        AccountTripartitePurseVO accountTripartitePurseVO = tripartitePurseDomain.queryAccountTripartitePurse(SecurityUtils.getAccountId());
-        if (accountTripartitePurseVO != null) {
-            accountTripartitePurseVO.subBankNo();
-        }
-        return PlatformResult.success(accountTripartitePurseVO);
-    }
-
-    /**
      * 查询客户账户变动记录
      *
      * <p>⚠️ 出参契约: 旧接口返 PageHelper 的 {@code PageInfo}
@@ -153,51 +127,6 @@ public class PurseController {
     }
 
     /**
-     * 动账明细导出
-     *
-     * @param req 变动记录查询
-     * @throws IOException 写出 Excel 失败
-     */
-    @PostMapping("/accountPurseAlterRecordsExport")
-    public void accountPurseAlterRecordsExport(@RequestBody AccountPurseAlterRecordQuery req) throws IOException {
-        EasyExcelUtil.export(alterRecordExportRows(req), "动账明细");
-    }
-
-    /**
-     * 采购金使用明细导出
-     *
-     * @param req 变动记录查询
-     * @throws IOException 写出 Excel 失败
-     */
-    @PostMapping("/purchaseUsageDetailsExport")
-    public void purchaseUsageDetailsExport(@RequestBody AccountPurseAlterRecordQuery req) throws IOException {
-        EasyExcelUtil.export(alterRecordExportRows(req), "使用明细");
-    }
-
-    /**
-     * 商品席位使用明细导出
-     *
-     * @param req 变动记录查询
-     * @throws IOException 写出 Excel 失败
-     */
-    @PostMapping("/goodsSeatUsageDetailsExport")
-    public void goodsSeatUsageDetailsExport(@RequestBody AccountPurseAlterRecordQuery req) throws IOException {
-        fillAccountScope(req);
-        List<GoodsSeatUsageDetailsExportVO> rows = TransferUtils.transfers(
-                accountPurseDomain.queryAccountPurseAlterRecords(req).getRecords(),
-                GoodsSeatUsageDetailsExportVO::new,
-                (c, v) -> {
-                    // 席位变动带符号: 进账为正, 其余为负
-                    int sign = EarningsEnum.PurseAlterTypeEnum.IN == c.getEarningAlterType() ? 1 : -1;
-                    // 席位数存于 Money 分位, getCent() 取回席位数, 带符号
-                    v.setAmount(String.valueOf(c.getAmount().getCent() * sign));
-                    v.setAlterType(alterTypeInfo(c.getAlterType()));
-                    v.setRemark(c.getRemark());
-                });
-        EasyExcelUtil.export(rows, "使用明细");
-    }
-
-    /**
      * 查询提现金额
      *
      * @param req 客户账户查询 (未传 accountId 时取当前登录账号)
@@ -210,25 +139,6 @@ public class PurseController {
     }
 
     /**
-     * 按动账明细导出口径组装导出行
-     *
-     * @param req 变动记录查询
-     * @return 导出行列表
-     */
-    private List<AccountPurseAlterRecordExportVO> alterRecordExportRows(AccountPurseAlterRecordQuery req) {
-        fillAccountScope(req);
-        return TransferUtils.transfers(
-                accountPurseDomain.queryAccountPurseAlterRecords(req).getRecords(),
-                AccountPurseAlterRecordExportVO::new,
-                (c, v) -> {
-                    v.setAlterType(alterTypeInfo(c.getAlterType()));
-                    // amount 已 Money, getAmount()=元 BigDecimal, 取代 分/100
-                    v.setAmount(c.getAmount().getAmount().toPlainString());
-                    v.setRemark(c.getRemark());
-                });
-    }
-
-    /**
      * 未指定账号时把查询范围收敛到当前登录账号
      *
      * @param req 变动记录查询
@@ -238,31 +148,6 @@ public class PurseController {
             req.setAccountId(SecurityUtils.getAccountId());
             req.setAccountType(PurseEnum.User.getByRole(SecurityUtils.getIdentity()));
         }
-    }
-
-    /**
-     * 取变动类型描述, 枚举缺失时返回空串
-     *
-     * @param alterType 变动类型
-     * @return 变动类型描述
-     */
-    private String alterTypeInfo(PurseEnum.AlterType alterType) {
-        return Opt.ofNullable(alterType).map(PurseEnum.AlterType::getValue).orElse("");
-    }
-
-    /**
-     * 查询三方账户分页列表
-     *
-     * <p>出参契约: 旧接口返 PageHelper 的 {@code PageInfo}, 本仓按
-     * {@code rules/Architecture.md} 改为直返 {@code List}, 前端需把 {@code res.data.list}
-     * 改成 {@code res.data} 取列表</p>
-     *
-     * @param query 三方账户查询
-     * @return 三方账户列表
-     */
-    @PostMapping("/queryTripartitePursePage")
-    public PlatformResult<List<AccountTripartitePurseVO>> queryTripartitePursePage(@RequestBody AccountTripartitePurseQuery query) {
-        return PlatformResult.success(tripartitePurseDomain.queryPageAccountTripartitePurse(query));
     }
 
     /**
@@ -297,15 +182,18 @@ public class PurseController {
     /**
      * 供应商采购商品位
      *
-     * <p>扣供应商营销金(数量×单席费), 扣减成功后增加同额商品位额度</p>
+     * <p>对齐渠道商购买流程: 选定套餐 (seatPackageId 非 0) 时按套餐数量与价格购买, 否则走自定义
+     * 数量 (读供应商配置校验最小量与单价)。营销金支付即时结算, 微信/支付宝返回汇付拉起结果并落
+     * 待付款记录。supplierId 取当前登录账号</p>
      *
      * @param req 采购入参
-     * @return 扣减成功返回 true, 余额不足返回 false
+     * @return 支付结果 (营销金返 {@code BalancePayResult}, 三方返 {@code HuiFuPayRes})
      */
     @FuncPermission("供应商采购商品位")
     @PostMapping("/supplierPurchaseGoodsSeat")
-    public PlatformResult<Boolean> supplierPurchaseGoodsSeat(@RequestBody SupplierPurchaseGoodsSeatReq req) {
-        return PlatformResult.success(goodsSeatDomain.supplierPurchaseGoodsSeat(req));
+    public PlatformResult<PayBaseResult> supplierPurchaseGoodsSeat(@RequestBody SupplierPurchaseGoodsSeatReq req) {
+        req.setSupplierId(SecurityUtils.getAccountId());
+        return PlatformResult.success(goodsSeatSupplierService.supplierPurchaseGoodsSeat(req));
     }
 
     /**

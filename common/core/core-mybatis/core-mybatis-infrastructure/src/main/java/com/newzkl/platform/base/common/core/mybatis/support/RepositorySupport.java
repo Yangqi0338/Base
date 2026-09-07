@@ -174,7 +174,8 @@ public abstract class RepositorySupport {
 
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> List<R> listOneField(M mapper, LambdaQueryWrapper<T> wrapper, SFunction<T, R> function) {
         return mapper.selectList(wrapper.clone()
-                .select(function)).stream().map(function).collect(Collectors.toList());
+//                .select(function)
+        ).stream().map(function).collect(Collectors.toList());
     }
 
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> List<R> listOneField(M mapper, QueryWrapper<T> wrapper, SFunction<T, R> function) {
@@ -206,7 +207,9 @@ public abstract class RepositorySupport {
 
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> R findOneField(M mapper, LambdaQueryWrapper<T> wrapper, SFunction<T, R> function) {
         return Opt.ofNullable(
-                mapper.selectOne(wrapper.clone().select(function), false)
+                mapper.selectOne(wrapper.clone()
+//                                .select(function)
+                        , false)
         ).map(function).orElse(null);
     }
 

@@ -1,7 +1,5 @@
 package com.newzkl.platform.base.biz.order.action.controller;
 
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.action.cmd.OrderCmd;
 import com.newzkl.platform.base.biz.order.application.service.CommitOrder;
@@ -17,21 +15,14 @@ import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -207,6 +198,7 @@ public class OrderController {
         }
         return PlatformResult.success();
     }
+
     /**
      * 交易单直接支付(渠道商对 C 端待付款订单直接确认支付, 跳过采购金扣减)
      */
@@ -217,37 +209,6 @@ public class OrderController {
             orderService.orderDirectPay(command.getCode());
         }
         return PlatformResult.success();
-    }
-    /**
-     * 交易单导出
-     */
-    @PostMapping("exportOrder")
-    public void exportOrder(HttpServletResponse response, @RequestBody OrderQuery orderQuery) throws IOException {
-        // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
-        String fileName = URLEncoder.encode("订单", "UTF-8").replaceAll("\\+", "%20");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), OrderExcelVO.class).sheet("模板").doWrite(data(orderQuery));
-    }
-
-    /**
-     * 交易单明细导出
-     */
-    @PostMapping("exportOrderItem")
-    public void exportOrderItem(@RequestBody OrderQuery orderQuery) throws IOException {
-        appendOrderQuery(orderQuery);
-        Set<Integer> yellowRowsSet = new HashSet<>();
-        RowBackGroundWriteHandler handler = new RowBackGroundWriteHandler(yellowRowsSet, IndexedColors.YELLOW.index);
-        List<OrderItemExcelVO> data = orderDomain.queryOrderItemExcelVO(orderQuery);
-        for (int i = 0; i < data.size(); i++) {
-            OrderItemExcelVO orderItemExcelVO = data.get(i);
-            if(orderItemExcelVO.getRefundingCount() != null && orderItemExcelVO.getRefundingCount() > 0){
-                yellowRowsSet.add(i + 1);
-            }
-        }
-        EasyExcelUtil.export(data, handler, "订单明细");
     }
 
     private boolean appendOrderQuery(OrderQuery orderQuery) {
@@ -275,39 +236,6 @@ public class OrderController {
         }
 
         return true;
-    }
-
-    private List<OrderExcelVO> data(OrderQuery orderQuery) {
-        appendOrderQuery(orderQuery);
-        Page<OrderAggVO> listOrder = queryService.orderAggVOList(orderQuery);
-        List<OrderAggVO> list = listOrder.getRecords();
-        List<OrderExcelVO> excelDate = new ArrayList<>();
-        for (OrderAggVO orderAggVO : list) {
-            OrderExcelVO orderExcelVO = new OrderExcelVO();
-            orderExcelVO.setId(orderAggVO.getOrderVO().getId().toString());
-            orderExcelVO.setOutOrderNo(orderAggVO.getOrderVO().getOutOrderNo());
-            BigDecimal supplierAmount = orderAggVO.getOrderVO().getSupplierAmount().getAmount().setScale(2, RoundingMode.DOWN);
-            orderExcelVO.setSupplierAmount(supplierAmount.toPlainString());
-            BigDecimal freightAmount = orderAggVO.getOrderVO().getFreightAmount().getAmount().setScale(2, RoundingMode.DOWN);
-            orderExcelVO.setFreightAmount(freightAmount.toPlainString());
-            Integer skuCount = 0;
-            if(orderAggVO.getSkuOrderList() != null){
-                for (SkuOrderVO skuOrderVO : orderAggVO.getSkuOrderList()) {
-                    skuCount = skuCount + skuOrderVO.getCount();
-                }
-            }
-            orderExcelVO.setCount(String.valueOf(skuCount));
-            orderExcelVO.setOrderState(orderAggVO.getOrderVO().getOrderState().getValue());
-            ShipVO shipVO = JSON.parseObject(orderAggVO.getOrderVO().getShipVO(), ShipVO.class);
-            orderExcelVO.setShipName(shipVO.getShipName());
-            orderExcelVO.setShipPhone(shipVO.getShipPhone());
-            String shipAddress = shipVO.getShipAddress() == null ? "":shipVO.getShipAddress();
-            orderExcelVO.setShipArea(shipVO.getShipArea() + "," + shipAddress);
-            orderExcelVO.setSpuName(orderAggVO.getOrderVO().getSpuName());
-            orderExcelVO.setRemark(orderAggVO.getOrderVO().getRemark());
-            excelDate.add(orderExcelVO);
-        }
-        return excelDate;
     }
 
     /**

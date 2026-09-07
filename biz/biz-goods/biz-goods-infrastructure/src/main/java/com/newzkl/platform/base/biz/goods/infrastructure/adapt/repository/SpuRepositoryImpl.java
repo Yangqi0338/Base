@@ -82,8 +82,6 @@ import java.util.Set;
  *   <li>{@code spuDownAfter} / {@code spuUpAfter} — 上下架后置处理的跨模块副作用未定义</li>
  *   <li>{@code refreshSalePriceRate} / {@code refreshSalePrice} — 加价比例与销售价的计算公式
  *       未在本仓定义</li>
- *   <li>{@code notifyUp} / {@code notifySpuBase} / {@code notifySkuDelete} /
- *       {@code notifySkuEdit} — 开发者通知的外部投递通道 (HTTP 回调或 MQ) 未定义</li>
  * </ul>
  *
  * @author KC
@@ -91,15 +89,6 @@ import java.util.Set;
 @Repository
 @RequiredArgsConstructor
 public class SpuRepositoryImpl extends RepositorySupport implements SpuRepository {
-
-    /**
-     * DTO → DO 拷贝需排除的审计属性
-     *
-     * <p>DTO 继承 {@code BaseDTO} 后带上这些字段, 而 DTO 同时是 {@code @RequestBody} 绑定对象;
-     * 若随拷贝落到 DO, MyBatis-Plus 的 strict fill 见字段非 null 便不再自动填充,
-     * 等于把审计字段的写入权交给客户端</p>
-     */
-    private static final String[] AUDIT_PROPS = {"creatorId", "executor", "createTime", "updateTime"};
 
     private final SpuDAO spuDAO;
     private final SkuDAO skuDAO;
@@ -111,7 +100,8 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long spuSave(SpuDTO spu) {
-        SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new, toDoOptions());
+        SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new);
+        spuDO.preInsert();
         spuDAO.insert(spuDO);
         return spuDO.getId();
     }
@@ -123,7 +113,7 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     }
 
     @Override
-    public SpuDTO getById(Long id) {
+    public SpuDTO detail(Long id) {
         SpuDO spuDO = spuDAO.selectById(id);
         return TransferUtils.transfer(spuDO, SpuDTO.class);
     }
@@ -131,7 +121,8 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void spuUpdate(SpuDTO spu) {
-        SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new, toDoOptions());
+        SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new);
+        spuDO.preUpdate();
         spuDO.setExpand(mergeExpand(spu.getId(), spuDO.getExpand()));
         spuDAO.updateById(spuDO);
     }
@@ -166,40 +157,30 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     }
 
     @Override
-    public SpuVO voByQuery(SpuQuery spuQuery) {
-        return spuAssembler.req2VO(
-                TransferUtils.transfer(getOne(spuDAO, spuDAO.getLw(spuQuery)), SpuDTO.class));
+    public SpuDTO detail(SpuQuery spuQuery) {
+        return TransferUtils.transfer(getOne(spuDAO, spuDAO.getLw(spuQuery)), SpuDTO.class);
     }
 
     @Override
-    public List<SpuVO> listSelect(SpuQuery spuQuery) {
-        return TransferUtils.transfers(spuDAO.selectList(spuDAO.getLw(spuQuery)),
-                spuDO -> spuAssembler.req2VO(TransferUtils.transfer(spuDO, SpuDTO.class)));
+    public List<SpuDTO> listSelect(SpuQuery spuQuery) {
+        return TransferUtils.transfers(spuDAO.selectList(spuDAO.getLw(spuQuery)), SpuDTO.class);
     }
 
     @Override
-    public Page<SpuVO> querySpuPage(SpuQuery spuQuery) {
+    public Page<SpuDTO> querySpuPage(SpuQuery spuQuery) {
         Page<SpuDO> page = spuDAO.selectPage(page(spuQuery), spuDAO.getLw(spuQuery));
-        return TransferUtils.transferPage(page,
-                spuDO -> spuAssembler.req2VO(TransferUtils.transfer(spuDO, SpuDTO.class)));
+        return TransferUtils.transferPage(page, SpuDTO.class);
     }
 
     @Override
-    public List<SpuStateVO> spuStateList(SpuQuery spuQuery) {
-        List<SpuDO> list = spuDAO.selectList(
-                spuDAO.getLw(spuQuery).select(SpuDO::getId, SpuDO::getState));
-        return TransferUtils.transfers(list, spuDO -> {
-            SpuStateVO vo = new SpuStateVO();
-            vo.setId(spuDO.getId());
-            vo.setState(spuDO.getState() == null ? null : spuDO.getState().getCode());
-            return vo;
-        });
+    public <T> List<T> spuList(SpuQuery spuQuery, Class<T> clazz) {
+        return list(spuDAO, spuDAO.getLw(spuQuery), clazz);
     }
 
     @Override
-    public Long spuId(Integer channelType, String outSpuId) {
+    public Long spuId(SpuEnum.ChannelType channelType, String outSpuId) {
         return getId(spuDAO, new BaseLambdaQueryWrapper<SpuDO>()
-                .notEmptyEq(SpuDO::getChannelType, SpuEnum.ChannelType.getByCode(channelType))
+                .notEmptyEq(SpuDO::getChannelType, channelType)
                 .notEmptyEq(SpuDO::getOutSpuId, outSpuId));
     }
 
@@ -224,13 +205,13 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void skuUpdate(SkuDTO skuDTO) {
-        skuDAO.updateById(TransferUtils.transfer(skuDTO, SkuDO::new, toDoOptions()));
+        skuDAO.updateById(TransferUtils.transfer(skuDTO, SkuDO::new));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void skuSave(SkuDTO skuDTO) {
-        skuDAO.insert(TransferUtils.transfer(skuDTO, SkuDO::new, toDoOptions()));
+        skuDAO.insert(TransferUtils.transfer(skuDTO, SkuDO::new));
     }
 
     @Override
@@ -240,7 +221,7 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
             return;
         }
         skuDAO.insert(TransferUtils.transfers(skuDTOList,
-                dto -> TransferUtils.transfer(dto, SkuDO::new, toDoOptions())));
+                dto -> TransferUtils.transfer(dto, SkuDO::new)));
     }
 
     @Override
@@ -405,55 +386,6 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     public void refreshSalePrice(List<Long> asList) {
         throw new UnsupportedOperationException(
                 "TODO[infra-gap]: 销售价 salePrice 的计算公式未定义");
-    }
-
-    @Override
-    public void notifyUp(Long spuId, Integer state) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 开发者通知 (SPU 上下架) 的外部投递通道未定义");
-    }
-
-    @Override
-    public void notifySpuBase(Long spuId) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 开发者通知 (SPU 基本信息) 的外部投递通道未定义");
-    }
-
-    @Override
-    public void notifySkuDelete(Long spuId, Long skuId) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 开发者通知 (SKU 删除) 的外部投递通道未定义");
-    }
-
-    @Override
-    public void notifySkuEdit(Long spuId, Long skuId) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 开发者通知 (SKU 变更) 的外部投递通道未定义");
-    }
-
-    /**
-     * 构建排除指定属性的拷贝选项
-     *
-     * @param props 需排除的属性名
-     * @return 拷贝选项
-     */
-    private static CopyOptions ignoring(String... props) {
-        return CopyOptions.create().setIgnoreProperties(props);
-    }
-
-    /**
-     * 构建 DTO → DO 的拷贝选项: 排除审计属性, 并追加调用方指定的属性
-     *
-     * @param extraProps 除审计属性外还需排除的属性名
-     * @return 拷贝选项
-     */
-    private static CopyOptions toDoOptions(String... extraProps) {
-        if (extraProps.length == 0) {
-            return ignoring(AUDIT_PROPS);
-        }
-        String[] props = Arrays.copyOf(AUDIT_PROPS, AUDIT_PROPS.length + extraProps.length);
-        System.arraycopy(extraProps, 0, props, AUDIT_PROPS.length, extraProps.length);
-        return ignoring(props);
     }
 
 }

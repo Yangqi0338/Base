@@ -7,7 +7,7 @@ import com.newzkl.platform.base.common.ddd.model.constant.PackOrderErrorCode;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderDeliverCommand;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackGoodsRes;
-import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
+import com.newzkl.platform.base.biz.account.model.pack.vo.PackShipVO;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.Data;
@@ -25,7 +25,7 @@ import java.util.List;
  * <p>迁移说明：{@code SnowflakeIdAble.getSnowflakeId()} 去除（落库时 DO 主键
  * {@code IdType.ASSIGN_ID} 自动雪花）；{@code ThrowsException.exception} 换
  * {@code PlatformException}；{@code SecurityUtils.getAccountId()} 沿用 Base 版；
- * 收货信息由源 {@code ShipAddressOutVO} 改存 biz-user {@code ShipAddressVO} 的 JSON；
+ * 收货信息由源 {@code ShipAddressOutVO} 改存礼包侧 {@code PackShipVO} 的 JSON；
  * 状态迁移用本域 {@code PackOrderStateEnum}。</p>
  *
  * @author KC
@@ -44,7 +44,7 @@ public class PackOrder implements Serializable {
     private Long accountId;
 
     /**
-     * 收货信息 JSON（结构：ShipAddressVO）
+     * 收货信息 JSON（结构：PackShipVO）
      */
     private String shipVO;
 
@@ -110,7 +110,7 @@ public class PackOrder implements Serializable {
      * @param shipAddressVO 收货信息
      * @param packGoodsList 礼包明细
      */
-    public void init(PackOrderCommand command, ShipAddressRes shipAddressVO, List<PackGoodsRes> packGoodsList) {
+    public void init(PackOrderCommand command, PackShipVO shipAddressVO, List<PackGoodsRes> packGoodsList) {
         for (PackGoodsRes packGoods : packGoodsList) {
             if (Integer.valueOf(0).equals(packGoods.getState())) {
                 throw new PlatformException(PackOrderErrorCode.GOODS_DOWN);

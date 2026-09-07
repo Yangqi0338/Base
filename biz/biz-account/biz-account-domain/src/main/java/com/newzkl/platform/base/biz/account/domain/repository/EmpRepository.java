@@ -23,6 +23,15 @@ public interface EmpRepository {
     Page<EmpVO> pageList(EmpQuery query);
 
     /**
+     * 按主键查员工身份行
+     *
+     * @param empId 员工 (账号) ID
+     * @return 员工视图, 无则 null
+     * @ext 主数据 emp (无副数据)
+     */
+    EmpVO emp(Long empId);
+
+    /**
      * 新增员工身份行
      *
      * <p>主键与 {@code account} 行共用, 由领域层生成后透传, 故此处不清 id</p>
@@ -47,4 +56,12 @@ public interface EmpRepository {
      * @return 影响行数
      */
     int delete(List<Long> idList);
+
+    /**
+     * 按主键批量查员工身份行
+     *
+     * @param idList 员工 (账号) ID 列表
+     * @return 员工视图列表, 无则空列表
+     */
+    List<EmpVO> listByIdList(List<Long> idList);
 }

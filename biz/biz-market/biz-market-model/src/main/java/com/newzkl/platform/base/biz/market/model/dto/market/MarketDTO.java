@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.market.model.dto.market;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.dto.BaseDTO;
+import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,13 +13,7 @@ import java.time.LocalDateTime;
  * 市场
  */
 @Data
-public class MarketDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private Long id;
-    /**
-     * 市场等级  1：一级 2：二级
-     */
-    private Integer marketLevel;
+public class MarketDTO extends BaseDTO {
     /**
      * 市场名称
      */
@@ -39,7 +35,7 @@ public class MarketDTO implements Serializable {
      */
     private Integer goodsNum;
     /**
-     * 下级推广人数量
+     * 渠道商绑定数
      */
     private Integer subBindNum;
     /**
@@ -47,24 +43,11 @@ public class MarketDTO implements Serializable {
      */
     private Integer sellNum;
     /**
-     * 总销售额 (Money, 落库 BIGINT 分)
+     * 总销售额
      */
     private Money sellAmount;
     /**
-     * 客户id  0：平台  >0：客户
+     * 市场类型
      */
-    private Long clientId;
-    /**
-     * 创建人
-     */
-    private String createUser;
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-    /**
-     * 市场类型  {@code com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum.MarketTypeEnum}
-     * GENERAL-普通市场，SPECIAL-专区市场
-     */
-    private String marketType;
+    private MarketEnum.MarketTypeEnum marketType;
 }

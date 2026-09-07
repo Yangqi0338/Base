@@ -6,7 +6,7 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.biz.order.model.req.OrderCreateCommand;
 import com.newzkl.platform.base.biz.order.model.vo.OrderExt;
 import com.newzkl.platform.base.biz.order.model.vo.OrderSnapVO;
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.ddd.model.vo.ShipVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -49,7 +49,8 @@ public class OrderDTO extends BaseDTO {
 	 */
 	private String outOrderNo;
 	/**
-	 * 外部平台来源(三方单) HUI_DING_HUO/LE_TAI 非外部单为 null
+	 * 订单来源平台(轴A) openapi(乐态)入口下的单为 LE_TAI 平台内部单为 null
+	 * <p>与商品级 {@code OrderSkuVO.platformType}(轴B 供货平台)不是同一语义 不参与三方下单派发</p>
 	 */
 	private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
 	/**
@@ -192,6 +193,7 @@ public class OrderDTO extends BaseDTO {
 		this.channelId = orderCreateCommand.getChannelId();
 		this.remark = orderCreateCommand.getRemark();
 		this.orderType = orderCreateCommand.getOrderType();
+		this.platformType = orderCreateCommand.getPlatformType();
 		//订单金额 (Money 累加; discountAmount 仍为 Integer 分, 参与 Money 运算时转 Money)
 		this.goodsAmount = Money.ZERO;
 		this.supplierAmount = Money.ZERO;

@@ -132,8 +132,7 @@ public class RoleDomainImpl implements RoleDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void bindAccounts(Long roleId, Collection<Long> accountIds) {
-        AccountEnum.Client client = SecurityUtils.getClient();
+    public void bindAccounts(AccountEnum.Client client, Long roleId, Collection<Long> accountIds) {
         RoleDTO role = roleRepository.getById(roleId);
         if (role == null) {
             throw new PlatformException(BaseErrorCode.NODATA, "角色");

@@ -2,12 +2,12 @@ package com.newzkl.platform.base.biz.market.domain.distribution;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StateNotifyDTO;
-import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
+import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreGoodsDTO;
 import com.newzkl.platform.base.biz.market.model.event.distribution.WorkTableUpDownEventMq;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
-import com.newzkl.platform.base.biz.market.model.query.distribution.StoreDistributionQuery;
+import com.newzkl.platform.base.biz.market.model.query.distribution.StoreGoodsQuery;
 import com.newzkl.platform.base.biz.market.model.req.distribution.DistributionsBatchUpdateReq;
 import com.newzkl.platform.base.biz.market.model.req.distribution.GoodsStateAlterReq;
 import com.newzkl.platform.base.biz.market.model.res.distribution.DistributionGoodsDetailRes;
@@ -21,7 +21,6 @@ import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author niu
@@ -68,7 +67,7 @@ public interface DistributionDomain {
     /**
      * 查询铺货商品信息集合
      */
-    List<StoreDistributionDTO> getDistributionDetailList(Long channelId, Long goodsId, boolean isSpu);
+    List<StoreGoodsDTO> getDistributionDetailList(Long channelId, Long goodsId, boolean isSpu);
 
     /**
      * 更新商品状态
@@ -79,6 +78,11 @@ public interface DistributionDomain {
      * 删除铺货商品
      */
     void delGoods(Long goodsId);
+
+    /**
+     * 恢复铺货商品
+     */
+    void recoverGoods(Long goodsId);
 
     /**
      * 批量删除铺货商品
@@ -133,12 +137,6 @@ public interface DistributionDomain {
     void alterDistribution(Long channelId, Long goodsId);
 
     /**
-     * 批量复制铺货
-     * 使用样板店时，批量复制目标样板店铺货数据，商品相同时覆盖自身商品
-     */
-    void copyChannelDistribution(Long channelId, Long targetChannelId, Set<Long> goodsIdList);
-
-    /**
      * 批量随机查询指定数量的门店下的铺货商品
      */
     Map<Long, List<DistributionRandomRPCVO>> queryRandomDistributionByStoreIdList(List<Long> storeIdList, Integer limitNum);
@@ -146,7 +144,7 @@ public interface DistributionDomain {
     /**
      * 铺货表数据查询
      */
-    List<StoreDistributionDTO> queryDistributionsList(StoreDistributionQuery query);
+    List<StoreGoodsDTO> queryDistributionsList(StoreGoodsQuery query);
 
     /**
      * 增加销量
@@ -176,12 +174,12 @@ public interface DistributionDomain {
     /**
      * 查询铺货表数据
      */
-    StoreDistributionDTO queryDistributionsByCondition(StoreDistributionQuery query);
+    StoreGoodsDTO queryDistributionsByCondition(StoreGoodsQuery query);
 
     /**
      * 根据id查询铺货信息
      */
-    List<StoreDistributionDTO> getByIds(List<Long> ids);
+    List<StoreGoodsDTO> getByIds(List<Long> ids);
 
     /**
      * 批量查询铺货详情

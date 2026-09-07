@@ -66,9 +66,9 @@ public class SupplierAuditRes extends BaseRes {
     private AuditEnum.State promisePayAuditState;
 
     /**
-     * 保证金缴纳配置 (0即时/1延迟)
+     * 保证金缴纳配置
      */
-    private Integer promisePayConfig;
+    private SupplierEnum.PromisePayConfig promisePayConfig;
 
     /**
      * 是否设置账期

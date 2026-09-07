@@ -49,11 +49,6 @@ public class MemberIdentityPolicy extends AbsIdentityPolicy {
     }
 
     @Override
-    public Object detail(Long id) {
-        return null;
-    }
-
-    @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
         // 移除会员身份: 删 member 行
         memberRepository.memberDelete(Collections.singletonList(accountVO.getId()));

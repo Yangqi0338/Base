@@ -69,6 +69,25 @@ public class ThirdPartyOrderRecordDTO extends BaseDTO {
     private LocalDateTime nextRetryTime;
 
     /**
+     * 补偿重试退避表 单位分钟 下标即已重试次数
+     */
+    private static final int[] RETRY_INTERVAL_MINUTES = {1, 5, 30, 120, 360};
+
+    /**
+     * 最大补偿重试次数 与退避表长度绑定为单一真源
+     */
+    public static final int MAX_RETRY_COUNT = RETRY_INTERVAL_MINUTES.length;
+
+    /**
+     * 按退避表排下一次重试时间 已重试次数越多间隔越长
+     */
+    public void scheduleNextRetry() {
+        int retried = retryCount == null ? 0 : retryCount;
+        int idx = Math.min(retried, RETRY_INTERVAL_MINUTES.length - 1);
+        setNextRetryTime(LocalDateTime.now().plusMinutes(RETRY_INTERVAL_MINUTES[idx]));
+    }
+
+    /**
      * 初始化一个新的第三方订单请求记录。
      * <p>
      * 这是一个静态工厂方法，用于在创建新请求时提供一个统一的、状态一致的实例。 它会设置一些默认值，如重试次数为0，并初始化创建和更新时间。

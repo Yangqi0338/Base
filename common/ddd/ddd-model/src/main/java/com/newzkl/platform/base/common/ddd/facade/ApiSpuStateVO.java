@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -22,5 +23,5 @@ public class ApiSpuStateVO implements Serializable {
      * 售卖状态 0 下架 1 上架
      */
     @NotNull
-    private Integer saleState;
+    private CommonEnum.YesOrNo saleState;
 }

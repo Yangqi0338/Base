@@ -80,12 +80,8 @@ public class CourseChapterRes extends BaseRes {
     private String durationDesc;
 
     /**
-     * 是否启用: 1-启用, 0-禁用
+     * 是否启用
      */
+    @JsonTranslate(index = 1)
     private CommonEnum.YesOrNo isEnabled;
-
-    @JsonTranslate
-    public String getIsEnabledDesc(){
-        return isEnabled == CommonEnum.YesOrNo.YES ? "启用" : "禁用";
-    }
 }

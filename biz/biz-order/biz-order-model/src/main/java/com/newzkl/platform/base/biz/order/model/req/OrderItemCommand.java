@@ -20,8 +20,8 @@ public class OrderItemCommand {
     /**
      * 铺货表idID
      */
-    @NotNull(message = "storeDistributionId不能为空")
-    private Long storeDistributionId;
+    @NotNull(message = "storeGoodsId不能为空")
+    private Long storeGoodsId;
     /**
      * skuId
      */

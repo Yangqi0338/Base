@@ -112,8 +112,6 @@ public interface OrderRepository {
 
     int skuOrderEditForRefundPass(List<String> skuOrderNoList);
 
-    void orderStateNotify(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, OrderEnum.State currentState, OrderEnum.State toState);
-
     int skuOrderEditForRefundClose(List<String> skuOrderNoList);
 
     int skuOrderSave(SkuOrderDTO sku, SkuOrderQuery skuQuery);
@@ -179,7 +177,7 @@ public interface OrderRepository {
 
     EarningsEnum.SettleType settleOrderType(Long supplierId);
 
-    void updateOrderShip(String orderNo, ShipVO shipVo);
+    void updateOrderShip(String orderNo, com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVo);
 
     List<OrderDTO> listDOByOrderStateAndUpdateTimeLessThan(OrderEnum.State orderState, LocalDateTime updateTime);
 
@@ -217,14 +215,6 @@ public interface OrderRepository {
      * @return 物流列表
      */
     List<DeliverVO> deliverListByOrderNo(String orderNo);
-
-    /**
-     * 查询交易单明细导出数据
-     *
-     * @param orderQuery 查询条件
-     * @return 导出明细列表
-     */
-    List<OrderItemExcelVO> queryOrderItemExcelVO(OrderQuery orderQuery);
 
     List<DeliverVO> deliverListByQuery(DeliverQuery deliverQuery);
 

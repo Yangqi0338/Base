@@ -47,6 +47,19 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     @Override
+    public Map<Long, List<String>> findRoleCodeByAccount(AccountEnum.Client client, List<Long> accountIdList) {
+        List<String> accountKeys = accountIdList.stream().map(String::valueOf).toList();
+        List<PermissionRelationDTO> relationDTOS = relationRepository.listBySource(client, PermissionEnum.RelationType.ACCOUNT_ROLE, accountKeys);
+        // relation 角色侧本就存 code, 直接返 target, 不做 code→id 反查
+        return accountIdList.stream().collect(CommonUtil.toKeyMap((accountId) -> {
+            String accountKey = String.valueOf(accountId);
+            return relationDTOS.stream().filter(item -> item.getSource().equals(accountKey))
+                    .map(PermissionRelationDTO::getTarget)
+                    .toList();
+        }));
+    }
+
+    @Override
     public void bindRoles(AccountEnum.Client client, Long accountId, List<Long> roleIdList) {
         roleDomain.bindRoles(client, accountId, roleIdList);
     }

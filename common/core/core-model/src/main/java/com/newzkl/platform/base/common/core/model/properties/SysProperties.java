@@ -96,7 +96,7 @@ public class SysProperties {
     /**
      * 用 translateMap 对文本做子串替换
      * <p>用于面向用户展示的文本做"个别字替换"。{@code JsonTranslateSerializer}
-     * 是整值替换，本方法是子串替换，互不冲突。</p>
+     * 在 type=FIX 时也走本方法，对取出的语义位文案做同一套替换。</p>
      * @ext 逐 entry.key → entry.value 全替换
      * @ext 通知内容/标题等
      * @param text 原文

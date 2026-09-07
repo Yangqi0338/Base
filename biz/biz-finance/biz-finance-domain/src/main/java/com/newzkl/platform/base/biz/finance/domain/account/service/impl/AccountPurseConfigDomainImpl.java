@@ -3,20 +3,24 @@ package com.newzkl.platform.base.biz.finance.domain.account.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseConfigRepository;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.ConfigChannelRepository;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.biz.finance.model.account.req.BatchQueryConfigChannelQuery;
+import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.biz.finance.model.account.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +44,43 @@ public class AccountPurseConfigDomainImpl implements AccountPurseConfigDomain {
     @Override
     public void saveChannelChargeConfig(ChargeConfigChannelReq req) {
         channelConfigRepository.saveChannelConfig(buildChannelConfig(req));
+    }
+
+    @Override
+    public void serviceFeeConfigEdit(Long channelId, ServiceFeeConfigVO serviceFeeConfigVO) {
+        TreeMap<Integer, Double> platformConfig = new TreeMap<>();
+        for (AmountRateDTO item : serviceFeeConfigVO.getItemList()) {
+            platformConfig.put(item.getAmount(), item.getRate());
+        }
+        ChargeConfigChannelReq req = new ChargeConfigChannelReq();
+        req.setChannelId(channelId);
+        req.setPlatformConfig(platformConfig);
+        saveChannelChargeConfig(req);
+    }
+
+    @Override
+    public ServiceFeeConfigVO queryServiceFeeConfig(Long channelId) {
+        ServiceFeeConfigVO serviceFeeConfigVO = new ServiceFeeConfigVO();
+        serviceFeeConfigVO.setItemList(new ArrayList<>());
+        ConfigChannelVO channelConfigVO = channelConfigRepository.queryChannelConfig(channelId);
+        if (channelConfigVO == null) {
+            // 渠道商尚未配置过服务费, 兜底返回空配置
+            return serviceFeeConfigVO;
+        }
+        String platformConfig = channelConfigVO.getPlatformConfig();
+        if (StrUtil.isNotBlank(platformConfig)) {
+            Map<String, Number> configMap = JSONUtil.parseObj(platformConfig).toBean(Map.class);
+            List<AmountRateDTO> itemList = new ArrayList<>();
+            configMap.forEach((amount, rate) -> {
+                AmountRateDTO item = new AmountRateDTO();
+                item.setAmount(NumberUtil.parseInt(amount));
+                item.setRate(NumberUtil.toDouble(rate));
+                itemList.add(item);
+            });
+            serviceFeeConfigVO.setItemList(itemList);
+        }
+        serviceFeeConfigVO.setServiceFee(channelConfigVO.getPlatformNowValue());
+        return serviceFeeConfigVO;
     }
 
     @Override

@@ -245,23 +245,6 @@ public class HuiFuMethod {
     /* ----------------------------------------- 业务方法 ------------------------------------------ */
 
     /**
-     * 汇付企业开户修改
-     *
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public static OpenAccountRes entModifyAccount(HuiFuEntUserOpenAccountReq request) {
-        log.info("请求原始数据:{}", JSONUtil.toJsonStr(request));
-        AccountReq.EntUserEnterReq req = buildEntEnterReq(request);
-
-        AccountRes.OpenAccountRes res = api.entUpdateAccount(req, true);
-
-        OpenAccountRes result = buildAccountRes(res, OpenAccountRes.class);
-        return result;
-    }
-
-    /**
      * 用户汇付开户
      *
      * @param request
@@ -283,23 +266,6 @@ public class HuiFuMethod {
             req.setCert_validity_type(request.getCertValidType());
             req.setMobile_no(request.getMobile());
         });
-    }
-
-    /**
-     * 用户汇付开户修改
-     *
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public static OpenAccountRes userModifyAccount(HuiFuUserOpenAccountReq request) {
-        log.info("请求原始数据:{}", JSONUtil.toJsonStr(request));
-
-        AccountReq.UserEnterReq req = buildEnterReq(request);
-        AccountRes.OpenAccountRes res = api.userUpdateAccount(req, true);
-
-        OpenAccountRes result = buildAccountRes(res, OpenAccountRes.class);
-        return result;
     }
 
     /**
@@ -351,20 +317,6 @@ public class HuiFuMethod {
         req.setCard_info(cardInfo);
 
         return req;
-    }
-
-    /**
-     * 用户汇付绑卡修改
-     * @param request
-     */
-    public static AccountBindSyncRes userModifyCard(HuiFuBindCardReq request) {
-        log.info("请求原始数据:{}", JSONUtil.toJsonStr(request));
-
-        AccountReq.EnterCardReq req = buildBindCardSyncReq(request);
-        AccountRes.AccountBindSyncRes res = api.modifyCard(req, true);
-
-        AccountBindSyncRes result = buildAccountRes(res, AccountBindSyncRes.class);
-        return result;
     }
 
     /* ----------------------------------------- 功能方法 ------------------------------------------ */

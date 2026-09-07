@@ -3,7 +3,6 @@ package com.newzkl.platform.base.biz.finance.domain.purse.service.impl;
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.biz.finance.domain.adapt.repository.AccountPurseRepository;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.GoodsSeatDomain;
-import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseQuery;
@@ -40,11 +39,11 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean supplierPurchaseGoodsSeat(SupplierPurchaseGoodsSeatReq req) {
-        ConfigSupplierVO supplierConfigVO = accountPurseConfigDomain.querySupplierConfig();
-        Integer totalFee = req.getPurchaseNum() * supplierConfigVO.getSkuSpaceFee();
+        // 总价由 application 编排确定 (套餐价或 单价×数量), 领域只做营销金扣减与商品位额度增加
+        Money totalFee = req.getPurchasePrice();
         // 扣供应商营销金 (非总账户、可负均 false)
         AccountPurseQuery subQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.MARKETING);
-        if (accountPurseRepository.subAccountPurseAmount(subQuery, Money.of(totalFee), false, false, false) == 1) {
+        if (accountPurseRepository.subAccountPurseAmount(subQuery, totalFee, false, false, false) == 1) {
             // 扣减成功才增加商品位额度
             AccountPurseQuery addQuery = buildQuery(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT);
             // 商品位账户不存在时 update 命中 0 行, 营销金已扣而额度未加 = 资损, 必须抛异常回滚
@@ -52,7 +51,7 @@ public class GoodsSeatDomainImpl implements GoodsSeatDomain {
                 throw new PlatformException(BaseErrorCode.CUSTOM, "商品位账户不存在, 加额度失败, supplierId=" + req.getSupplierId());
             }
             List<AccountPurseAlterRecordVO> records = new ArrayList<>();
-            records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.MARKETING, Money.of(totalFee),
+            records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.MARKETING, totalFee,
                     EarningsEnum.PurseAlterTypeEnum.OUT, PurseEnum.AlterType.GOODS_POSITION_BUY, 0L));
             records.add(buildRecord(req.getSupplierId(), PurseEnum.Type.GOODS_SEAT, Money.of(req.getPurchaseNum()),
                     EarningsEnum.PurseAlterTypeEnum.IN, PurseEnum.AlterType.GOODS_POSITION_BUY, null));

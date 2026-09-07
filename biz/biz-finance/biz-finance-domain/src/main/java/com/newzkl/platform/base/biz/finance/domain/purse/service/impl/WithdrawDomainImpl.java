@@ -8,12 +8,10 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.*;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.*;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author niu
@@ -85,19 +83,5 @@ public class WithdrawDomainImpl implements WithdrawDomain {
         RollOutApplyQuery req = new RollOutApplyQuery();
 
         return null;
-    }
-
-    @Override
-    public List<RollOutApplyExportVO> withdrawRecordsExport(RollOutApplyQuery req) {
-        List<RollOutApplyVO> rollOutApplyList = queryRollOutApplyPage(req).getRecords();
-        List<RollOutApplyExportVO> exportResponses = rollOutApplyList.stream().map(c -> {
-            RollOutApplyExportVO v = TransferUtils.transfer(c, RollOutApplyExportVO::new);
-            v.setAuditState(c.getAuditState().getValue());
-            v.setApplyAmount(c.getApplyAmount().getAmount().toPlainString());
-            v.setHandlingFee(c.getHandlingFee().getAmount().toPlainString());
-            v.setArrivalAmount(c.getApplyAmount().subtract(c.getHandlingFee()).getAmount().toPlainString());
-            return v;
-        }).collect(Collectors.toList());
-        return exportResponses;
     }
 }

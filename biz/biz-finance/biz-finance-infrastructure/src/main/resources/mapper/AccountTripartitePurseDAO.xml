@@ -2,26 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newzkl.platform.base.biz.finance.infrastructure.dao.AccountTripartitePurseDAO">
 
-    <!-- 增加客户三方账户余额 (迁移自 new-scm AccountTripartitePurseDAO.xml 的 addAccountTripartitePurseAmount) -->
-    <update id="addAccountTripartitePurseAmount">
-        update account_tripartite_purse
-        set amount = amount +#{amount}
-        where account_id = #{accountId}
-    </update>
-
-    <!-- 扣减客户三方账户余额 (迁移自 new-scm AccountTripartitePurseDAO.xml 的 subAccountTripartitePurseAmount) -->
-    <update id="subAccountTripartitePurseAmount">
-        update account_tripartite_purse
-        set amount = amount - #{amount}
-        where account_id = #{accountId}
-        and amount >= #{amount}
-    </update>
-
-    <!-- 查询最新提交资料信息 (迁移自 new-scm AccountTripartitePurseDAO.xml 的 queryCommitInfo) -->
-    <select id="queryCommitInfo" resultType="java.lang.String">
-        select commit_info
-        from account_tripartite_purse
-        where account_id = #{accountId}
-    </select>
+    <!-- 只增不查不维护: 落库走 MyBatis-Plus BaseMapper.insert, 自定义 SQL 已全部下线 -->
 
 </mapper>

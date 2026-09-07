@@ -52,12 +52,21 @@ public interface AccountDomain {
     void accountDelete(List<Long> accountIdList);
 
     /**
-     * 注销角色
+     * 注销身份
      *
      * @param accountId      账号ID
-     * @param destroyRoleReq 注销角色请求
+     * @param destroyRoleReq 注销身份请求
      */
     void destroy(Long accountId, DestroyRoleReq destroyRoleReq);
+
+    /**
+     * 注销账号 (非 C 端)
+     *
+     * <p>整个注销账号 (改 state=DESTROY), 身份表数据保留, 后端赋通行码绕过短信校验。</p>
+     *
+     * @param accountId 账号 ID
+     */
+    void destroyAccount(Long accountId);
 
     /**
      * 查询范围内子账号结构

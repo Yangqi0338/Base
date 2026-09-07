@@ -1,12 +1,8 @@
 package com.newzkl.platform.base.biz.account.application.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.account.application.service.IdentityService;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
@@ -14,22 +10,12 @@ import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
-import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.ddd.facade.AmountRateDTO;
-import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
-import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.common.ddd.model.constant.RoleErrorCode;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author muc_fang
@@ -44,7 +30,6 @@ public class IdentityServiceImpl implements IdentityService {
     private final UserQueryService userQueryService;
     private final AccountDomain accountDomain;
     private final GoodsStoreApi goodsStoreApi;
-    private final FinanceConfigApi financeConfigApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -56,51 +41,6 @@ public class IdentityServiceImpl implements IdentityService {
         }
 
         AbsIdentityPolicySupport.getPolicy(identity).customRegister(req);
-    }
-
-    // FIXME 这整个端口应该搬移到Finance
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void serviceFeeConfigEdit(Long accountId, ServiceFeeConfigVO serviceFeeConfigVO) {
-        ChargeConfigChannelReq req = new ChargeConfigChannelReq();
-        req.setChannelId(accountId);
-        req.setPlatformConfig(getTree(serviceFeeConfigVO.getItemList()));
-
-        financeConfigApi.saveChannelChargeConfig(req);
-    }
-
-    private TreeMap<Integer, Double> getTree(List<AmountRateDTO> itemList) {
-        TreeMap<Integer, Double> treeMap = new TreeMap<Integer, Double>();
-        for (AmountRateDTO amountRateDTO : itemList) {
-            treeMap.put(amountRateDTO.getAmount(), amountRateDTO.getRate());
-        }
-        return treeMap;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public ServiceFeeConfigVO queryServiceFeeConfig(Long channelId) {
-        ChannelServiceAmountRes channelConfigVO = financeConfigApi.queryChannelConfig(channelId);
-        ServiceFeeConfigVO serviceFeeConfigVO = new ServiceFeeConfigVO();
-        serviceFeeConfigVO.setItemList(new ArrayList<>());
-        if (channelConfigVO == null) {
-            // 跨域 finance 端口未接线时兜底返回空配置, 不抛异常
-            return serviceFeeConfigVO;
-        }
-        String platformConfig = channelConfigVO.getPlatformConfig();
-        if (StrUtil.isNotBlank(platformConfig)) {
-            Map<String, BigDecimal> map = JSONUtil.parseObj(platformConfig).toBean(Map.class);
-            List<AmountRateDTO> amountRateList = new ArrayList<>();
-            map.forEach((key, value) -> {
-                AmountRateDTO amountRateDTO = new AmountRateDTO();
-                amountRateDTO.setAmount(NumberUtil.parseInt(key));
-                amountRateDTO.setRate(NumberUtil.toDouble(value));
-                amountRateList.add(amountRateDTO);
-            });
-            serviceFeeConfigVO.setItemList(amountRateList);
-        }
-        serviceFeeConfigVO.setServiceFee(channelConfigVO.getPlatformNowValue());
-        return serviceFeeConfigVO;
     }
 
 //    @Override

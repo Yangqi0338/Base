@@ -84,9 +84,6 @@ public class SecurityUtils {
 
     public static AccountEnum.Identity getIdentity() {
         String identity = SecurityContextHolder.get(TokenConstants.DETAILS_IDENTITY, String.class);
-        if (StrUtil.isBlank(identity)) {
-            return null;
-        }
         Long identityCode = ArrayUtil.get(StrUtil.splitToLong(identity, ','), 0);
         return AccountEnum.Identity.getByCode(identityCode);
     }

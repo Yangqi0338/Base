@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.req.market;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 /**
@@ -28,6 +29,6 @@ public class ClientBindMarketReq {
     /**
      * 绑定类型
      */
-    private Integer bindType;
+    private AccountEnum.Identity bindType;
 
 }

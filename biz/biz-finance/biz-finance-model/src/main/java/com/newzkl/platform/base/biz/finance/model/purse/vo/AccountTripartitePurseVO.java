@@ -76,12 +76,6 @@ public class AccountTripartitePurseVO extends BaseRes {
      */
     private String commitInfo;
 
-    public void subBankNo() {
-        if (bankNo != null) {
-            bankNo = bankNo.substring(bankNo.length() - 4);
-        }
-    }
-
     public LocalDateTime getTime() {
         return createTime;
     }

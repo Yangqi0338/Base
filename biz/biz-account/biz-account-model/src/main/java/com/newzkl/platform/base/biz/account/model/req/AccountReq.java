@@ -33,7 +33,7 @@ public class AccountReq extends BaseReq {
     /**
      * 真实姓名
      */
-    private String realname;
+    private String realName;
     /**
      * 手机号 (查询)
      */

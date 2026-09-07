@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.vo.market;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class ClientMarketBindVO {
     /**
      * 绑定类型
      */
-    private Integer bindType;
+    private AccountEnum.Identity bindType;
 
     /**
      * 客户id

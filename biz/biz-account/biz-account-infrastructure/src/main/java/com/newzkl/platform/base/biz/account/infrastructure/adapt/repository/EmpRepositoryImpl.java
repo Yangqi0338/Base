@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +27,11 @@ public class EmpRepositoryImpl implements EmpRepository {
     @Override
     public Page<EmpVO> pageList(EmpQuery query) {
         return TransferUtils.transferPage(empDAO.selectPage(RepositorySupport.page(query), empDAO.getLw(query)), EmpVO.class);
+    }
+
+    @Override
+    public EmpVO emp(Long empId) {
+        return TransferUtils.transfer(empDAO.selectById(empId), EmpVO::new);
     }
 
     @Override
@@ -47,6 +54,13 @@ public class EmpRepositoryImpl implements EmpRepository {
             return 0;
         }
         return empDAO.deleteByIds(idList);
+    }
+
+    @Override
+    public List<EmpVO> listByIdList(List<Long> idList) {
+        List<EmpDO> empList =
+                Optional.ofNullable(empDAO.selectByIds(idList)).orElse(Collections.emptyList());
+        return TransferUtils.transfers(empList, EmpVO.class);
     }
 
     // OPTIMIZE 创建emp子账号,需要将邀请人也一并复制

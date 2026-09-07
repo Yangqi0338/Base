@@ -13,12 +13,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="time"/>
         <result column="name" jdbcType="VARCHAR" property="goodsName"/>
         <result column="img" jdbcType="VARCHAR" property="goodsPicture"/>
-        <result column="sale_price_began" jdbcType="INTEGER" property="salePriceBegan"/>
-        <result column="sale_price_end" jdbcType="INTEGER" property="salePriceEnd"/>
         <result column="state" jdbcType="INTEGER" property="state"/>
-        <result column="selection_num" jdbcType="INTEGER" property="selectionNum"/>
-        <result column="max_profit" jdbcType="INTEGER" property="maxProfit"/>
-        <!-- market_price/unit_price 列 BIGINT 分, 属性 Money, 去 jdbcType 让全局 MoneyTypeHandler 按 javaType 接管 -->
         <result column="market_price" property="marketPrice"/>
         <result column="market_name" jdbcType="VARCHAR" property="marketName"/>
         <result column="market_id" jdbcType="BIGINT" property="marketId"/>
@@ -51,8 +46,8 @@
     <!-- 市场商品关系列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 queryGoodsRelationList) -->
     <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
     <select id="queryGoodsRelationList" resultMap="GoodsRelationListResultMap">
-        select mgr.id, mgr.goods_id,mgr.sell_num,mgr.create_time,mgr.market_id,mgr.discount_rate,mgr.goods_info,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.market_price,
-               sp.selection_num,mt.market_name,(sp.unit_price - sp.sale_price_began) as max_profit,sp.unit_price, (sp.virtual_sale_num + sp.sale_num) as sale_num
+        select mgr.id, mgr.goods_id,mgr.sell_num,mgr.create_time,mgr.market_id,mgr.discount_rate,mgr.goods_info,sp.`name`,sp.img,sp.state,sp.market_price,
+               mt.market_name,(sp.unit_price - sp.sale_price) as max_profit,sp.unit_price, (sp.virtual_sale_num + sp.sale_num) as sale_num
         from market_goods_relation mgr,spu sp,market mt
         <where>
             mgr.goods_id = sp.id
@@ -99,15 +94,14 @@
     <!-- 渠道商已绑定市场的商品关系列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 queryClientBindMarketGoodsRelationList) -->
     <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
     <select id="queryClientBindMarketGoodsRelationList" resultMap="GoodsRelationListResultMap">
-        select mgr.id, mgr.goods_id,mgr.sell_num,mgr.create_time,mgr.discount_rate,sp.sale_num,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,sp.market_price
-        ,sp.max_profit
+        select mgr.id, mgr.goods_id,mgr.sell_num,mgr.create_time,mgr.discount_rate,sp.sale_num,sp.`name`,sp.img,sp.state,sp.market_price
         from market_bind mb,market_goods_relation mgr,spu sp
         <where>
             mb.market_id = mgr.market_id
             and mgr.goods_id = sp.id
             and mb.user_id = #{req.userId}
             <if test="req.bindType!=null">
-                and mb.bind_type = #{req.bindType}
+                and mb.bind_type = #{req.bindType.code}
             </if>
             <if test="req.relationType != null">
                 and mgr.relation_type = #{req.relationType}
@@ -135,10 +129,10 @@
         </if>
         <if test="req.priceSort != null">
             <if test="req.priceSort == 1">
-                order by sp.sale_price_began desc
+                order by sp.sale_price desc
             </if>
             <if test="req.priceSort == 2">
-                order by sp.sale_price_began asc
+                order by sp.sale_price asc
             </if>
         </if>
         <if test="req.profitSort != null">
@@ -157,7 +151,7 @@
     <!-- 平台添加市场商品-查询未添加商品 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 platformQueryMarketNotAddGoodsList) -->
     <!-- 源侧为裸参数, Base 签名是 @Param("req"), 全部加 req. 前缀 -->
     <select id="platformQueryMarketNotAddGoodsList" resultMap="GoodsRelationListResultMap">
-        select sp.id as goods_id,sp.`name`,sp.img,sp.sale_num,mgr.id,mgr.discount_rate,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,sp.market_price,sp.max_profit,sp.supplier_price_began,sp.supplier_price_end
+        select sp.id as goods_id,sp.`name`,sp.img,sp.sale_num,mgr.id,mgr.discount_rate,sp.state,sp.market_price
         from spu sp
         left join market_goods_relation mgr on sp.id = mgr.goods_id and market_id = #{req.marketId} and mgr.relation_type = 2  and mgr.state = 1
         where sp.audit_state = 2
@@ -174,15 +168,15 @@
         select mgrn.id, mgry.goods_id, mgry.discount_rate, mgry.sell_num as clientSellNum,
         mgry.market_id,
         sp.`name` as goodsName,sp.img as goodsPicture,
-        sp.sale_price_end,sp.state,sp.selection_num,sp.unit_price,
+        sp.sale_price,sp.state,sp.unit_price,
         (mgrn.id is not null) as choose,
         sp.create_time as time,
 
         <!-- 排序字段 -->
         (sp.virtual_sale_num + sp.sale_num) as sellNum,
-        (sp.unit_price - sp.sale_price_began) as maxProfit,
+        (sp.unit_price - sp.sale_price) as maxProfit,
         sp.market_price as marketPrice,
-        sp.sale_price_began as salePriceBegan,
+        sp.sale_price as salePriceBegan,
         sp.create_time as createTime
     from market_bind mb
         inner join market_goods_relation mgry on mb.market_id = mgry.market_id and mgry.relation_type = 2 and mgry.state = 1
@@ -194,7 +188,8 @@
         and mb.market_id = #{req.marketId}
         ${req.buildInSQL('marketIdList','mb.market_id')}
         and mb.state = 1
-        and mb.bind_type = 3
+        <!-- 1002 = AccountEnum.Identity.CHANNEL, 本查询只服务渠道商选品 -->
+        and mb.bind_type = 1002
         <if test="req.goodsName != null">
             and sp.name like CONCAT('%',#{req.goodsName},'%')
         </if>
@@ -205,25 +200,13 @@
             and sp.category_id = #{req.categoryId}
         </if>
         <if test="req.salePriceL != null and req.salePriceR != null">
-            and (sp.sale_price_began between #{req.salePriceL} and #{req.salePriceR} or sp.sale_price_end between
+            and (sp.sale_price between #{req.salePriceL} and #{req.salePriceR} or sp.sale_price between
             #{req.salePriceL} and #{req.salePriceR})
         </if>
         ${req.buildBetweenSQL('sp.unit_price','unitPriceL','unitPriceR')}
-        ${req.buildBetweenSQL('(sp.unit_price - sp.sale_price_began)','maxProfitL','maxProfitR')}
+        ${req.buildBetweenSQL('(sp.unit_price - sp.sale_price)','maxProfitL','maxProfitR')}
         ${req.buildBetweenSQL('(sp.virtual_sale_num + sp.sale_num)','sellNumL','sellNumR')}
         ${req.sortSQL}
-    </select>
-
-    <!-- 渠道商铺货已选商品列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 channelDistributionSelectedGoodsList) -->
-    <!-- 源侧入参为裸 Long accountId, Base 签名是 @Param("req") PlatformQueryMarketNotAddGoodsReq, 取 req.accountId -->
-    <select id="channelDistributionSelectedGoodsList" resultMap="GoodsRelationListResultMap">
-        select sd.id, mgr.goods_id,mgr.sell_num,sp.create_time,mgr.market_id,mgr.discount_rate,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state,sp.selection_num,
-               sp.market_price,(sp.unit_price - sp.sale_price_began) as max_profit,sp.unit_price, (sp.virtual_sale_num + sp.sale_num) as sale_num
-        from market_goods_relation mgr
-        left join spu sp on mgr.goods_id = sp.id
-        left join store_distribution sd on sp.id = sd.goods_id and sd.channel_id = #{req.accountId} and sd.store_id = #{req.accountId} and sd.data_type = 0
-        where mgr.user_id = #{req.accountId}
-        and mgr.relation_type = 3
     </select>
 
     <!-- 开放API-渠道商SPU关系列表 (迁移自 new-scm MarketGoodsRelationDAO.xml 的 selectList) -->
@@ -231,7 +214,7 @@
     <!-- 排序: 源侧手写 order by + foreach(sortField/sortMode), 空集合会产生残留 order by, 此处改用等价的 ${req.sortSQL} -->
     <select id="channelSpuRelationList"
             resultType="com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO">
-        select mgr.id,mgr.discount_rate,mt.market_type,sp.id as spu_id,sp.`name`,sp.img,sp.sale_price_began,sp.sale_price_end,sp.state as spu_state,sp.unit_price,mgr.goods_info,sp.min_pricing_num
+        select mgr.id,mgr.discount_rate,mt.market_type,sp.id as spu_id,sp.`name`,sp.img,sp.state as spu_state,sp.unit_price,mgr.goods_info
         from market_goods_relation mgr,spu sp,market mt
         <where>
             mgr.goods_id = sp.id

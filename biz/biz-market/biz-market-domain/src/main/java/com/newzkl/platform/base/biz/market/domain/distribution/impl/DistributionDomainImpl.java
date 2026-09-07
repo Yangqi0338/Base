@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.domain.adapt.repository.DistributionRepository;
 import com.newzkl.platform.base.biz.market.domain.distribution.DistributionDomain;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StateNotifyDTO;
-import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreDistributionDTO;
+import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreGoodsDTO;
 import com.newzkl.platform.base.biz.market.model.event.distribution.WorkTableUpDownEventMq;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
-import com.newzkl.platform.base.biz.market.model.query.distribution.StoreDistributionQuery;
+import com.newzkl.platform.base.biz.market.model.query.distribution.StoreGoodsQuery;
 import com.newzkl.platform.base.biz.market.model.req.distribution.DistributionsBatchUpdateReq;
 import com.newzkl.platform.base.biz.market.model.req.distribution.DistributionsUpdateReq;
 import com.newzkl.platform.base.biz.market.model.req.distribution.GoodsStateAlterReq;
@@ -78,11 +78,11 @@ public class DistributionDomainImpl implements DistributionDomain {
 
     @Override
     public StateNotifyDTO batchUpdateDistributions(DistributionsBatchUpdateReq req) {
-        List<StoreDistributionDTO> distributions = TransferUtils.transfers(req.getUpdateReqs(), StoreDistributionDTO::new, (source, target) -> {
+        List<StoreGoodsDTO> distributions = TransferUtils.transfers(req.getUpdateReqs(), StoreGoodsDTO::new, (source, target) -> {
             target.setNeedUpdate(CommonEnum.YesOrNo.NO.getCode());
         });
         if (CollUtil.isNotEmpty(distributions)) {
-            StoreDistributionDTO spuDistribution = CollUtil.getFirst(distributions);
+            StoreGoodsDTO spuDistribution = CollUtil.getFirst(distributions);
             Integer goodsState = spuDistribution.getGoodsState();
 
             if (DistributionEnum.State.LISTED.getCode().equals(goodsState)) {
@@ -90,7 +90,7 @@ public class DistributionDomainImpl implements DistributionDomain {
                 Money sellPrice = spuDistribution.getSellPrice();
                 if (sellPrice == null || !sellPrice.greaterThanZero()) {
                     Money maxSellPrice = distributions.stream()
-                            .map(StoreDistributionDTO::getSellPrice)
+                            .map(StoreGoodsDTO::getSellPrice)
                             .filter(Objects::nonNull)
                             .max(Comparator.comparingLong(Money::getCent))
                             .orElse(null);
@@ -137,20 +137,20 @@ public class DistributionDomainImpl implements DistributionDomain {
             throw new PlatformException(MarketErrorCode.NOT_EXIST_OR_STATE_ERROR);
         }
 
-        List<StoreDistributionDTO> storeDistributionList = new ArrayList<>();
-        storeDistributionList.add(buildStoreDistribution(distributionGoodsInfoVO, channelId));
+        List<StoreGoodsDTO> storeGoodsList = new ArrayList<>();
+        storeGoodsList.add(buildStoreGoods(distributionGoodsInfoVO, channelId));
         // 查询商品对应的sku信息
         List<DistributionGoodsInfoVO> distributionGoodsInfos = distributionRepository.queryGoodsDistributionSku(goodsId);
         distributionGoodsInfos.forEach(x->{
-            storeDistributionList.add(buildStoreDistribution(x,channelId));
+            storeGoodsList.add(buildStoreGoods(x,channelId));
         });
         // 批量保存铺货数据
-        distributionRepository.batchSave(storeDistributionList);
+        distributionRepository.batchSave(storeGoodsList);
     }
 
     @Override
-    public List<StoreDistributionDTO> getDistributionDetailList(Long channelId, Long goodsId, boolean isSpu) {
-        StoreDistributionQuery query = new StoreDistributionQuery();
+    public List<StoreGoodsDTO> getDistributionDetailList(Long channelId, Long goodsId, boolean isSpu) {
+        StoreGoodsQuery query = new StoreGoodsQuery();
         query.setChannelId(channelId);
         query.setGoodsId(goodsId);
         if(isSpu){
@@ -163,24 +163,29 @@ public class DistributionDomainImpl implements DistributionDomain {
 
     @Override
     public void alterGoodsState(GoodsStateAlterReq req) {
-        distributionRepository.updateDistributions(TransferUtils.transfer(req, StoreDistributionDTO::new));
+        distributionRepository.updateDistributions(TransferUtils.transfer(req, StoreGoodsDTO::new));
     }
 
-    private StoreDistributionDTO buildStoreDistribution(DistributionGoodsInfoVO distributionGoodsInfoVO, Long channelId){
-        StoreDistributionDTO storeDistribution = TransferUtils.transfer(distributionGoodsInfoVO, StoreDistributionDTO::new);
-        storeDistribution.setGoodsId(distributionGoodsInfoVO.getSpuId());
-        storeDistribution.setMarketId(distributionGoodsInfoVO.getMarketId() == null ? 0 : distributionGoodsInfoVO.getMarketId());
-        storeDistribution.setDataType(distributionGoodsInfoVO.getSkuId() == 0 ? 0: 1);
-        storeDistribution.setStoreId(channelId);
-        storeDistribution.setGoodsState(DistributionEnum.State.PENDING_LISTING.getCode());
-        storeDistribution.setSupplierPrice(distributionGoodsInfoVO.getSellPrice());
-        storeDistribution.setUpTime(LocalDateTime.now());
-        return storeDistribution;
+    private StoreGoodsDTO buildStoreGoods(DistributionGoodsInfoVO distributionGoodsInfoVO, Long channelId){
+        StoreGoodsDTO storeGoods = TransferUtils.transfer(distributionGoodsInfoVO, StoreGoodsDTO::new);
+        storeGoods.setGoodsId(distributionGoodsInfoVO.getSpuId());
+        storeGoods.setMarketId(distributionGoodsInfoVO.getMarketId() == null ? 0 : distributionGoodsInfoVO.getMarketId());
+        storeGoods.setDataType(distributionGoodsInfoVO.getSkuId() == 0 ? 0: 1);
+        storeGoods.setStoreId(channelId);
+        storeGoods.setGoodsState(DistributionEnum.State.PENDING_LISTING.getCode());
+        storeGoods.setSupplierPrice(distributionGoodsInfoVO.getSellPrice());
+        storeGoods.setUpTime(LocalDateTime.now());
+        return storeGoods;
     }
 
     @Override
     public void delGoods(Long goodsId) {
         distributionRepository.delGoods(goodsId,SecurityUtils.getAccountId());
+    }
+
+    @Override
+    public void recoverGoods(Long goodsId) {
+        distributionRepository.recoverGoods(goodsId, SecurityUtils.getAccountId());
     }
 
     @Override
@@ -257,7 +262,7 @@ public class DistributionDomainImpl implements DistributionDomain {
             return;
         }
         LocalDateTime now = LocalDateTime.now();
-        List<StoreDistributionDTO> storeDistributionList = new ArrayList<>();
+        List<StoreGoodsDTO> storeGoodsList = new ArrayList<>();
         // 查询商品对应的sku信息
         List<DistributionGoodsInfoVO> distributionGoodsInfos = distributionRepository.queryGoodsDistributionSku(goodsId);
         if (distributionRepository.queryChannelGoodsIsExist(goodsId, channelId, channelId) != null) {
@@ -266,24 +271,19 @@ public class DistributionDomainImpl implements DistributionDomain {
                 if (distributionRepository.queryChannelSkuIsExist(x.getSkuId(), channelId, channelId) != null) {
                     distributionRepository.alterChannelSkuSellPrice(x.getSkuId(), channelId, channelId, distributionGoodsInfoVO.getSellPrice());
                 } else {
-                    storeDistributionList.add(buildStoreDistribution(x, channelId));
+                    storeGoodsList.add(buildStoreGoods(x, channelId));
                 }
             });
         } else {
-            storeDistributionList.add(buildStoreDistribution(distributionGoodsInfoVO, channelId));
+            storeGoodsList.add(buildStoreGoods(distributionGoodsInfoVO, channelId));
             distributionGoodsInfos.forEach(x -> {
-                storeDistributionList.add(buildStoreDistribution(x, channelId));
+                storeGoodsList.add(buildStoreGoods(x, channelId));
             });
         }
-        if (!storeDistributionList.isEmpty()) {
+        if (!storeGoodsList.isEmpty()) {
             // 批量保存铺货数据
-            distributionRepository.batchSave(storeDistributionList);
+            distributionRepository.batchSave(storeGoodsList);
         }
-    }
-
-    @Override
-    public void copyChannelDistribution(Long channelId, Long targetChannelId, Set<Long> goodsIdList) {
-        distributionRepository.copyChannelDistribution(channelId, targetChannelId, goodsIdList);
     }
 
     @Override
@@ -292,26 +292,26 @@ public class DistributionDomainImpl implements DistributionDomain {
     }
 
     @Override
-    public List<StoreDistributionDTO> queryDistributionsList(StoreDistributionQuery query) {
+    public List<StoreGoodsDTO> queryDistributionsList(StoreGoodsQuery query) {
         return distributionRepository.queryDistributionsList(query);
     }
 
     @Override
     public void increaseSellNum(Long skuId, Long storeId, Integer num) {
-        StoreDistributionQuery query = new StoreDistributionQuery();
+        StoreGoodsQuery query = new StoreGoodsQuery();
         query.setSkuId(skuId);
         query.setChannelId(storeId);
         query.setStoreId(storeId);
-        StoreDistributionDTO storeDistributionDTO = distributionRepository.queryOneDistributions(query);
-        if (storeDistributionDTO != null) {
+        StoreGoodsDTO storeGoodsDTO = distributionRepository.queryOneDistributions(query);
+        if (storeGoodsDTO != null) {
             // 增加铺货sku销量
-            distributionRepository.increaseSellNum(storeDistributionDTO.getId(), num);
-            StoreDistributionQuery spuQuery = new StoreDistributionQuery();
+            distributionRepository.increaseSellNum(storeGoodsDTO.getId(), num);
+            StoreGoodsQuery spuQuery = new StoreGoodsQuery();
             spuQuery.setChannelId(storeId);
             spuQuery.setStoreId(storeId);
-            spuQuery.setGoodsId(storeDistributionDTO.getGoodsId());
+            spuQuery.setGoodsId(storeGoodsDTO.getGoodsId());
             spuQuery.setDataType(0);
-            StoreDistributionDTO spuDistribution = distributionRepository.queryOneDistributions(spuQuery);
+            StoreGoodsDTO spuDistribution = distributionRepository.queryOneDistributions(spuQuery);
             // 增加铺货spu销量
             distributionRepository.increaseSellNum(spuDistribution.getId(), num);
         }
@@ -319,13 +319,13 @@ public class DistributionDomainImpl implements DistributionDomain {
 
     @Override
     public Boolean checkGoodsIsDistributed(Long storeId, Long goodsId) {
-        StoreDistributionQuery query = new StoreDistributionQuery();
+        StoreGoodsQuery query = new StoreGoodsQuery();
         query.setGoodsId(goodsId);
         query.setChannelId(storeId);
         query.setStoreId(storeId);
         query.setDataType(0);
-        StoreDistributionDTO storeDistributionDTO = distributionRepository.queryOneDistributions(query);
-        return storeDistributionDTO != null;
+        StoreGoodsDTO storeGoodsDTO = distributionRepository.queryOneDistributions(query);
+        return storeGoodsDTO != null;
     }
 
     @Override
@@ -344,12 +344,12 @@ public class DistributionDomainImpl implements DistributionDomain {
     }
 
     @Override
-    public StoreDistributionDTO queryDistributionsByCondition(StoreDistributionQuery query) {
+    public StoreGoodsDTO queryDistributionsByCondition(StoreGoodsQuery query) {
         return distributionRepository.queryOneDistributions(query);
     }
 
     @Override
-    public List<StoreDistributionDTO> getByIds(List<Long> ids) {
+    public List<StoreGoodsDTO> getByIds(List<Long> ids) {
         return distributionRepository.getByIds(ids);
     }
 

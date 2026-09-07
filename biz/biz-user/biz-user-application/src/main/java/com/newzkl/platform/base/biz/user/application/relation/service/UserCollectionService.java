@@ -17,7 +17,7 @@ import java.util.List;
  *
  * <p>TODO[infra-gap] 旧实现的三处跨域调用在中台缺对应出站能力, 已省略, 不臆造实现:</p>
  * <ul>
- *   <li>{@code IDistributionRpcFacade.selectById(storeDistributionId)} — 收藏前校验铺货ID有效性,
+ *   <li>{@code IDistributionRpcFacade.selectById(storeGoodsId)} — 收藏前校验铺货ID有效性,
  *       并用铺货数据回填 storeId/spuId/skuId/price。中台无 market 铺货出站端口,
  *       改为直接采用入参快照, 铺货ID有效性不校验。</li>
  *   <li>{@code ISpuFacade.apiSpuVOList(...)} — 列表/分页出参用商品域实时数据覆盖 spuName/mainImage。

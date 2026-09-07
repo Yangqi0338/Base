@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
-import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huaweicloud.sdk.ocr.v1.model.RecognizeBusinessLicenseResponse;
 import com.huaweicloud.sdk.ocr.v1.model.RecognizeIdCardResponse;
@@ -18,6 +17,9 @@ import com.newzkl.platform.base.biz.sys.model.appversion.query.AppVersionQuery;
 import com.newzkl.platform.base.biz.sys.model.appversion.vo.AppVersionVO;
 import com.newzkl.platform.base.biz.sys.model.region.req.RegionReq;
 import com.newzkl.platform.base.biz.sys.model.region.vo.Area;
+import com.newzkl.platform.base.common.core.logistics.LogisticsCompany;
+import com.newzkl.platform.base.common.core.logistics.LogisticsMethod;
+import com.newzkl.platform.base.common.core.logistics.LogisticsTrack;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
@@ -32,9 +34,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -67,15 +68,13 @@ import java.util.List;
  *       全部落地; 仅 {@code operatorFilter=1} 的运营商区域打标依赖跨域 RPC,
  *       在 {@code RegionDomainImpl} 内保留注释 + {@code TODO[cross-service]} 未硬接。
  *       该入参传 1 时当前返回未按运营商打标的区域树, 前端注意。</li>
- *   <li>{@code /queryLogistics} — 裸 HTTP 下沉至 {@code infrastructure/gateway},
- *       controller 经 {@code LogisticsApi} 出站端口调用; appcode/host/path 外提配置,
- *       默认值与旧硬编码一致。</li>
+ *   <li>{@code /queryLogistics} — 三方由阿里云极速快递换成快递100, 调用收敛至
+ *       {@code core-logistics} 的 {@code LogisticsMethod} 门面 (签名/缓存/编码表都在门面内),
+ *       biz 侧不再自建出站端口。出参由原始报文串改结构化 {@code LogisticsTrack},
+ *       详见端点上的契约变更说明。</li>
  * </ul>
  *
- * <p>{@code exportExcelError} 已于本轮补迁: 不复用 Base 的
- * {@code EasyExcelErrorVO.ErrorLineVO(line:String, errorMsg:String)} (字段名与类型均不同),
- * 改在 action 层定义与旧 {@code ExcelErrorVO.Item(line:Integer, msg:String)} 逐字同构的
- * {@code SysCmd.ExcelErrorItem}, 前端契约不变。</p>
+ * <p>{@code exportExcelError} (Excel 导入异常明细回传下载) 随本轮导出能力整体移除, 不再暴露</p>
  *
  * @author KC
  */
@@ -152,15 +151,57 @@ public class CommonController {
     /**
      * 查询物流信息
      *
-     * <p>响应契约与旧一致: {@code data} 为三方返回的原始报文串, 由前端自行解析</p>
+     * <p>⚠️ 出参契约变更: 旧实现直返三方 (阿里云极速快递) 原始报文串由前端自行解析,
+     * 本轮三方换成快递100, 原始报文结构已完全不同, 旧解析代码无论如何都失效,
+     * 故索性改返结构化 {@code LogisticsTrack} (公司/单号/状态/节点列表)。
+     * <b>前端 3 处调用 {@code getDeliveryInfoReq} 需改按 {@code data.nodes} 渲染</b>:
+     * {@code platform-admin/src/http/common.ts}、{@code platform-admin/src/http/order.ts}、
+     * {@code gys-admin/src/http/order.ts}</p>
+     *
+     * <p>入参 {@code type} (快递公司编码或中文名) 可空, 空时由快递100 按单号自动识别;
+     * {@code mobile} 旧三方用于顺丰等隐私单号校验, 快递100 免费版不需要, 未使用</p>
+     *
+     * <p>出参公司与单号字段与发货单同口径: {@code expressCompanyName} / {@code expressCompanyCode} / {@code expressNo}</p>
      *
      * @param req 物流查询入参
-     * @return 三方原始报文串
+     * @return 物流轨迹
      */
     @PostMapping("/queryLogistics")
-    public PlatformResult<String> queryLogistics(@RequestBody SysCmd.DeliverQueryReq req) {
-        // FIXME
-        return PlatformResult.success();
+    public PlatformResult<LogisticsTrack> queryLogistics(@RequestBody SysCmd.DeliverQueryReq req) {
+        return PlatformResult.success(LogisticsMethod.queryTrack(req.getType(), req.getNumber()));
+    }
+
+    /**
+     * 查询快递公司列表
+     *
+     * <p>数据源为快递100 官方编码表 (classpath {@code kuaidi100com.csv}, 1421 家),
+     * 进程内存懒加载不落库; 顺序与编码表一致, 国内主流快递在前。
+     * 全量条数偏多故分页返回, 前端下拉框可直接搜关键字</p>
+     *
+     * <p>出参字段 {@code expressCompanyName} / {@code expressCompanyCode} 与发货接口入参同名:
+     * 下拉选中后原样回传 {@code deliverCreate} / {@code deliverEdit} 即可, 前端无需字段映射。
+     * 发货侧会按本编码表校验公司名, 故发货表单的公司应从本接口取, 不要让用户自由输入</p>
+     *
+     * @param keyword  名称或编码关键字, 可空, 空则返回全量
+     * @param pageNo   页码, 从 1 开始
+     * @param pageSize 每页条数
+     * @return 快递公司分页
+     */
+    @GetMapping("/logisticsCompanies")
+    public PlatformResult<Page<LogisticsCompany>> getLogisticsCompanies(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "1") long pageNo,
+            @RequestParam(defaultValue = "20") long pageSize) {
+        List<LogisticsCompany> all = LogisticsMethod.companies(keyword);
+        Page<LogisticsCompany> page = new Page<>(pageNo, pageSize, all.size());
+        int from = (int) ((pageNo - 1) * pageSize);
+        if (from < 0 || from >= all.size()) {
+            page.setRecords(Collections.emptyList());
+            return PlatformResult.success(page);
+        }
+        int to = (int) Math.min(from + pageSize, all.size());
+        page.setRecords(all.subList(from, to));
+        return PlatformResult.success(page);
     }
 
     /**
@@ -276,26 +317,6 @@ public class CommonController {
     @PostMapping("/queryAppNewVersion/{appName}")
     public PlatformResult<AppVersionVO> queryAppNewVersion(@PathVariable String appName) {
         return PlatformResult.success(appVersionDomain.queryAppNewVersion(appName));
-    }
-
-    /**
-     * Excel 异常信息导出
-     *
-     * <p>纯出参转换端点: 前端把导入时收到的异常明细回传, 服务端原样写成 xlsx 下载,
-     * 无落库、无领域逻辑, 故留在 action 层。</p>
-     *
-     * @param response   servlet 响应, 直接写出 xlsx 字节流
-     * @param excelError 异常明细行列表
-     * @throws IOException 写出响应流失败时抛出
-     */
-    @PostMapping("exportExcelError")
-    public void exportExcelError(HttpServletResponse response,
-                                 @RequestBody List<SysCmd.ExcelErrorItem> excelError) throws IOException {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        String fileName = URLEncoder.encode("Excel导入异常记录", StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), SysCmd.ExcelErrorItem.class).sheet("模板").doWrite(excelError);
     }
 
     /**

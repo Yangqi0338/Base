@@ -1,27 +1,22 @@
 package com.newzkl.platform.base.biz.account.action.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.account.model.req.ServiceFeeConfigEdit;
-import com.newzkl.platform.base.biz.account.application.service.IdentityService;
-import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
+import com.newzkl.platform.base.biz.account.application.service.AccountService;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
-import com.newzkl.platform.base.biz.account.model.req.ChannelQuery;
+import com.newzkl.platform.base.biz.account.model.dto.ChannelDTO;
+import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
+import com.newzkl.platform.base.biz.account.model.req.ChannelRegisterReq;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
-import com.newzkl.platform.base.biz.account.model.req.ChannelUpdateReq;
-import com.newzkl.platform.base.biz.account.model.res.ChannelPageRes;
-import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
-import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
+import com.newzkl.platform.base.biz.account.model.res.ChannelRes;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.ddd.action.auth.RoleLimit;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
-import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +24,14 @@ import org.springframework.web.bind.annotation.*;
  * 用户-渠道商
  *
  * <p>迁移自旧 {@code com.zkl.scm.user.interfaces.controller.ChannelController}。
- * 类级路径与方法级路径逐字沿用旧契约, 含旧代码中不带前导斜杠的写法 (如 {@code channel} / {@code pageList})。</p>
+ * 类级路径与方法级路径逐字沿用旧契约, 含旧代码中不带前导斜杠的写法 (如 {@code channel})。</p>
+ *
+ * <p>迁出端点: {@code serviceFeeConfigEdit} / {@code queryServiceFeeConfig} 已归位资金域
+ * {@code finance.action.controller.ConfigController} ({@code /config/*}), 服务费配置属资金域数据。</p>
  *
  * @author KC
  */
+@Slf4j
 @RestController
 @RequestMapping("/user/channel")
 @RequiredArgsConstructor
@@ -40,8 +39,27 @@ import org.springframework.web.bind.annotation.*;
 public class ChannelController {
 
     private final ChannelClientDomain channelClientDomain;
-    private final UserQueryService userQueryService;
-    private final IdentityService identityService;
+    private final AccountService accountService;
+
+    /**
+     * 渠道商新增
+     *
+     * <p>收渠道商专用入参 {@link ChannelRegisterReq}, 端内转 {@link AdminRegisterIdentityReq}:
+     * identity 固定 CHANNEL, 角色由 roleIdList 指定并在注册链绑定。渠道商业务字段 (公司信息/联系人等)
+     * 由注册链按昵称兜底, 其余走 {@link #channelEdit} 补充。</p>
+     *
+     * @param req 渠道商注册请求
+     * @return 新建账号 ID
+     */
+    @RoleLimit(client = AccountEnum.Client.ADMIN)
+    @PostMapping("/create")
+    @FuncPermission("新建渠道商")
+    public PlatformResult<Long> create(@RequestBody @Validated ChannelRegisterReq req) {
+        log.info("新增渠道商");
+        AdminRegisterIdentityReq registerReq = TransferUtils.transfer(req, AdminRegisterIdentityReq.class);
+        registerReq.setIdentity(AccountEnum.Identity.CHANNEL);
+        return PlatformResult.success(accountService.identityCreate(registerReq));
+    }
 
     /**
      * 渠道商修改
@@ -51,131 +69,45 @@ public class ChannelController {
      * @param req 渠道商修改请求
      * @return 空结果
      */
+    @RoleLimit({AccountEnum.Identity.PLATFORM, AccountEnum.Identity.PLATFORM, AccountEnum.Identity.CHANNEL})
     @PostMapping("/channelEdit")
     @FuncPermission("渠道商修改")
     public PlatformResult<Void> channelEdit(@Validated @RequestBody ChannelReq req) {
-        if (AccountEnum.Identity.PLATFORM == SecurityUtils.getIdentity()) {
+        if (AccountEnum.Client.ADMIN == SecurityUtils.getClient()) {
             if (req.getId() == null) {
                 ThrowsException.exception(BaseErrorCode.PARAM);
             }
         } else if (AccountEnum.Identity.CHANNEL == SecurityUtils.getIdentity()) {
             req.setId(SecurityUtils.getAccountId());
-        } else {
-            ThrowsException.exception(BaseErrorCode.PARAM);
         }
         channelClientDomain.channelEdit(req);
         return PlatformResult.success();
     }
 
     /**
+     * 渠道商纯净详情
+     *
+     * @param id 渠道商账号ID, 不传取当前登录账号
+     * @return 渠道商纯净视图
+     * @ext 主数据 channel (无副数据)
+     */
+    @GetMapping("/base")
+    public PlatformResult<ChannelDTO> channelBase(@RequestParam(value = "id", required = false) Long id) {
+        Long channelId = id == null ? SecurityUtils.getAccountId() : id;
+        return PlatformResult.success(channelClientDomain.channelBase(channelId));
+    }
+
+    /**
      * 渠道商详情
      *
      * @param id 渠道商账号ID, 不传取当前登录账号
-     * @return 渠道商视图
+     * @return 渠道商聚合视图
+     * @ext 主数据 channel, 副数据 account(单副, 副数据不再向下关联)。方向与
+     *      {@code AccountController.identityDetail}(主 account / 副身份) 相反, 两者不可互相替代
      */
     @GetMapping("channel")
-    public PlatformResult<ChannelVO> channel(@RequestParam(value = "id", required = false) Long id) {
+    public PlatformResult<ChannelRes> channel(@RequestParam(value = "id", required = false) Long id) {
         Long channelId = id == null ? SecurityUtils.getAccountId() : id;
         return PlatformResult.success(channelClientDomain.channel(channelId));
-    }
-
-    /**
-     * 渠道商详情 for admin
-     *
-     * <p>收编自旧 {@code AdapterController#channelForAdmin}, 按 ID 查渠道商详情。
-     * 路径 {@code /user/channel/channelForAdmin} 逐字保留(前端 yys-admin 在用)。</p>
-     *
-     * @param id 渠道商账号ID
-     * @return 渠道商视图
-     */
-    @GetMapping("/channelForAdmin")
-    public PlatformResult<ChannelVO> channelForAdmin(@RequestParam("id") Long id) {
-        return PlatformResult.success(channelClientDomain.channel(id));
-    }
-
-    /**
-     * 渠道商分页
-     *
-     * @param channelQuery 渠道商查询
-     * @return 渠道商分页
-     */
-    @PostMapping("channelListVO")
-    public PlatformResult<Page<ChannelVO>> channelPage(@RequestBody ChannelQuery channelQuery) {
-        AccountEnum.Identity identity = SecurityUtils.getIdentity();
-        AccountEnum.Client client = SecurityUtils.getClient();
-        if (AccountEnum.Identity.PLATFORM == identity) {
-            channelQuery.setStateOver(ChannelEnum.State.DESTORY);
-        } else if (AccountEnum.Client.PARTNER != client) {
-            ThrowsException.exception(BaseErrorCode.PARAM);
-        }
-        return PlatformResult.success(userQueryService.channelPage(channelQuery));
-    }
-
-    /**
-     * 用于APP端市场渠道分页
-     *
-     * <p>保留旧语义: 未传 {@code idList} 时直接回空分页。</p>
-     *
-     * @param channelQuery 渠道商查询
-     * @return 渠道商分页
-     */
-    @PostMapping("pageList")
-    public PlatformResult<Page<ChannelVO>> pageList(@RequestBody ChannelQuery channelQuery) {
-        if (channelQuery.getIdList() == null || channelQuery.getIdList().isEmpty()) {
-            return PlatformResult.success(new Page<>());
-        }
-        return PlatformResult.success(userQueryService.channelPage(channelQuery));
-    }
-
-    /**
-     * 渠道商服务费修改
-     *
-     * <p>旧 {@code @Limit(code=1023, level=set)} 未迁移, 见迁移报告「鉴权降级」。
-     * 迁移补充: 中台 {@code OperatorCmd.ServiceFeeConfigEdit} 的 {@code serviceFeeConfigVO}
-     * 字段随资金域解耦已注释, 当前只能传账号ID, 见迁移报告「能力缺失」。</p>
-     *
-     * @param serviceFeeConfigEdit 服务费修改入参
-     * @return 空结果
-     */
-    @PostMapping("serviceFeeConfigEdit")
-    @FuncPermission("渠道商服务费修改")
-    public PlatformResult<Void> serviceFeeConfigEdit(@RequestBody ServiceFeeConfigEdit serviceFeeConfigEdit) {
-        identityService.serviceFeeConfigEdit(serviceFeeConfigEdit.getAccountId(), null);
-        return PlatformResult.success();
-    }
-
-    /**
-     * 查询渠道商服务费
-     *
-     * @param idListCommand 渠道商ID入参
-     * @return 服务费配置
-     */
-    @PostMapping("/queryServiceFeeConfig")
-    public PlatformResult<ServiceFeeConfigVO> queryServiceFeeConfig(@RequestBody @Valid IdCommand idListCommand) {
-        return PlatformResult.success(identityService.queryServiceFeeConfig(CollUtil.getFirst(idListCommand.getIdList())));
-    }
-
-    /**
-     * 渠道商分页-数字门店
-     *
-     * @param channelQuery 渠道商查询
-     * @return 渠道商门店分页
-     */
-    @PostMapping("queryChannelPage")
-    public PlatformResult<Page<ChannelPageRes>> queryChannelPage(@RequestBody ChannelQuery channelQuery) {
-        return PlatformResult.success(userQueryService.queryChannelPage(channelQuery));
-    }
-
-    /**
-     * 修改渠道商-数字门店
-     *
-     * @param req 渠道商修改请求
-     * @return 空结果
-     */
-    @PostMapping("/update")
-    @FuncPermission("修改渠道商-数字门店")
-    public PlatformResult<Void> update(@Validated @RequestBody ChannelUpdateReq req) {
-        channelClientDomain.updateChannel(req);
-        return PlatformResult.success();
     }
 }

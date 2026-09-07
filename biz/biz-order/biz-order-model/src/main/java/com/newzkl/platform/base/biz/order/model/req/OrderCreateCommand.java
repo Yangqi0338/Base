@@ -1,8 +1,9 @@
 package com.newzkl.platform.base.biz.order.model.req;
 
 
-import com.newzkl.platform.base.biz.order.model.vo.ShipVO;
+import com.newzkl.platform.base.common.ddd.model.vo.ShipVO;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.order.ThirdPartyOrderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -44,6 +45,11 @@ public class OrderCreateCommand {
      * 外部订单号
      */
     private String outOrderNo;
+    /**
+     * 订单来源平台 openapi(乐态)入口下单时传 LE_TAI 平台内部下单为 null
+     * @ext 轴A 订单来源 与商品级 OrderSkuVO.platformType(轴B 供货平台)不是同一语义 不参与三方下单派发
+     */
+    private ThirdPartyOrderEnum.PlatformTypeEnum platformType;
     /**
      * 商品信息
      */

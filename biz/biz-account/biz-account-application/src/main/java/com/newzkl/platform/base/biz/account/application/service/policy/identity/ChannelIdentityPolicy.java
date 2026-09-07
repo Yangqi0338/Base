@@ -82,11 +82,6 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
     }
 
     @Override
-    public Object detail(Long id) {
-        return null;
-    }
-
-    @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
         // 移除渠道商身份: 删 channel 行
         channelRepository.channelDelete(Collections.singletonList(accountVO.getId()));

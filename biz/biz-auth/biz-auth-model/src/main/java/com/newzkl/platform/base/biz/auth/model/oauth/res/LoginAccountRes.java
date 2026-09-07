@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.auth.model.oauth.res;
 
 
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import jakarta.validation.constraints.Pattern;
@@ -39,4 +40,10 @@ public class LoginAccountRes extends BaseRes {
      * 帐号状态
      */
     private AccountEnum.State state;
+    /**
+     * 三方账户权限
+     *
+     * <p>前端据此判断是否需进入汇付开卡流程, 替代已移除的 GET /huiFu/detail 是否为 null 的判断。</p>
+     */
+    private CommonEnum.YesOrNo tripartiteAccountPermission;
 }

@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -84,7 +86,7 @@ public class ApiSpuVO implements Serializable {
      * 售卖状态 0 下架 1 上架
      */
     @NotNull
-    private Integer saleState;
+    private CommonEnum.YesOrNo saleState;
     /**
      * 是否包邮 0 不包邮 1 包邮
      */
@@ -94,7 +96,7 @@ public class ApiSpuVO implements Serializable {
     /**
      * 冗余: 建议零售价(to c)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
 
     /**
      * 让利比例
@@ -132,7 +134,7 @@ public class ApiSpuVO implements Serializable {
     /**
      * 冗余: 供货价起始
      */
-    private Integer supplierPriceBegan;
+    private Money supplierPriceBegan;
     /**
      * 运费模板id (查询)
      */

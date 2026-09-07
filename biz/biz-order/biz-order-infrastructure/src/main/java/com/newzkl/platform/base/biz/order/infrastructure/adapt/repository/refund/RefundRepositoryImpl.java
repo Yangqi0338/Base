@@ -3,8 +3,8 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.refun
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.order.domain.adapt.api.LocalMessageApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.RefundRepository;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundFreightAddressVO;
 import com.newzkl.platform.base.biz.order.facade.model.api.refund.ApiRefundStateVO;
@@ -17,10 +17,6 @@ import com.newzkl.platform.base.biz.order.model.req.query.RefundQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.SkuOrderQuery;
 import com.newzkl.platform.base.biz.order.model.req.query.OrderQuery;
 import com.newzkl.platform.base.biz.order.model.res.OrderRefundRes;
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiRefundStateEvent;
-import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
-import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
-import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
@@ -31,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,6 +40,7 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
 
     private final RefundDAO refundDAO;
     private final SkuOrderDAO skuOrderDAO;
+    private final LocalMessageApi localMessageApi;
 
     @Override
     public Long refundSave(RefundDTO refund) {
@@ -99,7 +95,7 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
                 .set(RefundDO::getRefundState, toState)
         );
         if(i > 0) {
-            refundStateNotify(orderType, channelId, refundId, sourceState, toState);
+            localMessageApi.publishRefundState(orderType, channelId, refundId, sourceState, toState);
         }
     }
 
@@ -114,7 +110,7 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
                 .set(RefundDO::getFromOrderState, sourceState)
         );
         if(i > 0){
-            refundStateNotify(orderType, channelId, refundId, sourceState, toState);
+            localMessageApi.publishRefundState(orderType, channelId, refundId, sourceState, toState);
         }
 
     }
@@ -169,18 +165,5 @@ public class RefundRepositoryImpl extends RepositorySupport implements RefundRep
                         RefundEnum.State.PLATFORM_WAIT, RefundEnum.State.MONEY_ING
                 )).build();
         return refundDAO.selectCount(refundDAO.getLw(query)).intValue();
-    }
-
-    public void refundStateNotify(OrderEnum.OrderType orderType, Long channelId, Long refundId, RefundEnum.State currentState, RefundEnum.State toState) {
-        //开发者通知
-        if(OrderEnum.OrderType.CHANNEL == orderType){
-            NotifyEventCommand notifyEventCommand = new NotifyEventCommand();
-            notifyEventCommand.setServiceType(NotifyEnums.ServiceType.ORDER.getCode());
-            notifyEventCommand.setBusinessType(NotifyEnums.OrderType.REFUND_STATE.getCode());
-            notifyEventCommand.setEventInfo(JSONObject.toJSONString(new ApiRefundStateEvent(refundId,
-                    currentState == null ? null : currentState.getCode(),
-                    toState == null ? null : toState.getCode())));
-            NotifyUtil.batchSend(Collections.singletonList(channelId), notifyEventCommand);
-        }
     }
 }

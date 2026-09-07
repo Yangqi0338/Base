@@ -56,4 +56,43 @@ public class SupplierEnum {
             return null;
         }
     }
+
+    /**
+     * 保证金缴纳配置
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum PromisePayConfig implements IEnum<Integer> {
+        /**
+         * 即时缴纳
+         */
+        IMMEDIATE(0, "即时缴纳"),
+        /**
+         * 延迟缴纳
+         */
+        DELAY(1, "延迟缴纳"),
+        ;
+        @EnumValue
+        @JsonValue
+        private final Integer code;
+        private final String value;
+
+        /**
+         * 按 code 反查保证金缴纳配置
+         *
+         * @param code 配置码
+         * @return 匹配的配置, 无匹配返回 null
+         */
+        public static PromisePayConfig getByCode(Integer code) {
+            if (code == null) {
+                return null;
+            }
+            for (PromisePayConfig config : values()) {
+                if (config.code.equals(code)) {
+                    return config;
+                }
+            }
+            return null;
+        }
+    }
 }

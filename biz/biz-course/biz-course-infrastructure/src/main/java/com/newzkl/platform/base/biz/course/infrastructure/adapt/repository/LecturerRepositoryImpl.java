@@ -41,15 +41,13 @@ public class LecturerRepositoryImpl implements LecturerRepository {
         if (id == null) {
             return null;
         }
-        return fillDesc(TransferUtils.transfer(lecturerDAO.selectById(id), LecturerRes::new));
+        return TransferUtils.transfer(lecturerDAO.selectById(id), LecturerRes::new);
     }
 
     @Override
     public Page<LecturerRes> pageList(LecturerQuery query) {
         Page<LecturerDO> page = lecturerDAO.selectPage(RepositorySupport.page(query), lecturerDAO.getLw(query));
-        Page<LecturerRes> result = TransferUtils.transferPage(page, LecturerRes::new);
-        result.getRecords().forEach(LecturerRepositoryImpl::fillDesc);
-        return result;
+        return TransferUtils.transferPage(page, LecturerRes::new);
     }
 
     @Override
@@ -57,8 +55,7 @@ public class LecturerRepositoryImpl implements LecturerRepository {
         BaseLambdaQueryWrapper<LecturerDO> wrapper = new BaseLambdaQueryWrapper<LecturerDO>()
                 .notNullEq(LecturerDO::getIsEnabled, 1);
         wrapper.orderByDesc(LecturerDO::getId);
-        List<LecturerRes> list = TransferUtils.transfers(lecturerDAO.selectList(wrapper), LecturerRes::new);
-        list.forEach(LecturerRepositoryImpl::fillDesc);
+        List<LecturerRes> list = TransferUtils.transfers(lecturerDAO.selectList(wrapper), LecturerRes::new);;
         return list;
     }
 
@@ -70,7 +67,7 @@ public class LecturerRepositoryImpl implements LecturerRepository {
         BaseLambdaQueryWrapper<LecturerDO> wrapper = new BaseLambdaQueryWrapper<LecturerDO>()
                 .notNullEq(LecturerDO::getMainAccountId, mainAccountId);
         wrapper.last("LIMIT 1");
-        return fillDesc(TransferUtils.transfer(lecturerDAO.selectOne(wrapper), LecturerRes::new));
+        return TransferUtils.transfer(lecturerDAO.selectOne(wrapper), LecturerRes::new);
     }
 
     @Override
@@ -112,18 +109,5 @@ public class LecturerRepositoryImpl implements LecturerRepository {
     @Transactional(rollbackFor = Exception.class)
     public boolean delete(List<Long> idList) {
         return lecturerDAO.deleteByIds(idList) > 0;
-    }
-
-    /**
-     * 回填启用状态描述
-     *
-     * @param res 讲师视图
-     * @return 入参本身, 便于链式调用
-     */
-    private static LecturerRes fillDesc(LecturerRes res) {
-        if (res != null) {
-            res.setIsEnabledDesc(Integer.valueOf(1).equals(res.getIsEnabled()) ? "启用" : "禁用");
-        }
-        return res;
     }
 }

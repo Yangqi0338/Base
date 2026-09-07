@@ -3,10 +3,12 @@ package com.newzkl.platform.base.biz.account.domain.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
+import com.newzkl.platform.base.biz.account.model.dto.SupplierDTO;
 import com.newzkl.platform.base.biz.account.model.res.SupplierAuditRes;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
@@ -24,13 +26,56 @@ public interface SupplierClientDomain {
 
     Long supplierCustomSave(SupplierCustomSaveReq req);
 
+    /**
+     * 供应商修改
+     *
+     * <p>{@code username} 已随建模收敛到 account 表, 命中时先落账号侧再写 supplier 行,
+     * 同事务保证两表一致</p>
+     *
+     * @param id              供应商账号ID (与 supplier 主键同值)
+     * @param supplierEditReq 供应商修改入参
+     * @return 影响行数
+     * @ext 主数据 supplier, 副数据 account(单副, 副数据不再向下关联)
+     */
     int supplierEdit(Long id, SupplierReq supplierEditReq);
-
-    int supplierDelete(List<Long> supplierIdList);
 
     void supplierEdit(List<EditColumnVO> editColumnList, Long id);
 
+    /**
+     * 供应商视图
+     *
+     * <p>历史签名, 返回内部 {@link SupplierVO}(含派生 getter 与 facade 转换所需字段)。
+     * 对外出参走 {@link #supplierBase} / {@link #supplierDetail}</p>
+     *
+     * @param supplierId 供应商账号ID
+     * @return 供应商视图, 无则 null
+     * @ext 主数据 supplier (无副数据)
+     */
     SupplierVO supplier(Long supplierId);
+
+    /**
+     * 供应商纯净详情
+     *
+     * <p>只查 supplier 一张表, 相比 {@link #supplierDetail} 少一次 account 查询。
+     * 适用于校验入驻/审核状态、取账期与保证金配置等只需自有列的场景</p>
+     *
+     * @param supplierId 供应商账号ID
+     * @return 供应商纯净视图
+     * @ext 主数据 supplier (无副数据)
+     */
+    SupplierDTO supplierBase(Long supplierId);
+
+    /**
+     * 供应商聚合详情
+     *
+     * <p>主数据 supplier 由 assembler 搬列, 副数据 account 逐字段显式填充</p>
+     *
+     * @param supplierId 供应商账号ID
+     * @return 供应商聚合视图
+     * @ext 主数据 supplier, 副数据 account(单副, 副数据不再向下关联)。与
+     *      {@code AccountController.identityDetail} 的「主 account / 副身份」方向相反, 两者不可互相替代
+     */
+    SupplierRes supplierDetail(Long supplierId);
 
     /**
      * 提交供应商审核
@@ -131,9 +176,9 @@ public interface SupplierClientDomain {
      *
      * @param id                     供应商账号ID
      * @param shouldPromisePayAmount 应付保证金金额
-     * @param promisePayConfig       保证金缴纳配置, 0 即时 1 延迟
+     * @param promisePayConfig       保证金缴纳配置
      */
-    void shouldPromisePayAmountSet(Long id, Money shouldPromisePayAmount, Integer promisePayConfig);
+    void shouldPromisePayAmountSet(Long id, Money shouldPromisePayAmount, SupplierEnum.PromisePayConfig promisePayConfig);
 
     /**
      * 追加供应商经营行业

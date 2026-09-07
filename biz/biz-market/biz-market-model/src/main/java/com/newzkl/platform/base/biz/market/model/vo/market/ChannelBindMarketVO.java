@@ -32,7 +32,7 @@ public class ChannelBindMarketVO {
     private Integer goodsNum;
 
     /**
-     * 下级推广人数量
+     * 渠道商绑定数
      */
     private Integer subBindNum;
 

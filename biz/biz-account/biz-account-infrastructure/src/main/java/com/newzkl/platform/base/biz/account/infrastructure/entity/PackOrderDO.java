@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.PackEnum;
 import com.newzkl.platform.base.biz.account.model.pack.vo.PackGoodsVO;
-import com.newzkl.platform.base.biz.account.model.address.vo.ShipAddressVO;
+import com.newzkl.platform.base.biz.account.model.pack.vo.PackShipVO;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class PackOrderDO extends BaseDO {
      */
     @OldColumnName("shipVO")
     @JsonSerializable
-    private ShipAddressVO ship;
+    private PackShipVO ship;
 
     /**
      * 礼包商品ID

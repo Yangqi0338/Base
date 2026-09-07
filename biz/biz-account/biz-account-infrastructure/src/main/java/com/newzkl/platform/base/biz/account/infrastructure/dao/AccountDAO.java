@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.newzkl.platform.base.biz.account.infrastructure.entity.AccountDO;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.SimpleAccountQuery;
-import com.newzkl.platform.base.biz.account.model.res.AccountOutRes;
 import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountRPCResVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureVO;

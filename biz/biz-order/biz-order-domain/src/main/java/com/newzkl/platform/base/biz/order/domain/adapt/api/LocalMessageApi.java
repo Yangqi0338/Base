@@ -41,8 +41,6 @@ public interface LocalMessageApi {
 
     void sendOrderNewRecordEvent(List<OrderDTO> orderList, OrderEnum.State beforeOrderState, OrderEnum.State afterOrderState, Long operatorId, AccountEnum.Identity operatorRoleId);
 
-    void deliverNotify(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId);
-
     void sendRefundOperationRecord(RefundDTO refundVO, RefundEnum.State from, RefundEnum.State to, com.newzkl.platform.base.common.ddd.model.enums.order.RefundEnum.RefundOperateTypeEnum refundOperateTypeEnum);
 
     void paySuccessNotify(OrderAgg orderAgg);
@@ -51,4 +49,46 @@ public interface LocalMessageApi {
      * 订单过期关闭
      */
     void orderExpireClose(Long orderId);
+
+    /**
+     * 发布订单状态变更业务事件
+     *
+     * <p>无条件发布 不做订单类型过滤: 由订阅方自行判定是否关心。原
+     * {@code OrderRepository.orderStateNotify} 直接发 openapi 专用通知信封, 已废弃</p>
+     *
+     * @param orderType    订单类型
+     * @param channelId    下单主体账户ID
+     * @param outOrderNo   外部订单号
+     * @param sourceState  变更前状态
+     * @param newState     变更后状态
+     */
+    void publishOrderState(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, OrderEnum.State sourceState, OrderEnum.State newState);
+
+    /**
+     * 发布售后单状态变更业务事件
+     *
+     * <p>无条件发布 不做订单类型过滤: 由订阅方自行判定是否关心</p>
+     *
+     * @param orderType   订单类型
+     * @param channelId   下单主体账户ID
+     * @param refundId    售后单ID
+     * @param sourceState 变更前状态
+     * @param newState    变更后状态
+     */
+    void publishRefundState(OrderEnum.OrderType orderType, Long channelId, Long refundId, RefundEnum.State sourceState, RefundEnum.State newState);
+
+    /**
+     * 发布订单发货业务事件
+     *
+     * <p>无条件发布 不做订单类型过滤: 由订阅方自行判定是否关心。原 {@code deliverNotify}
+     * 直接发 openapi 专用通知信封, 已废弃</p>
+     *
+     * @param orderType      订单类型
+     * @param channelId      下单主体账户ID
+     * @param outOrderNo     外部订单号
+     * @param skuDeliverList 本次发货的SKU与数量
+     * @param expressName    快递公司名称
+     * @param expressNo      快递单号
+     */
+    void publishOrderDelivery(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, List<SkuCountDTO> skuDeliverList, String expressName, String expressNo);
 }

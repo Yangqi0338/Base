@@ -101,18 +101,15 @@ public class ArticleCategoryController {
     }
 
     /**
-     * 获取分类列表
+     * 获取推荐的分类列表
      *
-     * <p>推荐人群由当前登录角色换算, 旧 {@code SecurityUtils.getIdentity()} 换为
-     * {@code SecurityUtils.getRoleId()}(两者同为角色ID语义)。入参 {@code req} 旧实现同样未使用,
-     * 为保持前端契约(POST 带 body)原样保留。</p>
-     *
-     * @param req 推荐人群入参(旧实现未使用)
      * @return 分类列表
      */
-    @PostMapping("/list")
-    public PlatformResult<List<ArticleCategoryRes>> getCategoryList(@RequestBody RecommendGroupReq req) {
-        return PlatformResult.success(articleCategoryDomain.getCategoryList(
-                RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity())));
+    @GetMapping("/recommendList")
+    public PlatformResult<List<ArticleCategoryRes>> getRecommendList() {
+        ArticleCategoryPageQuery pageQuery = new ArticleCategoryPageQuery();
+        pageQuery.setRecommendGroups(RecommendGroupsCheckUtil.getRecommendGroups(SecurityUtils.getIdentity()));
+        pageQuery.resetQueryList();
+        return PlatformResult.success(articleCategoryDomain.getCategoryPage(pageQuery).getRecords());
     }
 }

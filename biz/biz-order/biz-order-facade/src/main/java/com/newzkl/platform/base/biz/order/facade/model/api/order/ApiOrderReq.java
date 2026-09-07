@@ -17,7 +17,7 @@ public class ApiOrderReq implements Serializable {
     /**
      * 创建开始时间: 13位时间戳
      */
-    private Long createBeginTime;
+    private Long createStartTime;
     /**
      * 创建结束时间: 13位时间戳
      */

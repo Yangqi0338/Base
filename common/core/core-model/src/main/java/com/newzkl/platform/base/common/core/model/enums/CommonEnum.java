@@ -65,14 +65,16 @@ public class CommonEnum {
 
     /**
      * 是否
+     *
+     * <p>描述带两套语义: 第 0 位 是/否, 第 1 位 启用/禁用, 按语义位下标取用</p>
      */
     @Getter
     @AllArgsConstructor
     public enum YesOrNo implements IEnum<Integer> {
         /** 是 */
-        YES(1, "是"),
+        YES(1, "是|启用"),
         /** 否 */
-        NO(0, "否"),
+        NO(0, "否|禁用"),
         ;
 
         @EnumValue
@@ -139,5 +141,23 @@ public class CommonEnum {
         public String getValue() {
             return description;
         }
+    }
+
+    /**
+     * 翻译方式
+     *
+     * <p>决定语义位文案取出后按哪种来源重写文案</p>
+     * <p>FIX 走 SysProperties 的静态替换表, 其余为扩展占位, 命中时不重写</p>
+     */
+    public enum TranslateType {
+        /** 静态文案 */
+        FIX,
+        /** 配置文件 */
+        FILE,
+        /** 数据库字典 */
+        DB,
+        /** 缓存字典 */
+        CACHE,
+        ;
     }
 }

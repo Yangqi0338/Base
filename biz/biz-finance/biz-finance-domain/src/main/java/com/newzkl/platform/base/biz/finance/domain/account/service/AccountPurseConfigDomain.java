@@ -5,6 +5,7 @@ import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigChannelVO;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.biz.finance.model.account.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 
 import java.util.List;
@@ -24,6 +25,28 @@ public interface AccountPurseConfigDomain {
      * @param req
      */
     void saveChannelChargeConfig(ChargeConfigChannelReq req);
+
+    /**
+     * 渠道商服务费修改
+     *
+     * <p>由 account 域 {@code IdentityService#serviceFeeConfigEdit} 迁入。
+     * 把阶梯配置项列表折叠成金额升序的 {@code TreeMap} 后落库。</p>
+     *
+     * @param channelId          渠道商账号ID
+     * @param serviceFeeConfigVO 服务费配置
+     */
+    void serviceFeeConfigEdit(Long channelId, ServiceFeeConfigVO serviceFeeConfigVO);
+
+    /**
+     * 查询渠道商服务费
+     *
+     * <p>由 account 域 {@code IdentityService#queryServiceFeeConfig} 迁入。
+     * 渠道商尚无配置记录时返回阶梯项为空列表的对象, 不抛异常</p>
+     *
+     * @param channelId 渠道商账号ID
+     * @return 服务费配置
+     */
+    ServiceFeeConfigVO queryServiceFeeConfig(Long channelId);
 
     /**
      * 更新渠道商当前服务费配置

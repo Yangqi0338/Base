@@ -15,6 +15,7 @@ import java.util.List;
  *
  * <p>字段/getter 标 {@link JsonTranslate} 时追加同名 + "Desc" 伴生写出器, 原字段保留原样输出。
  * 字段名本身已以 Desc 结尾则直接改写其序列化器, 不再叠加</p>
+ * <p>注解上的 index 与 type 在此处读出, 构造注入 {@link JsonTranslateSerializer}</p>
  *
  * @author KC
  */
@@ -33,12 +34,13 @@ public class JsonTranslateSerializerModifier extends BeanSerializerModifier {
             if (ann == null) {
                 continue;
             }
+            JsonTranslateSerializer serializer = new JsonTranslateSerializer(ann.index(), ann.type());
             if (writer.getName().endsWith("Desc")) {
-                writer.assignSerializer(new JsonTranslateSerializer());
+                writer.assignSerializer(serializer);
                 continue;
             }
             BeanPropertyWriter descWriter = writer.rename(NameTransformer.simpleTransformer("", "Desc"));
-            descWriter.assignSerializer(new JsonTranslateSerializer());
+            descWriter.assignSerializer(serializer);
             result.add(descWriter);
         }
         return result;

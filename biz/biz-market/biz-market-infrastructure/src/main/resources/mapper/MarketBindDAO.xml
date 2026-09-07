@@ -1,45 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.newzkl.platform.base.biz.market.infrastructure.dao.MarketBindDAO">
-
-    <!-- 查询渠道商已绑定市场 (迁移自 new-scm MarketBindDAO.xml 的 queryChannelBindMarket) -->
-    <!-- 源侧走 ${ew.customSqlSegment}, Base 签名是 @Param("query") ChannelMarketPageQuery, 故条件按 query 字段显式展开 -->
-    <select id="queryChannelBindMarket"
-            resultType="com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketVO">
-        SELECT
-            mb.market_id AS id,
-            m.create_time,
-            m.market_name,
-            m.market_logo,
-            m.market_desc,
-            m.goods_num,
-            m.sub_bind_num,
-            m.sell_num,
-            m.sell_amount
-        FROM
-            market_bind mb left join
-        market m   on mb.market_id = m.id
-        <where>
-            <if test="query.clientId != null">
-                and mb.user_id = #{query.clientId}
-            </if>
-            <if test="query.bindType != null">
-                and mb.bind_type = #{query.bindType}
-            </if>
-            <if test="query.marketLevel != null">
-                and m.market_level = #{query.marketLevel}
-            </if>
-            <if test="query.marketName != null and query.marketName != ''">
-                and m.market_name like CONCAT('%',#{query.marketName},'%')
-            </if>
-        </where>
-        ${query.sortSQL}
-    </select>
-
-    <!-- 查询渠道商已绑定市场的商品 (迁移自 new-scm MarketBindDAO.xml 的 queryChannelBindMarketGoods) -->
-    <!-- 源侧走 ${ew.customSqlSegment}, Base 签名是 @Param("query") AppBindMarketGoodsPageQuery, 故条件按 query 字段显式展开 -->
-    <select id="queryChannelBindMarketGoods"
-            resultType="com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketGoodsVO">
+    <select id="queryMarketGoods"
+            resultType="com.newzkl.platform.base.biz.market.model.vo.market.BindMarketGoodsRes">
         SELECT
             mgr.id,
             mgr.goods_id,
@@ -50,15 +13,9 @@
             sp.sale_num,
             sp.`name`,
             sp.img,
-            sp.sale_price_began,
-            sp.sale_price_end,
             sp.state,
             sp.market_price,
-            sp.selection_num,
-            m.market_name,
-            sp.max_profit,
-            sp.supplier_price_began,
-            sp.supplier_price_end
+            m.market_name
         FROM
         market_bind mb
         LEFT JOIN market m ON mb.market_id = m.id
@@ -69,7 +26,7 @@
                 and mb.user_id = #{query.userId}
             </if>
             <if test="query.bindType != null">
-                and mb.bind_type = #{query.bindType}
+                and mb.bind_type = #{query.bindType.code}
             </if>
             <if test="query.marketId != null">
                 and mgr.market_id = #{query.marketId}

@@ -7,7 +7,7 @@ import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderDeliverCommand;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackOrderRes;
-import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
+import com.newzkl.platform.base.biz.account.model.pack.vo.PackShipVO;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface PackOrderDomain {
      * @param packGoodsList 礼包明细
      * @return 组装后的域实体
      */
-    PackOrder packOrderCreate(PackOrderCommand command, ShipAddressRes shipAddressVO, List<PackGoodsRes> packGoodsList);
+    PackOrder packOrderCreate(PackOrderCommand command, PackShipVO shipAddressVO, List<PackGoodsRes> packGoodsList);
 
     /**
      * 落库礼包订单

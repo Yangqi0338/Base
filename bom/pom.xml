@@ -73,6 +73,11 @@
                 <version>${base.revision}</version>
             </dependency>
             <dependency>
+                <groupId>com.newzkl.platform.Base</groupId>
+                <artifactId>core-logistics</artifactId>
+                <version>${base.revision}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.newzkl.platform.Base.core</groupId>
                 <artifactId>core-job</artifactId>
                 <version>${base.revision}</version>

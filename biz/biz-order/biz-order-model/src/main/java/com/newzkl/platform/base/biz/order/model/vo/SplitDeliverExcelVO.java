@@ -13,11 +13,13 @@ public class SplitDeliverExcelVO {
      */
     private String skuId;
     /**
-     * 物流公司名称
+     * 快递公司名称
+     *
+     * <p>必须是快递公司编码表里的名称 (或编码), 识别不出该行导入失败并返回行号</p>
      */
     private String expressCompanyName;
     /**
-     * 物流单号
+     * 快递单号
      */
     private String expressNo;
 }

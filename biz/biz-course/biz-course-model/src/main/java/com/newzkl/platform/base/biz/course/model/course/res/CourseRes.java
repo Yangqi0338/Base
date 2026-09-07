@@ -117,6 +117,6 @@ public class CourseRes extends BaseRes {
     /**
      * 是否启用: 1-启用, 0-禁用
      */
-    @JsonTranslate
+    @JsonTranslate(index = 1)
     private CommonEnum.YesOrNo isEnabled;
 }

@@ -8,7 +8,7 @@ import com.newzkl.platform.base.common.ddd.facade.GoodsVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderGoodsCheckReq;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckRes;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
-import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
+import com.newzkl.platform.base.common.ddd.facade.StoreGoodsDetailOutVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public interface GoodsApi {
      */
     List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> distributionIds);
 
-    StoreDistributionDetailOutVO selectBySkuId(Long channelId, Long storeId, Long skuId);
+    StoreGoodsDetailOutVO selectBySkuId(Long channelId, Long storeId, Long skuId);
 
     /**
      * 校验下单商品(V2)

@@ -1,7 +1,6 @@
 package com.newzkl.platform.base.biz.account.application.service;
 
 
-import com.newzkl.platform.base.biz.account.model.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 /**
@@ -18,21 +17,6 @@ public interface IdentityService {
      * @param role      申请角色
      */
     void updateAuditState(Long accountId, AccountEnum.Identity identity);
-
-    /**
-     * 服务费修改
-     *
-     * @param accountId
-     * @param serviceFeeConfigVO
-     */
-    void serviceFeeConfigEdit(Long accountId, ServiceFeeConfigVO serviceFeeConfigVO);
-
-    /**
-     * 查询服务费
-     *
-     * @param channelId
-     */
-    ServiceFeeConfigVO queryServiceFeeConfig(Long channelId);
 
 
 }

@@ -10,6 +10,7 @@ import com.newzkl.platform.base.biz.order.model.req.DeliverCommand;
 import com.newzkl.platform.base.biz.order.model.vo.DeliverVO;
 import com.newzkl.platform.base.biz.order.model.vo.FullDeliverExcelVO;
 import com.newzkl.platform.base.biz.order.model.vo.SplitDeliverExcelVO;
+import com.newzkl.platform.base.common.core.logistics.LogisticsTrack;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 
@@ -42,8 +43,12 @@ public class DeliverController {
 
     /**
      * 发货创建
-     * @param deliverCommand
-     * @return
+     *
+     * <p>{@code expressCompanyName} 值域为快递公司编码表 (见 {@code /admin/common/logisticsCompanies}),
+     * 落库前归一到官方名称, 识别不出直接报错 —— 存了识别不出的公司名等于轨迹永远查不到</p>
+     *
+     * @param deliverCommand 发货入参
+     * @return 空
      */
     @PostMapping("deliverCreate")
     @FuncPermission("发货创建")
@@ -55,11 +60,24 @@ public class DeliverController {
      * SPU订单发货信息
      */
     @PostMapping("orderDeliverInfo")
-    public PlatformResult<Map<Long, List<DeliverVO>>> orderDeliverInfo(@Validated @RequestBody DeliverCmd.OrderDeliverInfoReq deliverInfoReq) {
+    public PlatformResult<Map<Long, List<DeliverVO>>> orderDeliverInfo(@Validated @RequestBody DeliverCmd.OrderDeliverReq deliverInfoReq) {
         return PlatformResult.success(orderDomain.orderDeliverInfo(deliverInfoReq.getOrderNo()));
     }
     /**
+     * SPU订单物流轨迹
+     *
+     * <p>拆单发货的订单一个包裹一条轨迹, 故返回列表。出参公司与单号字段同发货单口径
+     * ({@code expressCompanyName} / {@code expressCompanyCode} / {@code expressNo}), 节点列表在 {@code nodes}</p>
+     */
+    @PostMapping("orderTrack")
+    public PlatformResult<List<LogisticsTrack>> orderTrack(@Validated @RequestBody DeliverCmd.OrderDeliverReq orderTrackReq) {
+        return PlatformResult.success(orderDomain.orderTrack(orderTrackReq.getOrderNo()));
+    }
+    /**
      * 修改物流单号
+     *
+     * <p>{@code expressCompanyName} 同 {@code deliverCreate}: 必须在快递公司编码表内, 落库前归一化。
+     * {@code id} 传负数表示删除该发货单, 此时不校验公司名</p>
      */
     @PostMapping("deliverEdit")
     @FuncPermission("修改物流单号")
@@ -69,6 +87,8 @@ public class DeliverController {
     }
     /**
      * 整单发货
+     *
+     * <p>Excel 「快递公司名称」列必须落在快递公司编码表内, 识别不出的行返回行号 (行 2 = 首个数据行), 不阻断其余行</p>
      * */
     @PostMapping(value = "/fullDeliver")
     @FuncPermission("整单发货")
@@ -93,6 +113,8 @@ public class DeliverController {
     }
     /**
      * 拆单发货
+     *
+     * <p>Excel 「快递公司名称」列必须落在快递公司编码表内, 识别不出的行返回行号 (行 2 = 首个数据行), 不阻断其余行</p>
      * */
     @PostMapping(value = "/splitDeliver")
     @FuncPermission("拆单发货")

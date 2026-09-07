@@ -1,5 +1,4 @@
 package com.newzkl.platform.base.biz.account.domain.adapt.api;
-import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
@@ -20,14 +19,6 @@ public interface FinanceConfigApi {
      * @param req 配置入参
      */
     void saveChannelChargeConfig(ChargeConfigChannelReq req);
-
-
-    /**
-     * 查询渠道商服务费配置
-     *
-     * @param channelId
-     */
-    ChannelServiceAmountRes queryChannelConfig(Long channelId);
 
     /**
      * 查询渠道商当前服务费

@@ -2,7 +2,6 @@ package com.newzkl.platform.base.biz.order.infrastructure.adapt.repository.order
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.ChannelApi;
 import com.newzkl.platform.base.biz.order.domain.adapt.api.SupplierApi;
@@ -19,13 +18,9 @@ import com.newzkl.platform.base.biz.order.model.res.AlreadyDeliverRes;
 import com.newzkl.platform.base.biz.order.model.res.OrderCreateRes;
 import com.newzkl.platform.base.biz.order.model.support.api.EarningsConfigRpcVO;
 
-import com.newzkl.platform.base.biz.order.model.support.api.openapi.ApiOrderStateEvent;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.mq.infrastructure.utils.NotifyUtil;
-import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEnums;
-import com.newzkl.platform.base.common.core.mq.model.notify.NotifyEventCommand;
 import com.newzkl.platform.base.common.core.redis.RedisEnum;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -302,20 +297,6 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public void orderStateNotify(OrderEnum.OrderType orderType, Long channelId, String outOrderNo, OrderEnum.State currentState, OrderEnum.State toState) {
-        //渠道商选品订单的开发者通知
-        if (OrderEnum.OrderType.CHANNEL == orderType) {
-            NotifyEventCommand notifyEventCommand = new NotifyEventCommand();
-            notifyEventCommand.setServiceType(NotifyEnums.ServiceType.ORDER.getCode());
-            notifyEventCommand.setBusinessType(NotifyEnums.OrderType.TRADE_STATE.getCode());
-            notifyEventCommand.setEventInfo(JSONObject.toJSONString(new ApiOrderStateEvent(outOrderNo,
-                    currentState == null ? null : currentState.getCode(),
-                    toState == null ? null : toState.getCode())));
-            NotifyUtil.batchSend(Collections.singletonList(channelId), notifyEventCommand);
-        }
-    }
-
-    @Override
     public int skuOrderEditForRefundClose(List<String> skuOrderNoList) {
         if (CollUtil.isEmpty(skuOrderNoList)) {
             return 0;
@@ -409,42 +390,6 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public List<OrderItemExcelVO> queryOrderItemExcelVO(OrderQuery orderQuery) {
-        // 纯 Java 编排: 先按条件取 order, 再按 order_no 取 sku_order, 内存组装
-        // spu 字段(spuName/attribute)取自 sku_order 内嵌 OrderSkuInfo/skuSaleAttribute; 主单信息(outOrderNo/ship/remark)取自 order
-        // 二次加工(orderState 转义 / attribute 解析 / ship 拆分 / price 分转元)由 domain 层完成
-        List<OrderDO> orderDOList = orderDAO.selectList(orderDAO.getLw(orderQuery));
-        if (CollUtil.isEmpty(orderDOList)) {
-            return Collections.emptyList();
-        }
-        Map<String, OrderDO> orderMap = orderDOList.stream()
-                .collect(Collectors.toMap(OrderDO::getOrderNo, Function.identity()));
-        SkuOrderQuery skuOrderQuery = new SkuOrderQuery();
-        skuOrderQuery.setOrderNoList(new ArrayList<>(orderMap.keySet()));
-        List<SkuOrderDO> skuOrderDOList = skuOrderDAO.selectList(skuOrderDAO.getLw(skuOrderQuery));
-        List<OrderItemExcelVO> result = new ArrayList<>();
-        for (SkuOrderDO skuOrder : skuOrderDOList) {
-            OrderDO order = orderMap.get(skuOrder.getOrderNo());
-            OrderItemExcelVO vo = new OrderItemExcelVO();
-            vo.setId(skuOrder.getOrderNo());
-            vo.setOrderState(skuOrder.getOrderState() == null ? null : String.valueOf(skuOrder.getOrderState()));
-            vo.setSpuName(skuOrder.getOrderSkuInfo() == null ? null : skuOrder.getOrderSkuInfo().getSpuName());
-            vo.setAttribute(skuOrder.getSkuSaleAttribute());
-            vo.setSkuId(skuOrder.getSkuId() == null ? null : String.valueOf(skuOrder.getSkuId()));
-            vo.setPrice(skuOrder.getSupplierPrice() == null ? null : String.valueOf(skuOrder.getSupplierPrice()));
-            vo.setCount(skuOrder.getCount() == null ? null : String.valueOf(skuOrder.getCount()));
-            vo.setRefundingCount(skuOrder.getRefundingCount());
-            if (order != null) {
-                vo.setOutOrderNo(order.getOutOrderNo());
-                vo.setShipVO(order.getShipVO());
-                vo.setRemark(order.getRemark());
-            }
-            result.add(vo);
-        }
-        return result;
-    }
-
-    @Override
     public EarningsEnum.SettleType settleOrderType(Long supplierId) {
         return supplierApi.settleOrderType(supplierId);
     }
@@ -489,7 +434,7 @@ public class OrderRepositoryImpl extends RepositorySupport implements OrderRepos
     }
 
     @Override
-    public void updateOrderShip(String orderNo, ShipVO shipVo) {
+    public void updateOrderShip(String orderNo, com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVo) {
         OrderDO orderDO = new OrderDO();
         // FIXME
         orderDO.setOrderNo(orderNo);

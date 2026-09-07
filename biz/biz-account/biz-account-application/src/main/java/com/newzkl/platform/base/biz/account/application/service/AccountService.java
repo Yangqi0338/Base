@@ -6,9 +6,12 @@ import com.newzkl.platform.base.biz.account.model.req.AdminDisableAccountReq;
 import com.newzkl.platform.base.biz.account.model.req.AdminRegisterIdentityReq;
 import com.newzkl.platform.base.biz.account.model.req.SubAccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.SubAccountSaveReq;
+import com.newzkl.platform.base.biz.account.model.res.AccountAggRes;
 import com.newzkl.platform.base.biz.account.model.res.SubAccountDetailRes;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author muc_fang
@@ -19,12 +22,28 @@ public interface AccountService {
 
 
     /**
-     * 分页查询会员账号
+     * 账号 + 身份聚合分页
+     * <p>
+     * 按 query.identityList 跨端分页查 account (不按 client 过滤), 再按本页 ID 批量回填对应身份表。
+     * 传了哪些身份就回填哪些槽; 身份行缺失时槽为 null, 该行仍保留, 以保证 records.size() 与 total 一致。
+     * 角色按账号各自 client 分组查编码列表。
      *
-     * @param query
-     * @return
+     * @param query 聚合分页入参, identityList 必填 (controller 端非 admin 经 setIdentity 注入单值)
+     * @return 聚合分页结果, 空结果返回空 Page 而非 null
      */
-    Page<?> pageAccount(AccountQuery query);
+    Page<AccountAggRes> aggPage(AccountQuery query);
+
+    /**
+     * 账号 + 身份聚合详情
+     * <p>
+     * 与 aggPage 同一套契约: 账号主体 (不含密码) + 角色编码列表 + 身份槽。传了哪些身份就回填哪些槽,
+     * 支持一个账号多身份。account 按 id 查, 不按 client 过滤。
+     *
+     * @param identityList 身份列表, 决定回填哪些身份槽
+     * @param accountId    账号 ID, 必填
+     * @return 聚合根, 永不为 null
+     */
+    AccountAggRes aggDetail(List<AccountEnum.Identity> identityList, Long accountId);
 
     /**
      * 禁用或者启用会员
@@ -39,17 +58,6 @@ public interface AccountService {
      * @param accountReq 账号创建请求
      */
     Long identityCreate(AdminRegisterIdentityReq accountReq);
-
-    /**
-     * 为账号绑定角色, 全量替换
-     *
-     * <p>校验账号存在后委托角色领域按当前端执行绑定与权限重算。
-     * 兼容 adopt-chicken 单端 {@code EmpController#bindRoles}: 中台多端下端由当前登录 client 推导, 角色须同端。</p>
-     *
-     * @param accountId 账号ID
-     * @param roleIds   角色ID集合, 空集视为清空
-     */
-    void bindRoles(Long accountId, Collection<Long> roleIds);
 
     /**
      * 主账号新增/编辑子账号

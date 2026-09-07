@@ -1,7 +1,5 @@
 package com.newzkl.platform.base.biz.order.domain.service.impl;
 
-import cn.hutool.json.JSONUtil;
-
 import com.newzkl.platform.base.biz.order.domain.adapt.repository.ThirdPartyOrderRepository;
 import com.newzkl.platform.base.biz.order.domain.service.ThirdPartyOrderDomain;
 import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
@@ -18,29 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 public class ThirdPartyOrderDomainImpl implements ThirdPartyOrderDomain {
-    
+
     @Autowired
     private ThirdPartyOrderRepository orderRepository;
-    
-    /**
-     * 创建并保存一个新的第三方订单请求记录
-     */
-    @Override
-    @Transactional
-    public ThirdPartyOrderRecordDTO createRecord(ThirdPartyOrderEnum.PlatformTypeEnum platformType, String bizOrderNo,
-                                                 String interfaceName, Object requestObject, Object responseObject, CommonEnum.RequestStatusEnum requestStatus,
-                                                 String errorMessage) {
-
-        ThirdPartyOrderRecordDTO existing = orderRepository.findRecordByBizOrderNo(bizOrderNo);
-        if (existing != null) {
-            throw new IllegalArgumentException("业务订单号 " + bizOrderNo + " 已存在");
-        }
-        String requestJson = JSONUtil.toJsonStr(requestObject);
-        String responseJson = JSONUtil.toJsonStr(responseObject);
-        ThirdPartyOrderRecordDTO requestRecord = ThirdPartyOrderRecordDTO
-            .init(platformType, bizOrderNo, interfaceName, requestJson, responseJson, requestStatus, errorMessage);
-        return orderRepository.saveRecord(requestRecord);
-    }
 
     /**
      * 记录一次三方动作 追加式 requestJson/responseJson 已由调用方序列化 直接落库
@@ -52,6 +30,20 @@ public class ThirdPartyOrderDomainImpl implements ThirdPartyOrderDomain {
         ThirdPartyOrderRecordDTO record = ThirdPartyOrderRecordDTO
             .init(platformType, bizOrderNo, interfaceName, requestJson, responseJson, requestStatus, errorMessage);
         record.setThirdOrderNo(thirdOrderNo);
+        // 仅开发者通知失败才排补偿 下单失败重推会在供应商侧造重复单 补偿日志行排期会自我增殖
+        if (CommonEnum.RequestStatusEnum.FAILED == requestStatus
+                && ThirdPartyOrderEnum.Action.NOTIFY.equals(interfaceName)) {
+            record.scheduleNextRetry();
+        }
         orderRepository.saveRecord(record);
+    }
+
+    /**
+     * 按 id 更新一条三方订单记录 委托 saveRecord 的 upsert 语义
+     */
+    @Override
+    @Transactional
+    public ThirdPartyOrderRecordDTO updateRecord(ThirdPartyOrderRecordDTO record) {
+        return orderRepository.saveRecord(record);
     }
 }

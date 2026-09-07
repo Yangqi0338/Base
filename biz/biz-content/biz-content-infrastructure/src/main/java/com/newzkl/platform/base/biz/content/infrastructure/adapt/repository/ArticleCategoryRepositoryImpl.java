@@ -38,6 +38,7 @@ public class ArticleCategoryRepositoryImpl implements ArticleCategoryRepository 
         Page<ArticleCategoryDO> page = contentArticleCategoryDAO.selectPage(RepositorySupport.page(query),
                 new BaseLambdaQueryWrapper<ArticleCategoryDO>()
                         .notEmptyLike(ArticleCategoryDO::getName, query.getName())
+                        .likeList(ArticleCategoryDO::getRecommendGroups, query.getRecommendGroups())
                         .orderByAsc(ArticleCategoryDO::getSort)
                         .orderByDesc(ArticleCategoryDO::getCreateTime));
         return TransferUtils.transferPage(page, ArticleCategoryRes.class);
@@ -78,15 +79,5 @@ public class ArticleCategoryRepositoryImpl implements ArticleCategoryRepository 
         contentArticleCategoryDAO.update(new LambdaUpdateWrapper<ArticleCategoryDO>()
                 .setSql(" article_count = article_count + (" + num + ")")
                 .eq(ArticleCategoryDO::getId, id));
-    }
-
-    @Override
-    public List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
-        LambdaQueryWrapper<ArticleCategoryDO> queryWrapper = new BaseLambdaQueryWrapper<ArticleCategoryDO>()
-                .likeList(ArticleCategoryDO::getRecommendGroups, recommendGroups)
-                .notEmptyEq(ArticleCategoryDO::getIsEnabled, CommonEnum.YesOrNo.YES)
-                .orderByAsc(ArticleCategoryDO::getSort)
-                .orderByDesc(ArticleCategoryDO::getId);
-        return TransferUtils.transfers(contentArticleCategoryDAO.selectList(queryWrapper), ArticleCategoryRes::new);
     }
 }

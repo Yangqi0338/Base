@@ -39,10 +39,6 @@
             <artifactId>core-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-office</artifactId>
-        </dependency>
-        <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>

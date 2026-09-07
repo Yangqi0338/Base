@@ -15,9 +15,21 @@ import java.time.LocalDate;
 @Data
 public class MemberReq extends BaseReq {
     /**
-     * 昵称
+     * 用户名称
      */
     private String name;
+    /**
+     * 昵称
+     *
+     * @ext 落 account 表, 非 member 自有列
+     */
+    private String nickname;
+    /**
+     * 头像
+     *
+     * @ext 落 account 表, 非 member 自有列
+     */
+    private String head;
     /**
      * 性别
      */

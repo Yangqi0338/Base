@@ -10,7 +10,7 @@ import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderCommand;
 import com.newzkl.platform.base.biz.account.model.pack.req.PackOrderDeliverCommand;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackGoodsRes;
 import com.newzkl.platform.base.biz.account.model.pack.res.PackOrderRes;
-import com.newzkl.platform.base.biz.account.model.address.res.ShipAddressRes;
+import com.newzkl.platform.base.biz.account.model.pack.vo.PackShipVO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -37,7 +37,7 @@ public class PackOrderDomainImpl implements PackOrderDomain {
     private final PackOrderRepository packOrderRepository;
 
     @Override
-    public PackOrder packOrderCreate(PackOrderCommand command, ShipAddressRes shipAddressVO, List<PackGoodsRes> packGoodsList) {
+    public PackOrder packOrderCreate(PackOrderCommand command, PackShipVO shipAddressVO, List<PackGoodsRes> packGoodsList) {
         PackOrder packOrder = TransferUtils.transfer(command, PackOrder::new);
         packOrder.init(command, shipAddressVO, packGoodsList);
         return packOrder;

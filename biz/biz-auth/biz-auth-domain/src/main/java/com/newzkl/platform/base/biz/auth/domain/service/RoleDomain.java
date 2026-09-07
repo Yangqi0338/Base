@@ -68,7 +68,7 @@ public interface RoleDomain {
      * @param roleId     角色ID
      * @param accountIds 账号ID集合
      */
-    void bindAccounts(Long roleId, Collection<Long> accountIds);
+    void bindAccounts(AccountEnum.Client client, Long roleId, Collection<Long> accountIds);
 
     /**
      * 为角色分配权限, 全量替换并重算受影响账号

@@ -29,7 +29,7 @@ public class OrderAggVO {
     public void doDesensitized() {
         String phone = DesensitizedUtil.mobilePhone(orderVO.getShipPhone());
         orderVO.setShipPhone(phone);
-        ShipVO shipVO = JSONUtil.toBean(orderVO.getShipVO(), ShipVO.class);
+        com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVO = JSONUtil.toBean(orderVO.getShipVO(), com.newzkl.platform.base.common.ddd.model.vo.ShipVO.class);
         if (shipVO != null) {
             shipVO.setShipPhone(phone);
             orderVO.setShipVO(JSONUtil.toJsonStr(shipVO));

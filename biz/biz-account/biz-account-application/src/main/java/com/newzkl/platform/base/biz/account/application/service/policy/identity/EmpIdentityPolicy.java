@@ -45,11 +45,6 @@ public class EmpIdentityPolicy extends AbsIdentityPolicy {
     }
 
     @Override
-    public Object detail(Long id) {
-        return null;
-    }
-
-    @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
         Long accountId = accountVO.getId();
         // 移除员工身份: 删 emp 行并解绑账号-角色

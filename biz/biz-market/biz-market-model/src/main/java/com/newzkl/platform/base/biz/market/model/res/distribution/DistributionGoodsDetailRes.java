@@ -15,7 +15,7 @@ import java.util.List;
 public class DistributionGoodsDetailRes implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /******************************StoreDistribution字段begin******************************************/
+    /******************************StoreGoods字段begin******************************************/
     private Long id;
     /**
      * 商品id
@@ -121,7 +121,7 @@ public class DistributionGoodsDetailRes implements Serializable {
      */
     private LocalDateTime upTime;
 
-    /******************************StoreDistribution字段end******************************************/
+    /******************************StoreGoods字段end******************************************/
 
 
     /******************************ApiSpuVO字段begin******************************************/

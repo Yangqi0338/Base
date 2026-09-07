@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.account.model.res;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.account.PersonalEnum;
 import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,14 +17,18 @@ import java.time.LocalDate;
 @Data
 public class MemberOutRes extends BaseRes {
     /**
+     * 用户名称
+     */
+    private String name;
+    /**
      * 背景图
      */
     private String backgroundImg;
 
     /**
-     * 性别：0-未知，1-男，2-女
+     * 性别 (MALE 男 / FEMALE 女), JSON 出参为 code 数值
      */
-    private Integer gender;
+    private PersonalEnum.Gender gender;
 
     /**
      * 生日
@@ -32,19 +37,11 @@ public class MemberOutRes extends BaseRes {
     private LocalDate birthday;
 
     /**
-     * 常住地-省份
+     * 常住地
+     *
+     * @ext 省份, 城市, 区县, 逗号分隔单列存储
      */
-    private String residenceProvince;
-
-    /**
-     * 常住地-城市
-     */
-    private String residenceCity;
-
-    /**
-     * 常住地-区县
-     */
-    private String residenceDistrict;
+    private String residence;
 
     /**
      * 微信ID

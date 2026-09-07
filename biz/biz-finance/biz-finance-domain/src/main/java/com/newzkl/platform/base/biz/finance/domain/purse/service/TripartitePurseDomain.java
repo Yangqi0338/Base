@@ -1,68 +1,23 @@
 package com.newzkl.platform.base.biz.finance.domain.purse.service;
 
 
-import java.util.List;
-import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
 
 /**
+ * 三方账户
+ *
+ * <p>只增不查不维护: 仅保留汇付开户成功后的落库, 查询与状态维护均已下线。</p>
+ *
  * @author niu
- * @description: 三方账户
  * @date 2023/12/20 14:20
  */
 public interface TripartitePurseDomain {
 
     /**
-     * 添加三方账户
+     * 添加三方账户 (汇付开户成功后落库)
      *
      * @param accountTripartitePurse
      */
     void addAccountTripartitePurse(AccountTripartitePurseVO accountTripartitePurse);
 
-    /**
-     * 更新三方账户
-     *
-     * @param accountTripartitePurse
-     */
-    void alterAccountTripartitePurse(AccountTripartitePurseVO accountTripartitePurse);
-
-    /**
-     * 查询三方账户
-     *
-     * @param accountId
-     * @return
-     */
-    AccountTripartitePurseVO queryAccountTripartitePurse(Long accountId);
-
-    /**
-     * 查询三方账户
-     *
-     * @param query
-     * @return
-     */
-    List<AccountTripartitePurseVO> queryPageAccountTripartitePurse(AccountTripartitePurseQuery query);
-
-    /**
-     * 查新提交资料信息
-     *
-     * @param accountId
-     * @return
-     */
-    String queryCommitInfo(Long accountId);
-
-    /**
-     * 增加客户三方账户余额
-     *
-     * @param accountId
-     * @param amount
-     */
-    void addAccountTripartitePurseAmount(Long accountId, Integer amount);
-
-    /**
-     * 扣减客户三方账户余额
-     *
-     * @param accountId
-     * @param amount
-     */
-    void subAccountTripartitePurseAmount(Long accountId, Integer amount);
 }

@@ -3,35 +3,22 @@ package com.newzkl.platform.base.biz.market.action.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.domain.market.MarketDomain;
 import com.newzkl.platform.base.biz.market.model.dto.market.MarketDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.market.MarketEnum;
 import com.newzkl.platform.base.biz.market.model.query.market.AppBindMarketGoodsPageQuery;
-import com.newzkl.platform.base.biz.market.model.query.market.ChannelMarketPageQuery;
-import com.newzkl.platform.base.biz.market.model.query.market.MarketPageQuery;
+import com.newzkl.platform.base.biz.market.model.query.market.MarketQuery;
 import com.newzkl.platform.base.biz.market.model.req.market.BindMarketListReq;
 import com.newzkl.platform.base.biz.market.model.req.market.ClientBindMarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketReq;
 import com.newzkl.platform.base.biz.market.model.req.market.MarketUserReq;
-import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketGoodsVO;
-import com.newzkl.platform.base.biz.market.model.vo.market.AppBindMarketVO;
-import com.newzkl.platform.base.biz.market.model.vo.market.BindMarketVO;
-import com.newzkl.platform.base.biz.market.model.vo.market.MarketUserVO;
-import com.newzkl.platform.base.biz.market.model.vo.market.MarketVO;
+import com.newzkl.platform.base.biz.market.model.vo.market.*;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * 市场服务控制器
@@ -63,33 +50,27 @@ public class MarketController {
     private final MarketDomain marketDomain;
 
     /**
-     * APP渠道商获取绑定市场列表
+     * 获取绑定市场列表
      *
      * @param query 查询条件
      * @return 绑定市场列表
      */
-    @GetMapping("/queryChannelBindMarket")
-    public PlatformResult<Page<AppBindMarketVO>> queryChannelBindMarket(@ModelAttribute ChannelMarketPageQuery query) {
-        if (query.getClientId() == null) {
-            query.setClientId(SecurityUtils.getAccountId());
-        }
-        fillBindTypeByRole(query.getBindType(), query::setBindType);
-        return PlatformResult.success(marketDomain.queryChannelBindMarket(query));
+    @PostMapping("/queryBindMarketList")
+    public PlatformResult<Page<MarketRes>> queryChannelBindMarketList(@RequestBody MarketQuery query) {
+        query.setBindAccountId(SecurityUtils.getAccountId());
+        query.setBindIdentity(SecurityUtils.getIdentity());
+        return PlatformResult.success(marketDomain.queryMarketList(query));
     }
 
     /**
-     * APP渠道商获取绑定市场列表对应的商品
+     * 获取绑定市场列表对应的商品
      *
      * @param query 查询条件
      * @return 绑定市场商品列表
      */
-    @GetMapping("/queryChannelBindMarketGoods")
-    public PlatformResult<Page<AppBindMarketGoodsVO>> queryChannelBindMarketGoods(@ModelAttribute AppBindMarketGoodsPageQuery query) {
-        if (query.getUserId() == null) {
-            query.setUserId(SecurityUtils.getAccountId());
-        }
-        fillBindTypeByRole(query.getBindType(), query::setBindType);
-        return PlatformResult.success(marketDomain.queryChannelBindMarketGoods(query));
+    @PostMapping("/queryMarketGoodsList")
+    public PlatformResult<Page<BindMarketGoodsRes>> queryMarketGoodsList(@RequestBody AppBindMarketGoodsPageQuery query) {
+        return PlatformResult.success(marketDomain.queryMarketGoods(query));
     }
 
     /**
@@ -99,27 +80,9 @@ public class MarketController {
      * @return 市场列表
      */
     @PostMapping("/queryMarketList")
-    public PlatformResult<Page<MarketVO>> queryMarketList(@RequestBody MarketPageQuery req) {
-        if (req.getClientId() == null) {
-            req.setClientId(SecurityUtils.getAccountId());
-        }
-        return PlatformResult.success(marketDomain.queryMarketList(req));
-    }
-
-    /**
-     * 查询市场列表 (二级市场, 按当前登录角色定位下级绑定关系)
-     *
-     * @param req 查询条件
-     * @return 市场列表
-     */
-    @PostMapping("/queryMarketList/v2")
-    public PlatformResult<Page<MarketVO>> queryMarketListV2(@RequestBody MarketPageQuery req) {
-        req.setMarketLevel(2);
-        req.setSubBindType(MarketEnum.User.accountTypeByRole(SecurityUtils.getIdentity()));
-        if (req.getSubBindUser() == null) {
-            req.setSubBindUser(SecurityUtils.getAccountId());
-        }
-        return PlatformResult.success(marketDomain.queryMarketList(req));
+    public PlatformResult<Page<MarketRes>> queryMarketList(@RequestBody MarketQuery query) {
+        query.setAccountId(SecurityUtils.getAccountId());
+        return PlatformResult.success(marketDomain.queryMarketList(query));
     }
 
     /**
@@ -129,32 +92,27 @@ public class MarketController {
      * @return 市场详情
      */
     @PostMapping("/queryMarket/{marketId}")
-    public PlatformResult<MarketVO> queryMarket(@PathVariable Long marketId) {
+    public PlatformResult<MarketRes> queryMarket(@PathVariable Long marketId) {
         return PlatformResult.success(marketDomain.queryMarket(marketId));
     }
 
     /**
-     * 保存二级市场
-     *
-     * <p>行为差异: 旧 application 层保存后另调 user 域
-     * {@code OperatorFacade#editTwoMarketCount} 累加运营商二级市场计数;
-     * Base 侧 market 域无该出站端口, 计数未接线。</p>
+     * 保存市场
      *
      * @param req 市场请求
      * @return 操作结果
      */
-    @PostMapping("/saveTwoLevelMarket")
-    @FuncPermission("保存二级市场")
-    public PlatformResult<Object> saveTwoLevelMarket(@RequestBody MarketReq req) {
-        MarketDTO marketDTO = buildMarketDTO(req);
-        marketDTO.setMarketLevel(MarketEnum.Level.TWO.getLevel());
+    @PostMapping("/saveMarket")
+    @FuncPermission("保存市场")
+    public PlatformResult<Object> saveMarket(@RequestBody MarketReq req) {
+        MarketDTO marketDTO = TransferUtils.transfer(req, MarketDTO.class);
         marketDTO.setCategoryId(req.getCategoryId());
         marketDomain.saveMarket(marketDTO);
         return PlatformResult.success();
     }
 
     /**
-     * 移动APP渠道商绑定交易市场
+     * 渠道商绑定交易市场
      *
      * @param req 绑定请求
      * @return 绑定ID
@@ -162,6 +120,7 @@ public class MarketController {
     @PostMapping("/appChannelBindMarket")
     @FuncPermission("APP渠道商绑定市场")
     public PlatformResult<Object> appChannelBindMarket(@RequestBody ClientBindMarketReq req) {
+        req.setUserId(SecurityUtils.getAccountId());
         return PlatformResult.success(marketDomain.appChannelBindMarket(req));
     }
 
@@ -174,7 +133,7 @@ public class MarketController {
     @PostMapping("/deBindMarket/{id}")
     @FuncPermission("解除绑定市场")
     public PlatformResult<Object> deBindMarket(@PathVariable Long id) {
-        marketDomain.deBindMarket(id);
+        marketDomain.deBindMarket(id, SecurityUtils.getAccountId());
         return PlatformResult.success();
     }
 
@@ -186,8 +145,8 @@ public class MarketController {
      */
     @PostMapping("/queryBindMarket")
     public PlatformResult<List<BindMarketVO>> queryBindMarket(@RequestBody BindMarketListReq req) {
-        if (req.getClientId() == null) {
-            req.setClientId(SecurityUtils.getAccountId());
+        if (req.getBindAccountId() == null) {
+            req.setBindAccountId(SecurityUtils.getAccountId());
         }
         return PlatformResult.success(marketDomain.queryBindMarket(req));
     }
@@ -201,42 +160,5 @@ public class MarketController {
     @PostMapping("/queryMarketUser")
     public PlatformResult<List<MarketUserVO>> queryMarketUser(@RequestBody MarketUserReq req) {
         return PlatformResult.success(marketDomain.queryMarketUser(req));
-    }
-
-    /**
-     * 未显式传入绑定类型时按当前登录角色补默认值
-     *
-     * <p>沿用旧 {@code queryChannelBindMarket} / {@code queryChannelBindMarketGoods} 判定:
-     * 运营商端角色 (运营商 / 交易师 / 甄选师 / 运营商游客) 取 1, 渠道商取 3, 其余留空。
-     * 旧实现用 {@code RoleEnum.CompanyRole.findClientRoleIdList(Client.OPERATOR).contains(roleId)},
-     * Base 侧该辅助方法下沉到 account 域, 此处按等价语义改判角色所属端。</p>
-     *
-     * @param currentBindType 请求已带的绑定类型, 非空则不覆盖
-     * @param bindTypeSetter  绑定类型写入器
-     */
-    private void fillBindTypeByRole(Integer currentBindType, Consumer<Integer> bindTypeSetter) {
-        if (currentBindType != null) {
-            return;
-        }
-        AccountEnum.Identity identity = SecurityUtils.getIdentity();
-        if (AccountEnum.Identity.CHANNEL == identity) {
-            bindTypeSetter.accept(MarketEnum.User.CHANNEL.getType());
-        }
-    }
-
-    /**
-     * 由市场请求构建市场 DTO
-     *
-     * @param req 市场请求
-     * @return 市场 DTO
-     */
-    private MarketDTO buildMarketDTO(MarketReq req) {
-        MarketDTO market = new MarketDTO();
-        market.setId(req.getId());
-        market.setMarketName(req.getMarketName());
-        market.setMarketDesc(req.getMarketDesc());
-        market.setMarketLogo(req.getMarketLogo());
-        market.setMarketType(req.getMarketType());
-        return market;
     }
 }

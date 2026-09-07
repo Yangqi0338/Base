@@ -16,7 +16,7 @@ import lombok.Data;
  *
  * <p>⚠️ <b>对前端的契约变更清单</b>(2026-07-30 由 {@code tools/out-dto-diff.mjs} 机械比对旧
  * {@code com.zkl.scm.user.domain.role.model.vo.ChannelVO} 得出; 用户裁决 <b>后端不做兼容映射,
- * 由前端改</b>)。本 VO 是 {@code GET /user/channel/channelForAdmin} 出参, 调用方 yys-admin。</p>
+ * 由前端改</b>)。本 VO 是 {@code GET /user/channel/channel} 出参, 调用方 yys-admin。</p>
  *
  * <p><b>改名(前端改字段名即可)</b>:</p>
  * <ul>

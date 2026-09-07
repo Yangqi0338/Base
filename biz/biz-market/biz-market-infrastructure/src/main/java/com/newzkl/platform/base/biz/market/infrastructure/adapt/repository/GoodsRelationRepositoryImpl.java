@@ -1,9 +1,12 @@
 package com.newzkl.platform.base.biz.market.infrastructure.adapt.repository;
 
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.domain.adapt.repository.GoodsRelationRepository;
+import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketBindDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.MarketGoodsRelationDAO;
+import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketBindDO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.MarketGoodsRelationDO;
 import com.newzkl.platform.base.biz.market.model.dto.relation.GoodsRelationQueryDTO;
 import com.newzkl.platform.base.biz.market.model.dto.relation.MarketGoodsRelationDTO;
@@ -11,10 +14,12 @@ import com.newzkl.platform.base.biz.market.model.query.relation.GoodsListPageQue
 import com.newzkl.platform.base.biz.market.model.req.relation.PlatformQueryMarketNotAddGoodsReq;
 import com.newzkl.platform.base.biz.market.model.req.relation.UpdateGoodsRelationReq;
 import com.newzkl.platform.base.common.ddd.facade.ApiChannelSpuRelationVO;
-import com.newzkl.platform.base.common.ddd.facade.AlterChannelSelectorSellDataReq;
 import com.newzkl.platform.base.common.ddd.facade.SpuRelevancyMarketVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.GoodsRelationEnum;
 import com.newzkl.platform.base.biz.market.model.vo.relation.GoodsRelationListVO;
 import com.newzkl.platform.base.biz.market.model.vo.relation.MarketGoodsInfoVO;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,6 +27,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * {@code GoodsRelationRepository} 实现
@@ -30,16 +38,8 @@ import java.util.List;
  * 跨表(market_goods_relation JOIN 商品表)的查询委派给 {@code MarketGoodsRelationDAO}
  * 已声明的同签名自定义方法。</p>
  *
- * <p>下列方法为 infra 能力缺口, 显式抛 {@code UnsupportedOperationException} 而非静默返回空值:</p>
- * <ul>
- *   <li>{@code alterChannelSelectorSellData} — 按 (channelId, marketId, goodsId) 累加
- *       sell_num/sell_amount, 但 market_goods_relation 无 channel_id 列, 渠道商维度落在
- *       user_id 还是别表无法从现有 DO 判定, 不臆造映射</li>
- * </ul>
- *
- * <p>说明: 委派给 DAO 自定义方法的分页查询依赖 MyBatis 语句绑定(本模块暂无 XML),
- * 与 {@link MarketRepositoryImpl#queryChannelBindMarket} 现状一致 —
- * 未绑定时由 MyBatis 抛 Invalid bound statement, 不会静默成功。</p>
+ * <p>说明: 委派给 DAO 自定义方法的分页查询依赖 MyBatis 语句绑定, 未绑定时由 MyBatis
+ * 抛 Invalid bound statement, 不会静默成功。</p>
  *
  * @author KC
  */
@@ -48,6 +48,7 @@ import java.util.List;
 public class GoodsRelationRepositoryImpl implements GoodsRelationRepository {
 
     private final MarketGoodsRelationDAO marketGoodsRelationDAO;
+    private final MarketBindDAO marketBindDAO;
 
     @Override
     public List<SpuRelevancyMarketVO> getSpuRelevancyMarketNum(List<Long> spuIdList) {
@@ -73,6 +74,60 @@ public class GoodsRelationRepositoryImpl implements GoodsRelationRepository {
         return toDTOList(marketGoodsRelationDAO.selectList(marketGoodsRelationDAO.buildQueryWrapper(query)));
     }
 
+    /**
+     * 反查订阅指定 SPU 的渠道商账户ID列表
+     *
+     * <p>一次取回 goods_id=spuId 的全部关系行, 内存分流两路: SELECT_GOODS 的 user_id 直接是渠道商;
+     * MARKET_GOODS 的 market_id 再查 market_bind 中 bind_type=CHANNEL 且 state=YES 的 user_id。
+     * 单 SPU 的关系行量级是「几个市场 × 几个渠道」, 一次取回比按 relation_type 发两条 SQL 便宜</p>
+     *
+     * <p>逻辑删由 {@code @TableLogic} 自动追加 del_flag 条件兜住, 故 A 路不加 state 过滤
+     * (market_goods_relation.state 无业务写入点, 加了结果集恒空); B 路的 market_bind.state 是活字段,
+     * 解绑时置 NO 而不走逻辑删, 必须显式过滤</p>
+     *
+     * @param spuId SPU 主键
+     * @return 渠道商账户ID列表 无订阅返回空列表
+     */
+    @Override
+    public List<Long> channelIdListBySpuId(Long spuId) {
+        if (spuId == null) {
+            return new ArrayList<>();
+        }
+        List<MarketGoodsRelationDO> relations = marketGoodsRelationDAO.selectList(
+                new LambdaQueryWrapper<MarketGoodsRelationDO>()
+                        .eq(MarketGoodsRelationDO::getGoodsId, spuId)
+        );
+        if (CollectionUtils.isEmpty(relations)) {
+            return new ArrayList<>();
+        }
+        // A 选品路径: relation_type=SELECT_GOODS 的 user_id 即渠道商
+        Set<Long> channelIds = relations.stream()
+                .filter(r -> GoodsRelationEnum.GoodsRelation.SELECT_GOODS == r.getRelationType())
+                .map(MarketGoodsRelationDO::getUserId)
+                .filter(userId -> userId != null && userId > 0)
+                .collect(Collectors.toSet());
+        // B 专区路径: relation_type=MARKET_GOODS 的 market_id 反查绑定生效的渠道商
+        List<Long> marketIdList = relations.stream()
+                .filter(r -> GoodsRelationEnum.GoodsRelation.MARKET_GOODS == r.getRelationType())
+                .map(MarketGoodsRelationDO::getMarketId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(marketIdList)) {
+            List<MarketBindDO> binds = marketBindDAO.selectList(
+                    new LambdaQueryWrapper<MarketBindDO>()
+                            .in(MarketBindDO::getMarketId, marketIdList)
+                            .eq(MarketBindDO::getBindType, AccountEnum.Identity.CHANNEL)
+                            .eq(MarketBindDO::getState, CommonEnum.YesOrNo.YES)
+            );
+            binds.stream()
+                    .map(MarketBindDO::getUserId)
+                    .filter(userId -> userId != null && userId > 0)
+                    .forEach(channelIds::add);
+        }
+        return new ArrayList<>(channelIds);
+    }
+
     @Override
     public void batchSaveGoodsRelation(List<MarketGoodsRelationDTO> marketGoodsRelations) {
         if (CollectionUtils.isEmpty(marketGoodsRelations)) {
@@ -85,12 +140,6 @@ public class GoodsRelationRepositoryImpl implements GoodsRelationRepository {
 
     @Override
     public Page<GoodsRelationListVO> queryGoodsRelationList(GoodsListPageQuery req) {
-        return marketGoodsRelationDAO.queryGoodsRelationList(RepositorySupport.page(req), req);
-    }
-
-    @Override
-    public Page<GoodsRelationListVO> appQueryMarketGoodList(GoodsListPageQuery req) {
-        // app 与平台复用同一市场商品查询, 旧实现共用一条语句
         return marketGoodsRelationDAO.queryGoodsRelationList(RepositorySupport.page(req), req);
     }
 
@@ -116,20 +165,8 @@ public class GoodsRelationRepositoryImpl implements GoodsRelationRepository {
     }
 
     @Override
-    public Page<GoodsRelationListVO> channelDistributionSelectedGoodsList(PlatformQueryMarketNotAddGoodsReq query) {
-        return marketGoodsRelationDAO.channelDistributionSelectedGoodsList(RepositorySupport.page(query), query);
-    }
-
-    @Override
     public Page<ApiChannelSpuRelationVO> channelSpuRelationList(GoodsListPageQuery query) {
         return marketGoodsRelationDAO.channelSpuRelationList(RepositorySupport.page(query), query);
-    }
-
-    @Override
-    public void alterChannelSelectorSellData(List<AlterChannelSelectorSellDataReq> req) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 需要渠道商维度的选品销售数据列; market_goods_relation 无 channel_id, "
-                        + "渠道商标识落在 user_id 还是独立表无法判定");
     }
 
     @Override

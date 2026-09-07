@@ -10,6 +10,18 @@ public interface RoleFacade {
     Map<Long, List<Long>> findRoleByAccount(AccountEnum.Client client, List<Long> accountIdList);
 
     /**
+     * 按账号批量查角色编码列表
+     *
+     * <p>角色编码是业务能力的载体 (前端 v-permission 按 code 判定), 故对外直接返 code,
+     * 不做 code→id 反查。relation 关系侧本就存 code。</p>
+     *
+     * @param client        所属端
+     * @param accountIdList 账号 ID 列表
+     * @return accountId → 角色编码列表, 无角色返回空列表
+     */
+    Map<Long, List<String>> findRoleCodeByAccount(AccountEnum.Client client, List<Long> accountIdList);
+
+    /**
      * 为账号绑定角色, 全量替换并重算派生权限, 同步清账号权限/角色缓存
      *
      * @param client     所属端

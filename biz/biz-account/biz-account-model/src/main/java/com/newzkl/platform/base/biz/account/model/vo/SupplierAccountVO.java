@@ -72,7 +72,7 @@ public class SupplierAccountVO extends BaseRes {
      * 保证金缴纳配置 promise_pay_config
      * 0 即时 1 延迟
      */
-    private Integer promisePayConfig;
+    private SupplierEnum.PromisePayConfig promisePayConfig;
     /**
      * 是否设置账期 (查询)
      */

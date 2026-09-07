@@ -46,7 +46,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
         doObj.setUserName(collection.getUserName());
         doObj.setStoreId(collection.getStoreId());
         doObj.setStoreName(collection.getStoreName());
-        doObj.setStoreDistributionId(collection.getStoreDistributionId());
+        doObj.setStoreGoodsId(collection.getStoreGoodsId());
         doObj.setSpuId(collection.getSpuId());
         doObj.setSpuName(collection.getSpuName());
         doObj.setSkuId(collection.getSkuId());
@@ -77,7 +77,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
         collection.setUserName(doObj.getUserName());
         collection.setStoreId(doObj.getStoreId());
         collection.setStoreName(doObj.getStoreName());
-        collection.setStoreDistributionId(doObj.getStoreDistributionId());
+        collection.setStoreGoodsId(doObj.getStoreGoodsId());
         collection.setSpuId(doObj.getSpuId());
         collection.setSpuName(doObj.getSpuName());
         collection.setSkuId(doObj.getSkuId());
@@ -107,7 +107,7 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
         CommonEnum.YesOrNo validValue = CommonEnum.YesOrNo.reverse(isValid);
         int update = userCollectionMapper.update(new LambdaUpdateWrapper<UserCollectionDO>()
                 .set(UserCollectionDO::getIsValid, CommonEnum.YesOrNo.getByCode(isValid))
-                .eq(UserCollectionDO::getStoreDistributionId, distributionId)
+                .eq(UserCollectionDO::getStoreGoodsId, distributionId)
                 .eq(validValue != null, UserCollectionDO::getIsValid, validValue)
         );
         return update > 0;
@@ -122,8 +122,8 @@ public class UserCollectionRepositoryImpl implements UserCollectionRepository {
     }
 
     @Override
-    public Optional<UserCollectionDTO> findWithDeletedByUserIdAndProductId(Long userId, Long storeDistributionId) {
-        UserCollectionDO doObj = userCollectionMapper.selectWithDeletedByUserId(userId, storeDistributionId);
+    public Optional<UserCollectionDTO> findWithDeletedByUserIdAndProductId(Long userId, Long storeGoodsId) {
+        UserCollectionDO doObj = userCollectionMapper.selectWithDeletedByUserId(userId, storeGoodsId);
         return Optional.ofNullable(toDomain(doObj));
     }
 

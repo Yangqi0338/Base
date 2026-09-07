@@ -12,7 +12,6 @@ import com.newzkl.platform.base.biz.finance.model.purse.req.TripartiteWithdrawRe
 import com.newzkl.platform.base.biz.finance.model.purse.vo.RollOutApplyVO;
 import com.newzkl.platform.base.biz.finance.model.purse.vo.WithdrawRecordVO;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
-import com.newzkl.platform.base.common.core.office.EasyExcelUtil;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import java.io.IOException;
 
 /**
  * 提现业务控制器
@@ -150,17 +148,6 @@ public class WithdrawController {
     @PostMapping("/queryTripartiteWithdrawRecordList")
     public PlatformResult<Page<WithdrawRecordVO>> queryTripartiteWithdrawRecordList(@RequestBody @Valid TripartiteWithdrawRecordQuery req) {
         return PlatformResult.success(withdrawDomain.queryTripartiteWithdrawRecordList(req));
-    }
-
-    /**
-     * 提现申请记录导出
-     *
-     * @param req 转出申请查询
-     * @throws IOException 写出 Excel 失败
-     */
-    @PostMapping("/withdrawRecordsExport")
-    public void withdrawRecordsExport(@RequestBody RollOutApplyQuery req) throws IOException {
-        EasyExcelUtil.export(withdrawDomain.withdrawRecordsExport(req), "提现申请");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.account.model.req;
 
+import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
@@ -113,6 +114,10 @@ public class AccountQuery extends BizPageQuery {
 
     public void setIdentity(AccountEnum.Identity identity) {
         this.identityList = doWrapperList(this.identityList, identity);
+    }
+
+    public AccountEnum.Identity getIdentity() {
+        return CollUtil.getFirst(identityList);
     }
 
 

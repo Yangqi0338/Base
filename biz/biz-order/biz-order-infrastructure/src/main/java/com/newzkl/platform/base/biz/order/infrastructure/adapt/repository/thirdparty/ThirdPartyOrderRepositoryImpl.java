@@ -32,15 +32,6 @@ public class ThirdPartyOrderRepositoryImpl implements ThirdPartyOrderRepository 
     }
 
     @Override
-    public ThirdPartyOrderRecordDTO findRecordByBizOrderNo(String bizOrderNo) {
-        ThirdPartyOrderRecordQuery query = ThirdPartyOrderRecordQuery.builder()
-                .bizOrderNo(bizOrderNo)
-                .build();
-        ThirdPartyOrderRecordDO recordDO = recordDAO.selectOne(recordDAO.getLw(query));
-        return TransferUtils.transfer(recordDO, ThirdPartyOrderRecordDTO.class);
-    }
-
-    @Override
     public Page<ThirdPartyOrderRecordDTO> selectPage(ThirdPartyOrderRecordQuery query) {
         Page<ThirdPartyOrderRecordDO> list = recordDAO.selectPage(RepositorySupport.page(query), recordDAO.getLw(query));
         return TransferUtils.transferPage(list, ThirdPartyOrderRecordDTO.class);

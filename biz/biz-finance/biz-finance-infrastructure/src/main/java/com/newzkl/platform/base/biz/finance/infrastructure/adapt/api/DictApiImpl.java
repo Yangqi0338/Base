@@ -38,6 +38,7 @@ public class DictApiImpl implements DictApi {
             configSupplierVO.setSkuSpaceFee(0);
             configSupplierVO.setDepositSettleSub(0);
             configSupplierVO.setWithdrawRate(5);
+            configSupplierVO.setPurchaseMinimumNum(1);
         }
         return configSupplierVO;
     }

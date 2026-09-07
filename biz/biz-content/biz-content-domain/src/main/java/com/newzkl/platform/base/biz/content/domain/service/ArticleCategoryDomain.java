@@ -50,26 +50,10 @@ public interface ArticleCategoryDomain {
     void deleteCategory(Long id);
 
     /**
-     * 增量更新分类下的文章数量
-     *
-     * @param id  分类主键ID
-     * @param num 增量值, 可为负数
-     */
-    void updateArticleCount(Long id, Integer num);
-
-    /**
      * 获取文章分类详情
      *
      * @param id 主键ID
      * @return 文章分类详情, 不存在返回 null
      */
     ArticleCategoryRes getById(Long id);
-
-    /**
-     * 按推荐人群查询启用的文章分类列表
-     *
-     * @param recommendGroups 推荐人群名称集合
-     * @return 文章分类列表
-     */
-    List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups);
 }

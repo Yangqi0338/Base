@@ -33,11 +33,6 @@ public class MmtChannelIdentityPolicy extends AbsIdentityPolicy {
     }
 
     @Override
-    public Object detail(Long id) {
-        return null;
-    }
-
-    @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
         return true;
     }

@@ -26,10 +26,6 @@ public class SkuOrderRpcVO {
      */
     private Integer orderState;
     /**
-     * 二级市场ID
-     */
-    private Long twoMarketId;
-    /**
      * 供应商ID
      */
     private Long supplierId;

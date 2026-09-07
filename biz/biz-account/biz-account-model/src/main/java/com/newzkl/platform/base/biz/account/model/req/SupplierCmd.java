@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.SupplierEnum;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -54,10 +55,9 @@ public class SupplierCmd {
         private Money shouldPromisePayAmount;
         /**
          * 保证金缴纳配置 promise_pay_config
-         * 0 即时 1 延迟
          */
         @NotNull
-        private Integer promisePayConfig;
+        private SupplierEnum.PromisePayConfig promisePayConfig;
     }
 
     @Data

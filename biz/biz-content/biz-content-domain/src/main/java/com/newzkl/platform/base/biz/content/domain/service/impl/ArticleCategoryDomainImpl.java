@@ -65,17 +65,7 @@ public class ArticleCategoryDomainImpl implements ArticleCategoryDomain {
     }
 
     @Override
-    public void updateArticleCount(Long id, Integer num) {
-        articleCategoryRepository.updateArticleCount(id, num);
-    }
-
-    @Override
     public ArticleCategoryRes getById(Long id) {
         return articleCategoryRepository.getResById(id);
-    }
-
-    @Override
-    public List<ArticleCategoryRes> getCategoryList(List<RecommendGroupEnum> recommendGroups) {
-        return articleCategoryRepository.getCategoryList(recommendGroups);
     }
 }

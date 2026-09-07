@@ -61,7 +61,7 @@ public abstract class BaseDO extends BaseIdDO {
      */
     public void preInsert() {
         setId(null);
-        this.executor = null;
+        preUpdate();
     }
 
     /**
@@ -69,5 +69,8 @@ public abstract class BaseDO extends BaseIdDO {
      */
     public void preUpdate() {
         this.executor = null;
+        this.creatorId = null;
+        this.createTime = null;
+        this.updateTime = null;
     }
 }

@@ -53,7 +53,7 @@ class CashPayServiceImplTest {
 
     private static final Long ORDER_NO = 730001L;
 
-    private static final Long TRADE_NO = 990001L;
+    private static final String TRADE_NO = "990001";
 
     private OrderPayDomain orderPayDomain;
 
@@ -136,7 +136,7 @@ class CashPayServiceImplTest {
 
         cashPayService.orderPay(req(PaymentEnum.PayType.WX));
 
-        verify(orderPayDomain, never()).resetTripartiteTradeNo(anyLong(), anyString());
+        verify(orderPayDomain, never()).resetTripartiteTradeNo(anyString(), anyString());
     }
 
     @Test

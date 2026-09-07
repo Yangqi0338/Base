@@ -51,15 +51,10 @@ public class SupplierIdentityPolicy extends AbsIdentityPolicy {
         item.setPeriodSetState(CommonEnum.YesOrNo.NO);
         // 前期固定5000
         item.setShouldPromisePayAmount(Money.of("5000"));
-        item.setPromisePayConfig(0);
+        item.setPromisePayConfig(SupplierEnum.PromisePayConfig.IMMEDIATE);
         supplierRepository.supplierSave(item);
 
         return new IdentityRegisterRes(null, accountId);
-    }
-
-    @Override
-    public Object detail(Long id) {
-        return null;
     }
 
     @Override

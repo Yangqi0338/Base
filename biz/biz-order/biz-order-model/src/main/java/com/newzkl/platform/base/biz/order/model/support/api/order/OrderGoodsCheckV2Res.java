@@ -18,7 +18,7 @@ import java.util.Map;
 public class OrderGoodsCheckV2Res implements Serializable {
 
     /** 商品信息 */
-    private List<StoreDistributionDetailRpcVO> goodsInfo;
+    private List<StoreGoodsDetailRpcVO> goodsInfo;
 
     /** 商品运费 */
     private Map<Long, Money> goodsFreight;

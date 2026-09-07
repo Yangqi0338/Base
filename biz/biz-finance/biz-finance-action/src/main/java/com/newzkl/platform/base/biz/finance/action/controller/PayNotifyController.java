@@ -5,15 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.pay.service.CashPayService;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
-import com.newzkl.platform.base.biz.finance.domain.purse.service.TripartitePurseDomain;
 import com.newzkl.platform.base.common.core.model.enums.CacheKey;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuAsyncRes;
-import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuBindCardNotifyRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayNotifyRes;
-import com.newzkl.platform.base.biz.finance.model.purse.req.AccountTripartitePurseQuery;
-import com.newzkl.platform.base.biz.finance.model.purse.vo.AccountTripartitePurseVO;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +25,6 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,13 +50,6 @@ public class PayNotifyController {
      * 三方要求的成功应答体
      */
     private static final String SUCCESS = "Success";
-
-    /**
-     * 汇付通知类型 - 审核消息
-     */
-    private static final String NOTIFY_TYPE_AUDIT = "A";
-
-    private final TripartitePurseDomain tripartitePurse;
 
     private final CashPayService cashPayService;
 
@@ -102,6 +88,8 @@ public class PayNotifyController {
     /**
      * 绑卡审核结果回调 (汇付)
      *
+     * <p>三方钱包只增不维护, 绑卡审核结果不再落库; 仅验签并应答成功。</p>
+     *
      * @param request 回调请求
      * @return 成功返回 {@code Success}; 缺少 {@code data} 或验签失败返回 {@code null}
      */
@@ -117,12 +105,7 @@ public class PayNotifyController {
             log.error("汇付绑卡回调验签失败");
             return null;
         }
-        HuiFuBindCardNotifyRes result = JSONUtil.toBean(data, HuiFuBindCardNotifyRes.class);
-        // 仅处理审核类通知, 其余类型 (灵活用工 H / 电子账户 Z) 直接应答成功
-        if (!NOTIFY_TYPE_AUDIT.equals(result.getNotify_type()) || result.getAudit_info() == null) {
-            return SUCCESS;
-        }
-        applyAuditResult(result.getAudit_info());
+        // 三方钱包只增不查不维护, 绑卡审核结果不再落库, 验签通过即应答成功
         return SUCCESS;
     }
 
@@ -152,25 +135,6 @@ public class PayNotifyController {
     public String withdrawOutNotify() {
         log.warn("/notify/withdrawOutNotify 命中未实现的路径壳, 已忽略");
         return null;
-    }
-
-    /**
-     * 按汇付审核结果更新三方账户状态
-     *
-     * @param auditInfo 审核信息
-     */
-    private void applyAuditResult(HuiFuBindCardNotifyRes.AuditInfo auditInfo) {
-        String applyNo = auditInfo.getApply_no();
-        AccountTripartitePurseQuery query = new AccountTripartitePurseQuery();
-        query.setOidApplySeqNo(applyNo);
-        query.resetQuerySingle();
-        List<AccountTripartitePurseVO> dbList = tripartitePurse.queryPageAccountTripartitePurse(query);
-        if (dbList == null || dbList.isEmpty()) {
-            log.error("汇付绑卡回调未知的申请id[{}]", applyNo);
-            throw new PlatformException(BaseErrorCode.NODATA);
-        }
-        AccountTripartitePurseVO accountTripartite = dbList.get(0);
-        tripartitePurse.alterAccountTripartitePurse(accountTripartite);
     }
 
     /**

@@ -1,16 +1,23 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
+import com.newzkl.platform.base.common.ddd.model.constant.AccountErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.ChannelRepository;
+import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
+import com.newzkl.platform.base.biz.account.model.dto.ChannelDTO;
 import com.newzkl.platform.base.biz.account.model.req.*;
+import com.newzkl.platform.base.biz.account.model.res.ChannelRes;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.ChannelVO;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.ChannelAssembler;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -31,6 +38,7 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
 
     private final ChannelRepository channelRepository;
     private final ChannelAssembler channelAssembler;
+    private final AccountDomain accountDomain;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -47,7 +55,19 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean channelEdit(ChannelReq channelReq) {
+        // username/headImg 已随建模迁到 account 表(channel 表建表脚本已 DROP 两列), 命中时先落账号侧
+        if (StrUtil.isNotBlank(channelReq.getUsername()) || StrUtil.isNotBlank(channelReq.getHeadImg())) {
+            // state 两侧同名不同义(渠道入驻状态 vs 账号启禁用), 放开会被 hutool 按名转枚举后抛异常, 故排除
+            AccountReq accountReq = TransferUtils.transfer(channelReq, AccountReq::new,
+                    (source, target) -> {
+                        target.setHead(source.getHeadImg());
+                        target.setIdentity(AccountEnum.Identity.CHANNEL);
+                    },
+                    CopyOptions.create().setIgnoreProperties("state"));
+            accountDomain.accountEdit(accountReq);
+        }
         return channelRepository.save(channelAssembler.req2VO(channelReq));
     }
 
@@ -64,14 +84,39 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
     }
 
     @Override
-    public ChannelVO channel(Long channelId) {
-        ChannelVO channel = channelRepository.channel(channelId);
-        return channel;
+    public ChannelDTO channelBase(Long channelId) {
+        return channelAssembler.vo2DTO(this.loadChannel(channelId));
     }
 
     @Override
-    public Boolean updateChannel(ChannelUpdateReq channelUpdateReq) {
-        return channelRepository.save(channelAssembler.updateReq2VO(channelUpdateReq));
+    public ChannelRes channel(Long channelId) {
+        ChannelRes res = channelAssembler.vo2Res(this.loadChannel(channelId));
+        // 副数据: 账号侧展示字段。channelId 同时是账号ID, 账号缺失时 accountDomain 内部抛 NO_EXIST
+        AccountVO account = accountDomain.account(AccountEnum.Client.CHANNEL, channelId);
+        res.setUsername(account.getUsername());
+        res.setRealName(account.getRealName());
+        res.setNickname(account.getNickname());
+        res.setHead(account.getHead());
+        res.setPhone(account.getPhone());
+        res.setYqm(account.getYqm());
+        res.setAccountState(account.getState());
+        res.setLastLoginTime(account.getLastLoginTime());
+        res.setTripartiteAccountPermission(account.getTripartiteAccountPermission());
+        return res;
+    }
+
+    /**
+     * 取渠道商主数据行
+     *
+     * @param channelId 渠道商账号ID
+     * @return 渠道商视图
+     */
+    private ChannelVO loadChannel(Long channelId) {
+        ChannelVO channel = channelRepository.channel(channelId);
+        if (channel == null) {
+            throw new PlatformException(AccountErrorCode.NO_EXIST);
+        }
+        return channel;
     }
 
     @Override

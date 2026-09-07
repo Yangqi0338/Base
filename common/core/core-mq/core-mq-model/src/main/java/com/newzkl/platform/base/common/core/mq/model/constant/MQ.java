@@ -27,15 +27,17 @@ public interface MQ {
         String FINANCE_EARNINGS_EXEC = "finance:earningsexec";
         String FINANCE_EARNINGS_EXEC_MESSAGE = "payment-earnings-message";
         /**
-         * 开发者:消息推送tag
+         * 开放平台消费组 订阅商品/订单业务事件后自行反查收件人并推送开发者
+         *
+         * <p>只是消费组名不是 tag 与 *_BI_MESSAGE 同类: 订阅方组名集中登记便于一处排重。
+         * 一类负载一个组: 负载类由 consumer 类的泛型实参决定 且同名组重复订阅会启动失败</p>
          */
-        String DEVELOPER_NOTIFY_EVENT = "developer:notify";
-        String DEVELOPER_NOTIFY_EVENT_MESSAGE = "developer-notify-message";
-        /**
-         * 商品:开发者通知(收件人未解析), 由 goods 域发布, openapi 侧解析订阅渠道后转 DEVELOPER_NOTIFY_EVENT
-         */
-        String GOODS_DEVELOPER_NOTIFY_EVENT = "goods:developer:notify";
-        String GOODS_DEVELOPER_NOTIFY_EVENT_MESSAGE = "goods-developer-notify-message";
+        String OPENAPI_GOODS_SPU_STATE_MESSAGE = "openapi-goods-spu-state-message";
+        String OPENAPI_GOODS_SPU_EDIT_MESSAGE = "openapi-goods-spu-edit-message";
+        String OPENAPI_GOODS_SKU_EDIT_MESSAGE = "openapi-goods-sku-edit-message";
+        String OPENAPI_ORDER_STATE_MESSAGE = "openapi-order-state-message";
+        String OPENAPI_REFUND_STATE_MESSAGE = "openapi-refund-state-message";
+        String OPENAPI_ORDER_DELIVERY_MESSAGE = "openapi-order-delivery-message";
         /**
          * 结算订单
          */
@@ -56,6 +58,18 @@ public interface MQ {
          */
         String ORDER_STATE_RECORD_EVENT = "order:state:record:msg";
         String ORDER_STATE_RECORD_MESSAGE = "order-state-record-message";
+        /**
+         * 订单:发货
+         */
+        String ORDER_DELIVERY_EVENT = "order:delivery";
+        /**
+         * 订单:交易单状态变更
+         */
+        String ORDER_STATE_EVENT = "order:state";
+        /**
+         * 售后单:状态变更
+         */
+        String REFUND_STATE_EVENT = "refund:state";
         /**
          * 课程章节观看记录
          */
@@ -94,5 +108,25 @@ public interface MQ {
         String GOODS_STATE = "goods:state";
         String GOODS_STATE_MESSAGE = "goods-state-message";
         String GOODS_STATE_BI_MESSAGE = "goods-state-bi-message";
+        /**
+         * 商品:SPU 上下架
+         */
+        String GOODS_SPU_STATE_EVENT = "goods:spu:state";
+        /**
+         * 商品:SPU 基础信息变更
+         */
+        String GOODS_SPU_EDIT_EVENT = "goods:spu:edit";
+        /**
+         * 商品:SKU 变更
+         */
+        String GOODS_SKU_EDIT_EVENT = "goods:sku:edit";
+        /**
+         * 商品:SKU 删除
+         */
+        String GOODS_SKU_DELETE_EVENT = "goods:sku:delete";
+        /**
+         * 商品:SKU 价格变更
+         */
+        String GOODS_SKU_PRICE_EVENT = "goods:sku:price";
     }
 }

@@ -6,7 +6,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.newzkl.platform.base.biz.order.domain.service.ThirdPartyOrderDomain;
 import com.newzkl.platform.base.biz.order.facade.model.order.ThirdPartyOrderRecordDTO;
 import com.newzkl.platform.base.biz.order.model.dto.OrderDTO;
-import com.newzkl.platform.base.biz.order.model.dto.SkuCountDTO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderSkuVO;
 import com.newzkl.platform.base.common.ddd.domain.Processor;
 import com.newzkl.platform.base.common.ddd.facade.ThirdPartyOrderResult;
@@ -20,22 +19,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 三方派发器 下单轴与补偿轴各走各的 Provider
+ *
+ * <p>本类不实现任何 SPI 故不会被自身的 {@code strategyProvider} 收进候选集</p>
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrderStrategy {
+public class ThirdPartyOrderProcessor extends Processor {
 
     /**
-     * 下单动作名 落 ThirdPartyOrderRecordDO.interfaceName
+     * 下单轴(轴B 供货平台) 候选策略
      */
-    private static final String INTERFACE_CREATE = "create";
-
-    /**
-     * 补偿动作名 落 ThirdPartyOrderRecordDO.interfaceName
-     */
-    private static final String INTERFACE_COMPENSATION = "compensation";
-
     private final ObjectProvider<ThirdPartyOrderStrategy> strategyProvider;
+
+    /**
+     * 补偿轴(轴C 通知重推) 候选补偿器
+     */
+    private final ObjectProvider<ThirdPartyCompensator> compensatorProvider;
 
     private final ThirdPartyOrderDomain thirdPartyOrderDomain;
 
@@ -44,28 +46,16 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
     }
 
     /**
-     * 批量处理待补偿记录(供定时任务调用)
-     * <p>
-     * TODO[deferred D-33] 待补偿扫描未实现 依赖尚不存在的能力面 ThirdPartyOrderRepository 缺按状态+下次重试时间批量扫描 缺乐观锁状态流转(RETRYING/FAILED_PERMANENT) ThirdPartyOrderRecordDTO 缺 version/maxRetryCount 且无调用方(ThirdPartyOrderJobHandler 未迁 Base) 补齐后按指数退避重派发 compensation
-     *
-     * @param batchSize 单批处理条数
-     */
-    public void processPendingRecords(int batchSize) {
-        log.warn("processPendingRecords 暂未实现 待补偿扫描能力面(批量扫描/乐观锁/重试计数)与定时任务调用方尚未迁入 batchSize={}", batchSize);
-    }
-
-    /**
-     * 创建第三方订单(派发器) 按订单外部平台路由到匹配策略
+     * 创建第三方订单(派发器) 按商品级供货平台路由到匹配策略
      *
      * @param outGoods 外部商品列表
      * @param order    系统内部订单
      * @return 三方订单结果 非三方单或无匹配策略时返回 null
      */
-    @Override
     public ThirdPartyOrderResult create(List<OrderSkuVO> outGoods, OrderDTO order) {
-        ThirdPartyOrderEnum.PlatformTypeEnum platformType = resolvePlatformType(order, outGoods);
+        ThirdPartyOrderEnum.PlatformTypeEnum platformType = resolvePlatformType(outGoods);
         if (platformType == null) {
-            log.info("订单非三方单或平台来源为空 跳过三方下单派发 orderId={}", order == null ? null : order.getId());
+            log.info("订单无三方供货商品 跳过三方下单派发 orderId={}", order == null ? null : order.getId());
             return null;
         }
         ThirdPartyOrderStrategy strategy = matchStrategy(platformType);
@@ -76,83 +66,79 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
         String bizOrderNo = order == null || order.getId() == null ? null : String.valueOf(order.getId());
         try {
             ThirdPartyOrderResult result = strategy.create(outGoods, order);
-            storeRecord(platformType, bizOrderNo, INTERFACE_CREATE, result, CommonEnum.RequestStatusEnum.SUCCESS, null);
+            storeRecord(platformType, bizOrderNo, ThirdPartyOrderEnum.Action.CREATE, result, CommonEnum.RequestStatusEnum.SUCCESS, null);
             return result;
         } catch (RuntimeException e) {
-            storeRecord(platformType, bizOrderNo, INTERFACE_CREATE, null, CommonEnum.RequestStatusEnum.FAILED, e.getMessage());
+            storeRecord(platformType, bizOrderNo, ThirdPartyOrderEnum.Action.CREATE, null, CommonEnum.RequestStatusEnum.FAILED, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 发货通知(派发器)
-     * <p>
-     * TODO[deferred D-34] 发货履约未接通 入参无平台鉴别符 且 new-scm 语义中发货走 orderRepository.deliverNotify 而非策略(所有策略 delivery 均返回 null) 后续以新履约模型替换时 需据 outOrderNo 反查记录取 platformType 再派发 或回归 repository 侧履约
+     * 补偿第三方订单(派发器) 按记录平台类型路由到匹配补偿器 派发后回写状态与重试计数
      *
-     * @param outOrderNo         外部订单号
-     * @param skuCountDTOList    发货商品数量
-     * @param expressCompanyName 快递公司
-     * @param expressNo          快递单号
-     * @param channelId          渠道商ID
-     * @return 三方结果 当前恒返回 null
+     * @param request 第三方订单记录 含 platformType 与 id
      */
-    @Override
-    public ThirdPartyOrderResult delivery(String outOrderNo, List<SkuCountDTO> skuCountDTOList, String expressCompanyName, String expressNo, Long channelId) {
-        return null;
-    }
-
-    /**
-     * 补偿第三方订单(派发器) 按记录平台类型路由到匹配策略
-     *
-     * @param request 第三方订单记录 含 platformType
-     */
-    @Override
     public void compensation(ThirdPartyOrderRecordDTO request) {
         if (request == null || request.getPlatformType() == null) {
             log.warn("补偿请求为空或平台类型缺失 跳过补偿派发");
             return;
         }
-        ThirdPartyOrderStrategy strategy = matchStrategy(request.getPlatformType());
-        if (strategy == null) {
-            log.warn("未找到匹配的三方补偿策略 platformType={} bizOrderNo={}", request.getPlatformType(), request.getBizOrderNo());
+        ThirdPartyCompensator compensator = matchCompensator(request.getPlatformType());
+        if (compensator == null) {
+            log.warn("未找到匹配的三方补偿器 platformType={} bizOrderNo={}", request.getPlatformType(), request.getBizOrderNo());
             return;
         }
         try {
-            strategy.compensation(request);
-            // 补偿后 策略已把三方响应/状态/错误回写进 request 追加一行补偿动作日志
-            thirdPartyOrderDomain.recordAction(request.getPlatformType(), request.getBizOrderNo(), INTERFACE_COMPENSATION,
-                    request.getThirdOrderNo(), request.getRequestJson(), request.getResponseJson(),
-                    request.getRequestStatus() == null ? CommonEnum.RequestStatusEnum.SUCCESS : request.getRequestStatus(),
-                    request.getErrorMessage());
+            compensator.compensation(request);
         } catch (RuntimeException e) {
-            thirdPartyOrderDomain.recordAction(request.getPlatformType(), request.getBizOrderNo(), INTERFACE_COMPENSATION,
-                    request.getThirdOrderNo(), request.getRequestJson(), request.getResponseJson(),
-                    CommonEnum.RequestStatusEnum.FAILED, e.getMessage());
-            throw e;
+            request.setRequestStatus(CommonEnum.RequestStatusEnum.FAILED);
+            request.setErrorMessage(e.getMessage());
+            log.error("补偿派发异常 platformType={} bizOrderNo={}", request.getPlatformType(), request.getBizOrderNo(), e);
         }
-    }
-
-    @Override
-    public boolean supports(Object type) {
-        // 派发器本身不参与业务 恒 false 使 strategyProvider 过滤时自动排除自身
-        return false;
+        // 追加一行补偿动作日志(审计 恒 INSERT) 与下面按 id 回写原记录是两条独立路径
+        thirdPartyOrderDomain.recordAction(request.getPlatformType(), request.getBizOrderNo(), ThirdPartyOrderEnum.Action.COMPENSATION,
+                request.getThirdOrderNo(), request.getRequestJson(), request.getResponseJson(),
+                request.getRequestStatus() == null ? CommonEnum.RequestStatusEnum.SUCCESS : request.getRequestStatus(),
+                request.getErrorMessage());
+        writeBackRetry(request);
     }
 
     /**
-     * 解析订单外部平台 优先取订单级 platformType 缺失时回退到 outGoods 首个非空商品级 platformType
+     * 回写原记录的补偿结果 成功即终结 失败则推进重试计数并排下一次
+     *
+     * @param request 带 id 的原始记录
      */
-    private ThirdPartyOrderEnum.PlatformTypeEnum resolvePlatformType(OrderDTO order, List<OrderSkuVO> outGoods) {
-        if (order != null && order.getPlatformType() != null) {
-            return order.getPlatformType();
+    private void writeBackRetry(ThirdPartyOrderRecordDTO request) {
+        if (CommonEnum.RequestStatusEnum.SUCCESS == request.getRequestStatus()) {
+            // 成功后 job 的 requestStatus=FAILED 闸门自动排除本行 无需清 nextRetryTime
+            thirdPartyOrderDomain.updateRecord(request);
+            return;
         }
-        if (CollUtil.isNotEmpty(outGoods)) {
-            return outGoods.stream()
-                    .map(OrderSkuVO::getPlatformType)
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(null);
+        request.setRequestStatus(CommonEnum.RequestStatusEnum.FAILED);
+        request.setRetryCount((request.getRetryCount() == null ? 0 : request.getRetryCount()) + 1);
+        if (request.getRetryCount() < ThirdPartyOrderRecordDTO.MAX_RETRY_COUNT) {
+            request.scheduleNextRetry();
+        } else {
+            log.warn("补偿重试次数耗尽 不再排期 bizOrderNo={} retryCount={}", request.getBizOrderNo(), request.getRetryCount());
         }
-        return null;
+        thirdPartyOrderDomain.updateRecord(request);
+    }
+
+    /**
+     * 解析供货平台(轴B) 只认商品级 platformType
+     * <p>订单级 {@code OrderDTO.platformType} 是订单来源(轴A 如 openapi 单恒为 LE_TAI) 与由谁供货无关
+     * 若参与派发会遮蔽商品级的会订货代发 故此处不读订单级</p>
+     */
+    private ThirdPartyOrderEnum.PlatformTypeEnum resolvePlatformType(List<OrderSkuVO> outGoods) {
+        if (CollUtil.isEmpty(outGoods)) {
+            return null;
+        }
+        return outGoods.stream()
+                .map(OrderSkuVO::getPlatformType)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -161,6 +147,16 @@ public class ThirdPartyOrderProcessor extends Processor implements ThirdPartyOrd
     private ThirdPartyOrderStrategy matchStrategy(ThirdPartyOrderEnum.PlatformTypeEnum platformType) {
         return strategyProvider.stream()
                 .filter(s -> s.supports(platformType))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * 从 compensatorProvider 中选出 supports(platformType) 命中的首个补偿器
+     */
+    private ThirdPartyCompensator matchCompensator(ThirdPartyOrderEnum.PlatformTypeEnum platformType) {
+        return compensatorProvider.stream()
+                .filter(c -> c.supports(platformType))
                 .findFirst()
                 .orElse(null);
     }

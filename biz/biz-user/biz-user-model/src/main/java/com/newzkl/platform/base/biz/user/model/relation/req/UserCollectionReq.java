@@ -23,5 +23,5 @@ public class UserCollectionReq {
      * 铺货商品ID
      */
     @NotNull(message = "铺货商品ID不能为空")
-    private Long storeDistributionId;
+    private Long storeGoodsId;
 }

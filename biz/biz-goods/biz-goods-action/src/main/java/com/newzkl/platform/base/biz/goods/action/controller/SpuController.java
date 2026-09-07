@@ -131,6 +131,29 @@ public class SpuController {
     }
 
     /**
+     * 货盘商品审核
+     *
+     * @param spuDTO 商品请求
+     * @return 空结果
+     */
+    @RoleLimit(client = {AccountEnum.Client.ADMIN})
+    @PostMapping("palletSpuAudit")
+    @FuncPermission("修改商品")
+    public PlatformResult<Void> palletSpuEdit(@RequestBody SpuDTO spuDTO) {
+        if (spuDTO.getId() == null) {
+            ThrowsException.exception(BaseErrorCode.PARAM);
+        }
+        spuDTO.setState(SpuEnum.State.PLATFORM_DOWN);
+        // 编码由后端持有, 不接受入参覆盖
+        spuDTO.setCode(null);
+        if (spuDTO.getSkuList() != null) {
+            spuDTO.getSkuList().forEach(skuDTO -> skuDTO.setCode(null));
+        }
+        spuDomain.spuPreUpdate(spuDTO);
+        return PlatformResult.success();
+    }
+
+    /**
      * 删除商品
      *
      * <p>仅供应商可删除, 平台不支持。</p>
@@ -184,8 +207,8 @@ public class SpuController {
         if (AccountEnum.Identity.SUPPLIER == identity
                 || AccountEnum.Identity.CHANNEL == identity) {
             spuQuery.setAccountId(SecurityUtils.getAccountId());
+            spuQuery.setIdentity(identity);
         }
-        spuQuery.setIdentity(identity);
         return PlatformResult.success(spuDomain.querySpuPage(spuQuery));
     }
 
@@ -241,10 +264,8 @@ public class SpuController {
      */
     @PostMapping("/palletSelectGoods")
     @FuncPermission("货盘选品")
+    @RoleLimit(client = {AccountEnum.Client.ADMIN})
     public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
-        if (AccountEnum.Identity.PLATFORM != SecurityUtils.getIdentity()) {
-            ThrowsException.exception(BaseErrorCode.NOT_SERVICE);
-        }
         spuVO.setChannelType(SpuEnum.ChannelType.OUT);
         return PlatformResult.success(spuService.palletSelectGoods(spuVO));
     }

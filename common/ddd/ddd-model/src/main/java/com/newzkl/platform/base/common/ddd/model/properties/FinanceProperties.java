@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.model.properties;
 
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,6 +53,7 @@ public class FinanceProperties {
         public static String privateKey;
         public static String productId;
         public static String sysId;
+        public static String id;
         public static String baseUrl;
         /* ============= 业务参数 ============= */
         // 结算周期
@@ -88,12 +90,20 @@ public class FinanceProperties {
             return notifyPreUrl + uri;
         }
 
+        public static String getHuiFuId(){
+            return Opt.ofNullable(id).orElse(sysId);
+        }
+
         public void setProductId(String productId) {
             HuiFuProperties.productId = productId;
         }
 
         public void setSysId(String sysId) {
             HuiFuProperties.sysId = sysId;
+        }
+
+        public void setId(String id) {
+            HuiFuProperties.id = id;
         }
 
         public void setSettleCycle(String settleCycle) {

@@ -16,7 +16,9 @@ import com.newzkl.platform.base.common.ddd.model.vo.EditColumnVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 供应商
@@ -91,5 +93,12 @@ public class SupplierRepositoryImpl extends RepositorySupport implements Supplie
         query.addCountField();
         BizCountMap countMap = supplierDAO.countWithAccountByCondition(query, supplierDAO.getJoinQw(query));
         return countMap.getCount(0);
+    }
+
+    @Override
+    public List<SupplierVO> listByIdList(List<Long> idList) {
+        List<SupplierDO> supplierList =
+                Optional.ofNullable(supplierDAO.selectByIds(idList)).orElse(Collections.emptyList());
+        return TransferUtils.transfers(supplierList, SupplierVO.class);
     }
 }

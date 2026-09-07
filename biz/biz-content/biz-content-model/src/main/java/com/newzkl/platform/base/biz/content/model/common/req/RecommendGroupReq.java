@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.content.model.common.req;
 
+import com.newzkl.platform.base.biz.content.model.enums.RecommendGroupEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,5 +21,5 @@ public class RecommendGroupReq implements Serializable {
     /**
      * 推荐人群名称集合
      */
-    private List<String> groupNames;
+    private List<RecommendGroupEnum> groupNames;
 }

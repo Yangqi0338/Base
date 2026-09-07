@@ -81,7 +81,7 @@
         ${query.sortSQL}
     </select>
 
-    <!-- SPU 视图分页 (迁移自 new-scm SpuDAO.xml 的 voByQuery; 分页壳由 PageInfo 改为 MyBatis-Plus Page + QueryWrapper) -->
+    <!-- SPU 视图分页 (迁移自 new-scm SpuDAO.xml 的 detail; 分页壳由 PageInfo 改为 MyBatis-Plus Page + QueryWrapper) -->
     <select id="voPageByQuery" resultType="com.newzkl.platform.base.biz.goods.model.goods.vo.spu.SpuVO">
         select
         t.*, t1.free_post, t1.name as freight_template_name,

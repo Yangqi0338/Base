@@ -32,11 +32,6 @@ public class PartnerIdentityPolicy extends AbsIdentityPolicy {
     }
 
     @Override
-    public Object detail(Long id) {
-        return null;
-    }
-
-    @Override
     public boolean destroy(AccountVO accountVO, String destroyReason) {
         // 服务商无独立身份实体, 无需清理
         return true;

@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.query.market;
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,12 +43,12 @@ public class AppBindMarketGoodsPageQuery extends PageQuery {
     /**
      * 关系类型
      *
-     * @ext 1：一级市场商品 2：二级市场商品 3：市场选品商品
+     * @ext 2：市场商品 3：市场选品商品
      */
     private Integer relationType;
 
-    /** 绑定类型 */
-    private Integer bindType;
+    /** 绑定身份类型 */
+    private AccountEnum.Identity bindType;
     /**
      * 商品上下架状态
      *

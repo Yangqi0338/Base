@@ -1,37 +1,21 @@
 package com.newzkl.platform.base.biz.account.application.service.impl;
-import com.newzkl.platform.base.biz.account.model.support.RoleEnumUtil;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.common.ddd.facade.AccountPurseReq;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.GoodsStoreApi;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseAmountRes;
-import com.newzkl.platform.base.biz.account.domain.adapt.api.StoreRPCVO;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
-import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
-import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.*;
 import com.newzkl.platform.base.biz.account.model.req.*;
 import com.newzkl.platform.base.biz.account.model.res.*;
-import com.newzkl.platform.base.biz.account.model.rpc.StoreOutVO;
 import com.newzkl.platform.base.biz.account.model.vo.*;
-import com.newzkl.platform.base.biz.account.model.assembler.AccountAssembler;
 import com.newzkl.platform.base.biz.account.model.assembler.identity.*;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author muc_fang
@@ -42,77 +26,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserQueryServiceImpl implements UserQueryService {
 
-    private final AccountAssembler accountAssembler;
-
-
-    private final AccountDomain accountDomain;
     private final AccountRepository accountRepository;
 
     private final SupplierClientDomain supplierClientDomain;
     private final UserClientDomain userDomain;
-
-    private final ChannelClientDomain channelClientDomain;
-
-    private final MemberAssembler memberAssembler;
-    private final ChannelAssembler channelAssembler;
-    private final EmpAssembler empAssembler;
-
-    private final PurseApi financePurseApi;
-    private final GoodsStoreApi goodsStoreApi;
-
-    @Override
-    public AccountOutRes accountOutVO(AccountEnum.Client client, Long id) {
-        //查询账号
-        AccountVO accountVO = accountDomain.account(client, id);
-        AccountOutRes accountOutVO = accountAssembler.vo2OutRes(accountVO);
-
-        //设置角色信息
-        String roleIdList = accountVO.getIdentityList();
-        List<AccountEnum.Identity> companyRoleList = RoleEnumUtil.getLevelUpEnumList(client, roleIdList);
-        for (AccountEnum.Identity identity : companyRoleList) {
-            Object identityVO = userIdentityDetail(id, identity);
-            switch (identity) {
-                case EMP:
-                    accountOutVO.setEmp(empAssembler.vo2OutRes((EmpVO) identityVO));
-                    break;
-                case MEMBER:
-                    accountOutVO.setMember(memberAssembler.vo2OutRes((MemberVO) identityVO));
-                    break;
-                case SUPPLIER:
-//                    accountOutVO.setSupplier(supplierAssembler.vo2OutRes((SupplierVO) identityVO));
-                    break;
-                case CHANNEL:
-                    accountOutVO.setChannel(channelAssembler.vo2OutRes((ChannelVO) identityVO));
-                    // 渠道商额外拿店铺信息
-                    StoreRPCVO storeRPCVO = goodsStoreApi.storeByChannelId(id);
-                    accountOutVO.setStore(TransferUtils.transfer(storeRPCVO, StoreOutVO::new));
-                    break;
-                default:
-                    break;
-            }
-        }
-        // 因为登录账户就是手机号, 所以默认已绑定手机号,获得50分.
-        int safeIndex = 50;
-        if (StringUtils.isNotEmpty(accountVO.getPassword())) {
-            accountOutVO.setIsSetPassword(CommonEnum.YesOrNo.YES);
-            safeIndex = safeIndex + 50;
-        }
-        accountOutVO.setSafeIndex(safeIndex);
-        return accountOutVO;
-    }
-
-    @Override
-    public AccountOutRes accountOutVO(String phone) {
-        AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setPhone(phone);
-        AccountInfo accountInfo = accountDomain.accountInfo(accountQuery);
-        return accountOutVO(accountInfo.getClient(), accountInfo.getId());
-    }
-
-    @Override
-    public Object userIdentityDetail(Long id, AccountEnum.Identity identity) {
-        return AbsIdentityPolicySupport.getPolicy(identity).detail(id);
-    }
 
     @Override
     public AccountVO accountByYqm(String yqm) {
@@ -129,66 +46,6 @@ public class UserQueryServiceImpl implements UserQueryService {
         query.setId(memberId);
         MemberVO memberVO = userDomain.member(memberId);
         return memberVO;
-    }
-
-    @Override
-    public Page<MemberVO> memberPage(MemberQuery memberQuery) {
-        // FIXME domian没有page查询，上层也不应该调用service，应直接调用domain
-//        List<MemberVO> memberVO = userDomain.queryMember(null);
-        return new Page<>();
-    }
-
-    @Override
-    public List<SupplierDescVO> supplierDescVOList(List<Long> supplierIdList) {
-//        return supplierClientDomain.supplierDescVOList(supplierIdList);
-        return null;
-    }
-
-
-    @Override
-    public Page<ChannelVO> channelPage(ChannelQuery channelQuery) {
-        // 迁移自 new-scm UserQueryServiceImpl.channelPage: 仅补 DAO 分页查询。
-        // 旧实现另调 earningApi.queryEarningContributeByAccountId 回填 earningContribute,
-        // Base 资金域尚无对应 RPC 端口, 收益填充留空 (见 deferred-issues 收益回填项)。
-        return channelClientDomain.channelPageList(channelQuery);
-    }
-
-    @Override
-    public Page<ChannelPageRes> queryChannelPage(ChannelQuery channelQuery) {
-//        Page<ChannelPageVO> channelPageVOPage = iChannelRepository.queryChannelPage(channelQuery);
-//        List<ChannelPageVO> channelPageVOList = channelPageVOPage.getRecords();
-        List<ChannelPageRes> channelPageVOList = new ArrayList<>();
-        if (CollUtil.isEmpty(channelPageVOList)) {
-            // 返回一个空的 Page 对象
-            return new Page<>();
-        }
-
-        List<Long> channelList = channelPageVOList.stream().map(ChannelPageRes::getId).collect(Collectors.toList());
-        // 客户账户查询对象
-        AccountPurseReq accountPurseReq = new AccountPurseReq();
-        accountPurseReq.setAccountIdList(channelList);
-        accountPurseReq.setAccountType(PurseEnum.User.CHANNEL.getCode());
-
-        //查询采购金
-        accountPurseReq.setPurseType(PurseEnum.Type.PURCHASE.getCode());
-        List<PurseAmountRes> purseAmountResList = financePurseApi.queryPurse(accountPurseReq);
-        Map<Long, PurseAmountRes> purseAmountMap = purseAmountResList.stream().collect(Collectors.toMap(PurseAmountRes::getAccountId, Function.identity()));
-
-        //查询商品位
-        accountPurseReq.setPurseType(PurseEnum.Type.GOODS_SEAT.getCode());
-        List<PurseAmountRes> goodsSeatList = financePurseApi.queryPurse(accountPurseReq);
-        Map<Long, PurseAmountRes> goodsSeatMap = goodsSeatList.stream().collect(Collectors.toMap(PurseAmountRes::getAccountId, Function.identity()));
-
-        for (ChannelPageRes vo : channelPageVOList) {
-            //填充采购金额
-            PurseAmountRes purseAmountRes = purseAmountMap.getOrDefault(vo.getId(), new PurseAmountRes());
-            vo.setEarnings(Money.of(Optional.ofNullable(purseAmountRes.getAmount()).orElse(0)));
-            //填充商品位
-            PurseAmountRes goodsSeat = goodsSeatMap.getOrDefault(vo.getId(), new PurseAmountRes());
-            vo.setProductSeatCount(Optional.ofNullable(goodsSeat.getAmount()).orElse(0));
-            vo.setUsedProductSeat(0);
-        }
-        return null;
     }
 
     @Override
@@ -231,27 +88,6 @@ public class UserQueryServiceImpl implements UserQueryService {
 //        return supplierDAO.supplierRelationVO(supplierIdList);
         return null;
     }
-
-
-    @Override
-    public AppAccountVO appVO(AccountKeyQuery query) {
-        AccountEnum.Client client = query.getClient();
-        Long id = query.getAccountId();
-        AccountVO accountVO = accountDomain.account(client, id);
-        AppAccountVO appAccountVO = accountAssembler.account2AppVO(accountVO);
-        appAccountVO.setIdentity(SecurityUtils.getIdentity());
-
-        // 获取channel角色表里的storePermission
-//        CommonEnum.YesOrNo storePermission = channelDAO.hasStore(id);
-//        appAccountVO.setHasStore(CommonEnum.YesOrNo.YES == storePermission);
-        appAccountVO.setHasChannel(accountVO.getIdentityList().contains(AccountEnum.Identity.CHANNEL.getCode() + ""));
-        switch (client) {
-            default:
-                break;
-        }
-        return appAccountVO;
-    }
-
 
 
     @Override

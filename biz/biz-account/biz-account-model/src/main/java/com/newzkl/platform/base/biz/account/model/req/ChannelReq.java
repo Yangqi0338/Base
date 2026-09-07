@@ -42,6 +42,21 @@ public class ChannelReq extends BaseReq {
     private String license;
 
     /**
+     * 发货省编码
+     */
+    private Integer shipProvinceCode;
+
+    /**
+     * 发货市编码
+     */
+    private Integer shipCityCode;
+
+    /**
+     * 发货区编码
+     */
+    private Integer shipAreaCode;
+
+    /**
      * 企业信息
      */
     private String companyInfo;

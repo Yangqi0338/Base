@@ -2,15 +2,12 @@ package com.newzkl.platform.base.biz.account.action.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.UserQueryService;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCmd;
-import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
+import com.newzkl.platform.base.biz.account.model.dto.SupplierDTO;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
-import com.newzkl.platform.base.biz.account.model.vo.SupplierDescVO;
-import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
 import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**
  * 用户-供应商
@@ -54,6 +50,8 @@ public class SupplierController {
      *
      * @param edit 供应商修改请求
      * @return 空结果
+     * @ext 主数据 supplier, 副数据 account(单副, 副数据不再向下关联)。{@code username}
+     *      落 account 表, 其余字段落 supplier 表
      */
     @PostMapping("supplierBaseEdit")
     @FuncPermission("供应商修改")
@@ -66,31 +64,30 @@ public class SupplierController {
     }
 
     /**
-     * 供应商删除
+     * 供应商纯净详情
      *
-     * <p>旧 {@code @Limit(code=1022, level=set)} 未迁移, 见迁移报告「鉴权降级」。</p>
+     * <p>只需供应商自有列时走本端点, 相比 {@code supplier} 少一次 account 查询</p>
      *
-     * @param supplierIdList 供应商账号ID列表
-     * @return 空结果
-     * @deprecated 前端零引用, 已确认死端点 (2026-07-27 交叉比对); 仅为契约完整性迁入
+     * @param id 供应商账号ID, 不传取当前登录账号
+     * @return 供应商纯净视图
+     * @ext 主数据 supplier (无副数据)
      */
-    @Deprecated
-    @PostMapping("supplierDelete")
-    @FuncPermission("供应商删除")
-    public PlatformResult<Void> supplierDelete(@Validated @RequestBody SupplierCmd.IDList supplierIdList) {
-        supplierClientDomain.supplierDelete(supplierIdList.getSupplierIdList());
-        return PlatformResult.success();
+    @GetMapping("/base")
+    public PlatformResult<SupplierDTO> supplierBase(@RequestParam(value = "id", required = false) Long id) {
+        return PlatformResult.success(supplierClientDomain.supplierBase(id == null ? SecurityUtils.getAccountId() : id));
     }
 
     /**
      * 供应商详情
      *
-     * @param id 供应商账号ID
-     * @return 供应商视图
+     * @param id 供应商账号ID, 不传取当前登录账号
+     * @return 供应商聚合视图
+     * @ext 主数据 supplier, 副数据 account(单副, 副数据不再向下关联)。方向与
+     *      {@code AccountController.identityDetail}(主 account / 副身份) 相反, 两者不可互相替代
      */
     @GetMapping("supplier")
-    public PlatformResult<SupplierVO> supplier(@RequestParam("id") Long id) {
-        return PlatformResult.success(userQueryService.supplierVO(id));
+    public PlatformResult<SupplierRes> supplier(@RequestParam(value = "id", required = false) Long id) {
+        return PlatformResult.success(supplierClientDomain.supplierDetail(id == null ? SecurityUtils.getAccountId() : id));
     }
 
     /**
@@ -103,21 +100,6 @@ public class SupplierController {
     @GetMapping("limitAmount")
     public PlatformResult<Money> limitAmount() {
         return PlatformResult.success(supplierClientDomain.limitAmount(SecurityUtils.getAccountId()));
-    }
-
-    /**
-     * 供应商分页
-     *
-     * <p>迁移补充: 旧 {@code IUserQueryService.supplierPage} 中台化后落在
-     * {@link SupplierClientDomain#supplierPage}, 记录类型改为出参对象
-     * {@code SupplierRes}; 旧实现取了 {@code accountId} 但未使用, 已去掉。</p>
-     *
-     * @param supplierQuery 供应商查询
-     * @return 供应商分页
-     */
-    @PostMapping("supplierPageVO")
-    public PlatformResult<Page<SupplierRes>> supplierPage(@RequestBody SupplierQuery supplierQuery) {
-        return PlatformResult.success(supplierClientDomain.supplierPage(supplierQuery));
     }
 
     /**
@@ -174,10 +156,9 @@ public class SupplierController {
      * @return 应付保证金金额
      */
     @PostMapping("/shouldPromisePayAmountInfo")
-    public PlatformResult<Integer> shouldPromisePayAmountInfo(@RequestBody IdCommand idListCommand) {
+    public PlatformResult<Money> shouldPromisePayAmountInfo(@RequestBody IdCommand idListCommand) {
         Long id = CollUtil.getFirst(idListCommand.getIdList());
-        Money amount = userQueryService.supplierVO(id).getShouldPromisePayAmount();
-        return PlatformResult.success(amount == null ? null : (int) amount.getCent());
+        return PlatformResult.success(userQueryService.supplierVO(id).getShouldPromisePayAmount());
     }
 
     /**
@@ -197,16 +178,5 @@ public class SupplierController {
         }
         supplierClientDomain.addIndustry(addIndustry.getAccountId(), addIndustry.getIndustryId());
         return PlatformResult.success();
-    }
-
-    /**
-     * 供应商描述信息
-     *
-     * @param command 供应商ID列表
-     * @return 供应商描述列表
-     */
-    @PostMapping("supplierDescVOList")
-    public PlatformResult<List<SupplierDescVO>> supplierDescVOList(@RequestBody SupplierCmd.IDList command) {
-        return PlatformResult.success(userQueryService.supplierDescVOList(command.getSupplierIdList()));
     }
 }

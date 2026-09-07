@@ -77,8 +77,6 @@ public abstract class AbsIdentityPolicy {
      */
     public abstract IdentityRegisterRes customRegister(IdentityCustomSaveReq customSaveReq);
 
-    public abstract Object detail(Long id);
-
     public abstract boolean destroy(AccountVO accountVO, String destroyReason);
 
     public abstract void saveByAccount(AccountReq req);

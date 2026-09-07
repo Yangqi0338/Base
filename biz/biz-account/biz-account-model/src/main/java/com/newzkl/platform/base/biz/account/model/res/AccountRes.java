@@ -24,6 +24,14 @@ public class AccountRes extends BaseRes {
      */
     private String pidList;
     /**
+     * 顶层主账号id (主账号自身=0, 子账号=顶层主账号id)
+     */
+    private Long mainAccountId;
+    /**
+     * 账号来源
+     */
+    private AccountEnum.Origin origin;
+    /**
      * 三方账户权限
      */
     protected CommonEnum.YesOrNo tripartiteAccountPermission;
@@ -44,27 +52,13 @@ public class AccountRes extends BaseRes {
      */
     private String realName;
     /**
-     * 密码
-     */
-    private String password;
-    /**
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
     /**
-     * 实名认证信息
-     */
-    private String nameAuthInfo;
-    /**
      * 登录凭证
      */
     private String username;
-    /**
-     * 子账号数量
-     */
-    /**
-     * 下级数量
-     */
     /**
      * 帐号状态
      */
@@ -82,21 +76,9 @@ public class AccountRes extends BaseRes {
      */
     private Long inviteAccountId;
     /**
-     * 角色ID集合
-     */
-    private String roleIdList;
-    /**
      * 头像
      */
     private String head;
-    /**
-     * 职务id集合
-     */
-    private String jobIdList;
-    /**
-     * IM账号
-     */
-    private String userAccount;
     /**
      * 手机号
      */

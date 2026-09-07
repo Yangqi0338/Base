@@ -12,6 +12,7 @@ import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsChec
 import com.newzkl.platform.base.biz.order.model.support.api.order.OrderGoodsCheckV2Res;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.logistics.LogisticsTrack;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 
 import java.time.LocalDateTime;
@@ -109,7 +110,7 @@ public interface OrderDomain {
      * @param shipVO
      * @return 各SPU对应的最新运费（用于对比是否变动）
      */
-    Map<Long, Money> validateOrderShipChange(OrderAgg orderAgg, ShipVO shipVO);
+    Map<Long, Money> validateOrderShipChange(OrderAgg orderAgg, com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVO);
 
     /**
      * 校验运费是否变动（独立封装，便于两处调用）
@@ -127,7 +128,7 @@ public interface OrderDomain {
      * @param orderNo 订单ID
      * @param shipVOJson 收货地址JSON串
      */
-    void updateOrderShipDb(String orderNo, ShipVO shipVOJson);
+    void updateOrderShipDb(String orderNo, com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVOJson);
 
 
     /**
@@ -185,7 +186,16 @@ public interface OrderDomain {
      */
     Map<Long, List<DeliverVO>> orderDeliverInfo(String orderNo);
 
-    List<OrderItemExcelVO> queryOrderItemExcelVO(OrderQuery orderQuery);
+    /**
+     * 订单物流轨迹
+     *
+     * <p>一个发货单 = 一个包裹 = 一条轨迹, 拆单发货的订单返回多条。
+     * 单个包裹查询失败不影响其余包裹, 降级为无节点轨迹</p>
+     *
+     * @param orderNo 订单号
+     * @return 轨迹列表, 无发货记录返回空集合
+     */
+    List<LogisticsTrack> orderTrack(String orderNo);
 
     /**
      * 新增订单状态记录（含领域规则校验）

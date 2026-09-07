@@ -14,10 +14,6 @@ import java.io.Serializable;
 public class SkuSaleInfo implements Serializable {
 
     /**
-     * 二级市场ID
-     */
-    private Long twoMarketId;
-    /**
      * 供应商ID
      */
     private Long supplierId;

@@ -1,11 +1,9 @@
 package com.newzkl.platform.base.biz.account.infrastructure.adapt.api;
 
-import com.newzkl.platform.base.common.ddd.facade.ChannelServiceAmountRes;
 import com.newzkl.platform.base.common.ddd.facade.ChargeConfigChannelReq;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.FinanceConfigApi;
 import com.newzkl.platform.base.biz.finance.facade.AccountConfigFacade;
 import com.newzkl.platform.base.biz.finance.facade.model.ChannelConfigRes;
-import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.ddd.facade.ChannelNowServiceFeeRes;
 import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
 import org.springframework.stereotype.Component;
@@ -27,12 +25,6 @@ public class FinanceConfigApiImpl implements FinanceConfigApi {
     @Override
     public void saveChannelChargeConfig(ChargeConfigChannelReq req) {
         purseConfigFacade.saveChannelChargeConfig(req);
-    }
-
-    @Override
-    public ChannelServiceAmountRes queryChannelConfig(Long channelId) {
-        ChannelConfigRes channelConfigRes = purseConfigFacade.queryChannelConfig(channelId);
-        return TransferUtils.transfer(channelConfigRes, ChannelServiceAmountRes.class);
     }
 
     @Override

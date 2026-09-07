@@ -11,7 +11,7 @@ import com.newzkl.platform.base.common.ddd.facade.ApiSpuVO;
 import com.newzkl.platform.base.biz.order.model.support.api.order.*;
 import com.newzkl.platform.base.common.ddd.facade.*;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
-import com.newzkl.platform.base.common.ddd.facade.StoreDistributionDetailOutVO;
+import com.newzkl.platform.base.common.ddd.facade.StoreGoodsDetailOutVO;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
 import lombok.extern.slf4j.Slf4j;
 import com.newzkl.platform.base.common.ddd.infrastructure.rpc.RpcReference;
@@ -60,7 +60,7 @@ public class GoodsApiImpl implements GoodsApi {
     }
 
     @Override
-    public StoreDistributionDetailOutVO selectBySkuId(Long channelId, Long storeId, Long skuId) {
+    public StoreGoodsDetailOutVO selectBySkuId(Long channelId, Long storeId, Long skuId) {
         return null;
     }
 
@@ -197,9 +197,9 @@ public class GoodsApiImpl implements GoodsApi {
     @Override
     public PlatformResult<OrderGoodsCheckV2Res> orderCheckV2(OrderGoodsCheckReq checkReq, List<GoodsVO> goodsList) {
 //        log.info("订单商品校验开始orderGoodsCheckV2,请求参数:{}", req);
-//        Map<Long, Integer> skuNum = goods.stream().collect(Collectors.toMap(GoodsVO::getStoreDistributionId, GoodsVO::getNum));
-//        List<Long> idList = goods.stream().map(GoodsVO::getStoreDistributionId).collect(Collectors.toList());
-//        List<StoreDistributionDetailRpcVO> storeGoods = skuDomainService.queryStoreDistributionDetailByIdList(idList);
+//        Map<Long, Integer> skuNum = goods.stream().collect(Collectors.toMap(GoodsVO::getStoreGoodsId, GoodsVO::getNum));
+//        List<Long> idList = goods.stream().map(GoodsVO::getStoreGoodsId).collect(Collectors.toList());
+//        List<StoreGoodsDetailRpcVO> storeGoods = skuDomainService.queryStoreGoodsDetailByIdList(idList);
 ////        List<OrderGoodsInfoVO> orderGoodsInfos = spuDomain.queryOrderGoodsInfoVOList(goods, req.getChannelId(), req.getStoreId());
 //
 //        // 2、校验选品或铺货
@@ -208,12 +208,12 @@ public class GoodsApiImpl implements GoodsApi {
 //            ThrowsException.exception(BaseErrorCode.PARAM, "SKU异常");
 //        }
 //        // 3、是否有未上架的商品
-//        Optional<StoreDistributionDetailRpcVO> first = storeGoods.stream().filter(x -> x.getSpuState() != 2).findFirst();
+//        Optional<StoreGoodsDetailRpcVO> first = storeGoods.stream().filter(x -> x.getSpuState() != 2).findFirst();
 //        first.ifPresent(orderGoodsInfoVO -> ThrowsException.exception(BaseErrorCode.PARAM.getCode(), "商品已下架,spuId为：" + orderGoodsInfoVO.getGoodsId()));
 //        // 设置购买数量并区分本地和外部商品
 //        List<OrderSkuVO> localGoods = new ArrayList<>();
 //        List<OrderSkuVO> outGoods = new ArrayList<>();
-//        Map<Long, StoreDistributionDetailRpcVO> skuOrderGoodsMap = new HashMap<>();
+//        Map<Long, StoreGoodsDetailRpcVO> skuOrderGoodsMap = new HashMap<>();
 //        storeGoods.forEach(x->{
 //            //库存校验
 //            if (x.getInventory() < skuNum.get(x.getId())){
@@ -251,7 +251,7 @@ public class GoodsApiImpl implements GoodsApi {
 //        // 商品购买数量
 //        //Map<Long,Integer> goodsNum = orderGoodsInfos.stream().collect(Collectors.groupingBy(OrderGoodsInfoVO::getSpuId,Collectors.summingInt(OrderGoodsInfoVO::getNum)));
 //        // 商品运费模板
-//        Map<Long,Long> goodsTemplate = storeGoods.stream().collect(Collectors.toMap(StoreDistributionDetailRpcVO::getGoodsId,StoreDistributionDetailRpcVO::getFreightTemplateId,(k, v) -> k));
+//        Map<Long,Long> goodsTemplate = storeGoods.stream().collect(Collectors.toMap(StoreGoodsDetailRpcVO::getGoodsId,StoreGoodsDetailRpcVO::getFreightTemplateId,(k, v) -> k));
 //        // 商品重量
 //        //Map<Long, Double> goodsWeight = orderGoodsInfos.stream().collect(Collectors.groupingBy(OrderGoodsInfoVO::getSpuId,Collectors.summingDouble(OrderGoodsInfoVO::getWeight)));
 //        // 按商品统计运费相关数据
@@ -259,15 +259,15 @@ public class GoodsApiImpl implements GoodsApi {
 //        Map<Long, GoodsFreightDataVO> goodsFreightDataMap =
 //                // 串行流（避免并行流线程安全/异常排查问题）
 //                storeGoods.stream()
-//                        .collect(Collectors.groupingBy(StoreDistributionDetailRpcVO::getGoodsId,
+//                        .collect(Collectors.groupingBy(StoreGoodsDetailRpcVO::getGoodsId,
 //                                Collectors.collectingAndThen(Collectors.toList(), m -> {
-//                                    StoreDistributionDetailRpcVO orderGoodsInfoVO = m.stream().findFirst().orElseThrow(() -> new IllegalArgumentException("SPU分组下无商品数据"));
+//                                    StoreGoodsDetailRpcVO orderGoodsInfoVO = m.stream().findFirst().orElseThrow(() -> new IllegalArgumentException("SPU分组下无商品数据"));
 //
-//                                    BigDecimal goodsWeight = m.stream().map(StoreDistributionDetailRpcVO::getWeight).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+//                                    BigDecimal goodsWeight = m.stream().map(StoreGoodsDetailRpcVO::getWeight).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
 //
-//                                    BigDecimal goodsVolume = m.stream().map(StoreDistributionDetailRpcVO::getVolume).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+//                                    BigDecimal goodsVolume = m.stream().map(StoreGoodsDetailRpcVO::getVolume).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
 //
-//                                    Integer num = m.stream().map(StoreDistributionDetailRpcVO::getBugNum).filter(Objects::nonNull).mapToInt(Integer::intValue).sum();
+//                                    Integer num = m.stream().map(StoreGoodsDetailRpcVO::getBugNum).filter(Objects::nonNull).mapToInt(Integer::intValue).sum();
 //
 //
 //                                    String expand = orderGoodsInfoVO.getExpand();

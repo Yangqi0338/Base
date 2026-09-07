@@ -15,7 +15,7 @@ public class GoodsVO implements Serializable {
     /**
      * 铺货表idID
      */
-    private Long storeDistributionId;
+    private Long storeGoodsId;
     /**
      * skuId
      */

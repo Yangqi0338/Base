@@ -8,9 +8,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 商品销售状态变更事件
+ *
+ * <p>SPU 上下架时发布 一条消息只带一个 spuId 见 GoodsMessageApi#publishSaleState</p>
+ *
  * @author muc_fang
- * @Description: 商品销售状态变更通知
- * @date 2024/1/2014:19
  */
 @Data
 @AllArgsConstructor

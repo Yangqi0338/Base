@@ -18,12 +18,16 @@ import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.repository.SupplierRepository;
+import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.SupplierClientDomain;
+import com.newzkl.platform.base.biz.account.model.req.AccountReq;
 import com.newzkl.platform.base.biz.account.model.req.SupplierCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.SupplierQuery;
 import com.newzkl.platform.base.biz.account.model.req.SupplierReq;
+import com.newzkl.platform.base.biz.account.model.dto.SupplierDTO;
 import com.newzkl.platform.base.biz.account.model.res.SupplierAuditRes;
 import com.newzkl.platform.base.biz.account.model.res.SupplierRes;
+import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierAccountVO;
 import com.newzkl.platform.base.biz.account.model.vo.SupplierVO;
@@ -39,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -59,6 +62,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     private final SupplierRepository supplierRepository;
     private final SupplierAssembler supplierAssembler;
     private final AccountRepository accountRepository;
+    private final AccountDomain accountDomain;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -74,21 +78,26 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
         item.setPeriodSetState(CommonEnum.YesOrNo.NO);
         // 前期固定5000
         item.setShouldPromisePayAmount(Money.of("5000"));
-        item.setPromisePayConfig(0);
+        item.setPromisePayConfig(SupplierEnum.PromisePayConfig.IMMEDIATE);
         return supplierRepository.supplierSave(item);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int supplierEdit(Long id, SupplierReq supplierEditReq) {
+        // username 已随建模收敛到 account 表(supplier 表无该列), 命中时先落账号侧
+        if (StrUtil.isNotBlank(supplierEditReq.getUsername())) {
+            AccountReq accountReq = TransferUtils.transfer(supplierEditReq, AccountReq::new,
+                    (source, target) -> {
+                        target.setId(id);
+                        target.setIdentity(AccountEnum.Identity.SUPPLIER);
+                    });
+            accountDomain.accountEdit(accountReq);
+        }
         SupplierVO item = TransferUtils.transfer(supplierEditReq, SupplierVO::new, (c, v) -> {
             v.setId(id);
         });
         return supplierRepository.supplierEdit(item);
-    }
-
-    @Override
-    public int supplierDelete(List<Long> supplierIdList) {
-        return supplierRepository.supplierDelete(supplierIdList);
     }
 
     @Override
@@ -100,6 +109,28 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     public SupplierVO supplier(Long supplierId) {
         SupplierVO supplier = supplierRepository.supplier(supplierId);
         return supplier;
+    }
+
+    @Override
+    public SupplierDTO supplierBase(Long supplierId) {
+        return supplierAssembler.vo2DTO(this.loadSupplier(supplierId));
+    }
+
+    @Override
+    public SupplierRes supplierDetail(Long supplierId) {
+        SupplierRes res = supplierAssembler.vo2Res(this.loadSupplier(supplierId));
+        // 副数据: 账号侧展示字段。supplierId 同时是账号ID, 账号缺失时 accountDomain 内部抛 NO_EXIST
+        AccountVO account = accountDomain.account(AccountEnum.Client.SUPPLIER, supplierId);
+        res.setUsername(account.getUsername());
+        res.setRealName(account.getRealName());
+        res.setNickname(account.getNickname());
+        res.setHead(account.getHead());
+        res.setPhone(account.getPhone());
+        res.setYqm(account.getYqm());
+        res.setAccountState(account.getState());
+        res.setLastLoginTime(account.getLastLoginTime());
+        res.setInviteId(account.getInviteAccountId());
+        return res;
     }
 
     @Override
@@ -255,7 +286,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void shouldPromisePayAmountSet(Long id, Money shouldPromisePayAmount, Integer promisePayConfig) {
+    public void shouldPromisePayAmountSet(Long id, Money shouldPromisePayAmount, SupplierEnum.PromisePayConfig promisePayConfig) {
         SupplierVO item = new SupplierVO();
         item.setId(id);
         item.setShouldPromisePayAmount(shouldPromisePayAmount);
@@ -288,10 +319,24 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
     }
 
     /**
+     * 按ID取供应商主数据, 不存在直接抛
+     *
+     * @param supplierId 供应商账号ID
+     * @return 供应商视图
+     */
+    private SupplierVO loadSupplier(Long supplierId) {
+        SupplierVO supplier = supplierRepository.supplier(supplierId);
+        if (supplier == null) {
+            throw new PlatformException(BaseErrorCode.NODATA, "供应商");
+        }
+        return supplier;
+    }
+
+    /**
      * 触发入驻判定
      *
      * <p>逐字保留旧 {@code Supplier#tripInState}: 账期已设置的前提下, 保证金已缴纳
-     * 或缴纳配置为延迟(1)时把供应商状态置为已入驻; 其余情形不动状态。</p>
+     * 或缴纳配置为延迟时把供应商状态置为已入驻; 其余情形不动状态。</p>
      *
      * @param id 供应商账号ID
      */
@@ -301,7 +346,7 @@ public class SupplierClientDomainImpl implements SupplierClientDomain {
             return;
         }
         boolean promisePaid = current.getPromisePayState() == CommonEnum.YesOrNo.YES;
-        boolean delayConfig = Objects.equals(1, current.getPromisePayConfig());
+        boolean delayConfig = SupplierEnum.PromisePayConfig.DELAY == current.getPromisePayConfig();
         if (!promisePaid && !delayConfig) {
             return;
         }

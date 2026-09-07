@@ -19,8 +19,8 @@ public class GoodsRelationEnum {
     @AllArgsConstructor
     @Getter
     public enum GoodsRelation implements IEnum<Integer> {
-        /** 二市场-商品 */
-        TWO_MARKET_GOODS(2, "二市场-商品"),
+        /** 市场-商品 */
+        MARKET_GOODS(2, "市场-商品"),
 
         /** 市场选品-商品 */
         SELECT_GOODS(3, "市场选品-商品");

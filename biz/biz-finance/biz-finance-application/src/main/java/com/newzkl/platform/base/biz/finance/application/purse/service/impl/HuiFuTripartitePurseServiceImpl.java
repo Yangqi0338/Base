@@ -1,6 +1,5 @@
 package com.newzkl.platform.base.biz.finance.application.purse.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.finance.application.purse.service.TripartitePurseService;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
@@ -47,16 +46,14 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         }
 
         String huifuId = saveCommand.getHuifuId();
-        // 若是新增，判断账号是否已经发起过绑定三方账号
-        boolean doUpdateAction = this.checkSave(huifuId);
         Long accountId = SecurityUtils.getAccountId();
 
         // 转化为汇付的开户请求
         HuiFuEntUserOpenAccountReq accountReq = saveCommand.getAccountReq();
         accountReq.setHuifuId(huifuId);
 
-        // 开户或修改开户信息
-        OpenAccountRes openAccountRes = doUpdateAction ? HuiFuMethod.entModifyAccount(accountReq) : HuiFuMethod.entOpenAccount(accountReq);
+        // 开户
+        OpenAccountRes openAccountRes = HuiFuMethod.entOpenAccount(accountReq);
         if (openAccountRes.isSuccess()) {
             throw new PlatformException(openAccountRes.getReqCode(), openAccountRes.getReqDesc());
         }
@@ -66,8 +63,8 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         HuiFuBindCardReq cardReq = saveCommand.getCardReq();
         cardReq.setHuifuId(huifuId);
 
-        // 绑卡或修改绑卡信息
-        AccountBindSyncRes syncRes = doUpdateAction ? HuiFuMethod.userModifyCard(cardReq) : HuiFuMethod.userBindCard(cardReq);
+        // 绑卡
+        AccountBindSyncRes syncRes = HuiFuMethod.userBindCard(cardReq);
 
         if (!syncRes.isSuccess()) {
             throw new PlatformException(BaseErrorCode.PARAM_JSON.getCode(), syncRes.getReqDesc());
@@ -107,19 +104,14 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         }
 
         String huifuId = saveCommand.getHuifuId();
-        // 若是新增，判断账号是否已经发起过绑定三方账号
-        boolean doUpdateAction = this.checkSave(huifuId);
         Long accountId = SecurityUtils.getAccountId();
-
-        String openAccountReqSeqId = accountId + "OA" + SnowflakeGenerator.getSnowflakeId();
-        String bindCardReqSeqId = accountId + "BC" + SnowflakeGenerator.getSnowflakeId();
 
         // 转化为汇付的开户请求
         HuiFuUserOpenAccountReq accountReq = saveCommand.getAccountReq();
         accountReq.setHuifuId(huifuId);
 
-        // 开户或修改开户信息
-        OpenAccountRes openAccountRes = doUpdateAction ? HuiFuMethod.userModifyAccount(accountReq) : HuiFuMethod.userOpenAccount(accountReq);
+        // 开户
+        OpenAccountRes openAccountRes = HuiFuMethod.userOpenAccount(accountReq);
         if (!openAccountRes.isSuccess()) {
             throw new PlatformException(BaseErrorCode.PARAM_JSON.getCode(), openAccountRes.getReqDesc());
         }
@@ -128,8 +120,8 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         HuiFuBindCardReq cardReq = saveCommand.getCardReq();
         cardReq.setHuifuId(huifuId);
 
-        // 绑卡或修改绑卡请求
-        AccountBindSyncRes syncRes = doUpdateAction ? HuiFuMethod.userModifyCard(cardReq) : HuiFuMethod.userBindCard(cardReq);
+        // 绑卡
+        AccountBindSyncRes syncRes = HuiFuMethod.userBindCard(cardReq);
 
         if (!syncRes.isSuccess()) {
             throw new PlatformException(BaseErrorCode.PARAM_JSON.getCode(), syncRes.getReqDesc());
@@ -160,22 +152,6 @@ public class HuiFuTripartitePurseServiceImpl implements TripartitePurseService {
         UserApplyAccountRes userApplyAccountResult = new UserApplyAccountRes();
 
         return userApplyAccountResult;
-    }
-
-    private boolean checkSave(String oidUserNo) {
-        Long accountId = SecurityUtils.getAccountId();
-        boolean doUpdateAction = StrUtil.isNotBlank(oidUserNo);
-        // 根据账号查询
-        AccountTripartitePurseVO dbTripartitePurse = tripartitePurseDomain.queryAccountTripartitePurse(accountId);
-        // 新增判断
-        if (dbTripartitePurse != null && !doUpdateAction) {
-            throw new PlatformException(BaseErrorCode.EXIST_DATA);
-        }
-        // 修改判断
-        if (dbTripartitePurse == null && doUpdateAction) {
-            throw new PlatformException(BaseErrorCode.NODATA);
-        }
-        return doUpdateAction;
     }
 
     private AccountTripartitePurseVO buildCommonTripartitePurse(String oidUserNo, Long accountId, String bankNo, boolean isAllDone) {

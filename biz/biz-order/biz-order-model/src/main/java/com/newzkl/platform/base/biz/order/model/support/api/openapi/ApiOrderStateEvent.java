@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * 订单状态变更通知事件
  *
- * <p>迁移自 new-scm scm-message-rpc {@code ApiOrderStateEvent}, 序列化进 NotifyEventCommand.eventInfo。</p>
+ * <p>plugin-openapi 的开发者回调出站体 由 {@code AbstractDeveloperNotifyConsumer} 序列化后 POST 给开发者</p>
  *
  * @author muc_fang
  */

@@ -1,105 +1,77 @@
 package com.newzkl.platform.base.biz.account.model.res;
 
-import com.newzkl.platform.base.biz.account.model.vo.CompanyInfoVO;
+import com.newzkl.platform.base.biz.account.model.dto.SupplierDTO;
 import com.newzkl.platform.base.common.core.model.money.Money;
-import com.newzkl.platform.base.common.ddd.facade.SettlementConfigVO;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
-import com.newzkl.platform.base.common.ddd.model.res.BaseRes;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
- * 供应商分页出参
+ * 供应商聚合视图
+ *
+ * <p>{@code GET /user/supplier/supplier} 详情出参与 {@code supplierPage} 分页出参共用。字段按来源
+ * 分三区排列: 主数据 supplier 自有列 (继承 {@link SupplierDTO})、副数据 account 列、暂无数据源的
+ * 旧契约统计字段。只需供应商自有列时改走 {@code GET /user/supplier/base}(出参
+ * {@link SupplierDTO}), 少一次 account 查询</p>
+ *
+ * <p><b>分页与详情的填充差异</b>: 分页走 {@code SupplierDAO.pageListWithAccount}, 联表只取
+ * {@code a.username} / {@code a.real_name}, 其余 account 列为 null; 详情走
+ * {@code SupplierClientDomain.supplier} 由 domain 逐字段显式填满</p>
+ *
+ * <p>⚠️ <b>对前端的契约变更</b>(与 {@code ChannelRes} 同批, 后端不做兼容映射, 由前端改):</p>
+ * <ul>
+ *   <li>{@code state} / {@code auditState} / {@code promisePayAuditState} 由 {@code Integer}
+ *       改为枚举 —— 原先 MapStruct 用 {@code ordinal()} 强转, 与枚举 code 不保证一致, 属修 bug</li>
+ *   <li>{@code identity} / {@code roleName} / {@code bodyType} 三字段删除 —— 全仓无数据源,
+ *       原本恒为 null。身份由端点语义隐含</li>
+ * </ul>
  *
  * @author fang
+ * @ext 主数据 supplier, 副数据 account(单副, 副数据不再向下关联)。与
+ *      {@code AccountController.identityDetail} 的「主 account / 副身份」方向相反, 两者不可互相替代
  */
 @Data
-public class SupplierRes extends BaseRes {
+public class SupplierRes extends SupplierDTO {
 
     /**
-     * 角色 ID（等值于 {@code RoleEnum.CompanyRole.SUPPLIER.getCode()}，供前端统一处理）
-     */
-    private AccountEnum.Identity identity;
-    /**
-     * 角色名称
-     */
-    private String roleName;
-    /**
-     * 账号名称 (查询)
+     * 登录名称(手机号)
      */
     private String username;
     /**
-     * 企业名称 (查询)
+     * 真实姓名
      */
-    private String name;
-
+    private String realName;
     /**
-     * 状态 (查询)
+     * 昵称
      */
-    private Integer state;
+    private String nickname;
     /**
-     * 审批状态 (查询) (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
+     * 头像
      */
-    private Integer auditState;
+    private String head;
     /**
-     * 企业区域
+     * 手机号
      */
-    private String companyAreaCode;
+    private String phone;
     /**
-     * 企业信息
+     * 邀请码
      */
-    private CompanyInfoVO companyInfo;
+    private String yqm;
     /**
-     * 是否缴纳保证金 (查询)
+     * 账号状态 (DISABLE 禁用 / ENABLE 启用 / DESTROY 已注销)
      */
-    private CommonEnum.YesOrNo promisePayState;
+    private AccountEnum.State accountState;
     /**
-     * 保证金金额 (Money, 落库 BIGINT 分)
+     * 最后登录时间
      */
-    private Money promisePayAmount;
+    private LocalDateTime lastLoginTime;
     /**
-     * 保证金审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
-     */
-    private Integer promisePayAuditState;
-    /**
-     * 保证金缴纳配置 promise_pay_config
-     * 0 即时 1 延迟
-     */
-    private Integer promisePayConfig;
-    /**
-     * 是否设置账期 (查询)
-     */
-    private CommonEnum.YesOrNo periodSetState;
-    /**
-     * 账期配置JSON
-     * orderType 0 订单完成 1 收货完成
-     * dataType 0 每月固定 1 商品审核
-     * dataOne 每月固定日期
-     * dataTwo 商品审核周期
-     */
-    private SettlementConfigVO periodSetConfig;
-    /**
-     * 应付保证金金额 (Money, 落库 BIGINT 分)
-     */
-    private Money shouldPromisePayAmount;
-    /**
-     * 主体类型 (查询)
-     */
-    private Integer bodyType;
-    /**
-     * 审批拒绝原因
-     */
-    private String auditRefuseReason;
-    /**
-     * 行业ID集合
-     */
-    private String industryIdList;
-    /**
-     * 上级甄选师ID
+     * 上级甄选师ID, 取 account.invite_account_id
      */
     private Long inviteId;
+
+
     /**
      * 商品总数
      */
@@ -109,39 +81,31 @@ public class SupplierRes extends BaseRes {
      */
     private Integer goodsOnSaleCount;
     /**
-     * 总金额 (Money, 落库 BIGINT 分)
-     */
-    private Money goodsSaleAmount;
-    /**
-     * 月金额 (Money, 落库 BIGINT 分)
-     */
-    private Money monthGoodsSaleAmount;
-    /**
-     * 总销量
-     */
-    private Integer goodsSaleCount;
-    /**
-     * 月销量
-     */
-    private Integer monthGoodsSaleCount;
-    /**
-     * 总成交销量
-     */
-    private Integer goodsDealCount;
-    /**
      * 待售卖的商品
      */
     private Integer goodsNotSaleCount;
     /**
-     * 收货地址
+     * 商品总金额
      */
-    private String receiveAddress;
+    private Money goodsSaleAmount;
     /**
-     * 入驻时间
+     * 商品月金额
      */
-    private LocalDateTime inTime;
+    private Money monthGoodsSaleAmount;
     /**
-     * 总成交笔数
+     * 商品总销量
+     */
+    private Integer goodsSaleCount;
+    /**
+     * 商品月销量
+     */
+    private Integer monthGoodsSaleCount;
+    /**
+     * 商品总成交销量
+     */
+    private Integer goodsDealCount;
+    /**
+     * 总订单笔数
      */
     private Integer totalOrderNumber;
     /**
@@ -149,14 +113,7 @@ public class SupplierRes extends BaseRes {
      */
     private Integer totalRefundNumber;
     /**
-     * 总订单金额 (Money, 落库 BIGINT 分)
-     */
-    /**
-     * 总售后金额 (Money, 落库 BIGINT 分)
+     * 总售后金额
      */
     private Money totalRefundAmount;
-    /**
-     * 真实姓名（联表 account.real_name）
-     */
-    private String realName;
 }

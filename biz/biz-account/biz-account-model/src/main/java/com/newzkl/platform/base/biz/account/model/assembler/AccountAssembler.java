@@ -27,14 +27,6 @@ public interface AccountAssembler extends BaseAssembler<AccountReq, AccountVO> {
     })
     IdentitySaveReq do2SaveReq(AccountRes account);
 
-    AppAccountVO account2AppVO(AccountVO accountVO);
-
-    
-    
-    
-    
-    AccountOutRes vo2OutRes(AccountVO accountVO);
-
     AccountQuery identityQuery2Query(IdentityAccountQuery identityAccountQuery);
 
     AccountQuery simpleQuery2Query(SimpleAccountQuery accountQuery);

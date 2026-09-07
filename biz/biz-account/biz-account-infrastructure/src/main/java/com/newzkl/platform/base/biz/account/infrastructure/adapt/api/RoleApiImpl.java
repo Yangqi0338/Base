@@ -21,6 +21,11 @@ public class RoleApiImpl implements PermissionApi {
     }
 
     @Override
+    public Map<Long, List<String>> findRoleCodeByAccountIdList(AccountEnum.Client client, List<Long> accountIdList) {
+        return roleFacade.findRoleCodeByAccount(client, accountIdList);
+    }
+
+    @Override
     public void bindRoles(AccountEnum.Client client, Long accountId, List<Long> roleIdList) {
         roleFacade.bindRoles(client, accountId, roleIdList);
     }

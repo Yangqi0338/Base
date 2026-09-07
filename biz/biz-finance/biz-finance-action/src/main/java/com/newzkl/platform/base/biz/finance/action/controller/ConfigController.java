@@ -2,10 +2,14 @@ package com.newzkl.platform.base.biz.finance.action.controller;
 
 import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseConfigDomain;
 import com.newzkl.platform.base.biz.finance.model.account.req.BatchQueryConfigChannelQuery;
+import com.newzkl.platform.base.biz.finance.model.account.req.ServiceFeeConfigEdit;
 import com.newzkl.platform.base.biz.finance.model.account.res.BatchQueryConfigChannelRes;
 import com.newzkl.platform.base.biz.finance.model.account.vo.ConfigSupplierVO;
+import com.newzkl.platform.base.biz.finance.model.account.vo.ServiceFeeConfigVO;
 import com.newzkl.platform.base.common.ddd.action.auth.FuncPermission;
+import com.newzkl.platform.base.common.core.model.req.IdCommand;
 import com.newzkl.platform.base.common.core.model.res.PlatformResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +26,12 @@ import java.util.List;
  * <p>未迁端点:</p>
  * <ul>
  *   <li>{@code /getWxPayConfig} — 微信支付通道已整体删除, 该端点随通道去掉</li>
+ * </ul>
+ *
+ * <p>迁入端点(旧契约在 user 域 {@code /user/channel/*}, 因服务费配置属资金域数据而归位):</p>
+ * <ul>
+ *   <li>{@code /serviceFeeConfigEdit}</li>
+ *   <li>{@code /queryServiceFeeConfig}</li>
  * </ul>
  *
  * @author KC
@@ -46,6 +56,28 @@ public class ConfigController {
             return PlatformResult.success(accountPurseConfigDomain.batchQueryChannelConfig(req));
         }
         return PlatformResult.success();
+    }
+
+    /**
+     * 渠道商服务费修改
+     * @param serviceFeeConfigEdit 服务费修改入参
+     * @return 空结果
+     */
+    @PostMapping("/serviceFeeConfigEdit")
+    @FuncPermission("渠道商服务费修改")
+    public PlatformResult<Void> serviceFeeConfigEdit(@RequestBody @Valid ServiceFeeConfigEdit serviceFeeConfigEdit) {
+        accountPurseConfigDomain.serviceFeeConfigEdit(serviceFeeConfigEdit.getAccountId(), serviceFeeConfigEdit.getServiceFeeConfigVO());
+        return PlatformResult.success();
+    }
+
+    /**
+     * 查询渠道商服务费
+     * @param idCommand 渠道商ID入参
+     * @return 服务费配置
+     */
+    @PostMapping("/queryServiceFeeConfig")
+    public PlatformResult<ServiceFeeConfigVO> queryServiceFeeConfig(@RequestBody @Valid IdCommand idCommand) {
+        return PlatformResult.success(accountPurseConfigDomain.queryServiceFeeConfig(idCommand.getId()));
     }
 
     /**

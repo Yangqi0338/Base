@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newzkl.platform.base.biz.goods.infrastructure.dao.SeatPackageDAO">
+
+    <resultMap id="BaseResultMap" type="com.newzkl.platform.base.biz.goods.infrastructure.entity.SeatPackageDO">
+        <id column="id" property="id" />
+        <result column="seat_package_code" property="seatPackageCode" />
+        <result column="seat_package_name" property="seatPackageName" />
+        <result column="seat_num" property="seatNum" />
+        <result column="package_price" property="packagePrice" />
+        <result column="package_describe" property="packageDescribe" />
+        <result column="state" property="state" />
+        <result column="deleted" property="deleted" />
+        <result column="create_id" property="createId" />
+        <result column="create_name" property="createName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, seat_package_code, seat_package_name, seat_num, package_price, package_describe,
+        state, deleted, create_id, create_name, create_time, update_time
+    </sql>
+
+</mapper>

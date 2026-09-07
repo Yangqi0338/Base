@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -52,12 +53,12 @@ public class ApiSkuVO implements Serializable {
     /**
      * 市场价
      */
-    private Integer marketPrice;
+    private Money marketPrice;
     /**
      * 采购价
      */
     @NotNull
-    private Integer salePrice;
+    private Money salePrice;
     /**
      * 起购数量
      */
@@ -67,12 +68,12 @@ public class ApiSkuVO implements Serializable {
     /**
      * 供货价
      */
-    private Integer supplyPrice;
+    private Money supplyPrice;
 
     /**
      * 冗余: 建议零售价(to c)
      */
-    private Integer unitPrice;
+    private Money unitPrice;
 
     /**
      * 外部SkuId

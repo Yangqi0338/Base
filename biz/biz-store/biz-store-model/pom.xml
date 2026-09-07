@@ -21,9 +21,5 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-utils</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-office</artifactId>
-        </dependency>
     </dependencies>
 </project>

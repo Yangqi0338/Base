@@ -38,7 +38,7 @@ public class DictDO extends BaseDO {
     @JsonSerializable(typeHandler = RawJsonStringTypeHandler.class)
     private String value;
 
-    /*
+    /**
      * 字典描述
      */
     @TableField("`desc`")

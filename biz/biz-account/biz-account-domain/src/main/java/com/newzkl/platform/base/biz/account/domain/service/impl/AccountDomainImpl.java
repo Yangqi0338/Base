@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,6 +90,19 @@ public class AccountDomainImpl implements AccountDomain {
 //            codeReq.setType(SmsEnum.Type.DESTROY_USER_EVENT);
         // TODO[infra-port sms]: SmsMethod.sendCode(codeReq);
 //            SmsMethod.send()
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void destroyAccount(Long accountId) {
+        AccountVO account = account(null, accountId);
+        if (AccountEnum.State.DESTROY == account.getState()) {
+            throw new PlatformException(AccountErrorCode.IS_LOCK);
+        }
+        // 整个注销账号: 仅改状态, 身份表数据保留 (与 cancelAccount 同构, 区别在非 C 端 + 通行码免短信)
+        account.setState(AccountEnum.State.DESTROY);
+        account.setCancelTime(LocalDateTime.now());
+        accountRepository.accountEdit(account, null);
     }
 
     @Override

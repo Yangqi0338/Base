@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.dto.market;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -18,9 +20,9 @@ public class MarketBindDTO implements Serializable {
      */
     private Long marketId;
     /**
-     * 绑定类型  1：运营商  2：交易师  3:渠道商
+     * 绑定身份类型
      */
-    private Integer bindType;
+    private AccountEnum.Identity bindType;
     /**
      * 客户id
      */
@@ -30,9 +32,9 @@ public class MarketBindDTO implements Serializable {
      */
     private String userName;
     /**
-     * 状态  0：删除  1：正常
+     * 状态
      */
-    private Integer state;
+    private CommonEnum.YesOrNo state;
     /**
      * 解除绑定时间
      */

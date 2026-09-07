@@ -23,6 +23,8 @@ import com.newzkl.platform.base.biz.order.model.support.api.order.*;
 import com.newzkl.platform.base.common.ddd.facade.*;
 import com.newzkl.platform.base.biz.order.model.vo.*;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.core.logistics.LogisticsMethod;
+import com.newzkl.platform.base.common.core.logistics.LogisticsTrack;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
@@ -50,8 +52,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -174,11 +174,10 @@ public class OrderDomainImpl implements OrderDomain {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public DeliverRes deliverCreate(DeliverCommand deliverCommand) {
-        // SpuOrder 层折叠: 原取 spu_order, 现取 order; 收货电话原为 spu_order 独立列, 现从 order.shipVO 取
+        // 快递公司名归一到编码表官方名称: deliverCreate / fullDeliver / splitDeliver 三条入口都过这里,
+        // 落库前拦住简称与别名, 否则 orderTrack 只能靠单号识别兜底, 识别不出整条轨迹就查不到
+        deliverCommand.setExpressCompanyName(LogisticsMethod.normalizeCompanyName(deliverCommand.getExpressCompanyName()));
         OrderDTO order = orderRepository.order(deliverCommand.getSpuOrderId());
-        if(order == null) {
-            ThrowsException.exception(BaseErrorCode.PARAM, "不存在的订单ID:" + deliverCommand.getSpuOrderId());
-        }
         OrderVO orderVO = TransferUtils.transfer(order, OrderVO.class);
         if(order.getShipVO() != null){
             deliverCommand.setExpressMobile(order.getShipVO().getShipPhone());
@@ -489,8 +488,8 @@ public class OrderDomainImpl implements OrderDomain {
                 //修改交易单状态
                 orderRepository.batchUpdateOrderState(Collections.singletonList(state.getOrderNo()), state.getCurrentState(), state.getToState(), null);
                 tripOrderChangeRes.getOrderStateChange().add(new TripOrderChangeRes.Item(state.getId(), state.getCurrentState(), state.getToState()));
-                //开发者通知
-                orderRepository.orderStateNotify(state.getOrderType(), state.getChannelId(), state.getOutOrderNo(), state.getCurrentState(), state.getToState());
+                // 订单状态业务事件 订阅方自行决定是否通知开发者
+                localMessageApi.publishOrderState(state.getOrderType(), state.getChannelId(), state.getOutOrderNo(), state.getCurrentState(), state.getToState());
                 //确认收货通知怡亚通
             }
         }
@@ -572,7 +571,6 @@ public class OrderDomainImpl implements OrderDomain {
         if(earningsConfigRpcVO.getUpOperatorId() != null){
             skuOrder.setOperatorId(earningsConfigRpcVO.getUpOperatorId());
         }
-        skuOrder.setTwoMarketId(orderGoodsInfoVO.getTwoMarketId());
         if(StrUtil.isEmpty(orderGoodsInfoVO.getOutSkuId())){
             skuOrder.setOutSkuId("0");
         } else {
@@ -604,7 +602,7 @@ public class OrderDomainImpl implements OrderDomain {
                 Deliver deliver = new Deliver();
                 deliver.setId(deliverCommand.getId());
                 deliver.setExpressNo(deliverCommand.getExpressNo());
-                deliver.setExpressCompanyName(deliverCommand.getExpressCompanyName());
+                deliver.setExpressCompanyName(LogisticsMethod.normalizeCompanyName(deliverCommand.getExpressCompanyName()));
                 deliver.setExpressMobile(deliverCommand.getExpressMobile());
                 orderRepository.deliverSave(deliver);
             }else {
@@ -616,7 +614,7 @@ public class OrderDomainImpl implements OrderDomain {
     }
 
     @Override
-    public Map<Long, Money> validateOrderShipChange(OrderAgg orderAgg,ShipVO shipVO) {
+    public Map<Long, Money> validateOrderShipChange(OrderAgg orderAgg, com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVO) {
         // 1. 基础校验：订单聚合对象非空
         if (Objects.isNull(orderAgg) || Objects.isNull(orderAgg.getOrder())
                 || CollUtil.isEmpty(orderAgg.getSkuOrderList())) {
@@ -697,7 +695,7 @@ public class OrderDomainImpl implements OrderDomain {
      * 数据库层更新收货地址（封装，便于复用）
      */
     @Override
-    public void updateOrderShipDb(String orderNo, ShipVO shipVOJson) {
+    public void updateOrderShipDb(String orderNo, com.newzkl.platform.base.common.ddd.model.vo.ShipVO shipVOJson) {
         orderRepository.updateOrderShip(orderNo, shipVOJson);
     }
 
@@ -797,33 +795,55 @@ public class OrderDomainImpl implements OrderDomain {
     }
 
     @Override
-    public List<OrderItemExcelVO> queryOrderItemExcelVO(OrderQuery orderQuery) {
-        // 迁移: 原 domain 直连 spuOrderDAO/skuOrderDAO 违依赖硬线, 查询下沉 infra, domain 只留组装
-        List<OrderItemExcelVO> orderItemExcelVOList = orderRepository.queryOrderItemExcelVO(orderQuery);
-        for (OrderItemExcelVO orderItemExcelVO : orderItemExcelVOList) {
-            List<SkuSaleAttributeVO> skuSaleAttribute = JSON.parseArray(orderItemExcelVO.getAttribute(), SkuSaleAttributeVO.class);
-            if(ObjectUtil.isNotEmpty(skuSaleAttribute)){
-                String skuName = "";
-                for (SkuSaleAttributeVO skuSaleAttributeVO : skuSaleAttribute) {
-                    skuName = skuSaleAttributeVO.getValue() + ";";
-                }
-                orderItemExcelVO.setAttribute(skuName.substring(0, skuName.length() - 1));
-            }
-            if(orderItemExcelVO.getRefundingCount() > 0){
-                orderItemExcelVO.setRefunding("是");
-            }else {
-                orderItemExcelVO.setRefunding("否");
-            }
-            orderItemExcelVO.setOrderState(OrderEnum.State.getByCode(Integer.valueOf(orderItemExcelVO.getOrderState())).getValue());
-            ShipVO shipVO = orderItemExcelVO.getShipVO();
-            orderItemExcelVO.setShipName(shipVO.getShipName());
-            orderItemExcelVO.setShipPhone(shipVO.getShipPhone());
-            String shipAddress = shipVO.getShipAddress() == null ? "":shipVO.getShipAddress();
-            orderItemExcelVO.setShipArea(shipVO.getShipArea() + "," + shipAddress);
-            BigDecimal price = new BigDecimal(orderItemExcelVO.getPrice()).divide(new BigDecimal(100)).setScale(2, RoundingMode.DOWN);
-            orderItemExcelVO.setPrice(price.toPlainString());
+    public List<LogisticsTrack> orderTrack(String orderNo) {
+        List<DeliverVO> deliverVOS = orderRepository.deliverListByOrderNo(orderNo);
+        if (CollUtil.isEmpty(deliverVOS)) {
+            return Collections.emptyList();
         }
-        return orderItemExcelVOList;
+        List<LogisticsTrack> tracks = new ArrayList<>(deliverVOS.size());
+        for (DeliverVO deliverVO : deliverVOS) {
+            if (StrUtil.isBlank(deliverVO.getExpressNo())) {
+                continue;
+            }
+            try {
+                tracks.add(LogisticsMethod.queryTrack(deliverVO.getExpressCompanyName(), deliverVO.getExpressNo()));
+            } catch (Exception e) {
+                // 单包裹查不到不阻断整单展示: 降级为无节点轨迹, 前端仍能看到公司与单号
+                log.warn(StrUtil.format("查询快递轨迹失败 orderNo={} expressNo={} msg={}",
+                        orderNo, deliverVO.getExpressNo(), e.getMessage()));
+                tracks.add(degradeTrack(deliverVO));
+            }
+        }
+        return tracks;
+    }
+
+    /**
+     * 轨迹查询失败降级
+     *
+     * @param deliverVO 发货单
+     * @return 仅含公司与单号的空轨迹
+     */
+    private LogisticsTrack degradeTrack(DeliverVO deliverVO) {
+        LogisticsTrack track = new LogisticsTrack();
+        track.setExpressCompanyName(deliverVO.getExpressCompanyName());
+        track.setExpressNo(deliverVO.getExpressNo());
+        track.setSigned(false);
+        track.setNodes(Collections.emptyList());
+        return track;
+    }
+
+    /**
+     * 填充物流信息
+     */
+    private void buildDeliver(Map<Long, List<DeliverVO>> map, OrderAggVO spuOrderAggVO) {
+        if(map != null) {
+            for (SkuOrderVO skuOrderVO : spuOrderAggVO.getSkuOrderList()) {
+                List<DeliverVO> deliverList = map.get(skuOrderVO.getSkuId());
+                if (deliverList != null) {
+                    skuOrderVO.setDeliverVOList(deliverList);
+                }
+            }
+        }
     }
 
     @Override
@@ -866,7 +886,7 @@ public class OrderDomainImpl implements OrderDomain {
 
     @Override
     public OrderCreateRes createOrder(OrderGoodsCheckV2Res data, OrderCreateCommand orderCreateCommand) {
-        List<StoreDistributionDetailRpcVO> goodsInfo = data.getGoodsInfo();
+        List<StoreGoodsDetailRpcVO> goodsInfo = data.getGoodsInfo();
         Map<Long, Money> goodsFreight = data.getGoodsFreight();
 
         // 获取渠道商当前服务费比例
@@ -884,7 +904,7 @@ public class OrderDomainImpl implements OrderDomain {
         if(StrUtil.isEmpty(orderCreateCommand.getOutOrderNo())){
             orderCreateCommand.setOutOrderNo(orderId.toString());
         }
-        for (StoreDistributionDetailRpcVO orderGoodsInfoVO : goodsInfo) {
+        for (StoreGoodsDetailRpcVO orderGoodsInfoVO : goodsInfo) {
             Long spuId = orderGoodsInfoVO.getGoodsId();
             // 迁移(Q2): settleOrderType 缓存移交 infra(@Cacheable), domain 直调 repository
             EarningsEnum.SettleType settleOrderType = orderRepository.settleOrderType(orderGoodsInfoVO.getSupplierId());
@@ -924,7 +944,7 @@ public class OrderDomainImpl implements OrderDomain {
         orderRepository.savePrePayOrder(order, memberOrderCreateCommand);
     }
 
-    private SkuOrderDTO buildSkuOrder(StoreDistributionDetailRpcVO orderGoodsInfoVO, String orderNo,
+    private SkuOrderDTO buildSkuOrder(StoreGoodsDetailRpcVO orderGoodsInfoVO, String orderNo,
                                       ChannelNowServiceFeeRes channelNowServiceFee,
                                       EarningsConfigRpcVO earningsConfigRpcVO, EarningsEnum.SettleType settleOrderType, LocalDateTime time){
 
@@ -954,7 +974,6 @@ public class OrderDomainImpl implements OrderDomain {
         if(earningsConfigRpcVO.getUpOperatorId() != null){
             skuOrder.setOperatorId(earningsConfigRpcVO.getUpOperatorId());
         }
-//        skuOrder.setTwoMarketId(orderGoodsInfoVO.getTwoMarketId());
         if(StrUtil.isEmpty(orderGoodsInfoVO.getOutSkuId())){
             skuOrder.setOutSkuId("0");
         } else {

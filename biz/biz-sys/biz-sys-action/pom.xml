@@ -34,11 +34,12 @@
             <groupId>com.newzkl.platform.Base</groupId>
             <artifactId>core-redis</artifactId>
         </dependency>
+        <!-- CommonController 快递公司目录 + 轨迹查询走 LogisticsMethod 门面 -->
         <dependency>
             <groupId>com.newzkl.platform.Base</groupId>
-            <artifactId>core-office</artifactId>
+            <artifactId>core-logistics</artifactId>
         </dependency>
-        <!-- 迁移补充: CommonController#exportExcelError 直写 HttpServletResponse;
+        <!-- 迁移补充: CommonController#generateQrCode 直写 HttpServletResponse;
              ddd-action / core-utils 的 servlet-api 为 provided 不传递 -->
         <dependency>
             <groupId>jakarta.servlet</groupId>

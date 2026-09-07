@@ -3,12 +3,9 @@ package com.newzkl.platform.base.biz.market.model.query.distribution;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -103,23 +100,4 @@ public class DistributionsQuery extends PageQuery {
      * @ext 0：不需要 1：需要
      */
     private CommonEnum.YesOrNo needUpdate;
-
-    @AllArgsConstructor
-    @Getter
-    public enum SortType implements SortField {
-        DEFAULT(0, "sd.id"),
-        UP_TIME(1, "sd.up_time IS NULL, sd.up_time"),
-        SELL_AMOUNT(2, "(sd.sell_num * sell_price)"),
-        SELL_NUM(3, "sd.sell_num"),
-        ;
-
-        private final Integer code;
-        private final String field;
-
-        @Override
-        public String getField(Integer code) {
-            return Arrays.stream(SortType.values()).filter(item -> item.getCode().equals(code)).findFirst()
-                    .map(SortType::getField).orElse(null);
-        }
-    }
 }
