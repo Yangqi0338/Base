@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.req.distribution;
 
 
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.Data;
 
@@ -18,9 +18,9 @@ public class DistributionsUpdateReq {
 
     /**
      * 状态
-     * @see DistributionEnum.State
+     * @see StoreGoodsEnum.State
      */
-    private DistributionEnum.State goodsState;
+    private StoreGoodsEnum.State goodsState;
 
     /**
      * 商品信息

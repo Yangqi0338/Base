@@ -218,18 +218,16 @@ public class CommitOrderImpl implements CommitOrder {
         HuiFuPurseInfo huiFuPurseInfo = accountPurseApi.queryHuiFuPurse(channelId);
         String huifuId = huiFuPurseInfo.getHuifuId();
         orderCreateCommand.setBenefitTripartiteId(huifuId);
-        ShipVO shipVO = orderCreateCommand.getShipVO();
-        if (shipVO.getId() != null){
-            // 收货地址并入订单域后由 ShipAddressDomain 同域查询, 不再经账户域 facade 出站
-            ShipAddressRes shipAddressRes = shipAddressDomain.detail(shipVO.getId());
+        Long shipId = orderCreateCommand.getShipId();
+        ShipVO shipVO = new ShipVO();
+        if (shipId != null){
+            ShipAddressRes shipAddressRes = shipAddressDomain.detail(shipId);
             if (Objects.isNull(shipAddressRes)){
                 ThrowsException.exception(BaseErrorCode.PARAM, "收货地址不存在");
             }
-            BeanUtils.copyProperties(shipAddressRes, shipVO);
             shipVO.setShipPhone(shipAddressRes.getShipPhone() == null ? StrUtil.EMPTY : shipAddressRes.getShipPhone().toString());
         }
         // 商品校验
-
         OrderGoodsCheckReq checkReq = new OrderGoodsCheckReq();
         checkReq.setChannelId(orderCreateCommand.getChannelId())
                 .setStoreId(memberOrderCreateCommand.getStoreId())

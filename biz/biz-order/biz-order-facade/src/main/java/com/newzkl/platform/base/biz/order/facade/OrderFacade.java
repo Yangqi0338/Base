@@ -16,7 +16,13 @@ import java.util.List;
  * @date 2023/4/28 10:54
  */
 public interface OrderFacade {
-
+     /**
+      * API-订单创建
+      * @param accountId
+      * @param orderReq
+      * @return
+      */
+     ApiOrderRes apiSubmitOrder(Long accountId, ApiOrderSubmitReq orderReq);
      /**
       * API-订单列表
       * @param accountId
@@ -79,11 +85,6 @@ public interface OrderFacade {
     void orderMemberPay(List<String> orderNoList);
 
     /**
-     * 超时关闭订单
-     */
-    void closeOrder(String orderNo);
-
-    /**
      * 保存订单状态记录
      * @param orderStateRecordRPC 订单状态记录RPC传输模型
      */
@@ -102,8 +103,4 @@ public interface OrderFacade {
      * @return 处理成功返回 {@code true}, 否则 {@code false}
      */
     boolean handleStatusCallback(OrderCallbackRequest callbackRequest);
-
-    OrderPayInfoRes queryPayInfoByOrderId(Long orderId);
-
-    ApiOrderRes commitOrder(OrderCreateRpcCommand orderCreateCommand);
 }

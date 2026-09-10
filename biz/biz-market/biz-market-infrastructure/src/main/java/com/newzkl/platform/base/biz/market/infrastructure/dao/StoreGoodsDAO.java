@@ -17,7 +17,6 @@ import com.newzkl.platform.base.biz.market.model.vo.market.DistributionCategoryV
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsInfoVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionGoodsListOPVO;
 import com.newzkl.platform.base.biz.market.model.vo.market.DistributionRandomVO;
-import com.newzkl.platform.base.common.ddd.facade.DistributionDetailVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 import lombok.AllArgsConstructor;
@@ -105,7 +104,7 @@ public interface StoreGoodsDAO extends BaseMapper<StoreGoodsDO> {
     /**
      * 构建 StoreGoods 查询条件的 QueryWrapper
      */
-    default QueryWrapper<StoreGoodsDO> buildQueryWrapper(StoreGoodsQuery query) {
+    default QueryWrapper<StoreGoodsDO> getLw(StoreGoodsQuery query) {
         QueryWrapper<StoreGoodsDO> wrapper = new QueryWrapper<>();
 
         // goods_state 条件
@@ -148,14 +147,6 @@ public interface StoreGoodsDAO extends BaseMapper<StoreGoodsDO> {
 
         return wrapper;
     }
-
-    /**
-     * 根据铺货ID集合查询铺货+SPU+SKU完整信息
-     *
-     * @param ids 铺货ID集合
-     * @return 铺货详情列表（包含SPU、SKU信息）
-     */
-    List<DistributionDetailVO> queryDistributionDetailByIds(@Param("ids") List<Long> ids);
 
     /**
      * 铺货列表排序字段（内包于 infra 层, 不向 model/前端暴露真实 SQL 片段）

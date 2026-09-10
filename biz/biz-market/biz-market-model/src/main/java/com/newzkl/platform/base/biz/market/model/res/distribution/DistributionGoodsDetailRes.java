@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.market.model.res.distribution;
 
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -57,7 +58,7 @@ public class DistributionGoodsDetailRes implements Serializable {
     private String video;
     /**
      * 来源
-     * @see com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum.Source
+     * @see StoreGoodsEnum.Source
      */
     private Long marketId;
 

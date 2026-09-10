@@ -73,10 +73,14 @@ public class DateTimeGenerator extends AtomicLong implements Generator {
      */
     @Override
     public String nextUUID(Object entity) {
-        int length = NumberUtil.parseInt(StrUtil.toString(entity));
-        if (length <= 0) {
-            length = DEFAULT_SEQUENCE_LENGTH;
+        int length = DEFAULT_SEQUENCE_LENGTH;
+        if (entity != null) {
+            int specifyLength = NumberUtil.parseInt(StrUtil.toStringOrNull(entity));
+            if (specifyLength > 0) {
+                length = specifyLength;
+            }
         }
+
         return getPrefix() + String.format("%0" + length + "d", nextId(entity));
     }
 }

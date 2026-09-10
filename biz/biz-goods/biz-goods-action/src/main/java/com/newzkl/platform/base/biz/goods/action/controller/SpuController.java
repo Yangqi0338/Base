@@ -264,7 +264,7 @@ public class SpuController {
      */
     @PostMapping("/palletSelectGoods")
     @FuncPermission("货盘选品")
-    @RoleLimit(client = {AccountEnum.Client.ADMIN})
+    @RoleLimit(client = {AccountEnum.Client.ADMIN, AccountEnum.Client.MMT_CHANNEL})
     public PlatformResult<Long> palletSelectGoods(@RequestBody SpuVO spuVO) {
         spuVO.setChannelType(SpuEnum.ChannelType.OUT);
         return PlatformResult.success(spuService.palletSelectGoods(spuVO));

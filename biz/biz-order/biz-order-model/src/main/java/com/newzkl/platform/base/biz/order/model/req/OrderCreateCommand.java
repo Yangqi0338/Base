@@ -25,9 +25,10 @@ public class OrderCreateCommand {
     @NotNull(message = "orderType?")
     private OrderEnum.OrderType orderType;
     /**
-     * 收货信息值对象
+     *  收货地址id
      */
-    @NotNull(message = "shipVO?")
+    @NotNull
+    private Long shipId;
     private ShipVO shipVO;
     /**
      * 渠道商ID 查询

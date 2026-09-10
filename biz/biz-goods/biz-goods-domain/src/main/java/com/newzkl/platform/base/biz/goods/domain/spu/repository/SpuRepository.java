@@ -157,17 +157,6 @@ public interface SpuRepository {
     OrderGoodsInfoVO queryOrderSkuInfoVOList(Long skuId);
 
     /**
-     * SPU下架后置处理
-     * @param spuIdList
-     */
-    void spuDownAfter(List<Long> spuIdList);
-    /**
-     * SPU上架后置处理
-     * @param spuIdList
-     */
-    void spuUpAfter(List<Long> spuIdList);
-
-    /**
      * 刷新加价比例
      * @param skuIdList
      */

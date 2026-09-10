@@ -2,6 +2,7 @@ package com.newzkl.platform.base.common.core.mq.infrastructure.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.newzkl.platform.base.common.core.mq.infrastructure.entity.LocalMessageDO;
+import com.newzkl.platform.base.common.core.mq.model.dto.LocalMessageDTO;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
@@ -21,10 +22,15 @@ public interface LocalMessageDAO extends BaseMapper<LocalMessageDO> {
      * @param sendState 发送状态
      * @return 查询包装器
      */
-    default BaseLambdaQueryWrapper<LocalMessageDO> getLw(MQEnum.SendState sendState) {
-        BaseLambdaQueryWrapper<LocalMessageDO> lw = new BaseLambdaQueryWrapper<LocalMessageDO>()
-                .notEmptyEq(LocalMessageDO::getSendState, sendState);
-        lw.orderByAsc(LocalMessageDO::getId);
-        return lw;
+    default BaseLambdaQueryWrapper<LocalMessageDO> getLw(LocalMessageDTO dto) {
+        return new BaseLambdaQueryWrapper<LocalMessageDO>()
+                .notEmptyEq(LocalMessageDO::getSendState, dto.getSendState())
+                .notEmptyEq(LocalMessageDO::getCanConsume, dto.getCanConsume())
+                .notEmptyEq(LocalMessageDO::getConsumeState, dto.getConsumeState())
+                .notEmptyLt(LocalMessageDO::getConsumeTime, dto.getConsumeTime())
+                .notEmptyEq(LocalMessageDO::getOutKey, dto.getOutKey())
+                .notEmptyEq(LocalMessageDO::getTopic, dto.getTopic())
+                .notEmptyLike(LocalMessageDO::getTag, dto.getTag())
+                .notEmptyLt(LocalMessageDO::getSendTime, dto.getSendTime());
     }
 }

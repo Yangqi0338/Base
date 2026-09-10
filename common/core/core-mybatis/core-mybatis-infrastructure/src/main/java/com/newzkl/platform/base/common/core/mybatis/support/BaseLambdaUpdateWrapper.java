@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,6 +36,11 @@ public class BaseLambdaUpdateWrapper<T> extends LambdaUpdateWrapper<T> {
         return this;
     }
 
+    public <R> BaseLambdaUpdateWrapper<T> set(boolean condition, SFunction<T, R> column, R value) {
+        super.set(condition, column, value);
+        return this;
+    }
+
     public <R> BaseLambdaUpdateWrapper<T> append(SFunction<T, R> column, R value) {
         return this.append(column, value,',');
     }
@@ -50,6 +56,21 @@ public class BaseLambdaUpdateWrapper<T> extends LambdaUpdateWrapper<T> {
 
     public BaseLambdaUpdateWrapper<T> setIncrBy(SFunction<T, ?> column, Money money) {
         super.setIncrBy(money.greaterThanZero(), column, money.getCent());
+        return this;
+    }
+
+    public BaseLambdaUpdateWrapper<T> setIncrBy(SFunction<T, ?> column, Number num) {
+        super.setIncrBy(num != null, column, num);
+        return this;
+    }
+
+    public BaseLambdaUpdateWrapper<T> setIncrCount(SFunction<T, ?> column) {
+        return setIncrBy(column, 1);
+    }
+
+    @Override
+    public BaseLambdaUpdateWrapper<T> setIncrBy(boolean condition, SFunction<T, ?> column, Number val) {
+        super.setIncrBy(condition, column, val);
         return this;
     }
 }

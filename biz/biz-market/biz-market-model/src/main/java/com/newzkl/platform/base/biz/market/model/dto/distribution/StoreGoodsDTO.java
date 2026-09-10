@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.dto.distribution;
 
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,7 +25,7 @@ public class StoreGoodsDTO implements Serializable {
     private Long skuId;
     /**
      * 来源
-     * @see com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum.Source
+     * @see StoreGoodsEnum.Source
      */
     private Long marketId;
     /**
@@ -46,7 +47,7 @@ public class StoreGoodsDTO implements Serializable {
     /**
      * 商品状态 0:下架  1：上架  -1：回收站
      */
-    private Integer goodsState;
+    private StoreGoodsEnum.State goodsState;
     /**
      * 渠道商id
      */

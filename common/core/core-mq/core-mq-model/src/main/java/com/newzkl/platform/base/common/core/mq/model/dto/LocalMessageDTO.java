@@ -93,6 +93,11 @@ public class LocalMessageDTO extends BaseDTO {
     private Integer consumeErrorCount;
 
     /**
+     * RocketMQ 延迟级别 (1-18, 见 {@link MQEnum.DelayTimeLevel})
+     */
+    private Integer delayTimeLevel;
+
+    /**
      * 是否可以重试
      *
      * @param maxRetryCount 最大重试次数

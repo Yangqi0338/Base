@@ -1,6 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.dto.distribution;
 
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import lombok.Data;
 
 @Data
@@ -8,9 +8,9 @@ public class StateNotifyDTO {
 
     /**
      * 商品状态
-     * @see DistributionEnum.State
+     * @see StoreGoodsEnum.State
      */
-    private Integer goodsState;
+    private StoreGoodsEnum.State goodsState;
 
     private Long channelId;
 

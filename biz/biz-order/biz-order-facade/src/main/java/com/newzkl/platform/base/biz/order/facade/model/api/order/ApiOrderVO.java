@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.order.facade.model.api.order;
 
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
 import lombok.Data;
 
@@ -25,27 +26,23 @@ public class ApiOrderVO implements Serializable {
      * 商品金额
      */
     @NotNull
-    private Integer goodsAmount;
+    private Money goodsAmount;
     /**
      * 运费金额
      */
     @NotNull
-    private Integer freightAmount;
+    private Money freightAmount;
     /**
      * 优惠金额
      */
     @NotNull
-    private Integer discountAmount;
+    private Money discountAmount;
     /**
      * 订单金额
      */
     @NotNull
-    private Integer totalAmount;
+    private Money totalAmount;
     @NotNull
-    /**
-     * 创建时间
-     */
-    private String createTime;
     /**
      * 订单状态 (0, "新订单"),(2,"待付款"),(4, "派发中"),(6,"待发货"),(8,"待收货"),(10,"已收货"),(12,"已完成"),(99,"已关闭")
      */

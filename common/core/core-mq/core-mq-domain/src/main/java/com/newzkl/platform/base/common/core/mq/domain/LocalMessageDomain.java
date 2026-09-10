@@ -45,7 +45,7 @@ public interface LocalMessageDomain {
      * @param localMessage 本地消息 DTO
      * @return 新增记录 id
      */
-    Long create(LocalMessageDTO localMessage);
+    Long preSave(LocalMessageDTO localMessage);
 
     /**
      * 拉取指定发送状态的消息列表
@@ -70,5 +70,13 @@ public interface LocalMessageDomain {
      * @param sendState 发送状态 code
      * @param sendTime  发送时间
      */
-    void messageSendUpdate(Long id, Integer sendState, LocalDateTime sendTime);
+    void messageSendUpdate(Long id, MQEnum.SendState sendState);
+
+    /**
+     * 按 outKey 唤醒本地消息: 可消费标识翻为 YES
+     *
+     * @param outKey 外部唯一键
+     * @return 是否唤醒成功
+     */
+    boolean wakeUp(String outKey);
 }

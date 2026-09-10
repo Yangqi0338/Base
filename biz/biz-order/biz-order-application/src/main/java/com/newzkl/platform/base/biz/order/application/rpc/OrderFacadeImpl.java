@@ -71,6 +71,30 @@ public class OrderFacadeImpl implements OrderFacade {
     private final GoodsApi goodsApi;
 
     @Override
+    public ApiOrderRes apiSubmitOrder(Long accountId, ApiOrderSubmitReq orderReq) {
+        OrderCreateCommand orderCreateCommand = new OrderCreateCommand();
+        orderCreateCommand.setChannelId(accountId);
+        orderCreateCommand.setOrderType(OrderEnum.OrderType.CHANNEL);
+        // openapi 入口的单一律标乐态来源(轴A 订单来源) 主体恒为渠道商(SignatureFilter 已置 Identity.CHANNEL)
+        orderCreateCommand.setPlatformType(ThirdPartyOrderEnum.PlatformTypeEnum.LE_TAI);
+        orderCreateCommand.setShipVO(TransferUtils.transfer(orderReq, ShipVO.class));
+        orderCreateCommand.setOrderGoodsList(TransferUtils.transfers(orderReq.getOrderGoodsList(), apiOrderSubmitItemReq -> {
+            OrderItemCommand orderItemCommand = new OrderItemCommand();
+            orderItemCommand.setSkuId(apiOrderSubmitItemReq.getSkuId());
+            orderItemCommand.setCount(apiOrderSubmitItemReq.getCount());
+            return orderItemCommand;
+        }));
+        orderCreateCommand.setRemark(orderReq.getRemark());
+        orderCreateCommand.setOutOrderNo(orderReq.getOutOrderNo());
+        OrderCreateRes orderCreateRes = commitOrder.commitOrder(orderCreateCommand, new MemberOrderCreateCommand());
+        return TransferUtils.transfer(orderCreateRes, orderCreateRes1 -> {
+            ApiOrderRes apiOrderRes = new ApiOrderRes();
+            apiOrderRes.setPayState(CommonEnum.YesOrNo.YES);
+            return apiOrderRes;
+        });
+    }
+
+    @Override
     public Page<ApiOrderVO> apiList(Long accountId, ApiOrderReq apiOrderReq) {
         //参数转换
         OrderQuery spuOrderQuery = TransferUtils.transfer(apiOrderReq, OrderQuery.class);
@@ -179,11 +203,6 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public void closeOrder(String orderNo) {
-        orderService.closeOrder(orderNo);
-    }
-
-    @Override
     public void save(OrderStateRecordRPC orderStateRecordRPC) {
         // 将RPC传输模型转换为领域实体
         OrderStateRecordEntity entity = new OrderStateRecordEntity();
@@ -262,21 +281,6 @@ public class OrderFacadeImpl implements OrderFacade {
         }
         log.info("订单状态更新成功，订单ID：{}，{}→{}", orderDTO.getId(), currentState.getValue(), validatedTarget.getValue());
         return true;
-    }
-
-    @Override
-    public OrderPayInfoRes queryPayInfoByOrderId(Long orderId) {
-        return null;
-    }
-
-    @Override
-    public ApiOrderRes commitOrder(OrderCreateRpcCommand orderCreateCommand) {
-        OrderCreateRes orderCreateRes = commitOrder.commitOrder(TransferUtils.transfer(orderCreateCommand, OrderCreateCommand.class), new MemberOrderCreateCommand());
-        return TransferUtils.transfer(orderCreateRes, orderCreateRes1 -> {
-            ApiOrderRes apiOrderRes = new ApiOrderRes();
-            apiOrderRes.setPayState(CommonEnum.YesOrNo.YES);
-            return apiOrderRes;
-        });
     }
 
     /**

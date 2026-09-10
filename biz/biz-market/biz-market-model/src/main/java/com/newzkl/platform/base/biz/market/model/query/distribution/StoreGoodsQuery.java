@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.market.model.query.distribution;
 
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,14 +19,14 @@ public class StoreGoodsQuery extends BizPageQuery {
      *
      * @ext 0：下架 1：上架
      */
-    private Integer state;
+    private StoreGoodsEnum.State state;
 
     /**
      * 状态 (排除)
      *
      * @ext 0：下架 1：上架
      */
-    private Integer stateNot;
+    private StoreGoodsEnum.State stateNot;
 
 
     /**

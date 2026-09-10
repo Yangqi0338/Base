@@ -28,7 +28,6 @@ public class PayApiImpl implements PayApi {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public BalancePayResult balancePay(BalancePayReq req) {
         return payFacade.balancePay(req);
     }

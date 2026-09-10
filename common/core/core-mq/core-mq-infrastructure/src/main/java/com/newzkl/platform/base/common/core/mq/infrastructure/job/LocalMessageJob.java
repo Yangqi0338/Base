@@ -1,17 +1,15 @@
 package com.newzkl.platform.base.common.core.mq.infrastructure.job;
 
 import com.newzkl.platform.base.common.core.mq.domain.LocalMessageDomain;
+import com.newzkl.platform.base.common.core.mq.infrastructure.producer.AbstractMQProducer;
+import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.newzkl.platform.base.common.core.mq.model.dto.LocalMessageDTO;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
-import com.newzkl.platform.base.common.core.mq.infrastructure.utils.MQUtil;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.SendStatus;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -65,17 +63,18 @@ public class LocalMessageJob {
     }
 
     /**
-     * 重发单条本地消息并回写发送状态
+     * 重发单条本地消息, 由生产者内部复用本地消息 id 落库并回写发送状态
      *
      * @param m 本地消息
      * @return 是否发送成功
      */
     private boolean resend(LocalMessageDTO m) {
-        SendResult sendResult = MQUtil.send(m.getTopic(), m.getTag(), m.getId(),
-                m.getMessageContent(), m.getMessageClass());
-        boolean ok = sendResult != null && SendStatus.SEND_OK.equals(sendResult.getSendStatus());
-        MQEnum.SendState toState = ok ? MQEnum.SendState.SUCCESS : MQEnum.SendState.FAIL;
-        localMessageDomain.messageSendUpdate(m.getId(), toState.getCode(), LocalDateTime.now());
-        return ok;
+        try {
+            MQUtil.send(m.getTopic(), m.getTag(), m.getId(), m.getMessageContent());
+            return true;
+        } catch (Exception e) {
+            log.error("重发本地消息失败, id : {}, tag : {}", m.getId(), m.getTag(), e);
+            return false;
+        }
     }
 }

@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.goods.domain.adapt.api.DistributionApi;
 import com.newzkl.platform.base.biz.goods.domain.adapt.api.EventApi;
 import com.newzkl.platform.base.biz.goods.domain.brand.repository.BrandRepository;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuCategoryRepository;
@@ -68,6 +69,7 @@ public class SpuDomainImpl implements SpuDomain {
     private final SpuCategoryRepository spuCategoryRepository;
     private final BrandRepository brandRepository;
     private final EventApi eventApi;
+    private final DistributionApi distributionApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -474,12 +476,10 @@ public class SpuDomainImpl implements SpuDomain {
      */
     private int updateSpuState(List<Long> spuIdList, SpuEnum.State targetState) {
         int result = spuRepository.editStateById(targetState, spuIdList);
-        
-        // 执行上架/下架后置处理
-        if (SpuEnum.State.SALE == targetState) {
-            spuRepository.spuUpAfter(spuIdList);
-        } else {
-            spuRepository.spuDownAfter(spuIdList);
+
+        // 下架需下架选品
+        if (SpuEnum.State.SALE != targetState) {
+            distributionApi.down(spuIdList);
         }
         
         return result;

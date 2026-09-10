@@ -41,8 +41,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LocalMessageApiImpl implements LocalMessageApi {
 
-    private final LocalMessageRepository localMessageRepository;
-
     @Override
     public void sendMessage(String tag, Object messageContent, String messageClass) {
         MQUtil.send(tag, messageContent);
@@ -60,8 +58,7 @@ public class LocalMessageApiImpl implements LocalMessageApi {
 
     @Override
     public void wakeUpEarningMessage(Long skuOrderId) {
-        String outKey = MQ.Tag.SETTLE + skuOrderId;
-        localMessageRepository.localMessageCanConsumeEditByOutKey(CommonEnum.YesOrNo.YES, outKey);
+        MQUtil.wakeUp(MQ.Tag.SETTLE + skuOrderId);
     }
 
     @Override

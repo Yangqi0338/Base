@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.market.model.event.distribution;
+package com.newzkl.platform.base.biz.market.facade.model;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
@@ -16,13 +16,8 @@ public class UpDownReq implements Serializable {
     private SpuEnum.State enable;
 
     /**
-     * 需要推送的事件详情
+     * spu id列表
      */
     private List<Long> spuIdList;
-
-    /**
-     * 需要推送的事件详情
-     */
-    private CommonEnum.YesOrNo needUpdate;
 
 }

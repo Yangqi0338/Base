@@ -11,7 +11,7 @@ import lombok.Getter;
  * 分销相关枚举
  */
 @Data
-public class DistributionEnum {
+public class StoreGoodsEnum {
 
     //来源
     @Getter

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.market.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.Index;
@@ -29,7 +29,7 @@ public class StoreGoodsDO extends BaseDO {
     private Long skuId;
     /**
      * 来源
-     * @see DistributionEnum.Source
+     * @see StoreGoodsEnum.Source
      */
     @Index
     private Long marketId;
@@ -58,7 +58,7 @@ public class StoreGoodsDO extends BaseDO {
      * 商品状态
      */
     @Index
-    private DistributionEnum.State goodsState;
+    private StoreGoodsEnum.State goodsState;
     /**
      * 渠道商id
      */

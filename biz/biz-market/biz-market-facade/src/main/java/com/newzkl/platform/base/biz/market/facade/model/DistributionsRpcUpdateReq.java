@@ -1,15 +1,15 @@
-package com.newzkl.platform.base.biz.market.model.req.distribution;
+package com.newzkl.platform.base.biz.market.facade.model;
 
 
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import lombok.Data;
 
 /**
  * 修改商品数据
  */
 @Data
-public class DistributionsUpdateReq {
+public class DistributionsRpcUpdateReq {
 
     /**
      * id
@@ -18,9 +18,9 @@ public class DistributionsUpdateReq {
 
     /**
      * 状态
-     * @see DistributionEnum.State
+     * @see StoreGoodsEnum.State
      */
-    private DistributionEnum.State goodsState;
+    private StoreGoodsEnum.State goodsState;
 
     /**
      * 商品信息

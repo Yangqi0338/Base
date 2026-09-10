@@ -25,7 +25,11 @@ import java.util.Map;
  * @description: 铺货数仓
  * @date 2024/4/2 14:40
  */
-public interface DistributionRepository {
+public interface StoreGoodsRepository {
+    /**
+     * 条件修改
+     */
+    int update(StoreGoodsDTO dto, StoreGoodsQuery query);
 
     /**
      * 批量修改铺货
@@ -178,10 +182,5 @@ public interface DistributionRepository {
      * 根据id查询铺货信息
      */
     List<StoreGoodsDTO> getByIds(List<Long> ids);
-
-    /**
-     * 批量查询铺货详情
-     */
-    List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> ids);
 
 }

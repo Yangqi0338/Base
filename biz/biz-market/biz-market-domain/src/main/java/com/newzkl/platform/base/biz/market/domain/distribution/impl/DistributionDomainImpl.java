@@ -2,11 +2,11 @@ package com.newzkl.platform.base.biz.market.domain.distribution.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.adapt.repository.DistributionRepository;
+import com.newzkl.platform.base.biz.market.domain.adapt.repository.StoreGoodsRepository;
 import com.newzkl.platform.base.biz.market.domain.distribution.DistributionDomain;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StateNotifyDTO;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreGoodsDTO;
-import com.newzkl.platform.base.biz.market.model.event.distribution.WorkTableUpDownEventMq;
+import com.newzkl.platform.base.biz.market.facade.model.UpDownReq;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
@@ -24,13 +24,14 @@ import com.newzkl.platform.base.common.ddd.facade.DistributionDetailVO;
 import com.newzkl.platform.base.biz.market.model.rpc.distribution.DistributionRandomRPCVO;
 import com.newzkl.platform.base.common.ddd.facade.GoodsSellNumVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.ddd.model.constant.MarketErrorCode;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.SpuEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,32 +49,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DistributionDomainImpl implements DistributionDomain {
 
-    private final DistributionRepository distributionRepository;
+    private final StoreGoodsRepository distributionRepository;
 
     @Override
-    public List<Long> idByQuery(DistributionsQuery req) {
-        return distributionRepository.idByQuery(req);
-    }
+    public void upDownEvent(UpDownReq upDownReq) {
+        StoreGoodsEnum.State state = upDownReq.getEnable() == SpuEnum.State.PLATFORM_DOWN ?
+                StoreGoodsEnum.State.PLATFORM_UNLISTED : StoreGoodsEnum.State.LISTED;
+        StoreGoodsDTO storeGoodsDTO = new StoreGoodsDTO();
+        storeGoodsDTO.setGoodsState(state);
 
-    @Override
-    public DistributionsBatchUpdateReq upDownEvent(WorkTableUpDownEventMq workTableUpDownEventMq) {
-        DistributionsBatchUpdateReq req = new DistributionsBatchUpdateReq();
-        DistributionEnum.State state = DistributionEnum.State.PLATFORM_UNLISTED;
-        DistributionsQuery distributionsReq = new DistributionsQuery();
-        distributionsReq.setGoodsIds(workTableUpDownEventMq.getSpuIdList());
-        distributionsReq.setStateNot(state);
-        distributionsReq.setNeedUpdate(workTableUpDownEventMq.getNeedUpdate());
-        List<Long> distributedIdList = distributionRepository.idByQuery(distributionsReq);
-        if (CollUtil.isNotEmpty(distributedIdList)) {
-            List<DistributionsUpdateReq> updateReqs = distributedIdList.stream().map(id -> {
-                DistributionsUpdateReq spuUpdateReq = new DistributionsUpdateReq();
-                spuUpdateReq.setId(id);
-                spuUpdateReq.setGoodsState(state);
-                return spuUpdateReq;
-            }).collect(Collectors.toList());
-            req.setUpdateReqs(updateReqs);
-        }
-        return req;
+        StoreGoodsQuery storeGoodsQuery = new StoreGoodsQuery();
+        storeGoodsQuery.setStateNot(state);
+        storeGoodsQuery.setGoodsIds(upDownReq.getSpuIdList());
+        int effectRows = distributionRepository.update(storeGoodsDTO, storeGoodsQuery);
     }
 
     @Override
@@ -83,9 +71,9 @@ public class DistributionDomainImpl implements DistributionDomain {
         });
         if (CollUtil.isNotEmpty(distributions)) {
             StoreGoodsDTO spuDistribution = CollUtil.getFirst(distributions);
-            Integer goodsState = spuDistribution.getGoodsState();
+            StoreGoodsEnum.State goodsState = spuDistribution.getGoodsState();
 
-            if (DistributionEnum.State.LISTED.getCode().equals(goodsState)) {
+            if (StoreGoodsEnum.State.LISTED == goodsState) {
                 // 售价 (Money 分); spu 售价为空或非正时, 取子项中最大售价兜底
                 Money sellPrice = spuDistribution.getSellPrice();
                 if (sellPrice == null || !sellPrice.greaterThanZero()) {
@@ -172,7 +160,7 @@ public class DistributionDomainImpl implements DistributionDomain {
         storeGoods.setMarketId(distributionGoodsInfoVO.getMarketId() == null ? 0 : distributionGoodsInfoVO.getMarketId());
         storeGoods.setDataType(distributionGoodsInfoVO.getSkuId() == 0 ? 0: 1);
         storeGoods.setStoreId(channelId);
-        storeGoods.setGoodsState(DistributionEnum.State.PENDING_LISTING.getCode());
+        storeGoods.setGoodsState(StoreGoodsEnum.State.PENDING_LISTING);
         storeGoods.setSupplierPrice(distributionGoodsInfoVO.getSellPrice());
         storeGoods.setUpTime(LocalDateTime.now());
         return storeGoods;
@@ -351,11 +339,6 @@ public class DistributionDomainImpl implements DistributionDomain {
     @Override
     public List<StoreGoodsDTO> getByIds(List<Long> ids) {
         return distributionRepository.getByIds(ids);
-    }
-
-    @Override
-    public List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> ids) {
-        return distributionRepository.queryDistributionDetailByIds(ids);
     }
 
 }

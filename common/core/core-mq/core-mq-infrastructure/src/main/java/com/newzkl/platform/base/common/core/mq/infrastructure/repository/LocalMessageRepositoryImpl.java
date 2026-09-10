@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.common.core.mq.infrastructure.repository;
 
+import cn.hutool.core.lang.Opt;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.newzkl.platform.base.common.core.mq.domain.LocalMessageRepository;
@@ -8,6 +10,7 @@ import com.newzkl.platform.base.common.core.mq.model.dto.LocalMessageDTO;
 import com.newzkl.platform.base.common.core.mq.infrastructure.entity.LocalMessageDO;
 import com.newzkl.platform.base.common.core.mq.model.enums.MQEnum;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaUpdateWrapper;
 import com.newzkl.platform.base.common.core.mybatis.support.RepositorySupport;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 
@@ -35,34 +38,10 @@ public class LocalMessageRepositoryImpl extends RepositorySupport implements Loc
     private final LocalMessageDAO localMessageDAO;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long localMessageCreate(LocalMessageDTO localMessage) {
+    public Long create(LocalMessageDTO localMessage) {
         LocalMessageDO localMessageDO = TransferUtils.transfer(localMessage, LocalMessageDO.class);
-        if (localMessageDO.getConsumeState() == null) {
-            localMessageDO.setConsumeState(MQEnum.ConsumeState.WAIT);
-        }
-        if (localMessageDO.getSendCount() == null) {
-            localMessageDO.setSendCount(0);
-        }
-        if (localMessageDO.getConsumeErrorCount() == null) {
-            localMessageDO.setConsumeErrorCount(0);
-        }
-        if (localMessageDO.getCanConsume() == null) {
-            localMessageDO.setCanConsume(CommonEnum.YesOrNo.YES);
-        }
         localMessageDAO.insert(localMessageDO);
         return localMessageDO.getId();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long localMessageSave(LocalMessageDTO localMessage) {
-        if (localMessage.getId() == null || localMessage.getId() == 0) {
-            return localMessageCreate(localMessage);
-        }
-        LocalMessageDO localMessageDO = TransferUtils.transfer(localMessage, LocalMessageDO.class);
-        localMessageDAO.updateById(localMessageDO);
-        return localMessage.getId();
     }
 
     @Override
@@ -73,73 +52,44 @@ public class LocalMessageRepositoryImpl extends RepositorySupport implements Loc
 
     @Override
     public boolean exists(Long localMessageId) {
-        if (localMessageId == null) {
-            return false;
-        }
-        return localMessageDAO.exists(new BaseLambdaQueryWrapper<LocalMessageDO>()
-                .notEmptyEq(LocalMessageDO::getId, localMessageId));
+        return localMessageDAO.exists(new LambdaQueryWrapper<LocalMessageDO>()
+                .eq(LocalMessageDO::getId, localMessageId));
     }
 
-    @Override
-    public List<LocalMessageDTO> querySendFailMsg() {
+    public List<LocalMessageDTO> list(LocalMessageDTO dto, Integer limit) {
         // 查询15分钟前发送成功但消费待处理的消息
-        List<LocalMessageDO> list = localMessageDAO.selectList(new LambdaQueryWrapper<LocalMessageDO>()
-                .eq(LocalMessageDO::getSendState, MQEnum.SendState.SUCCESS)
-                .eq(LocalMessageDO::getConsumeState, MQEnum.ConsumeState.WAIT)
-                .eq(LocalMessageDO::getConsumeErrorCount, 0)
-                .lt(LocalMessageDO::getSendTime, LocalDateTime.now().minusMinutes(15))
-        );
+        List<LocalMessageDO> list = localMessageDAO.selectPage(page(1, Opt.ofNullable(limit).orElse(Integer.MAX_VALUE))
+                ,localMessageDAO.getLw(dto)).getRecords();
         return TransferUtils.transfers(list, LocalMessageDTO.class);
     }
 
     @Override
-    public List<LocalMessageDTO> querySendState(MQEnum.SendState sendState, int limit) {
-        List<LocalMessageDO> list = localMessageDAO.selectList(localMessageDAO.getLw(sendState)
-                .last("LIMIT " + Math.max(1, limit)));
-        return TransferUtils.transfers(list, LocalMessageDTO.class);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean messageConsumeUpdate(Long id, Integer toState) {
-        LambdaUpdateWrapper<LocalMessageDO> wrapper = new LambdaUpdateWrapper<LocalMessageDO>()
-                .set(LocalMessageDO::getConsumeState, toState)
+    public boolean messageConsumeUpdate(Long id, MQEnum.ConsumeState toState, String errorMsg) {
+        LambdaUpdateWrapper<LocalMessageDO> wrapper = new BaseLambdaUpdateWrapper<LocalMessageDO>()
+                .setIncrBy(StrUtil.isNotBlank(errorMsg), LocalMessageDO::getConsumeErrorCount, 1)
+                .notEmptySet(LocalMessageDO::getConsumeState, toState)
+                .set(MQEnum.ConsumeState.WAIT != toState, LocalMessageDO::getConsumeTime, LocalDateTime.now())
                 .eq(LocalMessageDO::getId, id)
-                .eq(LocalMessageDO::getConsumeState, MQEnum.ConsumeState.WAIT);
-        // 终态(成功/失败/异常)回写消费时间
-        if (!MQEnum.ConsumeState.WAIT.getCode().equals(toState)) {
-            wrapper.set(LocalMessageDO::getConsumeTime, LocalDateTime.now());
-        }
+                .eq(LocalMessageDO::getConsumeState, MQEnum.ConsumeState.WAIT)
+                .eq(LocalMessageDO::getCanConsume, CommonEnum.YesOrNo.YES)
+                ;
         return localMessageDAO.update(wrapper) > 0;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void messageSendUpdate(Long id, Integer sendState, LocalDateTime sendTime) {
-        localMessageDAO.update(new LambdaUpdateWrapper<LocalMessageDO>()
+    public void messageSendUpdate(Long id, MQEnum.SendState sendState) {
+        localMessageDAO.update(new BaseLambdaUpdateWrapper<LocalMessageDO>()
+                .setIncrCount(LocalMessageDO::getSendCount)
                 .set(LocalMessageDO::getSendState, sendState)
-                .set(LocalMessageDO::getSendTime, sendTime)
-                .setSql("send_count = send_count + 1")
+                .set(LocalMessageDO::getSendTime, LocalDateTime.now())
+                .set(LocalMessageDO::getCanConsume, CommonEnum.YesOrNo.YES)
                 .eq(LocalMessageDO::getId, id)
         );
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void consumeUpdate(Long id, Integer consumeState, LocalDateTime consumeTime, String exceptionString) {
-        localMessageDAO.update(new LambdaUpdateWrapper<LocalMessageDO>()
-                .set(LocalMessageDO::getConsumeState, consumeState)
-                .set(LocalMessageDO::getConsumeTime, consumeTime)
-                .set(LocalMessageDO::getConsumeErrorMsg, exceptionString)
-                .setSql("consume_error_count = consume_error_count + 1")
-                .eq(LocalMessageDO::getId, id)
-        );
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean localMessageCanConsumeEditByOutKey(CommonEnum.YesOrNo state, String outKey) {
-        return localMessageDAO.update(new LambdaUpdateWrapper<LocalMessageDO>()
+    public boolean setCanConsumeByOutKey(CommonEnum.YesOrNo state, String outKey) {
+        return localMessageDAO.update(new BaseLambdaUpdateWrapper<LocalMessageDO>()
                 .set(LocalMessageDO::getCanConsume, state)
                 .eq(LocalMessageDO::getOutKey, outKey)
         ) > 0;

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.newzkl.platform.base.biz.goods.domain.adapt.api.DistributionApi;
 import com.newzkl.platform.base.biz.goods.domain.spu.repository.SpuRepository;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SkuDAO;
 import com.newzkl.platform.base.biz.goods.infrastructure.goods.dao.SpuAttributeDAO;
@@ -119,7 +120,6 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void spuUpdate(SpuDTO spu) {
         SpuDO spuDO = TransferUtils.transfer(spu, SpuDO::new);
         spuDO.preUpdate();
@@ -362,18 +362,6 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
     public void resetSpuOrderCount() {
         throw new UnsupportedOperationException(
                 "TODO[infra-gap]: 重置口径未定义 (待重置的计数列与作用范围均无出处)");
-    }
-
-    @Override
-    public void spuDownAfter(List<Long> spuIdList) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: SPU 下架后置处理的跨模块副作用未定义");
-    }
-
-    @Override
-    public void spuUpAfter(List<Long> spuIdList) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: SPU 上架后置处理的跨模块副作用未定义");
     }
 
     @Override

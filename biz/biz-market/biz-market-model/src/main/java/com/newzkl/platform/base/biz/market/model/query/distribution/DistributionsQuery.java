@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.market.model.query.distribution;
 
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import com.newzkl.platform.base.common.ddd.model.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,7 +41,7 @@ public class DistributionsQuery extends PageQuery {
      *
      * @ext 0：下架 1：上架
      */
-    private DistributionEnum.State stateNot;
+    private StoreGoodsEnum.State stateNot;
 
     /**
      * 商品名称

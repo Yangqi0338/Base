@@ -8,8 +8,6 @@ import lombok.EqualsAndHashCode;
 /**
  * 收货地址出参
  *
- * <p>迁移自旧 {@code com.zkl.scm.user.domain.address.model.vo.ShipAddressVO} 的对外出参角色。</p>
- *
  * @author KC
  */
 @EqualsAndHashCode(callSuper = true)

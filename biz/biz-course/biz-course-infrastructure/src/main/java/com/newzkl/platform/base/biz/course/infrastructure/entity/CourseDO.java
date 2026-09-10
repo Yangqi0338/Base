@@ -6,6 +6,8 @@ import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.autotable.annotation.ColumnType;
+import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
 
 /**
  * 课程数据对象
@@ -85,6 +87,7 @@ public class CourseDO extends BaseDO {
     /**
      * 课程详情富文本
      */
+    @ColumnType(value = MysqlTypeConstant.TEXT)
     private String details;
 
     /**

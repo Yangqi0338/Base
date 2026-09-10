@@ -145,8 +145,23 @@ public abstract class RepositorySupport {
      */
     public static <T> Page<T> page(PageQuery query) {
         Integer pageSize = query.getPageSize();
-        return new Page<>(query.getPageNo(), pageSize, pageSize != null && pageSize != Integer.MAX_VALUE);
+        return new Page<>(query.getPageNo(), pageSize, pageSize != Integer.MAX_VALUE);
     }
+
+    /**
+     * 由分页查询构建 mybatis-plus 分页对象
+     * <p>新 common {@code PageQuery} 不再耦合 mybatis-plus {@code Page},
+     * 转换逻辑收敛于此静态方法。</p>
+     *
+     * @param pageNo 页码
+     * @param pageSize 页大小
+     * @param <T>   记录类型
+     * @return mybatis-plus 分页对象
+     */
+    protected <T> Page<T> page(Integer pageNo, Integer pageSize) {
+        return new Page<>(pageNo, pageSize, pageSize != Integer.MAX_VALUE);
+    }
+
 
     public <R, T extends BaseIdDO, M extends BaseMapper<T>> Page<R> page(M mapper, PageQuery pageQuery, BaseLambdaQueryWrapper<T> wrapper, Class<R> clazz) {
         return TransferUtils.transferPage(mapper.selectPage(page(pageQuery),

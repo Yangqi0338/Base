@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newzkl.platform.base.biz.market.domain.adapt.repository.DistributionRepository;
+import com.newzkl.platform.base.biz.market.domain.adapt.repository.StoreGoodsRepository;
 import com.newzkl.platform.base.biz.market.infrastructure.dao.StoreGoodsDAO;
 import com.newzkl.platform.base.biz.market.infrastructure.entity.StoreGoodsDO;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreGoodsDTO;
-import com.newzkl.platform.base.common.ddd.model.enums.goods.DistributionEnum;
+import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
+import com.newzkl.platform.base.common.ddd.model.enums.goods.StoreGoodsEnum;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
@@ -49,7 +50,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class DistributionRepositoryImpl implements DistributionRepository {
+public class StoreGoodsRepositoryImpl extends RepositorySupport implements StoreGoodsRepository {
 
     /**
      * 推荐门店取数条数, 接口 javadoc 明确"按销量排序返回10个"
@@ -64,8 +65,8 @@ public class DistributionRepositoryImpl implements DistributionRepository {
     private final StoreGoodsDAO storeGoodsDAO;
 
     @Override
-    public List<Long> update(DistributionsQuery req) {
-        return storeGoodsDAO.idByQuery(req);
+    public int update(StoreGoodsDTO dto, StoreGoodsQuery query) {
+        return storeGoodsDAO.update(TransferUtils.transfer(dto, StoreGoodsDO.class), storeGoodsDAO.getLw(query));
     }
 
     @Override
@@ -96,13 +97,13 @@ public class DistributionRepositoryImpl implements DistributionRepository {
 
     @Override
     public List<StoreGoodsDTO> queryDistributionsList(StoreGoodsQuery query) {
-        return toDTOList(storeGoodsDAO.selectList(storeGoodsDAO.buildQueryWrapper(query)));
+        return toDTOList(storeGoodsDAO.selectList(storeGoodsDAO.getLw(query)));
     }
 
     @Override
     public StoreGoodsDTO queryOneDistributions(StoreGoodsQuery query) {
         List<StoreGoodsDO> list = storeGoodsDAO.selectList(
-                storeGoodsDAO.buildQueryWrapper(query).last("limit 1")
+                storeGoodsDAO.getLw(query).last("limit 1")
         );
         if (CollectionUtils.isEmpty(list)) {
             return null;
@@ -147,7 +148,7 @@ public class DistributionRepositoryImpl implements DistributionRepository {
                         .eq(StoreGoodsDO::getChannelId, accountId)
                         .eq(StoreGoodsDO::getGoodsId, goodsId)
                         .in(StoreGoodsDO::getGoodsState,
-                                DistributionEnum.State.UNLISTED, DistributionEnum.State.PENDING_LISTING)
+                                StoreGoodsEnum.State.UNLISTED, StoreGoodsEnum.State.PENDING_LISTING)
                         .eq(StoreGoodsDO::getSellNum, 0)
         );
     }
@@ -165,7 +166,7 @@ public class DistributionRepositoryImpl implements DistributionRepository {
                         .eq(StoreGoodsDO::getDataType, 0)
                         .in(StoreGoodsDO::getGoodsId, uniqueGoodsIdList)
                         .in(StoreGoodsDO::getGoodsState,
-                                DistributionEnum.State.UNLISTED, DistributionEnum.State.PENDING_LISTING)
+                                StoreGoodsEnum.State.UNLISTED, StoreGoodsEnum.State.PENDING_LISTING)
                         .eq(StoreGoodsDO::getSellNum, 0)
         );
     }
@@ -213,7 +214,7 @@ public class DistributionRepositoryImpl implements DistributionRepository {
     public void platformStoreListed(Long id) {
         StoreGoodsDO distributionDO = new StoreGoodsDO();
         distributionDO.setId(id);
-        distributionDO.setGoodsState(DistributionEnum.State.LISTED);
+        distributionDO.setGoodsState(StoreGoodsEnum.State.LISTED);
         storeGoodsDAO.updateById(distributionDO);
     }
 
@@ -221,7 +222,7 @@ public class DistributionRepositoryImpl implements DistributionRepository {
     public void platformStoreUnlisted(Long id) {
         StoreGoodsDO distributionDO = new StoreGoodsDO();
         distributionDO.setId(id);
-        distributionDO.setGoodsState(DistributionEnum.State.PLATFORM_STORE_UNLISTED);
+        distributionDO.setGoodsState(StoreGoodsEnum.State.PLATFORM_STORE_UNLISTED);
         storeGoodsDAO.updateById(distributionDO);
     }
 
@@ -323,14 +324,6 @@ public class DistributionRepositoryImpl implements DistributionRepository {
         return toDTOList(storeGoodsDAO.selectByIds(ids));
     }
 
-    @Override
-    public List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> ids) {
-        if (CollectionUtils.isEmpty(ids)) {
-            return new ArrayList<>();
-        }
-        return storeGoodsDAO.queryDistributionDetailByIds(ids);
-    }
-
     /**
      * 将前端传入的业务排序 code 翻译为真实排序片段
      *
@@ -408,7 +401,7 @@ public class DistributionRepositoryImpl implements DistributionRepository {
         dto.setSellPrice(distributionDO.getSellPrice());
         dto.setSellNum(distributionDO.getSellNum());
         dto.setStoreId(distributionDO.getStoreId());
-        dto.setGoodsState(distributionDO.getGoodsState() == null ? null : distributionDO.getGoodsState().getCode());
+        dto.setGoodsState(distributionDO.getGoodsState() == null ? null : distributionDO.getGoodsState());
         dto.setChannelId(distributionDO.getChannelId());
         dto.setCreateTime(distributionDO.getCreateTime());
         dto.setUnitPrice(distributionDO.getUnitPrice());
@@ -437,7 +430,7 @@ public class DistributionRepositoryImpl implements DistributionRepository {
         distributionDO.setSellNum(dto.getSellNum());
         distributionDO.setStoreId(dto.getStoreId());
         distributionDO.setGoodsState(
-                dto.getGoodsState() == null ? null : DistributionEnum.State.getState(dto.getGoodsState()));
+                dto.getGoodsState() == null ? null : dto.getGoodsState());
         distributionDO.setChannelId(dto.getChannelId());
         distributionDO.setUnitPrice(dto.getUnitPrice());
         distributionDO.setSupplierPrice(dto.getSupplierPrice());

@@ -3,7 +3,7 @@ package com.newzkl.platform.base.biz.market.domain.distribution;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StateNotifyDTO;
 import com.newzkl.platform.base.biz.market.model.dto.distribution.StoreGoodsDTO;
-import com.newzkl.platform.base.biz.market.model.event.distribution.WorkTableUpDownEventMq;
+import com.newzkl.platform.base.biz.market.facade.model.UpDownReq;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionRandomPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsPageQuery;
 import com.newzkl.platform.base.biz.market.model.query.distribution.DistributionsQuery;
@@ -30,14 +30,9 @@ import java.util.Map;
 public interface DistributionDomain {
 
     /**
-     * 批量查询
-     */
-    List<Long> idByQuery(DistributionsQuery req);
-
-    /**
      * 上下架通知
      */
-    DistributionsBatchUpdateReq upDownEvent(WorkTableUpDownEventMq workTableUpDownEventMq);
+    void upDownEvent(UpDownReq upDownReq);
 
     /**
      * 批量修改铺货
@@ -180,9 +175,4 @@ public interface DistributionDomain {
      * 根据id查询铺货信息
      */
     List<StoreGoodsDTO> getByIds(List<Long> ids);
-
-    /**
-     * 批量查询铺货详情
-     */
-    List<DistributionDetailVO> queryDistributionDetailByIds(List<Long> ids);
 }
