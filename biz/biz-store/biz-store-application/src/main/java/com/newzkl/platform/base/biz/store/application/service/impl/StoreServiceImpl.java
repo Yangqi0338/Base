@@ -1,12 +1,23 @@
 package com.newzkl.platform.base.biz.store.application.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONUtil;
 import com.newzkl.platform.base.biz.store.domain.adapt.api.*;
+import com.newzkl.platform.base.biz.store.model.store.entity.ChannelVO;
+import com.newzkl.platform.base.biz.store.model.store.entity.StoreOrderInfo;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayReq;
 import com.newzkl.platform.base.biz.store.model.store.req.StoreOrderPayRes;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.model.properties.SysProperties;
+import com.newzkl.platform.base.common.ddd.facade.ChannelConfigVO;
 import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.model.dto.AccountVO;
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
@@ -22,8 +33,13 @@ import com.newzkl.platform.base.biz.store.model.store.entity.StoreStyle;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreStyleRes;
 import com.newzkl.platform.base.biz.store.model.store.res.StoreRes;
 import com.newzkl.platform.base.biz.store.model.template.dto.ModelShopDTO;
+import com.newzkl.platform.base.common.ddd.model.enums.sys.DictEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum.*;
 
 /**
  * 门店应用服务实现
@@ -42,6 +58,7 @@ public class StoreServiceImpl implements StoreService {
     private final ChannelApi channelApi;
     private final UserFollowApi userFollowApi;
     private final DistributionApi distributionApi;
+    private final PayApi payApi;
 
     @Override
     public StoreStyleRes getModelShopStyle() {
@@ -103,44 +120,39 @@ public class StoreServiceImpl implements StoreService {
 
         // 是否有门店
         // 是否是用户或者渠道商
-//        AccountVO accountVO = accountQueryService.accountVO(accountId);
-//        if (accountVO == null) {
-//            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "账号不存在");
-//        }
-//        boolean isChannel = accountVO.getRoleIdList().contains(RoleEnum.CompanyRole.CHANNEL.getCode() + "");
-//        boolean isMember = accountVO.getRoleIdList().contains(RoleEnum.CompanyRole.MEMBER.getCode() + "");
-//        if (isChannel) {
-//            ChannelVO channelVO = accountQueryService.channelVO(accountId);
-//            if (channelVO == null) {
-//                isChannel = false;
-//            } else if (CommonEnum.Switch.ON.getCode().equals(channelVO.getStorePermission())) {
-//                throw new ScmException(BaseErrorCode.EXIST_DATA, "门店已开通");
-//            }
-//        }
-//        if (!isChannel && !isMember) {
-//            throw new ScmException(BaseErrorCode.OPERATE_FAIL, "未知的身份");
-//        }
+        List<Identity> identityList = SecurityUtils.getIdentityList();
+        boolean isChannel = identityList.contains(Identity.CHANNEL);
+        boolean isMember = identityList.contains(Identity.MEMBER);
+        OrderPayReq orderPayReq = new OrderPayReq();
+        if (isChannel) {
+            ChannelVO channelVO = channelApi.detail(accountId);
+            if (channelVO == null) {
+                isChannel = false;
+            } else if (CommonEnum.YesOrNo.YES == channelVO.getStorePermission()) {
+                throw new PlatformException(BaseErrorCode.EXIST_DATA, "门店已开通");
+            }
+        }
+        if (!isChannel && !isMember) {
+            throw new PlatformException(BaseErrorCode.OPERATE_FAIL, "未知的身份");
+        }
 
-//        String json = dictFacade.get(DictEnum.Key.CHANNEL_CONFIG.getCode());
-//        ChannelConfigVO channelConfigVO = JSONUtil.toBean(json, ChannelConfigVO.class);
-//        Integer storePrice = channelConfigVO.getSystemPrice();
+        ChannelConfigVO channelConfigVO = channelApi.getConfig();
+        Money storePrice = channelConfigVO.getSystemPrice();
 
         // 微信支付宝支付
-//        StoreOrderInfo storeOrderInfo = BeanUtil.copyProperties(storeInfo, StoreOrderInfo.class);
-//        storeOrderInfo.setIsChannel(isChannel);
+        StoreOrderInfo storeOrderInfo = BeanUtil.copyProperties(storeInfo, StoreOrderInfo.class);
+        storeOrderInfo.setIsChannel(isChannel);
 
-        OrderPayReq orderPayReq = new OrderPayReq();
-//        orderPayReq.setOrderNo(SnowflakeIdAble.getSnowflakeId());
+
         orderPayReq.setConsumeType(EarningsEnum.ConsumeType.STORE);
-//        orderPayReq.setOrderAmount(storePrice);
-//        orderPayReq.setPayAmount(storePrice);
-//        orderPayReq.setOrderInfo(JSONUtil.toJsonStr(storeOrderInfo));
+        orderPayReq.setOrderAmount(storePrice);
+        orderPayReq.setPayAmount(storePrice);
+        orderPayReq.setOrderInfo(JSONUtil.toJsonStr(storeOrderInfo));
         orderPayReq.setGoodsInfo("数智门店购买");
         orderPayReq.setAccountId(accountId);
         orderPayReq.setAccountName(SecurityUtils.getUsername());
         orderPayReq.setPayType(payType);
-//        PayBaseResult payBaseResult = payApi.orderPay(orderPayReq);
-        PayBaseResult payBaseResult = null;
-        return (StoreOrderPayRes) payBaseResult;
+        orderPayReq.setIdentity(isChannel ? Identity.CHANNEL : Identity.MEMBER);
+        return payApi.orderPay(orderPayReq);
     }
 }

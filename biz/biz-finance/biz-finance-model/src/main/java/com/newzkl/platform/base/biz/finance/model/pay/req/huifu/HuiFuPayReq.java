@@ -31,4 +31,9 @@ public class HuiFuPayReq {
      * 支付金额
      */
     private Integer payAmount;
+
+    /**
+     * 微信用户openId
+     */
+    private String wxOpenId;
 }

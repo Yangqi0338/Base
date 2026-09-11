@@ -1,4 +1,4 @@
-package com.newzkl.platform.base.biz.finance.model.pay.req;
+package com.newzkl.platform.base.biz.store.facade.model;
 
 import lombok.Data;
 

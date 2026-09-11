@@ -66,6 +66,10 @@ public class MemberVO extends BaseRes {
      */
     private String openId;
     /**
+     * unionId
+     */
+    private String unionId;
+    /**
      * 统计：成交笔数
      */
     private Integer countDealNumber;

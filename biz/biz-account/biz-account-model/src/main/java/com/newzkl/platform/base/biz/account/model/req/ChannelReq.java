@@ -67,6 +67,16 @@ public class ChannelReq extends BaseReq {
     private CommonEnum.YesOrNo storePermission;
 
     /**
+     * 微信 openId
+     */
+    private String openId;
+
+    /**
+     * 微信 unionId
+     */
+    private String unionId;
+
+    /**
      * 联系人姓名
      */
     private String contactsName;

@@ -43,6 +43,24 @@ abstract class AmountReq {
          * 回调地址
          */
         private String notify_url;
+        /**
+         * 回调地址
+         */
+        private WxData wx_data;
+
+        /**
+         * 微信拓展参数集合-内部类
+         */
+        @Data
+        public static class WxData {
+
+            @NotBlank(message = "子商户应用ID不能为空")
+            private String sub_appid;
+
+            @NotBlank(message = "子商户用户标识不能为空")
+            private String sub_openid;
+
+        }
     }
 
     /**

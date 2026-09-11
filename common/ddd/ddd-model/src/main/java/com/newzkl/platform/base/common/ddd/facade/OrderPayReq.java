@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.common.ddd.facade;
 
 
+import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
@@ -20,6 +21,7 @@ public class OrderPayReq implements Serializable {
      * 订单号
      */
     private Long orderNo;
+    private AccountEnum.Identity identity;
 
     /**
      * 消费类型
@@ -81,4 +83,9 @@ public class OrderPayReq implements Serializable {
      * 渠道商id
      */
     private Long channelId;
+
+    /**
+     * 微信用户openId
+     */
+    private String wxOpenId;
 }

@@ -12,11 +12,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.application.service.AccountLoginService;
 import com.newzkl.platform.base.biz.auth.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.auth.domain.adapt.api.SupplierApi;
+import com.newzkl.platform.base.biz.auth.domain.adapt.api.WxApi;
 import com.newzkl.platform.base.common.ddd.facade.SupplierOutVO;
 import com.newzkl.platform.base.common.ddd.model.enums.audit.AuditEnum;
 import com.newzkl.platform.base.biz.auth.domain.adapt.repository.AccountLoginRepository;
 import com.newzkl.platform.base.biz.auth.model.assembler.LoginAssembler;
 import com.newzkl.platform.base.biz.auth.model.oauth.dto.AccountLoginLogDTO;
+import com.newzkl.platform.base.biz.auth.model.oauth.dto.WxSessionDTO;
 import com.newzkl.platform.base.biz.auth.model.oauth.query.AccountLoginLogQuery;
 import com.newzkl.platform.base.biz.auth.model.oauth.req.*;
 import com.newzkl.platform.base.biz.auth.model.oauth.res.AccountLoginLogRes;
@@ -62,6 +64,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
     private final LoginAssembler loginAssembler;
     private final AccountApi accountApi;
     private final SupplierApi supplierApi;
+    private final WxApi wxApi;
 
     @Override
     public LoginRes accountLogin(AccountEnum.Client client, LoginReq loginReq) {
@@ -84,6 +87,9 @@ public class AccountLoginServiceImpl implements AccountLoginService {
             log.error("登录失败：账号{}无有效角色", account.getId());
             throw new PlatformException(AccountErrorCode.NO_EXIST);
         }
+
+        // 小程序登录(传 wxCode): 换 openId/unionId 并按身份回写, 保持与自主注册口径一致
+        bindWxOnLogin(loginReq, identity, account.getId());
 
         LoginRes loginRes = login(account, type, identity);
         loginRes.setClient(accountList.stream().map(AccountRpcVO::getClient).collect(Collectors.toList()));
@@ -176,6 +182,7 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         req.setIdentity(loginReq.getIdentity());
         // 注册后自动登录由后端写死 TRUE, 不由前端传入
         req.setLogin(Boolean.TRUE);
+        req.setWxCode(loginReq.getWxCode());
         return req;
     }
 
@@ -210,6 +217,30 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         }
 
         return accountList;
+    }
+
+    /**
+     * 小程序登录时回写微信绑定
+     *
+     * <p>仅当登录入参携带 {@code wxCode} 时执行: 先换 openId/unionId, 再按身份落到
+     * member/channel 表。回写失败不阻断登录, 仅记录日志, 与「允许登录 + 设置数据」口径一致。</p>
+     *
+     * @param loginReq  登录请求
+     * @param identity  登录主身份
+     * @param accountId 账号ID
+     */
+    private void bindWxOnLogin(LoginReq loginReq, AccountEnum.Identity identity, Long accountId) {
+        if (StrUtil.isBlank(loginReq.getWxCode())) {
+            return;
+        }
+        try {
+            WxSessionDTO session = wxApi.code2Session(loginReq.getWxCode());
+            accountApi.bindWx(identity, accountId, session.getOpenId(), session.getUnionId());
+        } catch (Exception e) {
+            log.warn("登录微信绑定回写失败, accountId={}, identity={}, err={}",
+                    accountId, identity, e.getMessage());
+            throw new PlatformException(AccountErrorCode.WX_BIND);
+        }
     }
 
     /**
@@ -430,6 +461,18 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         }
 
         registerRpcReq.setRegisterOnce(isRegisterOnce);
+
+        // 小程序注册(传 wxCode): 换 openId/unionId 落身份表
+        if (StrUtil.isNotBlank(req.getWxCode())) {
+            WxSessionDTO session = wxApi.code2Session(req.getWxCode());
+            String openId = session.getOpenId();
+            if (StrUtil.isBlank(openId)) {
+                log.warn("登录微信绑定回写失败, identity={}", identity);
+                throw new PlatformException(AccountErrorCode.WX_BIND);
+            }
+            registerRpcReq.setOpenId(openId);
+            registerRpcReq.setUnionId(session.getUnionId());
+        }
 
         // 短信验证
         VerificationCodeReq codeReq = new VerificationCodeReq();

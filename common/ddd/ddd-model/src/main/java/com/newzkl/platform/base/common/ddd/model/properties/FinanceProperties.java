@@ -60,6 +60,8 @@ public class FinanceProperties {
         public static String settleCycle = "T1";
         // 测试环境价格装饰模式
         public static Integer devDecorateMode = 0;
+        public static String wxAppId;
+        public static String wxAppSecret;
         private static String notifyPreUrl;
 
         public void setPublicKey(String publicKey) {
@@ -112,6 +114,13 @@ public class FinanceProperties {
 
         public void setDevDecorateMode(Integer devDecorateMode) {
             HuiFuProperties.devDecorateMode = devDecorateMode;
+        }
+
+        public void setWxAppId(String wxAppId) {
+            HuiFuProperties.wxAppId = wxAppId;
+        }
+        public void setWxAppSecret(String wxAppSecret) {
+            HuiFuProperties.wxAppSecret = wxAppSecret;
         }
     }
 

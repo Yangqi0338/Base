@@ -44,6 +44,14 @@ public class LoginReq {
     private AuthEnum.Type type;
 
     /**
+     * 微信小程序登录 code
+     *
+     * <p>小程序端登录传入, 后端经 jscode2session 换 openId/unionId 并按身份回写;
+     * PC 端不传, 不触发微信绑定。</p>
+     */
+    private String wxCode;
+
+    /**
      * 校验密码登录时密码是否为空
      *
      * @return 密码为空时返回 true

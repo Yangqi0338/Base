@@ -54,6 +54,10 @@ public class MemberDTO extends BaseRes {
      */
     private String openId;
     /**
+     * unionId
+     */
+    private String unionId;
+    /**
      * 渠道商ID
      */
     private Long channelId;

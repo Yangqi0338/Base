@@ -100,6 +100,19 @@ public class UserClientDomainImpl implements UserClientDomain {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean bindMemberWx(Long accountId, String openId, String unionId) {
+        if (accountId == null) {
+            return false;
+        }
+        MemberVO item = new MemberVO();
+        item.setId(accountId);
+        item.setOpenId(openId);
+        item.setUnionId(unionId);
+        return memberRepository.memberEdit(item) > 0;
+    }
+
+    @Override
     public MemberVO member(Long memberId) {
         return memberRepository.member(memberId);
     }

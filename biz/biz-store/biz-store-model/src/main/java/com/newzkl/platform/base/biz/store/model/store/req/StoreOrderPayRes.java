@@ -1,6 +1,8 @@
 package com.newzkl.platform.base.biz.store.model.store.req;
 
-import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;import lombok.Data;
+import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
+import com.newzkl.platform.base.common.ddd.facade.WxMiniPayResult;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -14,7 +16,7 @@ import java.io.Serializable;
  * @author KC
  */
 @Data
-public class StoreOrderPayRes implements PayBaseResult {
+public class StoreOrderPayRes extends WxMiniPayResult {
 
     /**
      * 平台交易号

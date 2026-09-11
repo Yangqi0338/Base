@@ -20,4 +20,9 @@ public class HuiFuPayRes extends TradeBaseRes implements PayBaseResult {
      */
     private String qrCode;
 
+    /**
+     *
+     */
+    private String payInfo;
+
 }

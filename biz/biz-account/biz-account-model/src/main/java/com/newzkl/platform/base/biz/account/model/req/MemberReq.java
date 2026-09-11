@@ -55,6 +55,14 @@ public class MemberReq extends BaseReq {
      */
     private String wxId;
     /**
+     * openId
+     */
+    private String openId;
+    /**
+     * unionId
+     */
+    private String unionId;
+    /**
      * 渠道商ID
      */
     private Long channelId;

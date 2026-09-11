@@ -36,11 +36,6 @@ public class ChannelFacadeProvider implements ChannelFacade {
     @Override
     public List<ChannelOutVO> channelList(ChannelRpcQuery query) {
         ChannelQuery channelQuery = BeanUtil.copyProperties(query, ChannelQuery.class);
-
-        // TODO
-//        if (req.getChannelId()!= null){
-//            channelQuery.setUpOperatorId(req.getChannelId());
-//        }
         List<ChannelVO> channelVOS = channelClientDomain.channelPageList(channelQuery).getRecords();
         return TransferUtils.transfers(channelVOS, ChannelOutVO::new);
     }

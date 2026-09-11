@@ -25,7 +25,7 @@ abstract class AmountRes {
     static class PayRes extends TradeRes implements PayBaseRes {
 
         private String bank_message;
-        private Map<String, Object> pay_info;
+        private String pay_info;
         private String trans_stat;
         private String remark;
         private String trans_amt;

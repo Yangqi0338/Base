@@ -63,6 +63,8 @@ public class ChannelIdentityPolicy extends AbsIdentityPolicy {
         channelCustomSaveReq.setStoreName(customSaveReq.getStoreName());
         channelCustomSaveReq.setLicense(customSaveReq.getLicense());
         channelCustomSaveReq.setStorePermission(customSaveReq.getStorePermission());
+        channelCustomSaveReq.setOpenId(customSaveReq.getOpenId());
+        channelCustomSaveReq.setUnionId(customSaveReq.getUnionId());
         channelDomain.channelCustomSave(channelCustomSaveReq);
 
         IdentityRegisterRes registerRes = new IdentityRegisterRes(null, accountId);

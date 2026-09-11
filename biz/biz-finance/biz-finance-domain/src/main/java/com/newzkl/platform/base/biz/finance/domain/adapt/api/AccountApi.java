@@ -79,4 +79,12 @@ public interface AccountApi {
      * @return
      */
     PermissionRpcVO levelPermissionVO(AccountEnum.Identity identity, Integer level);
+
+    /**
+     * 按账号查微信 openId, 供汇付小程序支付回填
+     *
+     * @param accountId 账号ID
+     * @return openId, 无则 null
+     */
+    String queryWxOpenId(Long accountId);
 }

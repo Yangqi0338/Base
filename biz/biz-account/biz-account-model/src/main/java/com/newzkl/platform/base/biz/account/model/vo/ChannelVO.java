@@ -98,6 +98,14 @@ public class ChannelVO extends BaseRes {
      */
     private CommonEnum.YesOrNo storePermission;
     /**
+     * 微信 openId
+     */
+    private String openId;
+    /**
+     * 微信 unionId
+     */
+    private String unionId;
+    /**
      * 渠道商ID
      */
     private Long channelId;

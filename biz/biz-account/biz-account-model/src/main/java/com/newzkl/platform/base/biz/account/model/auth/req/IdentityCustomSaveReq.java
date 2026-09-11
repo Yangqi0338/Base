@@ -78,4 +78,14 @@ public class IdentityCustomSaveReq extends BaseReq {
      * 数字门店权限
      */
     private CommonEnum.YesOrNo storePermission;
+
+    /**
+     * 微信 openId
+     */
+    private String openId;
+
+    /**
+     * 微信 unionId
+     */
+    private String unionId;
 }

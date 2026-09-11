@@ -8,30 +8,31 @@ import com.newzkl.platform.base.biz.finance.domain.account.service.AccountPurseC
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.AccountApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.CourseApi;
 import com.newzkl.platform.base.biz.finance.domain.adapt.api.NotifyApi;
+import com.newzkl.platform.base.biz.finance.domain.adapt.api.StoreApi;
 import com.newzkl.platform.base.biz.finance.domain.hf.HuiFuMethod;
 import com.newzkl.platform.base.biz.finance.domain.pay.service.OrderPayDomain;
 import com.newzkl.platform.base.biz.finance.domain.purse.service.AccountPurseDomain;
-import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
-import com.newzkl.platform.base.biz.finance.model.pay.req.StoreRegisterReq;
-import com.newzkl.platform.base.biz.finance.model.pay.res.StoreOrderInfo;
-import com.newzkl.platform.base.common.core.model.enums.CacheKey;
-import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
-import com.newzkl.platform.base.common.core.redis.RedisEnum;
-import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
-import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.PurchaseRecordReq;
 import com.newzkl.platform.base.biz.finance.model.pay.req.huifu.HuiFuPayReq;
+import com.newzkl.platform.base.biz.finance.model.pay.res.StoreOrderInfo;
 import com.newzkl.platform.base.biz.finance.model.pay.res.TradeOrderInfoRes;
 import com.newzkl.platform.base.biz.finance.model.pay.res.huifu.HuiFuPayRes;
 import com.newzkl.platform.base.biz.finance.model.purse.req.AccountPurseAlterRecordReq;
+import com.newzkl.platform.base.common.core.model.enums.CacheKey;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
+import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
+import com.newzkl.platform.base.common.core.model.exception.PlatformException;
+import com.newzkl.platform.base.common.core.redis.RedisEnum;
+import com.newzkl.platform.base.common.core.redis.aspect.DistributedLock;
+import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
+import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
+import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.EarningsEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PurseEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.order.OrderEnum;
-import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
-import com.newzkl.platform.base.common.core.model.exception.PlatformException;
-import com.newzkl.platform.base.common.core.redis.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +64,7 @@ public class CashPayServiceImpl implements CashPayService {
     private final NotifyApi notifyApi;
     private final CourseApi courseApi;
     private final AccountApi accountApi;
+    private final StoreApi storeApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -120,15 +122,9 @@ public class CashPayServiceImpl implements CashPayService {
                     req.setContactPhone(storeOrderInfo.getContactPhone());
 
                     accountApi.registerChannel(req);
-//                    roleFacade.registerChannel(req);
 
                     // 创建门店
-                    StoreRegisterReq storeRegisterReq = new StoreRegisterReq();
-                    storeRegisterReq.setChannelId(accountId);
-                    storeRegisterReq.setStoreType(storeType);
-                    storeRegisterReq.setStoreName(storeName);
-                    storeRegisterReq.setAddress(address);
-//                    storeFacade.openStore(storeRegisterReq);
+                    storeApi.openStore(accountId, storeType, storeName, address);
                     break;
                 case COURSE:
                     courseApi.paySuccess(tradeOrder.getOrderNo(),thirdOrderNo);
@@ -142,14 +138,14 @@ public class CashPayServiceImpl implements CashPayService {
     }
 
     @Override
-    @DistributedLock(key = "'orderPay:' + #req.orderNo")
+//    @DistributedLock(key = "'orderPay:' + #req.tradeNo")
     @Transactional(rollbackFor = Exception.class)
     public HuiFuPayRes orderPay(OrderPayReq req) {
         // 1、命中支付结果缓存则直接返回, 避免同一订单重复拉起三方支付
-        HuiFuPayRes cached = RedisUtil.get(RedisEnum.Key.ORDER_PAY_CACHE_PRE.getCode(req.getOrderNo()));
-        if (cached != null) {
-            return cached;
-        }
+//        HuiFuPayRes cached = RedisUtil.get(RedisEnum.Key.ORDER_PAY_CACHE_PRE.getCode(req.getOrderNo()));
+//        if (cached != null) {
+//            return cached;
+//        }
         // 2、落库业务支付单; 收款方分账信息暂不启用, 传 null
         String tradeNo = orderPayService.saveOrderPayRecord(req, null);
         // 3、请求汇付聚合正扫
@@ -159,7 +155,7 @@ public class CashPayServiceImpl implements CashPayService {
             orderPayService.resetTripartiteTradeNo(tradeNo, payRes.getTripartiteNo());
         }
         // 5、标记支付单待回调状态, 15 分钟过期
-        RedisUtil.set(StrUtil.format(CacheKey.PAYMENT_STATE, req.getConsumeType().getType(), payRes.getTradeNo()),
+        RedisUtil.set(StrUtil.format(CacheKey.PAYMENT_STATE, req.getConsumeType().getCode(), payRes.getTradeNo()),
                 1L, PAY_STATE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         // 6、缓存三方支付结果
         RedisUtil.set(RedisEnum.Key.ORDER_PAY_CACHE_PRE.getCode(req.getOrderNo()), payRes, PAY_CACHE_EXPIRE_MINUTES, TimeUnit.MINUTES);
@@ -178,10 +174,16 @@ public class CashPayServiceImpl implements CashPayService {
         // HuiFu 边界: Money → 分 Integer
         huiFuPayReq.setPayAmount((int) req.getPayAmount().getCent());
         huiFuPayReq.setTradeType(switch (req.getPayType()) {
-            case WX -> HuifuEnum.HuiFuTradeType.T_NATIVE;
+            case WX -> HuifuEnum.HuiFuTradeType.T_MINIAPP;
             case ALIPAY -> HuifuEnum.HuiFuTradeType.A_NATIVE;
             default -> throw new PlatformException(BaseErrorCode.PARAM);
         });
+        // 微信支付时回填 openId (汇付 sub_openid), 按账号从身份表查
+        if (req.getPayType() == PaymentEnum.PayType.WX) {
+            String openId = StrUtil.blankToDefault(req.getWxOpenId(),
+                    accountApi.queryWxOpenId(req.getAccountId()));
+            huiFuPayReq.setWxOpenId(openId);
+        }
         return huiFuPayReq;
     }
 

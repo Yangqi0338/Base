@@ -21,7 +21,7 @@ public class PaymentEnum implements Serializable {
      */
     @Getter
     @AllArgsConstructor
-    public enum PayState {
+    public enum PayState implements IEnum<Integer> {
         PENDING(0,"待支付"),
         SUCCESS(1,"支付成功"),
         FAILED(2,"支付失败"),

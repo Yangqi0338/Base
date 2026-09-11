@@ -1,13 +1,6 @@
 package com.newzkl.platform.base.biz.finance.facade;
 
-import com.newzkl.platform.base.common.ddd.facade.SupplierSettleReq;
-import com.newzkl.platform.base.common.ddd.facade.ChannelSettleReq;
-import com.newzkl.platform.base.common.ddd.facade.BalancePayReq;
-import com.newzkl.platform.base.common.ddd.facade.BalancePayResult;
-import com.newzkl.platform.base.common.ddd.facade.MemberRefundRes;
-import com.newzkl.platform.base.common.ddd.facade.OrderPayReq;
-import com.newzkl.platform.base.common.ddd.facade.PayBaseResult;
-import com.newzkl.platform.base.common.ddd.facade.SellAfterRefundReq;
+import com.newzkl.platform.base.common.ddd.facade.*;
 
 /**
  * 余额支付对外契约 (facade 自带 model, 防腐: 不暴露内部 model)。

@@ -12,6 +12,9 @@ import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.vo.RequestInfo;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * 权限获取工具类
@@ -86,6 +89,15 @@ public class SecurityUtils {
         String identity = SecurityContextHolder.get(TokenConstants.DETAILS_IDENTITY, String.class);
         Long identityCode = ArrayUtil.get(StrUtil.splitToLong(identity, ','), 0);
         return AccountEnum.Identity.getByCode(identityCode);
+    }
+
+    public static List<AccountEnum.Identity> getIdentityList() {
+        String identity = SecurityContextHolder.get(TokenConstants.DETAILS_IDENTITY, String.class);
+        if (StrUtil.isBlank(identity)) {
+            return CollUtil.newArrayList();
+        }
+        return Arrays.stream(StrUtil.splitToLong(identity, ','))
+                .mapToObj(AccountEnum.Identity::getByCode).toList();
     }
 
     public static RequestInfo getRequestInfo() {

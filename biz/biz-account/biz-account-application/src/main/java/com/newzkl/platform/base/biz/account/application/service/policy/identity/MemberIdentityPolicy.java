@@ -43,6 +43,8 @@ public class MemberIdentityPolicy extends AbsIdentityPolicy {
         MemberReq memberCommand = new MemberReq();
         memberCommand.setId(accountId);
         memberCommand.setChannelId(accountId);
+        memberCommand.setOpenId(customSaveReq.getOpenId());
+        memberCommand.setUnionId(customSaveReq.getUnionId());
         userDomain.memberSave(memberCommand);
 
         return new IdentityRegisterRes(null, accountId);

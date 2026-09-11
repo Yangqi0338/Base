@@ -24,7 +24,7 @@ public class EarningsEnum implements Serializable {
      */
     @AllArgsConstructor
     @Getter
-    public enum ConsumeType {
+    public enum ConsumeType implements IEnum<Integer> {
         /**
          * 礼包
          */
@@ -47,12 +47,12 @@ public class EarningsEnum implements Serializable {
 
         @EnumValue
         @JsonValue
-        private final Integer type;
-        private final String info;
+        private final Integer code;
+        private final String value;
 
         public static ConsumeType getByType(Integer consumeType) {
             return Stream.of(ConsumeType.values())
-                    .filter(extension -> extension.getType().equals(consumeType))
+                    .filter(extension -> extension.getCode().equals(consumeType))
                     .findFirst()
                     .orElse(null);
         }
@@ -63,7 +63,7 @@ public class EarningsEnum implements Serializable {
      */
     @AllArgsConstructor
     @Getter
-    public enum State {
+    public enum State implements IEnum<Integer> {
         /** 待结算 */
         SETTLE(0, "待结算"),
         /** 已结算 */
@@ -74,8 +74,8 @@ public class EarningsEnum implements Serializable {
 
         @EnumValue
         @JsonValue
-        private final Integer type;
-        private final String info;
+        private final Integer code;
+        private final String value;
     }
 
     /**

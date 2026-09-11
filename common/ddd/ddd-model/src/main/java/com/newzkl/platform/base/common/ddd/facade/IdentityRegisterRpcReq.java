@@ -67,4 +67,12 @@ public class IdentityRegisterRpcReq extends BaseReq {
      * 是否旧
      */
     private boolean old = false;
+    /**
+     * 微信 openId, 小程序注册时换码后落身份表
+     */
+    private String openId;
+    /**
+     * 微信 unionId, 小程序注册时换码后落身份表
+     */
+    private String unionId;
 }

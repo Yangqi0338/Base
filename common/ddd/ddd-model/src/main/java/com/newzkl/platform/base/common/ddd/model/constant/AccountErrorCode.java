@@ -36,6 +36,7 @@ public enum AccountErrorCode implements ErrorCode {
     REGISTER_CERTIFICATE_ERROR(1016, "错误{}凭证"),
     CERTIFICATE_MISSING(1017, "错误{}凭证"),
     PASSWORD_NOT_SET(1018, "未设置密码，请验证码登录后手动设置密码"),
+    WX_BIND(1019, "微信绑定失败"),
     ;
 
     /**

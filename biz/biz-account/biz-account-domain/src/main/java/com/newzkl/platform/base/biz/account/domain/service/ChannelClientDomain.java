@@ -39,6 +39,16 @@ public interface ChannelClientDomain {
     void channelEdit(List<EditColumnVO> editColumnList, Long id);
 
     /**
+     * 微信绑定回写: 把 openId/unionId 落到 channel 表
+     *
+     * @param accountId 渠道商账号ID (与 channel 主键同值)
+     * @param openId    微信 openId
+     * @param unionId   微信 unionId
+     * @return 是否回写成功
+     */
+    boolean bindChannelWx(Long accountId, String openId, String unionId);
+
+    /**
      * 渠道商纯净详情
      *
      * @param channelId 渠道商账号ID

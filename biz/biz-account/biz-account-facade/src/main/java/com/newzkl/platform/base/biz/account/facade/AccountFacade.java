@@ -54,4 +54,28 @@ public interface AccountFacade {
     AccountRpcVO register(List<IdentityRegisterRpcReq> registerRpcReq);
 
     boolean accountEdit(AccountRpcVO rpcVO);
+
+    /**
+     * 微信绑定回写: 按身份把 openId/unionId 落到身份表
+     *
+     * <p>登录场景传 wxCode 换码后调用, 保持小程序登录与自主注册口径一致。
+     * 只覆盖 member/channel 两种小程序身份, 其余身份返回 false 不回写。</p>
+     *
+     * @param identity 身份
+     * @param accountId 账号ID (与身份表主键同值)
+     * @param openId   微信 openId
+     * @param unionId  微信 unionId
+     * @return 是否回写成功
+     */
+    boolean bindWx(AccountEnum.Identity identity, Long accountId, String openId, String unionId);
+
+    /**
+     * 按账号查微信 openId
+     *
+     * <p>供支付等三方场景回填 openId。member 优先、channel 兜底, 均无则 null。</p>
+     *
+     * @param accountId 账号ID (与身份表主键同值)
+     * @return openId, 无则 null
+     */
+    String queryWxOpenId(Long accountId, AccountEnum.Identity identity);
 }

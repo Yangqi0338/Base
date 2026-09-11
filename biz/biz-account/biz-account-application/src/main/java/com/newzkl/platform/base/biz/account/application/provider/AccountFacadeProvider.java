@@ -5,13 +5,16 @@ import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySuppo
 import com.newzkl.platform.base.biz.account.domain.repository.AccountRepository;
 import com.newzkl.platform.base.biz.account.domain.service.AccountDomain;
 import com.newzkl.platform.base.biz.account.domain.service.ChannelClientDomain;
+import com.newzkl.platform.base.biz.account.domain.service.UserClientDomain;
 import com.newzkl.platform.base.biz.account.facade.AccountFacade;
 import com.newzkl.platform.base.biz.account.facade.model.AccountRpcQuery;
 import com.newzkl.platform.base.biz.account.model.auth.req.IdentityCustomSaveReq;
 import com.newzkl.platform.base.biz.account.model.req.AccountQuery;
 import com.newzkl.platform.base.biz.account.model.req.AccountReq;
+import com.newzkl.platform.base.biz.account.model.dto.ChannelDTO;
 import com.newzkl.platform.base.biz.account.model.req.ChannelReq;
 import com.newzkl.platform.base.biz.account.model.req.IdentityRegisterRes;
+import com.newzkl.platform.base.biz.account.model.vo.MemberVO;
 import com.newzkl.platform.base.common.ddd.facade.AccountGroupVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
@@ -21,6 +24,7 @@ import com.newzkl.platform.base.common.ddd.facade.ChannelRegisterReq;
 import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.account.ChannelEnum;
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,7 @@ public class AccountFacadeProvider implements AccountFacade {
     private final AccountRepository accountRepository;
     private final AccountDomain accountDomain;
     private final ChannelClientDomain channelDomain;
+    private final UserClientDomain userDomain;
 
     @Override
     public List<AccountGroupVO> listAccountByIds(List<Long> accountIdList) {
@@ -133,6 +138,8 @@ public class AccountFacadeProvider implements AccountFacade {
             saveReq.setNickname(req.getNickname());
             saveReq.setHead(req.getHead());
             saveReq.setRegisterOnce(req.isRegisterOnce());
+            saveReq.setOpenId(req.getOpenId());
+            saveReq.setUnionId(req.getUnionId());
             AbsIdentityPolicy policy = AbsIdentityPolicySupport.getPolicy(req.getIdentity());
             policy.customRegister(saveReq);
             // 端默认身份(自助注册主账号)自动授本端超管; 非默认身份(如员工)由管理员分配, 不触发
@@ -150,5 +157,47 @@ public class AccountFacadeProvider implements AccountFacade {
     public boolean accountEdit(AccountRpcVO rpcVO) {
         AccountReq req = TransferUtils.transfer(rpcVO, AccountReq.class);
         return accountDomain.accountEdit(req);
+    }
+
+    @Override
+    public boolean bindWx(AccountEnum.Identity identity, Long accountId, String openId, String unionId) {
+        if (identity == null || accountId == null) {
+            return false;
+        }
+        boolean bound;
+        switch (identity) {
+            case MEMBER -> bound = userDomain.bindMemberWx(accountId, openId, unionId);
+            case CHANNEL -> bound = channelDomain.bindChannelWx(accountId, openId, unionId);
+            default -> {
+                return false;
+            }
+        }
+        // 绑定成功后置 account.wxPermission = YES, 供后续快速判断
+        if (bound && StrUtil.isNotBlank(openId)) {
+            AccountReq req = new AccountReq();
+            req.setId(accountId);
+            req.setIdentity(identity);
+            req.setWxPermission(CommonEnum.YesOrNo.YES);
+            accountDomain.accountEdit(req);
+        }
+        return bound;
+    }
+
+    @Override
+    public String queryWxOpenId(Long accountId, AccountEnum.Identity identity) {
+        if (accountId == null) {
+            return null;
+        }
+        if (identity == AccountEnum.Identity.MEMBER || identity == null) {
+            MemberVO member = userDomain.member(accountId);
+            if (member != null && StrUtil.isNotBlank(member.getOpenId())) {
+                return member.getOpenId();
+            }
+        }
+        if (identity == AccountEnum.Identity.CHANNEL  || identity == null) {
+            ChannelDTO channel = channelDomain.channelBase(accountId);
+            return channel == null ? null : channel.getOpenId();
+        }
+        return null;
     }
 }

@@ -88,4 +88,9 @@ public class AccountApiImpl implements AccountApi {
     public boolean accountEdit(AccountRpcVO accountUpdate) {
         return accountFacade.accountEdit(accountUpdate);
     }
+
+    @Override
+    public boolean bindWx(AccountEnum.Identity identity, Long accountId, String openId, String unionId) {
+        return accountFacade.bindWx(identity, accountId, openId, unionId);
+    }
 }

@@ -43,6 +43,14 @@ public class ChannelDTO extends BaseRes {
      */
     private CommonEnum.YesOrNo storePermission;
     /**
+     * 微信 openId
+     */
+    private String openId;
+    /**
+     * 微信 unionId
+     */
+    private String unionId;
+    /**
      * 店铺地址, 省 CODE, 6 位
      */
     private Integer shipProvinceCode;

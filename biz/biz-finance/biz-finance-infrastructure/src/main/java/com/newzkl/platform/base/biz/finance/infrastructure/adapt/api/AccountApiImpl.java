@@ -58,4 +58,9 @@ public class AccountApiImpl implements AccountApi {
     public PermissionRpcVO levelPermissionVO(AccountEnum.Identity identity, Integer level) {
         return levelFacade.levelPermissionVO(identity, level);
     }
+
+    @Override
+    public String queryWxOpenId(Long accountId) {
+        return accountFacade.queryWxOpenId(accountId, null);
+    }
 }

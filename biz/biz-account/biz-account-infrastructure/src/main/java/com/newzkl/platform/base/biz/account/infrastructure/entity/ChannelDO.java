@@ -65,4 +65,12 @@ public class ChannelDO extends BaseDO {
      * 店铺名称
      */
     private String storeName;
+    /**
+     * 微信 openId
+     */
+    private String openId;
+    /**
+     * 微信 unionId
+     */
+    private String unionId;
 }

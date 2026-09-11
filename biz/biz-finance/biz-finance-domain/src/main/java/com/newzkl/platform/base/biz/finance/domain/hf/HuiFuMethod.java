@@ -25,6 +25,7 @@ import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.AccountBindSyn
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.OpenAccountRes;
 import com.newzkl.platform.base.biz.finance.model.purse.res.huifu.TripartiteAccountBaseRes;
 import com.newzkl.platform.base.biz.finance.model.support.TripartiteBaseRes;
+import com.newzkl.platform.base.common.ddd.model.enums.finance.HuifuEnum;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuNotifyEnum;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
@@ -92,7 +93,12 @@ public class HuiFuMethod {
         String amount = decorateAmount(request.getPayAmount());
         req.setTrans_amt(amount);
         req.setNotify_url(HuiFuProperties.getUrl(HuiFuNotifyEnum.pay));
-
+        if (request.getTradeType() == HuifuEnum.HuiFuTradeType.T_MINIAPP) {
+            PayReq.WxData wxData = new PayReq.WxData();
+            wxData.setSub_appid(HuiFuProperties.wxAppId);
+            wxData.setSub_openid(request.getWxOpenId());
+            req.setWx_data(wxData);
+        }
         PayRes res = api.pay(req);
         // 转化业务类
         HuiFuPayRes huiFuPayRes = buildTradeRes(res, HuiFuPayRes.class);
@@ -100,6 +106,7 @@ public class HuiFuMethod {
         huiFuPayRes.setQrCode(res.getQr_code());
         huiFuPayRes.setTradeNo(res.getTradeNo());
         huiFuPayRes.setTradeAmount(amountDecimal(amount));
+        huiFuPayRes.setPayInfo(res.getPay_info());
         return huiFuPayRes;
     }
 

@@ -31,4 +31,15 @@ public interface AccountApi {
     boolean exists(String newUsername, AccountEnum.Client client);
 
     boolean accountEdit(AccountRpcVO accountUpdate);
+
+    /**
+     * 微信绑定回写: 按身份把 openId/unionId 落到身份表
+     *
+     * @param identity  身份
+     * @param accountId 账号ID
+     * @param openId    微信 openId
+     * @param unionId   微信 unionId
+     * @return 是否回写成功
+     */
+    boolean bindWx(AccountEnum.Identity identity, Long accountId, String openId, String unionId);
 }

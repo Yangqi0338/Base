@@ -1,6 +1,7 @@
 package com.newzkl.platform.base.biz.account.domain.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.account.domain.adapt.api.PurseApi;
 import com.newzkl.platform.base.biz.account.domain.policy.AbsIdentityPolicySupport;
@@ -14,6 +15,7 @@ import com.newzkl.platform.base.biz.account.model.res.SimpleAccountRes;
 import com.newzkl.platform.base.biz.account.model.vo.AccountStructureTreeVO;
 import com.newzkl.platform.base.biz.account.model.vo.AccountVO;
 import com.newzkl.platform.base.common.core.model.enums.SmsEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.PlatformException;
 import com.newzkl.platform.base.common.core.redis.model.req.VerificationCodeReq;
 import com.newzkl.platform.base.common.ddd.facade.IdentityRegisterRpcReq;
@@ -174,6 +176,10 @@ public class AccountDomainImpl implements AccountDomain {
         accountVO.setHead(req.getHead());
         accountVO.setPhone(req.getPhone());
         accountVO.setId(req.getId());
+        // 小程序注册携带 openId 时标记已绑定微信, 供后续快速判断跳过 member/channel 查询
+        if (StrUtil.isNotBlank(req.getOpenId())) {
+            accountVO.setWxPermission(CommonEnum.YesOrNo.YES);
+        }
         Long accountId = accountRepository.accountSave(accountVO);
         accountVO.setId(accountId);
 

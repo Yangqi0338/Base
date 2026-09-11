@@ -72,6 +72,14 @@ public class RegisterReq {
     private CommonEnum.YesOrNo createMember;
 
     /**
+     * 微信小程序登录 code
+     *
+     * <p>小程序端注册传入, 后端经 jscode2session 换 openId/unionId 落身份表;
+     * PC 端不传。</p>
+     */
+    private String wxCode;
+
+    /**
      * 注册后是否自动登录
      *
      * <p>默认 true: 注册成功后回登录态返回 token; false 仅注册, token 为空</p>

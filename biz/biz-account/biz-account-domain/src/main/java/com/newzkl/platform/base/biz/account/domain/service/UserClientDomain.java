@@ -74,6 +74,16 @@ public interface UserClientDomain {
     MemberRes memberDetail(Long memberId);
 
     /**
+     * 微信绑定回写: 把 openId/unionId 落到 member 表
+     *
+     * @param accountId 会员账号ID (与 member 主键同值)
+     * @param openId    微信 openId
+     * @param unionId   微信 unionId
+     * @return 是否回写成功
+     */
+    boolean bindMemberWx(Long accountId, String openId, String unionId);
+
+    /**
      * 注销账号
      *
      * <p>仅将 account 状态置为注销, 身份表 (member/channel/...) 数据保留。</p>

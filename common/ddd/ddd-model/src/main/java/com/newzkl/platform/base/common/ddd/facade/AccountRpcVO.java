@@ -84,5 +84,10 @@ public class AccountRpcVO extends BaseRes {
      * 手机号
      */
     private String phone;
+    /**
+     * 微信绑定权限
+     * @ext 1-已绑定, 0/空-未绑定
+     */
+    private CommonEnum.YesOrNo wxPermission;
     private Boolean old;
 }

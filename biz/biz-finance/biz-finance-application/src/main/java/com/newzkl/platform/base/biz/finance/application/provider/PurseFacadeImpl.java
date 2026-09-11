@@ -56,7 +56,7 @@ public class PurseFacadeImpl implements PurseFacade {
             addAccountPurseReqs.add(buildAddAccountPurseReq(req, PurseEnum.Type.GOODS_SEAT));
         }
 
-        if (req.getPurseUser() == PurseEnum.User.CHANNEL) {
+        if (req.getPurseUser() == PurseEnum.User.CHANNEL || req.getPurseUser() == PurseEnum.User.MMT_CHANNEL) {
             addAccountPurseReqs.add(buildAddAccountPurseReq(req, PurseEnum.Type.PURCHASE));
             addAccountPurseReqs.add(buildAddAccountPurseReq(req, PurseEnum.Type.GOODS_SEAT));
             addAccountPurseReqs.add(buildAddAccountPurseReq(req, PurseEnum.Type.GOODS_INCOME));

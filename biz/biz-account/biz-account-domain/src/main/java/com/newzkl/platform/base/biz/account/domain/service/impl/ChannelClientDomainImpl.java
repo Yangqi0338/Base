@@ -84,6 +84,19 @@ public class ChannelClientDomainImpl extends IdentityAccountSupport implements C
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean bindChannelWx(Long accountId, String openId, String unionId) {
+        if (accountId == null) {
+            return false;
+        }
+        ChannelVO item = new ChannelVO();
+        item.setId(accountId);
+        item.setOpenId(openId);
+        item.setUnionId(unionId);
+        return channelRepository.channelEdit(item) > 0;
+    }
+
+    @Override
     public ChannelDTO channelBase(Long channelId) {
         return channelAssembler.vo2DTO(this.loadChannel(channelId));
     }

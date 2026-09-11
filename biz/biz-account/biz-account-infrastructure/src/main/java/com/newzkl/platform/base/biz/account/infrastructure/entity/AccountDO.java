@@ -120,4 +120,10 @@ public class AccountDO extends BaseDO {
      * 三方账户id
      */
     private String tripartiteAccountId;
+
+    /**
+     * 微信绑定权限
+     * @ext 1-已绑定, 0/空-未绑定; 注册/绑定回写时置 YES, 用于快速判断跳过 member/channel 查询
+     */
+    private CommonEnum.YesOrNo wxPermission;
 }

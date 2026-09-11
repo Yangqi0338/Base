@@ -94,7 +94,7 @@ public class HuiFuInterceptor extends ValidateForestInterceptor {
 
         Type bizType = request.getMethod().getReturnType();
         Type syncType = new ParameterizedTypeImpl(new Type[]{bizType}, null, Base.SyncRes.class);
-        Base.SyncRes<Base.Res> res = JSON.parseObject(content, syncType);
+        Base.SyncRes<Base.Res> res = JSONUtil.toBean(content, syncType, true);
         Base.Res data = res.getData();
         if (data == null) {
 

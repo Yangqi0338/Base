@@ -29,6 +29,7 @@ public class PurseEnum implements Serializable {
         SUPPLIER(1, AccountEnum.Identity.SUPPLIER),
         /** 渠道商 */
         CHANNEL(2, AccountEnum.Identity.CHANNEL),
+        MMT_CHANNEL(3, AccountEnum.Identity.MMT_CHANNEL),
         ;
 
         @EnumValue

@@ -124,6 +124,7 @@ public class StoreController {
     @PostMapping("orderPay")
     @FuncPermission("门店订单支付")
     public PlatformResult<StoreOrderPayRes> orderPay(@RequestBody @Valid StoreOrderPayReq orderPay) {
+        orderPay.setAccountId(SecurityUtils.getAccountId());
         return PlatformResult.success(storeService.orderPay(orderPay));
     }
 }

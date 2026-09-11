@@ -2,6 +2,7 @@ package com.newzkl.platform.base.biz.account.model.req;
 
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.PatternUtil;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -75,4 +76,10 @@ public class AccountReq extends BaseReq {
      * 后台角色id
      */
     private String jobIdList;
+
+    /**
+     * 微信绑定权限
+     * @ext 1-已绑定, 0/空-未绑定; 登录/注册绑定微信时置 YES
+     */
+    private CommonEnum.YesOrNo wxPermission;
 }

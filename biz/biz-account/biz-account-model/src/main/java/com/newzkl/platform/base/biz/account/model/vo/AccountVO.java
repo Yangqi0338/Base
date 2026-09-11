@@ -98,6 +98,11 @@ public class AccountVO extends BaseRes {
      */
     private String phone;
     /**
+     * 微信绑定权限
+     * @ext 1-已绑定, 0/空-未绑定
+     */
+    private CommonEnum.YesOrNo wxPermission;
+    /**
      * 归属端
      */
     private AccountEnum.Client client;
