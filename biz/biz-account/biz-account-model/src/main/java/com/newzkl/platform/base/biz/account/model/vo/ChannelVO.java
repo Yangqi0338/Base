@@ -74,10 +74,6 @@ public class ChannelVO extends BaseRes {
      */
     private String companyInfo;
     /**
-     * 实名认证信息
-     */
-    private String nameAuthInfo;
-    /**
      * 审批状态 (0,"待用户提交";1,"待审核";2,"通过",3,"未通过")
      */
     private AuditEnum.State auditState;
@@ -106,10 +102,6 @@ public class ChannelVO extends BaseRes {
      */
     private String unionId;
     /**
-     * 渠道商ID
-     */
-    private Long channelId;
-    /**
      * 店铺地址，省CODE, 6位
      */
     private Integer shipProvinceCode;
@@ -134,9 +126,6 @@ public class ChannelVO extends BaseRes {
      */
     private Integer totalOrderNumber;
     /**
-     * 总订单金额 (Money, 落库 BIGINT 分)
-     */
-    /**
      * 总售后笔数
      */
     private Integer totalRefundNumber;
@@ -144,18 +133,6 @@ public class ChannelVO extends BaseRes {
      * 总售后金额 (Money, 落库 BIGINT 分)
      */
     private Money totalRefundAmount;
-    /**
-     * 贡献金额 (Money, 落库 BIGINT 分)
-     */
-    private Money contributeAmount;
-    /**
-     * 层级贡献金额
-     */
-    private String contributeAmountStr;
-    /**
-     * 联表:实名认证信息 : 格式:NameAuthVO
-     */
-    private String nameAuthVO;
     /**
      * 联表:邀请码
      */
@@ -174,10 +151,6 @@ public class ChannelVO extends BaseRes {
      * 联表:角色ID集合
      */
     private String roleIdList;
-    /**
-     * 联表:运营商域名
-     */
-    private String operatorDomain;
     /**
      * 联表:数字门店地址
      */
@@ -198,23 +171,4 @@ public class ChannelVO extends BaseRes {
      * 连表: 三方账户权限
      */
     private String tripartiteAccountPermission;
-
-    /**
-     * 店铺id
-     */
-    public Long getStoreId() {
-        return Opt.ofNullable(channelId).orElse(id);
-    }
-
-    public String getStoreUrl() {
-        if (StrUtil.isNotEmpty(this.operatorDomain)) {
-            if (BizUtil.stringLast(this.operatorDomain).equals("/")) {
-                return this.operatorDomain + "scm/" + this.id + "/scm/";
-            } else {
-                return this.operatorDomain + "/scm/" + this.id + "/scm/";
-            }
-        } else {
-            return "";
-        }
-    }
 }

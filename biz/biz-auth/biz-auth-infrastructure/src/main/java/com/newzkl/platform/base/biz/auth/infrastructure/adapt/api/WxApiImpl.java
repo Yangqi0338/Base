@@ -9,9 +9,7 @@ import com.newzkl.platform.base.biz.auth.domain.adapt.api.WxApi;
 import com.newzkl.platform.base.biz.auth.model.oauth.dto.WxSessionDTO;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
-import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties;
 import com.newzkl.platform.base.common.ddd.model.properties.FinanceProperties.HuiFuProperties;
-import com.newzkl.platform.base.common.ddd.model.properties.WxMiniAppProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -1,9 +1,11 @@
 package com.newzkl.platform.base.biz.course.domain.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.LecturerCategoryRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.LecturerRepository;
+import com.newzkl.platform.base.biz.course.domain.adapt.repository.UserLecturerFollowRepository;
 import com.newzkl.platform.base.biz.course.domain.service.LecturerDomain;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
@@ -14,12 +16,14 @@ import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCa
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
 import com.newzkl.platform.base.common.core.model.exception.ThrowsException;
+import com.newzkl.platform.base.common.ddd.model.auth.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 讲师领域服务实现
@@ -38,6 +42,7 @@ public class LecturerDomainImpl implements LecturerDomain {
     private final LecturerRepository lecturerRepository;
     private final LecturerCategoryRepository lecturerCategoryRepository;
     private final CourseRepository courseRepository;
+    private final UserLecturerFollowRepository userLecturerFollowRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -83,8 +88,20 @@ public class LecturerDomainImpl implements LecturerDomain {
     }
 
     @Override
-    public IPage<LecturerRes> pageQuery(LecturerQuery query) {
-        return lecturerRepository.pageList(query);
+    public Page<LecturerRes> pageQuery(LecturerQuery query) {
+        Page<LecturerRes> pageList = lecturerRepository.pageList(query);
+        List<LecturerRes> lecturerRecords = pageList.getRecords();
+
+        Long userId = SecurityUtils.getAccountId();
+        List<Long> ids = lecturerRecords.stream().map(LecturerRes::getId).collect(Collectors.toList());
+        List<Long> lecturerIds = userLecturerFollowRepository.listFollowedLecturerIds(userId, ids);
+        lecturerRecords.forEach(lecturer -> {
+            if (lecturerIds.contains(lecturer.getId())){
+                lecturer.setIsFollow(true);
+            }
+        });
+
+        return pageList;
     }
 
     @Override

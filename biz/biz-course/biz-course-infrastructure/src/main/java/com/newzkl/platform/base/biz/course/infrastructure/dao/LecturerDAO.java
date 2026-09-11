@@ -30,6 +30,7 @@ public interface LecturerDAO extends BaseMapper<LecturerDO> {
                 .notEmptyIn(LecturerDO::getMainAccountId, query.getMainAccountIds())
                 .notNullEq(LecturerDO::getLecturerCategoryId, query.getLecturerCategoryId())
                 .notNullEq(LecturerDO::getIsEnabled, query.getIsEnabled())
+                .notNullEq(LecturerDO::getIsTop, query.getIsTop())
                 .between(LecturerDO::getCreateTime, query.getCreateTime());
         wrapper.orderByDesc(LecturerDO::getId);
         return wrapper;

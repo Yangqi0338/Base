@@ -94,7 +94,7 @@ public class PayOrderController {
         Money amount = Money.of(rechargeAmount);
         OrderPayReq req = buildOrderPayReq(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE, amount, payType);
         req.setOrderInfo(String.valueOf(rechargeAmount));
-        req.setGoodsInfo(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE.getInfo());
+        req.setGoodsInfo(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE.getValue());
         return PlatformResult.success(cashPayService.orderPay(req));
     }
 

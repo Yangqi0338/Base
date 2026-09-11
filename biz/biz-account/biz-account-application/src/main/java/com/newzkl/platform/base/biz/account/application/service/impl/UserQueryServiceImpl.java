@@ -80,15 +80,6 @@ public class UserQueryServiceImpl implements UserQueryService {
         return supplierVO;
     }
 
-    @Override
-    public List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList) {
-        if (ObjectUtil.isEmpty(supplierIdList)) {
-            return new ArrayList<>();
-        }
-//        return supplierDAO.supplierRelationVO(supplierIdList);
-        return null;
-    }
-
 
     @Override
     public Page<SupplierRes> supplierPage(SupplierQuery supplierQuery) {

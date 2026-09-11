@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.lecturer.query;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.query.BizPageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,5 +44,12 @@ public class LecturerQuery extends BizPageQuery {
      *
      * @ext 1-启用, 0-禁用; 为空查全部
      */
-    private Integer isEnabled;
+    private CommonEnum.YesOrNo isEnabled;
+
+    /**
+     * 是否金牌
+     *
+     * @ext 1-是, 0-否; 为空查全部
+     */
+    private CommonEnum.YesOrNo isTop;
 }

@@ -53,22 +53,6 @@
         </if>
     </sql>
 
-    <!-- 源取 supplier.invite_id, Base 该列已收敛 account.invite_account_id -->
-    <select id="supplierRelationVO" resultType="com.newzkl.platform.base.biz.account.model.vo.SupplierRelationVO">
-        select t.id, a.invite_account_id as up_selector_id
-        from supplier t
-        left join account a on t.id = a.id
-        <where>
-            t.del_flag = 0
-            <if test="supplierIdList != null and supplierIdList.size() > 0">
-                and t.id in
-                <foreach collection="supplierIdList" item="item" separator="," close=")" open="(">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
-    </select>
-
     <update id="changeColumn">
         update supplier set
         `${toColumn}` = `${fromColumn}`

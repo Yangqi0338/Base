@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
 import com.newzkl.platform.base.biz.course.infrastructure.convert.CourseUnitConverter;
 import com.newzkl.platform.base.biz.course.infrastructure.dao.CourseDAO;
+import com.newzkl.platform.base.biz.course.infrastructure.dao.LecturerDAO;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CourseDO;
+import com.newzkl.platform.base.biz.course.infrastructure.entity.LecturerDO;
 import com.newzkl.platform.base.biz.course.model.course.query.CourseQuery;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseDetailReq;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseReq;
 import com.newzkl.platform.base.biz.course.model.course.res.CourseRes;
+import com.newzkl.platform.base.biz.course.model.course.vo.CourseExpandVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.utils.common.TransferUtils;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
@@ -35,11 +38,14 @@ public class CourseRepositoryImpl extends RepositorySupport implements CourseRep
 
     private final CourseDAO courseDAO;
 
+    private final LecturerDAO lecturerDAO;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long saveBase(CourseReq req) {
         // 价格已 Money↔Money 同名同型, TransferUtils 直拷, 无需排除+手工换算
         CourseDO courseDO = TransferUtils.transfer(req, CourseDO::new);
+        courseDO.setExpand(TransferUtils.transfer(req, CourseExpandVO.class));
         courseDAO.insertOrUpdate(courseDO);
         return courseDO.getId();
     }
@@ -76,8 +82,34 @@ public class CourseRepositoryImpl extends RepositorySupport implements CourseRep
 
     @Override
     public Page<CourseRes> pageList(CourseQuery query) {
-        Page<CourseDO> page = courseDAO.selectPage(RepositorySupport.page(query), courseDAO.getLw(query));
+        Page<CourseDO> page = courseDAO.selectPage(RepositorySupport.page(query), getLw(query));
         return TransferUtils.transferPage(page, this::toRes);
+    }
+
+    /**
+     * 构建课程分页查询条件
+     *
+     * <p>{@code isTop} 为讲师金牌标识(跨表): 先查命中金牌/非金牌的讲师主键集合,
+     * 再按 {@code lecturer_id in (...)} 过滤课程; 无命中讲师时直接返回空集合条件,
+     * 保证结果为空。</p>
+     *
+     * @param query 查询条件
+     * @return 查询条件包装
+     */
+    private BaseLambdaQueryWrapper<CourseDO> getLw(CourseQuery query) {
+        BaseLambdaQueryWrapper<CourseDO> wrapper = courseDAO.getLw(query);
+        if (query.getIsTop() != null) {
+            List<Long> lecturerIds = listOneField(lecturerDAO,
+                    new BaseLambdaQueryWrapper<LecturerDO>()
+                            .notNullEq(LecturerDO::getIsTop, query.getIsTop()),
+                    LecturerDO::getId);
+            if (lecturerIds.isEmpty()) {
+                wrapper.eq(CourseDO::getId, -1L);
+            } else {
+                wrapper.in(CourseDO::getLecturerId, lecturerIds);
+            }
+        }
+        return wrapper;
     }
 
     @Override

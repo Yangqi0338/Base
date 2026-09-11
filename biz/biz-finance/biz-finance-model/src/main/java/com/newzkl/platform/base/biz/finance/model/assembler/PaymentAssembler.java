@@ -32,6 +32,6 @@ public interface PaymentAssembler extends BaseAssembler<OrderPayReq, PaymentVO> 
 
     default Integer getByCode(EarningsEnum.ConsumeType consumeType) {
         if (consumeType == null) return null;
-        return consumeType.getType();
+        return consumeType.getCode();
     }
 }

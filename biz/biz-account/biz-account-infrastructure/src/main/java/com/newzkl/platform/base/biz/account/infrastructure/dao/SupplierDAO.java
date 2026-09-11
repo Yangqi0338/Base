@@ -24,9 +24,6 @@ import java.util.Set;
 @Mapper
 public interface SupplierDAO extends BaseMapper<SupplierDO> {
 
-
-    List<SupplierRelationVO> supplierRelationVO(@Param("supplierIdList") List<Long> supplierIdList);
-
     void changeColumn(@Param("id") Long id, @Param("fromColumn") String fromColumn, @Param("toColumn") String toColumn);
 
     void resetColumn(@Param("id") Long id, @Param("columnList") List<String> columnList);

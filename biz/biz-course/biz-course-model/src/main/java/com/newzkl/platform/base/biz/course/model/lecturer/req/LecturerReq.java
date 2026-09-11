@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.lecturer.req;
 
+import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -59,4 +60,11 @@ public class LecturerReq extends BaseReq {
      */
     @NotNull(message = "启用状态不能为空")
     private Integer isEnabled;
+
+    /**
+     * 是否金牌
+     *
+     * @ext 1-是, 0-否
+     */
+    private CommonEnum.YesOrNo isTop;
 }

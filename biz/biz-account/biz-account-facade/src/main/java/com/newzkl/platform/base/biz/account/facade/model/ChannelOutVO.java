@@ -16,21 +16,9 @@ public class ChannelOutVO extends BaseRes implements java.io.Serializable{
      */
      private Long id;
      /**
-     * 上级交易师ID
-     */
-     private Long upDealerId;
-     /**
-     * 上级运营商ID
-     */
-     private Long upOperatorId;
-     /**
      * 角色ID
      */
      private AccountEnum.Identity identity;
-     /**
-     * 主体类型 (查询)
-     */
-     private Integer bodyType;
      /**
      * 状态 (查询)
      */
@@ -76,12 +64,10 @@ public class ChannelOutVO extends BaseRes implements java.io.Serializable{
      */
      private Integer dealerEarnings;
      /**
-     * 市场数量
-     */
-     /**
       * 适配
       */
      private String channelName;
+     private Boolean storePermission;
 
      public String getChannelName(){
           return this.name;

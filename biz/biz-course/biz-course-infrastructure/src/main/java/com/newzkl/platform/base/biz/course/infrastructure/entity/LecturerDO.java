@@ -76,4 +76,10 @@ public class LecturerDO extends BaseDO {
      * @ext 0-禁用, 1-启用
      */
     private CommonEnum.YesOrNo isEnabled;
+
+    /**
+     * 是否金牌
+     * @ext 0-否, 1-是
+     */
+    private CommonEnum.YesOrNo isTop;
 }

@@ -38,4 +38,11 @@ public class CourseQuery extends BizPageQuery {
      * @ext 1-启用, 0-禁用; 为空查全部
      */
     private Integer isEnabled;
+
+    /**
+     * 是否金牌(讲师)
+     *
+     * @ext 1-金牌, 0-非金牌; 为空查全部
+     */
+    private Integer isTop;
 }

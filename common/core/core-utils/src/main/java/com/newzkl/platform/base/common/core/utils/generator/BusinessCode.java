@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.common.core.utils.generator;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,6 +20,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@TableField(fill = FieldFill.INSERT)
 public @interface BusinessCode {
 
     /**

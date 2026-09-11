@@ -33,8 +33,6 @@ public interface UserQueryService {
 
     SupplierVO supplierVO(Long supplierId);
 
-    List<SupplierRelationVO> supplierRelationVO(List<Long> supplierIdList);
-
     ChannelEarningsConfigVO serviceFeeConfigVO(Long channelId);
 
     /**

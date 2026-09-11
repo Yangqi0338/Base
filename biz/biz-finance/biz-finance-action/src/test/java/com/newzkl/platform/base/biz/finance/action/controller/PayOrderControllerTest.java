@@ -121,7 +121,7 @@ class PayOrderControllerTest {
         OrderPayReq req = captureOrderPayReq();
         assertEquals(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE, req.getConsumeType());
         assertEquals("2000", req.getOrderInfo());
-        assertEquals(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE.getInfo(), req.getGoodsInfo());
+        assertEquals(EarningsEnum.ConsumeType.SUPPLIER_RECHARGE.getValue(), req.getGoodsInfo());
         assertEquals(ACCOUNT_ID, req.getAccountId());
         verify(accountPurseConfigDomain, never()).defaultChannelConfig();
     }

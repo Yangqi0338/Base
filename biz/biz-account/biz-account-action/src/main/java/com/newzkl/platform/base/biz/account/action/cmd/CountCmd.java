@@ -1,7 +1,10 @@
 package com.newzkl.platform.base.biz.account.action.cmd;
 
+import com.newzkl.platform.base.common.ddd.model.auth.OauthUserId;
 import com.newzkl.platform.base.common.ddd.model.enums.account.AccountEnum;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.BIEnum;
+import com.newzkl.platform.base.common.ddd.model.req.BaseReq;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -24,18 +27,17 @@ public class CountCmd {
      * @author KC
      */
     @Data
-    public static class UserAccount implements Serializable {
+    public static class UserAccount extends BaseReq {
 
         /**
          * 身份列表
          */
-        @NotNull
         private List<AccountEnum.Identity> identityList;
 
         /**
          * 账号 ID
          */
-        @NotNull
+        @OauthUserId
         private Long accountId;
     }
 }

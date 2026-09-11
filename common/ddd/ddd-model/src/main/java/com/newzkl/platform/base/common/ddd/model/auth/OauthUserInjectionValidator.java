@@ -114,15 +114,11 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
      * @param accountId 账号ID
      */
     private void injectUser(Object bean, Field field, Long accountId) {
-        try {
-            Class<?> type = field.getType();
-            if (Long.class.equals(type)) {
-                field.set(bean, accountId);
-            } else if (String.class.equals(type)) {
-                field.set(bean, String.valueOf(accountId));
-            }
-        } catch (IllegalAccessException ignored) {
-            // 注入失败不阻断校验主流程
+        Class<?> type = field.getType();
+        if (Long.class.equals(type)) {
+            ReflectUtil.setFieldValue(bean, field, accountId);
+        } else if (String.class.equals(type)) {
+            ReflectUtil.setFieldValue(bean, field, String.valueOf(accountId));
         }
     }
 
@@ -131,18 +127,13 @@ public class OauthUserInjectionValidator implements ConstraintValidator<OauthUse
      *
      * @param bean   宿主对象
      * @param field  目标字段
-     * @param role 角色ID
      */
     private void injectRole(Object bean, Field field, AccountEnum.Identity identity) {
-        try {
-            Class<?> type = field.getType();
-            if (Long.class.equals(type)) {
-                field.set(bean, identity.getCode());
-            } else if (AccountEnum.Identity.class.equals(type)) {
-                field.set(bean, identity);
-            }
-        } catch (IllegalAccessException ignored) {
-            // 注入失败不阻断校验主流程
+        Class<?> type = field.getType();
+        if (Long.class.equals(type)) {
+            ReflectUtil.setFieldValue(bean, field, identity.getCode());
+        } else if (AccountEnum.Identity.class.equals(type)) {
+            ReflectUtil.setFieldValue(bean, field, identity);
         }
     }
 

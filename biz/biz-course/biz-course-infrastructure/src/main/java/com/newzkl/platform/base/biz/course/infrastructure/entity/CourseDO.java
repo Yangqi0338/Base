@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class CourseDO extends BaseDO {
 
     /**

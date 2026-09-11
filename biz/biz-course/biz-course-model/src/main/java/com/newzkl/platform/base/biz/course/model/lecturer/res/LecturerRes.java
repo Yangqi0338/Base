@@ -75,6 +75,12 @@ public class LecturerRes extends BaseRes {
     private CommonEnum.YesOrNo isEnabled;
 
     /**
+     * 是否金牌
+     */
+    @JsonTranslate
+    private CommonEnum.YesOrNo isTop;
+
+    /**
      * 当前登录用户是否已关注该讲师
      */
     private Boolean isFollow = false;

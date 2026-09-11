@@ -110,7 +110,7 @@ public class AccountController {
      * @return 账号主体 (不含密码) + 角色编码列表 + 身份槽
      */
     @PostMapping("/identityDetail")
-    public PlatformResult<AccountAggRes> identityDetail(@RequestBody CountCmd.UserAccount userAccount) {
+    public PlatformResult<AccountAggRes> identityDetail(@RequestBody @Validated CountCmd.UserAccount userAccount) {
         if (AccountEnum.Client.ADMIN != SecurityUtils.getClient()) {
             userAccount.setIdentityList(List.of(SecurityUtils.getIdentity()));
         }
