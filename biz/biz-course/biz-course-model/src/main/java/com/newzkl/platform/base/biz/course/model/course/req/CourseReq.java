@@ -25,7 +25,7 @@ public class CourseReq extends BaseReq {
      *
      * <p>新增时由 {@code BusinessType#COURSE} 自动生成, 编辑时不可改。</p>
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 课程标题
@@ -45,12 +45,14 @@ public class CourseReq extends BaseReq {
      */
     @NotNull(message = "讲师ID不能为空")
     private Long lecturerId;
+    private String lecturerName;
 
     /**
      * 课程分类ID, 关联课程分类表主键
      */
     @NotNull(message = "课程分类ID不能为空")
     private Long categoryId;
+    private String categoryName;
 
     /**
      * 原价

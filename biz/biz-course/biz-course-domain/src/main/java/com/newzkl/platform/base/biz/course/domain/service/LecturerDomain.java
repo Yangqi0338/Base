@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
 import com.newzkl.platform.base.biz.course.model.lecturer.res.LecturerRes;
+import com.newzkl.platform.base.biz.course.model.lecturercategory.query.LecturerCategoryQuery;
+import com.newzkl.platform.base.biz.course.model.lecturercategory.req.LecturerCategoryReq;
+import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
 
 import java.util.List;
 
@@ -95,4 +98,59 @@ public interface LecturerDomain {
      * @return 是否成功
      */
     boolean addFollowCount(Long id, int delta);
+
+    /**
+     * 新增讲师分类
+     *
+     * @param req 分类请求
+     * @return 分类视图
+     */
+    LecturerCategoryRes addCategory(LecturerCategoryReq req);
+
+    /**
+     * 编辑讲师分类
+     *
+     * @param req 分类请求
+     * @return 分类视图
+     */
+    LecturerCategoryRes editCategory(LecturerCategoryReq req);
+
+    /**
+     * 启用讲师分类
+     *
+     * @param id 分类主键
+     * @return 是否成功
+     */
+    boolean enableCategory(Long id);
+
+    /**
+     * 禁用讲师分类
+     *
+     * @param id 分类主键
+     * @return 是否成功
+     */
+    boolean disableCategory(Long id);
+
+    /**
+     * 按主键查讲师分类
+     *
+     * @param id 分类主键
+     * @return 分类视图
+     */
+    LecturerCategoryRes getCategoryById(Long id);
+
+    /**
+     * 分页查讲师分类
+     *
+     * @param query 查询条件
+     * @return 分页结果
+     */
+    IPage<LecturerCategoryRes> pageCategoryQuery(LecturerCategoryQuery query);
+
+    /**
+     * 查全部启用讲师分类
+     *
+     * @return 平铺分类列表, 永远非 null
+     */
+    List<LecturerCategoryRes> listAllCategoryEnabled();
 }

@@ -42,7 +42,7 @@ public class CourseChapterWatchRecordReq implements Serializable {
     /**
      * 课程编码, 冗余字段
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 章节数, 冗余字段

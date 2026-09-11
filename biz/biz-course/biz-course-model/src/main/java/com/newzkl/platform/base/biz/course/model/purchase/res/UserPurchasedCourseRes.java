@@ -1,5 +1,8 @@
 package com.newzkl.platform.base.biz.course.model.purchase.res;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.newzkl.platform.base.biz.course.model.course.vo.CourseExpandVO;
+import com.newzkl.platform.base.common.ddd.model.enums.course.CourseEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,7 +35,7 @@ public class UserPurchasedCourseRes implements Serializable {
     /**
      * 支付状态: 0-待支付, 1-支付成功, 2-支付失败
      */
-    private Integer payState;
+    private CourseEnum.PurchasePayStateEnum payState;
 
     /**
      * 实际支付金额(分)
@@ -65,11 +68,6 @@ public class UserPurchasedCourseRes implements Serializable {
     private Long lecturerId;
 
     /**
-     * 讲师名称(冗余展示)
-     */
-    private String lecturerName;
-
-    /**
      * 课程ID
      */
     private Long courseId;
@@ -77,7 +75,7 @@ public class UserPurchasedCourseRes implements Serializable {
     /**
      * 课程编码
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 课程标题
@@ -88,11 +86,6 @@ public class UserPurchasedCourseRes implements Serializable {
      * 课程分类ID
      */
     private Long categoryId;
-
-    /**
-     * 分类名称(冗余展示)
-     */
-    private String categoryName;
 
     /**
      * 课程封面图URL
@@ -123,4 +116,7 @@ public class UserPurchasedCourseRes implements Serializable {
      * 课程简介
      */
     private String intro;
+
+    @JsonUnwrapped
+    public CourseExpandVO expand;
 }

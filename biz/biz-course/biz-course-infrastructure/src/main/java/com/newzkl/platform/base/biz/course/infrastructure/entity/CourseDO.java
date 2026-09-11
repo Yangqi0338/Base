@@ -1,13 +1,19 @@
 package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.newzkl.platform.base.biz.course.model.course.vo.CourseExpandVO;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCode;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.ColumnType;
 import org.dromara.autotable.annotation.mysql.MysqlTypeConstant;
+import org.dromara.mpe.autofill.annotation.JsonSerializable;
+
+import java.util.Map;
 
 /**
  * 课程数据对象
@@ -24,7 +30,8 @@ public class CourseDO extends BaseDO {
     /**
      * 课程编码
      */
-    private String courseNum;
+    @BusinessCode(BusinessType.COURSE)
+    private String courseNo;
 
     /**
      * 课程标题
@@ -34,6 +41,7 @@ public class CourseDO extends BaseDO {
     /**
      * 课程简介
      */
+    @ColumnType(length = 2000)
     private String intro;
 
     /**
@@ -103,13 +111,13 @@ public class CourseDO extends BaseDO {
     private Long totalDurationCentisecond;
 
     /**
-     * 课程总时长描述
-     * @ext 冗余字段
-     */
-    private String totalDurationDesc;
-
-    /**
      * 是否启用
      */
     private CommonEnum.YesOrNo isEnabled;
+
+    /**
+     * 扩展信息
+     */
+    @JsonSerializable
+    private CourseExpandVO expand;
 }

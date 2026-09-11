@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.course.action.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.newzkl.platform.base.biz.course.domain.service.CourseChapterDomain;
+import com.newzkl.platform.base.biz.course.domain.service.CourseDomain;
 import com.newzkl.platform.base.biz.course.model.chapter.query.CourseChapterQuery;
 import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
@@ -32,7 +32,7 @@ import java.util.List;
 @FuncPermission("课程章节管理")
 public class CourseChapterController {
 
-    private final CourseChapterDomain courseChapterDomain;
+    private final CourseDomain courseDomain;
 
     /**
      * 新增章节
@@ -46,7 +46,7 @@ public class CourseChapterController {
         if (req.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        return PlatformResult.success(courseChapterDomain.add(req));
+        return PlatformResult.success(courseDomain.addChapter(req));
     }
 
     /**
@@ -61,7 +61,7 @@ public class CourseChapterController {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        return PlatformResult.success(courseChapterDomain.edit(req));
+        return PlatformResult.success(courseDomain.editChapter(req));
     }
 
     /**
@@ -73,7 +73,7 @@ public class CourseChapterController {
     @PostMapping("/enable/{id}")
     @FuncPermission("启用章节")
     public PlatformResult<Boolean> enable(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.enable(id));
+        return PlatformResult.success(courseDomain.enableChapter(id));
     }
 
     /**
@@ -85,7 +85,7 @@ public class CourseChapterController {
     @PostMapping("/disable/{id}")
     @FuncPermission("禁用章节")
     public PlatformResult<Boolean> disable(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.disable(id));
+        return PlatformResult.success(courseDomain.disableChapter(id));
     }
 
     /**
@@ -97,7 +97,7 @@ public class CourseChapterController {
     @PostMapping("/setFree/{id}")
     @FuncPermission("设为免费章节")
     public PlatformResult<Boolean> setFree(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.setFree(id));
+        return PlatformResult.success(courseDomain.setFree(id));
     }
 
     /**
@@ -109,7 +109,7 @@ public class CourseChapterController {
     @PostMapping("/setCharge/{id}")
     @FuncPermission("设为收费章节")
     public PlatformResult<Boolean> setCharge(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.setCharge(id));
+        return PlatformResult.success(courseDomain.setCharge(id));
     }
 
     /**
@@ -120,7 +120,7 @@ public class CourseChapterController {
      */
     @GetMapping("/get/{id}")
     public PlatformResult<CourseChapterRes> get(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.getById(id));
+        return PlatformResult.success(courseDomain.getChapterById(id));
     }
 
     /**
@@ -131,18 +131,18 @@ public class CourseChapterController {
      */
     @PostMapping("/page")
     public PlatformResult<IPage<CourseChapterRes>> page(@RequestBody CourseChapterQuery query) {
-        return PlatformResult.success(courseChapterDomain.pageQuery(query));
+        return PlatformResult.success(courseDomain.pageChapterQuery(query));
     }
 
     /**
      * 按课程编号查章节列表
      *
-     * @param courseNum 课程编号
+     * @param courseNo 课程编号
      * @return 章节列表
      */
-    @GetMapping("/listByCourse/{courseNum}")
-    public PlatformResult<List<CourseChapterRes>> listByCourse(@PathVariable("courseNum") String courseNum) {
-        return PlatformResult.success(courseChapterDomain.listByCourseNum(courseNum));
+    @GetMapping("/listByCourse/{courseNo}")
+    public PlatformResult<List<CourseChapterRes>> listByCourse(@PathVariable("courseNo") String courseNo) {
+        return PlatformResult.success(courseDomain.listChapterByCourseNo(courseNo));
     }
 
     /**
@@ -154,7 +154,7 @@ public class CourseChapterController {
     @PostMapping("/delete/{id}")
     @FuncPermission("删除章节")
     public PlatformResult<Boolean> delete(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.delete(id));
+        return PlatformResult.success(courseDomain.deleteChapter(id));
     }
 
     /**
@@ -166,7 +166,7 @@ public class CourseChapterController {
     @PostMapping("/batchDelete")
     @FuncPermission("批量删除章节")
     public PlatformResult<Boolean> batchDelete(@Validated @RequestBody IdCommand idListCommand) {
-        return PlatformResult.success(courseChapterDomain.batchDelete(idListCommand.getIdList()));
+        return PlatformResult.success(courseDomain.batchDeleteChapter(idListCommand.getIdList()));
     }
 
     /**
@@ -178,6 +178,6 @@ public class CourseChapterController {
     @PostMapping("/recover/{id}")
     @FuncPermission("恢复已删除章节")
     public PlatformResult<Boolean> recover(@PathVariable("id") Long id) {
-        return PlatformResult.success(courseChapterDomain.recover(id));
+        return PlatformResult.success(courseDomain.recoverChapter(id));
     }
 }

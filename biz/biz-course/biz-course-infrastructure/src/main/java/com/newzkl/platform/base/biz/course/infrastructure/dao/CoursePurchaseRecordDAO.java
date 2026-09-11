@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.newzkl.platform.base.biz.course.infrastructure.entity.CoursePurchaseRecordDO;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
 import com.newzkl.platform.base.common.core.mybatis.support.BaseLambdaQueryWrapper;
+import com.newzkl.platform.base.common.ddd.model.enums.course.CourseEnum;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public interface CoursePurchaseRecordDAO extends BaseMapper<CoursePurchaseRecord
      * @param payNo    第三方支付流水号
      * @return 更新条数
      */
-    default int updatePayState(Long orderNo, Integer payState, String payNo) {
+    default int updatePayState(Long orderNo, CourseEnum.PurchasePayStateEnum payState, String payNo) {
         LambdaUpdateWrapper<CoursePurchaseRecordDO> uw = Wrappers.<CoursePurchaseRecordDO>lambdaUpdate()
                 .set(CoursePurchaseRecordDO::getPayState, payState)
                 .set(CoursePurchaseRecordDO::getPayNo, payNo)

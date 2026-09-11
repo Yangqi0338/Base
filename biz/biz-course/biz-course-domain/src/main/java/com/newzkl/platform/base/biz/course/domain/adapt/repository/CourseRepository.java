@@ -43,10 +43,10 @@ public interface CourseRepository {
     /**
      * 按课程编码查课程
      *
-     * @param courseNum 课程编码
+     * @param courseNo 课程编码
      * @return 课程视图, 不存在返回 null
      */
-    CourseRes getByCourseNum(String courseNum);
+    CourseRes getByCourseNo(String courseNo);
 
     /**
      * 分页查课程

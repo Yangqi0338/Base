@@ -138,10 +138,10 @@ public class MQUtil {
     private static LocalMessageDTO buildDTO(String topic, String tag, Long localMessageId, Object messageContent, String outKey) {
         String content = null;
         String contentClass = null;
-        if (JSONUtil.isTypeJSON((String) messageContent)) {
+        if (messageContent instanceof String && JSONUtil.isTypeJSON((String) messageContent)) {
             content = (String) messageContent;
         } else if (messageContent != null) {
-            content = messageContent.toString();
+            content = JSONUtil.toJsonStr(messageContent);
             contentClass = messageContent.getClass().getCanonicalName();
         }
         LocalMessageDTO dto = new LocalMessageDTO();

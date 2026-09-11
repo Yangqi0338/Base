@@ -2,7 +2,7 @@ ALTER TABLE
   `course_purchase_record` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
   MODIFY COLUMN `order_no` bigint NULL COMMENT 'orderNo',
   MODIFY COLUMN `course_id` bigint NULL COMMENT 'courseId',
-  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNum',
+  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNo',
   MODIFY COLUMN `user_id` bigint NULL COMMENT 'userId',
   MODIFY COLUMN `original_price` bigint NULL COMMENT 'originalPrice',
   MODIFY COLUMN `pay_price` bigint NULL COMMENT 'payPrice',

@@ -65,12 +65,12 @@ public class CourseRepositoryImpl extends RepositorySupport implements CourseRep
     }
 
     @Override
-    public CourseRes getByCourseNum(String courseNum) {
-        if (courseNum == null || courseNum.isBlank()) {
+    public CourseRes getByCourseNo(String courseNo) {
+        if (courseNo == null || courseNo.isBlank()) {
             return null;
         }
         BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<CourseDO>()
-                .notEmptyEq(CourseDO::getCourseNum, courseNum);
+                .notEmptyEq(CourseDO::getCourseNo, courseNo);
         return toRes(courseDAO.selectOne(wrapper.last("limit 1")));
     }
 
@@ -84,7 +84,7 @@ public class CourseRepositoryImpl extends RepositorySupport implements CourseRep
     public List<CourseRes> listByCategoryId(Long categoryId) {
         BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<CourseDO>()
                 .notNullEq(CourseDO::getCategoryId, categoryId)
-                .notNullEq(CourseDO::getIsEnabled, 1);
+                .notNullEq(CourseDO::getIsEnabled, CommonEnum.YesOrNo.YES);
         wrapper.orderByDesc(CourseDO::getId);
         return TransferUtils.transfers(courseDAO.selectList(wrapper), this::toRes);
     }
@@ -113,35 +113,29 @@ public class CourseRepositoryImpl extends RepositorySupport implements CourseRep
         courseDO.setId(id);
         courseDO.setChapterCount(chapterCount);
         courseDO.setTotalDurationCentisecond(totalDurationCentisecond);
-        courseDO.setTotalDurationDesc(CourseUnitConverter.formatCentisecond(totalDurationCentisecond));
         return courseDAO.updateById(courseDO) > 0;
     }
 
     @Override
     public List<Long> listIdsByTitleAndCategory(String title, Long categoryId) {
-        boolean hasTitle = title != null && !title.isBlank();
-        if (!hasTitle && categoryId == null) {
-            return java.util.Collections.emptyList();
-        }
-        BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<>();
-        wrapper.notEmptyLike(CourseDO::getTitle, title)
-                .notNullEq(CourseDO::getCategoryId, categoryId);
-        wrapper.select(CourseDO::getId);
-        return courseDAO.selectList(wrapper).stream().map(CourseDO::getId).toList();
+        CourseQuery query = new CourseQuery();
+        query.setCategoryId(categoryId);
+        query.setTitle(title);
+        return listOneField(courseDAO, courseDAO.getLw(query), CourseDO::getId);
     }
 
     @Override
     public long countByCategoryId(Long categoryId) {
-        BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<CourseDO>()
-                .notNullEq(CourseDO::getCategoryId, categoryId);
-        return courseDAO.selectCount(wrapper);
+        CourseQuery query = new CourseQuery();
+        query.setCategoryId(categoryId);
+        return courseDAO.selectCount(courseDAO.getLw(query));
     }
 
     @Override
     public long countByLecturerId(Long lecturerId) {
-        BaseLambdaQueryWrapper<CourseDO> wrapper = new BaseLambdaQueryWrapper<CourseDO>()
-                .notNullEq(CourseDO::getLecturerId, lecturerId);
-        return courseDAO.selectCount(wrapper);
+        CourseQuery query = new CourseQuery();
+        query.setLecturerId(lecturerId);
+        return courseDAO.selectCount(courseDAO.getLw(query));
     }
 
     @Override

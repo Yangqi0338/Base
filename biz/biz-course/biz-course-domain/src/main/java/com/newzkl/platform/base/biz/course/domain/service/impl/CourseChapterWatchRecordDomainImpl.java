@@ -29,7 +29,7 @@ import java.util.List;
  * <p>迁移自 {@code com.zkl.scm.user.domain.course.service.impl.CourseChapterWatchRecordDomainServiceImpl}
  * 与应用服务 {@code CourseChapterWatchRecordServiceImpl} 的合并结果。</p>
  *
- * <p>{@code courseNum}/{@code chapterNum} 为冗余字段, 入参未带时由章节回读补齐, 与旧实现一致。</p>
+ * <p>{@code courseNo}/{@code chapterNum} 为冗余字段, 入参未带时由章节回读补齐, 与旧实现一致。</p>
  *
  * @author KC
  */

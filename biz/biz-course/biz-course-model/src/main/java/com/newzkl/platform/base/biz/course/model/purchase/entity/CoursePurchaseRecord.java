@@ -1,5 +1,6 @@
 package com.newzkl.platform.base.biz.course.model.purchase.entity;
 
+import com.newzkl.platform.base.common.ddd.model.enums.course.CourseEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ public class CoursePurchaseRecord implements Serializable {
     /**
      * 订单编号(唯一)
      */
-    private Long orderNo;
+    private String orderNo;
 
     /**
      * 课程ID
@@ -37,7 +38,7 @@ public class CoursePurchaseRecord implements Serializable {
     /**
      * 课程编码
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 购买用户ID
@@ -57,7 +58,7 @@ public class CoursePurchaseRecord implements Serializable {
     /**
      * 支付状态: 0-待支付, 1-支付成功, 2-支付失败
      */
-    private Integer payState;
+    private CourseEnum.PurchasePayStateEnum payState;
 
     /**
      * 支付链接/二维码

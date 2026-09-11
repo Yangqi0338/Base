@@ -1,6 +1,6 @@
 ALTER TABLE
   `course` MODIFY COLUMN `id` bigint NOT NULL COMMENT 'id',
-  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNum',
+  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNo',
   MODIFY COLUMN `title` varchar(255) NULL COMMENT 'title',
   MODIFY COLUMN `intro` varchar(255) NULL COMMENT 'intro',
   MODIFY COLUMN `lecturer_id` bigint NULL COMMENT 'lecturerId',

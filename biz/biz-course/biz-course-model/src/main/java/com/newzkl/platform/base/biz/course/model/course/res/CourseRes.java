@@ -1,5 +1,7 @@
 package com.newzkl.platform.base.biz.course.model.course.res;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.newzkl.platform.base.biz.course.model.course.vo.CourseExpandVO;
 import com.newzkl.platform.base.common.core.model.annotation.JsonTranslate;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.money.Money;
@@ -22,7 +24,7 @@ public class CourseRes extends BaseRes {
     /**
      * 课程编码
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 课程标题
@@ -40,19 +42,9 @@ public class CourseRes extends BaseRes {
     private Long lecturerId;
 
     /**
-     * 讲师名称, 冗余展示
-     */
-    private String lecturerName;
-
-    /**
      * 课程分类ID
      */
     private Long categoryId;
-
-    /**
-     * 分类名称, 冗余展示
-     */
-    private String categoryName;
 
     /**
      * 原价 (Money; JSON 出参按元字符串序列化)
@@ -119,4 +111,7 @@ public class CourseRes extends BaseRes {
      */
     @JsonTranslate(index = 1)
     private CommonEnum.YesOrNo isEnabled;
+
+    @JsonUnwrapped
+    private CourseExpandVO expand;
 }

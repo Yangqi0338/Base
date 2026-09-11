@@ -8,6 +8,8 @@ import com.newzkl.platform.base.biz.course.domain.service.LecturerDomain;
 import com.newzkl.platform.base.biz.course.model.lecturer.query.LecturerQuery;
 import com.newzkl.platform.base.biz.course.model.lecturer.req.LecturerReq;
 import com.newzkl.platform.base.biz.course.model.lecturer.res.LecturerRes;
+import com.newzkl.platform.base.biz.course.model.lecturercategory.query.LecturerCategoryQuery;
+import com.newzkl.platform.base.biz.course.model.lecturercategory.req.LecturerCategoryReq;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.model.exception.BaseErrorCode;
@@ -34,9 +36,7 @@ import java.util.List;
 public class LecturerDomainImpl implements LecturerDomain {
 
     private final LecturerRepository lecturerRepository;
-
     private final LecturerCategoryRepository lecturerCategoryRepository;
-
     private final CourseRepository courseRepository;
 
     @Override
@@ -140,5 +140,69 @@ public class LecturerDomainImpl implements LecturerDomain {
         LecturerRes exist = lecturerRepository.detail(id);
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "讲师");
         return lecturerRepository.updateEnabled(id, isEnabled);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public LecturerCategoryRes addCategory(LecturerCategoryReq req) {
+        ThrowsException.isTrue(lecturerCategoryRepository.existsByName(req.getCategoryName(), null),
+                BaseErrorCode.EXIST_DATA, "讲师分类名称");
+        req.setId(null);
+        Long id = lecturerCategoryRepository.save(req);
+        return lecturerCategoryRepository.detail(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public LecturerCategoryRes editCategory(LecturerCategoryReq req) {
+        ThrowsException.isNull(req.getId(), BaseErrorCode.PARAM, "分类主键");
+        LecturerCategoryRes exist = lecturerCategoryRepository.detail(req.getId());
+        ThrowsException.isNull(exist, BaseErrorCode.NODATA, "讲师分类");
+        ThrowsException.isTrue(lecturerCategoryRepository.existsByName(req.getCategoryName(), req.getId()),
+                BaseErrorCode.EXIST_DATA, "讲师分类名称");
+        lecturerCategoryRepository.save(req);
+        return lecturerCategoryRepository.detail(req.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean enableCategory(Long id) {
+        return updateEnabled(id, CommonEnum.YesOrNo.YES);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean disableCategory(Long id) {
+        return updateEnabled(id, CommonEnum.YesOrNo.NO);
+    }
+
+    @Override
+    public LecturerCategoryRes getCategoryById(Long id) {
+        LecturerCategoryRes res = lecturerCategoryRepository.detail(id);
+        ThrowsException.isNull(res, BaseErrorCode.NODATA, "讲师分类");
+        return res;
+    }
+
+    @Override
+    public IPage<LecturerCategoryRes> pageCategoryQuery(LecturerCategoryQuery query) {
+        return lecturerCategoryRepository.pageList(query);
+    }
+
+    @Override
+    public List<LecturerCategoryRes> listAllCategoryEnabled() {
+        return lecturerCategoryRepository.listAllEnabled();
+    }
+
+    /**
+     * 校验存在后更新启用状态
+     *
+     * @param id        分类主键
+     * @param isEnabled 启用状态 1-启用 0-禁用
+     * @return 是否成功
+     */
+    private boolean updateCategoryEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
+        LecturerCategoryRes exist = lecturerCategoryRepository.detail(id);
+        ThrowsException.isNull(exist, BaseErrorCode.NODATA, "讲师分类");
+        return lecturerCategoryRepository.updateEnabled(id, isEnabled);
     }
 }

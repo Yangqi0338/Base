@@ -136,7 +136,7 @@ public class SpuController {
      * @param spuDTO 商品请求
      * @return 空结果
      */
-    @RoleLimit(client = {AccountEnum.Client.ADMIN})
+    @RoleLimit(client = {AccountEnum.Client.ADMIN, AccountEnum.Client.MMT_CHANNEL})
     @PostMapping("palletSpuAudit")
     @FuncPermission("修改商品")
     public PlatformResult<Void> palletSpuEdit(@RequestBody SpuDTO spuDTO) {

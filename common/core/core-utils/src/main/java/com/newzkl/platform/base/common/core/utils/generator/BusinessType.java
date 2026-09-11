@@ -29,6 +29,7 @@ public enum BusinessType {
     PAYMENT("P", "交易订单", new DateTimeGenerator()),
     ORDER_REFUND_RETURN("ORR", "售后订单", new SnowflakeGenerator()),
     ORDER_DELIVERY("OD", "发货单", new SnowflakeGenerator()),
+    ORDER_COURSE("OC", "课程订单", new SnowflakeGenerator()),
     /* 课程 */
     COURSE_CATEGORY("CC", "课程分类"),
     COURSE("C", "课程"),

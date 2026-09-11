@@ -39,7 +39,7 @@ public class CourseChapterWatchRecordDO extends BaseDO {
      * 课程编码
      * @ext 冗余字段
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 章节数

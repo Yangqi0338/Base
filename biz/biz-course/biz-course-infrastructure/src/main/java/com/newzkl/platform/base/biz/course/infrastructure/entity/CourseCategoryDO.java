@@ -3,6 +3,8 @@ package com.newzkl.platform.base.biz.course.infrastructure.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.model.enums.CommonEnum;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCode;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +21,7 @@ public class CourseCategoryDO extends BaseDO {
     /**
      * 分类编码
      */
+    @BusinessCode(BusinessType.COURSE_CATEGORY)
     private String categoryCode;
 
     /**

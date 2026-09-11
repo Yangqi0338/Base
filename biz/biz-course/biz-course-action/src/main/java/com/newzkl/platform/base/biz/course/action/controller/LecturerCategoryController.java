@@ -1,7 +1,7 @@
 package com.newzkl.platform.base.biz.course.action.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.newzkl.platform.base.biz.course.domain.service.LecturerCategoryDomain;
+import com.newzkl.platform.base.biz.course.domain.service.LecturerDomain;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.query.LecturerCategoryQuery;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.req.LecturerCategoryReq;
 import com.newzkl.platform.base.biz.course.model.lecturercategory.res.LecturerCategoryRes;
@@ -31,7 +31,7 @@ import java.util.List;
 @FuncPermission("讲师分类管理")
 public class LecturerCategoryController {
 
-    private final LecturerCategoryDomain lecturerCategoryDomain;
+    private final LecturerDomain lecturerDomain;
 
     /**
      * 新增讲师分类
@@ -45,7 +45,7 @@ public class LecturerCategoryController {
         if (req.getId() != null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        return PlatformResult.success(lecturerCategoryDomain.add(req));
+        return PlatformResult.success(lecturerDomain.addCategory(req));
     }
 
     /**
@@ -60,7 +60,7 @@ public class LecturerCategoryController {
         if (req.getId() == null) {
             ThrowsException.exception(BaseErrorCode.PARAM);
         }
-        return PlatformResult.success(lecturerCategoryDomain.edit(req));
+        return PlatformResult.success(lecturerDomain.editCategory(req));
     }
 
     /**
@@ -72,7 +72,7 @@ public class LecturerCategoryController {
     @PostMapping("/enable/{id}")
     @FuncPermission("启用讲师分类")
     public PlatformResult<Boolean> enable(@PathVariable("id") Long id) {
-        return PlatformResult.success(lecturerCategoryDomain.enable(id));
+        return PlatformResult.success(lecturerDomain.enableCategory(id));
     }
 
     /**
@@ -84,7 +84,7 @@ public class LecturerCategoryController {
     @PostMapping("/disable/{id}")
     @FuncPermission("禁用讲师分类")
     public PlatformResult<Boolean> disable(@PathVariable("id") Long id) {
-        return PlatformResult.success(lecturerCategoryDomain.disable(id));
+        return PlatformResult.success(lecturerDomain.disableCategory(id));
     }
 
     /**
@@ -95,7 +95,7 @@ public class LecturerCategoryController {
      */
     @GetMapping("/get/{id}")
     public PlatformResult<LecturerCategoryRes> get(@PathVariable("id") Long id) {
-        return PlatformResult.success(lecturerCategoryDomain.getById(id));
+        return PlatformResult.success(lecturerDomain.getCategoryById(id));
     }
 
     /**
@@ -106,7 +106,7 @@ public class LecturerCategoryController {
      */
     @PostMapping("/page")
     public PlatformResult<IPage<LecturerCategoryRes>> page(@RequestBody LecturerCategoryQuery query) {
-        return PlatformResult.success(lecturerCategoryDomain.pageQuery(query));
+        return PlatformResult.success(lecturerDomain.pageCategoryQuery(query));
     }
 
     /**
@@ -116,6 +116,6 @@ public class LecturerCategoryController {
      */
     @GetMapping("/listEnabled")
     public PlatformResult<List<LecturerCategoryRes>> listEnabled() {
-        return PlatformResult.success(lecturerCategoryDomain.listAllEnabled());
+        return PlatformResult.success(lecturerDomain.listAllCategoryEnabled());
     }
 }

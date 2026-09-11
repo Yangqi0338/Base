@@ -3,6 +3,7 @@ package com.newzkl.platform.base.biz.course.domain.adapt.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newzkl.platform.base.biz.course.model.purchase.entity.CoursePurchaseRecord;
 import com.newzkl.platform.base.biz.course.model.purchase.query.UserPurchasedCoursePageReq;
+import com.newzkl.platform.base.common.ddd.model.enums.course.CourseEnum;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public interface CoursePurchaseRecordRepository {
      * @param payNo    第三方支付流水号
      * @return 是否更新成功
      */
-    boolean updatePayState(Long orderNo, Integer payState, String payNo);
+    boolean updatePayState(Long orderNo, CourseEnum.PurchasePayStateEnum payState, String payNo);
 
     /**
      * 分页查用户购买记录(单表, 仅购买记录字段)

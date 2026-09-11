@@ -118,12 +118,12 @@ public class CourseController {
     /**
      * 按课程编号查课程
      *
-     * @param courseNum 课程编号
+     * @param courseNo 课程编号
      * @return 课程视图
      */
-    @GetMapping("/getByNum/{courseNum}")
-    public PlatformResult<CourseRes> getByNum(@PathVariable("courseNum") String courseNum) {
-        return PlatformResult.success(courseDomain.getByCourseNum(courseNum));
+    @GetMapping("/getByNum/{courseNo}")
+    public PlatformResult<CourseRes> getByNum(@PathVariable("courseNo") String courseNo) {
+        return PlatformResult.success(courseDomain.getByCourseNo(courseNo));
     }
 
     /**

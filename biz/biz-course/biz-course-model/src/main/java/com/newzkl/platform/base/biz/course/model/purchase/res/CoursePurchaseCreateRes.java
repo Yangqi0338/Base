@@ -37,7 +37,7 @@ public class CoursePurchaseCreateRes implements Serializable {
     /**
      * 课程编码(冗余)
      */
-    private String courseNum;
+    private String courseNo;
 
     /**
      * 购买用户ID
@@ -58,11 +58,6 @@ public class CoursePurchaseCreateRes implements Serializable {
      * 支付状态: 0-待支付, 1-支付成功, 2-支付失败
      */
     private Integer payState;
-
-    /**
-     * 支付状态描述(冗余)
-     */
-    private String payStateDesc;
 
     /**
      * 支付完成时间

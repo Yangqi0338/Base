@@ -2,6 +2,8 @@ package com.newzkl.platform.base.biz.course.infrastructure.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.newzkl.platform.base.common.core.mybatis.entity.BaseDO;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessCode;
+import com.newzkl.platform.base.common.core.utils.generator.BusinessType;
 import com.newzkl.platform.base.common.ddd.model.enums.finance.PaymentEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +26,8 @@ public class CoursePurchaseRecordDO extends BaseDO {
      * 订单编号
      * @ext 唯一
      */
-    private Long orderNo;
+    @BusinessCode(BusinessType.ORDER_COURSE)
+    private String orderNo;
 
     /**
      * 课程ID

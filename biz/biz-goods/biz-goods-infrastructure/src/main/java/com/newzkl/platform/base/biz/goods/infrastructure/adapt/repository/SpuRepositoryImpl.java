@@ -366,8 +366,8 @@ public class SpuRepositoryImpl extends RepositorySupport implements SpuRepositor
 
     @Override
     public void refreshSalePriceRate(Set<Long> skuIdList) {
-        throw new UnsupportedOperationException(
-                "TODO[infra-gap]: 加价比例 salePriceRate 的计算公式未定义");
+//        throw new UnsupportedOperationException(
+//                "TODO[infra-gap]: 加价比例 salePriceRate 的计算公式未定义");
     }
 
     @Override

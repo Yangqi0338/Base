@@ -3,7 +3,7 @@ ALTER TABLE
   MODIFY COLUMN `user_id` bigint NULL COMMENT 'userId',
   MODIFY COLUMN `course_id` bigint NULL COMMENT 'courseId',
   MODIFY COLUMN `course_chapter_id` bigint NULL COMMENT 'courseChapterId',
-  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNum',
+  MODIFY COLUMN `course_num` varchar(255) NULL COMMENT 'courseNo',
   MODIFY COLUMN `chapter_num` int NULL COMMENT 'chapterNum',
   MODIFY COLUMN `is_watched` int NULL COMMENT 'isWatched[1是,0否]',
   MODIFY COLUMN `watch_duration_centisecond` int NULL COMMENT 'watchDurationCentisecond',

@@ -7,8 +7,14 @@ import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseCategor
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseChapterWatchRecordRepository;
 import com.newzkl.platform.base.biz.course.domain.adapt.repository.CourseRepository;
+import com.newzkl.platform.base.biz.course.domain.service.CourseChapterWatchRecordDomain;
 import com.newzkl.platform.base.biz.course.domain.service.CourseDomain;
+import com.newzkl.platform.base.biz.course.model.category.query.CourseCategoryQuery;
+import com.newzkl.platform.base.biz.course.model.category.req.CourseCategoryReq;
 import com.newzkl.platform.base.biz.course.model.category.res.CourseCategoryRes;
+import com.newzkl.platform.base.biz.course.model.chapter.query.CourseChapterQuery;
+import com.newzkl.platform.base.biz.course.model.chapter.req.CourseChapterReq;
+import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterRes;
 import com.newzkl.platform.base.biz.course.model.chapter.res.CourseChapterStatRes;
 import com.newzkl.platform.base.biz.course.model.course.query.CourseQuery;
 import com.newzkl.platform.base.biz.course.model.course.req.CourseDetailReq;
@@ -55,14 +61,14 @@ public class CourseDomainImpl implements CourseDomain {
 
     private final CourseChapterWatchRecordRepository courseChapterWatchRecordRepository;
 
+    private final CourseChapterWatchRecordDomain courseChapterWatchRecordDomain;
+
     private final AccountApi accountApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CourseRes add(CourseReq req) {
         checkCategory(req.getCategoryId());
-        req.setId(null);
-        req.setCourseNum(BusinessCodeUtil.generate(BusinessType.COURSE));
         Long id = courseRepository.saveBase(req);
         return courseRepository.detail(id);
     }
@@ -74,7 +80,6 @@ public class CourseDomainImpl implements CourseDomain {
         CourseRes exist = courseRepository.detail(req.getId());
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程");
         checkCategory(req.getCategoryId());
-        req.setCourseNum(exist.getCourseNum());
         courseRepository.saveBase(req);
         return courseRepository.detail(req.getId());
     }
@@ -109,9 +114,9 @@ public class CourseDomainImpl implements CourseDomain {
     }
 
     @Override
-    public CourseRes getByCourseNum(String courseNum) {
-        ThrowsException.isBlank(courseNum, "课程编码");
-        CourseRes res = courseRepository.getByCourseNum(courseNum);
+    public CourseRes getByCourseNo(String courseNo) {
+        ThrowsException.isBlank(courseNo, "课程编码");
+        CourseRes res = courseRepository.getByCourseNo(courseNo);
         ThrowsException.isNull(res, BaseErrorCode.NODATA, "课程");
         return res;
     }
@@ -234,5 +239,235 @@ public class CourseDomainImpl implements CourseDomain {
         CourseRes exist = courseRepository.detail(id);
         ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程");
         return courseRepository.updateEnabled(id, isEnabled);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CourseCategoryRes addCategory(CourseCategoryReq req) {
+        ThrowsException.isTrue(courseCategoryRepository.existsByName(req.getCategoryName(), null),
+                BaseErrorCode.EXIST_DATA, "分类名称");
+        req.setId(null);
+        req.setIsEnabled(CommonEnum.YesOrNo.YES);
+        req.setCategoryCode(BusinessCodeUtil.generate(BusinessType.COURSE_CATEGORY));
+        Long id = courseCategoryRepository.save(req);
+        return courseCategoryRepository.detail(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CourseCategoryRes editCategory(CourseCategoryReq req) {
+        ThrowsException.isNull(req.getId(), BaseErrorCode.PARAM, "分类主键");
+        CourseCategoryRes exist = courseCategoryRepository.detail(req.getId());
+        ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程分类");
+        ThrowsException.isTrue(courseCategoryRepository.existsByName(req.getCategoryName(), req.getId()),
+                BaseErrorCode.EXIST_DATA, "分类名称");
+        req.setCategoryCode(exist.getCategoryCode());
+        courseCategoryRepository.save(req);
+        return courseCategoryRepository.detail(req.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean enableCategory(Long id) {
+        return updateCategoryEnabled(id, CommonEnum.YesOrNo.YES);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean disableCategory(Long id) {
+        return updateCategoryEnabled(id, CommonEnum.YesOrNo.NO);
+    }
+
+    @Override
+    public CourseCategoryRes getCategoryById(Long id) {
+        CourseCategoryRes res = courseCategoryRepository.detail(id);
+        ThrowsException.isNull(res, BaseErrorCode.NODATA, "课程分类");
+        return res;
+    }
+
+    @Override
+    public IPage<CourseCategoryRes> pageCategoryQuery(CourseCategoryQuery query) {
+        return courseCategoryRepository.pageList(query);
+    }
+
+    @Override
+    public List<CourseCategoryRes> listAllCategoryEnabled() {
+        return courseCategoryRepository.listAllEnabled();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteCategory(Long id) {
+        return batchDeleteCategory(Collections.singletonList(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean batchDeleteCategory(List<Long> idList) {
+        ThrowsException.isTrue(idList == null || idList.isEmpty(), BaseErrorCode.PARAM, "分类主键列表");
+        for (Long id : idList) {
+            CourseCategoryRes exist = courseCategoryRepository.detail(id);
+            ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程分类");
+            ThrowsException.isTrue(courseRepository.countByCategoryId(id) > 0,
+                    BaseErrorCode.OPERATE_FAIL, "分类下存在课程, 不允许删除");
+        }
+        return courseCategoryRepository.delete(idList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean recoverCategory(Long id) {
+        ThrowsException.isNull(id, BaseErrorCode.PARAM, "分类主键");
+        return courseCategoryRepository.recover(id);
+    }
+
+    /**
+     * 校验存在后更新启用状态
+     *
+     * @param id        分类主键
+     * @param isEnabled 启用状态 1-启用 0-禁用
+     * @return 是否成功
+     */
+    private boolean updateCategoryEnabled(Long id, CommonEnum.YesOrNo isEnabled) {
+        CourseCategoryRes exist = courseCategoryRepository.detail(id);
+        ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程分类");
+        return courseCategoryRepository.updateEnabled(id, isEnabled);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CourseChapterRes addChapter(CourseChapterReq req) {
+        checkCourse(req.getCourseId());
+        ThrowsException.isTrue(
+                courseChapterRepository.existsChapterNum(req.getCourseId(), req.getChapterNum(), null),
+                BaseErrorCode.EXIST_DATA, "该课程下同章节数的章节");
+        req.setId(null);
+        Long id = courseChapterRepository.save(req);
+        refreshChapterStat(req.getCourseId());
+        return courseChapterRepository.detail(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CourseChapterRes editChapter(CourseChapterReq req) {
+        ThrowsException.isNull(req.getId(), BaseErrorCode.PARAM, "章节主键");
+        CourseChapterRes exist = courseChapterRepository.detail(req.getId());
+        ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程章节");
+        checkCourse(req.getCourseId());
+        ThrowsException.isTrue(
+                courseChapterRepository.existsChapterNum(req.getCourseId(), req.getChapterNum(), req.getId()),
+                BaseErrorCode.EXIST_DATA, "该课程下同章节数的章节");
+        courseChapterRepository.save(req);
+        refreshChapterStat(req.getCourseId());
+        return courseChapterRepository.detail(req.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean enableChapter(Long id) {
+        CourseChapterRes exist = getExist(id);
+        return courseChapterRepository.updateEnabled(exist.getId(), CommonEnum.YesOrNo.YES);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean disableChapter(Long id) {
+        CourseChapterRes exist = getExist(id);
+        return courseChapterRepository.updateEnabled(exist.getId(), CommonEnum.YesOrNo.NO);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setFree(Long id) {
+        CourseChapterRes exist = getExist(id);
+        return courseChapterRepository.updateFree(exist.getId(), CommonEnum.YesOrNo.YES);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setCharge(Long id) {
+        CourseChapterRes exist = getExist(id);
+        return courseChapterRepository.updateFree(exist.getId(), CommonEnum.YesOrNo.NO);
+    }
+
+    @Override
+    public CourseChapterRes getChapterById(Long id) {
+        CourseChapterRes res = getExist(id);
+        courseChapterWatchRecordDomain.bufferWatch(res);
+        return res;
+    }
+
+    @Override
+    public IPage<CourseChapterRes> pageChapterQuery(CourseChapterQuery query) {
+        return courseChapterRepository.pageList(query);
+    }
+
+    @Override
+    public List<CourseChapterRes> listChapterByCourseNo(String courseNo) {
+        ThrowsException.isBlank(courseNo, "课程编码");
+        CourseRes course = courseRepository.getByCourseNo(courseNo);
+        ThrowsException.isNull(course, BaseErrorCode.NODATA, "课程");
+        return courseChapterRepository.listByCourseId(course.getId());
+    }
+
+    @Override
+    public Map<Long, CourseChapterStatRes> batchStatChapter(List<Long> courseIdList) {
+        if (courseIdList == null || courseIdList.isEmpty()) {
+            return new HashMap<>(0);
+        }
+        List<CourseChapterStatRes> statList = courseChapterRepository.batchStat(courseIdList);
+        Map<Long, CourseChapterStatRes> statMap = new HashMap<>(statList.size());
+        statList.forEach(item -> statMap.put(item.getCourseId(), item));
+        return statMap;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteChapter(Long id) {
+        return batchDeleteChapter(Collections.singletonList(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean batchDeleteChapter(List<Long> idList) {
+        ThrowsException.isTrue(idList == null || idList.isEmpty(), BaseErrorCode.PARAM, "章节主键列表");
+        List<Long> courseIdList = idList.stream().map(id -> getExist(id).getCourseId()).distinct().toList();
+        boolean deleted = courseChapterRepository.delete(idList);
+        courseIdList.forEach(this::refreshChapterStat);
+        return deleted;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean recoverChapter(Long id) {
+        ThrowsException.isNull(id, BaseErrorCode.PARAM, "章节主键");
+        boolean recovered = courseChapterRepository.recover(id);
+        CourseChapterRes chapter = courseChapterRepository.detail(id);
+        if (chapter != null) {
+            refreshChapterStat(chapter.getCourseId());
+        }
+        return recovered;
+    }
+
+    /**
+     * 取存在的章节, 不存在抛业务异常
+     *
+     * @param id 章节主键
+     * @return 章节视图
+     */
+    private CourseChapterRes getExist(Long id) {
+        CourseChapterRes exist = courseChapterRepository.detail(id);
+        ThrowsException.isNull(exist, BaseErrorCode.NODATA, "课程章节");
+        return exist;
+    }
+
+    /**
+     * 校验所属课程存在
+     *
+     * @param courseId 课程主键
+     */
+    private void checkCourse(Long courseId) {
+        ThrowsException.isNull(courseId, BaseErrorCode.PARAM, "课程主键");
+        ThrowsException.isNull(courseRepository.detail(courseId), BaseErrorCode.NODATA, "课程");
     }
 }

@@ -87,25 +87,23 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             CoursePurchaseRecord exist =
                     coursePurchaseRecordRepository.findSuccessByUserIdAndCourseId(req.getUserId(), req.getCourseId());
             if (exist != null) {
-                ThrowsException.isTrue(CourseEnum.PurchasePayStateEnum.SUCCESS.getCode().equals(exist.getPayState()),
+                ThrowsException.isTrue(CourseEnum.PurchasePayStateEnum.SUCCESS == exist.getPayState(),
                         BaseErrorCode.REPEAT, "");
             }
 
             long sellCent = centOf(course.getSellPrice());
             CoursePurchaseRecord record = new CoursePurchaseRecord();
-            record.setOrderNo(SnowflakeGenerator.getSnowflakeId());
             record.setCourseId(course.getId());
-            record.setCourseNum(course.getCourseNum());
+            record.setCourseNo(course.getCourseNo());
             record.setUserId(req.getUserId());
             record.setOriginalPrice(centOf(course.getOriginalPrice()));
             record.setPayPrice(sellCent);
             record.setPayType(req.getPayType());
             record.setPayState(sellCent == 0
-                    ? CourseEnum.PurchasePayStateEnum.SUCCESS.getCode() : CourseEnum.PurchasePayStateEnum.PENDING.getCode());
+                    ? CourseEnum.PurchasePayStateEnum.SUCCESS : CourseEnum.PurchasePayStateEnum.PENDING);
 
             if (sellCent != 0) {
                 OrderPayCommand command = new OrderPayCommand();
-                command.setOrderNo(record.getOrderNo());
                 command.setConsumeType(OrderPayCommand.CONSUME_TYPE_COURSE);
                 command.setOrderAmount((int) sellCent);
                 command.setPayAmount((int) sellCent);
@@ -160,7 +158,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
     public void paySuccess(Long orderNo, String payNo) {
         CoursePurchaseRecord record = coursePurchaseRecordRepository.findByOrderNo(orderNo);
         ThrowsException.isNull(record, BaseErrorCode.NODATA, "订单");
-        coursePurchaseRecordRepository.updatePayState(orderNo, CourseEnum.PurchasePayStateEnum.SUCCESS.getCode(), payNo);
+        coursePurchaseRecordRepository.updatePayState(orderNo, CourseEnum.PurchasePayStateEnum.SUCCESS, payNo);
         courseDomain.addPurchaseCount(record.getCourseId());
     }
 
@@ -194,7 +192,7 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             res.setPayType(record.getPayType());
             res.setCreateTime(record.getCreateTime());
             res.setCourseId(record.getCourseId());
-            res.setCourseNum(record.getCourseNum());
+            res.setCourseNo(record.getCourseNo());
             res.setWatchCount(watchMap.getOrDefault(record.getCourseId(), 0));
             fillCourseFields(res, record.getCourseId());
             list.add(res);
@@ -217,10 +215,10 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
             return;
         }
         res.setLecturerId(course.getLecturerId());
-        res.setLecturerName(course.getLecturerName());
+//        res.setLecturerName(course.getLecturerName());
         res.setCourseTitle(course.getTitle());
         res.setCategoryId(course.getCategoryId());
-        res.setCategoryName(course.getCategoryName());
+//        res.setCategoryName(course.getCategoryName());
         res.setCoverImage(course.getCoverImage());
         res.setTotalDurationCentisecond(course.getTotalDurationCentisecond());
         res.setTotalDurationSeconds(course.getTotalDurationSeconds());
@@ -238,7 +236,6 @@ public class CoursePurchaseRecordDomainImpl implements CoursePurchaseRecordDomai
     private CoursePurchaseCreateRes toCreateRes(CoursePurchaseRecord record, String courseTitle) {
         CoursePurchaseCreateRes res = TransferUtils.transfer(record, CoursePurchaseCreateRes::new);
         res.setCourseTitle(courseTitle);
-        res.setPayStateDesc(CourseEnum.PurchasePayStateEnum.descOf(record.getPayState()));
         return res;
     }
 

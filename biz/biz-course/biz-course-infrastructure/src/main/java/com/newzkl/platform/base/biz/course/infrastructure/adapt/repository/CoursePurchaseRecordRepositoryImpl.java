@@ -65,7 +65,7 @@ public class CoursePurchaseRecordRepositoryImpl implements CoursePurchaseRecordR
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updatePayState(Long orderNo, Integer payState, String payNo) {
+    public boolean updatePayState(Long orderNo, CourseEnum.PurchasePayStateEnum payState, String payNo) {
         return coursePurchaseRecordDAO.updatePayState(orderNo, payState, payNo) > 0;
     }
 
